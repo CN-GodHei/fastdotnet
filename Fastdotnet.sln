@@ -10,7 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fastdotnet.Service", "src\F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fastdotnet.WebApi", "src\Fastdotnet.WebApi\Fastdotnet.WebApi.csproj", "{66B6C9B3-CC2E-4E6E-BB35-3C97EDF10F01}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugin", "Plugin", "{A5114D66-3DBC-4A6C-9DFF-033E894B6ECD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{A5114D66-3DBC-4A6C-9DFF-033E894B6ECD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fastdotnet.Plugin", "src\Plugin\Fastdotnet.Plugin\Fastdotnet.Plugin.csproj", "{25220DC0-50C2-4F95-AFAA-92797B490302}"
 EndProject
