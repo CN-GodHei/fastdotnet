@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
+    <ProjectReference Include="..\Fastdotnet.Infrastructure\Fastdotnet.Infrastructure.csproj" />
+    <ProjectReference Include="..\Fastdotnet.Service\Fastdotnet.Service.csproj" />
+  </ItemGroup>
+
+  <Target Name="SetupPluginDirectory" AfterTargets="Build">
+    <PropertyGroup>
+      <PluginRootDir>$(OutputPath)\..\..\..\Plugin</PluginRootDir>
+      <PluginDir>$(PluginRootDir)\Fastdotnet.Plugin</PluginDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(PluginRootDir)" />
+    <MakeDir Directories="$(PluginDir)" />
+    <ItemGroup>
+      <PluginFiles Include="$(OutputPath)\..\..\..\..\Fastdotnet.Plugin\bin\$(Configuration)\$(TargetFramework)\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PluginFiles)" DestinationFiles="@(PluginFiles->'$(PluginDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
+</Project>

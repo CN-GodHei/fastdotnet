@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <PropertyGroup>
+      <PluginOutputPath>$(SolutionDir)src\Fastdotnet.WebApi\Plugin\$(AssemblyName)</PluginOutputPath>
+    </PropertyGroup>
+    <MakeDir Directories="$(PluginOutputPath)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PluginOutputPath)" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(PluginOutputPath)" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).deps.json" DestinationFolder="$(PluginOutputPath)" Condition="Exists('$(TargetDir)$(TargetName).deps.json')" />
+  </Target>
+
+</Project>
