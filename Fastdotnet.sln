@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{A511
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fastdotnet.Plugin", "src\Plugin\Fastdotnet.Plugin\Fastdotnet.Plugin.csproj", "{25220DC0-50C2-4F95-AFAA-92797B490302}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fastdotnet.Plugin", "src\Plugins\Fastdotnet.Plugin\Fastdotnet.Plugin.csproj", "{2860A6B4-5FE8-4FA4-ABF5-EEA9E2676097}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,12 +42,17 @@ Global
 		{25220DC0-50C2-4F95-AFAA-92797B490302}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25220DC0-50C2-4F95-AFAA-92797B490302}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25220DC0-50C2-4F95-AFAA-92797B490302}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2860A6B4-5FE8-4FA4-ABF5-EEA9E2676097}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2860A6B4-5FE8-4FA4-ABF5-EEA9E2676097}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2860A6B4-5FE8-4FA4-ABF5-EEA9E2676097}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2860A6B4-5FE8-4FA4-ABF5-EEA9E2676097}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{25220DC0-50C2-4F95-AFAA-92797B490302} = {A5114D66-3DBC-4A6C-9DFF-033E894B6ECD}
+		{2860A6B4-5FE8-4FA4-ABF5-EEA9E2676097} = {A5114D66-3DBC-4A6C-9DFF-033E894B6ECD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {82E9E1E9-E419-4005-8516-B0339884923F}
