@@ -7,6 +7,9 @@ using Fastdotnet.Core.Plugin;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// 设置应用程序URL
+builder.WebHost.UseUrls("http://*:18848");
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -42,12 +45,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
 // 使用JWT中间件
 app.UseMiddleware<JwtMiddleware>();
 
 // 启用路由和控制器
+app.Logger.LogInformation("开始注册路由...");
 app.MapControllers();
+
+// 设置插件管理器的EndpointRouteBuilder
+var pluginManagerInstance = app.Services.GetRequiredService<PluginManager>();
+app.Logger.LogInformation("开始设置插件管理器的EndpointRouteBuilder...");
+pluginManagerInstance.SetEndpointRouteBuilder(app);
+app.Logger.LogInformation("路由注册完成。");
 
 app.Run();

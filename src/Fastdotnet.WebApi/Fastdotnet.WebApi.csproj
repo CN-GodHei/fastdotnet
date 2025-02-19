@@ -22,15 +22,20 @@
 
   <Target Name="SetupPluginDirectory" AfterTargets="Build">
     <PropertyGroup>
-      <PluginRootDir>$(OutputPath)\..\..\..\Plugin</PluginRootDir>
-      <PluginDir>$(PluginRootDir)\Fastdotnet.Plugin</PluginDir>
+      <PluginsOutputPath>$(OutputPath)Plugins</PluginsOutputPath>
     </PropertyGroup>
-    <MakeDir Directories="$(PluginRootDir)" />
-    <MakeDir Directories="$(PluginDir)" />
+    <MakeDir Directories="$(PluginsOutputPath)" />
     <ItemGroup>
-      <PluginFiles Include="$(OutputPath)\..\..\..\..\Fastdotnet.Plugin\bin\$(Configuration)\$(TargetFramework)\**\*.*" />
+      <PluginProjects Include="..\Plugins\**\*.csproj" />
     </ItemGroup>
-    <Copy SourceFiles="@(PluginFiles)" DestinationFiles="@(PluginFiles->'$(PluginDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <MSBuild Projects="@(PluginProjects)" Targets="Build" Properties="Configuration=$(Configuration)">
+      <Output TaskParameter="TargetOutputs" ItemName="PluginAssemblies" />
+    </MSBuild>
+    <ItemGroup>
+      <PluginFiles Include="$(SolutionDir)src\Plugins\**\bin\$(Configuration)\net8.0\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PluginFiles)"
+          DestinationFiles="@(PluginFiles->'$(PluginsOutputPath)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
 </Project>
