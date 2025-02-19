@@ -1,18 +1,119 @@
-# Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
+# Visual Studio临时文件
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# 编译输出
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
 [Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
 
-# Other files and folders
-.settings/
+# Visual Studio 2015/2017 缓存/选项目录
+.vs/
 
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
+# Visual Studio 2017 自动生成的文件
+Generated\ Files/
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+# MSTest测试结果
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NuGet包
+*.nupkg
+# NuGet Symbol包
+*.snupkg
+# 包文件夹
+[Pp]ackages/
+# NuGet v3的项目.json文件
+project.lock.json
+project.assets.json
+*.nuget.props
+
+# Visual Studio临时文件
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.log
+*.tlog
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# Visual Studio历史文件
+.history/
+
+# Windows临时文件
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS临时文件
+.DS_Store
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# 用户特定文件
+*.userprefs
+*.usertasks
+
+# 构建结果
+[Dd]ebugPublic/
+[Rr]eleasePublic/
+[Pp]ublish/
+
+# Roslyn缓存
+*.ide/
+
+# Visual Studio代码覆盖率结果
+*.coverage
+*.coveragexml
+
+# 发布Web输出
+*.[Pp]ublish.xml
+*.azurePubxml
+*.pubxml
+*.publishproj
+
+# SQL Server文件
+*.mdf
+*.ldf
+*.ndf
+.history
