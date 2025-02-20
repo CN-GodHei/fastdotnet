@@ -84,8 +84,8 @@ namespace Fastdotnet.WebApi.Controllers
                 }
 
                 // 读取并修改配置
-                var config = JObject.Parse(System.IO.File.ReadAllText(configPath));
-                config["enabled"] = true;
+                //var config = JObject.Parse(System.IO.File.ReadAllText(configPath));
+                //config["enabled"] = true;
 
                 try
                 {
@@ -98,14 +98,11 @@ namespace Fastdotnet.WebApi.Controllers
                     }
 
                     // 保存配置
-                    System.IO.File.WriteAllText(configPath, config.ToString(Formatting.Indented));
+                    //System.IO.File.WriteAllText(configPath, config.ToString(Formatting.Indented));
                     return Ok(new { Message = "插件启用成功" });
                 }
                 catch
                 {
-                    // 加载失败，回滚配置
-                    config["enabled"] = false;
-                    System.IO.File.WriteAllText(configPath, config.ToString(Formatting.Indented));
                     throw;
                 }
             }
@@ -135,13 +132,13 @@ namespace Fastdotnet.WebApi.Controllers
                 _pluginManager.UnloadPlugin(pluginId);
 
                 // 更新配置文件
-                var configPath = Path.Combine(pluginPath, "plugin.json");
-                if (System.IO.File.Exists(configPath))
-                {
-                    var config = JObject.Parse(System.IO.File.ReadAllText(configPath));
-                    config["enabled"] = false;
-                    System.IO.File.WriteAllText(configPath, config.ToString(Formatting.Indented));
-                }
+                //var configPath = Path.Combine(pluginPath, "plugin.json");
+                //if (System.IO.File.Exists(configPath))
+                //{
+                //    var config = JObject.Parse(System.IO.File.ReadAllText(configPath));
+                //    config["enabled"] = false;
+                //    System.IO.File.WriteAllText(configPath, config.ToString(Formatting.Indented));
+                //}
 
                 return Ok(new { Message = "插件停用成功" });
             }

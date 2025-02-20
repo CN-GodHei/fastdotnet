@@ -1,10 +1,12 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Runtime.Loader;
+using System.Xml;
 using Fastdotnet.Core.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
 
 namespace Fastdotnet.Core.Plugin
 {
@@ -112,20 +114,25 @@ namespace Fastdotnet.Core.Plugin
 
         public CommonResult<bool> LoadPlugin(string pluginPath)
         {
+            var pluginDir = Path.GetDirectoryName(pluginPath);
+            var configPath = Path.Combine(pluginDir, "plugin.json");
             try
             {
+
                 // 检查插件是否已经加载
                 var assemblyName = Path.GetFileNameWithoutExtension(pluginPath);
-                if (_loadedAssemblies.ContainsKey(assemblyName))
-                {
-                    return CommonResult<bool>.Error($"插件 {assemblyName} 已经加载，跳过重复加载");                    
-                }
-                var pluginDir = Path.GetDirectoryName(pluginPath);
-                var configPath = Path.Combine(pluginDir, "plugin.json");
-                if (!pluginStatus(configPath))
-                {
-                    return CommonResult<bool>.Error($"插件 {assemblyName} 配置文件验证失败或未启用");                    
-                }
+                // 检查插件是否已经预加载但未注册路由
+                //if (_loadedAssemblies.ContainsKey(assemblyName))
+                //{
+                //    if (pluginStatus(configPath))
+                //    {
+                //        // 如果插件已预加载且配置有效，直接注册路由
+                //        var assembly_ = _loadedAssemblies[assemblyName];
+                //        RegisterPluginRoutes(assembly_, assemblyName);
+                //        return CommonResult<bool>.Success(true, "插件路由注册成功");
+                //    }
+                //    return CommonResult<bool>.Error($"插件 {assemblyName} 配置文件验证失败或未启用");
+                //}
 
                 if (_loadedAssemblies.TryGetValue(assemblyName, out var assembly))
                 {
@@ -139,9 +146,16 @@ namespace Fastdotnet.Core.Plugin
                     assembly = _loadedAssemblies[assemblyName];
                     RegisterPluginRoutes(assembly, assemblyName);
                 }
+                // 读取并修改配置
+                var config = JObject.Parse(System.IO.File.ReadAllText(configPath));
+                config["enabled"] = true;
+                System.IO.File.WriteAllText(configPath, config.ToString((Newtonsoft.Json.Formatting)Formatting.Indented));
             }
             catch (Exception ex)
             {
+                var config = JObject.Parse(System.IO.File.ReadAllText(configPath));
+                config["enabled"] = true;
+                System.IO.File.WriteAllText(configPath, config.ToString((Newtonsoft.Json.Formatting)Formatting.Indented));
                 Console.WriteLine($"Error loading plugin {pluginPath}: {ex.Message}");
                 return CommonResult<bool>.Error($"插件加载失败: {ex.Message}");
             }
@@ -292,9 +306,6 @@ namespace Fastdotnet.Core.Plugin
             {
                 return false;
             }
-
-
-
         }
     }
 }
