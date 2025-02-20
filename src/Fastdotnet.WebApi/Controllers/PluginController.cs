@@ -35,8 +35,9 @@ namespace Fastdotnet.WebApi.Controllers
                     return BadRequest(new { Message = $"插件DLL文件不存在: {dllPath}" });
                 }
 
-                _pluginManager.LoadPlugin(dllPath);
-                return Ok(new { Message = "插件加载成功" });
+               var result = _pluginManager.LoadPlugin(dllPath);
+
+                return Ok(new { Message = result.Msg });
             }
             catch (Exception ex)
             {

@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Runtime.Loader;
+using Fastdotnet.Core.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -109,18 +110,23 @@ namespace Fastdotnet.Core.Plugin
             }
         }
 
-        public void LoadPlugin(string pluginPath)
+        public CommonResult<bool> LoadPlugin(string pluginPath)
         {
             try
             {
+                // 检查插件是否已经加载
+                var assemblyName = Path.GetFileNameWithoutExtension(pluginPath);
+                if (_loadedAssemblies.ContainsKey(assemblyName))
+                {
+                    return CommonResult<bool>.Error($"插件 {assemblyName} 已经加载，跳过重复加载");                    
+                }
                 var pluginDir = Path.GetDirectoryName(pluginPath);
                 var configPath = Path.Combine(pluginDir, "plugin.json");
                 if (!pluginStatus(configPath))
                 {
-                    return;
+                    return CommonResult<bool>.Error($"插件 {assemblyName} 配置文件验证失败或未启用");                    
                 }
 
-                var assemblyName = Path.GetFileNameWithoutExtension(pluginPath);
                 if (_loadedAssemblies.TryGetValue(assemblyName, out var assembly))
                 {
                     // 如果程序集已加载，只需要注册路由
@@ -137,8 +143,9 @@ namespace Fastdotnet.Core.Plugin
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading plugin {pluginPath}: {ex.Message}");
-                throw;
+                return CommonResult<bool>.Error($"插件加载失败: {ex.Message}");
             }
+            return CommonResult<bool>.Success(true, "插件加载成功");
         }
 
         private void RegisterPluginRoutes(Assembly assembly, string assemblyName)
