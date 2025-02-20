@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Fastdotnet.Core.Plugin;
+using Microsoft.AspNetCore.Routing;
 
 namespace Fastdotnet.WebApi.Controllers
 {
@@ -8,10 +9,12 @@ namespace Fastdotnet.WebApi.Controllers
     public class PluginController : ControllerBase
     {
         private readonly PluginManager _pluginManager;
+        private readonly IEndpointRouteBuilder _endpointRouteBuilder;
 
-        public PluginController(PluginManager pluginManager)
+        public PluginController(PluginManager pluginManager, IEndpointRouteBuilder endpointRouteBuilder)
         {
             _pluginManager = pluginManager;
+            _endpointRouteBuilder = endpointRouteBuilder;
         }
 
         /// <summary>
@@ -35,6 +38,8 @@ namespace Fastdotnet.WebApi.Controllers
                     return BadRequest(new { Message = $"插件DLL文件不存在: {dllPath}" });
                 }
 
+                // 确保在加载插件前设置EndpointRouteBuilder
+                _pluginManager.SetEndpointRouteBuilder(_endpointRouteBuilder);
                 _pluginManager.LoadPlugin(dllPath);
                 return Ok(new { Message = "插件加载成功" });
             }

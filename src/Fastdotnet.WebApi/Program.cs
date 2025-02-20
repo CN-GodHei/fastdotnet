@@ -4,6 +4,7 @@ using Fastdotnet.Service;
 using Fastdotnet.Infrastructure;
 using Fastdotnet.Core;
 using Fastdotnet.Core.Plugin;
+using Microsoft.AspNetCore.Routing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,9 @@ if (!Directory.Exists(pluginPath))
 var pluginManager = new PluginManager(builder.Services, pluginPath);
 builder.Services.AddSingleton(pluginManager);
 
+// 注册IEndpointRouteBuilder服务
+builder.Services.AddSingleton<IEndpointRouteBuilder>(provider => provider.GetRequiredService<WebApplication>());
+
 // 加载所有现有插件
 pluginManager.LoadAllPlugins();
 
@@ -53,9 +57,6 @@ app.Logger.LogInformation("开始注册路由...");
 app.MapControllers();
 
 // 设置插件管理器的EndpointRouteBuilder
-var pluginManagerInstance = app.Services.GetRequiredService<PluginManager>();
-app.Logger.LogInformation("开始设置插件管理器的EndpointRouteBuilder...");
-pluginManagerInstance.SetEndpointRouteBuilder(app);
-app.Logger.LogInformation("路由注册完成。");
+pluginManager.SetEndpointRouteBuilder(app);
 
 app.Run();

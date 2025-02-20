@@ -151,6 +151,24 @@ namespace Fastdotnet.Core.Plugin
                                                     ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
                                                 });
                                             }
+                                            else if (result is IActionResult actionResult)
+                                            {
+                                                await actionResult.ExecuteResultAsync(new ActionContext
+                                                {
+                                                    HttpContext = context,
+                                                    RouteData = context.GetRouteData(),
+                                                    ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
+                                                });
+                                            }
+                                            else if (result != null)
+                                            {
+                                                await new JsonResult(result).ExecuteResultAsync(new ActionContext
+                                                {
+                                                    HttpContext = context,
+                                                    RouteData = context.GetRouteData(),
+                                                    ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
+                                                });
+                                            }
                                         }
                                     });
                             }
@@ -278,6 +296,24 @@ namespace Fastdotnet.Core.Plugin
                                                                 ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
                                                             });
                                                         }
+                                                        else if (result is IActionResult actionResult)
+                                                        {
+                                                            await actionResult.ExecuteResultAsync(new ActionContext
+                                                            {
+                                                                HttpContext = context,
+                                                                RouteData = context.GetRouteData(),
+                                                                ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
+                                                            });
+                                                        }
+                                                        else if (result != null)
+                                                        {
+                                                            await new JsonResult(result).ExecuteResultAsync(new ActionContext
+                                                            {
+                                                                HttpContext = context,
+                                                                RouteData = context.GetRouteData(),
+                                                                ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
+                                                            });
+                                                        }
                                                     }
                                                 });
                                             Console.WriteLine($"路由 {template} 注册成功");
@@ -332,6 +368,24 @@ namespace Fastdotnet.Core.Plugin
                                     {
                                         var actionResult = await taskResult;
                                         await actionResult.ExecuteResultAsync(new ActionContext
+                                        {
+                                            HttpContext = context,
+                                            RouteData = context.GetRouteData(),
+                                            ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
+                                        });
+                                    }
+                                    else if (result is IActionResult actionResult)
+                                    {
+                                        await actionResult.ExecuteResultAsync(new ActionContext
+                                        {
+                                            HttpContext = context,
+                                            RouteData = context.GetRouteData(),
+                                            ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
+                                        });
+                                    }
+                                    else if (result != null)
+                                    {
+                                        await new JsonResult(result).ExecuteResultAsync(new ActionContext
                                         {
                                             HttpContext = context,
                                             RouteData = context.GetRouteData(),
