@@ -1,15 +1,9 @@
-using System;
 using System.Collections.Concurrent;
-using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Core;
-using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Fastdotnet.Core.Plugin
 {
@@ -22,6 +16,7 @@ namespace Fastdotnet.Core.Plugin
         private readonly ConcurrentDictionary<string, Assembly> _loadedAssemblies;
         private FileSystemWatcher _watcher;
         private IEndpointRouteBuilder _app;
+        private RouteManager _routeManager;
 
         public PluginManager(IServiceCollection services, string pluginPath)
         {
@@ -30,6 +25,7 @@ namespace Fastdotnet.Core.Plugin
             _loadedPlugins = new ConcurrentDictionary<string, IPlugin>();
             _loadedAssemblies = new ConcurrentDictionary<string, Assembly>();
             InitializeFileWatcher();
+            PreloadPlugins(); // 预加载插件
         }
 
         private void InitializeFileWatcher()
@@ -46,19 +42,70 @@ namespace Fastdotnet.Core.Plugin
             _watcher.Deleted += OnPluginDeleted;
         }
 
-        private void OnPluginChanged(object sender, FileSystemEventArgs e)
+        private void PreloadPlugins()
         {
-            if (Path.GetExtension(e.FullPath).Equals(".dll", StringComparison.OrdinalIgnoreCase))
+            if (!Directory.Exists(_pluginPath))
             {
-                LoadPlugin(e.FullPath);
+                return;
+            }
+
+            foreach (var pluginDir in Directory.GetDirectories(_pluginPath))
+            {
+                var dllFiles = Directory.GetFiles(pluginDir, "*.dll");
+                foreach (var dllFile in dllFiles)
+                {
+                    try
+                    {
+                        RegisterPluginServices(dllFile);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error pre-loading plugin {dllFile}: {ex.Message}");
+                    }
+                }
             }
         }
 
-        private void OnPluginDeleted(object sender, FileSystemEventArgs e)
+        private void RegisterPluginServices(string pluginPath)
         {
-            if (Path.GetExtension(e.FullPath).Equals(".dll", StringComparison.OrdinalIgnoreCase))
+            var assemblyName = Path.GetFileNameWithoutExtension(pluginPath);
+
+            // 检查程序集是否已经加载
+            if (_loadedAssemblies.TryGetValue(assemblyName, out var existingAssembly))
             {
-                UnloadPlugin(e.FullPath);
+                Console.WriteLine($"Assembly {assemblyName} is already loaded, skipping...");
+                return;
+            }
+
+            var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(pluginPath);
+            _loadedAssemblies.TryAdd(assemblyName, assembly);
+
+            Console.WriteLine($"开始加载程序集 {assemblyName}");
+            var allTypes = assembly.GetTypes();
+            Console.WriteLine($"程序集 {assemblyName} 中包含 {allTypes.Length} 个类型");
+
+            // 注册带有PluginService特性的服务
+            var serviceTypes = assembly.GetTypes()
+                .Where(t => t.GetInterfaces().Any(i => i.GetCustomAttribute<PluginServiceAttribute>() != null));
+            foreach (var serviceType in serviceTypes)
+            {
+                var serviceInterface = serviceType.GetInterfaces()
+                    .FirstOrDefault(i => i.GetCustomAttribute<PluginServiceAttribute>() != null);
+                if (serviceInterface != null)
+                {
+                    _services.AddScoped(serviceInterface, serviceType);
+                }
+            }
+
+            // 注册插件中的所有控制器
+            var controllerTypes = assembly.GetTypes()
+                .Where(t => t.Name.EndsWith("Controller") && !t.IsAbstract && !t.IsInterface);
+            var controllerList = controllerTypes.ToList();
+            Console.WriteLine($"找到 {controllerList.Count} 个控制器类型");
+            foreach (var controllerType in controllerList)
+            {
+                Console.WriteLine($"正在注册控制器: {controllerType.FullName}");
+                _services.AddTransient(controllerType);
             }
         }
 
@@ -66,202 +113,66 @@ namespace Fastdotnet.Core.Plugin
         {
             try
             {
-                // 检查并创建plugin.json配置文件
-                string pluginDir = Path.GetDirectoryName(pluginPath);
-                string configPath = Path.Combine(pluginDir, "plugin.json");
-                if (!File.Exists(configPath))
+                var assemblyName = Path.GetFileNameWithoutExtension(pluginPath);
+                if (_loadedAssemblies.TryGetValue(assemblyName, out var assembly))
                 {
-                    // 读取默认配置
-                    string defaultConfigPath = Path.Combine(AppContext.BaseDirectory, "DefaultPluginConfig.json");
-                    string defaultConfig = File.ReadAllText(defaultConfigPath);
-                    
-                    // 写入新的配置文件
-                    File.WriteAllText(configPath, defaultConfig);
-                    Console.WriteLine($"已创建插件配置文件: {configPath}");
-                }
-
-                // 获取插件目录路径
-                var pluginJsonPath = Path.Combine(pluginDir, "plugin.json");
-
-                // 检查并读取plugin.json文件
-                if (File.Exists(pluginJsonPath))
-                {
-                    var jsonContent = File.ReadAllText(pluginJsonPath);
-                    var pluginConfig = System.Text.Json.JsonSerializer.Deserialize<PluginConfig>(jsonContent);
-
-                    // 如果插件被禁用，则跳过加载
-                    if (pluginConfig?.enabled == false)
-                    {
-                        Console.WriteLine($"Plugin {Path.GetFileNameWithoutExtension(pluginPath)} is disabled in plugin.json, skipping...");
-                        return;
-                    }
+                    // 如果程序集已加载，只需要注册路由
+                    RegisterPluginRoutes(assembly, assemblyName);
                 }
                 else
                 {
-                    Console.WriteLine($"Warning: plugin.json not found in {pluginDir}, proceeding with default settings...");
-                }
-                var assemblyName = Path.GetFileNameWithoutExtension(pluginPath);
-
-                // 检查程序集是否已经加载
-                if (_loadedAssemblies.TryGetValue(assemblyName, out var existingAssembly))
-                {
-                    Console.WriteLine($"Assembly {assemblyName} is already loaded, skipping...");
-                    return;
-                }
-
-                var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(pluginPath);
-                _loadedAssemblies.TryAdd(assemblyName, assembly);
-
-                Console.WriteLine($"开始加载程序集 {assemblyName}");
-                var allTypes = assembly.GetTypes();
-                Console.WriteLine($"程序集 {assemblyName} 中包含 {allTypes.Length} 个类型");
-
-                // 注册带有PluginService特性的服务
-                var serviceTypes = assembly.GetTypes()
-                    .Where(t => t.GetInterfaces().Any(i => i.GetCustomAttribute<PluginServiceAttribute>() != null));
-                foreach (var serviceType in serviceTypes)
-                {
-                    var serviceInterface = serviceType.GetInterfaces()
-                        .FirstOrDefault(i => i.GetCustomAttribute<PluginServiceAttribute>() != null);
-                    if (serviceInterface != null)
-                    {
-                        _services.AddScoped(serviceInterface, serviceType);
-                    }
-                }
-
-                // 注册插件中的所有控制器
-                var controllerTypes = assembly.GetTypes()
-                    .Where(t => t.Name.EndsWith("Controller") && !t.IsAbstract && !t.IsInterface);
-                var controllerList = controllerTypes.ToList();
-                Console.WriteLine($"找到 {controllerList.Count} 个控制器类型");
-                foreach (var controllerType in controllerList)
-                {
-                    Console.WriteLine($"正在注册控制器: {controllerType.FullName}");
-                    _services.AddTransient(controllerType);
-
-                    // 注册控制器的路由
-                    Console.WriteLine($"准备为控制器 {controllerType.FullName} 注册路由，_endpointRouteBuilder是否为null: {_endpointRouteBuilder == null}");
-                    if (_endpointRouteBuilder != null)
-                    {
-                        Console.WriteLine($"开始为控制器 {controllerType.FullName} 注册路由");
-                        var controllerName = controllerType.Name.Replace("Controller", "");
-                        var methods = controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                            .Where(m => m.DeclaringType == controllerType);
-
-                        foreach (var method in methods)
-                        {
-                            var httpMethodAttribute = method.GetCustomAttributes()
-                                .FirstOrDefault(a => a is HttpMethodAttribute) as HttpMethodAttribute;
-
-                            if (httpMethodAttribute != null)
-                            {
-                                var template = $"/api/{controllerName}/{method.Name}";
-                                var methodInfo = method;
-                                var httpMethod = httpMethodAttribute.HttpMethods.First();
-
-                                Console.WriteLine($"注册路由: {httpMethod} {template} -> {controllerType.Name}.{method.Name}");
-                                Console.WriteLine($"路由注册时的_endpointRouteBuilder实例: {_endpointRouteBuilder.GetType().FullName}");
-
-                                _endpointRouteBuilder.MapMethods(
-                                    template,
-                                    new[] { httpMethod },
-                                    async context =>
-                                    {
-                                        var controller = ActivatorUtilities.CreateInstance(context.RequestServices, controllerType) as ControllerBase;
-                                        if (controller != null)
-                                        {
-                                            controller.ControllerContext = new ControllerContext
-                                            {
-                                                HttpContext = context
-                                            };
-                                            var result = methodInfo.Invoke(controller, new object[] { });
-                                            if (result is Task<IActionResult> taskResult)
-                                            {
-                                                var actionResult = await taskResult;
-                                                await actionResult.ExecuteResultAsync(new ActionContext
-                                                {
-                                                    HttpContext = context,
-                                                    RouteData = context.GetRouteData(),
-                                                    ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
-                                                });
-                                            }
-                                            else if (result is IActionResult actionResult)
-                                            {
-                                                await actionResult.ExecuteResultAsync(new ActionContext
-                                                {
-                                                    HttpContext = context,
-                                                    RouteData = context.GetRouteData(),
-                                                    ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
-                                                });
-                                            }
-                                            else if (result != null)
-                                            {
-                                                await new JsonResult(result).ExecuteResultAsync(new ActionContext
-                                                {
-                                                    HttpContext = context,
-                                                    RouteData = context.GetRouteData(),
-                                                    ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
-                                                });
-                                            }
-                                        }
-                                    });
-                            }
-                        }
-                    }
-                }
-                var pluginTypes = assembly.GetTypes()
-                    .Where(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
-
-                foreach (var pluginType in pluginTypes)
-                {
-                    var plugin = (IPlugin)Activator.CreateInstance(pluginType);
-                    if (plugin != null)
-                    {
-                        if (_loadedPlugins.TryAdd(plugin.Id, plugin))
-                        {
-                            // 注册插件服务
-                            _services.AddSingleton(pluginType, plugin);
-                            plugin.Initialize();
-                            plugin.Start();
-                        }
-                    }
+                    // 如果程序集未加载，先注册服务
+                    RegisterPluginServices(pluginPath);
+                    assembly = _loadedAssemblies[assemblyName];
+                    RegisterPluginRoutes(assembly, assemblyName);
                 }
             }
             catch (Exception ex)
             {
-                // 记录加载插件时的错误
                 Console.WriteLine($"Error loading plugin {pluginPath}: {ex.Message}");
+                throw;
             }
         }
 
-        public void UnloadPlugin(string pluginPath)
+        private void RegisterPluginRoutes(Assembly assembly, string assemblyName)
         {
-            var pluginId = Path.GetFileNameWithoutExtension(pluginPath);
-            if (_loadedPlugins.TryRemove(pluginId, out var plugin))
+            if (_routeManager != null)
             {
-                try
+                var controllerTypes = assembly.GetTypes()
+                    .Where(t => t.Name.EndsWith("Controller") && !t.IsAbstract && !t.IsInterface);
+                foreach (var controllerType in controllerTypes)
                 {
-                    plugin.Stop();
-                    // 从程序集缓存中移除
-                    _loadedAssemblies.TryRemove(pluginId, out _);
-
-                    // 尝试进行垃圾回收以清理未使用的资源
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error unloading plugin {pluginId}: {ex.Message}");
+                    _routeManager.RegisterPluginController(controllerType, assemblyName);
                 }
             }
         }
 
         public void LoadAllPlugins()
         {
-            var pluginFiles = Directory.GetFiles(_pluginPath, "*.dll", SearchOption.AllDirectories);
-            foreach (var file in pluginFiles)
+            if (!Directory.Exists(_pluginPath))
             {
-                LoadPlugin(file);
+                return;
+            }
+
+            foreach (var pluginDir in Directory.GetDirectories(_pluginPath))
+            {
+                var dllFiles = Directory.GetFiles(pluginDir, "*.dll");
+                foreach (var dllFile in dllFiles)
+                {
+                    try
+                    {
+                        // 只注册路由，因为服务已经在PreloadPlugins中注册
+                        var assemblyName = Path.GetFileNameWithoutExtension(dllFile);
+                        if (_loadedAssemblies.TryGetValue(assemblyName, out var assembly))
+                        {
+                            RegisterPluginRoutes(assembly, assemblyName);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error loading plugin {dllFile}: {ex.Message}");
+                    }
+                }
             }
         }
 
@@ -271,181 +182,34 @@ namespace Fastdotnet.Core.Plugin
             _endpointRouteBuilder = endpointRouteBuilder;
             _app = endpointRouteBuilder;
             Console.WriteLine($"EndpointRouteBuilder设置完成，类型为: {endpointRouteBuilder.GetType().FullName}");
-
-            // 重新注册已加载插件的路由
+            
+            _routeManager = new RouteManager(_endpointRouteBuilder, _app.ServiceProvider);
             Console.WriteLine("开始重新注册已加载插件的路由...");
-            foreach (var assembly in _loadedAssemblies.Values)
+        }
+
+        private void OnPluginChanged(object sender, FileSystemEventArgs e)
+        {
+            // 处理插件变更
+            LoadPlugin(e.FullPath);
+        }
+
+        private void OnPluginDeleted(object sender, FileSystemEventArgs e)
+        {
+            // 处理插件删除
+            var assemblyName = Path.GetFileNameWithoutExtension(e.FullPath);
+            if (_loadedPlugins.TryRemove(assemblyName, out var plugin))
             {
-                var controllerTypes = assembly.GetTypes()
-                    .Where(t => t.Name.EndsWith("Controller") && !t.IsAbstract && !t.IsInterface);
-
-                foreach (var controllerType in controllerTypes)
-                {
-                    var controllerName = controllerType.Name.Replace("Controller", "");
-                    var methods = controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                        .Where(m => m.DeclaringType == controllerType);
-                    foreach (var method in methods)
-                    {
-                        var httpMethodAttribute = method.GetCustomAttributes()
-                            .FirstOrDefault(a => a is HttpMethodAttribute) as HttpMethodAttribute;
-                        {
-                            if (httpMethodAttribute != null)
-                            {
-                                string template = null;
-                                if (!string.IsNullOrEmpty(httpMethodAttribute.Template))
-                                {
-                                    template = $"/api/{controllerName}/{httpMethodAttribute.Template}";
-                                }
-                                else
-                                {
-                                    template = $"/api/{controllerName}/{method.Name}";
-                                }
-                                var methodInfo = method;
-                                var httpMethod = httpMethodAttribute.HttpMethods.First();
-                                {
-                                    Console.WriteLine($"注册路由: {httpMethod} {template} -> {controllerType.Name}.{method.Name}");
-                                    {
-                                        try
-                                        {
-                                            _endpointRouteBuilder.MapMethods(
-                                                template,
-                                                new[] { httpMethod },
-                                                async context =>
-                                                {
-                                                    var controller = ActivatorUtilities.CreateInstance(context.RequestServices, controllerType) as ControllerBase;
-                                                    if (controller != null)
-                                                    {
-                                                        controller.ControllerContext = new ControllerContext
-                                                        {
-                                                            HttpContext = context
-                                                        };
-                                                        var result = methodInfo.Invoke(controller, new object[] { });
-                                                        if (result is Task<IActionResult> taskResult)
-                                                        {
-                                                            var actionResult = await taskResult;
-                                                            await actionResult.ExecuteResultAsync(new ActionContext
-                                                            {
-                                                                HttpContext = context,
-                                                                RouteData = context.GetRouteData(),
-                                                                ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
-                                                            });
-                                                        }
-                                                        else if (result is IActionResult actionResult)
-                                                        {
-                                                            await actionResult.ExecuteResultAsync(new ActionContext
-                                                            {
-                                                                HttpContext = context,
-                                                                RouteData = context.GetRouteData(),
-                                                                ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
-                                                            });
-                                                        }
-                                                        else if (result != null)
-                                                        {
-                                                            await new JsonResult(result).ExecuteResultAsync(new ActionContext
-                                                            {
-                                                                HttpContext = context,
-                                                                RouteData = context.GetRouteData(),
-                                                                ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
-                                                            });
-                                                        }
-                                                    }
-                                                });
-                                            Console.WriteLine($"路由 {template} 注册成功");
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Console.WriteLine($"注册路由 {template} 失败: {ex.Message}");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                plugin.Stop();
             }
+            _loadedAssemblies.TryRemove(assemblyName, out _);
         }
-        private void RegisterControllerRoutes(Type controllerType)
-        {
-            var controllerName = controllerType.Name.Replace("Controller", "");
-            var methods = controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Where(m => m.DeclaringType == controllerType);
 
-            foreach (var method in methods)
+        public void UnloadPlugin(string pluginId)
+        {
+            if (_loadedPlugins.TryRemove(pluginId, out var plugin))
             {
-                var httpMethodAttribute = method.GetCustomAttributes()
-                    .FirstOrDefault(a => a is HttpMethodAttribute) as HttpMethodAttribute;
-
-                if (httpMethodAttribute != null)
-                {
-                    var template = $"/api/{controllerName}/{method.Name}";
-                    var methodInfo = method;
-                    var httpMethod = httpMethodAttribute.HttpMethods.First();
-
-                    Console.WriteLine($"注册路由: {httpMethod} {template} -> {controllerType.Name}.{method.Name}");
-
-                    try
-                    {
-                        _endpointRouteBuilder.MapMethods(
-                            template,
-                            new[] { httpMethod },
-                            async context =>
-                            {
-                                var controller = ActivatorUtilities.CreateInstance(context.RequestServices, controllerType) as ControllerBase;
-                                if (controller != null)
-                                {
-                                    controller.ControllerContext = new ControllerContext
-                                    {
-                                        HttpContext = context
-                                    };
-                                    var result = methodInfo.Invoke(controller, new object[] { });
-                                    if (result is Task<IActionResult> taskResult)
-                                    {
-                                        var actionResult = await taskResult;
-                                        await actionResult.ExecuteResultAsync(new ActionContext
-                                        {
-                                            HttpContext = context,
-                                            RouteData = context.GetRouteData(),
-                                            ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
-                                        });
-                                    }
-                                    else if (result is IActionResult actionResult)
-                                    {
-                                        await actionResult.ExecuteResultAsync(new ActionContext
-                                        {
-                                            HttpContext = context,
-                                            RouteData = context.GetRouteData(),
-                                            ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
-                                        });
-                                    }
-                                    else if (result != null)
-                                    {
-                                        await new JsonResult(result).ExecuteResultAsync(new ActionContext
-                                        {
-                                            HttpContext = context,
-                                            RouteData = context.GetRouteData(),
-                                            ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
-                                        });
-                                    }
-                                }
-                            });
-                        Console.WriteLine($"路由 {template} 注册成功");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"注册路由 {template} 失败: {ex.Message}");
-                    }
-                }
+                plugin.Stop();
             }
-        }
-        public IPlugin GetPlugin(string pluginId)
-        {
-            _loadedPlugins.TryGetValue(pluginId, out var plugin);
-            return plugin;
-        }
-
-        public IEnumerable<IPlugin> GetAllPlugins()
-        {
-            return _loadedPlugins.Values;
         }
     }
 }

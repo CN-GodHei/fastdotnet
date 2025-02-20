@@ -34,12 +34,7 @@ if (!Directory.Exists(pluginPath))
 var pluginManager = new PluginManager(builder.Services, pluginPath);
 builder.Services.AddSingleton(pluginManager);
 
-// 注册IEndpointRouteBuilder服务
-builder.Services.AddSingleton<IEndpointRouteBuilder>(provider => provider.GetRequiredService<WebApplication>());
-
-// 加载所有现有插件
-pluginManager.LoadAllPlugins();
-
+// 创建应用程序实例
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -52,11 +47,35 @@ if (app.Environment.IsDevelopment())
 // 使用JWT中间件
 app.UseMiddleware<JwtMiddleware>();
 
-// 启用路由和控制器
-app.Logger.LogInformation("开始注册路由...");
+// 启用路由
+app.UseRouting();
+
+// 启用授权（确保在UseRouting和UseEndpoints之间）
+app.UseAuthorization();
+
+// 配置端点和加载插件
 app.MapControllers();
 
-// 设置插件管理器的EndpointRouteBuilder
-pluginManager.SetEndpointRouteBuilder(app);
+// 加载插件并注册插件路由
+app.Logger.LogInformation("开始注册插件路由...");
+var endpointRouteBuilder = app;
+pluginManager.SetEndpointRouteBuilder(endpointRouteBuilder);
+pluginManager.LoadAllPlugins();
+
+app.Run();
+app.UseRouting();
+
+// 配置路由端点
+app.UseEndpoints(endpoints =>
+{
+    // 先注册插件路由
+    app.Logger.LogInformation("开始注册插件路由...");
+    pluginManager.SetEndpointRouteBuilder(endpoints);
+    pluginManager.LoadAllPlugins();
+
+    // 再注册主应用路由
+    app.Logger.LogInformation("开始注册主应用路由...");
+    endpoints.MapControllers();
+});
 
 app.Run();

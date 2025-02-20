@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Fastdotnet.Core.Plugin;
-using Microsoft.AspNetCore.Routing;
 
 namespace Fastdotnet.WebApi.Controllers
 {
@@ -9,12 +8,10 @@ namespace Fastdotnet.WebApi.Controllers
     public class PluginController : ControllerBase
     {
         private readonly PluginManager _pluginManager;
-        private readonly IEndpointRouteBuilder _endpointRouteBuilder;
 
-        public PluginController(PluginManager pluginManager, IEndpointRouteBuilder endpointRouteBuilder)
+        public PluginController(PluginManager pluginManager)
         {
             _pluginManager = pluginManager;
-            _endpointRouteBuilder = endpointRouteBuilder;
         }
 
         /// <summary>
@@ -26,7 +23,7 @@ namespace Fastdotnet.WebApi.Controllers
         {
             try
             {
-                string pluginPath = Path.Combine(AppContext.BaseDirectory, "Plugins", "Fastdotnet.Demo");
+                string pluginPath = Path.Combine(AppContext.BaseDirectory, "plugins", "Fastdotnet.Demo");
                 if (!Directory.Exists(pluginPath))
                 {
                     return BadRequest(new { Message = $"插件目录不存在: {pluginPath}" });
@@ -38,8 +35,6 @@ namespace Fastdotnet.WebApi.Controllers
                     return BadRequest(new { Message = $"插件DLL文件不存在: {dllPath}" });
                 }
 
-                // 确保在加载插件前设置EndpointRouteBuilder
-                _pluginManager.SetEndpointRouteBuilder(_endpointRouteBuilder);
                 _pluginManager.LoadPlugin(dllPath);
                 return Ok(new { Message = "插件加载成功" });
             }
@@ -60,7 +55,7 @@ namespace Fastdotnet.WebApi.Controllers
             try
             {
                 _pluginManager.UnloadPlugin(pluginId);
-                return Ok(new { Message = $"插件 {pluginId} 卸载成功" });
+                return Ok(new { Message = "插件卸载成功" });
             }
             catch (Exception ex)
             {
