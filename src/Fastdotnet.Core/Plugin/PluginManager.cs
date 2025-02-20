@@ -239,6 +239,38 @@ namespace Fastdotnet.Core.Plugin
 
         public void UnloadPlugin(string pluginId)
         {
+            var pluginPath = GetPluginPath(pluginId);
+            if (pluginPath != null)
+            {
+                var dllFiles = Directory.GetFiles(pluginPath, "*.dll");
+                foreach (var dllFile in dllFiles)
+                {
+                    var assemblyName = Path.GetFileNameWithoutExtension(dllFile);
+                    if (_loadedAssemblies.TryGetValue(assemblyName, out var assembly))
+                    {
+                        // 注销路由
+                        if (_routeManager != null)
+                        {
+                            var controllerTypes = assembly.GetTypes()
+                                .Where(t => t.Name.EndsWith("Controller") && !t.IsAbstract && !t.IsInterface);
+                            foreach (var controllerType in controllerTypes)
+                            {
+                                _routeManager.UnregisterPluginController(controllerType, assemblyName);
+                            }
+                        }
+                    }
+                }
+
+                // 更新插件配置
+                var configPath = Path.Combine(pluginPath, "plugin.json");
+                if (File.Exists(configPath))
+                {
+                    var config = JObject.Parse(File.ReadAllText(configPath));
+                    config["enabled"] = false;
+                    File.WriteAllText(configPath, config.ToString(Newtonsoft.Json.Formatting.Indented));
+                }
+            }
+
             if (_loadedPlugins.TryRemove(pluginId, out var plugin))
             {
                 plugin.Stop();

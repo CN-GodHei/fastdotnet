@@ -63,27 +63,76 @@ namespace Fastdotnet.Core.Plugin
             }
         }
 
-        private static async Task HandleActionResult(object result, HttpContext context)
+        private async Task HandleActionResult(object? result, HttpContext context)
         {
-            var actionContext = new ActionContext
+            if (result == null)
             {
-                HttpContext = context,
-                RouteData = context.GetRouteData(),
-                ActionDescriptor = new Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor()
-            };
+                return;
+            }
 
-            if (result is Task<IActionResult> taskResult)
+            // 处理Task类型的结果
+            if (result is Task task)
             {
-                var actionResult = await taskResult;
-                await actionResult.ExecuteResultAsync(actionContext);
+                await task;
+                if (task.GetType().IsGenericType)
+                {
+                    result = ((dynamic)task).Result;
+                }
+                else
+                {
+                    return;
+                }
             }
-            else if (result is IActionResult actionResult)
+
+            // 处理IActionResult类型的结果
+            if (result is IActionResult actionResult)
             {
-                await actionResult.ExecuteResultAsync(actionContext);
+                await actionResult.ExecuteResultAsync(new ActionContext
+                {
+                    HttpContext = context
+                });
+                return;
             }
-            else if (result != null)
+
+            // 处理其他类型的结果（序列化为JSON）
+            await context.Response.WriteAsJsonAsync(result);
+        }
+
+        public void UnregisterPluginController(Type controllerType, string pluginId)
+        {
+            if (controllerType == null)
+                throw new ArgumentNullException(nameof(controllerType));
+
+            var controllerName = controllerType.Name.Replace("Controller", "");
+            var methods = controllerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .Where(m => m.DeclaringType == controllerType);
+
+            foreach (var method in methods)
             {
-                await new JsonResult(result).ExecuteResultAsync(actionContext);
+                var httpMethodAttribute = method.GetCustomAttributes()
+                    .FirstOrDefault(a => a is HttpMethodAttribute) as HttpMethodAttribute;
+
+                if (httpMethodAttribute != null)
+                {
+                    var template = $"/api/plugins/{pluginId}/{controllerName}/{method.Name}";
+                    var dataSource = _endpointRouteBuilder.DataSources.FirstOrDefault();
+                    if (dataSource != null)
+                    {
+                        var endpoints = dataSource.Endpoints
+                            .Where(e => {
+                                var routeEndpoint = e as RouteEndpoint;
+                                return routeEndpoint?.RoutePattern?.RawText == template;
+                            })
+                            .ToList();
+
+                        foreach (var endpoint in endpoints)
+                        {
+                            dataSource.GetType()
+                                .GetMethod("Remove", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)?
+                                .Invoke(dataSource, new object[] { endpoint });
+                        }
+                    }
+                }
             }
         }
     }
