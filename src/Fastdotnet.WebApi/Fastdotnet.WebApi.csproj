@@ -20,6 +20,13 @@
     <ProjectReference Include="..\Fastdotnet.Service\Fastdotnet.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\Fastdotnet.Core\Plugin\DefaultPluginConfig.json">
+      <Link>DefaultPluginConfig.json</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Target Name="SetupPluginDirectory" AfterTargets="Build">
     <PropertyGroup>
       <PluginsOutputPath>$(OutputPath)Plugins</PluginsOutputPath>

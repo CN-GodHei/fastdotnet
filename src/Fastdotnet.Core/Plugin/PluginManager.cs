@@ -66,6 +66,40 @@ namespace Fastdotnet.Core.Plugin
         {
             try
             {
+                // 检查并创建plugin.json配置文件
+                string pluginDir = Path.GetDirectoryName(pluginPath);
+                string configPath = Path.Combine(pluginDir, "plugin.json");
+                if (!File.Exists(configPath))
+                {
+                    // 读取默认配置
+                    string defaultConfigPath = Path.Combine(AppContext.BaseDirectory, "DefaultPluginConfig.json");
+                    string defaultConfig = File.ReadAllText(defaultConfigPath);
+                    
+                    // 写入新的配置文件
+                    File.WriteAllText(configPath, defaultConfig);
+                    Console.WriteLine($"已创建插件配置文件: {configPath}");
+                }
+
+                // 获取插件目录路径
+                var pluginJsonPath = Path.Combine(pluginDir, "plugin.json");
+
+                // 检查并读取plugin.json文件
+                if (File.Exists(pluginJsonPath))
+                {
+                    var jsonContent = File.ReadAllText(pluginJsonPath);
+                    var pluginConfig = System.Text.Json.JsonSerializer.Deserialize<PluginConfig>(jsonContent);
+
+                    // 如果插件被禁用，则跳过加载
+                    if (pluginConfig?.enabled == false)
+                    {
+                        Console.WriteLine($"Plugin {Path.GetFileNameWithoutExtension(pluginPath)} is disabled in plugin.json, skipping...");
+                        return;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Warning: plugin.json not found in {pluginDir}, proceeding with default settings...");
+                }
                 var assemblyName = Path.GetFileNameWithoutExtension(pluginPath);
 
                 // 检查程序集是否已经加载
