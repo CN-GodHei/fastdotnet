@@ -3,7 +3,7 @@
   "name": "Fastdotnet Demo Plugin",
   "description": "演示插件，用于展示插件系统的基本功能",
   "version": "1.0.0",
-  "enabled": false,
+  "enabled": true,
   "author": "Fastdotnet Team",
   "dependencies": [],
   "tags": ["demo", "example"]
