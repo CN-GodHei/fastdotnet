@@ -113,6 +113,13 @@ namespace Fastdotnet.Core.Plugin
         {
             try
             {
+                var pluginDir = Path.GetDirectoryName(pluginPath);
+                var configPath = Path.Combine(pluginDir, "plugin.json");
+                if (!pluginStatus(configPath))
+                {
+                    return;
+                }
+
                 var assemblyName = Path.GetFileNameWithoutExtension(pluginPath);
                 if (_loadedAssemblies.TryGetValue(assemblyName, out var assembly))
                 {
@@ -156,6 +163,11 @@ namespace Fastdotnet.Core.Plugin
 
             foreach (var pluginDir in Directory.GetDirectories(_pluginPath))
             {
+                var configPath = Path.Combine(pluginDir, "plugin.json");
+                if (!pluginStatus(configPath))
+                {
+                    continue;
+                }
                 var dllFiles = Directory.GetFiles(pluginDir, "*.dll");
                 foreach (var dllFile in dllFiles)
                 {
@@ -182,7 +194,7 @@ namespace Fastdotnet.Core.Plugin
             _endpointRouteBuilder = endpointRouteBuilder;
             _app = endpointRouteBuilder;
             Console.WriteLine($"EndpointRouteBuilder设置完成，类型为: {endpointRouteBuilder.GetType().FullName}");
-            
+
             _routeManager = new RouteManager(_endpointRouteBuilder, _app.ServiceProvider);
             Console.WriteLine("开始重新注册已加载插件的路由...");
         }
@@ -210,6 +222,41 @@ namespace Fastdotnet.Core.Plugin
             {
                 plugin.Stop();
             }
+        }
+
+        private bool pluginStatus(string configPath)
+        {
+            try
+            {
+                // 检查plugin.json是否存在，如果不存在则从DefaultPluginConfig.json复制
+                if (!File.Exists(configPath))
+                {
+                    var defaultConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DefaultPluginConfig.json");
+                    if (File.Exists(defaultConfigPath))
+                    {
+                        File.Copy(defaultConfigPath, configPath);
+                        //Console.WriteLine($"Created plugin.json from DefaultPluginConfig.json: {configPath}");
+                    }
+                    else
+                    {
+                        //Console.WriteLine($"Plugin configuration file not found: {configPath}");
+                        return false;
+                    }
+                }
+
+                // 读取并解析plugin.json
+                var configJson = File.ReadAllText(configPath);
+                var pluginConfig = System.Text.Json.JsonSerializer.Deserialize<PluginConfig>(configJson);
+
+                return pluginConfig.enabled;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+
+
         }
     }
 }
