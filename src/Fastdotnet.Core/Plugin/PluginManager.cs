@@ -231,6 +231,37 @@ namespace Fastdotnet.Core.Plugin
             }
         }
 
+        public string GetPluginPath(string pluginId)
+        {
+            if (!Directory.Exists(_pluginPath))
+            {
+                return null;
+            }
+
+            foreach (var pluginDir in Directory.GetDirectories(_pluginPath))
+            {
+                var configPath = Path.Combine(pluginDir, "plugin.json");
+                if (File.Exists(configPath))
+                {
+                    try
+                    {
+                        var configJson = File.ReadAllText(configPath);
+                        var pluginConfig = System.Text.Json.JsonSerializer.Deserialize<PluginConfig>(configJson);
+                        if (pluginConfig.id == pluginId)
+                        {
+                            return pluginDir;
+                        }
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private bool pluginStatus(string configPath)
         {
             try
