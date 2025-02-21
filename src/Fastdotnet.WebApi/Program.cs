@@ -31,7 +31,7 @@ if (!Directory.Exists(pluginPath))
 {
     Directory.CreateDirectory(pluginPath);
 }
-var pluginManager = new PluginManager(builder.Services, pluginPath);
+var pluginManager = new MefPluginManager(builder.Services, pluginPath);
 builder.Services.AddSingleton(pluginManager);
 
 // 创建应用程序实例

@@ -121,18 +121,6 @@ namespace Fastdotnet.Core.Plugin
 
                 // 检查插件是否已经加载
                 var assemblyName = Path.GetFileNameWithoutExtension(pluginPath);
-                // 检查插件是否已经预加载但未注册路由
-                //if (_loadedAssemblies.ContainsKey(assemblyName))
-                //{
-                //    if (pluginStatus(configPath))
-                //    {
-                //        // 如果插件已预加载且配置有效，直接注册路由
-                //        var assembly_ = _loadedAssemblies[assemblyName];
-                //        RegisterPluginRoutes(assembly_, assemblyName);
-                //        return CommonResult<bool>.Success(true, "插件路由注册成功");
-                //    }
-                //    return CommonResult<bool>.Error($"插件 {assemblyName} 配置文件验证失败或未启用");
-                //}
 
                 if (_loadedAssemblies.TryGetValue(assemblyName, out var assembly))
                 {
@@ -267,7 +255,7 @@ namespace Fastdotnet.Core.Plugin
                 {
                     var config = JObject.Parse(File.ReadAllText(configPath));
                     config["enabled"] = false;
-                    File.WriteAllText(configPath, config.ToString(Newtonsoft.Json.Formatting.Indented));
+                    //File.WriteAllText(configPath, config.ToString(Newtonsoft.Json.Formatting.Indented));
                 }
             }
 
