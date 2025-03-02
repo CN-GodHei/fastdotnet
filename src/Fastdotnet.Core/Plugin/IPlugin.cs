@@ -1,55 +1,41 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Fastdotnet.Core.Plugin
 {
-    /// <summary>
-    /// 插件接口
-    /// </summary>
     public interface IPlugin
     {
         /// <summary>
-        /// 插件ID
-        /// </summary>
-        string Id { get; }
-
-        /// <summary>
-        /// 插件名称
+        /// 获取插件名称
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// 插件版本
+        /// 获取插件版本
         /// </summary>
         string Version { get; }
 
         /// <summary>
-        /// 插件描述
+        /// 插件初始化
         /// </summary>
-        string Description { get; }
+        Task InitializeAsync();
 
         /// <summary>
-        /// 插件作者
+        /// 插件启动
         /// </summary>
-        string Author { get; }
+        Task StartAsync();
 
         /// <summary>
-        /// 插件所需的框架版本
+        /// 插件停止
         /// </summary>
-        string RequiredFrameworkVersion { get; }
+        Task StopAsync();
 
         /// <summary>
-        /// 初始化插件
+        /// 插件卸载前的清理工作
         /// </summary>
-        void Initialize();
-
-        /// <summary>
-        /// 启动插件
-        /// </summary>
-        void Start();
-
-        /// <summary>
-        /// 停止插件
-        /// </summary>
-        void Stop();
+        Task UnloadAsync();
     }
 }

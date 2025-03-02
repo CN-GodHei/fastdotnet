@@ -9,6 +9,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.Extensions.Logging;
 using Fastdotnet.Core.Models;
 using System.Threading.Tasks;
+using Fastdotnet.Core.Plugin;
 
 namespace Fastdotnet.Plugin.Core.Infrastructure
 {

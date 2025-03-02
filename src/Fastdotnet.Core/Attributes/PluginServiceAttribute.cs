@@ -1,4 +1,4 @@
-namespace Fastdotnet.Core.Plugin
+namespace Fastdotnet.Core.Attributes
 {
     [AttributeUsage(AttributeTargets.Interface)]
     public class PluginServiceAttribute : Attribute

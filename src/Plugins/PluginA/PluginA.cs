@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Fastdotnet.Core.Plugin;
 using Fastdotnet.Plugin.Core.Infrastructure;
 
 namespace PluginA
