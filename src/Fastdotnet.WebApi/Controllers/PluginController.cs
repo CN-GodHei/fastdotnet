@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.IO;
 using System;
 using System.Linq;
+using Fastdotnet.Plugin.Core.Infrastructure;
 
 namespace Fastdotnet.WebApi.Controllers
 {
@@ -13,11 +14,17 @@ namespace Fastdotnet.WebApi.Controllers
     [Route("api/[controller]")]
     public class PluginController : ControllerBase
     {
-        private readonly PluginManager _pluginManager;
+        //private readonly PluginManager _pluginManager;
 
-        public PluginController(PluginManager pluginManager)
+        //public PluginController(PluginManager pluginManager)
+        //{
+        //    _pluginManager = pluginManager;
+        //}
+        private readonly IPluginLoadService _pluginLoadService;
+
+        public PluginController(IPluginLoadService pluginLoadService)
         {
-            _pluginManager = pluginManager;
+            _pluginLoadService = pluginLoadService;
         }
 
         /// <summary>
@@ -51,7 +58,7 @@ namespace Fastdotnet.WebApi.Controllers
                 }
                 
                 var dllPath = dllFiles.First();
-                var result = _pluginManager.LoadPlugin(dllPath);
+                var result =await _pluginLoadService.LoadPluginAsync(dllPath);
 
                 return Ok(new { Message = result.Msg });
             }
@@ -67,11 +74,11 @@ namespace Fastdotnet.WebApi.Controllers
         /// <param name="pluginId">插件ID</param>
         /// <returns>启用结果</returns>
         [HttpPost("enable/{pluginId}")]
-        public IActionResult EnablePlugin(string pluginId)
+        public async Task<IActionResult> EnablePlugin(string pluginId)
         {
             try
             {
-                var pluginPath = _pluginManager.GetPluginPath(pluginId);
+                var pluginPath = _pluginLoadService.GetPluginPath(pluginId);
                 if (string.IsNullOrEmpty(pluginPath))
                 {
                     return BadRequest(new { Message = "插件不存在" });
@@ -90,8 +97,9 @@ namespace Fastdotnet.WebApi.Controllers
                 try
                 {
                     // 尝试加载插件
-                    var dllPath = Directory.GetFiles(pluginPath, "*.dll").First();
-                    var result = _pluginManager.LoadPlugin(dllPath);
+                    //var dllPath = Directory.GetFiles(pluginPath, "*.dll").First();
+                    var dllPath = Path.Combine(pluginPath, $"{pluginId }.dll");
+                    var result =await _pluginLoadService.LoadPluginAsync(dllPath);
                     if (!result.Result)
                     {
                         throw new Exception(result.Msg);
@@ -108,7 +116,7 @@ namespace Fastdotnet.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Message = $"插件启用失败: {ex.Message}" });
+                return BadRequest(new { Message = $"{ex.Message}" });
             }
         }
 
@@ -118,18 +126,18 @@ namespace Fastdotnet.WebApi.Controllers
         /// <param name="pluginId">插件ID</param>
         /// <returns>停用结果</returns>
         [HttpPost("disable/{pluginId}")]
-        public IActionResult DisablePlugin(string pluginId)
+        public async Task<IActionResult> DisablePlugin(string pluginId)
         {
             try
             {
-                var pluginPath = _pluginManager.GetPluginPath(pluginId);
+                var pluginPath = _pluginLoadService.GetPluginPath(pluginId);
                 if (string.IsNullOrEmpty(pluginPath))
                 {
                     return BadRequest(new { Message = "插件不存在" });
                 }
 
                 // 卸载插件服务和路由
-                _pluginManager.UnloadPlugin(pluginId);
+              var result = await  _pluginLoadService.UnloadPlugin(pluginId);
 
                 // 更新配置文件
                 //var configPath = Path.Combine(pluginPath, "plugin.json");
@@ -158,7 +166,7 @@ namespace Fastdotnet.WebApi.Controllers
         {
             try
             {
-                var pluginPath = _pluginManager.GetPluginPath(pluginId);
+                var pluginPath = _pluginLoadService.GetPluginPath(pluginId);
                 if (string.IsNullOrEmpty(pluginPath))
                 {
                     return BadRequest(new { Message = "插件不存在" });
@@ -183,6 +191,29 @@ namespace Fastdotnet.WebApi.Controllers
             {
                 return BadRequest(new { Message = $"插件卸载失败: {ex.Message}" });
             }
+        }
+
+        /// <summary>
+        /// 判断插件是否已加载
+        /// </summary>
+        /// <param name="pluginName"></param>
+        /// <returns></returns>
+        [HttpGet("{pluginName}")]
+        public IActionResult IsPluginLoaded(string pluginName)
+        {
+            var isLoaded = _pluginLoadService.IsPluginLoaded(pluginName);
+            return Ok(new { isLoaded });
+        }
+
+        /// <summary>
+        /// 获取已加载的插件
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult GetLoadedPlugins()
+        {
+            var plugins = _pluginLoadService.GetLoadedPlugins();
+            return Ok(plugins);
         }
     }
 }

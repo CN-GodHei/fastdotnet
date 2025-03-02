@@ -1,40 +1,53 @@
-using Fastdotnet.WebApi.Middleware.Authentication;
-using Fastdotnet.Service.IService.Admin;
-using Fastdotnet.Service;
-using Fastdotnet.Infrastructure;
-using Fastdotnet.Core;
-using Fastdotnet.Core.Plugin;
-using Microsoft.AspNetCore.Routing;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Reflection;
+using Fastdotnet.Plugin.Core.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 设置应用程序URL
 builder.WebHost.UseUrls("http://*:18848");
 
-// Add services to the container.
-builder.Services.AddControllers();
+// Add ASP.NET Core services
+builder.Services.AddControllers()
+    .ConfigureApplicationPartManager(manager =>
+    {
+        // 确保ApplicationPartManager可以动态加载插件中的控制器
+        manager.FeatureProviders.Add(new DynamicControllerFeatureProvider());
+    });
+
+// 注册ActionDescriptorChangeProvider服务
+builder.Services.AddSingleton<IActionDescriptorChangeProvider, ActionDescriptorChangeProvider>();
+builder.Services.AddSingleton<IActionDescriptorChangeProvider>(new ActionDescriptorChangeProvider());
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// 注册服务
-builder.Services.AddScoped<IAdminUserService, AdminUserService>();
-
-// 注册基础设施服务
-builder.Services.AddInfrastructureServices(builder.Configuration);
-
-// 注册业务服务
-builder.Services.AddApplicationServices();
-
-// 配置插件管理器
-var pluginPath = Path.Combine(AppContext.BaseDirectory, "plugins");
-if (!Directory.Exists(pluginPath))
+builder.Services.AddSwaggerGen(c =>
 {
-    Directory.CreateDirectory(pluginPath);
-}
-var pluginManager = new MefPluginManager(builder.Services, pluginPath);
-builder.Services.AddSingleton(pluginManager);
+    c.SwaggerDoc("v1", new() { Title = "Dynamic Plugin System API", Version = "v1" });
+});
 
-// 创建应用程序实例
+// 注册IServiceProviderIsService服务
+builder.Services.AddSingleton<Microsoft.Extensions.DependencyInjection.IServiceProviderIsService>(new DefaultServiceProviderIsService());
+
+// Use Autofac as the DI container
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+{
+    // Register your custom services
+    containerBuilder.RegisterType<PluginManager>().AsSelf().SingleInstance();
+
+    // 注册PluginLoadService，并将IServiceProvider作为参数传入
+    containerBuilder.RegisterType<PluginLoadService>().As<IPluginLoadService>().SingleInstance()
+        .PropertiesAutowired()
+        .WithParameter(
+            (pi, ctx) => pi.ParameterType == typeof(IServiceProvider),
+            (pi, ctx) => ctx.Resolve<IServiceProvider>());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,38 +57,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// 使用JWT中间件
-app.UseMiddleware<JwtMiddleware>();
-
-// 启用路由
+app.UseHttpsRedirection();
 app.UseRouting();
-
-// 启用授权（确保在UseRouting和UseEndpoints之间）
 app.UseAuthorization();
-
-// 配置端点和加载插件
 app.MapControllers();
 
-// 加载插件并注册插件路由
-app.Logger.LogInformation("开始注册插件路由...");
-var endpointRouteBuilder = app;
-pluginManager.SetEndpointRouteBuilder(endpointRouteBuilder);
-pluginManager.LoadAllPlugins();
-
 app.Run();
-app.UseRouting();
 
-// 配置路由端点
-app.UseEndpoints(endpoints =>
+record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
-    // 先注册插件路由
-    app.Logger.LogInformation("开始注册插件路由...");
-    pluginManager.SetEndpointRouteBuilder(endpoints);
-    pluginManager.LoadAllPlugins();
+    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+}
 
-    // 再注册主应用路由
-    app.Logger.LogInformation("开始注册主应用路由...");
-    endpoints.MapControllers();
-});
-
-app.Run();
