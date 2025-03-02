@@ -2,7 +2,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
-using Fastdotnet.Infrastructure.Common.Constants;
+using Fastdotnet.Core.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 

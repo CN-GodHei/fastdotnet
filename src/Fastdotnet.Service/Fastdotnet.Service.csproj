@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
-    <ProjectReference Include="..\Fastdotnet.Infrastructure\Fastdotnet.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

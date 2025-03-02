@@ -4,8 +4,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fastdotnet.Core", "src\Fastdotnet.Core\Fastdotnet.Core.csproj", "{30555076-068A-44DE-9CBC-7BB68501417C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fastdotnet.Infrastructure", "src\Fastdotnet.Infrastructure\Fastdotnet.Infrastructure.csproj", "{10D806BA-55F2-452C-98FC-F40CDE57C753}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fastdotnet.Service", "src\Fastdotnet.Service\Fastdotnet.Service.csproj", "{18548205-9D98-4842-8660-7A8B81D7CC62}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fastdotnet.WebApi", "src\Fastdotnet.WebApi\Fastdotnet.WebApi.csproj", "{66B6C9B3-CC2E-4E6E-BB35-3C97EDF10F01}"
@@ -26,10 +24,6 @@ Global
 		{30555076-068A-44DE-9CBC-7BB68501417C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30555076-068A-44DE-9CBC-7BB68501417C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30555076-068A-44DE-9CBC-7BB68501417C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10D806BA-55F2-452C-98FC-F40CDE57C753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10D806BA-55F2-452C-98FC-F40CDE57C753}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10D806BA-55F2-452C-98FC-F40CDE57C753}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10D806BA-55F2-452C-98FC-F40CDE57C753}.Release|Any CPU.Build.0 = Release|Any CPU
 		{18548205-9D98-4842-8660-7A8B81D7CC62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{18548205-9D98-4842-8660-7A8B81D7CC62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18548205-9D98-4842-8660-7A8B81D7CC62}.Release|Any CPU.ActiveCfg = Release|Any CPU
