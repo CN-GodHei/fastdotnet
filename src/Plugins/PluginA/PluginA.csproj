@@ -13,13 +13,12 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\..\Fastdotnet.Plugin.Core\Fastdotnet.Plugin.Core.csproj" />
-	</ItemGroup>
 	<ItemGroup>
 		<None Include="plugin.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
 	</ItemGroup>
 </Project>
