@@ -117,3 +117,4 @@ Desktop.ini
 *.ldf
 *.ndf
 .history
+node_modules
