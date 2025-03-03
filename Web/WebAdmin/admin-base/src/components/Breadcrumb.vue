@@ -21,16 +21,14 @@ const router = useRouter()
 
 const breadcrumbs = ref([])
 
-// 监听路由变化
-watch(
-  () => route.path,
-  () => {
-    getBreadcrumb()
-  },
-  {
-    immediate: true
+// 判断是否为首页
+const isDashboard = (route) => {
+  const name = route && route.name
+  if (!name) {
+    return false
   }
-)
+  return name.trim().toLocaleLowerCase() === 'Dashboard'.toLocaleLowerCase()
+}
 
 // 获取面包屑数据
 const getBreadcrumb = () => {
@@ -44,19 +42,21 @@ const getBreadcrumb = () => {
   breadcrumbs.value = matched
 }
 
-// 判断是否为首页
-const isDashboard = (route) => {
-  const name = route && route.name
-  if (!name) {
-    return false
-  }
-  return name.trim().toLocaleLowerCase() === 'Dashboard'.toLocaleLowerCase()
-}
-
 // 处理链接点击
 const handleLink = (item) => {
   router.push(item.path)
 }
+
+// 监听路由变化
+watch(
+  () => route.path,
+  () => {
+    getBreadcrumb()
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 
 <style lang="scss" scoped>
@@ -70,20 +70,5 @@ const handleLink = (item) => {
     color: #97a8be;
     cursor: text;
   }
-}
-
-.breadcrumb-enter-active,
-.breadcrumb-leave-active {
-  transition: all .5s;
-}
-
-.breadcrumb-enter-from,
-.breadcrumb-leave-active {
-  opacity: 0;
-  transform: translateX(20px);
-}
-
-.breadcrumb-leave-active {
-  position: absolute;
 }
 </style>

@@ -58,14 +58,14 @@ Mock.mock('/api/user/menus', 'get', () => {
   return {
     code: 200,
     data: [
-      {
-        path: '/dashboard',
-        name: 'Dashboard',
-        meta: {
-          title: '仪表盘',
-          icon: 'Odometer'
-        }
-      },
+      // {
+      //   path: '/dashboard',
+      //   name: 'Dashboard',
+      //   meta: {
+      //     title: '仪表盘',
+      //     icon: 'Odometer'
+      //   }
+      // },
       {
         path: '/system',
         name: 'System',
@@ -75,19 +75,12 @@ Mock.mock('/api/user/menus', 'get', () => {
         },
         children: [
           {
-            path: '/system/user',
-            name: 'User',
+            path: '/system/test',
+            name: 'Test',
+            component: 'sys/test/Index.vue',
             meta: {
-              title: '用户管理',
-              icon: 'User'
-            }
-          },
-          {
-            path: '/system/role',
-            name: 'Role',
-            meta: {
-              title: '角色管理',
-              icon: 'UserFilled'
+              title: '测试页面',
+              icon: 'Monitor'
             }
           }
         ]

@@ -31,7 +31,25 @@ export function transformMenuToRoutes(menus) {
 
 // 动态加载组件
 function loadComponent(component) {
-  if (!component) return null
-  // 这里假设所有组件都在views目录下
-  return () => import(`@/views/${component}.vue`)
+  if (!component) {
+    console.warn('组件路径为空')
+    return null
+  }
+
+  // 处理布局组件
+  if (component === 'Layout') {
+    return () => import('@/views/sys/Layout.vue')
+  }
+
+  // 处理其他组件
+  try {
+    // 确保组件路径以.vue结尾
+    console.log(1111,component)
+    const componentPath = component.endsWith('.vue') ? component : `${component}.vue`
+    return () => import(`@/views/${componentPath}`)
+  } catch (error) {
+    console.error(`加载组件失败: ${component}\n错误详情:`, error)
+    console.warn(`请检查组件路径是否正确，完整路径: @/views/${component}`)
+    return null
+  }
 }

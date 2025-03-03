@@ -62,7 +62,7 @@ const addView = (view) => {
 
 // 处理标签点击
 const handleTabClick = (tab) => {
-  router.push(tab.props.name)
+  router.push(tab.paneName)
 }
 
 // 处理标签移除

@@ -34,7 +34,7 @@ const baseRoutes = [
   {
     path: '/home',
     name: 'Home',
-    component: () => import('../views/sys/Home.vue'),
+    component: () => import('../views/sys/Layout.vue'),
     meta: { requiresAuth: true },
     children: [
       {
@@ -48,9 +48,19 @@ const baseRoutes = [
           {
             path: 'test',
             name: 'PluginTest',
+            component: () => import('../views/plugins/Test.vue'),
             meta: {
               title: '插件测试页面',
               icon: 'Document'
+            }
+          },
+          {
+            path: 'manage',
+            name: 'PluginManage',
+            component: () => import('../views/plugins/manage/Index.vue'),
+            meta: {
+              title: '插件管理',
+              icon: 'Setting'
             }
           }
         ]
