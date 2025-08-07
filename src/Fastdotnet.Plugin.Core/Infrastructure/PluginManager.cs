@@ -1,175 +1,89 @@
-﻿using System.Reflection;
-using System.Runtime.Loader;
-using Autofac;
+
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Loader;
 
 namespace Fastdotnet.Plugin.Core.Infrastructure
 {
     public class PluginManager
     {
-        private readonly ILifetimeScope _lifetimeScope;
-        private readonly ApplicationPartManager _partManager;
-        private readonly Dictionary<string, AssemblyLoadContext> _loadContexts;
-        private readonly Dictionary<string, Assembly> _loadedPlugins;
-        private readonly ILogger<PluginManager> _logger;
+        private readonly ConcurrentDictionary<Type, Type> _pluginTypes = new ConcurrentDictionary<Type, Type>();
+        private readonly ConcurrentDictionary<string, (AssemblyLoadContext, Assembly)> _loadedPlugins = new ConcurrentDictionary<string, (AssemblyLoadContext, Assembly)>();
+        private readonly ApplicationPartManager _applicationPartManager;
 
-        public IReadOnlyDictionary<string, Assembly> LoadedPlugins => _loadedPlugins;
+        public IReadOnlyDictionary<Type, Type> PluginTypes => _pluginTypes;
 
-        public PluginManager(ILifetimeScope lifetimeScope, ApplicationPartManager partManager, ILogger<PluginManager> logger = null)
+        public PluginManager(ApplicationPartManager applicationPartManager)
         {
-            _lifetimeScope = lifetimeScope ?? throw new ArgumentNullException(nameof(lifetimeScope));
-            _partManager = partManager ?? throw new ArgumentNullException(nameof(partManager));
-            _logger = logger;
-            _loadContexts = new Dictionary<string, AssemblyLoadContext>();
-            _loadedPlugins = new Dictionary<string, Assembly>();
+            _applicationPartManager = applicationPartManager;
         }
 
-        public async Task LoadPluginAsync(string pluginPath)
+        // 【新增】辅助方法，用于判断一个类型是否来自于已加载的插件程序集。
+        public bool IsTypeFromPluginAssembly(Type type)
         {
-            if (string.IsNullOrEmpty(pluginPath))
-                throw new ArgumentNullException(nameof(pluginPath));
+            return _loadedPlugins.Values.Any(p => p.Item2 == type.Assembly);
+        }
 
-            if (!File.Exists(pluginPath))
-                throw new FileNotFoundException($"Plugin assembly not found at {pluginPath}");
+        public Assembly LoadPlugin(string pluginName, string pluginPath)
+        {
+            var alc = new AssemblyLoadContext(pluginName, isCollectible: true);
+            var loadedAssembly = alc.LoadFromAssemblyPath(pluginPath);
 
-            var pluginName = Path.GetFileNameWithoutExtension(pluginPath);
-            if (_loadedPlugins.ContainsKey(pluginName))
+            if (_loadedPlugins.TryAdd(pluginName, (alc, loadedAssembly)))
             {
-                _logger?.LogWarning($"Plugin {pluginName} is already loaded");
-                throw new InvalidOperationException($"Plugin {pluginName} is already loaded");
-            }
+                // 注册服务
+                var types = loadedAssembly.GetExportedTypes()
+                    .Where(t => t.IsClass && !t.IsAbstract);
 
-            try
-            {
-                var loadContext = new CollectibleAssemblyLoadContext();
-                await using var fs = new FileStream(pluginPath, FileMode.Open, FileAccess.Read);
-                var assembly = loadContext.LoadFromStream(fs);
-
-                _loadContexts[pluginName] = loadContext;
-                _loadedPlugins[pluginName] = assembly;
-
-                var assemblyPart = new AssemblyPart(assembly);
-                _partManager.ApplicationParts.Add(assemblyPart);
-
-                // 重新构建控制器特性提供程序
-                var feature = new ControllerFeature();
-                _partManager.PopulateFeature(feature);
-
-                _logger?.LogInformation($"Plugin {pluginName} loaded successfully");
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"Failed to load plugin {pluginName}");
-
-                // 清理已分配的资源
-                if (_loadContexts.TryGetValue(pluginName, out var context))
+                foreach (var type in types)
                 {
-                    _loadContexts.Remove(pluginName);
-                    try
+                    foreach (var interfaceType in type.GetInterfaces())
                     {
-                        ((CollectibleAssemblyLoadContext)context).Unload();
-                    }
-                    catch (Exception unloadEx)
-                    {
-                        _logger?.LogError(unloadEx, $"Error unloading context for plugin {pluginName}");
+                        _pluginTypes.TryAdd(interfaceType, type);
                     }
                 }
 
-                if (_loadedPlugins.ContainsKey(pluginName))
-                {
-                    _loadedPlugins.Remove(pluginName);
-                }
-
-                throw; // 重新抛出异常以便调用者处理
+                // 注册控制器
+                var part = new AssemblyPart(loadedAssembly);
+                _applicationPartManager.ApplicationParts.Add(part);
+                ActionDescriptorChangeProvider.Instance.NotifyChanges();
+                return loadedAssembly;
             }
+            return null;
         }
 
         public void UnloadPlugin(string pluginName)
         {
-            if (string.IsNullOrEmpty(pluginName))
-                throw new ArgumentNullException(nameof(pluginName));
-
-            if (!_loadedPlugins.ContainsKey(pluginName))
+            if (_loadedPlugins.TryRemove(pluginName, out var pluginInfo))
             {
-                _logger?.LogWarning($"Plugin {pluginName} is not loaded");
-                throw new InvalidOperationException($"Plugin {pluginName} is not loaded");
-            }
+                var (alc, assembly) = pluginInfo;
 
-            try
-            {
-                _logger?.LogInformation($"Unloading plugin {pluginName}");
+                // 注销服务
+                var types = assembly.GetExportedTypes()
+                    .Where(t => t.IsClass && !t.IsAbstract);
 
-                // 移除ApplicationPart
-                var assembly = _loadedPlugins[pluginName];
-                var assemblyPart = _partManager.ApplicationParts
-                    .FirstOrDefault(part => part is AssemblyPart ap && ap.Assembly == assembly);
-
-                if (assemblyPart != null)
+                foreach (var type in types)
                 {
-                    _partManager.ApplicationParts.Remove(assemblyPart);
-                    var feature = new ControllerFeature();
-                    _partManager.PopulateFeature(feature);
-                    _logger?.LogDebug($"Removed assembly part for plugin {pluginName}");
+                    foreach (var interfaceType in type.GetInterfaces())
+                    {
+                        _pluginTypes.TryRemove(interfaceType, out _);
+                    }
                 }
 
-                // 从已加载插件字典中移除
-                _loadedPlugins.Remove(pluginName);
-                _logger?.LogDebug($"Removed plugin {pluginName} from loaded plugins dictionary");
-
-                // 卸载AssemblyLoadContext
-                if (_loadContexts.TryGetValue(pluginName, out var loadContext))
+                // 注销控制器
+                var part = _applicationPartManager.ApplicationParts.FirstOrDefault(p => p is AssemblyPart ap && ap.Assembly == assembly);
+                if (part != null)
                 {
-                    _loadContexts.Remove(pluginName);
-
-                    try
-                    {
-                        ((CollectibleAssemblyLoadContext)loadContext).Unload();
-                        _logger?.LogDebug($"Unloaded assembly context for plugin {pluginName}");
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger?.LogError(ex, $"Error unloading context for plugin {pluginName}");
-                    }
-
-                    // 强制GC回收
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    _logger?.LogDebug($"Garbage collection completed for plugin {pluginName}");
+                    _applicationPartManager.ApplicationParts.Remove(part);
+                    ActionDescriptorChangeProvider.Instance.NotifyChanges();
                 }
 
-                _logger?.LogInformation($"Plugin {pluginName} unloaded successfully");
+                alc.Unload();
             }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, $"Error unloading plugin {pluginName}");
-                throw; // 重新抛出异常以便调用者处理
-            }
-        }
-
-        public bool IsPluginLoaded(string pluginName)
-        {
-            return _loadedPlugins.ContainsKey(pluginName);
-        }
-
-        public IEnumerable<string> GetLoadedPlugins()
-        {
-            return _loadedPlugins.Keys;
-        }
-    }
-
-    public class CollectibleAssemblyLoadContext : AssemblyLoadContext
-    {
-        public CollectibleAssemblyLoadContext() : base(isCollectible: true)
-        {
-        }
-
-        protected override Assembly Load(AssemblyName assemblyName)
-        {
-            // 返回null表示此上下文不处理程序集解析
-            // 这样可以避免加载到默认上下文中的程序集被重复加载
-            return null;
         }
     }
 }
