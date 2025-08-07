@@ -50,7 +50,8 @@
     <ItemGroup>
       <PluginFiles Include="$(SolutionDir)src\Plugins\**\bin\$(Configuration)\net8.0\**\*.*" />
     </ItemGroup>
-    <Copy SourceFiles="@(PluginFiles)" DestinationFiles="@(PluginFiles->'$(PluginsOutputPath)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <!-- 动态生成插件名称目录并发布文件 -->
+    <Copy SourceFiles="@(PluginFiles)" DestinationFiles="@(PluginFiles->'$(PluginsOutputPath)\%(Filename)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
 </Project>
