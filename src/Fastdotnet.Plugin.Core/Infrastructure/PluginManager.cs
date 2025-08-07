@@ -1,4 +1,5 @@
 
+using Fastdotnet.Core.Plugin;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using System;
 using System.Collections.Concurrent;
@@ -12,7 +13,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
     public class PluginManager
     {
         private readonly ConcurrentDictionary<Type, Type> _pluginTypes = new ConcurrentDictionary<Type, Type>();
-        private readonly ConcurrentDictionary<string, (AssemblyLoadContext, Assembly)> _loadedPlugins = new ConcurrentDictionary<string, (AssemblyLoadContext, Assembly)>();
+        private readonly ConcurrentDictionary<string, (AssemblyLoadContext, Assembly, PluginConfig)> _loadedPlugins = new ConcurrentDictionary<string, (AssemblyLoadContext, Assembly, PluginConfig)>();
         private readonly ApplicationPartManager _applicationPartManager;
 
         public IReadOnlyDictionary<Type, Type> PluginTypes => _pluginTypes;
@@ -22,18 +23,38 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             _applicationPartManager = applicationPartManager;
         }
 
+        public bool IsPluginLoaded(string pluginId)
+        {
+            return _loadedPlugins.ContainsKey(pluginId);
+        }
+
+        public bool IsPluginLoaded(Assembly assembly)
+        {
+            return _loadedPlugins.Values.Any(p => p.Item2 == assembly);
+        }
+
+        public PluginConfig GetPluginConfig(string pluginId)
+        {
+            return _loadedPlugins.TryGetValue(pluginId, out var pluginInfo) ? pluginInfo.Item3 : null;
+        }
+
+        public IEnumerable<PluginConfig> GetLoadedPluginConfigs()
+        {
+            return _loadedPlugins.Values.Select(v => v.Item3);
+        }
+
         // 【新增】辅助方法，用于判断一个类型是否来自于已加载的插件程序集。
         public bool IsTypeFromPluginAssembly(Type type)
         {
             return _loadedPlugins.Values.Any(p => p.Item2 == type.Assembly);
         }
 
-        public Assembly LoadPlugin(string pluginName, string pluginPath)
+        public Assembly LoadPlugin(PluginConfig config, string pluginPath)
         {
-            var alc = new AssemblyLoadContext(pluginName, isCollectible: true);
+            var alc = new AssemblyLoadContext(config.id, isCollectible: true);
             var loadedAssembly = alc.LoadFromAssemblyPath(pluginPath);
 
-            if (_loadedPlugins.TryAdd(pluginName, (alc, loadedAssembly)))
+            if (_loadedPlugins.TryAdd(config.id, (alc, loadedAssembly, config)))
             {
                 // 注册服务
                 var types = loadedAssembly.GetExportedTypes()
@@ -70,7 +91,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         {
             if (_loadedPlugins.TryRemove(pluginName, out var pluginInfo))
             {
-                var (alc, assembly) = pluginInfo;
+                var (alc, assembly, _) = pluginInfo;
 
                 // 注销服务
                 var types = assembly.GetExportedTypes()

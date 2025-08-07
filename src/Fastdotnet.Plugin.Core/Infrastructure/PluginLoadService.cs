@@ -16,13 +16,13 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
 {
     public interface IPluginLoadService
     {
-        Task<CommonResult> LoadPluginsAsync();
-        Task<CommonResult> LoadPluginAsync(string pluginId);
-        Task StartLoadedPluginsAsync();
-        Task<CommonResult> UnloadPluginAsync(string pluginName);
-        bool IsPluginLoaded(string pluginName);
-        IEnumerable<string> GetLoadedPlugins();
-        string GetPluginPath(string pluginId);
+        Task<CommonResult<IEnumerable<PluginConfig>>> ScanPluginsAsync();
+        Task<CommonResult> EnablePluginAsync(string pluginId);
+        Task<CommonResult> DisablePluginAsync(string pluginId);
+        Task<CommonResult> UninstallPluginAsync(string pluginId);
+        bool IsPluginActive(string pluginId);
+        IEnumerable<PluginConfig> GetLoadedPlugins();
+        IEnumerable<string> GetActivePlugins();
     }
 
     public class PluginLoadService : IPluginLoadService, IDisposable
@@ -31,8 +31,8 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<PluginLoadService> _logger;
         private readonly ConcurrentDictionary<string, IPlugin> _activePlugins = new ConcurrentDictionary<string, IPlugin>();
+        private readonly string _pluginsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
         private bool _disposed = false;
-        private readonly string _pluginPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
 
         public PluginLoadService(PluginManager pluginManager, IServiceProvider serviceProvider, ILogger<PluginLoadService> logger = null)
         {
@@ -41,103 +41,65 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             _logger = logger;
         }
 
-        public async Task<CommonResult> LoadPluginsAsync()
+        public Task<CommonResult<IEnumerable<PluginConfig>>> ScanPluginsAsync()
         {
-            if (!Directory.Exists(_pluginPath))
+            var configs = new List<PluginConfig>();
+            if (Directory.Exists(_pluginsPath))
             {
-                return CommonResult.Success("插件目录不存在，跳过加载。");
-            }
-
-            try
-            {
-                // 1. 读取所有插件的配置信息
-                var allPluginConfigs = new Dictionary<string, (PluginConfig Config, string DllPath)>();
-                foreach (var pluginDir in Directory.GetDirectories(_pluginPath))
+                foreach (var pluginDir in Directory.GetDirectories(_pluginsPath))
                 {
                     var configPath = Path.Combine(pluginDir, "plugin.json");
-                    var dllPath = Path.Combine(pluginDir, Path.GetFileName(pluginDir) + ".dll");
-                    if (File.Exists(configPath) && File.Exists(dllPath))
+                    if (File.Exists(configPath))
                     {
-                        var configJson = await File.ReadAllTextAsync(configPath);
+                        var configJson = File.ReadAllText(configPath);
                         var config = JsonSerializer.Deserialize<PluginConfig>(configJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                        if (config != null && config.enabled)
-                        {
-                            allPluginConfigs[config.id] = (config, dllPath);
-                        }
+                        if (config != null) configs.Add(config);
                     }
                 }
-
-                // 2. 拓扑排序以确定加载顺序
-                var sortedPluginIds = TopologicalSort(allPluginConfigs.Values.Select(p => p.Config).ToList());
-
-                // 3. 按顺序加载插件
-                foreach (var pluginId in sortedPluginIds)
-                {
-                    if (IsPluginLoaded(pluginId)) continue;
-
-                    var (config, dllPath) = allPluginConfigs[pluginId];
-                    await LoadSinglePluginAsync(config, dllPath);
-                }
-
-                return CommonResult.Success("所有插件加载完成。");
             }
-            catch (Exception ex)
-            {
-                _logger?.LogError(ex, "加载插件失败。");
-                return CommonResult.Error($"加载插件时发生错误: {ex.Message}");
-            }
+            return Task.FromResult(CommonResult<IEnumerable<PluginConfig>>.Success(configs));
         }
 
-        public async Task<CommonResult> LoadPluginAsync(string pluginId)
+        public async Task<CommonResult> EnablePluginAsync(string pluginId)
         {
-            if (IsPluginLoaded(pluginId)) return CommonResult.Success($"插件 {pluginId} 已加载。");
+            if (IsPluginActive(pluginId)) return CommonResult.Success($"插件 {pluginId} 已启用。");
 
-            var pluginDir = Path.Combine(_pluginPath, pluginId);
-            var configPath = Path.Combine(pluginDir, "plugin.json");
-
-            if (!File.Exists(configPath))
+            // Step 1: Technical Load (if not already loaded)
+            if (!_pluginManager.IsPluginLoaded(pluginId))
             {
-                return CommonResult.Error($"插件 {pluginId} 的配置文件plugin.json不存在。");
-            }
+                var pluginDir = Path.Combine(_pluginsPath, pluginId);
+                if (!Directory.Exists(pluginDir)) return CommonResult.Error("找不到插件目录。");
 
-            var configJson = await File.ReadAllTextAsync(configPath);
-            var config = JsonSerializer.Deserialize<PluginConfig>(configJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var configPath = Path.Combine(pluginDir, "plugin.json");
+                if (!File.Exists(configPath)) return CommonResult.Error("找不到plugin.json。");
 
-            if (config == null) return CommonResult.Error($"无法读取插件 {pluginId} 的配置。");
+                var configJson = await File.ReadAllTextAsync(configPath);
+                var config = JsonSerializer.Deserialize<PluginConfig>(configJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (config == null) return CommonResult.Error("无法解析plugin.json。");
 
-            var entryPoint = string.IsNullOrEmpty(config.entryPoint) ? config.id + ".dll" : config.entryPoint;
-            var dllPath = Path.Combine(pluginDir, entryPoint);
-
-            if (!File.Exists(dllPath))
-            {
-                return CommonResult.Error($"插件 {pluginId} 的入口文件 {entryPoint} 未找到。");
-            }
-
-            // 检查依赖项
-            if (config.dependencies != null)
-            {
-                foreach (var dependency in config.dependencies)
+                // Check dependencies before loading
+                if (config.dependencies != null)
                 {
-                    if (!IsPluginLoaded(dependency))
+                    foreach (var depId in config.dependencies)
                     {
-                        return CommonResult.Error($"插件 {pluginId} 的依赖项 {dependency} 未加载。");
+                        if (!_pluginManager.IsPluginLoaded(depId)) 
+                            return CommonResult.Error($"加载失败：依赖项 {depId} 未加载。");
                     }
                 }
+
+                var entryPoint = string.IsNullOrEmpty(config.entryPoint) ? config.id + ".dll" : config.entryPoint;
+                var dllPath = Path.Combine(pluginDir, entryPoint);
+                if (!File.Exists(dllPath)) return CommonResult.Error($"找不到入口文件 {entryPoint}。");
+
+                // The DI container cannot be modified at runtime. Services must be resolved dynamically.
+                _pluginManager.LoadPlugin(config, dllPath);
             }
 
-            await LoadSinglePluginAsync(config, dllPath);
-            return CommonResult.Success($"插件 {pluginId} 加载成功。");
-        }
-
-        public async Task StartLoadedPluginsAsync()
-        {
-            var loadedPluginIds = _pluginManager.GetLoadedPlugins();
-            foreach (var pluginId in loadedPluginIds)
+            // Step 2: Business Activation
+            try
             {
-                if (_activePlugins.ContainsKey(pluginId)) continue;
-
                 var assembly = _pluginManager.GetPluginAssembly(pluginId);
-                if (assembly == null) continue;
+                if (assembly == null) return CommonResult.Error("找不到插件程序集。");
 
                 var pluginType = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsAbstract);
                 if (pluginType != null)
@@ -150,150 +112,87 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                         _activePlugins.TryAdd(pluginId, pluginInstance);
                     }
                 }
-            }
-        }
-
-        private async Task LoadSinglePluginAsync(PluginConfig config, string dllPath)
-        {
-            try
-            {
-                var assembly = _pluginManager.LoadPlugin(config.id, dllPath);
-                if (assembly == null) return;
-
-                var pluginType = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsAbstract);
-                if (pluginType != null)
-                {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        var pluginInstance = (IPlugin)ActivatorUtilities.CreateInstance(scope.ServiceProvider, pluginType);
-
-                        // Note: We can't call ConfigureServices here as the container is already built.
-                        // This is a limitation of runtime loading.
-
-                        await pluginInstance.InitializeAsync();
-                        await pluginInstance.StartAsync();
-                        _activePlugins.TryAdd(config.id, pluginInstance);
-                    }
-                }
-                _logger?.LogInformation($"插件 {config.id} 加载成功。");
+                _logger?.LogInformation($"插件 {pluginId} 启用成功。");
+                return CommonResult.Success($"插件 {pluginId} 启用成功。");
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, $"加载插件 {config.id} 失败");
-                await UnloadPluginAsync(config.id); // 尝试清理
+                _logger?.LogError(ex, $"启用插件 {pluginId} 失败");
+                return CommonResult.Error($"启用插件失败: {ex.Message}");
             }
         }
 
-        public async Task<CommonResult> UnloadPluginAsync(string pluginName)
+        public async Task<CommonResult> DisablePluginAsync(string pluginId)
         {
-            if (!IsPluginLoaded(pluginName))
-            {
-                return CommonResult.Error($"插件 {pluginName} 未加载。");
-            }
+            if (!IsPluginActive(pluginId)) return CommonResult.Success($"插件 {pluginId} 已停用。");
 
-            // 检查是否有其他已加载的插件依赖此插件
-            var loadedPlugins = GetLoadedPlugins();
-            foreach (var loadedPluginId in loadedPlugins)
+            var activePlugins = GetActivePlugins();
+            foreach (var otherPluginId in activePlugins)
             {
-                if (loadedPluginId == pluginName) continue;
-                var configPath = Path.Combine(_pluginPath, loadedPluginId, "plugin.json");
-                if (File.Exists(configPath))
+                if (otherPluginId == pluginId) continue;
+                var config = _pluginManager.GetPluginConfig(otherPluginId);
+                if (config?.dependencies?.Contains(pluginId) == true)
                 {
-                    var configJson = await File.ReadAllTextAsync(configPath);
-                    var config = JsonSerializer.Deserialize<PluginConfig>(configJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                    if (config?.dependencies?.Contains(pluginName) == true)
-                    {
-                        return CommonResult.Error($"无法卸载插件 {pluginName}，因为插件 {loadedPluginId} 依赖于它。");
-                    }
+                    return CommonResult.Error($"无法停用插件 {pluginId}，因为活动的插件 {otherPluginId} 依赖于它。");
                 }
             }
 
             try
             {
-                if (_activePlugins.TryRemove(pluginName, out var plugin))
+                if (_activePlugins.TryRemove(pluginId, out var plugin))
                 {
                     await plugin.StopAsync();
                     await plugin.UnloadAsync();
                 }
-
-                _pluginManager.UnloadPlugin(pluginName);
-
-                _logger?.LogInformation($"插件 {pluginName} 卸载成功。");
-                return CommonResult.Success("插件卸载成功。");
+                _pluginManager.UnloadPlugin(pluginId);
+                _logger?.LogInformation($"插件 {pluginId} 已成功停用并卸载。");
+                return CommonResult.Success("插件已成功停用。");
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, $"卸载插件 {pluginName} 失败");
+                _logger?.LogError(ex, $"停用插件 {pluginId} 失败");
+                return CommonResult.Error($"停用插件失败: {ex.Message}");
+            }
+        }
+
+        public async Task<CommonResult> UninstallPluginAsync(string pluginId)
+        {
+            if (_pluginManager.IsPluginLoaded(pluginId))
+            {
+                 if (IsPluginActive(pluginId)) 
+                    return CommonResult.Error("无法卸载，请先停用插件。");
+                _pluginManager.UnloadPlugin(pluginId);
+            }
+
+            try
+            {
+                var pluginDir = Path.Combine(_pluginsPath, pluginId);
+                if (Directory.Exists(pluginDir))
+                {
+                    Directory.Delete(pluginDir, true);
+                }
+                _logger?.LogInformation($"插件 {pluginId} 已被物理删除。");
+                return CommonResult.Success("插件已成功卸载。");
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, $"物理删除插件 {pluginId} 失败");
                 return CommonResult.Error($"卸载插件失败: {ex.Message}");
             }
         }
 
-        public bool IsPluginLoaded(string pluginName)
-        {
-            return _activePlugins.ContainsKey(pluginName);
-        }
-
-        public IEnumerable<string> GetLoadedPlugins()
-        {
-            return _activePlugins.Keys;
-        }
-
-        public string GetPluginPath(string pluginId)
-        {
-            var pluginDir = Path.Combine(_pluginPath, pluginId);
-            return Directory.Exists(pluginDir) ? pluginDir : null;
-        }
-
-        private List<string> TopologicalSort(List<PluginConfig> plugins)
-        {
-            var sorted = new List<string>();
-            var visited = new HashSet<string>();
-            var graph = plugins.ToDictionary(p => p.id, p => p.dependencies ?? new List<string>());
-
-            foreach (var plugin in plugins)
-            {
-                if (!visited.Contains(plugin.id))
-                {
-                    Visit(plugin.id, graph, visited, sorted, new HashSet<string>());
-                }
-            }
-
-            return sorted;
-        }
-
-        private void Visit(string nodeId, Dictionary<string, List<string>> graph, HashSet<string> visited, List<string> sorted, HashSet<string> recursionStack)
-        {
-            visited.Add(nodeId);
-            recursionStack.Add(nodeId);
-
-            if (graph.TryGetValue(nodeId, out var dependencies))
-            {
-                foreach (var dependency in dependencies)
-                {
-                    if (!graph.ContainsKey(dependency))
-                        throw new InvalidOperationException($"插件 '{nodeId}' 的依赖 '{dependency}' 未找到。");
-
-                    if (recursionStack.Contains(dependency))
-                        throw new InvalidOperationException($"检测到循环依赖: {nodeId} -> {dependency}");
-
-                    if (!visited.Contains(dependency))
-                    {
-                        Visit(dependency, graph, visited, sorted, recursionStack);
-                    }
-                }
-            }
-
-            recursionStack.Remove(nodeId);
-            sorted.Add(nodeId);
-        }
+        public bool IsPluginActive(string pluginId) => _activePlugins.ContainsKey(pluginId);
+        public IEnumerable<string> GetActivePlugins() => _activePlugins.Keys;
+        public IEnumerable<PluginConfig> GetLoadedPlugins() => _pluginManager.GetLoadedPluginConfigs();
 
         public void Dispose()
         {
             if (!_disposed)
             {
-                foreach (var pluginName in _activePlugins.Keys.ToList())
+                var activePluginIds = _activePlugins.Keys.ToList();
+                foreach (var pluginName in activePluginIds)
                 {
-                    UnloadPluginAsync(pluginName).GetAwaiter().GetResult();
+                    DisablePluginAsync(pluginName).GetAwaiter().GetResult();
                 }
                 _disposed = true;
             }
