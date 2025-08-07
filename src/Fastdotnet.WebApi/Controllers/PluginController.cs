@@ -81,5 +81,11 @@ namespace Fastdotnet.WebApi.Controllers
         {
             return Ok(new { IsActive = _pluginLoadService.IsPluginActive(pluginId) });
         }
+
+        [NonAction]
+        public void Test()
+        {
+            Console.WriteLine("这是一个测试方法");
+        }
     }
 }
