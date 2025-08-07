@@ -10,6 +10,9 @@ using Fastdotnet.Plugin.Core.Infrastructure;
 
 namespace Fastdotnet.WebApi.Controllers
 {
+    /// <summary>
+    /// 插件模块
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class PluginController : ControllerBase

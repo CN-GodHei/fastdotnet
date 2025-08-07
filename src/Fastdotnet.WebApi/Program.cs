@@ -10,7 +10,7 @@ using Fastdotnet.Plugin.Core.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 // 设置应用程序URL
-builder.WebHost.UseUrls("http://*:18848");
+builder.WebHost.UseUrls("http://*:18889");
 
 // Add ASP.NET Core services
 builder.Services.AddControllers()
@@ -57,16 +57,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-
-}
 
