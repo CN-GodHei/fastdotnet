@@ -18,6 +18,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
     {
         Task<CommonResult> LoadPluginsAsync();
         Task<CommonResult> LoadPluginAsync(string pluginId);
+        Task StartLoadedPluginsAsync();
         Task<CommonResult> UnloadPluginAsync(string pluginName);
         bool IsPluginLoaded(string pluginName);
         IEnumerable<string> GetLoadedPlugins();
@@ -126,6 +127,30 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
 
             await LoadSinglePluginAsync(config, dllPath);
             return CommonResult.Success($"插件 {pluginId} 加载成功。");
+        }
+
+        public async Task StartLoadedPluginsAsync()
+        {
+            var loadedPluginIds = _pluginManager.GetLoadedPlugins();
+            foreach (var pluginId in loadedPluginIds)
+            {
+                if (_activePlugins.ContainsKey(pluginId)) continue;
+
+                var assembly = _pluginManager.GetPluginAssembly(pluginId);
+                if (assembly == null) continue;
+
+                var pluginType = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsAbstract);
+                if (pluginType != null)
+                {
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var pluginInstance = (IPlugin)ActivatorUtilities.CreateInstance(scope.ServiceProvider, pluginType);
+                        await pluginInstance.InitializeAsync();
+                        await pluginInstance.StartAsync();
+                        _activePlugins.TryAdd(pluginId, pluginInstance);
+                    }
+                }
+            }
         }
 
         private async Task LoadSinglePluginAsync(PluginConfig config, string dllPath)

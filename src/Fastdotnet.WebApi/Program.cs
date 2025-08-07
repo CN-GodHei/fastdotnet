@@ -43,8 +43,12 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 // 5. 构建并运行应用
 var app = builder.Build();
 
-// 启动所有已加载的插件
-await StartPlugins(app.Services);
+// 由统一的插件服务来完成所有插件的初始化和启动
+using (var scope = app.Services.CreateScope())
+{
+    var pluginLoadService = scope.ServiceProvider.GetRequiredService<IPluginLoadService>();
+    await pluginLoadService.StartLoadedPluginsAsync();
+}
 
 if (app.Environment.IsDevelopment())
 {
@@ -109,26 +113,7 @@ static void ConfigurePlugins(ContainerBuilder containerBuilder, PluginManager pl
     }
 }
 
-static async Task StartPlugins(IServiceProvider serviceProvider)
-{
-    using var scope = serviceProvider.CreateScope();
-    var pluginManager = scope.ServiceProvider.GetRequiredService<PluginManager>();
-    var loadedPlugins = pluginManager.GetLoadedPlugins(); // 需要在PluginManager中添加此方法
 
-    foreach (var pluginId in loadedPlugins)
-    {
-        var assembly = pluginManager.GetPluginAssembly(pluginId); // 需要在PluginManager中添加此方法
-        if (assembly == null) continue;
-
-        var pluginType = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsAbstract);
-        if (pluginType != null)
-        {
-            var pluginInstance = (IPlugin)ActivatorUtilities.CreateInstance(scope.ServiceProvider, pluginType);
-            await pluginInstance.InitializeAsync();
-            await pluginInstance.StartAsync();
-        }
-    }
-}
 
 static List<string> TopologicalSort(List<PluginConfig> plugins)
 {
