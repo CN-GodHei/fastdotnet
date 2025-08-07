@@ -118,3 +118,4 @@ Desktop.ini
 *.ndf
 .history
 node_modules
+build/
