@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Autofac;
-using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Fastdotnet.Core.Plugin
 {
@@ -22,9 +22,10 @@ namespace Fastdotnet.Core.Plugin
         string Version { get; }
 
         /// <summary>
-        /// 插件初始化
+        /// 插件初始化，在此处可以访问主程序的服务
         /// </summary>
-        Task InitializeAsync();
+        /// <param name="serviceProvider">服务提供程序，用于解析主程序的服务</param>
+        Task InitializeAsync(IServiceProvider serviceProvider);
 
         /// <summary>
         /// 插件启动
@@ -39,7 +40,8 @@ namespace Fastdotnet.Core.Plugin
         /// <summary>
         /// 插件卸载前的清理工作
         /// </summary>
-        Task UnloadAsync();
+        /// <param name="serviceProvider">服务提供程序，用于解析主程序的服务以进行清理</param>
+        Task UnloadAsync(IServiceProvider serviceProvider);
 
         /// <summary>
         /// 配置插件服务

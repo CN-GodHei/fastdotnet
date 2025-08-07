@@ -9,31 +9,3 @@
   "tags": [ "demo", "example" ],
   "entryPoint": "PluginA.dll"
 }
-
-//1. 主程序启动 (`Program.cs`)：
-//       * 职责：一个完全空白的、纯净的宿主环境。它就像一个刚刚安装好的、没有任何App的操作系统。
-//       * 操作：
-//          a.  启动ASP.NET Core。
-//          b.  注册仅属于宿主自身的核心服务，例如 PluginManager 和 PluginLoadService 的实例。
-//       * 绝对不做：它绝不扫描 plugins 目录。它启动时，对插件世界一无所知。DI容器在构建时，里面没有任何与插件相关的信息。
-
-//   2. 启用插件接口 (`EnablePluginAsync`)：
-//       * 职责：这是唯一的、负责将一个插件从“磁盘上的文件”变为“内存中运行的实例”的入口。
-//       * 操作：
-//          a.  接收到启用 PluginA 的请求。
-//          b.  检查是否已加载：PluginManager 中是否有 PluginA 的记录？
-//          c.  如果未加载，则执行“技术加载”：
-//              i.  找到 plugins/PluginA 目录。
-//              ii. 读取 plugin.json，检查依赖项（依赖的插件必须已启用）。
-//              iii. 调用 `PluginManager.LoadPlugin`，创建新的 AssemblyLoadContext，加载DLL，并将插件信息（包括其程序集和配置）记录到 PluginManager
-//  中。这一步使得插件的控制器能被MVC框架发现，并且它的服务能被 PluginRegistrationSource 动态解析。
-//          d.  检查是否已激活：PluginLoadService 的 _activePlugins 字典中是否有 PluginA 的记录？
-//          e.  如果未激活，则执行“业务启动”：创建 IPlugin 实例，调用 StartAsync，并记录到 _activePlugins 字典中。
-
-//   3. 停用插件接口 (`DisablePluginAsync`)：
-//       * 职责：将一个插件从“运行中”变为“已加载但未运行”的“冷”状态。
-//       * 操作：
-//          a.  执行业务停止：调用 StopAsync。
-//          b.  从 _activePlugins 字典中移除实例。
-//          c.  执行技术卸载：调用 PluginManager.UnloadPlugin，彻底释放 AssemblyLoadContext，让其代码和类型从内存中消失。
-//d.需要将插件的路由也从mvc中移除

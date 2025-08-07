@@ -6,6 +6,8 @@ using Fastdotnet.Service;
 using Fastdotnet.Service.Initializers;
 using Fastdotnet.Service.IService.Admin;
 using Fastdotnet.WebApi.Extensions;
+using Fastdotnet.Core.Middleware;
+using Fastdotnet.WebApi.Middleware;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
@@ -21,6 +23,7 @@ builder.Services.AddControllers().AddControllersAsServices()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IActionDescriptorChangeProvider>(ActionDescriptorChangeProvider.Instance);
+builder.Services.AddSingleton<DynamicMiddlewareRegistry>();
 
 // 注册应用服务和初始化器
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
@@ -57,8 +60,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// 执行所有实现了 IApplicationConfigure 接口的配置
-app.UseApplicationConfigures();
+// 注册动态中间件调度器，它将执行来自所有插件的中间件
+app.UseMiddleware<DynamicMiddlewareDispatcher>();
 
 //app.UseMiddleware<PluginRoutingMiddleware>();
 app.UseAuthorization();

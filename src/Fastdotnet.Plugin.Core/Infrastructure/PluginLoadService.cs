@@ -107,7 +107,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                     using (var scope = _serviceProvider.CreateScope())
                     {
                         var pluginInstance = (IPlugin)ActivatorUtilities.CreateInstance(scope.ServiceProvider, pluginType);
-                        await pluginInstance.InitializeAsync();
+                        await pluginInstance.InitializeAsync(scope.ServiceProvider);
                         await pluginInstance.StartAsync();
                         _activePlugins.TryAdd(pluginId, pluginInstance);
                     }
@@ -141,8 +141,11 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             {
                 if (_activePlugins.TryRemove(pluginId, out var plugin))
                 {
-                    await plugin.StopAsync();
-                    await plugin.UnloadAsync();
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        await plugin.StopAsync();
+                        await plugin.UnloadAsync(scope.ServiceProvider);
+                    }
                 }
                 _pluginManager.UnloadPlugin(pluginId);
                 _logger?.LogInformation($"插件 {pluginId} 已成功停用并卸载。");
