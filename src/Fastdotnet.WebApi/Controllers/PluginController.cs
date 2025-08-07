@@ -53,15 +53,23 @@ namespace Fastdotnet.WebApi.Controllers
                 System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, tempPath);
                 
                 // 查找插件DLL
-                var dllFiles = Directory.GetFiles(tempPath, "*.dll", SearchOption.AllDirectories);
-                if (!dllFiles.Any())
+                var configPath = Directory.GetFiles(tempPath, "plugin.json", SearchOption.AllDirectories).FirstOrDefault();
+                if (configPath == null)
                 {
                     Directory.Delete(tempPath, true);
-                    return BadRequest(new { Message = "插件包中未找到DLL文件" });
+                    return BadRequest(new { Message = "插件包中未找到plugin.json文件" });
                 }
-                
-                var dllPath = dllFiles.First();
-                var result =await _pluginLoadService.LoadPluginAsync(dllPath);
+
+                var configJson = await System.IO.File.ReadAllTextAsync(configPath);
+                var config = System.Text.Json.JsonSerializer.Deserialize<Fastdotnet.Core.Plugin.PluginConfig>(configJson, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                if (config == null || string.IsNullOrEmpty(config.id))
+                {
+                    Directory.Delete(tempPath, true);
+                    return BadRequest(new { Message = "无法读取插件ID" });
+                }
+
+                var result = await _pluginLoadService.LoadPluginAsync(config.id);
 
                 return Ok(new { Message = result.Msg });
             }
@@ -101,8 +109,7 @@ namespace Fastdotnet.WebApi.Controllers
                 {
                     // 尝试加载插件
                     //var dllPath = Directory.GetFiles(pluginPath, "*.dll").First();
-                    var dllPath = Path.Combine(pluginPath, $"{pluginId }.dll");
-                    var result =await _pluginLoadService.LoadPluginAsync(dllPath);
+                    var result = await _pluginLoadService.LoadPluginAsync(pluginId);
                     if (!result.Result)
                     {
                         throw new Exception(result.Msg);
@@ -140,7 +147,7 @@ namespace Fastdotnet.WebApi.Controllers
                 }
 
                 // 卸载插件服务和路由
-              var result = await  _pluginLoadService.UnloadPlugin(pluginId);
+              var result = await  _pluginLoadService.UnloadPluginAsync(pluginId);
 
                 // 更新配置文件
                 //var configPath = Path.Combine(pluginPath, "plugin.json");

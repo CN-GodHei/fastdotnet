@@ -1,4 +1,5 @@
 ﻿using System;
+using Autofac;
 using System.Threading.Tasks;
 using Fastdotnet.Core.Plugin;
 
@@ -31,6 +32,12 @@ namespace PluginA
         {
             //Console.WriteLine($"[{Name}] Unloading...");
             return Task.CompletedTask;
+        }
+
+        public void ConfigureServices(ContainerBuilder builder)
+        {
+            // 可以在这里注册此插件特有的服务
+            // 例如: builder.RegisterType<MyService>().As<IMyService>().SingleInstance();
         }
     }
 }

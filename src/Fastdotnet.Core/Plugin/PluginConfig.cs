@@ -43,5 +43,10 @@ namespace Fastdotnet.Core.Plugin
         /// 插件标签
         /// </summary>
         public List<string> tags { get; set; }
+
+        /// <summary>
+        /// 插件入口DLL文件名
+        /// </summary>
+        public string entryPoint { get; set; }
     }
 }

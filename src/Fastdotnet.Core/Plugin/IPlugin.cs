@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Autofac;
+using System.Threading.Tasks;
+
 namespace Fastdotnet.Core.Plugin
 {
     public interface IPlugin
@@ -37,5 +40,11 @@ namespace Fastdotnet.Core.Plugin
         /// 插件卸载前的清理工作
         /// </summary>
         Task UnloadAsync();
+
+        /// <summary>
+        /// 配置插件服务
+        /// </summary>
+        /// <param name="builder">Autofac容器构建器</param>
+        void ConfigureServices(ContainerBuilder builder);
     }
 }

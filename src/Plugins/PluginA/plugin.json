@@ -6,5 +6,6 @@
   "enabled": true,
   "author": "Fastdotnet Team",
   "dependencies": [],
-  "tags": ["demo", "example"]
+  "tags": ["demo", "example"],
+  "entryPoint": "PluginA.dll"
 }

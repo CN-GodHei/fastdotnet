@@ -56,6 +56,16 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             return null;
         }
 
+        public IEnumerable<string> GetLoadedPlugins()
+        {
+            return _loadedPlugins.Keys;
+        }
+
+        public Assembly GetPluginAssembly(string pluginName)
+        {
+            return _loadedPlugins.TryGetValue(pluginName, out var pluginInfo) ? pluginInfo.Item2 : null;
+        }
+
         public void UnloadPlugin(string pluginName)
         {
             if (_loadedPlugins.TryRemove(pluginName, out var pluginInfo))

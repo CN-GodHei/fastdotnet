@@ -36,7 +36,7 @@
     <Content Include="$(NuGetPackageRoot)swashbuckle.aspnetcore\**\swagger-ui\**" LinkBase="swagger" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
-  <Target Name="SetupPluginDirectory" AfterTargets="Build">
+  <!--<Target Name="SetupPluginDirectory" AfterTargets="Build">
     <PropertyGroup>
       <PluginsOutputPath>$(OutputPath)Plugins</PluginsOutputPath>
     </PropertyGroup>
@@ -50,8 +50,8 @@
     <ItemGroup>
       <PluginFiles Include="$(SolutionDir)src\Plugins\**\bin\$(Configuration)\net8.0\**\*.*" />
     </ItemGroup>
-    <!-- 动态生成插件名称目录并发布文件 -->
+    --><!-- 动态生成插件名称目录并发布文件 --><!--
     <Copy SourceFiles="@(PluginFiles)" DestinationFiles="@(PluginFiles->'$(PluginsOutputPath)\%(Filename)\%(RecursiveDir)%(Filename)%(Extension)')" />
-  </Target>
+  </Target>-->
 
 </Project>
