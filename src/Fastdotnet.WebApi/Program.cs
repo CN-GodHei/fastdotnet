@@ -1,6 +1,11 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Fastdotnet.Core.Initializers;
 using Fastdotnet.Plugin.Core.Infrastructure;
+using Fastdotnet.Service;
+using Fastdotnet.Service.Initializers;
+using Fastdotnet.Service.IService.Admin;
+using Fastdotnet.WebApi.Extensions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
@@ -16,6 +21,11 @@ builder.Services.AddControllers().AddControllersAsServices()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IActionDescriptorChangeProvider>(ActionDescriptorChangeProvider.Instance);
+
+// 注册应用服务和初始化器
+builder.Services.AddScoped<IAdminUserService, AdminUserService>();
+builder.Services.AddScoped<IApplicationInitializer, AdminUserInitializer>();
+
 
 // 2. 准备插件系统的核心实例
 var partManager = builder.Services.BuildServiceProvider().GetRequiredService<ApplicationPartManager>();
@@ -35,6 +45,9 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 // 4. 构建并运行应用
 var app = builder.Build();
 
+// 执行应用初始化器
+await app.UseApplicationInitializers();
+
 // 5. 配置 HTTP 请求管道
 if (app.Environment.IsDevelopment())
 {
@@ -43,6 +56,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// 执行所有实现了 IApplicationConfigure 接口的配置
+app.UseApplicationConfigures();
+
 //app.UseMiddleware<PluginRoutingMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
