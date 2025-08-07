@@ -59,11 +59,9 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// 启用 Swagger 中间件（可根据需要调整为动态配置）
+app.UseSwagger();
+app.UseSwaggerUI();
 
 //app.UseHttpsRedirection();
 app.UseRouting();

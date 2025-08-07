@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,6 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <!-- 确保 XML 文档文件被发布 -->
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +32,8 @@
       <Link>DefaultPluginConfig.json</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <!-- 确保 Swagger 静态文件被发布 -->
+    <Content Include="$(NuGetPackageRoot)swashbuckle.aspnetcore\**\swagger-ui\**" LinkBase="swagger" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <Target Name="SetupPluginDirectory" AfterTargets="Build">
