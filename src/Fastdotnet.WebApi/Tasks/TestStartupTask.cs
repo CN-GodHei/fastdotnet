@@ -1,4 +1,5 @@
-using Fastdotnet.Core.Initializers;
+﻿using Fastdotnet.Core.Initializers;
+using Fastdotnet.Plugin.Core.Infrastructure;
 using Fastdotnet.WebApi.Controllers;
 using System;
 using System.Threading.Tasks;
@@ -14,23 +15,25 @@ namespace Fastdotnet.WebApi.Tasks
             _serviceProvider = serviceProvider;
         }
 
-        public Task ExecuteAsync()
+        public async Task ExecuteAsync()
         {
             Console.WriteLine("Executing TestStartupTask...");
             using (var scope = _serviceProvider.CreateScope())
             {
                 try
                 {
-                    var pluginController = scope.ServiceProvider.GetRequiredService<PluginController>();
-                    pluginController.Test();
-                    Console.WriteLine("Test method executed successfully from TestStartupTask.");
+                    // ✅ 推荐：调用服务
+                    var pluginLoader = scope.ServiceProvider.GetRequiredService<IPluginLoadService>();
+
+                    pluginLoader.StartInstalledPlugins();
+
+                    Console.WriteLine("Test methods executed successfully.");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error executing Test method in TestStartupTask: {ex.Message}");
+                    Console.WriteLine($"Error in startup task: {ex.Message}");
                 }
             }
-            return Task.CompletedTask;
         }
     }
 }

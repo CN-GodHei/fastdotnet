@@ -23,6 +23,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         bool IsPluginActive(string pluginId);
         IEnumerable<PluginConfig> GetLoadedPlugins();
         IEnumerable<string> GetActivePlugins();
+        void StartInstalledPlugins();
     }
 
     public class PluginLoadService : IPluginLoadService, IDisposable
@@ -82,7 +83,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 {
                     foreach (var depId in config.dependencies)
                     {
-                        if (!_pluginManager.IsPluginLoaded(depId)) 
+                        if (!_pluginManager.IsPluginLoaded(depId))
                             return CommonResult.Error($"加载失败：依赖项 {depId} 未加载。");
                     }
                 }
@@ -162,7 +163,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         {
             if (_pluginManager.IsPluginLoaded(pluginId))
             {
-                 if (IsPluginActive(pluginId)) 
+                if (IsPluginActive(pluginId))
                     return CommonResult.Error("无法卸载，请先停用插件。");
                 _pluginManager.UnloadPlugin(pluginId);
             }
@@ -200,6 +201,29 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 _disposed = true;
             }
             GC.SuppressFinalize(this);
+        }
+        /// <summary>
+        /// 启动已安装的插件
+        /// </summary>
+        public void StartInstalledPlugins()
+        {
+            string[] subDirectories = Directory.GetDirectories(_pluginsPath);
+            List<string> pluginFolders = new List<string>();
+            foreach (string dirPath in subDirectories)
+            {
+                string dirName = new DirectoryInfo(dirPath).Name;
+                Console.WriteLine(dirName);
+
+                try
+                {
+                    _=EnablePluginAsync(dirName);
+                }
+                catch (Exception)
+                {
+
+                    continue;
+                }
+            }
         }
     }
 }

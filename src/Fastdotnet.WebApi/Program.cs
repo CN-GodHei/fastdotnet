@@ -111,20 +111,42 @@ app.UseAuthorization();
 app.MapControllers();
 
 // --- 应用程序启动后执行启动任务 ---
+// 获取 IHostApplicationLifetime 服务
 var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-lifetime.ApplicationStarted.Register(async () =>
+
+// 注册 ApplicationStarted 事件处理程序
+lifetime.ApplicationStarted.Register(() =>
 {
-    Console.WriteLine("Application has started. Executing startup tasks...");
-    using (var scope = app.Services.CreateScope())
+    // 使用 Task.Run 异步执行，防止阻塞主线程
+    _ = Task.Run(async () =>
     {
-        var startupTasks = scope.ServiceProvider.GetServices<IStartupTask>();
-        foreach (var task in startupTasks)
+        Console.WriteLine("Application has started. Executing startup tasks in background...");
+        try
         {
-            await task.ExecuteAsync();
+            using (var scope = app.Services.CreateScope())
+            {
+                var startupTasks = scope.ServiceProvider.GetServices<IStartupTask>();
+                foreach (var task in startupTasks)
+                {
+                    try
+                    {
+                        await task.ExecuteAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error executing startup task {task.GetType().Name}: {ex.Message}");
+                    }
+                }
+            }
+            Console.WriteLine("All startup tasks executed.");
         }
-    }
-    Console.WriteLine("All startup tasks executed.");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during startup tasks execution: {ex.Message}");
+        }
+    });
 });
+
 
 // 6. 运行应用
 app.Run("http://*:18889");
