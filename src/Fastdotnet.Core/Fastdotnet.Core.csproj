@@ -17,4 +17,8 @@
     <PackageReference Include="System.ComponentModel.Composition" Version="9.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Tasks\" />
+  </ItemGroup>
+
 </Project>
