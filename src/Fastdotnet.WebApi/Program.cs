@@ -10,7 +10,10 @@ using Fastdotnet.WebApi.Extensions;
 using Fastdotnet.WebApi.Middleware;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +25,36 @@ builder.Services.AddControllers().AddControllersAsServices()
         manager.FeatureProviders.Add(new DynamicControllerFeatureProvider());
     });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.TagActionsBy(apiDesc =>
+    {
+        if (apiDesc.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
+        {
+            // 获取插件名称
+            var pluginName = apiDesc.ActionDescriptor.Properties.ContainsKey("PluginName")
+                ? apiDesc.ActionDescriptor.Properties["PluginName"] as string
+                : null;
+
+            var controllerName = controllerActionDescriptor.ControllerName;
+
+            // 如果插件名称存在，则使用插件名称作为主要分组依据
+            if (!string.IsNullOrEmpty(pluginName))
+            {
+                // 插件名作为主分组，控制器名作为子描述
+                return new[] { pluginName };
+            }
+            else
+            {
+                // 对于非插件的API，按控制器名称分组
+                return new[] { controllerName };
+            }
+        }
+
+        return new[] { "Default" };
+    });
+
+});
 builder.Services.AddSingleton<IActionDescriptorChangeProvider>(ActionDescriptorChangeProvider.Instance);
 builder.Services.AddSingleton<DynamicMiddlewareRegistry>();
 //builder.Services.AddSingleton<IActionDescriptorProvider, PluginActionDescriptorProvider>();

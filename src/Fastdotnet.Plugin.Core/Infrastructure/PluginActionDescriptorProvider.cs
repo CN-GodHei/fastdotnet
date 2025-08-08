@@ -41,6 +41,12 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                         var pluginConfig = _pluginManager.GetPluginConfig(controllerType.Assembly);
                         if (pluginConfig != null)
                         {
+                            // --- START: 为Swagger分组添加插件名称 ---
+                            if (!controllerActionDescriptor.Properties.ContainsKey("PluginName"))
+                            {
+                                controllerActionDescriptor.Properties["PluginName"] =$"插件【{pluginConfig.name}】" ;
+                            }
+                            // --- END: 为Swagger分组添加插件名称 ---
                             var pluginId = pluginConfig.id.ToLowerInvariant();
 
                             if (controllerActionDescriptor.AttributeRouteInfo != null)
