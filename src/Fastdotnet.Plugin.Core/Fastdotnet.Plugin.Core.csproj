@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Infrastructure\PluginRouteApplicationModelProvider.cs" />
+    <Compile Remove="Infrastructure\PluginRouteConvention.cs" />
     <Compile Remove="Infrastructure\PluginRoutingMiddleware.cs" />
   </ItemGroup>
 

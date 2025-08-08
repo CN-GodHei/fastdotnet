@@ -1,13 +1,14 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Fastdotnet.Core.Initializers;
+using Fastdotnet.Core.Middleware;
 using Fastdotnet.Plugin.Core.Infrastructure;
 using Fastdotnet.Service;
 using Fastdotnet.Service.Initializers;
 using Fastdotnet.Service.IService.Admin;
 using Fastdotnet.WebApi.Extensions;
-using Fastdotnet.Core.Middleware;
 using Fastdotnet.WebApi.Middleware;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
@@ -24,7 +25,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IActionDescriptorChangeProvider>(ActionDescriptorChangeProvider.Instance);
 builder.Services.AddSingleton<DynamicMiddlewareRegistry>();
-
+builder.Services.AddSingleton<IActionDescriptorProvider, PluginActionDescriptorProvider>();
 // 注册应用服务和初始化器
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IApplicationInitializer, AdminUserInitializer>();

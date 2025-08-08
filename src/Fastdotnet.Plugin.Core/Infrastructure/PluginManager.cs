@@ -1,4 +1,3 @@
-
 using Fastdotnet.Core.Plugin;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using System;
@@ -36,6 +35,11 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         public PluginConfig GetPluginConfig(string pluginId)
         {
             return _loadedPlugins.TryGetValue(pluginId, out var pluginInfo) ? pluginInfo.Item3 : null;
+        }
+
+        public PluginConfig GetPluginConfig(Assembly assembly)
+        {
+            return _loadedPlugins.Values.FirstOrDefault(p => p.Item2 == assembly).Item3;
         }
 
         public IEnumerable<PluginConfig> GetLoadedPluginConfigs()
