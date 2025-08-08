@@ -6,6 +6,7 @@ using Fastdotnet.Plugin.Core.Infrastructure;
 using Fastdotnet.Service;
 using Fastdotnet.Service.Initializers;
 using Fastdotnet.Service.IService.Admin;
+using Fastdotnet.WebApi.Controllers;
 using Fastdotnet.WebApi.Extensions;
 using Fastdotnet.WebApi.Middleware;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Scrutor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +64,13 @@ builder.Services.AddSingleton<DynamicMiddlewareRegistry>();
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IApplicationInitializer, AdminUserInitializer>();
 
+// 扫描并注册所有 IStartupTask 实现
+builder.Services.Scan(scan => scan
+    .FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+    .AddClasses(classes => classes.AssignableTo<IStartupTask>())
+    .AsImplementedInterfaces()
+    .WithScopedLifetime());
+
 
 // 2. 准备插件系统的核心实例
 var partManager = builder.Services.BuildServiceProvider().GetRequiredService<ApplicationPartManager>();
@@ -100,6 +109,22 @@ app.UseMiddleware<DynamicMiddlewareDispatcher>();
 //app.UseMiddleware<PluginRoutingMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
+
+// --- 应用程序启动后执行启动任务 ---
+var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
+lifetime.ApplicationStarted.Register(async () =>
+{
+    Console.WriteLine("Application has started. Executing startup tasks...");
+    using (var scope = app.Services.CreateScope())
+    {
+        var startupTasks = scope.ServiceProvider.GetServices<IStartupTask>();
+        foreach (var task in startupTasks)
+        {
+            await task.ExecuteAsync();
+        }
+    }
+    Console.WriteLine("All startup tasks executed.");
+});
 
 // 6. 运行应用
 app.Run("http://*:18889");
