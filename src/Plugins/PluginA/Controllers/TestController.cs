@@ -26,5 +26,11 @@ namespace PluginA.Controllers
         {
             return Ok(new { message = "在2025-03-02 10点49分由GodHei写下了这行改变dotnet框架插件化生态建设里程碑式进程的代码", testMessage = _testService.GetTestMessage() });
         }
+        [HttpGet]
+        public IActionResult Test()
+        {
+            return Ok(new { message = "在2025-03-02 10点49分由GodHei写下了这行改变dotnet框架插件化生态建设里程碑式进程的代码", testMessage = _testService.GetTestMessage() });
+        }
+
     }
 }
