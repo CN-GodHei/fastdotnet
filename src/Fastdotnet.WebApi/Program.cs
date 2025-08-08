@@ -25,7 +25,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IActionDescriptorChangeProvider>(ActionDescriptorChangeProvider.Instance);
 builder.Services.AddSingleton<DynamicMiddlewareRegistry>();
-builder.Services.AddSingleton<IActionDescriptorProvider, PluginActionDescriptorProvider>();
+//builder.Services.AddSingleton<IActionDescriptorProvider, PluginActionDescriptorProvider>();
 // 注册应用服务和初始化器
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IApplicationInitializer, AdminUserInitializer>();
@@ -44,6 +44,7 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.RegisterInstance(pluginManager).AsSelf().SingleInstance();
     containerBuilder.RegisterType<PluginLoadService>().As<IPluginLoadService>().SingleInstance();
     containerBuilder.RegisterSource(pluginSource);
+    containerBuilder.RegisterType<PluginActionDescriptorProvider>().As<IActionDescriptorProvider>().SingleInstance();
 });
 
 // 4. 构建并运行应用
