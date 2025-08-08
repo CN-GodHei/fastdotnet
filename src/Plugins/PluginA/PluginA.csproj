@@ -18,9 +18,7 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-	      <ProjectReference Include="..\..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
-    <ProjectReference Include="..\..\Fastdotnet.Plugin.Core\Fastdotnet.Plugin.Core.csproj">
-      <Private>false</Private>
-    </ProjectReference>
+	  <ProjectReference Include="..\..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
+	  <ProjectReference Include="..\..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" />
 	</ItemGroup>
 </Project>

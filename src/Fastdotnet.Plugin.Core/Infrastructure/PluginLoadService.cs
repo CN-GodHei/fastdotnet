@@ -1,6 +1,5 @@
 using Autofac;
 using Fastdotnet.Core.Models;
-using Fastdotnet.Core.Plugin;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
@@ -11,6 +10,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System;
+using Fastdotnet.Plugin.Contracts;
 
 namespace Fastdotnet.Plugin.Core.Infrastructure
 {

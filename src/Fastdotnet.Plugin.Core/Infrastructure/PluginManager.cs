@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Plugin;
+using Fastdotnet.Plugin.Contracts;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using System;
 using System.Collections.Concurrent;

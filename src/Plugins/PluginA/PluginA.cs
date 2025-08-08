@@ -2,11 +2,11 @@
 using Autofac;
 using System.Threading.Tasks;
 using Fastdotnet.Core.Middleware;
-using Fastdotnet.Core.Plugin;
 using Microsoft.Extensions.DependencyInjection;
 using PluginA.Middleware;
 // This using statement is necessary to find the extension method 'GetService'.
 using Microsoft.Extensions.DependencyInjection;
+using Fastdotnet.Plugin.Contracts;
 
 // The namespace for the WebApi project must be included to find the DynamicMiddlewareRegistry.
 

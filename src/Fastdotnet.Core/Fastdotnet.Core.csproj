@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Plugin\IPlugin.cs" />
+    <Compile Remove="Plugin\PluginConfig.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
@@ -19,6 +24,10 @@
 
   <ItemGroup>
     <Folder Include="Tasks\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
