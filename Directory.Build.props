@@ -1,0 +1,3 @@
+<Project>
+  <Import Project="Directory.Packages.props" Condition="Exists('Directory.Packages.props')" />
+</Project>

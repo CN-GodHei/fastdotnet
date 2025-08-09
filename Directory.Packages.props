@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="SqlSugarCore" Version="5.1.4.199" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+  <PackageVersion Include="SqlSugarCore" Version="5.1.4.199" />
+</ItemGroup>
+</Project>
