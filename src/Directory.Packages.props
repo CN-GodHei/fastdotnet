@@ -16,5 +16,6 @@
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.5.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="9.0.2" />
+    <PackageVersion Include="SqlSugarCore" Version="5.1.4.199" />
   </ItemGroup>
 </Project>

@@ -1,30 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using PluginA.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using SqlSugar;
 using System.Threading.Tasks;
+using Fastdotnet.Core.Models.User;
 
 namespace PluginA.Controllers
 {
-
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("api/plugin-a/[controller]")]
     public class Test2Controller : ControllerBase
     {
-        private readonly ITestService _testService;
+        private readonly ISqlSugarClient _db;
 
-        public Test2Controller(ITestService testService)
+        public Test2Controller(ISqlSugarClient db)
         {
-            _testService = testService;
+            _db = db;
         }
 
-        [HttpGet]
-        public IActionResult Hello()
+        [HttpGet("users")]
+        public async Task<IActionResult> GetUsers()
         {
-            return Ok(new { message = "你好", testMessage = _testService.GetTestMessage() });
+            var users = await _db.Queryable<FdUser>().ToListAsync();
+            return Ok(users);
+        }
+
+        [HttpPost("users")]
+        public async Task<IActionResult> CreateUser([FromBody] FdUser user)
+        {
+            var id = await _db.Insertable(user).ExecuteReturnIdentityAsync();
+            user.Id = id;
+            return Ok(user);
         }
     }
 }

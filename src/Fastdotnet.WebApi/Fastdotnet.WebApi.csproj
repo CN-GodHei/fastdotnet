@@ -6,27 +6,29 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <!-- 确保 XML 文档文件被发布 -->
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <DocumentationFile>Fastdotnet.WebApi.xml</DocumentationFile>
     <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" />
-    <PackageReference Include="Newtonsoft.Json" />
-    <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="Scrutor" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    <PackageReference Include="SqlSugarCore" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
+    <ProjectReference Include="..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" />
+    <ProjectReference Include="..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" />
     <ProjectReference Include="..\Fastdotnet.Plugin.Core\Fastdotnet.Plugin.Core.csproj" />
     <ProjectReference Include="..\Fastdotnet.Service\Fastdotnet.Service.csproj" />
-    <ProjectReference Include="..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +40,13 @@
     <Content Include="$(NuGetPackageRoot)swashbuckle.aspnetcore\**\swagger-ui\**" LinkBase="swagger" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
-  <!--<Target Name="SetupPluginDirectory" AfterTargets="Build">
+  <!-- 强制使用指定版本的包 -->
+  <ItemGroup>
+    <PackageVersion Include="Autofac" Version="8.4.0" />
+  </ItemGroup>
+  
+  <!--
+  <Target Name="SetupPluginDirectory" AfterTargets="Build">
     <PropertyGroup>
       <PluginsOutputPath>$(OutputPath)Plugins</PluginsOutputPath>
     </PropertyGroup>
@@ -52,8 +60,9 @@
     <ItemGroup>
       <PluginFiles Include="$(SolutionDir)src\Plugins\**\bin\$(Configuration)\net8.0\**\*.*" />
     </ItemGroup>
-    --><!-- 动态生成插件名称目录并发布文件 --><!--
+    动态生成插件名称目录并发布文件
     <Copy SourceFiles="@(PluginFiles)" DestinationFiles="@(PluginFiles->'$(PluginsOutputPath)\%(Filename)\%(RecursiveDir)%(Filename)%(Extension)')" />
-  </Target>-->
+  </Target>
+  -->
 
 </Project>

@@ -1,3 +1,4 @@
+using Fastdotnet.Core.Models.Base;
 using SqlSugar;
 using System;
 

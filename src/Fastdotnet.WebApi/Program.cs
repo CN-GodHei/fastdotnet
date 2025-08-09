@@ -109,6 +109,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// RequestIdMiddleware应该在所有其他中间件之前注册，确保每个请求都有RequestId
+app.UseMiddleware<RequestIdMiddleware>();
+
 // 注册动态中间件调度器，它将执行来自所有插件的中间件
 app.UseMiddleware<DynamicMiddlewareDispatcher>();
 

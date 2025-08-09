@@ -1,36 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using PluginA.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using SqlSugar;
 using System.Threading.Tasks;
+using PluginA.Entities;
 
 namespace PluginA.Controllers
 {
-
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("api/plugin-a/[controller]")]
     public class TestController : ControllerBase
     {
-        private readonly ITestService _testService;
+        private readonly ISqlSugarClient _db;
 
-        public TestController(ITestService testService)
+        public TestController(ISqlSugarClient db)
         {
-            _testService = testService;
+            _db = db;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(new { message = "在2025-03-02 10点49分由GodHei写下了这行改变dotnet框架插件化生态建设里程碑式进程的代码", testMessage = _testService.GetTestMessage() });
-        }
-        [HttpGet]
-        public IActionResult Test()
-        {
-            return Ok(new { message = "在2025-03-02 10点49分由GodHei写下了这行改变dotnet框架插件化生态建设里程碑式进程的代码", testMessage = _testService.GetTestMessage() });
+            var entities = await _db.Queryable<PluginEntity>().ToListAsync();
+            return Ok(entities);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] PluginEntity entity)
+        {
+            var id = await _db.Insertable(entity).ExecuteReturnIdentityAsync();
+            entity.Id = id;
+            return Ok(entity);
+        }
     }
 }

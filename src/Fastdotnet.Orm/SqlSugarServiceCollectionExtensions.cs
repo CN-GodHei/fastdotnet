@@ -1,4 +1,6 @@
+using Fastdotnet.Core.Models.Base;
 using Fastdotnet.Core.Models.Interfaces;
+using Fastdotnet.Core.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -51,6 +53,33 @@ public static class SqlSugarServiceCollectionExtensions
 
                 // 配置全局软删除过滤器
                 db.QueryFilter.AddTableFilter<ISoftDelete>(u => u.IsDeleted == false);
+                
+                // 插入前自动填充雪花ID和创建时间
+                db.Aop.DataExecuting = (oldValue, entityInfo) =>
+                {
+                    if (entityInfo.OperationType == DataFilterType.InsertByObject)
+                    {
+                        // 自动填充雪花ID（如果ID为0）
+                        if (entityInfo.PropertyName == nameof(IBaseEntity.Id) && (long)oldValue == 0)
+                        {
+                            entityInfo.SetValue(SnowflakeIdGenerator.NextId());
+                        }
+                        
+                        // 自动填充创建时间（如果CreateTime为默认值）
+                        else if (entityInfo.PropertyName == nameof(IBaseEntity.CreateTime) && (DateTime)oldValue == default)
+                        {
+                            entityInfo.SetValue(DateTime.Now);
+                        }
+                    }
+                    else if (entityInfo.OperationType == DataFilterType.UpdateByObject)
+                    {
+                        // 自动填充更新时间
+                        if (entityInfo.PropertyName == nameof(IBaseEntity.UpdateTime))
+                        {
+                            entityInfo.SetValue(DateTime.Now);
+                        }
+                    }
+                };
             });
 
             return scope;
@@ -75,23 +104,28 @@ public static class SqlSugarServiceCollectionExtensions
         }
 
         var sqlClient = serviceProvider.GetRequiredService<ISqlSugarClient>();
-        var pluginDirectory = Path.GetDirectoryName(pluginAssembly.Location);
 
-        if (string.IsNullOrEmpty(pluginDirectory))
-        {
-            return;
-        }
-
-        // 查找所有与该插件位于同一目录的已加载程序集
-        var allLoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-        var pluginAssemblies = allLoadedAssemblies
-            .Where(a => !a.IsDynamic && string.Equals(Path.GetDirectoryName(a.Location), pluginDirectory, StringComparison.OrdinalIgnoreCase));
-
-        // 从这些程序集中找出所有符合条件的实体
-        var entityTypes = pluginAssemblies
-            .SelectMany(a => a.GetTypes())
+        // 直接从传入的插件程序集中找出所有符合条件的实体
+        var entityTypes = pluginAssembly.GetTypes()
             .Where(t => t.IsClass && !t.IsAbstract && t.GetCustomAttribute<SugarTable>() != null)
             .ToArray();
+
+        // 同时也检查当前AppDomain中其他已加载的插件相关程序集
+        var pluginName = pluginAssembly.GetName().Name?.Split('.').FirstOrDefault() ?? string.Empty;
+        if (!string.IsNullOrEmpty(pluginName))
+        {
+            var pluginAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && (a.GetName().Name?.StartsWith(pluginName) ?? false));
+
+            foreach (var assembly in pluginAssemblies)
+            {
+                var additionalEntityTypes = assembly.GetTypes()
+                    .Where(t => t.IsClass && !t.IsAbstract && t.GetCustomAttribute<SugarTable>() != null)
+                    .ToArray();
+
+                entityTypes = entityTypes.Concat(additionalEntityTypes).ToArray();
+            }
+        }
 
         if (entityTypes.Any())
         {

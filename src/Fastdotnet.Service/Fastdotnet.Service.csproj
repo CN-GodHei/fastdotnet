@@ -7,13 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Tasks\**" />
-    <EmbeddedResource Remove="Tasks\**" />
-    <None Remove="Tasks\**" />
+    <PackageReference Include="SqlSugarCore" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
+    <ProjectReference Include="..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" />
   </ItemGroup>
 
 </Project>

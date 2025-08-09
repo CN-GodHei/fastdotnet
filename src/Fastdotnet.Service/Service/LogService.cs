@@ -1,4 +1,5 @@
-using Fastdotnet.Core.Models.Logs;
+using Fastdotnet.Core.Models.LogModels;
+using Fastdotnet.Core.Utils;
 using Fastdotnet.Service.IService;
 using SqlSugar;
 using System.Threading.Tasks;
@@ -25,16 +26,34 @@ public class LogService : ILogService
 
     public async Task AddOperationLogAsync(OperationLog log)
     {
+        // 自动填充RequestId
+        if (string.IsNullOrEmpty(log.RequestId))
+        {
+            log.RequestId = RequestIdManager.CurrentRequestId;
+        }
+        
         await GetLogDb().Insertable(log).ExecuteCommandAsync();
     }
 
     public async Task AddExceptionLogAsync(ExceptionLog log)
     {
+        // 自动填充RequestId
+        if (string.IsNullOrEmpty(log.RequestId))
+        {
+            log.RequestId = RequestIdManager.CurrentRequestId;
+        }
+        
         await GetLogDb().Insertable(log).ExecuteCommandAsync();
     }
 
     public async Task AddDebugLogAsync(DebugLog log)
     {
+        // 自动填充RequestId
+        if (string.IsNullOrEmpty(log.RequestId))
+        {
+            log.RequestId = RequestIdManager.CurrentRequestId;
+        }
+        
         await GetLogDb().Insertable(log).ExecuteCommandAsync();
     }
 }

@@ -104,18 +104,17 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 if (assembly == null) return CommonResult.Error("找不到插件程序集。");
 
                 // 为插件执行CodeFirst
+                // 使用根服务提供程序而不是作用域内的提供程序
                 _serviceProvider.UsePluginCodeFirst(assembly);
 
                 var pluginType = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsAbstract);
                 if (pluginType != null)
                 {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        var pluginInstance = (IPlugin)ActivatorUtilities.CreateInstance(scope.ServiceProvider, pluginType);
-                        await pluginInstance.InitializeAsync(scope.ServiceProvider);
-                        await pluginInstance.StartAsync();
-                        _activePlugins.TryAdd(pluginId, pluginInstance);
-                    }
+                    // 使用根服务提供程序创建插件实例
+                    var pluginInstance = (IPlugin)ActivatorUtilities.CreateInstance(_serviceProvider, pluginType);
+                    await pluginInstance.InitializeAsync(_serviceProvider);
+                    await pluginInstance.StartAsync();
+                    _activePlugins.TryAdd(pluginId, pluginInstance);
                 }
                 _logger?.LogInformation($"插件 {pluginId} 启用成功。");
                 return CommonResult.Success($"插件 {pluginId} 启用成功。");
@@ -146,11 +145,9 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             {
                 if (_activePlugins.TryRemove(pluginId, out var plugin))
                 {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        await plugin.StopAsync();
-                        await plugin.UnloadAsync(scope.ServiceProvider);
-                    }
+                    // 使用根服务提供程序而不是作用域内的提供程序
+                    await plugin.StopAsync();
+                    await plugin.UnloadAsync(_serviceProvider);
                 }
                 _pluginManager.UnloadPlugin(pluginId);
                 _logger?.LogInformation($"插件 {pluginId} 已成功停用并卸载。");
@@ -206,6 +203,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             }
             GC.SuppressFinalize(this);
         }
+        
         /// <summary>
         /// 启动已安装的插件
         /// </summary>

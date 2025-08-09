@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Fastdotnet.WebApi</name>
+    </assembly>
+    <members>
+        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.ScanPlugins">
+            <summary>
+            扫描插件目录以发现所有可用插件
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.EnablePlugin(System.String)">
+            <summary>
+            启用一个插件（如果未加载，则先加载）
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.DisablePlugin(System.String)">
+            <summary>
+            停用一个插件（停止业务并卸载其代码）
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.UninstallPlugin(System.String)">
+            <summary>
+            从磁盘物理删除一个已停用的插件
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.GetLoadedPlugins">
+            <summary>
+            获取所有已加载的插件（无论是否激活）
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.GetActivePlugins">
+            <summary>
+            获取所有当前活动的插件
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.IsPluginActive(System.String)">
+            <summary>
+            检查一个插件当前是否处于活动状态
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.WebApi.Extensions.ApplicationInitializerExtensions">
+            <summary>
+            Provides extension methods for application initializers.
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Extensions.ApplicationInitializerExtensions.UseApplicationInitializers(Microsoft.AspNetCore.Builder.WebApplication)">
+            <summary>
+            Discovers and executes all registered IApplicationInitializer services.
+            </summary>
+            <param name="app">The WebApplication instance.</param>
+        </member>
+        <member name="T:Fastdotnet.WebApi.Middleware.Authentication.JwtMiddleware">
+            <summary>
+            JWT认证中间件
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.WebApi.Middleware.DynamicMiddlewareDispatcher">
+            <summary>
+            A dispatcher middleware that executes dynamic middlewares from a central registry.
+            This enables hot-pluggable plugins to participate in the HTTP request pipeline.
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.WebApi.Middleware.RequestIdMiddleware">
+            <summary>
+            请求ID中间件，为每个请求生成唯一的请求ID
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,4 +1,5 @@
 using Fastdotnet.Core.Initializers;
+using Fastdotnet.Core.Models.LogModels;
 using SqlSugar;
 using System;
 using System.Linq;
@@ -20,15 +21,37 @@ public class OrmCodeFirstInitializer : IApplicationInitializer
 
     public async Task InitializeAsync()
     {
+        // 获取主业务数据库连接
+        var mainDb = _sqlSugarClient.AsTenant().GetConnection("main");
+        
+        // 获取日志数据库连接
+        var logDb = _sqlSugarClient.AsTenant().GetConnection("log");
+
         // 扫描当前应用域中的所有程序集
-        var entityTypes = AppDomain.CurrentDomain.GetAssemblies()
+        var allEntityTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes())
             .Where(t => t.IsClass && !t.IsAbstract && t.GetCustomAttribute<SugarTable>() != null)
             .ToArray();
 
-        if (entityTypes.Any())
+        // 分离日志实体和业务实体
+        var logEntityTypes = allEntityTypes
+            .Where(t => t.Namespace != null && t.Namespace.EndsWith("LogModels"))
+            .ToArray();
+
+        var mainEntityTypes = allEntityTypes
+            .Where(t => !logEntityTypes.Contains(t))
+            .ToArray();
+
+        // 为主业务库初始化表
+        if (mainEntityTypes.Any())
         {
-            _sqlSugarClient.CodeFirst.InitTables(entityTypes);
+            mainDb.CodeFirst.InitTables(mainEntityTypes);
+        }
+
+        // 为日志库初始化表
+        if (logEntityTypes.Any())
+        {
+            logDb.CodeFirst.InitTables(logEntityTypes);
         }
 
         await Task.CompletedTask;

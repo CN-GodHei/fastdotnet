@@ -5,14 +5,35 @@ using System;
 namespace Fastdotnet.Core.Models.Base
 {
     /// <summary>
-    /// 基础实体类
+    /// 基础实体类接口
     /// </summary>
-    public class BaseEntity : ISoftDelete
+    public interface IBaseEntity
     {
         /// <summary>
         /// 主键ID
         /// </summary>
-        [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
+        long Id { get; set; }
+        
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        DateTime CreateTime { get; set; }
+        
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        DateTime? UpdateTime { get; set; }
+    }
+    
+    /// <summary>
+    /// 基础实体类
+    /// </summary>
+    public class BaseEntity : IBaseEntity, ISoftDelete
+    {
+        /// <summary>
+        /// 主键ID
+        /// </summary>
+        [SugarColumn(IsPrimaryKey = true)]
         public long Id { get; set; }
 
         /// <summary>
