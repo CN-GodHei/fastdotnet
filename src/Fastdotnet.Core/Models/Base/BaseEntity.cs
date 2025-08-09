@@ -1,3 +1,5 @@
+using Fastdotnet.Core.Models.Interfaces;
+using SqlSugar;
 using System;
 
 namespace Fastdotnet.Core.Models.Base
@@ -5,11 +7,12 @@ namespace Fastdotnet.Core.Models.Base
     /// <summary>
     /// 基础实体类
     /// </summary>
-    public class BaseEntity
+    public class BaseEntity : ISoftDelete
     {
         /// <summary>
         /// 主键ID
         /// </summary>
+        [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
         public long Id { get; set; }
 
         /// <summary>
@@ -26,5 +29,10 @@ namespace Fastdotnet.Core.Models.Base
         /// 是否删除
         /// </summary>
         public bool IsDeleted { get; set; } = false;
+
+        /// <summary>
+        /// 删除时间
+        /// </summary>
+        public DateTime? DeleteTime { get; set; }
     }
 }

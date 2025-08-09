@@ -20,8 +20,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="System.ComponentModel.Composition" />
+	  <PackageReference Include="SqlSugarCore" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Tasks\" />
   </ItemGroup>

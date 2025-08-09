@@ -6,6 +6,7 @@ using Fastdotnet.Plugin.Core.Infrastructure;
 using Fastdotnet.Service;
 using Fastdotnet.Service.Initializers;
 using Fastdotnet.Service.IService.Admin;
+using Fastdotnet.Orm;
 using Fastdotnet.WebApi.Controllers;
 using Fastdotnet.WebApi.Extensions;
 using Fastdotnet.WebApi.Middleware;
@@ -59,10 +60,15 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddSingleton<IActionDescriptorChangeProvider>(ActionDescriptorChangeProvider.Instance);
 builder.Services.AddSingleton<DynamicMiddlewareRegistry>();
+
+// 添加ORM
+builder.Services.AddSqlSugar(builder.Configuration);
+
 //builder.Services.AddSingleton<IActionDescriptorProvider, PluginActionDescriptorProvider>();
 // 注册应用服务和初始化器
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IApplicationInitializer, AdminUserInitializer>();
+builder.Services.AddScoped<IApplicationInitializer, OrmCodeFirstInitializer>();
 
 // 扫描并注册所有 IStartupTask 实现
 builder.Services.Scan(scan => scan

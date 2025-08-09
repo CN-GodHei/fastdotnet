@@ -1,3 +1,4 @@
+using SqlSugar;
 using System;
 
 namespace Fastdotnet.Core.Models.Admin
@@ -5,6 +6,7 @@ namespace Fastdotnet.Core.Models.Admin
     /// <summary>
     /// 管理员表
     /// </summary>
+    [SugarTable("fd_admin_user")]
     public class FdAdminUser : BaseEntity
     {
         /// <summary>

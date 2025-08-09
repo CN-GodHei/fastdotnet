@@ -11,6 +11,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System;
 using Fastdotnet.Plugin.Contracts;
+using Fastdotnet.Orm;
 
 namespace Fastdotnet.Plugin.Core.Infrastructure
 {
@@ -101,6 +102,9 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             {
                 var assembly = _pluginManager.GetPluginAssembly(pluginId);
                 if (assembly == null) return CommonResult.Error("找不到插件程序集。");
+
+                // 为插件执行CodeFirst
+                _serviceProvider.UsePluginCodeFirst(assembly);
 
                 var pluginType = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsAbstract);
                 if (pluginType != null)

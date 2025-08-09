@@ -26,6 +26,7 @@
     <ProjectReference Include="..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
     <ProjectReference Include="..\Fastdotnet.Plugin.Core\Fastdotnet.Plugin.Core.csproj" />
     <ProjectReference Include="..\Fastdotnet.Service\Fastdotnet.Service.csproj" />
+    <ProjectReference Include="..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" />
   </ItemGroup>
 
   <ItemGroup>
