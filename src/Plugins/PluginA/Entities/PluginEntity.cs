@@ -11,11 +11,6 @@ namespace PluginA.Entities
     public class PluginEntity: BaseEntity
     {
         /// <summary>
-        /// 主键ID
-        /// </summary>
-        public long Id { get; set; }
-
-        /// <summary>
         /// 名称
         /// </summary>
         public string Name { get; set; }

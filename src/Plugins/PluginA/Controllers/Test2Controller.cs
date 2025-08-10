@@ -6,7 +6,7 @@ using Fastdotnet.Core.Models.User;
 namespace PluginA.Controllers
 {
     [ApiController]
-    [Route("api/plugin-a/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class Test2Controller : ControllerBase
     {
         private readonly ISqlSugarClient _db;

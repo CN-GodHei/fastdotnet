@@ -6,7 +6,7 @@ using PluginA.Entities;
 namespace PluginA.Controllers
 {
     [ApiController]
-    [Route("api/plugin-a/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class TestController : ControllerBase
     {
         private readonly ISqlSugarClient _db;
