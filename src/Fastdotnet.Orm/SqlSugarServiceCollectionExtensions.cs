@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SqlSugar;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -111,27 +113,71 @@ public static class SqlSugarServiceCollectionExtensions
         var entityTypes = pluginAssembly.GetTypes()
             .Where(t => t.IsClass && !t.IsAbstract && t.GetCustomAttribute<SugarTable>() != null)
             .ToArray();
-
-        // 同时也检查当前AppDomain中其他已加载的插件相关程序集
-        var pluginName = pluginAssembly.GetName().Name?.Split('.').FirstOrDefault() ?? string.Empty;
-        if (!string.IsNullOrEmpty(pluginName))
-        {
-            var pluginAssemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(a => !a.IsDynamic && (a.GetName().Name?.StartsWith(pluginName) ?? false));
-
-            foreach (var assembly in pluginAssemblies)
-            {
-                var additionalEntityTypes = assembly.GetTypes()
-                    .Where(t => t.IsClass && !t.IsAbstract && t.GetCustomAttribute<SugarTable>() != null)
-                    .ToArray();
-
-                entityTypes = entityTypes.Concat(additionalEntityTypes).ToArray();
-            }
-        }
-
+        
         if (entityTypes.Any())
         {
             sqlClient.CodeFirst.InitTables(entityTypes);
+        }
+    }
+
+    /// <summary>
+    /// 从SqlSugar缓存中移除插件的实体类型
+    /// </summary>
+    /// <param name="serviceProvider"></param>
+    /// <param name="pluginAssembly">要卸载的插件程序集</param>
+    public static void RemovePluginCodeFirst(this IServiceProvider serviceProvider, Assembly pluginAssembly)
+    {
+        if (pluginAssembly == null)
+        {
+            return;
+        }
+
+        var sqlClient = serviceProvider.GetRequiredService<ISqlSugarClient>();
+
+        // 找出该程序集中所有被SqlSugar管理的实体
+        var entityTypesInAssembly = pluginAssembly.GetTypes()
+            .Where(t => t.IsClass && !t.IsAbstract && t.GetCustomAttribute<SugarTable>() != null)
+            .ToHashSet();
+
+        if (entityTypesInAssembly.Any())
+        {
+            try
+            {
+                // 通过反射获取私有字段 _entityInfoList
+                var entityMaintenance = sqlClient.EntityMaintenance;
+                var fieldInfo = typeof(EntityMaintenance).GetField("EntityList", BindingFlags.NonPublic | BindingFlags.Instance);
+                
+                if (fieldInfo != null)
+                {
+                    // 获取当前缓存的实体列表
+                    var entityInfoList = fieldInfo.GetValue(entityMaintenance) as IList;
+                    if (entityInfoList != null)
+                    {
+                        // 创建一个列表来存储要移除的项，避免在遍历时修改集合
+                        var itemsToRemove = new List<object>();
+                        foreach (var item in entityInfoList)
+                        {
+                            var entityType = item.GetType().GetProperty("EntityType")?.GetValue(item) as Type;
+                            if (entityType != null && entityTypesInAssembly.Contains(entityType))
+                            {
+                                itemsToRemove.Add(item);
+                            }
+                        }
+
+                        // 从列表中移除
+                        foreach (var item in itemsToRemove)
+                        {
+                            entityInfoList.Remove(item);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // 记录反射操作可能出现的错误
+                var logger = serviceProvider.GetService<ILogger<ISqlSugarClient>>();
+                logger?.LogError(ex, "Failed to remove plugin entities from SqlSugar cache via reflection.");
+            }
         }
     }
 }

@@ -1,9 +1,11 @@
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Fastdotnet.Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,6 +14,7 @@ using System.Threading.Tasks;
 using System;
 using Fastdotnet.Plugin.Contracts;
 using Fastdotnet.Orm;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Fastdotnet.Plugin.Core.Infrastructure
 {
@@ -25,22 +28,29 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         IEnumerable<PluginConfig> GetLoadedPlugins();
         IEnumerable<string> GetActivePlugins();
         void StartInstalledPlugins();
+        bool TryGetPluginScope(string pluginId, [MaybeNullWhen(false)] out ILifetimeScope scope);
     }
 
     public class PluginLoadService : IPluginLoadService, IDisposable
     {
         private readonly PluginManager _pluginManager;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ILifetimeScope _rootLifetimeScope;
         private readonly ILogger<PluginLoadService> _logger;
-        private readonly ConcurrentDictionary<string, IPlugin> _activePlugins = new ConcurrentDictionary<string, IPlugin>();
+        
+        private readonly ConcurrentDictionary<string, ILifetimeScope> _pluginScopes = new();
         private readonly string _pluginsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
         private bool _disposed = false;
 
-        public PluginLoadService(PluginManager pluginManager, IServiceProvider serviceProvider, ILogger<PluginLoadService> logger = null)
+        public PluginLoadService(PluginManager pluginManager, ILifetimeScope lifetimeScope, ILogger<PluginLoadService> logger = null)
         {
             _pluginManager = pluginManager;
-            _serviceProvider = serviceProvider;
+            _rootLifetimeScope = lifetimeScope;
             _logger = logger;
+        }
+
+        public bool TryGetPluginScope(string pluginId, [MaybeNullWhen(false)] out ILifetimeScope scope)
+        {
+            return _pluginScopes.TryGetValue(pluginId, out scope);
         }
 
         public Task<CommonResult<IEnumerable<PluginConfig>>> ScanPluginsAsync()
@@ -66,10 +76,10 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         {
             if (IsPluginActive(pluginId)) return CommonResult.Success($"插件 {pluginId} 已启用。");
 
-            // Step 1: Technical Load (if not already loaded)
-            if (!_pluginManager.IsPluginLoaded(pluginId))
+            var assembly = _pluginManager.GetPluginAssembly(pluginId);
+            if (assembly == null)
             {
-                var pluginDir = Path.Combine(_pluginsPath, pluginId);
+                 var pluginDir = Path.Combine(_pluginsPath, pluginId);
                 if (!Directory.Exists(pluginDir)) return CommonResult.Error("找不到插件目录。");
 
                 var configPath = Path.Combine(pluginDir, "plugin.json");
@@ -79,13 +89,12 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 var config = JsonSerializer.Deserialize<PluginConfig>(configJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 if (config == null) return CommonResult.Error("无法解析plugin.json。");
 
-                // Check dependencies before loading
                 if (config.dependencies != null)
                 {
                     foreach (var depId in config.dependencies)
                     {
-                        if (!_pluginManager.IsPluginLoaded(depId))
-                            return CommonResult.Error($"加载失败：依赖项 {depId} 未加载。");
+                        if (!IsPluginActive(depId))
+                            return CommonResult.Error($"加载失败：依赖项 {depId} 未加载或未启用。");
                     }
                 }
 
@@ -93,28 +102,36 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 var dllPath = Path.Combine(pluginDir, entryPoint);
                 if (!File.Exists(dllPath)) return CommonResult.Error($"找不到入口文件 {entryPoint}。");
 
-                // The DI container cannot be modified at runtime. Services must be resolved dynamically.
-                _pluginManager.LoadPlugin(config, dllPath);
+                assembly = _pluginManager.LoadPlugin(config, dllPath);
+                if (assembly == null) return CommonResult.Error("插件程序集加载失败。");
             }
 
-            // Step 2: Business Activation
             try
             {
-                var assembly = _pluginManager.GetPluginAssembly(pluginId);
-                if (assembly == null) return CommonResult.Error("找不到插件程序集。");
-
-                // 为插件执行CodeFirst
-                // 使用根服务提供程序而不是作用域内的提供程序
-                _serviceProvider.UsePluginCodeFirst(assembly);
+                SqlSugarServiceCollectionExtensions.UsePluginCodeFirst(new AutofacServiceProvider(_rootLifetimeScope), assembly);
 
                 var pluginType = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsAbstract);
                 if (pluginType != null)
                 {
-                    // 使用根服务提供程序创建插件实例
-                    var pluginInstance = (IPlugin)ActivatorUtilities.CreateInstance(_serviceProvider, pluginType);
-                    await pluginInstance.InitializeAsync(_serviceProvider);
+                    var pluginScope = _rootLifetimeScope.BeginLifetimeScope(builder =>
+                    {
+                        var tempPluginInstance = (IPlugin)Activator.CreateInstance(pluginType);
+                        tempPluginInstance.ConfigureServices(builder);
+                        
+                        builder.RegisterType(pluginType).As<IPlugin>().InstancePerLifetimeScope();
+                        builder.RegisterAssemblyTypes(assembly)
+                               .Where(t => typeof(ControllerBase).IsAssignableFrom(t))
+                               .AsSelf()
+                               .InstancePerDependency();
+                    });
+
+                    _pluginScopes.TryAdd(pluginId, pluginScope);
+
+                    var pluginInstance = pluginScope.Resolve<IPlugin>();
+                    
+                    // 插件的 InitializeAsync 需要一个 IServiceProvider，它自己的子容器就是最好的选择
+                    await pluginInstance.InitializeAsync(new AutofacServiceProvider(pluginScope));
                     await pluginInstance.StartAsync();
-                    _activePlugins.TryAdd(pluginId, pluginInstance);
                 }
                 _logger?.LogInformation($"插件 {pluginId} 启用成功。");
                 return CommonResult.Success($"插件 {pluginId} 启用成功。");
@@ -122,6 +139,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             catch (Exception ex)
             {
                 _logger?.LogError(ex, $"启用插件 {pluginId} 失败");
+                await DisablePluginAsync(pluginId);
                 return CommonResult.Error($"启用插件失败: {ex.Message}");
             }
         }
@@ -143,13 +161,32 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
 
             try
             {
-                if (_activePlugins.TryRemove(pluginId, out var plugin))
+                var assembly = _pluginManager.GetPluginAssembly(pluginId);
+
+                // 核心修复：在销毁作用域之前，先执行插件自己的清理逻辑
+                if (_pluginScopes.TryRemove(pluginId, out var pluginScope))
                 {
-                    // 使用根服务提供程序而不是作用域内的提供程序
+                    // 1. 从子容器中解析出插件实例
+                    var plugin = pluginScope.Resolve<IPlugin>();
+                    
+                    // 2. 执行插件的停止和卸载方法，让它自己清理（比如注销中间件）
                     await plugin.StopAsync();
-                    await plugin.UnloadAsync(_serviceProvider);
+                    await plugin.UnloadAsync(new AutofacServiceProvider(pluginScope));
+                    
+                    // 3. 彻底销毁子容器，释放所有DI引用
+                    pluginScope.Dispose();
+                    _logger?.LogInformation("插件 [{pluginId}] 的DI作用域已成功销毁。", pluginId);
                 }
+
+                // 4. 清理ORM缓存
+                if (assembly != null)
+                {
+                    SqlSugarServiceCollectionExtensions.RemovePluginCodeFirst(new AutofacServiceProvider(_rootLifetimeScope), assembly);
+                }
+
+                // 5. 卸载程序集
                 _pluginManager.UnloadPlugin(pluginId);
+
                 _logger?.LogInformation($"插件 {pluginId} 已成功停用并卸载。");
                 return CommonResult.Success("插件已成功停用。");
             }
@@ -162,11 +199,14 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
 
         public async Task<CommonResult> UninstallPluginAsync(string pluginId)
         {
+            if (IsPluginActive(pluginId))
+            {
+                return CommonResult.Error("无法卸载，请先停用插件。");
+            }
+            
             if (_pluginManager.IsPluginLoaded(pluginId))
             {
-                if (IsPluginActive(pluginId))
-                    return CommonResult.Error("无法卸载，请先停用插件。");
-                _pluginManager.UnloadPlugin(pluginId);
+                 _pluginManager.UnloadPlugin(pluginId);
             }
 
             try
@@ -186,15 +226,16 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             }
         }
 
-        public bool IsPluginActive(string pluginId) => _activePlugins.ContainsKey(pluginId);
-        public IEnumerable<string> GetActivePlugins() => _activePlugins.Keys;
+        public bool IsPluginActive(string pluginId) => _pluginScopes.ContainsKey(pluginId);
+        public IEnumerable<string> GetActivePlugins() => _pluginScopes.Keys;
+        
         public IEnumerable<PluginConfig> GetLoadedPlugins() => _pluginManager.GetLoadedPluginConfigs();
 
         public void Dispose()
         {
             if (!_disposed)
             {
-                var activePluginIds = _activePlugins.Keys.ToList();
+                var activePluginIds = _pluginScopes.Keys.ToList();
                 foreach (var pluginName in activePluginIds)
                 {
                     DisablePluginAsync(pluginName).GetAwaiter().GetResult();
@@ -204,26 +245,21 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             GC.SuppressFinalize(this);
         }
         
-        /// <summary>
-        /// 启动已安装的插件
-        /// </summary>
         public void StartInstalledPlugins()
         {
-            string[] subDirectories = Directory.GetDirectories(_pluginsPath);
-            List<string> pluginFolders = new List<string>();
-            foreach (string dirPath in subDirectories)
-            {
-                string dirName = new DirectoryInfo(dirPath).Name;
-                Console.WriteLine(dirName);
+            var pluginDirs = Directory.GetDirectories(_pluginsPath)
+                .Select(d => new DirectoryInfo(d).Name)
+                .ToList();
 
+            foreach (var pluginId in pluginDirs)
+            {
                 try
                 {
-                    _=EnablePluginAsync(dirName);
+                    _ = EnablePluginAsync(pluginId).GetAwaiter().GetResult();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
-                    continue;
+                    _logger?.LogError(ex, "启动已安装插件 [{pluginId}] 时发生错误。", pluginId);
                 }
             }
         }
