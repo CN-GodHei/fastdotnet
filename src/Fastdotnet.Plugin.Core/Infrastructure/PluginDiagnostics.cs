@@ -1,7 +1,9 @@
+using Fastdotnet.Core.Middleware;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -12,120 +14,118 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
     public static class PluginDiagnostics
     {
         /// <summary>
-        /// 诊断插件卸载后文件仍然被占用的问题。
+        /// 执行具有破坏性的诊断，以找出文件锁的根源。
         /// </summary>
-        /// <param name="pluginId">插件ID</param>
-        /// <param name="pluginDllPath">插件DLL的完整路径</param>
-        /// <param name="serviceProvider">应用程序的服务提供程序</param>
-        /// <param name="logger">日志记录器</param>
-        public static async Task DiagnoseAndLogLocking(string pluginId, string pluginDllPath, IServiceProvider serviceProvider, ILogger logger)
+        public static async Task PerformDestructiveDiagnostics(string pluginDllPath, IServiceProvider rootProvider, ILogger logger)
         {
-            logger.LogInformation("========== 开始诊断插件 [{pluginId}] 的文件锁定问题 ==========", pluginId);
-            logger.LogInformation("目标文件: {pluginDllPath}", pluginDllPath);
+            logger.LogWarning("!!!!!!!!!! 开始执行破坏性诊断 !!!!!!!!!!");
+            logger.LogWarning("此过程将尝试破坏应用状态以定位引用泄漏。");
 
-            // 1. 在执行任何操作之前，先强制GC一次，建立一个干净的基线
-            await ForceGCAndCheckLock(pluginDllPath, "初始状态", logger);
-
-            // 2. 这里我们假设标准的 DisablePluginAsync 已经执行完毕。
-            // 在实际调用链中，此诊断方法应在 DisablePluginAsync 之后被调用。
-            // 我们再次执行GC和检查，看看标准流程后文件是否解锁。
-            logger.LogInformation("--- 标准卸载流程已执行完毕，现在检查文件状态 ---");
-            await ForceGCAndCheckLock(pluginDllPath, "标准卸载后", logger);
-
-            // 3. 如果文件仍然被锁定，开始逐个排查可疑的引用源
-            if (IsFileLocked(new FileInfo(pluginDllPath)))
+            if (!await CheckLockAndLog(pluginDllPath, "进入诊断前的初始状态", logger))
             {
-                logger.LogWarning("文件在标准卸载后依然被锁定。开始深入诊断...");
-
-                // 诊断步骤可以不断添加
-                // 例如：尝试清理特定的缓存、手动释放已知的单例服务等。
-                // 由于我们无法直接访问DI容器中所有已解析的实例，
-                // 这里的诊断更多是基于对应用程序架构的假设。
-
-                // 示例：尝试清理ASP.NET Core的路由缓存 (这是一个常见的嫌疑犯)
-                var actionDescriptorProvider = serviceProvider.GetService<IActionDescriptorCollectionProvider>();
-                if (actionDescriptorProvider is IDisposable disposableProvider)
-                {
-                    logger.LogInformation("--- 正在尝试清理 IActionDescriptorCollectionProvider ---");
-                    // 注意：这在实际应用中可能是危险操作，仅用于诊断
-                    // disposableProvider.Dispose(); 
-                    // 这里我们只记录日志，不实际操作，因为可能会破坏应用
-                }
-                
-                logger.LogInformation("--- 诊断步骤执行完毕 ---");
-            }
-            else
-            {
-                logger.LogInformation("文件在标准卸载后已成功解锁。");
+                logger.LogInformation("文件在进入诊断前已解锁，诊断中止。");
+                return;
             }
 
-            logger.LogInformation("========== 插件 [{pluginId}] 的文件锁定诊断结束 ==========", pluginId);
-        }
-
-        /// <summary>
-        /// 强制进行垃圾回收，并检查文件锁定状态。
-        /// </summary>
-        private static async Task ForceGCAndCheckLock(string filePath, string checkPoint, ILogger logger)
-        {
-            logger.LogInformation("--> 检查点: {checkPoint}", checkPoint);
-            logger.LogInformation("    执行强制垃圾回收 (GC)...");
-            
-            // 使用NoInlining确保GC在此方法内完成，而不是被JIT优化掉
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            static void GCRun()
-            {
-                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
-                GC.WaitForPendingFinalizers();
-                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
-            }
-
-            GCRun();
-            
-            // 等待一小段时间，给操作系统反应时间
-            await Task.Delay(100);
-
-            var fileInfo = new FileInfo(filePath);
-            if (IsFileLocked(fileInfo))
-            {
-                logger.LogError("    [文件状态]：仍然被锁定 ❌");
-            }
-            else
-            {
-                logger.LogInformation("    [文件状态]：已解锁 ✅");
-            }
-        }
-
-        /// <summary>
-        /// 检查文件是否被锁定。
-        /// </summary>
-        /// <param name="file">文件信息</param>
-        /// <returns>如果文件被锁定，则为true；否则为false。</returns>
-        private static bool IsFileLocked(FileInfo file)
-        {
-            if (!file.Exists)
-            {
-                // 如果文件不存在，自然没有被锁定
-                return false;
-            }
-
-            FileStream stream = null;
+            // --- 目标 1: DynamicMiddlewareRegistry ---
+            logger.LogWarning("--> 诊断目标 1: 清理 DynamicMiddlewareRegistry 的内部列表...");
             try
             {
-                // 尝试以读写模式打开文件。如果文件被另一个进程以写入方式锁定，
-                // 或者被任何方式锁定导致我们无法获取写权限，这里会抛出IOException。
-                stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+                var registry = rootProvider.GetService<DynamicMiddlewareRegistry>();
+                if (registry != null)
+                {
+                    var field = typeof(DynamicMiddlewareRegistry).GetField("_middlewareTypes", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (field != null)
+                    {
+                        if (field.GetValue(registry) is IList list)
+                        {
+                            list.Clear();
+                            logger.LogInformation("    成功：DynamicMiddlewareRegistry._middlewareTypes 已被强制清空。");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { logger.LogError(ex, "    清理 DynamicMiddlewareRegistry 时发生错误。"); }
+            if (!await CheckLockAndLog(pluginDllPath, "清理 DynamicMiddlewareRegistry 后", logger)) return;
+
+
+            // --- 目标 2: SqlSugar 实体缓存 ---
+            logger.LogWarning("--> 诊断目标 2: 清理 SqlSugar 的实体缓存...");
+            try
+            {
+                var sqlClient = rootProvider.GetService<SqlSugar.ISqlSugarClient>();
+                if (sqlClient != null)
+                {
+                    var field = typeof(SqlSugar.EntityMaintenance).GetField("EntityList", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (field != null)
+                    {
+                        if (field.GetValue(sqlClient.EntityMaintenance) is IList list)
+                        {
+                            list.Clear();
+                            logger.LogInformation("    成功：SqlSugar.EntityMaintenance.EntityList 已被强制清空。");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { logger.LogError(ex, "    清理 SqlSugar 缓存时发生错误。"); }
+            if (!await CheckLockAndLog(pluginDllPath, "清理 SqlSugar 后", logger)) return;
+
+
+            // --- 目标 3: ASP.NET Core MVC 路由缓存 ---
+            logger.LogWarning("--> 诊断目标 3: 强制刷新 MVC 路由缓存...");
+            try
+            {
+                var provider = rootProvider.GetService<IActionDescriptorChangeProvider>();
+                ActionDescriptorChangeProvider.Instance.NotifyChanges();
+                logger.LogInformation("    成功：已再次触发 ActionDescriptorChangeProvider.Instance.NotifyChanges()。");
+            }
+            catch (Exception ex) { logger.LogError(ex, "    强制刷新 MVC 路由时发生错误。"); }
+            if (!await CheckLockAndLog(pluginDllPath, "强制刷新 MVC 路由后", logger)) return;
+
+
+            logger.LogCritical("!!!!!!!!!! 所有诊断步骤执行完毕，文件依然被锁定。问题根源未知。 !!!!!!!!!!");
+        }
+
+        private static async Task<bool> CheckLockAndLog(string filePath, string checkPoint, ILogger logger)
+        {
+            logger.LogInformation("    检查点: {checkPoint}", checkPoint);
+            ForceGC();
+            await Task.Delay(100); // Give OS time to release handle
+
+            var isLocked = IsFileLocked(new FileInfo(filePath));
+            if (isLocked)
+            {
+                logger.LogError("        [文件状态]: 仍然被锁定 ❌");
+            }
+            else
+            {
+                logger.LogInformation("        [文件状态]: 已成功解锁 ✅ <--- 问题可能在此步骤解决！");
+            }
+            return isLocked;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void ForceGC()
+        {
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+            GC.WaitForPendingFinalizers();
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true);
+        }
+
+        private static bool IsFileLocked(FileInfo file)
+        {
+            if (!file.Exists) return false;
+            try
+            {
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                {
+                    stream.Close();
+                }
             }
             catch (IOException)
             {
-                // 捕获到异常，说明文件正在被使用
                 return true;
             }
-            finally
-            {
-                stream?.Close();
-            }
-
-            // 如果没有异常，说明文件未被锁定
             return false;
         }
     }

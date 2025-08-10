@@ -20,6 +20,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Scrutor;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,13 +79,13 @@ builder.Services.AddSingleton<IControllerActivator, PluginControllerActivator>()
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
-    // 注册核心服务，Autofac 会自动处理依赖顺序
     containerBuilder.RegisterType<PluginManager>().AsSelf().SingleInstance();
     containerBuilder.RegisterType<PluginLoadService>().As<IPluginLoadService>().SingleInstance();
     containerBuilder.RegisterType<PluginActionDescriptorProvider>().As<IActionDescriptorProvider>().SingleInstance();
-    
-    // 注册我们新的、无状态的 FeatureProvider
     containerBuilder.RegisterType<DynamicControllerFeatureProvider>().As<IApplicationFeatureProvider<ControllerFeature>>().SingleInstance();
+    
+    // 注入 ILoggerFactory 以便控制日志
+    //containerBuilder.Register(c => c.Resolve<ILoggerFactory>()).As<ILoggerFactory>().SingleInstance();
 });
 
 // 3. 构建并运行应用

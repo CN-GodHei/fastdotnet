@@ -129,7 +129,6 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
 
                     var pluginInstance = pluginScope.Resolve<IPlugin>();
                     
-                    // 插件的 InitializeAsync 需要一个 IServiceProvider，它自己的子容器就是最好的选择
                     await pluginInstance.InitializeAsync(new AutofacServiceProvider(pluginScope));
                     await pluginInstance.StartAsync();
                 }
@@ -159,35 +158,44 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 }
             }
 
+            var pluginConfig = _pluginManager.GetPluginConfig(pluginId);
+            string dllPath = string.Empty;
+            if (pluginConfig != null)
+            {
+                var pluginDir = Path.Combine(_pluginsPath, pluginId);
+                var entryPoint = string.IsNullOrEmpty(pluginConfig.entryPoint) ? pluginConfig.id + ".dll" : pluginConfig.entryPoint;
+                dllPath = Path.Combine(pluginDir, entryPoint);
+            }
+
             try
             {
                 var assembly = _pluginManager.GetPluginAssembly(pluginId);
 
-                // 核心修复：在销毁作用域之前，先执行插件自己的清理逻辑
                 if (_pluginScopes.TryRemove(pluginId, out var pluginScope))
                 {
-                    // 1. 从子容器中解析出插件实例
                     var plugin = pluginScope.Resolve<IPlugin>();
-                    
-                    // 2. 执行插件的停止和卸载方法，让它自己清理（比如注销中间件）
                     await plugin.StopAsync();
                     await plugin.UnloadAsync(new AutofacServiceProvider(pluginScope));
                     
-                    // 3. 彻底销毁子容器，释放所有DI引用
                     pluginScope.Dispose();
                     _logger?.LogInformation("插件 [{pluginId}] 的DI作用域已成功销毁。", pluginId);
                 }
 
-                // 4. 清理ORM缓存
                 if (assembly != null)
                 {
                     SqlSugarServiceCollectionExtensions.RemovePluginCodeFirst(new AutofacServiceProvider(_rootLifetimeScope), assembly);
                 }
 
-                // 5. 卸载程序集
                 _pluginManager.UnloadPlugin(pluginId);
 
                 _logger?.LogInformation($"插件 {pluginId} 已成功停用并卸载。");
+
+                // 如果文件仍然被锁定，启动破坏性诊断
+                if (!string.IsNullOrEmpty(dllPath) && new FileInfo(dllPath).Exists && IsFileLocked(new FileInfo(dllPath)))
+                {
+                    await PluginDiagnostics.PerformDestructiveDiagnostics(dllPath, new AutofacServiceProvider(_rootLifetimeScope), _logger);
+                }
+
                 return CommonResult.Success("插件已成功停用。");
             }
             catch (Exception ex)
@@ -195,6 +203,22 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 _logger?.LogError(ex, $"停用插件 {pluginId} 失败");
                 return CommonResult.Error($"停用插件失败: {ex.Message}");
             }
+        }
+
+        private bool IsFileLocked(FileInfo file)
+        {
+            try
+            {
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            return false;
         }
 
         public async Task<CommonResult> UninstallPluginAsync(string pluginId)
