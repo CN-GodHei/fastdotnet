@@ -1,0 +1,67 @@
+﻿以下是完整的日志：
+info: Fastdotnet.Service.Initializers.AdminUserInitializer[0]
+      =============== Initializing Admin User Service... Success! ===============
+info: SqlSugar.SqlSugarClient[0]
+      SqlSugar Executing SQL: select Name from sqlite_master where type='table' and name<>'sqlite_sequence' order by name;
+info: SqlSugar.SqlSugarClient[0]
+      SqlSugar Executing SQL: select Name from sqlite_master where type='table' and name<>'sqlite_sequence' order by name;
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://[::]:18889
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\GodHeiWorkSpace\开源项目开发\fd\src\Fastdotnet.WebApi
+Application has started. Executing startup tasks in background...
+Executing TestStartupTask...
+info: SqlSugar.SqlSugarClient[0]
+      SqlSugar Executing SQL: select Name from sqlite_master where type='table' and name<>'sqlite_sequence' order by name;
+[PluginA] Initializing and registering middleware...
+[PluginA] Middleware 'PluginAMiddleware' registered successfully.
+info: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+      插件 PluginA 启用成功。
+Test methods executed successfully.
+All startup tasks executed.
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+[PluginA] Dynamic Middleware handling request: /api/plugins/plugina/test/Get
+info: SqlSugar.SqlSugarClient[0]
+      SqlSugar Executing SQL: SELECT `Name`,`Description`,`Id`,`CreateTime`,`UpdateTime`,`IsDeleted`,`DeleteTime` FROM `plugin_entities`  WHERE ( `IsDeleted` = @IsDeleted0 )
+[PluginA] Dynamic Middleware handling request: /api/Plugin/disable/PluginA
+[PluginA] Unloading and unregistering middleware...
+[PluginA] Middleware 'PluginAMiddleware' unregistered successfully.
+info: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+      插件 [PluginA] 的DI作用域已成功销毁。
+info: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+      插件 PluginA 已成功停用并卸载。
+warn: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+      !!!!!!!!!! 开始执行破坏性诊断 !!!!!!!!!!
+warn: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+      此过程将尝试破坏应用状态以定位引用泄漏。
+info: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+          检查点: 进入诊断前的初始状态
+fail: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+              [文件状态]: 仍然被锁定 ?
+warn: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+      --> 诊断目标 1: 清理 DynamicMiddlewareRegistry 的内部列表...
+info: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+          检查点: 清理 DynamicMiddlewareRegistry 后
+fail: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+              [文件状态]: 仍然被锁定 ?
+warn: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+      --> 诊断目标 2: 清理 SqlSugar 的实体缓存...
+info: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+          检查点: 清理 SqlSugar 后
+fail: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+              [文件状态]: 仍然被锁定 ?
+warn: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+      --> 诊断目标 3: 强制刷新 MVC 路由缓存...
+info: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+          成功：已再次触发 ActionDescriptorChangeProvider.Instance.NotifyChanges()。
+info: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+          检查点: 强制刷新 MVC 路由后
+fail: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+              [文件状态]: 仍然被锁定 ?
+crit: Fastdotnet.Plugin.Core.Infrastructure.PluginLoadService[0]
+      !!!!!!!!!! 所有诊断步骤执行完毕，文件依然被锁定。问题根源未知。 !!!!!!!!!!
