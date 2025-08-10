@@ -26,8 +26,8 @@ namespace PluginA.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] PluginEntity entity)
         {
-            var id = await _db.Insertable(entity).ExecuteReturnIdentityAsync();
-            entity.Id = id;
+            // 由于使用了雪花ID，在插入前就已经通过AOP设置了ID值
+            var rows = await _db.Insertable(entity).ExecuteReturnIdentityAsync();
             return Ok(entity);
         }
     }

@@ -17,11 +17,17 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Scrutor;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. 注册 ASP.NET Core 的核心服务
-builder.Services.AddControllers().AddControllersAsServices()
+builder.Services.AddControllers()
+    .AddControllersAsServices()
+    .AddNewtonsoftJson(options =>
+    {
+        SetNewtonsoftJsonSetting(options.SerializerSettings);
+    })
     .ConfigureApplicationPartManager(manager =>
     {
         // This provider is essential for discovering controllers from dynamically loaded assemblies
@@ -159,3 +165,15 @@ lifetime.ApplicationStarted.Register(() =>
 
 // 6. 运行应用
 app.Run("http://*:18889");
+
+/// <summary>
+/// 设置NewtonsoftJson的配置
+/// </summary>
+/// <param name="setting"></param>
+static void SetNewtonsoftJsonSetting(JsonSerializerSettings setting)
+{
+    setting.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+    setting.DateTimeZoneHandling = DateTimeZoneHandling.Local;
+    setting.DateFormatString = "yyyy-MM-dd HH:mm:ss"; // 时间格式化
+    setting.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; // 忽略循环引用
+}

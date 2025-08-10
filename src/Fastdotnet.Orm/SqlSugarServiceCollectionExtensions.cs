@@ -68,6 +68,7 @@ public static class SqlSugarServiceCollectionExtensions
                         // 自动填充创建时间（如果CreateTime为默认值）
                         else if (entityInfo.PropertyName == nameof(IBaseEntity.CreateTime) && (DateTime)oldValue == default)
                         {
+                            // 使用本地时间，确保所见即所得
                             entityInfo.SetValue(DateTime.Now);
                         }
                     }
@@ -76,6 +77,7 @@ public static class SqlSugarServiceCollectionExtensions
                         // 自动填充更新时间
                         if (entityInfo.PropertyName == nameof(IBaseEntity.UpdateTime))
                         {
+                            // 使用本地时间，确保所见即所得
                             entityInfo.SetValue(DateTime.Now);
                         }
                     }

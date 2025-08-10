@@ -39,11 +39,13 @@ namespace Fastdotnet.Core.Models.Base
         /// <summary>
         /// 创建时间
         /// </summary>
+        [SugarColumn(ColumnDataType = "datetime")]
         public DateTime CreateTime { get; set; } = DateTime.Now;
 
         /// <summary>
         /// 更新时间
         /// </summary>
+        [SugarColumn(IsNullable = true, ColumnDataType = "datetime")]
         public DateTime? UpdateTime { get; set; }
 
         /// <summary>
@@ -54,6 +56,7 @@ namespace Fastdotnet.Core.Models.Base
         /// <summary>
         /// 删除时间
         /// </summary>
+        [SugarColumn(IsNullable = true, ColumnDataType = "datetime")]
         public DateTime? DeleteTime { get; set; }
     }
 }
