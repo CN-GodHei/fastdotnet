@@ -87,5 +87,21 @@ namespace Fastdotnet.WebApi.Controllers
         {
             Console.WriteLine("这是一个测试方法");
         }
+        [HttpGet("gc")]
+        public void ForceGC()
+        {
+            // The final breakthrough: It appears two full, blocking GC cycles are required.
+            // The first cycle runs the finalizers of any lingering objects.
+            // The second cycle collects the now-unreferenced AssemblyLoadContext itself.
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
+            GC.WaitForPendingFinalizers();
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
+            Console.WriteLine("First GC cycle completed.");
+
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
+            GC.WaitForPendingFinalizers();
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
+            Console.WriteLine("Second GC cycle completed.");
+        }
     }
 }

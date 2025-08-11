@@ -65,7 +65,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             return false;
         }
 
-        public Assembly LoadPlugin(PluginConfig config, string pluginPath)
+        public (Assembly Assembly, AssemblyLoadContext Context)? LoadPlugin(PluginConfig config, string pluginPath)
         {
             var alc = new PluginAssemblyLoadContext(pluginPath);
             var loadedAssembly = alc.LoadFromAssemblyPath(pluginPath);
@@ -89,7 +89,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 
                 ActionDescriptorChangeProvider.Instance.NotifyChanges();
 
-                return loadedAssembly;
+                return (loadedAssembly, alc);
             }
 
             alc.Unload();
@@ -99,6 +99,11 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         public Assembly GetPluginAssembly(string pluginName)
         {
             return _loadedPlugins.TryGetValue(pluginName, out var pluginInfo) ? pluginInfo.Assembly : null;
+        }
+
+        public AssemblyLoadContext GetPluginContext(string pluginId)
+        {
+            return _loadedPlugins.TryGetValue(pluginId, out var pluginInfo) ? pluginInfo.Context : null;
         }
 
         public void UnloadPlugin(string pluginId)
@@ -124,16 +129,18 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 
                 context.Unload();
 
-                ForceGC();
-            }
-        }
+                // After extensive testing, it has been determined that two full, blocking GC cycles are
+                // required to reliably unload the AssemblyLoadContext after its associated Autofac
+                // child scope has been disposed. The first cycle handles finalization of objects,
+                // and the second cycle collects the now-unreferenced AssemblyLoadContext itself.
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
+                GC.WaitForPendingFinalizers();
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private static void ForceGC()
-        {
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
-            GC.WaitForPendingFinalizers();
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
+                GC.WaitForPendingFinalizers();
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
+            }
         }
     }
 

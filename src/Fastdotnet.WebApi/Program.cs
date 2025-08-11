@@ -80,12 +80,14 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     containerBuilder.RegisterType<PluginManager>().AsSelf().SingleInstance();
-    containerBuilder.RegisterType<PluginLoadService>().As<IPluginLoadService>().SingleInstance();
+    containerBuilder.Register(c => new PluginLoadService(
+        c.Resolve<PluginManager>(),
+        c.Resolve<ILifetimeScope>(),
+        c.Resolve<ILogger<PluginLoadService>>(),
+        c.Resolve<ILoggerFactory>()
+    )).As<IPluginLoadService>().SingleInstance();
     containerBuilder.RegisterType<PluginActionDescriptorProvider>().As<IActionDescriptorProvider>().SingleInstance();
-    containerBuilder.RegisterType<DynamicControllerFeatureProvider>().As<IApplicationFeatureProvider<ControllerFeature>>().SingleInstance();
-    
-    // 注入 ILoggerFactory 以便控制日志
-    //containerBuilder.Register(c => c.Resolve<ILoggerFactory>()).As<ILoggerFactory>().SingleInstance();
+    //containerBuilder.RegisterType<DynamicControllerFeatureProvider>().As<IApplicationFeatureProvider<ControllerFeature>>().SingleInstance();
 });
 
 // 3. 构建并运行应用

@@ -55,6 +55,7 @@ public static class SqlSugarServiceCollectionExtensions
 
                 // 配置全局软删除过滤器
                 db.QueryFilter.AddTableFilter<ISoftDelete>(u => u.IsDeleted == false);
+                //db.QueryFilter.Add<ISoftDelete>(u => u.IsDeleted == false);
                 
                 // 插入前自动填充雪花ID和创建时间
                 db.Aop.DataExecuting = (oldValue, entityInfo) =>

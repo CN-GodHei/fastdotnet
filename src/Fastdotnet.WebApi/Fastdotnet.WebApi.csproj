@@ -20,7 +20,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Scrutor" />
-    <PackageReference Include="SqlSugarCore" />
+    <PackageReference Include="SqlSugarCoreNoDrive" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 

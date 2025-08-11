@@ -14,7 +14,6 @@
   
   <ItemGroup>
     <PackageReference Include="Autofac" />
-    <PackageReference Include="SqlSugarCore" />
   </ItemGroup>
 
 </Project>

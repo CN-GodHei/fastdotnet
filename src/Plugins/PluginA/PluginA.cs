@@ -22,7 +22,7 @@ namespace PluginA
         /// </summary>
         public Task InitializeAsync(IServiceProvider serviceProvider)
         {
-            Console.WriteLine($"[{Name}] Initializing and registering middleware...");
+            //Console.WriteLine($"[{Name}] Initializing and registering middleware...");
             
             // Get the central middleware registry from the host's services.
             var registry = serviceProvider.GetService<DynamicMiddlewareRegistry>();
@@ -30,11 +30,11 @@ namespace PluginA
             {
                 // Register this plugin's middleware type.
                 registry.Register(typeof(PluginAMiddleware));
-                Console.WriteLine($"[{Name}] Middleware '{nameof(PluginAMiddleware)}' registered successfully.");
+                //Console.WriteLine($"[{Name}] Middleware '{nameof(PluginAMiddleware)}' registered successfully.");
             }
             else
             {
-                Console.WriteLine($"[{Name}] ERROR: Could not find {nameof(DynamicMiddlewareRegistry)}. Middleware not registered.");
+                //Console.WriteLine($"[{Name}] ERROR: Could not find {nameof(DynamicMiddlewareRegistry)}. Middleware not registered.");
             }
             
             return Task.CompletedTask;
@@ -57,16 +57,16 @@ namespace PluginA
         /// </summary>
         public Task UnloadAsync(IServiceProvider serviceProvider)
         {
-            Console.WriteLine($"[{Name}] Unloading and unregistering middleware...");
+            //Console.WriteLine($"[{Name}] Unloading and unregistering middleware...");
 
             // Get the central middleware registry from the host's services.
             var registry = serviceProvider.GetService<DynamicMiddlewareRegistry>();
-            if (registry != null)
-            {
-                // Unregister this plugin's middleware type to ensure clean removal.
-                registry.Unregister(typeof(PluginAMiddleware));
-                Console.WriteLine($"[{Name}] Middleware '{nameof(PluginAMiddleware)}' unregistered successfully.");
-            }
+            // if (registry != null)
+            // {
+            //     // Unregister this plugin's middleware type to ensure clean removal.
+            //     registry.Unregister(typeof(PluginAMiddleware));
+            //     //Console.WriteLine($"[{Name}] Middleware '{nameof(PluginAMiddleware)}' unregistered successfully.");
+            // }
             
             return Task.CompletedTask;
         }

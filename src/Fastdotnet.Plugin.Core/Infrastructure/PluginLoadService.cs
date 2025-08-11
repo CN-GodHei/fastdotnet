@@ -36,16 +36,18 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         private readonly PluginManager _pluginManager;
         private readonly ILifetimeScope _rootLifetimeScope;
         private readonly ILogger<PluginLoadService> _logger;
-        
+        private readonly ILoggerFactory _loggerFactory;
+
         private readonly ConcurrentDictionary<string, ILifetimeScope> _pluginScopes = new();
         private readonly string _pluginsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
         private bool _disposed = false;
 
-        public PluginLoadService(PluginManager pluginManager, ILifetimeScope lifetimeScope, ILogger<PluginLoadService> logger = null)
+        public PluginLoadService(PluginManager pluginManager, ILifetimeScope lifetimeScope, ILogger<PluginLoadService> logger, ILoggerFactory loggerFactory)
         {
             _pluginManager = pluginManager;
             _rootLifetimeScope = lifetimeScope;
             _logger = logger;
+            _loggerFactory = loggerFactory;
         }
 
         public bool TryGetPluginScope(string pluginId, [MaybeNullWhen(false)] out ILifetimeScope scope)
@@ -76,10 +78,12 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         {
             if (IsPluginActive(pluginId)) return CommonResult.Success($"插件 {pluginId} 已启用。");
 
-            var assembly = _pluginManager.GetPluginAssembly(pluginId);
+            Assembly assembly = _pluginManager.GetPluginAssembly(pluginId);
+            System.Runtime.Loader.AssemblyLoadContext loadContext = _pluginManager.GetPluginContext(pluginId);
+
             if (assembly == null)
             {
-                 var pluginDir = Path.Combine(_pluginsPath, pluginId);
+                var pluginDir = Path.Combine(_pluginsPath, pluginId);
                 if (!Directory.Exists(pluginDir)) return CommonResult.Error("找不到插件目录。");
 
                 var configPath = Path.Combine(pluginDir, "plugin.json");
@@ -102,18 +106,24 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 var dllPath = Path.Combine(pluginDir, entryPoint);
                 if (!File.Exists(dllPath)) return CommonResult.Error($"找不到入口文件 {entryPoint}。");
 
-                assembly = _pluginManager.LoadPlugin(config, dllPath);
-                if (assembly == null) return CommonResult.Error("插件程序集加载失败。");
+                var loadResult = _pluginManager.LoadPlugin(config, dllPath);
+                if (loadResult == null)
+                {
+                    return CommonResult.Error("插件程序集加载失败。");
+                }
+
+                assembly = loadResult.Value.Assembly;
+                loadContext = loadResult.Value.Context;
             }
 
             try
             {
-                SqlSugarServiceCollectionExtensions.UsePluginCodeFirst(new AutofacServiceProvider(_rootLifetimeScope), assembly);
+                if (assembly == null || loadContext == null) return CommonResult.Error("无法获取插件程序集或加载上下文。");
 
                 var pluginType = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsAbstract);
                 if (pluginType != null)
                 {
-                    var pluginScope = _rootLifetimeScope.BeginLifetimeScope(builder =>
+                    var pluginScope = _rootLifetimeScope.BeginLoadContextLifetimeScope(loadContext, builder =>
                     {
                         var tempPluginInstance = (IPlugin)Activator.CreateInstance(pluginType);
                         tempPluginInstance.ConfigureServices(builder);

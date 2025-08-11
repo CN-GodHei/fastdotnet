@@ -3,11 +3,10 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
     <PackageVersion Include="Autofac" Version="8.4.0" />
-    <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.5.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
@@ -16,6 +15,8 @@
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.5.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="9.0.2" />
-    <PackageVersion Include="SqlSugarCore" Version="5.1.4.199" />
+    <PackageVersion Include="SqlSugarCoreNoDrive" Version="5.1.4.199" />
+    <PackageVersion Include="SqlSugar.MySqlConnectorCore" Version="5.10.3.37" />
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="9.0.0" />
   </ItemGroup>
 </Project>
