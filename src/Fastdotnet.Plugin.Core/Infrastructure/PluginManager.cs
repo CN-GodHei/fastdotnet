@@ -68,7 +68,12 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         public (Assembly Assembly, AssemblyLoadContext Context)? LoadPlugin(PluginConfig config, string pluginPath)
         {
             var alc = new PluginAssemblyLoadContext(pluginPath);
-            var loadedAssembly = alc.LoadFromAssemblyPath(pluginPath);
+
+            // Load the assembly into a byte array and then from a memory stream
+            // to avoid locking the original DLL file on disk.
+            var assemblyBytes = File.ReadAllBytes(pluginPath);
+            using var memoryStream = new MemoryStream(assemblyBytes);
+            var loadedAssembly = alc.LoadFromStream(memoryStream);
             var part = new AssemblyPart(loadedAssembly);
 
             if (_loadedPlugins.TryAdd(config.id, (alc, loadedAssembly, config, part)))
