@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Utils;
+using Fastdotnet.Service.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,6 +67,9 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddSingleton<IActionDescriptorChangeProvider>(ActionDescriptorChangeProvider.Instance);
 builder.Services.AddSingleton<DynamicMiddlewareRegistry>();
 builder.Services.AddSqlSugar(builder.Configuration);
+
+// 注册日志服务
+builder.Services.AddScoped<ILogService, LogService>();
 
 // 注册应用服务和初始化器
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();

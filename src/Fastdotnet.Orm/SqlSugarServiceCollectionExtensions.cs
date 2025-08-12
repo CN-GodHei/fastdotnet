@@ -1,5 +1,6 @@
 using Fastdotnet.Core.Models.Base;
 using Fastdotnet.Core.Models.Interfaces;
+using Fastdotnet.Core.Models.LogModels;
 using Fastdotnet.Core.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,9 +9,11 @@ using SqlSugar;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Fastdotnet.Orm;
 
@@ -37,20 +40,63 @@ public static class SqlSugarServiceCollectionExtensions
             // 创建SqlSugarScope
             var scope = new SqlSugarScope(options.Connections, db =>
             {
-                // 从外部的serviceProvider获取ILogger
-                var logger = serviceProvider.GetRequiredService<ILogger<SqlSugarClient>>();
-
                 // AOP配置
                 db.Aop.OnLogExecuting = (sql, pars) =>
                 {
                     // 使用日志框架记录SQL
-                    logger.LogInformation("SqlSugar Executing SQL: {Sql}", sql);
+                    var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
+                    logger?.LogInformation("SqlSugar Executing SQL: {Sql}", sql);
+                    
+                    // 根据配置决定是否将SQL执行日志记录到专门的日志表中
+                    if (options.EnableSqlExecutionLogging)
+                    {
+                        // 在SQL执行后记录日志
+                        var sqlCopy = sql;
+                        var parsCopy = pars?.ToArray() ?? new SugarParameter[0];
+                        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+                        db.Aop.OnLogExecuted = (sqlExecuted, parsExecuted) =>
+                        {
+                            stopwatch.Stop();
+                            RecordSqlExecutionToLogTable(serviceProvider, sqlCopy, parsCopy, stopwatch.ElapsedMilliseconds, null);
+                            db.Aop.OnLogExecuted = null; // 重置事件处理程序
+                        };
+                    }
                 };
 
                 db.Aop.OnError = ex =>
                 {
                     // 使用日志框架记录错误
-                    logger.LogError(ex, "SqlSugar SQL execution error: {Message}", ex.Message);
+                    var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
+                    logger?.LogError(ex, "SqlSugar SQL execution error: {Message}", ex.Message);
+                    
+                    // 根据配置决定是否将SQL错误记录到专门的日志表中
+                    if (options.EnableSqlExecutionLogging)
+                    {
+                        // 安全地处理异常中的参数
+                        SugarParameter[] parameters = null;
+                        if (ex.Parametres is IEnumerable<SugarParameter> sugarParams)
+                        {
+                            parameters = sugarParams.ToArray();
+                        }
+                        else if (ex.Parametres is IEnumerable enumerable)
+                        {
+                            var paramList = new List<SugarParameter>();
+                            foreach (var param in enumerable)
+                            {
+                                if (param is SugarParameter sugarParam)
+                                {
+                                    paramList.Add(sugarParam);
+                                }
+                            }
+                            parameters = paramList.ToArray();
+                        }
+                        else
+                        {
+                            parameters = new SugarParameter[0];
+                        }
+                        
+                        RecordSqlExecutionToLogTable(serviceProvider, ex.Sql, parameters, 0, ex);
+                    }
                 };
 
                 // 配置全局软删除过滤器
@@ -94,6 +140,131 @@ public static class SqlSugarServiceCollectionExtensions
         services.AddSingleton<ISqlSugarClient>(sp => sp.GetRequiredService<SqlSugarScope>());
 
         return services;
+    }
+
+    /// <summary>
+    /// 记录SQL执行日志到专门的日志表中
+    /// </summary>
+    /// <param name="rootServiceProvider">根服务提供者</param>
+    /// <param name="sql">执行的SQL语句</param>
+    /// <param name="parameters">SQL参数</param>
+    /// <param name="elapsedMilliseconds">执行耗时（毫秒）</param>
+    /// <param name="exception">异常信息（如果有）</param>
+    private static void RecordSqlExecutionToLogTable(IServiceProvider rootServiceProvider, string sql, SugarParameter[] parameters, long elapsedMilliseconds, Exception exception)
+    {
+        try
+        {
+            // 在新的作用域中解析服务，避免生命周期问题
+            using var scope = rootServiceProvider.CreateScope();
+            var serviceProvider = scope.ServiceProvider;
+
+            // 构造完整的SQL语句（包含参数值）
+            var formattedSql = sql;
+            
+            // 如果有参数，则尝试构建完整的SQL语句
+            if (parameters != null && parameters.Length > 0)
+            {
+                formattedSql = FormatSqlWithParameters(sql, parameters);
+            }
+
+            // 创建SQL执行日志对象
+            var sqlExecutionLog = new SqlExecutionLog
+            {
+                FullSql = formattedSql,
+                ElapsedMilliseconds = elapsedMilliseconds,
+                HasError = exception != null,
+                ErrorMessage = exception?.Message,
+                StackTrace = exception?.StackTrace,
+                CreateTime = DateTime.Now
+            };
+
+            // 异步记录日志到数据库
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    // 获取SqlSugar客户端
+                    var sqlClient = serviceProvider.GetService<ISqlSugarClient>();
+                    if (sqlClient == null) return;
+
+                    // 尝试将日志记录到日志数据库
+                    var logDb = sqlClient.AsTenant().GetConnection("log") ?? sqlClient;
+                    await logDb.Insertable(sqlExecutionLog).ExecuteCommandAsync();
+                }
+                catch
+                {
+                    // 忽略日志记录过程中的任何错误，避免影响主流程
+                }
+            });
+        }
+        catch
+        {
+            // 忽略日志记录过程中的任何错误，避免影响主流程
+        }
+    }
+
+    /// <summary>
+    /// 格式化SQL语句，将参数值嵌入到SQL中
+    /// </summary>
+    /// <param name="sql">原始SQL语句</param>
+    /// <param name="parameters">SQL参数</param>
+    /// <returns>包含参数值的完整SQL语句</returns>
+    private static string FormatSqlWithParameters(string sql, SugarParameter[] parameters)
+    {
+        if (string.IsNullOrEmpty(sql) || parameters == null || parameters.Length == 0)
+        {
+            return sql ?? string.Empty;
+        }
+
+        var formattedSql = sql;
+        
+        // 按参数名长度降序排列，避免短名称替换影响长名称（例如@p1和@p10的情况）
+        var sortedParameters = parameters.OrderByDescending(p => p.ParameterName?.Length ?? 0);
+        
+        foreach (var parameter in sortedParameters)
+        {
+            if (string.IsNullOrEmpty(parameter.ParameterName))
+                continue;
+
+            var parameterValue = GetParameterValue(parameter);
+            formattedSql = formattedSql.Replace(parameter.ParameterName, parameterValue);
+        }
+
+        return formattedSql;
+    }
+
+    /// <summary>
+    /// 获取参数的字符串表示形式
+    /// </summary>
+    /// <param name="parameter">SQL参数</param>
+    /// <returns>参数值的字符串表示</returns>
+    private static string GetParameterValue(SugarParameter parameter)
+    {
+        if (parameter.Value == null || parameter.Value == DBNull.Value)
+        {
+            return "NULL";
+        }
+
+        // 根据参数值的类型进行适当的格式化
+        switch (parameter.Value)
+        {
+            case string str:
+                return $"'{str.Replace("'", "''")}'"; // 转义单引号
+            case DateTime dateTime:
+                return $"'{dateTime:yyyy-MM-dd HH:mm:ss}'";
+            case bool boolValue:
+                return boolValue ? "1" : "0"; // SQL中通常用1/0表示布尔值
+            case int _:
+            case long _:
+            case short _:
+            case byte _:
+            case decimal _:
+            case float _:
+            case double _:
+                return parameter.Value.ToString();
+            default:
+                return $"'{parameter.Value}'";
+        }
     }
 
     /// <summary>
@@ -176,7 +347,7 @@ public static class SqlSugarServiceCollectionExtensions
             catch (Exception ex)
             {
                 // 记录反射操作可能出现的错误
-                var logger = serviceProvider.GetService<ILogger<ISqlSugarClient>>();
+                var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
                 logger?.LogError(ex, "Failed to remove plugin entities from SqlSugar cache via reflection.");
             }
         }
