@@ -32,6 +32,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<GlobalExceptionFilter>();
+    options.Filters.Add<GlobalResultFilter>(); // 添加全局结果过滤器
 })
     .AddControllersAsServices()
     .AddNewtonsoftJson(options =>

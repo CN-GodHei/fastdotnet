@@ -25,7 +25,7 @@ namespace Fastdotnet.WebApi.Filters
             if (context.Exception is BusinessException)
             {
                 // 可控异常，不记录日志，返回422状态码
-                context.Result = new ObjectResult(CommonResult<object>.Error(context.Exception.Message))
+                context.Result = new ObjectResult(new ApiResult<object>(){ Data= context.Exception.Message })
                 {
                     StatusCode = 422
                 };
@@ -48,7 +48,7 @@ namespace Fastdotnet.WebApi.Filters
                 // 返回500状态码
                 _logger.LogError(context.Exception, "系统内部异常");
                 
-                context.Result = new ObjectResult(CommonResult<object>.Error("服务器内部错误"))
+                context.Result = new ObjectResult(new ApiResult<object>(){ Data= "服务器内部错误" })
                 {
                     StatusCode = 500
                 };

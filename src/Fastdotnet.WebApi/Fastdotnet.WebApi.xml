@@ -50,6 +50,11 @@
             </summary>
             <param name="app">The WebApplication instance.</param>
         </member>
+        <member name="T:Fastdotnet.WebApi.Filters.GlobalResultFilter">
+            <summary>
+            全局结果过滤器，用于统一API返回格式
+            </summary>
+        </member>
         <member name="T:Fastdotnet.WebApi.Middleware.Authentication.JwtMiddleware">
             <summary>
             JWT认证中间件

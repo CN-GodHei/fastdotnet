@@ -20,5 +20,9 @@ namespace PluginA.Entities
         /// </summary>
         public string Description { get; set; }
 
+        // 添加无参数构造函数以满足new()约束
+        public PluginEntity()
+        {
+        }
     }
 }

@@ -20,10 +20,10 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
 {
     public interface IPluginLoadService
     {
-        Task<CommonResult<IEnumerable<PluginConfig>>> ScanPluginsAsync();
-        Task<CommonResult> EnablePluginAsync(string pluginId);
-        Task<CommonResult> DisablePluginAsync(string pluginId);
-        Task<CommonResult> UninstallPluginAsync(string pluginId);
+        Task<List<PluginConfig>> ScanPluginsAsync();
+        Task<ApiResult> EnablePluginAsync(string pluginId);
+        Task<ApiResult> DisablePluginAsync(string pluginId);
+        Task<ApiResult> UninstallPluginAsync(string pluginId);
         bool IsPluginActive(string pluginId);
         IEnumerable<PluginConfig> GetLoadedPlugins();
         IEnumerable<string> GetActivePlugins();
@@ -55,7 +55,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             return _pluginScopes.TryGetValue(pluginId, out scope);
         }
 
-        public Task<CommonResult<IEnumerable<PluginConfig>>> ScanPluginsAsync()
+        public async Task<List<PluginConfig>> ScanPluginsAsync()
         {
             var configs = new List<PluginConfig>();
             if (Directory.Exists(_pluginsPath))
@@ -65,18 +65,18 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                     var configPath = Path.Combine(pluginDir, "plugin.json");
                     if (File.Exists(configPath))
                     {
-                        var configJson = File.ReadAllText(configPath);
+                        var configJson = await File.ReadAllTextAsync(configPath);
                         var config = JsonSerializer.Deserialize<PluginConfig>(configJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                         if (config != null) configs.Add(config);
                     }
                 }
             }
-            return Task.FromResult(CommonResult<IEnumerable<PluginConfig>>.Success(configs));
+            return configs;
         }
 
-        public async Task<CommonResult> EnablePluginAsync(string pluginId)
+        public async Task<ApiResult> EnablePluginAsync(string pluginId)
         {
-            if (IsPluginActive(pluginId)) return CommonResult.Success($"插件 {pluginId} 已启用。");
+            if (IsPluginActive(pluginId)) return new ApiResult() { Code = 200, Msg = $"插件 {pluginId} 已启用。" };
 
             Assembly assembly = _pluginManager.GetPluginAssembly(pluginId);
             System.Runtime.Loader.AssemblyLoadContext loadContext = _pluginManager.GetPluginContext(pluginId);
@@ -84,32 +84,32 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             if (assembly == null)
             {
                 var pluginDir = Path.Combine(_pluginsPath, pluginId);
-                if (!Directory.Exists(pluginDir)) return CommonResult.Error("找不到插件目录。");
+                if (!Directory.Exists(pluginDir)) return new ApiResult() { Code = -1, Msg = $"找不到插件目录" } ;
 
                 var configPath = Path.Combine(pluginDir, "plugin.json");
-                if (!File.Exists(configPath)) return CommonResult.Error("找不到plugin.json。");
+                if (!File.Exists(configPath)) return new ApiResult() { Code = -1, Msg = $"找不到plugin.json。" } ;
 
                 var configJson = await File.ReadAllTextAsync(configPath);
                 var config = JsonSerializer.Deserialize<PluginConfig>(configJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                if (config == null) return CommonResult.Error("无法解析plugin.json。");
+                if (config == null) return new ApiResult() { Code = -1, Msg = $"无法解析plugin.json。" };
 
                 if (config.dependencies != null)
                 {
                     foreach (var depId in config.dependencies)
                     {
                         if (!IsPluginActive(depId))
-                            return CommonResult.Error($"加载失败：依赖项 {depId} 未加载或未启用。");
+                            return new ApiResult() { Code = -1, Msg = $"加载失败：依赖项 {depId} 未加载或未启用。" };
                     }
                 }
 
                 var entryPoint = string.IsNullOrEmpty(config.entryPoint) ? config.id + ".dll" : config.entryPoint;
                 var dllPath = Path.Combine(pluginDir, entryPoint);
-                if (!File.Exists(dllPath)) return CommonResult.Error($"找不到入口文件 {entryPoint}。");
+                if (!File.Exists(dllPath)) return new ApiResult() { Code = -1, Msg = $"找不到入口文件 {entryPoint}。" };
 
                 var loadResult = _pluginManager.LoadPlugin(config, dllPath);
                 if (loadResult == null)
                 {
-                    return CommonResult.Error("插件程序集加载失败。");
+                    return new ApiResult() { Code = -1, Msg = $"插件程序集加载失败。" };
                 }
 
                 assembly = loadResult.Value.Assembly;
@@ -118,7 +118,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
 
             try
             {
-                if (assembly == null || loadContext == null) return CommonResult.Error("无法获取插件程序集或加载上下文。");
+                if (assembly == null || loadContext == null) return new ApiResult() { Code = -1, Msg = $"无法获取插件程序集或加载上下文。" };
 
                 var pluginType = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsAbstract);
                 if (pluginType != null)
@@ -143,19 +143,19 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                     await pluginInstance.StartAsync();
                 }
                 _logger?.LogInformation($"插件 {pluginId} 启用成功。");
-                return CommonResult.Success($"插件 {pluginId} 启用成功。");
+                return new ApiResult() { Code = 200, Msg = $"插件 {pluginId} 启用成功。" };
             }
             catch (Exception ex)
             {
                 _logger?.LogError(ex, $"启用插件 {pluginId} 失败");
                 await DisablePluginAsync(pluginId);
-                return CommonResult.Error($"启用插件失败: {ex.Message}");
+                return new ApiResult() { Code = -1, Msg = $"启用插件失败: {ex.Message}" };
             }
         }
 
-        public async Task<CommonResult> DisablePluginAsync(string pluginId)
+        public async Task<ApiResult> DisablePluginAsync(string pluginId)
         {
-            if (!IsPluginActive(pluginId)) return CommonResult.Success($"插件 {pluginId} 已停用。");
+            if (!IsPluginActive(pluginId)) return new ApiResult() { Code = 200, Msg = $"插件 {pluginId} 已停用。" };
 
             var activePlugins = GetActivePlugins();
             foreach (var otherPluginId in activePlugins)
@@ -164,7 +164,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 var config = _pluginManager.GetPluginConfig(otherPluginId);
                 if (config?.dependencies?.Contains(pluginId) == true)
                 {
-                    return CommonResult.Error($"无法停用插件 {pluginId}，因为活动的插件 {otherPluginId} 依赖于它。");
+                    return new ApiResult() { Code = -1, Msg = $"无法停用插件 {pluginId}，因为活动的插件 {otherPluginId} 依赖于它。" };
                 }
             }
 
@@ -206,12 +206,12 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                     await PluginDiagnostics.PerformDestructiveDiagnostics(dllPath, new AutofacServiceProvider(_rootLifetimeScope), _logger);
                 }
 
-                return CommonResult.Success("插件已成功停用。");
+                return new ApiResult() { Code = 200, Msg = $"插件已成功停用。" };
             }
             catch (Exception ex)
             {
                 _logger?.LogError(ex, $"停用插件 {pluginId} 失败");
-                return CommonResult.Error($"停用插件失败: {ex.Message}");
+                return new ApiResult() { Code = -1, Msg = $"停用插件失败: {ex.Message}" };
             }
         }
 
@@ -231,11 +231,11 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             return false;
         }
 
-        public async Task<CommonResult> UninstallPluginAsync(string pluginId)
+        public async Task<ApiResult> UninstallPluginAsync(string pluginId)
         {
             if (IsPluginActive(pluginId))
             {
-                return CommonResult.Error("无法卸载，请先停用插件。");
+                return new ApiResult() { Code = -1, Msg = $"无法卸载，请先停用插件。" };
             }
             
             if (_pluginManager.IsPluginLoaded(pluginId))
@@ -251,12 +251,12 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                     Directory.Delete(pluginDir, true);
                 }
                 _logger?.LogInformation($"插件 {pluginId} 已被物理删除。");
-                return CommonResult.Success("插件已成功卸载。");
+                return new ApiResult() { Code = 200, Msg = $"插件已成功卸载。" };
             }
             catch (Exception ex)
             {
                 _logger?.LogError(ex, $"物理删除插件 {pluginId} 失败");
-                return CommonResult.Error($"卸载插件失败: {ex.Message}");
+                return new ApiResult() { Code = -1, Msg = $"卸载插件失败: {ex.Message}" };
             }
         }
 

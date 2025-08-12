@@ -2,22 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>PluginA</AssemblyName>
+    <RootNamespace>PluginA</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
     <ProjectReference Include="..\..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" />
     <ProjectReference Include="..\..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Autofac" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="plugin.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>

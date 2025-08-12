@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Autofac;
 using System.Threading.Tasks;
 using Fastdotnet.Core.Middleware;
@@ -7,6 +7,8 @@ using PluginA.Middleware;
 // This using statement is necessary to find the extension method 'GetService'.
 using Microsoft.Extensions.DependencyInjection;
 using Fastdotnet.Plugin.Contracts;
+using PluginA.IService;
+using PluginA.Services;
 
 // The namespace for the WebApi project must be included to find the DynamicMiddlewareRegistry.
 
@@ -80,6 +82,7 @@ namespace PluginA
             // This is where you would register services internal to the plugin.
             // For the middleware to be activated, it also needs to be registered here.
             builder.RegisterType<PluginAMiddleware>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<PluginEntityService>().As<IPluginEntityService>().InstancePerLifetimeScope();
         }
     }
 }
