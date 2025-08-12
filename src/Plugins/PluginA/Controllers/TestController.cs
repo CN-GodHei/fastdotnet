@@ -12,7 +12,7 @@ namespace PluginA.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    [SkipGlobalResult] // 标记整个控制器跳过全局结果处理
+    //[SkipGlobalResult] // 标记整个控制器跳过全局结果处理
     public class TestController : ControllerBase
     {
         private readonly ISqlSugarClient _db;
@@ -28,7 +28,7 @@ namespace PluginA.Controllers
         public async Task<IActionResult> Get()
         {
             // 添加Debug日志测试
-            //DebugLogger.Print("开始执行DisablePlugin方法", "PluginA");
+            DebugLogger.Print("开始执行DisablePlugin方法", "PluginA");
             //_logger.LogInformation("正在尝试停用插件: {PluginId}", pluginId);
 
             //// 添加可控异常测试
