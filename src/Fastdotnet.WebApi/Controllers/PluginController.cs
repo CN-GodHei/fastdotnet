@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Fastdotnet.Plugin.Core.Infrastructure;
 using System.Threading.Tasks;
+using Fastdotnet.Core.Exceptions;
+using System;
+using Fastdotnet.Core.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace Fastdotnet.WebApi.Controllers
 {
@@ -9,10 +13,12 @@ namespace Fastdotnet.WebApi.Controllers
     public class PluginController : ControllerBase
     {
         private readonly IPluginLoadService _pluginLoadService;
+        private readonly ILogger<PluginController> _logger;
 
-        public PluginController(IPluginLoadService pluginLoadService)
+        public PluginController(IPluginLoadService pluginLoadService, ILogger<PluginController> logger)
         {
             _pluginLoadService = pluginLoadService;
+            _logger = logger;
         }
 
         /// <summary>

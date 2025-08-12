@@ -18,10 +18,6 @@ public class DebugLog
     /// </summary>
     public string RequestId { get; set; }
 
-    /// <summary>
-    /// 日志级别
-    /// </summary>
-    public string Level { get; set; }
 
     /// <summary>
     /// 日志消息
