@@ -20,7 +20,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Scrutor" />
-    <PackageReference Include="SqlSugarCoreNoDrive" />
+    <PackageReference Include="SqlSugarCore" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 
@@ -41,11 +41,6 @@
     <Content Include="$(NuGetPackageRoot)swashbuckle.aspnetcore\**\swagger-ui\**" LinkBase="swagger" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
-  <!-- 强制使用指定版本的包 -->
-  <ItemGroup>
-    <PackageVersion Include="Autofac" Version="8.4.0" />
-  </ItemGroup>
-  
   <!--
   <Target Name="SetupPluginDirectory" AfterTargets="Build">
     <PropertyGroup>

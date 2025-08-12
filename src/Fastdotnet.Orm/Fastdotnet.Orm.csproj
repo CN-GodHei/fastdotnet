@@ -15,9 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SqlSugarCoreNoDrive" />
-    <PackageReference Include="Microsoft.Data.Sqlite" />
-    <PackageReference Include="SqlSugar.MySqlConnectorCore" />
+    <PackageReference Include="SqlSugarCore" />
   </ItemGroup>
 
 </Project>

@@ -16,4 +16,8 @@
     <PackageReference Include="Autofac" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="plugin.json" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
 </Project>

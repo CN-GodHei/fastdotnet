@@ -21,7 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
     <ProjectReference Include="..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" />
-    <PackageReference Include="SqlSugarCoreNoDrive" />
+    <PackageReference Include="SqlSugarCore" />
   </ItemGroup>
 
 </Project>
