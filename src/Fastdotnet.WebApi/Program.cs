@@ -10,6 +10,7 @@ using Fastdotnet.Service.IService.Admin;
 using Fastdotnet.Orm;
 using Fastdotnet.WebApi.Controllers;
 using Fastdotnet.WebApi.Extensions;
+using Fastdotnet.WebApi.Filters;
 using Fastdotnet.WebApi.Middleware;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -21,11 +22,16 @@ using Scrutor;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Fastdotnet.Core.IService;
+using Fastdotnet.Core.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. 注册 ASP.NET Core 的核心服务
-builder.Services.AddControllers()
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<GlobalExceptionFilter>();
+})
     .AddControllersAsServices()
     .AddNewtonsoftJson(options =>
     {
@@ -65,6 +71,7 @@ builder.Services.AddSqlSugar(builder.Configuration);
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IApplicationInitializer, AdminUserInitializer>();
 builder.Services.AddScoped<IApplicationInitializer, OrmCodeFirstInitializer>();
+builder.Services.AddScoped<GlobalExceptionFilter>();
 
 // 扫描并注册所有 IStartupTask 实现
 builder.Services.Scan(scan => scan
@@ -105,6 +112,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseMiddleware<RequestIdMiddleware>();
+app.UseMiddleware<OperationLogMiddleware>();
 app.UseMiddleware<DynamicMiddlewareDispatcher>();
 app.UseAuthorization();
 app.MapControllers();
@@ -139,6 +147,10 @@ lifetime.ApplicationStarted.Register(() =>
         {
             Console.WriteLine($"Error during startup tasks execution: {ex.Message}");
         }
+        
+        // 初始化DebugLogger
+        var logService = app.Services.GetRequiredService<ILogService>();
+        DebugLogger.Initialize(logService);
     });
 });
 

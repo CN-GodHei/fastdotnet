@@ -1,59 +1,92 @@
 using Fastdotnet.Core.Models.LogModels;
 using Fastdotnet.Core.Utils;
-using Fastdotnet.Service.IService;
+using Fastdotnet.Core.IService;
 using SqlSugar;
+using System;
 using System.Threading.Tasks;
 
-namespace Fastdotnet.Service.Service;
-
-/// <summary>
-/// 日志服务实现
-/// </summary>
-public class LogService : ILogService
+namespace Fastdotnet.Service.Service
 {
-    private readonly SqlSugarScope _sqlSugarScope;
-
-    public LogService(SqlSugarScope sqlSugarScope)
+    public class LogService : ILogService
     {
-        _sqlSugarScope = sqlSugarScope;
-    }
+        private readonly SqlSugarScope _sqlSugarScope;
 
-    private ISqlSugarClient GetLogDb()
-    {
-        // 显式切换到日志数据库
-        return _sqlSugarScope.GetConnection("log");
-    }
-
-    public async Task AddOperationLogAsync(OperationLog log)
-    {
-        // 自动填充RequestId
-        if (string.IsNullOrEmpty(log.RequestId))
+        public LogService(SqlSugarScope sqlSugarScope)
         {
-            log.RequestId = RequestIdManager.CurrentRequestId;
+            _sqlSugarScope = sqlSugarScope;
         }
-        
-        await GetLogDb().Insertable(log).ExecuteCommandAsync();
-    }
 
-    public async Task AddExceptionLogAsync(ExceptionLog log)
-    {
-        // 自动填充RequestId
-        if (string.IsNullOrEmpty(log.RequestId))
+        private ISqlSugarClient GetLogDb()
         {
-            log.RequestId = RequestIdManager.CurrentRequestId;
+            // 显式切换到日志数据库
+            return _sqlSugarScope.GetConnection("log");
         }
-        
-        await GetLogDb().Insertable(log).ExecuteCommandAsync();
-    }
 
-    public async Task AddDebugLogAsync(DebugLog log)
-    {
-        // 自动填充RequestId
-        if (string.IsNullOrEmpty(log.RequestId))
+        public async Task AddOperationLogAsync(OperationLog log)
         {
-            log.RequestId = RequestIdManager.CurrentRequestId;
+            // 自动填充RequestId
+            if (string.IsNullOrEmpty(log.RequestId))
+            {
+                log.RequestId = RequestIdManager.CurrentRequestId;
+            }
+            
+            await GetLogDb().Insertable(log).ExecuteCommandAsync();
         }
-        
-        await GetLogDb().Insertable(log).ExecuteCommandAsync();
+
+        public async Task AddExceptionLogAsync(ExceptionLog log)
+        {
+            // 自动填充RequestId
+            if (string.IsNullOrEmpty(log.RequestId))
+            {
+                log.RequestId = RequestIdManager.CurrentRequestId;
+            }
+            
+            await GetLogDb().Insertable(log).ExecuteCommandAsync();
+        }
+
+        public async Task AddDebugLogAsync(DebugLog log)
+        {
+            // 自动填充RequestId
+            if (string.IsNullOrEmpty(log.RequestId))
+            {
+                log.RequestId = RequestIdManager.CurrentRequestId;
+            }
+            
+            await GetLogDb().Insertable(log).ExecuteCommandAsync();
+        }
+
+        // 添加同步方法以支持某些场景
+        public void AddOperationLog(OperationLog log)
+        {
+            // 自动填充RequestId
+            if (string.IsNullOrEmpty(log.RequestId))
+            {
+                log.RequestId = RequestIdManager.CurrentRequestId;
+            }
+            
+            GetLogDb().Insertable(log).ExecuteCommand();
+        }
+
+        public void AddExceptionLog(ExceptionLog log)
+        {
+            // 自动填充RequestId
+            if (string.IsNullOrEmpty(log.RequestId))
+            {
+                log.RequestId = RequestIdManager.CurrentRequestId;
+            }
+            
+            GetLogDb().Insertable(log).ExecuteCommand();
+        }
+
+        public void AddDebugLog(DebugLog log)
+        {
+            // 自动填充RequestId
+            if (string.IsNullOrEmpty(log.RequestId))
+            {
+                log.RequestId = RequestIdManager.CurrentRequestId;
+            }
+            
+            GetLogDb().Insertable(log).ExecuteCommand();
+        }
     }
 }

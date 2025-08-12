@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Tasks\**" />
+    <EmbeddedResource Remove="Tasks\**" />
+    <None Remove="Tasks\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Plugin\IPlugin.cs" />
     <Compile Remove="Plugin\PluginConfig.cs" />
   </ItemGroup>
@@ -21,9 +27,6 @@
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="System.ComponentModel.Composition" />
 	  <PackageReference Include="SqlSugarCore" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tasks\" />
   </ItemGroup>
 
   <ItemGroup>
