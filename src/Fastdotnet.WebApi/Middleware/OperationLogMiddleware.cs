@@ -9,6 +9,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Fastdotnet.Core.Models.LogModels;
+using System.Net;
 
 namespace Fastdotnet.WebApi.Middleware
 {
@@ -32,7 +33,7 @@ namespace Fastdotnet.WebApi.Middleware
             // 读取请求信息
             var path = context.Request.Path;
             var method = context.Request.Method;
-            var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+            var ip = GetClientIp(context); // 使用优化的IP获取方法
             
             string headers = null;
             string body = null;
@@ -95,6 +96,24 @@ namespace Fastdotnet.WebApi.Middleware
                     _logger.LogError(ex, "Failed to copy response body to original stream");
                 }
             }
+        }
+
+        /// <summary>
+        /// 获取客户端IP地址，优化IPv4映射地址格式
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private string GetClientIp(HttpContext context)
+        {
+            var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+            
+            // 处理IPv4映射地址，如 ::ffff:127.0.0.1 -> 127.0.0.1
+            if (ip.StartsWith("::ffff:"))
+            {
+                ip = ip.Substring(7); // 移除 "::ffff:" 前缀
+            }
+            
+            return ip;
         }
 
         private string GetHeaders(HttpContext context)

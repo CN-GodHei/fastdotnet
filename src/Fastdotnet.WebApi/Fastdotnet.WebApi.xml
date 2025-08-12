@@ -61,6 +61,13 @@
             This enables hot-pluggable plugins to participate in the HTTP request pipeline.
             </summary>
         </member>
+        <member name="M:Fastdotnet.WebApi.Middleware.OperationLogMiddleware.GetClientIp(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            获取客户端IP地址，优化IPv4映射地址格式
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
         <member name="T:Fastdotnet.WebApi.Middleware.RequestIdMiddleware">
             <summary>
             请求ID中间件，为每个请求生成唯一的请求ID
