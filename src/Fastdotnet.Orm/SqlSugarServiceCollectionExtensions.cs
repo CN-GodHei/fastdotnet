@@ -30,11 +30,11 @@ public static class SqlSugarServiceCollectionExtensions
         // 1. 注册 SqlSugarScope 服务
         services.AddSingleton(serviceProvider =>
         {
-            var options = configuration.GetSection(SqlSugarOptions.SectionName).Get<SqlSugarOptions>();
+            var options = configuration.GetSection("SqlSugar").Get<SqlSugarOptions>();
 
             if (options?.Connections == null || !options.Connections.Any())
             {
-                throw new ArgumentNullException(nameof(options), "Database connection configuration is missing or empty.");
+                throw new ArgumentNullException(nameof(options), "数据库连接配置缺失或为空。");
             }
 
             // 创建SqlSugarScope
@@ -47,7 +47,7 @@ public static class SqlSugarServiceCollectionExtensions
                     {
                         // 使用日志框架记录SQL
                         var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
-                        logger?.LogInformation("SqlSugar Executing SQL: {Sql}", sql);
+                        //logger?.LogInformation("SqlSugar Executing SQL: {Sql}", sql);
                         
                         // 根据配置决定是否将SQL执行日志记录到专门的日志表中
                         if (options.EnableSqlExecutionLogging)
@@ -197,32 +197,40 @@ public static class SqlSugarServiceCollectionExtensions
                 CreateTime = DateTime.Now
             };
 
-            // 异步记录日志到数据库
-            _ = Task.Run(async () =>
+            // 同步记录日志到数据库，避免异步任务可能的问题
+            try
             {
-                try
-                {
-                    // 获取SqlSugar客户端
-                    var sqlClient = serviceProvider.GetService<ISqlSugarClient>();
-                    if (sqlClient == null) return;
+                // 获取SqlSugar客户端
+                var sqlClient = serviceProvider.GetService<ISqlSugarClient>();
+                //if (sqlClient == null) 
+                //{
+                //    var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
+                //    logger?.LogWarning("无法获取SqlSugarClient实例");
+                //    return;
+                //}
 
-                    // 尝试将日志记录到日志数据库
-                    var logDb = sqlClient.AsTenant().GetConnection("log") ?? sqlClient;
-                    await logDb.Insertable(sqlExecutionLog).ExecuteCommandAsync();
-                }
-                catch (Exception ex)
-                {
-                    // 记录日志记录过程中的任何错误，避免影响主流程
-                    var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
-                    logger?.LogError(ex, "Error recording SQL execution log to database");
-                }
-            });
+                // 尝试将日志记录到日志数据库
+                var logDb = sqlClient.AsTenant().GetConnection("log") ?? sqlClient;
+                
+                // 添加调试日志
+                var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
+                //logger?.LogInformation("准备记录SQL执行日志到数据库: {Sql}", formattedSql);
+                
+                var result = logDb.Insertable(sqlExecutionLog).ExecuteCommand();
+                //logger?.LogInformation("SQL执行日志记录结果: {Result}", result);
+            }
+            catch (Exception ex)
+            {
+                // 记录日志记录过程中的任何错误，避免影响主流程
+                var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
+                //logger?.LogError(ex, "Error recording SQL execution log to database. SQL: {Sql}", formattedSql);
+            }
         }
         catch (Exception ex)
         {
             // 记录日志记录过程中的任何错误，避免影响主流程
             var logger = rootServiceProvider.GetService<ILogger<SqlSugarClient>>();
-            logger?.LogError(ex, "Error in RecordSqlExecutionToLogTable method");
+            //logger?.LogError(ex, "Error in RecordSqlExecutionToLogTable method");
         }
     }
 
