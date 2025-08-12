@@ -43,59 +43,77 @@ public static class SqlSugarServiceCollectionExtensions
                 // AOP配置
                 db.Aop.OnLogExecuting = (sql, pars) =>
                 {
-                    // 使用日志框架记录SQL
-                    var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
-                    logger?.LogInformation("SqlSugar Executing SQL: {Sql}", sql);
-                    
-                    // 根据配置决定是否将SQL执行日志记录到专门的日志表中
-                    if (options.EnableSqlExecutionLogging)
+                    try
                     {
-                        // 在SQL执行后记录日志
-                        var sqlCopy = sql;
-                        var parsCopy = pars?.ToArray() ?? new SugarParameter[0];
-                        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-                        db.Aop.OnLogExecuted = (sqlExecuted, parsExecuted) =>
+                        // 使用日志框架记录SQL
+                        var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
+                        logger?.LogInformation("SqlSugar Executing SQL: {Sql}", sql);
+                        
+                        // 根据配置决定是否将SQL执行日志记录到专门的日志表中
+                        if (options.EnableSqlExecutionLogging)
                         {
-                            stopwatch.Stop();
-                            RecordSqlExecutionToLogTable(serviceProvider, sqlCopy, parsCopy, stopwatch.ElapsedMilliseconds, null);
-                            db.Aop.OnLogExecuted = null; // 重置事件处理程序
-                        };
+                            // 在SQL执行后记录日志
+                            var sqlCopy = sql;
+                            var parsCopy = pars?.ToArray() ?? new SugarParameter[0];
+                            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+                            db.Aop.OnLogExecuted = (sqlExecuted, parsExecuted) =>
+                            {
+                                stopwatch.Stop();
+                                RecordSqlExecutionToLogTable(serviceProvider, sqlCopy, parsCopy, stopwatch.ElapsedMilliseconds, null);
+                                db.Aop.OnLogExecuted = null; // 重置事件处理程序
+                            };
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // 记录AOP处理过程中的任何错误，避免影响主流程
+                        var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
+                        logger?.LogError(ex, "Error in SqlSugar OnLogExecuting AOP handler");
                     }
                 };
 
                 db.Aop.OnError = ex =>
                 {
-                    // 使用日志框架记录错误
-                    var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
-                    logger?.LogError(ex, "SqlSugar SQL execution error: {Message}", ex.Message);
-                    
-                    // 根据配置决定是否将SQL错误记录到专门的日志表中
-                    if (options.EnableSqlExecutionLogging)
+                    try
                     {
-                        // 安全地处理异常中的参数
-                        SugarParameter[] parameters = null;
-                        if (ex.Parametres is IEnumerable<SugarParameter> sugarParams)
-                        {
-                            parameters = sugarParams.ToArray();
-                        }
-                        else if (ex.Parametres is IEnumerable enumerable)
-                        {
-                            var paramList = new List<SugarParameter>();
-                            foreach (var param in enumerable)
-                            {
-                                if (param is SugarParameter sugarParam)
-                                {
-                                    paramList.Add(sugarParam);
-                                }
-                            }
-                            parameters = paramList.ToArray();
-                        }
-                        else
-                        {
-                            parameters = new SugarParameter[0];
-                        }
+                        // 使用日志框架记录错误
+                        var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
+                        logger?.LogError(ex, "SqlSugar SQL execution error: {Message}", ex.Message);
                         
-                        RecordSqlExecutionToLogTable(serviceProvider, ex.Sql, parameters, 0, ex);
+                        // 根据配置决定是否将SQL错误记录到专门的日志表中
+                        if (options.EnableSqlExecutionLogging)
+                        {
+                            // 安全地处理异常中的参数
+                            SugarParameter[] parameters = null;
+                            if (ex.Parametres is IEnumerable<SugarParameter> sugarParams)
+                            {
+                                parameters = sugarParams.ToArray();
+                            }
+                            else if (ex.Parametres is IEnumerable enumerable)
+                            {
+                                var paramList = new List<SugarParameter>();
+                                foreach (var param in enumerable)
+                                {
+                                    if (param is SugarParameter sugarParam)
+                                    {
+                                        paramList.Add(sugarParam);
+                                    }
+                                }
+                                parameters = paramList.ToArray();
+                            }
+                            else
+                            {
+                                parameters = new SugarParameter[0];
+                            }
+                            
+                            RecordSqlExecutionToLogTable(serviceProvider, ex.Sql, parameters, 0, ex);
+                        }
+                    }
+                    catch (Exception ex2)
+                    {
+                        // 记录AOP处理过程中的任何错误，避免影响主流程
+                        var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
+                        logger?.LogError(ex2, "Error in SqlSugar OnError AOP handler");
                     }
                 };
 
@@ -170,6 +188,7 @@ public static class SqlSugarServiceCollectionExtensions
             // 创建SQL执行日志对象
             var sqlExecutionLog = new SqlExecutionLog
             {
+                RequestId = RequestIdManager.CurrentRequestId,
                 FullSql = formattedSql,
                 ElapsedMilliseconds = elapsedMilliseconds,
                 HasError = exception != null,
@@ -191,15 +210,19 @@ public static class SqlSugarServiceCollectionExtensions
                     var logDb = sqlClient.AsTenant().GetConnection("log") ?? sqlClient;
                     await logDb.Insertable(sqlExecutionLog).ExecuteCommandAsync();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // 忽略日志记录过程中的任何错误，避免影响主流程
+                    // 记录日志记录过程中的任何错误，避免影响主流程
+                    var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
+                    logger?.LogError(ex, "Error recording SQL execution log to database");
                 }
             });
         }
-        catch
+        catch (Exception ex)
         {
-            // 忽略日志记录过程中的任何错误，避免影响主流程
+            // 记录日志记录过程中的任何错误，避免影响主流程
+            var logger = rootServiceProvider.GetService<ILogger<SqlSugarClient>>();
+            logger?.LogError(ex, "Error in RecordSqlExecutionToLogTable method");
         }
     }
 

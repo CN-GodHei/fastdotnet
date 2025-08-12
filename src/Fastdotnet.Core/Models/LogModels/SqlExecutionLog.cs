@@ -16,6 +16,7 @@ public class SqlExecutionLog
     /// <summary>
     /// 请求ID，用于追踪整个请求链路
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public string RequestId { get; set; }
 
     /// <summary>

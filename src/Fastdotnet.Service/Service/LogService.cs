@@ -30,6 +30,12 @@ namespace Fastdotnet.Service.Service
                 log.RequestId = RequestIdManager.CurrentRequestId;
             }
             
+            // 确保有创建时间
+            if (log.CreateTime == default)
+            {
+                log.CreateTime = DateTime.Now;
+            }
+            
             await GetLogDb().Insertable(log).ExecuteCommandAsync();
         }
 
@@ -41,6 +47,12 @@ namespace Fastdotnet.Service.Service
                 log.RequestId = RequestIdManager.CurrentRequestId;
             }
             
+            // 确保有创建时间
+            if (log.CreateTime == default)
+            {
+                log.CreateTime = DateTime.Now;
+            }
+            
             await GetLogDb().Insertable(log).ExecuteCommandAsync();
         }
 
@@ -50,6 +62,12 @@ namespace Fastdotnet.Service.Service
             if (string.IsNullOrEmpty(log.RequestId))
             {
                 log.RequestId = RequestIdManager.CurrentRequestId;
+            }
+            
+            // 确保有创建时间
+            if (log.CreateTime == default)
+            {
+                log.CreateTime = DateTime.Now;
             }
             
             await GetLogDb().Insertable(log).ExecuteCommandAsync();
@@ -64,6 +82,12 @@ namespace Fastdotnet.Service.Service
                 log.RequestId = RequestIdManager.CurrentRequestId;
             }
             
+            // 确保有创建时间
+            if (log.CreateTime == default)
+            {
+                log.CreateTime = DateTime.Now;
+            }
+            
             GetLogDb().Insertable(log).ExecuteCommand();
         }
 
@@ -75,6 +99,12 @@ namespace Fastdotnet.Service.Service
                 log.RequestId = RequestIdManager.CurrentRequestId;
             }
             
+            // 确保有创建时间
+            if (log.CreateTime == default)
+            {
+                log.CreateTime = DateTime.Now;
+            }
+            
             GetLogDb().Insertable(log).ExecuteCommand();
         }
 
@@ -84,6 +114,12 @@ namespace Fastdotnet.Service.Service
             if (string.IsNullOrEmpty(log.RequestId))
             {
                 log.RequestId = RequestIdManager.CurrentRequestId;
+            }
+            
+            // 确保有创建时间
+            if (log.CreateTime == default)
+            {
+                log.CreateTime = DateTime.Now;
             }
             
             GetLogDb().Insertable(log).ExecuteCommand();

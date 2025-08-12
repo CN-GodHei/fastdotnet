@@ -64,18 +64,36 @@ namespace Fastdotnet.WebApi.Middleware
                 // 记录操作日志
                 var operationLog = new OperationLog
                 {
+                    RequestId = RequestIdManager.CurrentRequestId, // 明确设置RequestId
                     Path = path,
                     Method = method,
                     Ip = ip,
                     Headers = headers,
                     Body = body,
                     StatusCode = statusCode,
-                    ElapsedMilliseconds = stopwatch.ElapsedMilliseconds
+                    ElapsedMilliseconds = stopwatch.ElapsedMilliseconds,
+                    CreateTime = DateTime.Now // 明确设置创建时间
                 };
 
-                _ = _logService.AddOperationLogAsync(operationLog);
+                try 
+                {
+                    await _logService.AddOperationLogAsync(operationLog);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to record operation log");
+                }
 
-                await responseBody.CopyToAsync(originalBodyStream);
+                // 将响应内容复制回原始流
+                try
+                {
+                    responseBody.Seek(0, SeekOrigin.Begin);
+                    await responseBody.CopyToAsync(originalBodyStream);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to copy response body to original stream");
+                }
             }
         }
 
