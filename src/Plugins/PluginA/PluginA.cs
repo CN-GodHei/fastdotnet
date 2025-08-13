@@ -8,7 +8,7 @@ using PluginA.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 using Fastdotnet.Plugin.Contracts;
 using PluginA.IService;
-using PluginA.Services;
+//using PluginA.Services;
 
 // The namespace for the WebApi project must be included to find the DynamicMiddlewareRegistry.
 
@@ -82,7 +82,7 @@ namespace PluginA
             // This is where you would register services internal to the plugin.
             // For the middleware to be activated, it also needs to be registered here.
             builder.RegisterType<PluginAMiddleware>().AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<PluginEntityService>().As<IPluginEntityService>().InstancePerLifetimeScope();
+            //builder.RegisterType<PluginEntityService>().As<IPluginEntityService>().InstancePerLifetimeScope();
         }
     }
 }
