@@ -255,6 +255,202 @@ namespace Fastdotnet.Core.Service
             return result;
         }
         #endregion
+
+        #region 回收站操作
+
+        /// <summary>
+        /// 获取回收站数据（已删除但未被物理删除的数据）
+        /// </summary>
+        /// <param name="pageIndex">页码（从1开始）</param>
+        /// <param name="pageSize">页大小</param>
+        /// <param name="orderByExpression">排序表达式</param>
+        /// <param name="orderByType">排序类型</param>
+        /// <returns>分页结果</returns>
+        public virtual async Task<PageResult<T>> GetRecycleBinAsync(
+            int pageIndex,
+            int pageSize,
+            Expression<Func<T, object>> orderByExpression = null,
+            OrderByType orderByType = OrderByType.Desc)
+        {
+            // 查询已删除的数据
+            Expression<Func<T, bool>> whereExpression = entity => entity.IsDeleted;
+            
+            RefAsync<int> totalCount = 0;
+            var query = _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression);
+
+            if (orderByExpression != null)
+            {
+                query = query.OrderBy(orderByExpression, orderByType);
+            }
+            else
+            {
+                // 默认按删除时间倒序排列
+                query = query.OrderBy(entity => entity.DeleteTime, OrderByType.Desc);
+            }
+            
+            var list = await query.ToPageListAsync(pageIndex, pageSize, totalCount);
+            return new PageResult<T>
+            {
+                Items = list,
+                PageInfo = new PageInfo()
+                {
+                    Page = pageIndex,
+                    PageSize = pageSize,
+                    Total = totalCount.Value
+                }
+            };
+        }
+
+        /// <summary>
+        /// 根据条件查询回收站数据
+        /// </summary>
+        /// <param name="whereExpression">查询条件表达式</param>
+        /// <param name="pageIndex">页码（从1开始）</param>
+        /// <param name="pageSize">页大小</param>
+        /// <param name="orderByExpression">排序表达式</param>
+        /// <param name="orderByType">排序类型</param>
+        /// <returns>分页结果</returns>
+        public virtual async Task<PageResult<T>> GetRecycleBinAsync(
+            Expression<Func<T, bool>> whereExpression,
+            int pageIndex,
+            int pageSize,
+            Expression<Func<T, object>> orderByExpression = null,
+            OrderByType orderByType = OrderByType.Desc)
+        {
+            // 合并条件：必须是已删除的数据，并且满足传入的条件
+            Expression<Func<T, bool>> deletedExpression = entity => entity.IsDeleted;
+            var combinedExpression = CombineExpressions(deletedExpression, whereExpression);
+
+            RefAsync<int> totalCount = 0;
+            var query = _db.Queryable<T>().WhereIF(combinedExpression != null, combinedExpression);
+
+            if (orderByExpression != null)
+            {
+                query = query.OrderBy(orderByExpression, orderByType);
+            }
+            else
+            {
+                // 默认按删除时间倒序排列
+                query = query.OrderBy(entity => entity.DeleteTime, OrderByType.Desc);
+            }
+            
+            var list = await query.ToPageListAsync(pageIndex, pageSize, totalCount);
+            return new PageResult<T>
+            {
+                Items = list,
+                PageInfo = new PageInfo()
+                {
+                    Page = pageIndex,
+                    PageSize = pageSize,
+                    Total = totalCount.Value
+                }
+            };
+        }
+
+        /// <summary>
+        /// 恢复回收站中的实体
+        /// </summary>
+        /// <param name="id">实体主键</param>
+        /// <returns>是否恢复成功</returns>
+        public virtual async Task<bool> RestoreAsync(TKey id)
+        {
+            // 只有实现了软删除接口的实体才能恢复
+            if (typeof(ISoftDelete).IsAssignableFrom(typeof(T)))
+            {
+                var result = await _db.Updateable<T>()
+                    .SetColumns(it => new T 
+                    { 
+                        IsDeleted = false, 
+                        DeleteTime = null,
+                        UpdateTime = DateTime.Now
+                    })
+                    .Where(it => it.Id.Equals(id) && it.IsDeleted)
+                    .ExecuteCommandAsync();
+                return result > 0;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 批量恢复回收站中的实体
+        /// </summary>
+        /// <param name="whereExpression">条件表达式</param>
+        /// <returns>恢复成功的数量</returns>
+        public virtual async Task<int> RestoreAsync(Expression<Func<T, bool>> whereExpression)
+        {
+            // 只有实现了软删除接口的实体才能恢复
+            if (typeof(ISoftDelete).IsAssignableFrom(typeof(T)))
+            {
+                // 合并条件：必须是已删除的数据，并且满足传入的条件
+                Expression<Func<T, bool>> deletedExpression = entity => entity.IsDeleted;
+                var combinedExpression = CombineExpressions(deletedExpression, whereExpression);
+
+                var result = await _db.Updateable<T>()
+                    .SetColumns(it => new T 
+                    { 
+                        IsDeleted = false, 
+                        DeleteTime = null,
+                        UpdateTime = DateTime.Now
+                    })
+                    .WhereIF(combinedExpression != null, combinedExpression)
+                    .ExecuteCommandAsync();
+                return result;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// 永久删除回收站中的实体
+        /// </summary>
+        /// <param name="id">实体主键</param>
+        /// <returns>是否删除成功</returns>
+        public virtual async Task<bool> PermanentDeleteAsync(TKey id)
+        {
+            var result = await _db.Deleteable<T>().In(id).ExecuteCommandAsync();
+            return result > 0;
+        }
+
+        /// <summary>
+        /// 根据条件永久删除回收站中的实体
+        /// </summary>
+        /// <param name="whereExpression">条件表达式</param>
+        /// <returns>删除成功的数量</returns>
+        public virtual async Task<int> PermanentDeleteAsync(Expression<Func<T, bool>> whereExpression)
+        {
+            // 合并条件：必须是已删除的数据，并且满足传入的条件
+            Expression<Func<T, bool>> deletedExpression = entity => entity.IsDeleted;
+            var combinedExpression = CombineExpressions(deletedExpression, whereExpression);
+
+            var result = await _db.Deleteable<T>()
+                .WhereIF(combinedExpression != null, combinedExpression)
+                .ExecuteCommandAsync();
+            return result;
+        }
+
+        #endregion
+
+        #region 私有辅助方法
+
+        /// <summary>
+        /// 合并两个表达式（AND关系）
+        /// </summary>
+        /// <param name="expr1">第一个表达式</param>
+        /// <param name="expr2">第二个表达式</param>
+        /// <returns>合并后的表达式</returns>
+        private Expression<Func<T, bool>> CombineExpressions(Expression<Func<T, bool>> expr1, Expression<Func<T, bool>> expr2)
+        {
+            if (expr1 == null) return expr2;
+            if (expr2 == null) return expr1;
+
+            var parameter = Expression.Parameter(typeof(T), "entity");
+            var body = Expression.AndAlso(
+                Expression.Invoke(expr1, parameter),
+                Expression.Invoke(expr2, parameter)
+            );
+            return Expression.Lambda<Func<T, bool>>(body, parameter);
+        }
+
+        #endregion
     }
 
     /// <summary>

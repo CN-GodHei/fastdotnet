@@ -138,6 +138,68 @@ namespace Fastdotnet.Core.IService
         Task<int> DeleteAsync(Expression<Func<T, bool>> whereExpression);
 
         #endregion
+
+        #region 回收站操作
+
+        /// <summary>
+        /// 获取回收站数据（已删除但未被物理删除的数据）
+        /// </summary>
+        /// <param name="pageIndex">页码（从1开始）</param>
+        /// <param name="pageSize">页大小</param>
+        /// <param name="orderByExpression">排序表达式</param>
+        /// <param name="orderByType">排序类型</param>
+        /// <returns>分页结果</returns>
+        Task<PageResult<T>> GetRecycleBinAsync(
+            int pageIndex,
+            int pageSize,
+            Expression<Func<T, object>> orderByExpression = null,
+            OrderByType orderByType = OrderByType.Desc);
+
+        /// <summary>
+        /// 根据条件查询回收站数据
+        /// </summary>
+        /// <param name="whereExpression">查询条件表达式</param>
+        /// <param name="pageIndex">页码（从1开始）</param>
+        /// <param name="pageSize">页大小</param>
+        /// <param name="orderByExpression">排序表达式</param>
+        /// <param name="orderByType">排序类型</param>
+        /// <returns>分页结果</returns>
+        Task<PageResult<T>> GetRecycleBinAsync(
+            Expression<Func<T, bool>> whereExpression,
+            int pageIndex,
+            int pageSize,
+            Expression<Func<T, object>> orderByExpression = null,
+            OrderByType orderByType = OrderByType.Desc);
+
+        /// <summary>
+        /// 恢复回收站中的实体
+        /// </summary>
+        /// <param name="id">实体主键</param>
+        /// <returns>是否恢复成功</returns>
+        Task<bool> RestoreAsync(TKey id);
+
+        /// <summary>
+        /// 批量恢复回收站中的实体
+        /// </summary>
+        /// <param name="whereExpression">条件表达式</param>
+        /// <returns>恢复成功的数量</returns>
+        Task<int> RestoreAsync(Expression<Func<T, bool>> whereExpression);
+
+        /// <summary>
+        /// 永久删除回收站中的实体
+        /// </summary>
+        /// <param name="id">实体主键</param>
+        /// <returns>是否删除成功</returns>
+        Task<bool> PermanentDeleteAsync(TKey id);
+
+        /// <summary>
+        /// 根据条件永久删除回收站中的实体
+        /// </summary>
+        /// <param name="whereExpression">条件表达式</param>
+        /// <returns>删除成功的数量</returns>
+        Task<int> PermanentDeleteAsync(Expression<Func<T, bool>> whereExpression);
+
+        #endregion
     }
 
     /// <summary>
