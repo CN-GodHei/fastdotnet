@@ -219,11 +219,7 @@ namespace Fastdotnet.Core.Service
             // 如果实体实现了软删除接口，则执行软删除
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(T)))
             {
-                var result = await _db.Updateable<T>()
-                    .SetColumns(it => new T { IsDeleted = true, DeleteTime = DateTime.Now })
-                    .Where(it => it.Id.Equals(id))
-                    .ExecuteCommandAsync();
-                return result > 0;
+               return await _db.Deleteable<T>().In(id).IsLogic().ExecuteCommandAsync("IsDeleted",true, "DeleteTime")>0;
             }
             else
             {
