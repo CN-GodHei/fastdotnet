@@ -66,7 +66,24 @@ namespace Fastdotnet.Core.Service
         }
 
         /// <summary>
-        /// 获取分页数据
+        /// 分页查询
+        /// </summary>
+        /// <param name="pageIndex">页码（从1开始）</param>
+        /// <param name="pageSize">页大小</param>
+        /// <param name="orderByExpression">排序表达式</param>
+        /// <param name="orderByType">排序类型</param>
+        /// <returns>分页结果</returns>
+        public virtual async Task<PageResult<T>> GetPageAsync(
+            int pageIndex,
+            int pageSize,
+            Expression<Func<T, object>> orderByExpression = null,
+            OrderByType orderByType = OrderByType.Asc)
+        {
+            return await GetPageAsync(null, pageIndex, pageSize, orderByExpression, orderByType);
+        }
+
+        /// <summary>
+        /// 分页查询
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <param name="pageIndex">页码（从1开始）</param>
