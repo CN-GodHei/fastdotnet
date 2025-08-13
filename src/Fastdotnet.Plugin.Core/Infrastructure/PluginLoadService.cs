@@ -139,21 +139,13 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                     var pluginInstance = pluginScope.Resolve<IPlugin>();
                     
                     // 添加插件的CodeFirst支持
-                    // 通过文件路径重新加载程序集，以确保Location属性可用
-                    //var pluginConfig = _pluginManager.GetPluginConfig(pluginId);
-                    //if (pluginConfig != null)
-                    //{
-                    //    var pluginDir = Path.Combine(_pluginsPath, pluginId);
-                    //    var entryPoint = string.IsNullOrEmpty(pluginConfig.entryPoint) ? pluginConfig.id + ".dll" : pluginConfig.entryPoint;
-                    //    var dllPath = Path.Combine(pluginDir, entryPoint);
-                        
-                    //    if (File.Exists(dllPath))
-                    //    {
-                    //        var assemblyForCodeFirst = Assembly.LoadFrom(dllPath);
-                    //        var serviceProvider = new AutofacServiceProvider(pluginScope);
-                    //        serviceProvider.UsePluginCodeFirst(assemblyForCodeFirst);
-                    //    }
-                    //}
+                    // 使用已经加载的程序集，避免重复加载
+                    var assemblyForCodeFirst = _pluginManager.GetPluginAssembly(pluginId);
+                    if (assemblyForCodeFirst != null)
+                    {
+                        var serviceProvider = new AutofacServiceProvider(pluginScope);
+                        serviceProvider.UsePluginCodeFirst(assemblyForCodeFirst);
+                    }
                     
                     await pluginInstance.InitializeAsync(new AutofacServiceProvider(pluginScope));
                     await pluginInstance.StartAsync();

@@ -305,7 +305,7 @@ public static class SqlSugarServiceCollectionExtensions
     /// <param name="pluginAssembly">插件的主程序集，用于定位插件目录</param>
     public static void UsePluginCodeFirst(this IServiceProvider serviceProvider, Assembly pluginAssembly)
     {
-        if (pluginAssembly == null || string.IsNullOrEmpty(pluginAssembly.Location))
+        if (pluginAssembly == null)
         {
             return;
         }
