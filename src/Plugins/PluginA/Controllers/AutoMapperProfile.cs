@@ -1,4 +1,5 @@
 using AutoMapper;
+using PluginA.Dto;
 using PluginA.Entities;
 
 namespace PluginA.Controllers
@@ -6,9 +7,9 @@ namespace PluginA.Controllers
     /// <summary>
     /// PluginATest实体和DTO之间的映射配置
     /// </summary>
-    public class PluginATestDtoProfile : Profile
+    public class AutoMapperProfile : Profile
     {
-        public PluginATestDtoProfile()
+        public AutoMapperProfile()
         {
             CreateMap<PluginATest, PluginATestDto>();
             CreateMap<PluginATestCreateDto, PluginATest>();

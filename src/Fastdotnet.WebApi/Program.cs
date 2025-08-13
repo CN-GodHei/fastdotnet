@@ -105,18 +105,23 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
         c.Resolve<ILoggerFactory>()
     )).As<IPluginLoadService>().SingleInstance();
     containerBuilder.RegisterType<PluginActionDescriptorProvider>().As<IActionDescriptorProvider>().SingleInstance();
-    //containerBuilder.RegisterType<DynamicControllerFeatureProvider>().As<IApplicationFeatureProvider<ControllerFeature>>().SingleInstance();
-    
-    // 在Autofac中注册AutoMapper，确保插件中的Profile也能被扫描到
-    //containerBuilder.Register(context => {
-    //    var config = new MapperConfiguration(cfg =>
-    //    {
-    //        // 扫描所有程序集中的Profile
-    //        cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
-    //    }, context.Resolve<ILoggerFactory>());
-    //    return config;
-    //}).AsSelf().SingleInstance();
-    //containerBuilder.Register(c => c.Resolve<MapperConfiguration>().CreateMapper()).As<IMapper>().InstancePerLifetimeScope();
+
+    // 在Autofac中注册AutoMapper
+    containerBuilder.Register(c =>
+    {
+        var context = c.Resolve<IComponentContext>();
+        var loggerFactory = context.Resolve<ILoggerFactory>(); // 1. 解析 ILoggerFactory
+
+        // 2. 创建和配置 MapperConfigurationExpression
+        var expression = new AutoMapper.MapperConfigurationExpression();
+        expression.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
+        expression.ConstructServicesUsing(context.Resolve);
+
+        // 3. 使用你提供的特定构造函数创建 MapperConfiguration
+        var config = new MapperConfiguration(expression, loggerFactory);
+
+        return config.CreateMapper();
+    }).As<IMapper>().InstancePerLifetimeScope();
 });
 
 // 3. 构建并运行应用
