@@ -15,6 +15,8 @@ using System;
 using Fastdotnet.Plugin.Contracts;
 using Fastdotnet.Orm;
 using Microsoft.AspNetCore.Mvc;
+using Fastdotnet.Core.Service;
+using Fastdotnet.Core.IService;
 
 namespace Fastdotnet.Plugin.Core.Infrastructure
 {
@@ -132,6 +134,10 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                                .Where(t => typeof(ControllerBase).IsAssignableFrom(t))
                                .AsSelf()
                                .InstancePerDependency();
+                        
+                        // 注册通用仓储服务，解决插件控制器中IRepository依赖注入问题
+                        builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerDependency();
+                        builder.RegisterGeneric(typeof(Repository<,>)).As(typeof(IRepository<,>)).InstancePerDependency();
                     });
 
                     _pluginScopes.TryAdd(pluginId, pluginScope);

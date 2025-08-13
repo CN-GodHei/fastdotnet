@@ -12,11 +12,8 @@ namespace PluginA.Controllers
     [Route("api/[controller]")]
     public class PluginATestController : GenericControllerBase<PluginATest>
     {
-        private readonly IRepository<PluginATest> _pluginATestRepository;
-
         public PluginATestController(IRepository<PluginATest> pluginATestRepository) : base(pluginATestRepository)
         {
-            _pluginATestRepository = pluginATestRepository;
         }
 
         // 继承自GenericControllerBase的通用CRUD操作:
