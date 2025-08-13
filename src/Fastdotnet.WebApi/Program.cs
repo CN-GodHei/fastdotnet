@@ -1,6 +1,8 @@
 using Autofac;
 using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
+// 添加AutoMapper相关引用
+using AutoMapper;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Middleware;
@@ -20,6 +22,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -70,8 +73,10 @@ builder.Services.AddSingleton<IActionDescriptorChangeProvider>(ActionDescriptorC
 builder.Services.AddSingleton<DynamicMiddlewareRegistry>();
 builder.Services.AddSqlSugar(builder.Configuration);
 
+
 // 注册日志服务
 builder.Services.AddScoped<ILogService, LogService>();
+//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // 注册应用服务和初始化器
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
@@ -101,6 +106,17 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     )).As<IPluginLoadService>().SingleInstance();
     containerBuilder.RegisterType<PluginActionDescriptorProvider>().As<IActionDescriptorProvider>().SingleInstance();
     //containerBuilder.RegisterType<DynamicControllerFeatureProvider>().As<IApplicationFeatureProvider<ControllerFeature>>().SingleInstance();
+    
+    // 在Autofac中注册AutoMapper，确保插件中的Profile也能被扫描到
+    //containerBuilder.Register(context => {
+    //    var config = new MapperConfiguration(cfg =>
+    //    {
+    //        // 扫描所有程序集中的Profile
+    //        cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
+    //    }, context.Resolve<ILoggerFactory>());
+    //    return config;
+    //}).AsSelf().SingleInstance();
+    //containerBuilder.Register(c => c.Resolve<MapperConfiguration>().CreateMapper()).As<IMapper>().InstancePerLifetimeScope();
 });
 
 // 3. 构建并运行应用

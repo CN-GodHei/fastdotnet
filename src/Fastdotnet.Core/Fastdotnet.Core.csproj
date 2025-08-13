@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" />
+    <PackageReference Include="AutoMapper" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="System.ComponentModel.Composition" />

@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\PluginATestController.cs" />
     <Compile Remove="Controllers\TestController.cs" />
     <Compile Remove="Entities\PluginEntity.cs" />
     <Compile Remove="IService\IPluginEntityService.cs" />
