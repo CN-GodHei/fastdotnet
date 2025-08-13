@@ -53,7 +53,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="orderByExpression">排序表达式</param>
         /// <param name="orderByType">排序类型</param>
         /// <returns>分页结果</returns>
-        Task<List<T>> GetPageAsync(
+        Task<PageResult<T>> GetPageAsync(
             Expression<Func<T, bool>> whereExpression,
             int pageIndex,
             int pageSize,

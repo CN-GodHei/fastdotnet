@@ -74,7 +74,7 @@ namespace Fastdotnet.Core.Service
         /// <param name="orderByExpression">排序表达式</param>
         /// <param name="orderByType">排序类型</param>
         /// <returns>分页结果</returns>
-        public virtual async Task<List<T>> GetPageAsync(
+        public virtual async Task<PageResult<T>> GetPageAsync(
             Expression<Func<T, bool>> whereExpression,
             int pageIndex,
             int pageSize,
@@ -88,9 +88,19 @@ namespace Fastdotnet.Core.Service
             {
                 query = query.OrderBy(orderByExpression, orderByType);
             }
-
-            return await query.ToPageListAsync(pageIndex, pageSize, totalCount);
+            var list = await query.ToPageListAsync(pageIndex, pageSize, totalCount);
+            return new PageResult<T>
+            {
+                Items = list,
+                PageInfo = new PageInfo()
+                {
+                    Page = pageIndex,
+                    PageSize = pageSize,
+                    Total = totalCount.Value
+                }
+            };
         }
+
 
         /// <summary>
         /// 判断是否存在满足条件的实体
@@ -153,13 +163,13 @@ namespace Fastdotnet.Core.Service
         public virtual async Task<bool> UpdateAsync(TKey id, Dictionary<string, object> columns)
         {
             var updateable = _db.Updateable<T>().Where(it => it.Id.Equals(id));
-            
+
             // 逐个设置要更新的列
             foreach (var column in columns)
             {
                 updateable = updateable.SetColumns(column.Key, column.Value);
             }
-            
+
             var result = await updateable.ExecuteCommandAsync();
             return result > 0;
         }
@@ -184,13 +194,13 @@ namespace Fastdotnet.Core.Service
         public virtual async Task<int> UpdateRangeAsync(Expression<Func<T, bool>> whereExpression, Dictionary<string, object> columns)
         {
             var updateable = _db.Updateable<T>().WhereIF(whereExpression != null, whereExpression);
-            
+
             // 逐个设置要更新的列
             foreach (var column in columns)
             {
                 updateable = updateable.SetColumns(column.Key, column.Value);
             }
-            
+
             var result = await updateable.ExecuteCommandAsync();
             return result;
         }
@@ -248,7 +258,6 @@ namespace Fastdotnet.Core.Service
             }
             return result;
         }
-
         #endregion
     }
 

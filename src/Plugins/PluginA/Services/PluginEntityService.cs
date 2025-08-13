@@ -39,14 +39,7 @@ namespace PluginA.Services
                 whereExpression = x => x.Name.Contains(name);
             }
 
-            var pageResult = await GetPageAsync(whereExpression, pageIndex, pageSize);
-            if (pageResult != null) {
-              return  new PageResult<PluginEntity>
-                {
-                    Items = pageResult
-                };
-            }
-            return null;
+            return await GetPageAsync(whereExpression, pageIndex, pageSize);
         }
 
         /// <summary>
