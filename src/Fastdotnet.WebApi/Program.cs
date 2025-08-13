@@ -2,29 +2,30 @@ using Autofac;
 using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using Fastdotnet.Core.Initializers;
+using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Middleware;
+using Fastdotnet.Core.Utils;
+using Fastdotnet.Orm;
 using Fastdotnet.Plugin.Core.Infrastructure;
 using Fastdotnet.Service;
 using Fastdotnet.Service.Initializers;
 using Fastdotnet.Service.IService.Admin;
-using Fastdotnet.Orm;
+using Fastdotnet.Service.Service;
 using Fastdotnet.WebApi.Controllers;
 using Fastdotnet.WebApi.Extensions;
 using Fastdotnet.WebApi.Filters;
 using Fastdotnet.WebApi.Middleware;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Scrutor;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Utils;
-using Fastdotnet.Service.Service;
+using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Scrutor;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -168,4 +169,6 @@ static void SetNewtonsoftJsonSetting(JsonSerializerSettings setting)
     setting.DateTimeZoneHandling = DateTimeZoneHandling.Local;
     setting.DateFormatString = "yyyy-MM-dd HH:mm:ss";
     setting.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+    //不改变字段大小写：还是注释吧，总有人分不清大小写，但程序不会，通吃就行
+    //setting.ContractResolver = new DefaultContractResolver();
 }
