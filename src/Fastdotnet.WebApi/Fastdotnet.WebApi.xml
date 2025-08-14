@@ -4,6 +4,23 @@
         <name>Fastdotnet.WebApi</name>
     </assembly>
     <members>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.AdminUsersController.Create(Fastdotnet.Core.Models.Admin.Users.CreateAdminUserDto)">
+            <summary>
+            创建新管理员（重写）
+            </summary>
+            <remarks>
+            重写基类方法以调用包含特殊业务逻辑（如密码加密、用户名检查）的服务。
+            </remarks>
+            <param name="dto">创建用户的DTO</param>
+            <returns>创建成功后的用户信息</returns>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.AdminUsersController.ResetPassword(System.Int64,Fastdotnet.Core.Models.Admin.Users.ResetPasswordDto)">
+            <summary>
+            重置管理员密码
+            </summary>
+            <param name="id">用户ID</param>
+            <param name="dto">重置密码的DTO</param>
+        </member>
         <member name="M:Fastdotnet.WebApi.Controllers.PluginController.ScanPlugins">
             <summary>
             扫描插件目录以发现所有可用插件

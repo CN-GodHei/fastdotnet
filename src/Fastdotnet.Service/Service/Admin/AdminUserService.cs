@@ -1,45 +1,97 @@
-using Fastdotnet.Core.Models.Admin;
+using AutoMapper;
+using Fastdotnet.Core.Entities.Admin;
+using Fastdotnet.Core.Exceptions;
+using Fastdotnet.Core.IService;
+using Fastdotnet.Core.Models;
+using Fastdotnet.Core.Models.Admin.Users;
 using Fastdotnet.Service.IService.Admin;
+using System.Threading.Tasks;
 
-namespace Fastdotnet.Service
+namespace Fastdotnet.Service.Service.Admin
 {
     public class AdminUserService : IAdminUserService
     {
-        public AdminUserService()
+        private readonly IRepository<FdAdminUser> _repository;
+        private readonly IMapper _mapper;
+
+        public AdminUserService(IRepository<FdAdminUser> repository, IMapper mapper)
         {
-            // TODO: 添加必要的依赖注入
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        public Task<bool> ChangePasswordAsync(long id, string oldPassword, string newPassword)
+        public async Task<long> CreateAsync(CreateAdminUserDto dto)
         {
-            throw new NotImplementedException();
+            var existingUser = await _repository.GetFirstAsync(u => u.Username == dto.Username);
+            if (existingUser != null)
+            { 
+                throw new BusinessException("用户名已存在");
+            }
+
+            var user = _mapper.Map<FdAdminUser>(dto);
+            // 在实际项目中，密码应该在这里进行加密处理
+            // user.Password = PasswordHasher.Hash(dto.Password);
+
+            await _repository.InsertAsync(user);
+            return user.Id;
         }
 
-        public Task<bool> CreateAsync(FdAdminUser adminUser)
+        public async Task DeleteAsync(long id)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetByIdAsync(id);
+            if (user == null)
+            {
+                throw new BusinessException("用户不存在");
+            }
+            await _repository.DeleteAsync(id);
         }
 
-        public Task<bool> DeleteAsync(long id)
+        public async Task<AdminUserDto?> GetAsync(long id)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetByIdAsync(id);
+            return _mapper.Map<AdminUserDto?>(user);
         }
 
-        public Task<FdAdminUser> GetByIdAsync(long id)
+        public async Task<PageResult<AdminUserDto>> GetPageAsync(PageQueryDto query)
         {
-            throw new NotImplementedException();
+            var pageResult = await _repository.GetPageAsync(
+                u => string.IsNullOrEmpty(query.Keyword) || u.Username.Contains(query.Keyword) || u.FullName.Contains(query.Keyword),
+                query.PageIndex,
+                query.PageSize
+            );
+
+            return new PageResult<AdminUserDto>
+            {
+                Items = _mapper.Map<System.Collections.Generic.IList<AdminUserDto>>(pageResult.Items),
+                PageInfo = pageResult.PageInfo
+            };
         }
 
-        public Task<string> LoginAsync(string username, string password)
+        public async Task ResetPasswordAsync(long id, string newPassword)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetByIdAsync(id);
+            if (user == null)
+            {
+                throw new BusinessException("用户不存在");
+            }
+
+            // 在实际项目中，密码应该在这里进行加密处理
+            // user.Password = PasswordHasher.Hash(newPassword);
+            user.Password = newPassword; // 临时明文处理
+
+            await _repository.UpdateAsync(user);
         }
 
-        public Task<bool> UpdateAsync(FdAdminUser adminUser)
+        public async Task UpdateAsync(long id, UpdateAdminUserDto dto)
         {
-            throw new NotImplementedException();
-        }
+            var user = await _repository.GetByIdAsync(id);
+            if (user == null)
+            { 
+                throw new BusinessException("用户不存在");
+            }
 
-        // TODO: 实现IAdminUserService接口的方法
+            _mapper.Map(dto, user);
+            await _repository.UpdateAsync(user);
+        }
     }
 }

@@ -6,6 +6,7 @@ using AutoMapper;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Middleware;
+using Fastdotnet.Core.Service;
 using Fastdotnet.Core.Utils;
 using Fastdotnet.Orm;
 using Fastdotnet.Plugin.Core.Infrastructure;
@@ -13,6 +14,7 @@ using Fastdotnet.Service;
 using Fastdotnet.Service.Initializers;
 using Fastdotnet.Service.IService.Admin;
 using Fastdotnet.Service.Service;
+using Fastdotnet.Service.Service.Admin;
 using Fastdotnet.WebApi.Controllers;
 using Fastdotnet.WebApi.Extensions;
 using Fastdotnet.WebApi.Filters;
@@ -79,6 +81,7 @@ builder.Services.AddScoped<ILogService, LogService>();
 //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // 注册应用服务和初始化器
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IApplicationInitializer, AdminUserInitializer>();
 builder.Services.AddScoped<IApplicationInitializer, OrmCodeFirstInitializer>();
