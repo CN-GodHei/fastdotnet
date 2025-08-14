@@ -82,6 +82,7 @@ namespace PluginA
             // This is where you would register services internal to the plugin.
             // For the middleware to be activated, it also needs to be registered here.
             builder.RegisterType<PluginAMiddleware>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<PluginAPermissionProvider>().As<IPermissionProvider>().InstancePerLifetimeScope();
             //builder.RegisterType<PluginEntityService>().As<IPluginEntityService>().InstancePerLifetimeScope();
         }
     }

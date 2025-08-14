@@ -62,7 +62,7 @@ namespace Fastdotnet.Service.Service.Admin
 
             return new PageResult<AdminUserDto>
             {
-                Items = _mapper.Map<System.Collections.Generic.IList<AdminUserDto>>(pageResult.Items),
+                Items = _mapper.Map<IList<AdminUserDto>>(pageResult.Items),
                 PageInfo = pageResult.PageInfo
             };
         }

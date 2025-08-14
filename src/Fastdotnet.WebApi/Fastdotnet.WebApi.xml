@@ -21,6 +21,11 @@
             <param name="id">用户ID</param>
             <param name="dto">重置密码的DTO</param>
         </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.PermissionsController.GetAll">
+            <summary>
+            获取所有权限，按模块分组，方便前端展示
+            </summary>
+        </member>
         <member name="M:Fastdotnet.WebApi.Controllers.PluginController.ScanPlugins">
             <summary>
             扫描插件目录以发现所有可用插件

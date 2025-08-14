@@ -8,6 +8,8 @@ using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Middleware;
 using Fastdotnet.Core.Service;
 using Fastdotnet.Core.Utils;
+using Fastdotnet.Core.Settings;
+using Fastdotnet.Service.IService;
 using Fastdotnet.Orm;
 using Fastdotnet.Plugin.Core.Infrastructure;
 using Fastdotnet.Service;
@@ -15,6 +17,8 @@ using Fastdotnet.Service.Initializers;
 using Fastdotnet.Service.IService.Admin;
 using Fastdotnet.Service.Service;
 using Fastdotnet.Service.Service.Admin;
+using Fastdotnet.Service.Service.System;
+using Fastdotnet.Plugin.Contracts;
 using Fastdotnet.WebApi.Controllers;
 using Fastdotnet.WebApi.Extensions;
 using Fastdotnet.WebApi.Filters;
@@ -74,6 +78,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddSingleton<IActionDescriptorChangeProvider>(ActionDescriptorChangeProvider.Instance);
 builder.Services.AddSingleton<DynamicMiddlewareRegistry>();
 builder.Services.AddSqlSugar(builder.Configuration);
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
 
 // 注册日志服务
@@ -83,8 +88,11 @@ builder.Services.AddScoped<ILogService, LogService>();
 // 注册应用服务和初始化器
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IApplicationInitializer, AdminUserInitializer>();
 builder.Services.AddScoped<IApplicationInitializer, OrmCodeFirstInitializer>();
+builder.Services.AddScoped<IApplicationInitializer, PermissionInitializer>();
+builder.Services.AddScoped<IPermissionProvider, FrameworkPermissionProvider>();
 builder.Services.AddScoped<GlobalExceptionFilter>();
 
 // 扫描并注册所有 IStartupTask 实现
