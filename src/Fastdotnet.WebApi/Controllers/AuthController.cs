@@ -1,5 +1,6 @@
 using Fastdotnet.Core.Models.Auth;
 using Fastdotnet.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace Fastdotnet.WebApi.Controllers
 {
     [ApiController]
     [Route("api/auth")]
+    [AllowAnonymous] // 将此控制器标记为允许匿名访问
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
