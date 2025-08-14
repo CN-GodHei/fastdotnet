@@ -1,4 +1,5 @@
 using AutoMapper;
+using Fastdotnet.Core.Constants;
 using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.Entities.Admin;
 using Fastdotnet.Core.Entities.App;
@@ -6,7 +7,8 @@ using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.System;
-using Fastdotnet.Core.Utils; // 添加对雪花ID生成器的引用
+using Fastdotnet.Core.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
     [Route("api/admin/roles")]
+    [Authorize]
     public class RolesController : GenericDtoControllerBase<FdRole, long, CreateRoleDto, UpdateRoleDto, RoleDto>
     {
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
@@ -34,14 +37,28 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             _rolePermissionRepository = rolePermissionRepository;
         }
 
+        [Authorize(Policy = Permissions.Admin.Roles.View)]
+        public override Task<System.Collections.Generic.List<RoleDto>> GetAll() => base.GetAll();
+
+        [Authorize(Policy = Permissions.Admin.Roles.View)]
+        public override Task<RoleDto> GetById(long id) => base.GetById(id);
+
+        [Authorize(Policy = Permissions.Admin.Roles.View)]
+        public override Task<Fastdotnet.Core.Models.PageResult<RoleDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10) => base.GetPage(pageIndex, pageSize);
+
+        [Authorize(Policy = Permissions.Admin.Roles.Create)]
+        public override Task<RoleDto> Create(CreateRoleDto dto) => base.Create(dto);
+
+        [Authorize(Policy = Permissions.Admin.Roles.Edit)]
+        public override Task<RoleDto> Update(long id, UpdateRoleDto dto) => base.Update(id, dto);
+
+        [Authorize(Policy = Permissions.Admin.Roles.Delete)]
+        public override Task<bool> Delete(long id) => base.Delete(id);
+
         protected override async Task BeforeCreate(FdRole entity, CreateRoleDto dto)
         {
-            // 使用雪花ID生成唯一的角色编码
-            var snowflakeId = SnowflakeIdGenerator.NextId();
-            entity.Code = $"ROLE_CODE_{snowflakeId}";
-
-            // 注意：因为雪花ID保证了唯一性，我们不再需要检查Code是否重复
-
+            var generatedCode = $"ROLE_CODE_{SnowflakeIdGenerator.NextId()}";
+            entity.Code = generatedCode;
             await base.BeforeCreate(entity, dto);
         }
 
@@ -64,6 +81,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         [HttpGet("{id}/permissions")]
+        [Authorize(Policy = Permissions.Admin.Roles.View)]
         public async Task<List<long>> GetPermissionIds(long id)
         {
             var permissions = await _rolePermissionRepository.GetListAsync(rp => rp.RoleId == id);
@@ -71,9 +89,9 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         [HttpPost("{id}/permissions")]
+        [Authorize(Policy = Permissions.Admin.Roles.AssignPermissions)]
         public async Task<IActionResult> AssignPermissions(long id, [FromBody] AssignPermissionsDto dto)
         {
-            // 建议：在真实项目中，以下两个操作应在一个数据库事务中执行
             await _rolePermissionRepository.DeleteAsync(rp => rp.RoleId == id);
 
             if (dto.PermissionIds != null && dto.PermissionIds.Any())

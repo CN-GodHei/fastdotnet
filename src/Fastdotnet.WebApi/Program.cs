@@ -38,6 +38,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Fastdotnet.WebApi.Middleware.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -152,6 +153,11 @@ builder.Services.AddScoped<IApplicationInitializer, OrmCodeFirstInitializer>();
 builder.Services.AddScoped<IApplicationInitializer, PermissionInitializer>();
 builder.Services.AddScoped<IPermissionProvider, FrameworkPermissionProvider>();
 builder.Services.AddScoped<GlobalExceptionFilter>();
+
+// 注册授权处理器和策略提供者
+builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
 
 // 扫描并注册所有 IStartupTask 实现
 builder.Services.Scan(scan => scan
