@@ -150,9 +150,11 @@ builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IApplicationInitializer, OrmCodeFirstInitializer>();
 builder.Services.AddScoped<IApplicationInitializer, AdminUserInitializer>();
-builder.Services.AddScoped<IApplicationInitializer, PermissionInitializer>();
 builder.Services.AddScoped<IPermissionProvider, FrameworkPermissionProvider>();
 builder.Services.AddScoped<GlobalExceptionFilter>();
+
+// 注册新权限同步服务
+builder.Services.AddScoped<IPermissionSyncService, PermissionSyncService>();
 
 // 注册授权处理器和策略提供者
 builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();

@@ -15,8 +15,8 @@ using System;
 using Fastdotnet.Plugin.Contracts;
 using Fastdotnet.Orm;
 using Microsoft.AspNetCore.Mvc;
-using Fastdotnet.Core.Service;
 using Fastdotnet.Core.IService;
+using Fastdotnet.Core.Service;
 
 namespace Fastdotnet.Plugin.Core.Infrastructure
 {
@@ -135,6 +135,12 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                                .AsSelf()
                                .InstancePerDependency();
                         
+                        // 注册插件中的IPermissionProvider实现
+                        builder.RegisterAssemblyTypes(assembly)
+                               .Where(t => typeof(IPermissionProvider).IsAssignableFrom(t) && !t.IsAbstract)
+                               .As<IPermissionProvider>()
+                               .InstancePerDependency();
+
                         // 注册通用仓储服务，解决插件控制器中IRepository依赖注入问题
                         builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerDependency();
                         builder.RegisterGeneric(typeof(Repository<,>)).As(typeof(IRepository<,>)).InstancePerDependency();
@@ -151,6 +157,25 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                     {
                         var serviceProvider = new AutofacServiceProvider(pluginScope);
                         serviceProvider.UsePluginCodeFirst(assemblyForCodeFirst);
+                        
+                        // 同步插件权限
+                        try
+                        {
+                            // 只获取插件程序集中的IPermissionProvider实现
+                            var permissionProviders = pluginScope.Resolve<IEnumerable<IPermissionProvider>>()
+                                .Where(p => p.GetType().Assembly == assemblyForCodeFirst);
+                            
+                            var permissionSyncService = pluginScope.Resolve<IPermissionSyncService>();
+                            
+                            foreach (var provider in permissionProviders)
+                            {
+                                await permissionSyncService.SyncPluginPermissionsAsync(provider, pluginId);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger?.LogWarning(ex, $"同步插件 {pluginId} 的权限时发生错误");
+                        }
                     }
                     
                     await pluginInstance.InitializeAsync(new AutofacServiceProvider(pluginScope));

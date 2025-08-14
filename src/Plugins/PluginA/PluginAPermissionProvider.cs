@@ -12,7 +12,7 @@ namespace PluginA
                 new()
                 {
                     Module = "PluginA",
-                    Code = "pluginA.data.view",
+                    Code = PluginAPermissions.DataView,
                     Name = "查看插件A数据",
                     Category = "User",
                     Type = "Api"
@@ -20,7 +20,7 @@ namespace PluginA
                 new()
                 {
                     Module = "PluginA",
-                    Code = "pluginA.settings.manage",
+                    Code = PluginAPermissions.SettingsManage,
                     Name = "管理插件A设置",
                     Category = "Admin",
                     Type = "Api"
