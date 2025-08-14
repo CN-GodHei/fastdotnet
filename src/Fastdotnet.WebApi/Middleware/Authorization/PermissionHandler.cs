@@ -17,8 +17,14 @@ namespace Fastdotnet.WebApi.Middleware.Authorization
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
         {
-            if (context.User == null)
+            if (context.User == null) {
+                return;
+            }
+
+            // 超级管理员直接拥有所有权限
+            if (context.User.IsInRole("SUPER_ADMIN"))
             {
+                context.Succeed(requirement);
                 return;
             }
 

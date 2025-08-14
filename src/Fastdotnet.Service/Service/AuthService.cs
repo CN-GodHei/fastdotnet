@@ -1,5 +1,6 @@
 using Fastdotnet.Core.Entities.Admin;
 using Fastdotnet.Core.Entities.App;
+using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.Auth;
@@ -10,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,23 +22,32 @@ namespace Fastdotnet.Service.Service
     {
         private readonly IRepository<FdAdminUser> _adminUserRepository;
         private readonly IRepository<FdAppUser> _appUserRepository;
+        private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
+        private readonly IRepository<FdAppUserRole> _appUserRoleRepository;
+        private readonly IRepository<FdRole> _roleRepository;
         private readonly JwtSettings _jwtSettings;
 
         public AuthService(
             IRepository<FdAdminUser> adminUserRepository,
             IRepository<FdAppUser> appUserRepository,
-            IOptions<JwtSettings> jwtSettings)
+            IOptions<JwtSettings> jwtSettings,
+            IRepository<FdAdminUserRole> adminUserRoleRepository,
+            IRepository<FdAppUserRole> appUserRoleRepository,
+            IRepository<FdRole> roleRepository)
         {
             _adminUserRepository = adminUserRepository;
             _appUserRepository = appUserRepository;
             _jwtSettings = jwtSettings.Value;
+            _adminUserRoleRepository = adminUserRoleRepository;
+            _appUserRoleRepository = appUserRoleRepository;
+            _roleRepository = roleRepository;
         }
 
         public async Task<string> LoginAsync(LoginDto dto, string userCategory)
         {
             long userId;
             string userName;
-            // In a real application, you would also fetch user roles to include in the token.
+            List<string> roleCodes = new List<string>();
 
             if (userCategory == "Admin")
             {
@@ -47,6 +58,14 @@ namespace Fastdotnet.Service.Service
                 }
                 userId = user.Id;
                 userName = user.Username;
+
+                var userRoles = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
+                var roleIds = userRoles.Select(ur => ur.RoleId).ToList();
+                if (roleIds.Any())
+                {
+                    var roles = await _roleRepository.GetListAsync(r => roleIds.Contains(r.Id));
+                    roleCodes.AddRange(roles.Select(r => r.Code));
+                }
             }
             else if (userCategory == "App")
             {
@@ -57,16 +76,24 @@ namespace Fastdotnet.Service.Service
                 }
                 userId = user.Id;
                 userName = user.Nickname;
+
+                var userRoles = await _appUserRoleRepository.GetListAsync(ur => ur.AppUserId == userId);
+                var roleIds = userRoles.Select(ur => ur.RoleId).ToList();
+                if (roleIds.Any())
+                {
+                    var roles = await _roleRepository.GetListAsync(r => roleIds.Contains(r.Id));
+                    roleCodes.AddRange(roles.Select(r => r.Code));
+                }
             }
             else
             {
                 throw new BusinessException("无效的用户类别");
             }
 
-            return GenerateJwtToken(userId, userName, userCategory);
+            return GenerateJwtToken(userId, userName, userCategory, roleCodes);
         }
 
-        private string GenerateJwtToken(long userId, string userName, string category)
+        private string GenerateJwtToken(long userId, string userName, string category, List<string> roleCodes)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
@@ -76,8 +103,13 @@ namespace Fastdotnet.Service.Service
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Name, userName),
                 new Claim("category", category) // Custom claim for user category
-                // Add other claims like roles here
             };
+
+            // Add role claims
+            foreach (var roleCode in roleCodes)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, roleCode));
+            }
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
