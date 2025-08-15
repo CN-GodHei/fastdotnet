@@ -18,22 +18,29 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     public class MenusController : GenericDtoControllerBase<FdMenu, long, CreateMenuDto, UpdateMenuDto, MenuDto>
     {
         private readonly IMenuService _menuService;
+        private readonly ICurrentUser _currentUser;
 
         public MenusController(
             IRepository<FdMenu> repository,
             IMapper mapper,
-            IMenuService menuService) : base(repository, mapper)
+            IMenuService menuService,
+            ICurrentUser currentUser) : base(repository, mapper)
         {
             _menuService = menuService;
+            _currentUser = currentUser;
         }
 
         [HttpGet("tree")]
         [Authorize(Policy = Permissions.Admin.Menus.View)]
         public async Task<IActionResult> GetUserMenuTree()
         {
-            // TODO: 从 HttpContext 获取用户ID
-            var userId = 1; // 临时用ID为1的用户
-            var menus = await _menuService.GetUserMenusAsync(userId, "Admin");
+            var userId = _currentUser.Id;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var menus = await _menuService.GetUserMenusAsync(userId.Value, "Admin");
             return Ok(menus);
         }
 
