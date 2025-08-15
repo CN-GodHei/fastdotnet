@@ -41,6 +41,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Fastdotnet.WebApi.Middleware.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,6 +86,26 @@ builder.Services.AddSwaggerGen(c =>
         }
         return new[] { "Default" };
     });
+
+    // 启用 XML 文档注释
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        c.IncludeXmlComments(xmlPath);
+    }
+
+    // 为插件中的控制器添加XML注释支持
+    var pluginDirs = Directory.GetDirectories(Path.Combine(AppContext.BaseDirectory, "Plugins"));
+    foreach (var pluginDir in pluginDirs)
+    {
+        var pluginName = Path.GetFileName(pluginDir);
+        var pluginXmlPath = Path.Combine(pluginDir, $"{pluginName}.xml");
+        if (File.Exists(pluginXmlPath))
+        {
+            c.IncludeXmlComments(pluginXmlPath);
+        }
+    }
 
     // Add JWT Bearer security definition
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

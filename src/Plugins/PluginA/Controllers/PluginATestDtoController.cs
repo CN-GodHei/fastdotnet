@@ -1,9 +1,10 @@
+using AutoMapper;
 using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.IService;
 using Microsoft.AspNetCore.Mvc;
-using PluginA.Entities;
-using AutoMapper;
+using NetTaste;
 using PluginA.Dto;
+using PluginA.Entities;
 
 namespace PluginA.Controllers
 {
@@ -33,7 +34,7 @@ namespace PluginA.Controllers
         // 6. PUT /api/plugintestdto/{id} - 更新指定ID的PluginATest实体（从PluginATestUpdateDto转换）
         // 7. DELETE /api/plugintestdto/{id} - 删除指定ID的PluginATest实体
         // 8. DELETE /api/plugintestdto/batch - 批量删除PluginATest实体
-        
+
         // 继承自GenericDtoControllerBase的回收站相关操作:
         // 9. GET /api/plugintestdto/recyclebin - 获取回收站中的PluginATest实体并转换为PluginATestDto
         // 10. POST /api/plugintestdto/recyclebin/search - 根据条件查询回收站中的PluginATest实体并转换为PluginATestDto
@@ -43,5 +44,15 @@ namespace PluginA.Controllers
         // 14. POST /api/plugintestdto/recyclebin/permanent - 根据条件永久删除回收站中的PluginATest实体
 
         // 可以在此处添加PluginATest特有的业务方法
+
+        /// <summary>
+        /// 这是一个测试方法
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("test")]
+        public async Task<IActionResult> Test()
+        {
+            return Ok("这是一个测试方法");
+        }
     }
 }
