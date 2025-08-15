@@ -25,7 +25,7 @@ namespace Fastdotnet.WebApi.Filters
             if (context.Exception is BusinessException)
             {
                 // 可控异常，不记录日志，返回422状态码
-                context.Result = new ObjectResult(new ApiResult<object>(){ Data= context.Exception.Message })
+                context.Result = new ObjectResult(new ApiResult<object>(){ Msg= context.Exception.Message })
                 {
                     StatusCode = 422
                 };
