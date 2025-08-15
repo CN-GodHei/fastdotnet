@@ -115,6 +115,10 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddSingleton<IActionDescriptorChangeProvider>(ActionDescriptorChangeProvider.Instance);
 builder.Services.AddSingleton<DynamicMiddlewareRegistry>();
 builder.Services.AddSqlSugar(builder.Configuration);
+
+// 注册 HttpContextAccessor 和 CurrentUser 服务
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
 // 添加认证和授权
