@@ -77,13 +77,33 @@ builder.Services.AddSwaggerGen(c =>
     var pluginDirs = Directory.GetDirectories(Path.Combine(AppContext.BaseDirectory, "Plugins"));
     foreach (var pluginDir in pluginDirs)
     {
-        var pluginName = Path.GetFileName(pluginDir);
-        c.SwaggerDoc($"plugin-{pluginName.ToLower()}", new OpenApiInfo
+        try
         {
-            Title = $"{pluginName} 插件 API",
-            Version = "v1",
-            Description = $"Fastdotnet {pluginName} 插件 API 文档"
-        });
+            var pluginJsonPath = Path.Combine(pluginDir, "plugin.json");
+            if (File.Exists(pluginJsonPath))
+            {
+                var pluginJson = File.ReadAllText(pluginJsonPath);
+                var pluginConfig = System.Text.Json.JsonDocument.Parse(pluginJson);
+                var pluginId = pluginConfig.RootElement.GetProperty("id").GetString();
+                var pluginName = pluginConfig.RootElement.GetProperty("name").GetString();
+                var pluginDescription = pluginConfig.RootElement.GetProperty("description").GetString();
+                
+                if (!string.IsNullOrEmpty(pluginId))
+                {
+                    c.SwaggerDoc($"plugin-{pluginId.ToLower()}", new OpenApiInfo
+                    {
+                        Title = $"{pluginName} 插件 API",
+                        Version = "v1",
+                        Description = $"Fastdotnet {pluginDescription}"
+                    });
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // 如果读取plugin.json失败，跳过该插件
+            Console.WriteLine($"读取插件配置失败 {pluginDir}: {ex.Message}");
+        }
     }
 
     c.TagActionsBy(apiDesc =>
@@ -269,8 +289,27 @@ if (app.Environment.IsDevelopment())
         var pluginDirs = Directory.GetDirectories(Path.Combine(AppContext.BaseDirectory, "Plugins"));
         foreach (var pluginDir in pluginDirs)
         {
-            var pluginName = Path.GetFileName(pluginDir);
-            c.SwaggerEndpoint($"/swagger/plugin-{pluginName.ToLower()}/swagger.json", $"{pluginName} 插件 API v1");
+            try
+            {
+                var pluginJsonPath = Path.Combine(pluginDir, "plugin.json");
+                if (File.Exists(pluginJsonPath))
+                {
+                    var pluginJson = File.ReadAllText(pluginJsonPath);
+                    var pluginConfig = System.Text.Json.JsonDocument.Parse(pluginJson);
+                    var pluginId = pluginConfig.RootElement.GetProperty("id").GetString();
+                    var pluginName = pluginConfig.RootElement.GetProperty("name").GetString();
+                    
+                    if (!string.IsNullOrEmpty(pluginId))
+                    {
+                        c.SwaggerEndpoint($"/swagger/plugin-{pluginId.ToLower()}/swagger.json", $"{pluginName} 插件 API v1");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // 如果读取plugin.json失败，跳过该插件
+                Console.WriteLine($"读取插件配置失败 {pluginDir}: {ex.Message}");
+            }
         }
         
         c.RoutePrefix = "swagger";

@@ -3,6 +3,8 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using System.IO;
+using System.Text.Json;
 
 namespace Fastdotnet.WebApi.Filters
 {
@@ -40,7 +42,7 @@ namespace Fastdotnet.WebApi.Filters
             else if (docName.StartsWith("plugin-"))
             {
                 // 提取插件名称
-                var currentPluginName = docName.Substring("plugin-".Length);
+                var currentPluginId = docName.Substring("plugin-".Length);
                 
                 // 插件文档 - 只保留当前插件的API
                 foreach (var path in swaggerDoc.Paths)
@@ -57,7 +59,7 @@ namespace Fastdotnet.WebApi.Filters
                             if (pathSegments.Length > 2 && pathSegments[1] == "plugins")
                             {
                                 var pathPluginId = pathSegments[2].ToLower();
-                                if (pathPluginId != currentPluginName)
+                                if (pathPluginId != currentPluginId)
                                 {
                                     pathsToRemove.Add(path.Key);
                                 }
