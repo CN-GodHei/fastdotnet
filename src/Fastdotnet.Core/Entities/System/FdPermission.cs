@@ -1,6 +1,7 @@
 using Fastdotnet.Core.Models.Base;
 using Fastdotnet.Core.Models.Interfaces;
 using SqlSugar;
+using Fastdotnet.Core;
 
 namespace Fastdotnet.Core.Entities.System
 {
@@ -39,10 +40,10 @@ namespace Fastdotnet.Core.Entities.System
         /// 权限类型 (e.g., "Menu", "Api", "Data")
         /// </summary>
         [SugarColumn(IsNullable = false, Length = 50)]
-        public string Type { get; set; }
+        public PermissionType Type { get; set; }
 
         /// <summary>
-        /// 权限分类: "Admin" 或 "User"
+        /// 权限分类: "Admin" 或 "App"
         /// </summary>
         [SugarColumn(IsNullable = false, Length = 50)]
         public string Category { get; set; }

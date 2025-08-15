@@ -51,7 +51,7 @@ namespace Fastdotnet.Core.Service
                     Code = p.Code,
                     Name = p.Name,
                     Category = p.Category,
-                    Type = p.Type,
+                    Type = Enum.Parse<PermissionType>(p.Type, true),
                     Description = $"由 {p.Module} 模块自动注册"
                 }).ToList();
 

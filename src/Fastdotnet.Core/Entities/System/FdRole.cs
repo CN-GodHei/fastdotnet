@@ -30,7 +30,7 @@ namespace Fastdotnet.Core.Entities.System
         public string Description { get; set; }
 
         /// <summary>
-        /// 角色类别: "Admin" 或 "User"
+        /// 角色类别: "Admin" 或 "App"
         /// </summary>
         [SugarColumn(IsNullable = false, Length = 50)]
         public string Category { get; set; }
