@@ -30,6 +30,22 @@ namespace Fastdotnet.Core.Constants
             {
                 public const string View = "admin.permissions.view";
             }
+
+            public static class Menus
+            {
+                public const string View = "admin.menus.view";
+                public const string Create = "admin.menus.create";
+                public const string Edit = "admin.menus.edit";
+                public const string Delete = "admin.menus.delete";
+            }
+
+            public static class MenuButtons
+            {
+                public const string View = "admin.menubuttons.view";
+                public const string Create = "admin.menubuttons.create";
+                public const string Edit = "admin.menubuttons.edit";
+                public const string Delete = "admin.menubuttons.delete";
+            }
         }
 
         /*
