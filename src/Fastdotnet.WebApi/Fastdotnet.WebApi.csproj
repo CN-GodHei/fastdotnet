@@ -48,6 +48,10 @@
     <Compile Remove="Filters\CustomOperationFilter.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
   <!--
   <Target Name="SetupPluginDirectory" AfterTargets="Build">
     <PropertyGroup>

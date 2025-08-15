@@ -44,6 +44,13 @@ using System.Text;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+// 添加CORS服务
+builder.Services.AddCors(cors => cors.AddDefaultPolicy(policy =>
+    policy.AllowAnyHeader()
+         .AllowAnyMethod()
+         .AllowAnyOrigin()
+         .WithExposedHeaders("*")));
+
 
 // 1. 注册 ASP.NET Core 的核心服务
 builder.Services.AddControllers(options =>
@@ -66,9 +73,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     // 添加主API文档
-    c.SwaggerDoc("main", new OpenApiInfo 
-    { 
-        Title = "主系统 API", 
+    c.SwaggerDoc("main", new OpenApiInfo
+    {
+        Title = "主系统 API",
         Version = "v1",
         Description = "Fastdotnet 主系统 API 文档"
     });
@@ -87,7 +94,7 @@ builder.Services.AddSwaggerGen(c =>
                 var pluginId = pluginConfig.RootElement.GetProperty("id").GetString();
                 var pluginName = pluginConfig.RootElement.GetProperty("name").GetString();
                 var pluginDescription = pluginConfig.RootElement.GetProperty("description").GetString();
-                
+
                 if (!string.IsNullOrEmpty(pluginId))
                 {
                     c.SwaggerDoc($"plugin-{pluginId.ToLower()}", new OpenApiInfo
@@ -156,7 +163,7 @@ builder.Services.AddSwaggerGen(c =>
                 var pluginJson = File.ReadAllText(pluginJsonPath);
                 var pluginConfig = System.Text.Json.JsonDocument.Parse(pluginJson);
                 var pluginId = pluginConfig.RootElement.GetProperty("id").GetString();
-                
+
                 if (!string.IsNullOrEmpty(pluginId))
                 {
                     var pluginXmlPath = Path.Combine(pluginDir, $"{pluginId}.xml");
@@ -308,7 +315,7 @@ if (app.Environment.IsDevelopment())
     {
         // 添加主API文档
         c.SwaggerEndpoint("/swagger/main/swagger.json", "主系统 API v1");
-        
+
         // 为插件动态添加API文档
         var pluginDirs = Directory.GetDirectories(Path.Combine(AppContext.BaseDirectory, "Plugins"));
         foreach (var pluginDir in pluginDirs)
@@ -322,7 +329,7 @@ if (app.Environment.IsDevelopment())
                     var pluginConfig = System.Text.Json.JsonDocument.Parse(pluginJson);
                     var pluginId = pluginConfig.RootElement.GetProperty("id").GetString();
                     var pluginName = pluginConfig.RootElement.GetProperty("name").GetString();
-                    
+
                     if (!string.IsNullOrEmpty(pluginId))
                     {
                         c.SwaggerEndpoint($"/swagger/plugin-{pluginId.ToLower()}/swagger.json", $"{pluginName} 插件 API v1");
@@ -335,12 +342,17 @@ if (app.Environment.IsDevelopment())
                 Console.WriteLine($"读取插件配置失败 {pluginDir}: {ex.Message}");
             }
         }
-        
+
         c.RoutePrefix = "swagger";
         c.DefaultModelsExpandDepth(-1); // 隐藏底部的Models部分
     });
+    app.UseCors();
 }
-
+// 只在生产环境中使用HTTPS重定向
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseHttpsRedirection();
 app.UseMiddleware<RequestIdMiddleware>();
 app.UseMiddleware<OperationLogMiddleware>();
@@ -379,7 +391,7 @@ lifetime.ApplicationStarted.Register(() =>
         {
             Console.WriteLine($"Error during startup tasks execution: {ex.Message}");
         }
-        
+
         // 初始化DebugLogger
         var logService = app.Services.GetRequiredService<ILogService>();
         DebugLogger.Initialize(logService);

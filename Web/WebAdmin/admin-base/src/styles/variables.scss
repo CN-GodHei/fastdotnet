@@ -1,0 +1,41 @@
+// sidebar
+$sideBarWidth: 210px;
+$subMenuBg: #1f2d3d;
+$subMenuHover: #001528;
+$subMenuActiveText: #f4f4f5;
+$menuBg: #304156;
+$menuText: #bfcbd9;
+$menuActiveText: #409eff;
+
+// nav
+$navBarHeight: 50px;
+
+// app-main
+$appMainHeight: calc(100vh - #{$navBarHeight});
+
+// sidebar transition
+$sideBarDuration: 0.28s;
+
+// logo
+$logoHeight: 50px;
+
+// 定义SCSS变量
+$menuText: #bfcbd9;
+$menuActiveText: #409eff;
+$subMenuActiveText: #f4f4f5;
+$menuBg: #001529;
+$menuHover: #001528;
+$subMenuBg: #000c17;
+$subMenuHover: #001528;
+$sideBarWidth: 210px;
+
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}

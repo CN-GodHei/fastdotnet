@@ -4,23 +4,23 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --mode development",
+    "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^2.3.1",
-    "axios": "^1.8.1",
-    "element-plus": "^2.9.5",
-    "mockjs": "^1.1.0",
-    "pinia": "^3.0.1",
-    "qiankun": "^2.10.16",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5",
+    "pinia": "^2.1.7",
+    "element-plus": "^2.4.2",
+    "axios": "^1.6.0",
+    "qiankun": "^2.10.16"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.1",
-    "sass-embedded": "^1.85.1",
-    "vite": "^6.2.0"
+    "@vitejs/plugin-vue": "^4.4.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vue-tsc": "^1.8.5",
+    "@types/node": "^20.9.0"
   }
 }

@@ -1,11 +1,16 @@
 <template>
-  <router-view />
+  <div id="app-wrapper">
+    <router-view />
+  </div>
 </template>
 
-<style>
-#app {
+<script setup lang="ts">
+// 主应用根组件
+</script>
+
+<style scoped>
+#app-wrapper {
   height: 100vh;
-  margin: 0;
-  padding: 0;
+  width: 100vw;
 }
 </style>

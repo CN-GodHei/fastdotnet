@@ -1,0 +1,56 @@
+// 过渡动画
+$fade-time: 0.28s;
+$transform-time: 0.5s;
+
+// fade 过渡
+.fade {
+  &-enter-active,
+  &-leave-active {
+    transition: opacity $fade-time;
+  }
+
+  &-enter,
+  &-leave-active {
+    opacity: 0;
+  }
+}
+
+// fade-transform 过渡
+.fade-transform {
+  &-leave-active,
+  &-enter-active {
+    transition: all $transform-time;
+  }
+
+  &-enter {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  &-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+}
+
+// breadcrumb 过渡
+.breadcrumb {
+  &-enter-active,
+  &-leave-active {
+    transition: all $transform-time;
+  }
+
+  &-enter,
+  &-leave-active {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  &-move {
+    transition: all $transform-time;
+  }
+
+  &-leave-active {
+    position: absolute;
+  }
+}
