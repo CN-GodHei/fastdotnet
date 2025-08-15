@@ -53,10 +53,10 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
 
                     if (pluginConfig != null)
                     {
-                        if (!controllerActionDescriptor.Properties.ContainsKey("PluginName"))
-                        {
-                            controllerActionDescriptor.Properties["PluginName"] = $"插件【{pluginConfig.name}】";
-                        }
+                        //if (!controllerActionDescriptor.Properties.ContainsKey("PluginName"))
+                        //{
+                        //    controllerActionDescriptor.Properties["PluginName"] = $"插件【{pluginConfig.name}】";
+                        //}
 
                         var pluginId = pluginConfig.id.ToLowerInvariant();
                         string newTemplate;

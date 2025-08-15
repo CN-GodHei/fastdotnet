@@ -65,6 +65,27 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    // 添加主API文档
+    c.SwaggerDoc("main", new OpenApiInfo 
+    { 
+        Title = "主系统 API", 
+        Version = "v1",
+        Description = "Fastdotnet 主系统 API 文档"
+    });
+
+    // 为插件动态添加API文档定义
+    var pluginDirs = Directory.GetDirectories(Path.Combine(AppContext.BaseDirectory, "Plugins"));
+    foreach (var pluginDir in pluginDirs)
+    {
+        var pluginName = Path.GetFileName(pluginDir);
+        c.SwaggerDoc($"plugin-{pluginName.ToLower()}", new OpenApiInfo
+        {
+            Title = $"{pluginName} 插件 API",
+            Version = "v1",
+            Description = $"Fastdotnet {pluginName} 插件 API 文档"
+        });
+    }
+
     c.TagActionsBy(apiDesc =>
     {
         if (apiDesc.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
@@ -87,6 +108,9 @@ builder.Services.AddSwaggerGen(c =>
         return new[] { "Default" };
     });
 
+    // 添加文档过滤器
+    c.DocumentFilter<PluginDocumentFilter>();
+
     // 启用 XML 文档注释
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -96,7 +120,6 @@ builder.Services.AddSwaggerGen(c =>
     }
 
     // 为插件中的控制器添加XML注释支持
-    var pluginDirs = Directory.GetDirectories(Path.Combine(AppContext.BaseDirectory, "Plugins"));
     foreach (var pluginDir in pluginDirs)
     {
         var pluginName = Path.GetFileName(pluginDir);
@@ -237,7 +260,22 @@ await app.UseApplicationInitializers();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        // 添加主API文档
+        c.SwaggerEndpoint("/swagger/main/swagger.json", "主系统 API v1");
+        
+        // 为插件动态添加API文档
+        var pluginDirs = Directory.GetDirectories(Path.Combine(AppContext.BaseDirectory, "Plugins"));
+        foreach (var pluginDir in pluginDirs)
+        {
+            var pluginName = Path.GetFileName(pluginDir);
+            c.SwaggerEndpoint($"/swagger/plugin-{pluginName.ToLower()}/swagger.json", $"{pluginName} 插件 API v1");
+        }
+        
+        c.RoutePrefix = "swagger";
+        c.DefaultModelsExpandDepth(-1); // 隐藏底部的Models部分
+    });
 }
 
 app.UseHttpsRedirection();
