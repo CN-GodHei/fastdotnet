@@ -44,6 +44,10 @@
     <Content Include="$(NuGetPackageRoot)swashbuckle.aspnetcore\**\swagger-ui\**" LinkBase="swagger" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Filters\CustomOperationFilter.cs" />
+  </ItemGroup>
+
   <!--
   <Target Name="SetupPluginDirectory" AfterTargets="Build">
     <PropertyGroup>

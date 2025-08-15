@@ -122,6 +122,11 @@ builder.Services.AddSwaggerGen(c =>
             }
             else
             {
+                // 为AuthController设置特殊标签名，使其排在最前面
+                if (controllerName == "Auth")
+                {
+                    return new[] { "00-认证接口" };
+                }
                 return new[] { controllerName };
             }
         }
@@ -130,6 +135,7 @@ builder.Services.AddSwaggerGen(c =>
 
     // 添加文档过滤器
     c.DocumentFilter<PluginDocumentFilter>();
+    c.DocumentFilter<TagOrderDocumentFilter>();
 
     // 启用 XML 文档注释
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -142,11 +148,29 @@ builder.Services.AddSwaggerGen(c =>
     // 为插件中的控制器添加XML注释支持
     foreach (var pluginDir in pluginDirs)
     {
-        var pluginName = Path.GetFileName(pluginDir);
-        var pluginXmlPath = Path.Combine(pluginDir, $"{pluginName}.xml");
-        if (File.Exists(pluginXmlPath))
+        try
         {
-            c.IncludeXmlComments(pluginXmlPath);
+            var pluginJsonPath = Path.Combine(pluginDir, "plugin.json");
+            if (File.Exists(pluginJsonPath))
+            {
+                var pluginJson = File.ReadAllText(pluginJsonPath);
+                var pluginConfig = System.Text.Json.JsonDocument.Parse(pluginJson);
+                var pluginId = pluginConfig.RootElement.GetProperty("id").GetString();
+                
+                if (!string.IsNullOrEmpty(pluginId))
+                {
+                    var pluginXmlPath = Path.Combine(pluginDir, $"{pluginId}.xml");
+                    if (File.Exists(pluginXmlPath))
+                    {
+                        c.IncludeXmlComments(pluginXmlPath);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // 如果读取plugin.json失败，跳过该插件
+            Console.WriteLine($"读取插件配置失败 {pluginDir}: {ex.Message}");
         }
     }
 
