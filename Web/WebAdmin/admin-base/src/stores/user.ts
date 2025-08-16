@@ -41,7 +41,7 @@ export const useUserStore = defineStore('user', {
         }
         
         const response = await adminLogin(loginData)
-        const token = response.data.token
+        const token = response.data?.Token
         this.setToken(token)
         return token
       } catch (error) {
@@ -81,11 +81,11 @@ export const useUserStore = defineStore('user', {
       
       const traverse = (menuList: Menu[]) => {
         menuList.forEach(menu => {
-          if (menu.permissionCode) {
-            permissions.push(menu.permissionCode)
+          if (menu.PermissionCode) {
+            permissions.push(menu.PermissionCode)
           }
-          if (menu.children && menu.children.length > 0) {
-            traverse(menu.children)
+          if (menu.Children && menu.Children.length > 0) {
+            traverse(menu.Children)
           }
         })
       }

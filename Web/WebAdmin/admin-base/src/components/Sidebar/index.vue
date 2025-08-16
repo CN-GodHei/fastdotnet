@@ -8,8 +8,8 @@ const userStore = useUserStore()
 // 过滤出启用的菜单并按排序字段排序
 const enabledMenus = computed(() => {
   return userStore.userMenus
-    .filter(menu => menu.isEnabled)
-    .sort((a, b) => a.sort - b.sort)
+    .filter(menu => menu.IsEnabled)
+    .sort((a, b) => a.Sort - b.Sort)
 })
 </script>
 
@@ -26,9 +26,9 @@ const enabledMenus = computed(() => {
       >
         <sidebar-item 
           v-for="menu in enabledMenus" 
-          :key="menu.id" 
+          :key="menu.Id" 
           :item="menu" 
-          :base-path="menu.path"
+          :base-path="menu.Path"
         />
       </el-menu>
     </el-scrollbar>

@@ -3,6 +3,15 @@ import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
 import type { PageResult } from './types'
 
+// 扩展ImportMeta接口
+declare global {
+  interface ImportMeta {
+    env: {
+      VITE_API_BASE_URL?: string
+    }
+  }
+}
+
 // 创建axios实例
 const service: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api', // url = base url + request url
@@ -37,10 +46,41 @@ service.interceptors.response.use(
     // 对响应数据做点什么
     const res = response.data
 
-    // 根据后端返回的状态码或HTTP状态码进行处理
-    if (res.code !== 200 || response.status !== 200) {
-      // 401: 未登录
-      if (res.code === 401) {
+    // 以HTTP状态码为主要判断依据
+    if (response.status >= 200 && response.status < 300) {
+      // HTTP状态码表示成功
+      
+      // Code是我后端和前端的约定，0表示业务成功
+      if (res.Code === 0) {
+        // 成功响应，将Data字段作为返回数据
+        return {
+          ...res,
+          data: res.Data
+        }
+      } else {
+        // 业务错误处理
+        // 401: 未登录
+        if (res.Code === 401) {
+          ElMessage.error('登录已过期，请重新登录')
+          // 清除token并跳转到登录页
+          const userStore = useUserStore()
+          userStore.logout()
+          window.location.href = '/login'
+          return Promise.reject(new Error('登录已过期，请重新登录'))
+        }
+
+        // 422: 验证错误
+        if (res.Code === 422) {
+          return Promise.reject(new Error(res.Msg))
+        }
+
+        // 其他业务错误
+        ElMessage.error(res.Msg || '请求失败')
+        return Promise.reject(new Error(res.Msg || 'Error'))
+      }
+    } else {
+      // HTTP错误状态码处理
+      if (response.status === 401) {
         ElMessage.error('登录已过期，请重新登录')
         // 清除token并跳转到登录页
         const userStore = useUserStore()
@@ -50,17 +90,13 @@ service.interceptors.response.use(
       }
 
       // 422: 验证错误
-      if (res.code === 422 || response.status === 422) {
-        // console.log(res);
-        // ElMessage.error(res.Msg); // 统一使用res.Msg进行错误提示，与后端保持一致
-        return Promise.reject(new Error(res.Msg)); // 确保Promise.reject也使用正确的Msg字段
+      if (response.status === 422) {
+        return Promise.reject(new Error(res.Msg || res.message || '验证错误'));
       }
 
       // 其他错误状态
-      ElMessage.error(res.message || res.data || '请求失败')
-      return Promise.reject(new Error(res.message || res.data || 'Error'))
-    } else {
-      return res
+      ElMessage.error(res.Msg || res.message || '请求失败')
+      return Promise.reject(new Error(res.Msg || res.message || 'Error'))
     }
   },
   (error: any) => {
@@ -68,7 +104,8 @@ service.interceptors.response.use(
     console.log('err' + error);
     // 只有当请求完全失败（例如网络断开、DNS 解析失败、服务器无响应等）时才显示网络错误
     if (error.response) {
-        // 请求已发出，但服务器响应的状态码不在 2xx 范围内，这些情况已在成功回调中处理
+        // 请求已发出，但服务器响应的状态码不在 2xx 范围内
+        ElMessage.error(error.response.data.Msg || error.response.data.message || error.message || '请求失败')
         return Promise.reject(error); 
     } else if (error.request) {
         // 请求已发出，但没有收到响应

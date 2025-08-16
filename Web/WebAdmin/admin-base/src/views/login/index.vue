@@ -2,18 +2,21 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { useLoginStore } from '@/stores/login'
 import { ElMessage } from 'element-plus'
+import { User, Lock } from '@element-plus/icons-vue'
 
 const userStore = useUserStore()
+const loginStore = useLoginStore()
 const router = useRouter()
+const loginFormRef = ref()
 
 // 登录表单数据
 const loginForm = ref({
-  username: 'admin',
+  username: 'superadmin',
   password: '123456'
 })
 
-const loading = ref(false)
 const redirect = ref('')
 
 // 监听路由变化获取redirect参数
@@ -28,7 +31,7 @@ const handleLogin = async () => {
     return
   }
 
-  loading.value = true
+  loginStore.setLoading(true)
   try {
     await userStore.login(loginForm.value.username, loginForm.value.password)
     ElMessage.success('登录成功')
@@ -38,7 +41,7 @@ const handleLogin = async () => {
     console.error('登录失败:', error)
     ElMessage.error(error.message || '登录失败，请检查用户名和密码')
   } finally {
-    loading.value = false
+    loginStore.setLoading(false)
   }
 }
 </script>
@@ -81,7 +84,7 @@ const handleLogin = async () => {
         </el-form-item>
         
         <el-button
-          :loading="loading"
+          :loading="loginStore.loading"
           type="primary"
           style="width: 100%; margin-bottom: 30px"
           @click.prevent="handleLogin"

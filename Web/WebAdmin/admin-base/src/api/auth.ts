@@ -8,7 +8,11 @@ export interface LoginDto {
 
 // 登录响应数据
 export interface LoginResponse {
-  token: string
+  Data: {
+    Token: string
+  }
+  Code: number
+  Msg: string | null
 }
 
 // 管理端登录

@@ -19,13 +19,14 @@ const props = defineProps({
 
 // 判断是否始终显示根菜单
 const alwaysShowRootMenu = computed(() => {
-  return props.item.type === 'Directory' && props.item.children && props.item.children.length > 0
+  return props.item.Type === 1 && props.item.Children && props.item.Children.length > 0
 })
 
 // 显示的子菜单
 const showingChildren = computed(() => {
-  return props.item.children?.filter((item) => {
-    return !(item.type === 'Menu' && item.isExternal && !item.externalUrl)
+  return props.item.Children?.filter((item) => {
+    // 过滤掉外部链接但没有URL的菜单项
+    return !(item.Type === 2 && item.IsExternal && !item.ExternalUrl)
   }) || []
 })
 
@@ -38,7 +39,7 @@ const onlyOneChild = computed(() => {
   }
   // 如果没有子项，则显示自己
   if (showingChildrenCount === 0) {
-    return { ...props.item, path: '', noShowingChildren: true }
+    return { ...props.item, Path: '', noShowingChildren: true }
   }
   return null
 })
@@ -69,55 +70,55 @@ const resolvePath = (routePath: string) => {
 </script>
 
 <template>
-  <div v-if="!item.isHidden">
-    <template v-if="alwaysShowRootMenu">
-      <el-sub-menu :index="resolvePath(item.path)" v-if="item.children && item.children.length > 0">
+  <div v-if="!item.IsDeleted">
+    <template v-if="alwaysShowRootMenu && item.Children && item.Children.length > 0">
+      <el-sub-menu :index="resolvePath(item.Path)">
         <template #title>
-          <el-icon v-if="item.icon">
-            <component :is="item.icon" />
+          <el-icon v-if="item.Icon">
+            <component :is="item.Icon" />
           </el-icon>
-          <span>{{ item.name }}</span>
+          <span>{{ item.Name }}</span>
         </template>
         
         <sidebar-item
-          v-for="child in item.children"
-          :key="child.id"
+          v-for="child in item.Children"
+          :key="child.Id"
           :item="child"
-          :base-path="resolvePath(child.path)"
+          :base-path="resolvePath(child.Path)"
         />
       </el-sub-menu>
     </template>
     
     <template v-else>
       <el-menu-item 
-        v-if="onlyOneChild && !onlyOneChild.children" 
-        :index="resolvePath(onlyOneChild.path)"
+        v-if="onlyOneChild && !onlyOneChild.Children" 
+        :index="resolvePath(onlyOneChild.Path)"
       >
-        <el-icon v-if="onlyOneChild.icon">
-          <component :is="onlyOneChild.icon" />
+        <el-icon v-if="onlyOneChild.Icon">
+          <component :is="onlyOneChild.Icon" />
         </el-icon>
         <template #title>
-          <span>{{ onlyOneChild.name }}</span>
+          <span>{{ onlyOneChild.Name }}</span>
         </template>
       </el-menu-item>
       
       <el-sub-menu 
         v-else 
-        :index="resolvePath(item.path)"
+        :index="resolvePath(item.Path)"
         popper-append-to-body
       >
         <template #title>
-          <el-icon v-if="item.icon">
-            <component :is="item.icon" />
+          <el-icon v-if="item.Icon">
+            <component :is="item.Icon" />
           </el-icon>
-          <span>{{ item.name }}</span>
+          <span>{{ item.Name }}</span>
         </template>
         
         <sidebar-item
-          v-for="child in item.children"
-          :key="child.id"
+          v-for="child in item.Children"
+          :key="child.Id"
           :item="child"
-          :base-path="resolvePath(child.path)"
+          :base-path="resolvePath(child.Path)"
         />
       </el-sub-menu>
     </template>

@@ -38,6 +38,7 @@ namespace Fastdotnet.Core.Entities.System
         /// <summary>
         /// 父级菜单ID
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public long? ParentId { get; set; }
 
         /// <summary>

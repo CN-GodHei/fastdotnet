@@ -6,6 +6,9 @@ using Fastdotnet.Core.Models;
 using Fastdotnet.Core.Models.Admin.Users;
 using Fastdotnet.Service.IService.Admin;
 using System.Threading.Tasks;
+using Fastdotnet.Core.Entities.System;
+using System.Linq;
+using Fastdotnet.Core.Constants;
 
 namespace Fastdotnet.Service.Service.Admin
 {
@@ -13,11 +16,19 @@ namespace Fastdotnet.Service.Service.Admin
     {
         private readonly IRepository<FdAdminUser> _repository;
         private readonly IMapper _mapper;
+        private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
+        private readonly IRepository<FdRole> _roleRepository;
 
-        public AdminUserService(IRepository<FdAdminUser> repository, IMapper mapper)
+        public AdminUserService(
+            IRepository<FdAdminUser> repository, 
+            IMapper mapper,
+            IRepository<FdAdminUserRole> adminUserRoleRepository,
+            IRepository<FdRole> roleRepository)
         {
             _repository = repository;
             _mapper = mapper;
+            _adminUserRoleRepository = adminUserRoleRepository;
+            _roleRepository = roleRepository;
         }
 
         public async Task<long> CreateAsync(CreateAdminUserDto dto)
@@ -92,6 +103,24 @@ namespace Fastdotnet.Service.Service.Admin
 
             _mapper.Map(dto, user);
             await _repository.UpdateAsync(user);
+        }
+        
+        public async Task<bool> IsSuperAdminAsync(long userId)
+        {
+            // 获取用户的角色
+            var userRoles = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
+            var roleIds = userRoles.Select(ur => ur.RoleId).ToList();
+
+            if (!roleIds.Any())
+            {
+                return false;
+            }
+
+            // 获取角色信息
+            var roles = await _roleRepository.GetListAsync(r => roleIds.Contains(r.Id));
+
+            // 检查是否包含超管角色
+            return roles.Any(r => r.Code == SystemConstants.SuperAdminRoleCode);
         }
     }
 }

@@ -39,5 +39,12 @@ namespace Fastdotnet.Service.IService.Admin
         /// (由管理员)重置用户密码
         /// </summary>
         Task ResetPasswordAsync(long id, string newPassword);
+        
+        /// <summary>
+        /// 判断指定用户是否为超级管理员
+        /// </summary>
+        /// <param name="userId">用户ID</param>
+        /// <returns>是否为超级管理员</returns>
+        Task<bool> IsSuperAdminAsync(long userId);
     }
 }

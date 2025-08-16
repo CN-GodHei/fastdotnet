@@ -43,6 +43,6 @@ namespace Fastdotnet.Core.Constants
         /// <summary>
         /// 超级管理员角色编码
         /// </summary>
-        public const string SuperAdminRoleCode = "superadmin";
+        public const string SuperAdminRoleCode = "SUPER_ADMIN";
     }
 }

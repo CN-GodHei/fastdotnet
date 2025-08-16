@@ -9,6 +9,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Fastdotnet.Core.Utils;
+using Fastdotnet.Core.Entities.Admin;
+using System.Linq;
+using System;
+using Fastdotnet.Service.IService.Admin;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
@@ -19,15 +24,22 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     {
         private readonly IMenuService _menuService;
         private readonly ICurrentUser _currentUser;
+        private readonly IRepository<FdRole> _roleRepository;
+        private readonly IAdminUserService _adminUserService;
 
         public MenusController(
             IRepository<FdMenu> repository,
             IMapper mapper,
             IMenuService menuService,
-            ICurrentUser currentUser) : base(repository, mapper)
+            ICurrentUser currentUser,
+            IRepository<FdAdminUserRole> adminUserRoleRepository,
+            IAdminUserService adminUserService,
+            IRepository<FdRole> roleRepository) : base(repository, mapper)
         {
             _menuService = menuService;
             _currentUser = currentUser;
+            _adminUserService = adminUserService;
+            _roleRepository = roleRepository;
         }
 
         [HttpGet("tree")]
@@ -40,8 +52,49 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 return Unauthorized();
             }
 
-            var menus = await _menuService.GetUserMenusAsync(userId.Value, "Admin");
+            // 判断是否为超管角色
+            bool isSuperAdmin = await _adminUserService.IsSuperAdminAsync(userId.Value);
+            List<FdMenu> menus;
+            
+            if (isSuperAdmin)
+            {
+                // 超管获取所有菜单
+                menus = await _repository.GetListAsync(m => m.Category == "Admin" && m.IsEnabled);
+                menus = BuildMenuTree(menus, null);
+            }
+            else
+            {
+                // 普通用户根据权限获取菜单
+                menus = await _menuService.GetUserMenusAsync(userId.Value, "Admin");
+            }
+            
             return Ok(menus);
+        }
+
+        private List<FdMenu> BuildMenuTree(List<FdMenu> allMenus, long? parentId)
+        {
+            return allMenus
+                .Where(m => m.ParentId == parentId)
+                .OrderBy(m => m.Sort)
+                .Select(m => new FdMenu
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    Code = m.Code,
+                    Path = m.Path,
+                    Icon = m.Icon,
+                    ParentId = m.ParentId,
+                    Sort = m.Sort,
+                    Type = m.Type,
+                    Module = m.Module,
+                    Category = m.Category,
+                    IsExternal = m.IsExternal,
+                    ExternalUrl = m.ExternalUrl,
+                    IsEnabled = m.IsEnabled,
+                    PermissionCode = m.PermissionCode,
+                    Children = BuildMenuTree(allMenus, m.Id)
+                })
+                .ToList();
         }
 
         [Authorize(Policy = Permissions.Admin.Menus.View)]
@@ -61,5 +114,20 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         [Authorize(Policy = Permissions.Admin.Menus.Delete)]
         public override Task<bool> Delete(long id) => base.Delete(id);
+        
+        protected override async Task BeforeCreate(FdMenu entity, CreateMenuDto dto)
+        {
+            var generatedCode = $"MENU_CODE_{SnowflakeIdGenerator.NextId()}";
+            entity.Code = generatedCode;
+            entity.ParentId = entity.ParentId == 0 ? null : entity.ParentId;
+            await base.BeforeCreate(entity, dto);
+        }
+        
+        protected override async Task BeforeUpdate(FdMenu existingEntity, FdMenu updatedEntity, UpdateMenuDto dto)
+        {
+            // Code字段由系统自动生成，不允许修改
+            updatedEntity.Code = existingEntity.Code;
+            await base.BeforeUpdate(existingEntity, updatedEntity, dto);
+        }
     }
 }
