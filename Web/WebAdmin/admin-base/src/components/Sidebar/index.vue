@@ -28,7 +28,7 @@ const enabledMenus = computed(() => {
           v-for="menu in enabledMenus" 
           :key="menu.Id" 
           :item="menu" 
-          :base-path="menu.Path"
+          base-path="/"
         />
       </el-menu>
     </el-scrollbar>

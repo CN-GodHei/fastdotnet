@@ -14,6 +14,8 @@ using Fastdotnet.Core.Entities.Admin;
 using System.Linq;
 using System;
 using Fastdotnet.Service.IService.Admin;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
@@ -60,7 +62,15 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             {
                 // 超管获取所有菜单
                 menus = await _repository.GetListAsync(m => m.Category == "Admin" && m.IsEnabled);
+                JsonConvert.SerializeObject(menus, Formatting.Indented);
+                //将menus 转为 JSON 字符串输出
+                var menusJson = JsonConvert.SerializeObject(menus, Formatting.Indented);
+
+
+                var ss = menus.ToString();
                 menus = BuildMenuTree(menus, null);
+                var menusJson1 = JsonConvert.SerializeObject(menus, Formatting.Indented);
+
             }
             else
             {
@@ -71,10 +81,10 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             return Ok(menus);
         }
 
-        private List<FdMenu> BuildMenuTree(List<FdMenu> allMenus, long? parentId)
+        private List<FdMenu> BuildMenuTree(List<FdMenu> allMenus, string? parentCode)
         {
             return allMenus
-                .Where(m => m.ParentId == parentId)
+                .Where(m => m.ParentCode == parentCode)
                 .OrderBy(m => m.Sort)
                 .Select(m => new FdMenu
                 {
@@ -83,7 +93,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                     Code = m.Code,
                     Path = m.Path,
                     Icon = m.Icon,
-                    ParentId = m.ParentId,
+                    ParentCode = m.ParentCode,
                     Sort = m.Sort,
                     Type = m.Type,
                     Module = m.Module,
@@ -92,7 +102,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                     ExternalUrl = m.ExternalUrl,
                     IsEnabled = m.IsEnabled,
                     PermissionCode = m.PermissionCode,
-                    Children = BuildMenuTree(allMenus, m.Id)
+                    Children = BuildMenuTree(allMenus, m.Code)
                 })
                 .ToList();
         }
@@ -119,7 +129,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         {
             var generatedCode = $"MENU_CODE_{SnowflakeIdGenerator.NextId()}";
             entity.Code = generatedCode;
-            entity.ParentId = entity.ParentId == 0 ? null : entity.ParentId;
+            //entity.ParentCode = entity.ParentCode == 0 ? null : entity.ParentCode;
             await base.BeforeCreate(entity, dto);
         }
         

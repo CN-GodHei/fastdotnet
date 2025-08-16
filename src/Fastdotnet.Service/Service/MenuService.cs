@@ -73,10 +73,10 @@ namespace Fastdotnet.Service.Service
             return BuildMenuTree(accessibleMenus, null);
         }
 
-        private List<FdMenu> BuildMenuTree(List<FdMenu> allMenus, long? parentId)
+        private List<FdMenu> BuildMenuTree(List<FdMenu> allMenus, string? parentCode)
         {
             return allMenus
-                .Where(m => m.ParentId == parentId)
+                .Where(m => m.ParentCode == parentCode)
                 .OrderBy(m => m.Sort)
                 .Select(m => new FdMenu
                 {
@@ -86,7 +86,7 @@ namespace Fastdotnet.Service.Service
                     Code = m.Code,
                     Path = m.Path,
                     Icon = m.Icon,
-                    ParentId = m.ParentId,
+                    ParentCode = m.ParentCode,
                     Sort = m.Sort,
                     Type = m.Type,
                     Module = m.Module,
@@ -95,7 +95,7 @@ namespace Fastdotnet.Service.Service
                     ExternalUrl = m.ExternalUrl,
                     IsEnabled = m.IsEnabled,
                     PermissionCode = m.PermissionCode,
-                    Children = BuildMenuTree(allMenus, m.Id) // Recursive call
+                    Children = BuildMenuTree(allMenus, m.Code) // Recursive call
                 })
                 .ToList();
         }

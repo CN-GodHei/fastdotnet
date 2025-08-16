@@ -7,7 +7,7 @@ export interface Menu {
   Code: string              // 菜单代码
   Path: string              // 菜单路径
   Icon: string              // 菜单图标
-  ParentId: number | null   // 父级菜单ID
+  ParentCode: string | null   // 父级菜单Code.
   Sort: number              // 排序
   Type: number              // 菜单类型 (1: 目录, 2: 菜单)
   Module: string            // 所属模块

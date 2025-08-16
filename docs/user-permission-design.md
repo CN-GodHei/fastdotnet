@@ -156,7 +156,7 @@ public class FdRole : BaseEntity, ISoftDelete
     public string Code { get; set; }
     public string Description { get; set; }
     public string Category { get; set; } // 角色类别: "Admin" 或 "User"
-    public long? ParentId { get; set; } // 父级角色ID，用于支持角色层级
+    public long? ParentCode { get; set; } // 父级角色ID，用于支持角色层级
     public bool IsSystem { get; set; } // 是否系统角色
 }
 ```
@@ -205,7 +205,7 @@ public class FdRolePermission : BaseEntity
 ```
 
 ### 4.7 角色层级与权限继承
-通过在 `FdRole` 中增加 `ParentId` 字段，系统可以支持角色层级或角色组。权限继承规则需要明确：
+通过在 `FdRole` 中增加 `ParentCode` 字段，系统可以支持角色层级或角色组。权限继承规则需要明确：
 - **继承规则**: 子角色自动继承其所有父级角色的权限。
 - **权限检查**: 在进行权限验证时，系统需要递归检查用户所拥有的角色及其所有父级角色链的权限总和。
 

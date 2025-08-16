@@ -1,57 +1,75 @@
 import router from './index'
 import { useUserStore } from '@/stores/user'
 import type { Menu } from '@/api/menu'
-import { constantRoutes } from './index'
 import type { RouteRecordRaw } from 'vue-router'
+import Layout from '@/layouts/index.vue'
 
 // 白名单路由
 const whiteList = ['/login']
 
-// 将菜单转换为路由
+// 使用 Vite 的 import.meta.glob 实现高效的动态组件加载
+const modules = import.meta.glob('/src/views/**/*.vue')
+
+// 将后端菜单项转换为 Vue Router 路由记录
 function menuToRoute(menu: Menu): RouteRecordRaw | null {
-  // 如果是外部链接，不生成路由
-  if (menu.isExternal && menu.externalUrl) {
+  // 不为外部链接生成路由
+  if (menu.IsExternal && menu.ExternalUrl) {
     return null
   }
   
-  // 如果没有路径，不生成路由
-  if (!menu.path) {
+  // 不为没有路径的菜单项生成路由
+  if (!menu.Path) {
     return null
   }
   
   const route: RouteRecordRaw = {
-    path: menu.path,
-    name: menu.name,
+    path: menu.Path,
+    name: menu.Name,
     meta: {
-      title: menu.name,
-      icon: menu.icon,
-      permission: menu.permissionCode
+      title: menu.Name,
+      icon: menu.Icon,
+      permission: menu.PermissionCode
     }
   }
   
-  // 如果是目录类型，创建父级路由
-  if (menu.type === 'Directory') {
-    route.component = () => import('@/layouts/index.vue')
-    route.redirect = menu.children && menu.children.length > 0 ? 
-      (menu.children[0].path ? `${menu.path}/${menu.children[0].path}` : menu.path) : 
-      menu.path
+  // 处理目录/布局路由 (菜单类型 MenuType=0)
+  if (menu.Type === 0) {
+    route.component = Layout
+    // 设置重定向到第一个子路由，以避免显示空白布局
+    if (menu.Children && menu.Children.length > 0 && menu.Children[0].Path) {
+      const firstChildPath = menu.Children[0].Path
+      if (firstChildPath.startsWith('/')) {
+        route.redirect = firstChildPath
+      } else {
+        // 确保重定向路径格式正确
+        route.redirect = menu.Path === '/' ? `/${firstChildPath}` : `${menu.Path}/${firstChildPath}`
+      }
+    }
   } 
-  // 如果是菜单类型，创建页面路由
+  // 处理页面/视图路由 (菜单类型 MenuType=1)
   else {
-    // 微前端路由
-    if (menu.path.startsWith('/micro/')) {
+    // 对微前端路由进行特殊处理
+    if (menu.Path.startsWith('/micro/')) {
       route.component = () => import('@/views/micro/index.vue')
-    } 
-    // 普通路由
-    else {
-      // 这里可以根据需要动态导入组件
-      route.component = () => import('@/views/dashboard/index.vue')
+    } else {
+      // 根据菜单路径构建可能的组件路径
+      const componentPath = `/src/views${menu.Path}.vue`
+      const componentIndexPath = `/src/views${menu.Path}/index.vue`
+
+      if (modules[componentPath]) {
+        route.component = modules[componentPath]
+      } else if (modules[componentIndexPath]) {
+        route.component = modules[componentIndexPath]
+      } else {
+        console.warn(`[Router] 菜单路径 "${menu.Path}" 的组件未找到。查找路径: ${componentPath} 和 ${componentIndexPath}。`)
+        return null // 如果组件不存在，则跳过创建路由
+      }
     }
   }
   
-  // 处理子路由
-  if (menu.children && menu.children.length > 0) {
-    const childrenRoutes = menu.children
+  // 递归处理子菜单项
+  if (menu.Children && menu.Children.length > 0) {
+    const childrenRoutes = menu.Children
       .map(child => menuToRoute(child))
       .filter(route => route !== null) as RouteRecordRaw[]
     
@@ -60,10 +78,11 @@ function menuToRoute(menu: Menu): RouteRecordRaw | null {
     }
   }
   
+  console.log('生成路由:', route)
   return route
 }
 
-// 根据菜单生成路由
+// 从菜单树生成所有路由
 function generateRoutesFromMenus(menus: Menu[]): RouteRecordRaw[] {
   return menus
     .map(menu => menuToRoute(menu))
@@ -90,6 +109,7 @@ router.beforeEach(async (to: any, from: any, next: any) => {
           
           // 添加路由
           accessRoutes.forEach(route => {
+            console.log('添加路由:', route)
             router.addRoute(route)
           })
           

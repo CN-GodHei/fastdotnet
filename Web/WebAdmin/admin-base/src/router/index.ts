@@ -42,12 +42,20 @@ export const constantRoutes: RouteRecordRaw[] = [
         }
       }
     ]
+  },
+  // 404页面
+  {
+    path: '/:pathMatch(.*)*',
+    component: () => import('@/views/error/404.vue'),
+    meta: {
+      hidden: true
+    }
   }
 ]
 
 // 异步路由（基于菜单动态生成）
 export const asyncRoutes: RouteRecordRaw[] = [
-  // 动态路由将在这里添加
+  // 所有业务性质的菜单都从后端读取，不再在这里配置
 ]
 
 // 创建路由实例

@@ -36,10 +36,10 @@ namespace Fastdotnet.Core.Entities.System
         public string Icon { get; set; }
 
         /// <summary>
-        /// 父级菜单ID
+        /// 父级菜单Code
         /// </summary>
         [SugarColumn(IsNullable = true)]
-        public long? ParentId { get; set; }
+        public string? ParentCode { get; set; }
 
         /// <summary>
         /// 排序
