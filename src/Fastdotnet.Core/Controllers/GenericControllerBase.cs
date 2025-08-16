@@ -309,13 +309,13 @@ namespace Fastdotnet.Core.Controllers
     }
 
     /// <summary>
-    /// 通用控制器基类，默认主键为long
+    /// 通用控制器基类，默认主键为string
     /// </summary>
     /// <typeparam name="TEntity">实体类型</typeparam>
-    public abstract class GenericControllerBase<TEntity> : GenericControllerBase<TEntity, long> 
+    public abstract class GenericControllerBase<TEntity> : GenericControllerBase<TEntity, string> 
         where TEntity : BaseEntity, new()
     {
-        protected GenericControllerBase(IRepository<TEntity, long> repository) : base(repository)
+        protected GenericControllerBase(IRepository<TEntity, string> repository) : base(repository)
         {
         }
     }

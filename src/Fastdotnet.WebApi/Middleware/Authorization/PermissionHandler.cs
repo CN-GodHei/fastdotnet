@@ -31,11 +31,12 @@ namespace Fastdotnet.WebApi.Middleware.Authorization
             var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier);
             var userCategoryClaim = context.User.FindFirst("category");
 
-            if (userIdClaim == null || userCategoryClaim == null || !long.TryParse(userIdClaim.Value, out var userId))
+            if (userIdClaim == null || userCategoryClaim == null)
             {
                 return;
             }
 
+            var userId = userIdClaim.Value;
             var userPermissions = await _permissionService.GetUserPermissionsAsync(userId, userCategoryClaim.Value);
 
             if (userPermissions.Contains(requirement.Permission))

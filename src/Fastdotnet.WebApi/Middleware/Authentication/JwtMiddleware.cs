@@ -41,7 +41,7 @@ namespace Fastdotnet.WebApi.Middleware.Authentication
                     }, out SecurityToken validatedToken);
 
                     var jwtToken = (JwtSecurityToken)validatedToken;
-                    var userId = long.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+                    var userId = jwtToken.Claims.First(x => x.Type == "id");
 
                     // 将用户ID添加到上下文中
                     context.Items["UserId"] = userId;

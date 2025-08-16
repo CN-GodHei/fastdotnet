@@ -37,7 +37,7 @@ public class PluginA_UserData
     /// 主键，同时也是指向 FdAppUser.Id 的外键
     /// </summary>
     [Key] // 使用 [Key] 特性标记为主键
-    public long Id { get; set; }
+    public string Id { get; set; }
 
     /// <summary>
     /// 插件A自定义的字段：等级
@@ -65,10 +65,10 @@ public class PluginA_UserData
 // 在主框架中定义事件
 public class AppUserCreatedEvent : INotification
 {
-    public long UserId { get; }
+    public string UserId { get; }
     public string Nickname { get; }
 
-    public AppUserCreatedEvent(long userId, string nickname)
+    public AppUserCreatedEvent(string userId, string nickname)
     {
         UserId = userId;
         Nickname = nickname;
@@ -151,7 +151,7 @@ public class AppUserCreatedHandler : INotificationHandler<AppUserCreatedEvent>
 public class PluginA_UserDto
 {
     // --- 来自主框架 FdAppUser 的信息 ---
-    public long Id { get; set; }
+    public string Id { get; set; }
     public string Nickname { get; set; }
     public string? AvatarUrl { get; set; }
     public DateTime RegistrationDate { get; set; }

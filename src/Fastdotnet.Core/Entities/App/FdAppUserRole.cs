@@ -12,11 +12,11 @@ namespace Fastdotnet.Core.Entities.App
         /// <summary>
         /// 应用用户ID
         /// </summary>
-        public long AppUserId { get; set; }
+        public string AppUserId { get; set; }
 
         /// <summary>
         /// 角色ID
         /// </summary>
-        public long RoleId { get; set; }
+        public string RoleId { get; set; }
     }
 }

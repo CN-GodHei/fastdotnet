@@ -217,10 +217,10 @@ namespace Fastdotnet.Core.IService
     }
 
     /// <summary>
-    /// 默认主键为long的仓储接口
+    /// 默认主键为string的仓储接口
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
-    public interface IRepository<T> : IRepository<T, long> where T : BaseEntity, new()
+    public interface IRepository<T> : IRepository<T, string> where T : BaseEntity, new()
     {
     }
 }

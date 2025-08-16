@@ -3,6 +3,8 @@ import { onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import Sidebar from '@/components/Sidebar/index.vue'
 import Navbar from '@/components/Navbar/index.vue'
+import Breadcrumb from '@/components/Breadcrumb.vue'
+import TabsView from '@/components/TabsView.vue'
 
 const userStore = useUserStore()
 
@@ -22,6 +24,12 @@ onMounted(async () => {
     <div class="main-container">
       <!-- 顶部导航栏 -->
       <Navbar />
+      
+      <!-- 面包屑导航 -->
+      <Breadcrumb />
+      
+      <!-- 标签页 -->
+      <TabsView />
       
       <!-- 主要内容区域 -->
       <div class="app-main">

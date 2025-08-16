@@ -45,7 +45,7 @@ namespace Fastdotnet.Service.Service
 
         public async Task<string> LoginAsync(LoginDto dto, string userCategory)
         {
-            long userId;
+            string userId;
             string userName;
             List<string> roleCodes = new List<string>();
 
@@ -93,7 +93,7 @@ namespace Fastdotnet.Service.Service
             return GenerateJwtToken(userId, userName, userCategory, roleCodes);
         }
 
-        private string GenerateJwtToken(long userId, string userName, string category, List<string> roleCodes)
+        private string GenerateJwtToken(string userId, string userName, string category, List<string> roleCodes)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);

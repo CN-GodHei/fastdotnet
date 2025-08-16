@@ -2,14 +2,14 @@ import request from '@/api/request'
 
 // 菜单数据类型定义
 export interface Menu {
-  Id: number                // 菜单ID
+  Id:string                // 菜单ID
   Name: string              // 菜单名称
   Code: string              // 菜单代码
   Path: string              // 菜单路径
   Icon: string              // 菜单图标
   ParentCode: string | null   // 父级菜单Code.
-  Sort: number              // 排序
-  Type: number              // 菜单类型 (1: 目录, 2: 菜单)
+  Sort:string              // 排序
+  Type:string              // 菜单类型 (1: 目录, 2: 菜单)
   Module: string            // 所属模块
   Category: string          // 菜单分类
   IsExternal: boolean       // 是否外链
@@ -40,7 +40,7 @@ export const getAllMenus = () => {
 }
 
 // 获取菜单详情
-export const getMenuById = (id: number) => {
+export const getMenuById = (id:string) => {
   return request({
     url: `/api/admin/menus/${id}`,
     method: 'get'
@@ -57,7 +57,7 @@ export const createMenu = (data: Partial<Menu>) => {
 }
 
 // 更新菜单
-export const updateMenu = (id: number, data: Partial<Menu>) => {
+export const updateMenu = (id:string, data: Partial<Menu>) => {
   return request({
     url: `/api/admin/menus/${id}`,
     method: 'put',
@@ -66,7 +66,7 @@ export const updateMenu = (id: number, data: Partial<Menu>) => {
 }
 
 // 删除菜单
-export const deleteMenu = (id: number) => {
+export const deleteMenu = (id:string) => {
   return request({
     url: `/api/admin/menus/${id}`,
     method: 'delete'

@@ -6,6 +6,6 @@ namespace Fastdotnet.Service.IService
 {
     public interface IMenuService
     {
-        Task<List<FdMenu>> GetUserMenusAsync(long userId, string category);
+        Task<List<FdMenu>> GetUserMenusAsync(string userId, string category);
     }
 }

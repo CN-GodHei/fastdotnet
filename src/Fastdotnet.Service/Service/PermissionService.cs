@@ -28,9 +28,9 @@ namespace Fastdotnet.Service.Service
             _permissionRepository = permissionRepository;
         }
 
-        public async Task<List<string>> GetUserPermissionsAsync(long userId, string userCategory)
+        public async Task<List<string>> GetUserPermissionsAsync(string userId, string userCategory)
         {
-            List<long> roleIds;
+            List<string> roleIds;
             if (userCategory == "Admin")
             {
                 var userRoles = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);

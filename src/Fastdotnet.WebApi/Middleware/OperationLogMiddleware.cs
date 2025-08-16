@@ -72,7 +72,7 @@ namespace Fastdotnet.WebApi.Middleware
                     Headers = headers,
                     Body = body,
                     StatusCode = statusCode,
-                    ElapsedMilliseconds = stopwatch.ElapsedMilliseconds,
+                    ElapsedMilliseconds = stopwatch.ElapsedMilliseconds.ToString(),
                     CreateTime = DateTime.Now // 明确设置创建时间
                 };
 

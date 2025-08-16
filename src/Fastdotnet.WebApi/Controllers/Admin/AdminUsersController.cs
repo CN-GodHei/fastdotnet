@@ -14,7 +14,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
     [Route("api/admin/users")]
-    public class AdminUsersController : GenericDtoControllerBase<FdAdminUser, long, CreateAdminUserDto, UpdateAdminUserDto, AdminUserDto>
+    public class AdminUsersController : GenericDtoControllerBase<FdAdminUser, string, CreateAdminUserDto, UpdateAdminUserDto, AdminUserDto>
     {
         private readonly IAdminUserService _adminUserService;
         private readonly ICurrentUser _currentUser;
@@ -33,7 +33,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public override Task<System.Collections.Generic.List<AdminUserDto>> GetAll() => base.GetAll();
 
         //[Authorize(Policy = Permissions.Admin.Users.View)]
-        //public async Task<AdminUserDto> GetById(long id)
+        //public async Task<AdminUserDto> GetById(string id)
         //{
         //    // 超管可以查看所有用户，普通用户只能查看自己
         //    //bool isSuperAdmin = await _adminUserService.IsSuperAdminAsync(_currentUser.Id ?? 0);
@@ -58,7 +58,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         //[Authorize(Policy = Permissions.Admin.Users.Edit)]
-        //public async Task<AdminUserDto> Update(long id, UpdateAdminUserDto dto)
+        //public async Task<AdminUserDto> Update(string id, UpdateAdminUserDto dto)
         //{
         //    // 超管可以更新所有用户，普通用户只能更新自己
         //    //bool isSuperAdmin = await _adminUserService.IsSuperAdminAsync(_currentUser.Id ?? 0);
@@ -73,7 +73,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         //}
 
         [Authorize(Policy = Permissions.Admin.Users.Delete)]
-        public override async Task<bool> Delete(long id)
+        public override async Task<bool> Delete(string id)
         {
             // 检查是否尝试删除超管用户
             bool isTargetSuperAdmin = await _adminUserService.IsSuperAdminAsync(id);
@@ -95,7 +95,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         [HttpPost("{id}/reset-password")]
         [Authorize(Policy = Permissions.Admin.Users.ResetPassword)]
-        public async Task<IActionResult> ResetPassword(long id, [FromBody] ResetPasswordDto dto)
+        public async Task<IActionResult> ResetPassword(string id, [FromBody] ResetPasswordDto dto)
         { 
             await _adminUserService.ResetPasswordAsync(id, dto.NewPassword);
             return NoContent();

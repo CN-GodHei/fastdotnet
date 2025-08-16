@@ -471,10 +471,10 @@ namespace Fastdotnet.Core.Service
     }
 
     /// <summary>
-    /// 默认主键为long的仓储实现
+    /// 默认主键为string的仓储实现
     /// </summary>
     /// <typeparam name="T">实体类型</typeparam>
-    public class Repository<T> : Repository<T, long>, IRepository<T> where T : BaseEntity, new()
+    public class Repository<T> : Repository<T, string>, IRepository<T> where T : BaseEntity, new()
     {
         public Repository(ISqlSugarClient db) : base(db)
         {

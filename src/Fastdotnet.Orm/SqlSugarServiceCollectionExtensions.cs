@@ -59,7 +59,7 @@ public static class SqlSugarServiceCollectionExtensions
                             db.Aop.OnLogExecuted = (sqlExecuted, parsExecuted) =>
                             {
                                 stopwatch.Stop();
-                                RecordSqlExecutionToLogTable(serviceProvider, sqlCopy, parsCopy, stopwatch.ElapsedMilliseconds, null);
+                                RecordSqlExecutionToLogTable(serviceProvider, sqlCopy, parsCopy, stopwatch.ElapsedMilliseconds.ToString(), null);
                                 db.Aop.OnLogExecuted = null; // 重置事件处理程序
                             };
                         }
@@ -106,7 +106,7 @@ public static class SqlSugarServiceCollectionExtensions
                                 parameters = new SugarParameter[0];
                             }
                             
-                            RecordSqlExecutionToLogTable(serviceProvider, ex.Sql, parameters, 0, ex);
+                            RecordSqlExecutionToLogTable(serviceProvider, ex.Sql, parameters, "0", ex);
                         }
                     }
                     catch (Exception ex2)
@@ -127,7 +127,7 @@ public static class SqlSugarServiceCollectionExtensions
                     if (entityInfo.OperationType == DataFilterType.InsertByObject)
                     {
                         // 自动填充雪花ID（如果ID为0）
-                        if (entityInfo.PropertyName == nameof(IBaseEntity.Id) && (long)oldValue == 0)
+                        if (entityInfo.PropertyName == nameof(IBaseEntity.Id) && oldValue == null)
                         {
                             entityInfo.SetValue(SnowflakeIdGenerator.NextId());
                         }
@@ -168,7 +168,7 @@ public static class SqlSugarServiceCollectionExtensions
     /// <param name="parameters">SQL参数</param>
     /// <param name="elapsedMilliseconds">执行耗时（毫秒）</param>
     /// <param name="exception">异常信息（如果有）</param>
-    private static void RecordSqlExecutionToLogTable(IServiceProvider rootServiceProvider, string sql, SugarParameter[] parameters, long elapsedMilliseconds, Exception exception)
+    private static void RecordSqlExecutionToLogTable(IServiceProvider rootServiceProvider, string sql, SugarParameter[] parameters, string elapsedMilliseconds, Exception exception)
     {
         try
         {

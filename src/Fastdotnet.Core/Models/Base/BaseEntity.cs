@@ -12,7 +12,7 @@ namespace Fastdotnet.Core.Models.Base
         /// <summary>
         /// 主键ID
         /// </summary>
-        long Id { get; set; }
+        string Id { get; set; }
         
         /// <summary>
         /// 创建时间
@@ -34,7 +34,7 @@ namespace Fastdotnet.Core.Models.Base
         /// 主键ID
         /// </summary>
         [SugarColumn(IsPrimaryKey = true)]
-        public long Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// 创建时间

@@ -19,7 +19,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     [ApiController]
     [Route("api/admin/roles")]
     [Authorize]
-    public class RolesController : GenericDtoControllerBase<FdRole, long, CreateRoleDto, UpdateRoleDto, RoleDto>
+    public class RolesController : GenericDtoControllerBase<FdRole, string, CreateRoleDto, UpdateRoleDto, RoleDto>
     {
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
         private readonly IRepository<FdAppUserRole> _appUserRoleRepository;
@@ -41,7 +41,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public override Task<System.Collections.Generic.List<RoleDto>> GetAll() => base.GetAll();
 
         [Authorize(Policy = Permissions.Admin.Roles.View)]
-        public override Task<RoleDto> GetById(long id) => base.GetById(id);
+        public override Task<RoleDto> GetById(string id) => base.GetById(id);
 
         [Authorize(Policy = Permissions.Admin.Roles.View)]
         public override Task<Fastdotnet.Core.Models.PageResult<RoleDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10) => base.GetPage(pageIndex, pageSize);
@@ -50,10 +50,10 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public override Task<RoleDto> Create(CreateRoleDto dto) => base.Create(dto);
 
         [Authorize(Policy = Permissions.Admin.Roles.Edit)]
-        public override Task<RoleDto> Update(long id, UpdateRoleDto dto) => base.Update(id, dto);
+        public override Task<RoleDto> Update(string id, UpdateRoleDto dto) => base.Update(id, dto);
 
         [Authorize(Policy = Permissions.Admin.Roles.Delete)]
-        public override Task<bool> Delete(long id) => base.Delete(id);
+        public override Task<bool> Delete(string id) => base.Delete(id);
 
         protected override async Task BeforeCreate(FdRole entity, CreateRoleDto dto)
         {
@@ -82,7 +82,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         [HttpGet("{id}/permissions")]
         [Authorize(Policy = Permissions.Admin.Roles.View)]
-        public async Task<List<long>> GetPermissionIds(long id)
+        public async Task<List<string>> GetPermissionIds(string id)
         {
             var permissions = await _rolePermissionRepository.GetListAsync(rp => rp.RoleId == id);
             return permissions.Select(p => p.PermissionId).ToList();
@@ -90,7 +90,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         [HttpPost("{id}/permissions")]
         [Authorize(Policy = Permissions.Admin.Roles.AssignPermissions)]
-        public async Task<IActionResult> AssignPermissions(long id, [FromBody] AssignPermissionsDto dto)
+        public async Task<IActionResult> AssignPermissions(string id, [FromBody] AssignPermissionsDto dto)
         {
             await _rolePermissionRepository.DeleteAsync(rp => rp.RoleId == id);
 

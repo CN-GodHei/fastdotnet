@@ -3,7 +3,7 @@ import { usePluginStore } from '@/stores/plugin'
 
 // 微应用配置类型
 export interface MicroApp extends RegistrableApp<any> {
-  id: number
+  id:string
   name: string
   entry: string
   container: string

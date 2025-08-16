@@ -44,7 +44,7 @@ namespace PluginA.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(long id)
+        public async Task<IActionResult> GetById(string id)
         {
             var entity = await _pluginEntityService.GetByIdAsync(id);
             if (entity == null)
@@ -90,7 +90,7 @@ namespace PluginA.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(long id)
+        public async Task<IActionResult> Delete(string id)
         {
             var result = await _pluginEntityService.DeleteAsync(id);
             return Ok(result);

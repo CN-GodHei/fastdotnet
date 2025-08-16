@@ -7,7 +7,7 @@ namespace Fastdotnet.Core.Models.Admin.Users
     /// </summary>
     public class AdminUserDto
     {
-        public long Id { get; set; }
+        public string Id { get; set; }
 
         public string Username { get; set; }
 

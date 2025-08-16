@@ -18,9 +18,9 @@ namespace PluginA.Controllers
     /// 继承自通用DTO控制器基类，实现基于DTO的CRUD操作
     /// </summary>
     [Route("api/[controller]")]
-    public class PluginATestDtoController : GenericDtoControllerBase<PluginATest, long, PluginATestCreateDto, PluginATestUpdateDto, PluginATestDto>
+    public class PluginATestDtoController : GenericDtoControllerBase<PluginATest, string, PluginATestCreateDto, PluginATestUpdateDto, PluginATestDto>
     {
-        public PluginATestDtoController(IRepository<PluginATest, long> pluginATestRepository, IMapper mapper) 
+        public PluginATestDtoController(IRepository<PluginATest, string> pluginATestRepository, IMapper mapper) 
             : base(pluginATestRepository, mapper)
         {
         }

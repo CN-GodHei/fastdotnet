@@ -31,7 +31,7 @@ namespace Fastdotnet.Service.Service.Admin
             _roleRepository = roleRepository;
         }
 
-        public async Task<long> CreateAsync(CreateAdminUserDto dto)
+        public async Task<string> CreateAsync(CreateAdminUserDto dto)
         {
             var existingUser = await _repository.GetFirstAsync(u => u.Username == dto.Username);
             if (existingUser != null)
@@ -47,7 +47,7 @@ namespace Fastdotnet.Service.Service.Admin
             return user.Id;
         }
 
-        public async Task DeleteAsync(long id)
+        public async Task DeleteAsync(string id)
         {
             var user = await _repository.GetByIdAsync(id);
             if (user == null)
@@ -57,7 +57,7 @@ namespace Fastdotnet.Service.Service.Admin
             await _repository.DeleteAsync(id);
         }
 
-        public async Task<AdminUserDto?> GetAsync(long id)
+        public async Task<AdminUserDto?> GetAsync(string id)
         {
             var user = await _repository.GetByIdAsync(id);
             return _mapper.Map<AdminUserDto?>(user);
@@ -78,7 +78,7 @@ namespace Fastdotnet.Service.Service.Admin
             };
         }
 
-        public async Task ResetPasswordAsync(long id, string newPassword)
+        public async Task ResetPasswordAsync(string id, string newPassword)
         {
             var user = await _repository.GetByIdAsync(id);
             if (user == null)
@@ -93,7 +93,7 @@ namespace Fastdotnet.Service.Service.Admin
             await _repository.UpdateAsync(user);
         }
 
-        public async Task UpdateAsync(long id, UpdateAdminUserDto dto)
+        public async Task UpdateAsync(string id, UpdateAdminUserDto dto)
         {
             var user = await _repository.GetByIdAsync(id);
             if (user == null)
@@ -105,7 +105,7 @@ namespace Fastdotnet.Service.Service.Admin
             await _repository.UpdateAsync(user);
         }
         
-        public async Task<bool> IsSuperAdminAsync(long userId)
+        public async Task<bool> IsSuperAdminAsync(string userId)
         {
             // 获取用户的角色
             var userRoles = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);

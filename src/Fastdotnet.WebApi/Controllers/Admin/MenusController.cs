@@ -22,7 +22,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     [ApiController]
     [Route("api/admin/menus")]
     [Authorize]
-    public class MenusController : GenericDtoControllerBase<FdMenu, long, CreateMenuDto, UpdateMenuDto, MenuDto>
+    public class MenusController : GenericDtoControllerBase<FdMenu, string, CreateMenuDto, UpdateMenuDto, MenuDto>
     {
         private readonly IMenuService _menuService;
         private readonly ICurrentUser _currentUser;
@@ -55,7 +55,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             }
 
             // 判断是否为超管角色
-            bool isSuperAdmin = await _adminUserService.IsSuperAdminAsync(userId.Value);
+            bool isSuperAdmin = await _adminUserService.IsSuperAdminAsync(userId);
             List<FdMenu> menus;
             
             if (isSuperAdmin)
@@ -75,7 +75,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             else
             {
                 // 普通用户根据权限获取菜单
-                menus = await _menuService.GetUserMenusAsync(userId.Value, "Admin");
+                menus = await _menuService.GetUserMenusAsync(userId, "Admin");
             }
             
             return Ok(menus);
@@ -111,7 +111,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public override Task<List<MenuDto>> GetAll() => base.GetAll();
 
         [Authorize(Policy = Permissions.Admin.Menus.View)]
-        public override Task<MenuDto> GetById(long id) => base.GetById(id);
+        public override Task<MenuDto> GetById(string id) => base.GetById(id);
 
         [Authorize(Policy = Permissions.Admin.Menus.View)]
         public override Task<Fastdotnet.Core.Models.PageResult<MenuDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10) => base.GetPage(pageIndex, pageSize);
@@ -120,10 +120,10 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public override Task<MenuDto> Create(CreateMenuDto dto) => base.Create(dto);
 
         [Authorize(Policy = Permissions.Admin.Menus.Edit)]
-        public override Task<MenuDto> Update(long id, UpdateMenuDto dto) => base.Update(id, dto);
+        public override Task<MenuDto> Update(string id, UpdateMenuDto dto) => base.Update(id, dto);
 
         [Authorize(Policy = Permissions.Admin.Menus.Delete)]
-        public override Task<bool> Delete(long id) => base.Delete(id);
+        public override Task<bool> Delete(string id) => base.Delete(id);
         
         protected override async Task BeforeCreate(FdMenu entity, CreateMenuDto dto)
         {

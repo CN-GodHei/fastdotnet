@@ -34,7 +34,7 @@ export const usePluginStore = defineStore('plugin', {
     },
 
     // 启用插件
-    async enablePlugin(id: number) {
+    async enablePlugin(id:string) {
       try {
         await enablePlugin(id)
         const plugin = this.plugins.find(p => p.id === id)
@@ -49,7 +49,7 @@ export const usePluginStore = defineStore('plugin', {
     },
 
     // 禁用插件
-    async disablePlugin(id: number) {
+    async disablePlugin(id:string) {
       try {
         await disablePlugin(id)
         const plugin = this.plugins.find(p => p.id === id)

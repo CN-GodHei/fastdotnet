@@ -15,7 +15,7 @@ namespace PluginA.Services
     /// <summary>
     /// 插件实体服务实现
     /// </summary>
-    public class PluginEntityService : Repository<PluginEntity, long>, IPluginEntityService
+    public class PluginEntityService : Repository<PluginEntity, string>, IPluginEntityService
     {
         private readonly ILogger<PluginEntityService> _logger;
 

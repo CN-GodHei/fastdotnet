@@ -16,14 +16,14 @@ namespace Fastdotnet.Core.Models.System
 
     public class MenuDto
     {
-        public long Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
         public string Path { get; set; }
         public string Icon { get; set; }
         public string? ParentCode { get; set; }
         public int Sort { get; set; }
-        public string Type { get; set; }
+        public MenuType Type { get; set; }
         public string Module { get; set; }
         public string Category { get; set; }
         public bool IsExternal { get; set; }
@@ -40,7 +40,7 @@ namespace Fastdotnet.Core.Models.System
         public string Icon { get; set; }
         public string? ParentCode { get; set; }
         public int Sort { get; set; }
-        public string Type { get; set; }
+        public MenuType Type { get; set; }
         public string Module { get; set; }
         public string Category { get; set; }
         public bool IsExternal { get; set; }
@@ -57,7 +57,7 @@ namespace Fastdotnet.Core.Models.System
         public string Icon { get; set; }
         public string? ParentCode { get; set; }
         public int Sort { get; set; }
-        public string Type { get; set; }
+        public MenuType Type { get; set; }
         public string Module { get; set; }
         public string Category { get; set; }
         public bool IsExternal { get; set; }

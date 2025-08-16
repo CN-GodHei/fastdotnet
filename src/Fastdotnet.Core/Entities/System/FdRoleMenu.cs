@@ -12,11 +12,11 @@ namespace Fastdotnet.Core.Entities.System
         /// <summary>
         /// 角色ID
         /// </summary>
-        public long RoleId { get; set; }
+        public string RoleId { get; set; }
 
         /// <summary>
         /// 菜单ID
         /// </summary>
-        public long MenuId { get; set; }
+        public string MenuId { get; set; }
     }
 }

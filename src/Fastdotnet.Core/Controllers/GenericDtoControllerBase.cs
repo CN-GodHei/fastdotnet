@@ -337,16 +337,16 @@ namespace Fastdotnet.Core.Controllers
     }
 
     /// <summary>
-    /// 支持 DTO 的通用控制器基类，默认主键为long
+    /// 支持 DTO 的通用控制器基类，默认主键为string
     /// </summary>
     /// <typeparam name="TEntity">实体类型</typeparam>
     /// <typeparam name="TCreateDto">创建 DTO 类型</typeparam>
     /// <typeparam name="TUpdateDto">更新 DTO 类型</typeparam>
     /// <typeparam name="TDto">输出 DTO 类型</typeparam>
-    public abstract class GenericDtoControllerBase<TEntity, TCreateDto, TUpdateDto, TDto> : GenericDtoControllerBase<TEntity, long, TCreateDto, TUpdateDto, TDto>
+    public abstract class GenericDtoControllerBase<TEntity, TCreateDto, TUpdateDto, TDto> : GenericDtoControllerBase<TEntity, string, TCreateDto, TUpdateDto, TDto>
         where TEntity : BaseEntity, new()
     {
-        protected GenericDtoControllerBase(IRepository<TEntity, long> repository, IMapper mapper) : base(repository, mapper)
+        protected GenericDtoControllerBase(IRepository<TEntity, string> repository, IMapper mapper) : base(repository, mapper)
         {
         }
     }

@@ -18,12 +18,12 @@ namespace Fastdotnet.Core.Service
 
         public bool IsAuthenticated => User?.Identity?.IsAuthenticated ?? false;
 
-        public long? Id
+        public string? Id
         {
             get
             {
                 var claim = User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-                return claim != null ? long.Parse(claim.Value) : null;
+                return claim != null ? claim.Value : null;
             }
         }
 

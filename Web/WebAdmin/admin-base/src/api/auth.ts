@@ -11,7 +11,7 @@ export interface LoginResponse {
   Data: {
     Token: string
   }
-  Code: number
+  Code:string
   Msg: string | null
 }
 

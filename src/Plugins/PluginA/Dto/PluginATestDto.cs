@@ -23,7 +23,7 @@ namespace PluginA.Dto
     /// </summary>
     public class PluginATestUpdateDto
     {
-        public long Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int TestValue { get; set; }
@@ -36,7 +36,7 @@ namespace PluginA.Dto
     /// </summary>
     public class PluginATestDto
     {
-        public long Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int TestValue { get; set; }

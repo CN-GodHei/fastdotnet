@@ -31,7 +31,7 @@ namespace Fastdotnet.Core.Entities.System
         /// <summary>
         /// 关联的菜单ID
         /// </summary>
-        public long MenuId { get; set; }
+        public string MenuId { get; set; }
 
         /// <summary>
         /// 所属模块 (System/PluginId)

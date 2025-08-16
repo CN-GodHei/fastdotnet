@@ -31,10 +31,10 @@ namespace Fastdotnet.Service.Service
             _permissionService = permissionService;
         }
 
-        public async Task<List<FdMenu>> GetUserMenusAsync(long userId, string category)
+        public async Task<List<FdMenu>> GetUserMenusAsync(string userId, string category)
         {
             // 1. Get user's roles
-            List<long> roleIds;
+            List<string> roleIds;
             if (category == "Admin")
             {
                 var userRoles = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);

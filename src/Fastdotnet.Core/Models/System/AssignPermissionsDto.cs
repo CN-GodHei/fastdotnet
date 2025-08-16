@@ -4,6 +4,6 @@ namespace Fastdotnet.Core.Models.System
 {
     public class AssignPermissionsDto
     {
-        public List<long> PermissionIds { get; set; }
+        public List<string> PermissionIds { get; set; }
     }
 }

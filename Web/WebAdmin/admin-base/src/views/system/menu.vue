@@ -36,6 +36,9 @@ const menuForm = ref({
   DeleteTime: null
 })
 
+// 表单引用
+const menuFormRef = ref()
+
 // 表单验证规则
 const formRules = {
   Name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }],
@@ -84,7 +87,7 @@ const buildMenuOptions = (menus: Menu[], prefix = ''): Menu[] => {
 const handleAdd = (parentMenu?: Menu) => {
   resetForm()
   if (parentMenu) {
-    menuForm.value.ParentCode = parentMenu.Id
+    menuForm.value.ParentCode = parentMenu.Code 
     menuForm.value.Category = parentMenu.Category
   }
   dialogTitle.value = '新增菜单'
@@ -93,7 +96,9 @@ const handleAdd = (parentMenu?: Menu) => {
 
 // 编辑菜单
 const handleEdit = async (menu: Menu) => {
+  console.log('编辑菜单', menu)
   try {
+    formLoading.value = true
     const response = await getMenuById(menu.Id)
     menuForm.value = { ...response.data }
     dialogTitle.value = '编辑菜单'
@@ -101,6 +106,8 @@ const handleEdit = async (menu: Menu) => {
   } catch (error) {
     ElMessage.error('获取菜单详情失败')
     console.error(error)
+  } finally {
+    formLoading.value = false
   }
 }
 
@@ -172,7 +179,7 @@ const resetForm = () => {
 }
 
 // 格式化菜单类型显示
-const formatMenuType = (type: number) => {
+const formatMenuType = (type:string) => {
   return type === 1 ? '目录' : '菜单'
 }
 
@@ -320,4 +327,8 @@ onMounted(() => {
   margin-top: 10px;
 }
 </style>
+
+
+
+
 

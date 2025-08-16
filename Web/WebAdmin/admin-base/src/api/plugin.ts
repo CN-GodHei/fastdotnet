@@ -2,7 +2,7 @@ import request from '@/api/request'
 
 // 插件数据类型定义
 export interface Plugin {
-  id: number
+  id:string
   name: string           // 插件名称
   code: string           // 插件代码
   version: string        // 插件版本
@@ -24,7 +24,7 @@ export const getPluginList = () => {
 }
 
 // 获取插件详情
-export const getPluginById = (id: number) => {
+export const getPluginById = (id:string) => {
   return request({
     url: `/admin/plugins/${id}`,
     method: 'get'
@@ -41,7 +41,7 @@ export const createPlugin = (data: Partial<Plugin>) => {
 }
 
 // 更新插件
-export const updatePlugin = (id: number, data: Partial<Plugin>) => {
+export const updatePlugin = (id:string, data: Partial<Plugin>) => {
   return request({
     url: `/admin/plugins/${id}`,
     method: 'put',
@@ -50,7 +50,7 @@ export const updatePlugin = (id: number, data: Partial<Plugin>) => {
 }
 
 // 删除插件
-export const deletePlugin = (id: number) => {
+export const deletePlugin = (id:string) => {
   return request({
     url: `/admin/plugins/${id}`,
     method: 'delete'
@@ -58,7 +58,7 @@ export const deletePlugin = (id: number) => {
 }
 
 // 启用插件
-export const enablePlugin = (id: number) => {
+export const enablePlugin = (id:string) => {
   return request({
     url: `/admin/plugins/${id}/enable`,
     method: 'post'
@@ -66,7 +66,7 @@ export const enablePlugin = (id: number) => {
 }
 
 // 禁用插件
-export const disablePlugin = (id: number) => {
+export const disablePlugin = (id:string) => {
   return request({
     url: `/admin/plugins/${id}/disable`,
     method: 'post'

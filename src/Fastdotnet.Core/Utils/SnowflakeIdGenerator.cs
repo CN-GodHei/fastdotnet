@@ -38,7 +38,7 @@ public static class SnowflakeIdGenerator
     /// 生成下一个ID
     /// </summary>
     /// <returns></returns>
-    public static long NextId()
+    public static string NextId()
     {
         lock (typeof(SnowflakeIdGenerator))
         {
@@ -69,9 +69,11 @@ public static class SnowflakeIdGenerator
             _lastTimestamp = timestamp;
             
             // 组合ID
-            return ((timestamp - _twepoch) << (int)_timestampLeftShift) |
+            var id = ((timestamp - _twepoch) << (int)_timestampLeftShift) |
                    (_machineId << (int)_machineIdShift) |
                    _sequence;
+            // 转换为字符串返回
+            return id.ToString();
         }
     }
     

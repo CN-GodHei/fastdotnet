@@ -12,11 +12,11 @@ namespace Fastdotnet.Core.Entities.Admin
         /// <summary>
         /// 管理员用户ID
         /// </summary>
-        public long AdminUserId { get; set; }
+        public string AdminUserId { get; set; }
 
         /// <summary>
         /// 角色ID
         /// </summary>
-        public long RoleId { get; set; }
+        public string RoleId { get; set; }
     }
 }

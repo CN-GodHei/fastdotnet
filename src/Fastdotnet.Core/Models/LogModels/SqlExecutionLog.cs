@@ -11,7 +11,7 @@ namespace Fastdotnet.Core.Models.LogModels;
 public class SqlExecutionLog
 {
     [SugarColumn(IsPrimaryKey = true)]
-    public long Id { get; set; } = SnowflakeIdGenerator.NextId();
+    public string Id { get; set; } = SnowflakeIdGenerator.NextId();
 
     /// <summary>
     /// 请求ID，用于追踪整个请求链路
@@ -28,7 +28,7 @@ public class SqlExecutionLog
     /// <summary>
     /// 执行耗时（毫秒）
     /// </summary>
-    public long ElapsedMilliseconds { get; set; }
+    public string ElapsedMilliseconds { get; set; }
 
     /// <summary>
     /// 是否有错误

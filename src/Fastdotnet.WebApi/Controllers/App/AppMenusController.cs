@@ -32,7 +32,7 @@ namespace Fastdotnet.WebApi.Controllers.App
             }
 
             // 注意这里的 "App"
-            var menus = await _menuService.GetUserMenusAsync(userId.Value, "App");
+            var menus = await _menuService.GetUserMenusAsync(userId, "App");
             return Ok(menus);
         }
     }

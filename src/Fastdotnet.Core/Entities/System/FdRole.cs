@@ -39,7 +39,7 @@ namespace Fastdotnet.Core.Entities.System
         /// 父级角色ID，用于支持角色层级
         /// </summary>
         [SugarColumn(IsNullable = true)]
-        public long? ParentId { get; set; }
+        public string? ParentId { get; set; }
 
         /// <summary>
         /// 是否为系统内置角色

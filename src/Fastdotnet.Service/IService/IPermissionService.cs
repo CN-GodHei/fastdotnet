@@ -5,6 +5,6 @@ namespace Fastdotnet.Service.IService
 {
     public interface IPermissionService
     {
-        Task<List<string>> GetUserPermissionsAsync(long userId, string userCategory);
+        Task<List<string>> GetUserPermissionsAsync(string userId, string userCategory);
     }
 }

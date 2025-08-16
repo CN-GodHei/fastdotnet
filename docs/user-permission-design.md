@@ -156,7 +156,7 @@ public class FdRole : BaseEntity, ISoftDelete
     public string Code { get; set; }
     public string Description { get; set; }
     public string Category { get; set; } // 角色类别: "Admin" 或 "User"
-    public long? ParentCode { get; set; } // 父级角色ID，用于支持角色层级
+    public string? ParentCode { get; set; } // 父级角色ID，用于支持角色层级
     public bool IsSystem { get; set; } // 是否系统角色
 }
 ```
@@ -181,8 +181,8 @@ public class FdPermission : BaseEntity, ISoftDelete
 ```csharp
 public class FdAdminUserRole : BaseEntity
 {
-    public long AdminUserId { get; set; }
-    public long RoleId { get; set; }
+    public string AdminUserId { get; set; }
+    public string RoleId { get; set; }
 }
 ```
 
@@ -190,8 +190,8 @@ public class FdAdminUserRole : BaseEntity
 ```csharp
 public class FdAppUserRole : BaseEntity
 {
-    public long AppUserId { get; set; }
-    public long RoleId { get; set; }
+    public string AppUserId { get; set; }
+    public string RoleId { get; set; }
 }
 ```
 
@@ -199,8 +199,8 @@ public class FdAppUserRole : BaseEntity
 ```csharp
 public class FdRolePermission : BaseEntity
 {
-    public long RoleId { get; set; }
-    public long PermissionId { get; set; }
+    public string RoleId { get; set; }
+    public string PermissionId { get; set; }
 }
 ```
 

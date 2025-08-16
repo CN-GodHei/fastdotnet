@@ -14,7 +14,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     [ApiController]
     [Route("api/admin/menu-buttons")]
     [Authorize]
-    public class MenuButtonsController : GenericDtoControllerBase<FdMenuButton, long, CreateMenuButtonDto, UpdateMenuButtonDto, MenuButtonDto>
+    public class MenuButtonsController : GenericDtoControllerBase<FdMenuButton, string, CreateMenuButtonDto, UpdateMenuButtonDto, MenuButtonDto>
     {
         public MenuButtonsController(
             IRepository<FdMenuButton> repository,
@@ -26,7 +26,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public override Task<List<MenuButtonDto>> GetAll() => base.GetAll();
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.View)]
-        public override Task<MenuButtonDto> GetById(long id) => base.GetById(id);
+        public override Task<MenuButtonDto> GetById(string id) => base.GetById(id);
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.View)]
         public override Task<Fastdotnet.Core.Models.PageResult<MenuButtonDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10) => base.GetPage(pageIndex, pageSize);
@@ -35,9 +35,9 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public override Task<MenuButtonDto> Create(CreateMenuButtonDto dto) => base.Create(dto);
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.Edit)]
-        public override Task<MenuButtonDto> Update(long id, UpdateMenuButtonDto dto) => base.Update(id, dto);
+        public override Task<MenuButtonDto> Update(string id, UpdateMenuButtonDto dto) => base.Update(id, dto);
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.Delete)]
-        public override Task<bool> Delete(long id) => base.Delete(id);
+        public override Task<bool> Delete(string id) => base.Delete(id);
     }
 }

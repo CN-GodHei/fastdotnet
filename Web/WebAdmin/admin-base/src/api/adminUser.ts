@@ -3,7 +3,7 @@ import type { PageQuery, PageResult } from './types'
 
 // 管理员用户信息DTO
 export interface AdminUserDto {
-  id: number
+  id:string
   username: string
   fullName: string | null
   email: string | null
@@ -46,7 +46,7 @@ export const getAdminUsers = () => {
 }
 
 // 根据ID获取管理员用户
-export const getAdminUserById = (id: number) => {
+export const getAdminUserById = (id:string) => {
   return request({
     url: `/api/admin/users/${id}`,
     method: 'get'
@@ -72,7 +72,7 @@ export const createAdminUser = (data: CreateAdminUserDto) => {
 }
 
 // 更新管理员用户
-export const updateAdminUser = (id: number, data: UpdateAdminUserDto) => {
+export const updateAdminUser = (id:string, data: UpdateAdminUserDto) => {
   return request({
     url: `/api/admin/users/${id}`,
     method: 'put',
@@ -81,7 +81,7 @@ export const updateAdminUser = (id: number, data: UpdateAdminUserDto) => {
 }
 
 // 删除管理员用户
-export const deleteAdminUser = (id: number) => {
+export const deleteAdminUser = (id:string) => {
   return request({
     url: `/api/admin/users/${id}`,
     method: 'delete'
@@ -89,7 +89,7 @@ export const deleteAdminUser = (id: number) => {
 }
 
 // 重置管理员用户密码
-export const resetAdminUserPassword = (id: number, data: ResetPasswordDto) => {
+export const resetAdminUserPassword = (id:string, data: ResetPasswordDto) => {
   return request({
     url: `/api/admin/users/${id}/reset-password`,
     method: 'post',
