@@ -127,7 +127,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         
         protected override async Task BeforeCreate(FdMenu entity, CreateMenuDto dto)
         {
-            var generatedCode = $"MENU_CODE_{SnowflakeIdGenerator.NextId()}";
+            var generatedCode = $"MENU_CODE_{SnowflakeIdGenerator.NextStrId()}";
             entity.Code = generatedCode;
             //entity.ParentCode = entity.ParentCode == 0 ? null : entity.ParentCode;
             await base.BeforeCreate(entity, dto);

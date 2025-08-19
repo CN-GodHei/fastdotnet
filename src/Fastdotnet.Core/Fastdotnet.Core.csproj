@@ -30,6 +30,7 @@
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="System.ComponentModel.Composition" />
 	  <PackageReference Include="SqlSugarCore" />
+	  <PackageReference Include="Yitter.IdGenerator" />
   </ItemGroup>
 
   <ItemGroup>

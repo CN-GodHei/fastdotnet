@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="SqlSugarCore" />
+    <PackageReference Include="Yitter.IdGenerator" />
   </ItemGroup>
 
 </Project>

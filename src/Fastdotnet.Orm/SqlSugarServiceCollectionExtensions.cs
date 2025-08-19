@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Yitter.IdGenerator;
 
 namespace Fastdotnet.Orm;
 
@@ -129,7 +130,8 @@ public static class SqlSugarServiceCollectionExtensions
                         // 自动填充雪花ID（如果ID为0）
                         if (entityInfo.PropertyName == nameof(IBaseEntity.Id) && oldValue == null)
                         {
-                            entityInfo.SetValue(SnowflakeIdGenerator.NextId());
+                            entityInfo.SetValue(SnowflakeIdGenerator.NextStrId());
+                            entityInfo.SetValue(YitIdHelper.NextId());
                         }
                         
                         // 自动填充创建时间（如果CreateTime为默认值）

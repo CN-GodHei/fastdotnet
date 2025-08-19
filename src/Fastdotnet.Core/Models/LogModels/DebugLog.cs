@@ -11,7 +11,7 @@ namespace Fastdotnet.Core.Models.LogModels;
 public class DebugLog
 {
     [SugarColumn(IsPrimaryKey = true)]
-    public string Id { get; set; } = SnowflakeIdGenerator.NextId();
+    public string Id { get; set; } = SnowflakeIdGenerator.NextStrId();
 
     /// <summary>
     /// 请求ID，用于追踪整个请求链路

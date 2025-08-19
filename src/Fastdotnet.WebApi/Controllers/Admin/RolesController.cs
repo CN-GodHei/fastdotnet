@@ -57,7 +57,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         protected override async Task BeforeCreate(FdRole entity, CreateRoleDto dto)
         {
-            var generatedCode = $"ROLE_CODE_{SnowflakeIdGenerator.NextId()}";
+            var generatedCode = $"ROLE_CODE_{SnowflakeIdGenerator.NextStrId()}";
             entity.Code = generatedCode;
             await base.BeforeCreate(entity, dto);
         }

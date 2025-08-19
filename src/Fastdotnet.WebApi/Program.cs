@@ -7,43 +7,50 @@ using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Middleware;
 using Fastdotnet.Core.Service;
-using Fastdotnet.Core.Utils;
 using Fastdotnet.Core.Settings;
-using Fastdotnet.Service.IService;
+using Fastdotnet.Core.Utils;
 using Fastdotnet.Orm;
+using Fastdotnet.Plugin.Contracts;
 using Fastdotnet.Plugin.Core.Infrastructure;
 using Fastdotnet.Service;
 using Fastdotnet.Service.Initializers;
+using Fastdotnet.Service.IService;
 using Fastdotnet.Service.IService.Admin;
 using Fastdotnet.Service.Service;
 using Fastdotnet.Service.Service.Admin;
 using Fastdotnet.Service.Service.System;
-using Fastdotnet.Plugin.Contracts;
 using Fastdotnet.WebApi.Controllers;
 using Fastdotnet.WebApi.Extensions;
 using Fastdotnet.WebApi.Filters;
 using Fastdotnet.WebApi.Middleware;
+using Fastdotnet.WebApi.Middleware.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Scrutor;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Fastdotnet.WebApi.Middleware.Authorization;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using System.Reflection;
+using System.Text;
+using Yitter.IdGenerator;
 
 var builder = WebApplication.CreateBuilder(args);
+var options = new IdGeneratorOptions(0001);
+// options.WorkerIdBitLength = 10; // 默认值6，限定 WorkerId 最大值为2^6-1，即默认最多支持64个节点。
+ options.SeqBitLength = 10; // 默认值6，限制每毫秒生成的ID个数。若生成速度超过5万个/秒，建议加大 SeqBitLength 到 10。
+
+YitIdHelper.SetIdGenerator(options);
+
 // 添加CORS服务
 builder.Services.AddCors(cors => cors.AddDefaultPolicy(policy =>
     policy.AllowAnyHeader()

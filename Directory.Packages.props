@@ -22,5 +22,6 @@
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="9.0.2" />
     <PackageVersion Include="SqlSugarCore" Version="5.1.4.199" />
+    <PackageVersion Include="Yitter.IdGenerator" Version="1.0.14" />
   </ItemGroup>
 </Project>

@@ -25,6 +25,7 @@
     <PackageReference Include="Scrutor" />
     <PackageReference Include="SqlSugarCore" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="Yitter.IdGenerator" />
   </ItemGroup>
 
   <ItemGroup>
