@@ -57,7 +57,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             // 判断是否为超管角色
             bool isSuperAdmin = await _adminUserService.IsSuperAdminAsync(userId);
             List<FdMenu> menus;
-            
+
             if (isSuperAdmin)
             {
                 // 超管获取所有菜单
@@ -77,7 +77,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 // 普通用户根据权限获取菜单
                 menus = await _menuService.GetUserMenusAsync(userId, "Admin");
             }
-            
+
             return Ok(menus);
         }
 
@@ -124,15 +124,19 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         [Authorize(Policy = Permissions.Admin.Menus.Delete)]
         public override Task<bool> Delete(string id) => base.Delete(id);
-        
+
         protected override async Task BeforeCreate(FdMenu entity, CreateMenuDto dto)
         {
             var generatedCode = $"MENU_CODE_{SnowflakeIdGenerator.NextStrId()}";
             entity.Code = generatedCode;
             //entity.ParentCode = entity.ParentCode == 0 ? null : entity.ParentCode;
+            if (string.IsNullOrEmpty(entity.ParentCode))
+            {
+                entity.ParentCode = null;
+            }
             await base.BeforeCreate(entity, dto);
         }
-        
+
         protected override async Task BeforeUpdate(FdMenu existingEntity, FdMenu updatedEntity, UpdateMenuDto dto)
         {
             // Code字段由系统自动生成，不允许修改
