@@ -26,6 +26,7 @@ namespace Fastdotnet.Service.Service
         private readonly IRepository<FdAppUserRole> _appUserRoleRepository;
         private readonly IRepository<FdRole> _roleRepository;
         private readonly JwtSettings _jwtSettings;
+        private readonly IVerificationCodeManager _verificationCodeManager;
 
         public AuthService(
             IRepository<FdAdminUser> adminUserRepository,
@@ -33,7 +34,8 @@ namespace Fastdotnet.Service.Service
             IOptions<JwtSettings> jwtSettings,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
             IRepository<FdAppUserRole> appUserRoleRepository,
-            IRepository<FdRole> roleRepository)
+            IRepository<FdRole> roleRepository,
+            IVerificationCodeManager verificationCodeManager)
         {
             _adminUserRepository = adminUserRepository;
             _appUserRepository = appUserRepository;
@@ -41,6 +43,43 @@ namespace Fastdotnet.Service.Service
             _adminUserRoleRepository = adminUserRoleRepository;
             _appUserRoleRepository = appUserRoleRepository;
             _roleRepository = roleRepository;
+            _verificationCodeManager = verificationCodeManager;
+        }
+
+        public async Task AppRegisterAsync(AppRegisterDto dto)
+        {
+            // 1. 校验验证码
+            var isCodeValid = await _verificationCodeManager.VerifyCodeAsync(dto.Email, dto.VerificationCode, null);
+            if (!isCodeValid)
+            {
+                throw new BusinessException("验证码错误或已失效");
+            }
+
+            // 2. 检查用户是否存在
+            var existingUserByUsername = await _appUserRepository.GetFirstAsync(u => u.Username == dto.Username);
+            if (existingUserByUsername != null)
+            {
+                throw new BusinessException("用户名已存在");
+            }
+
+            var existingUserByEmail = await _appUserRepository.GetFirstAsync(u => u.Email == dto.Email);
+            if (existingUserByEmail != null)
+            {
+                throw new BusinessException("该邮箱已被注册");
+            }
+
+            // 3. 创建新用户
+            var newUser = new FdAppUser
+            {
+                Username = dto.Username,
+                Password = dto.Password, // IMPORTANT: Storing plain text, following existing pattern
+                Email = dto.Email,
+                Nickname = dto.Username, // 默认昵称等于用户名
+                AvatarUrl = "", // 默认头像
+                Status = 0, // 默认状态
+            };
+
+            await _appUserRepository.InsertAsync(newUser);
         }
 
         public async Task<string> LoginAsync(LoginDto dto, string userCategory)

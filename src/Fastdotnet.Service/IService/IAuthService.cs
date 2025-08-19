@@ -12,5 +12,11 @@ namespace Fastdotnet.Service.IService
         /// <param name="userCategory">用户类别: "Admin" or "App"</param>
         /// <returns>JWT Token</returns>
         Task<string> LoginAsync(LoginDto dto, string userCategory);
+
+        /// <summary>
+        /// App端用户注册
+        /// </summary>
+        /// <param name="dto">注册信息</param>
+        Task AppRegisterAsync(AppRegisterDto dto);
     }
 }

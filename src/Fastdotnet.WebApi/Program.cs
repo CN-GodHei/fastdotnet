@@ -256,10 +256,28 @@ builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IApplicationInitializer, OrmCodeFirstInitializer>();
-builder.Services.AddScoped<IApplicationInitializer, AdminUserInitializer>();
-builder.Services.AddScoped<IApplicationInitializer, SystemConfigInitializer>();
+// 扫描并注册所有 IApplicationInitializer 实现
+builder.Services.Scan(scan => scan
+    .FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+    .AddClasses(classes => classes.AssignableTo<IApplicationInitializer>())
+    .AsImplementedInterfaces()
+    .WithScopedLifetime());
 builder.Services.AddScoped<IPermissionProvider, FrameworkPermissionProvider>();
 builder.Services.AddScoped<GlobalExceptionFilter>();
+
+// 添加内存缓存服务
+builder.Services.AddMemoryCache();
+
+// 注册邮件和验证码服务
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IVerificationCodeManager, VerificationCodeManager>();
+
+// 扫描并注册所有验证码策略
+builder.Services.Scan(scan => scan
+    .FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+    .AddClasses(classes => classes.AssignableTo<IVerificationCodeStrategy>())
+    .AsImplementedInterfaces()
+    .WithScopedLifetime());
 
 // 注册新权限同步服务
 builder.Services.AddScoped<IPermissionSyncService, PermissionSyncService>();

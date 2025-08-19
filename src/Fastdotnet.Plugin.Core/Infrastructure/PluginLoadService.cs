@@ -17,6 +17,7 @@ using Fastdotnet.Orm;
 using Microsoft.AspNetCore.Mvc;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Service;
+using Fastdotnet.Core.Initializers;
 
 namespace Fastdotnet.Plugin.Core.Infrastructure
 {
@@ -144,6 +145,12 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                         // 注册通用仓储服务，解决插件控制器中IRepository依赖注入问题
                         builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerDependency();
                         builder.RegisterGeneric(typeof(Repository<,>)).As(typeof(IRepository<,>)).InstancePerDependency();
+
+                        // 注册插件中的IApplicationInitializer实现
+                        builder.RegisterAssemblyTypes(assembly)
+                               .Where(t => typeof(IApplicationInitializer).IsAssignableFrom(t) && !t.IsAbstract)
+                               .As<IApplicationInitializer>()
+                               .InstancePerLifetimeScope();
                     });
 
                     _pluginScopes.TryAdd(pluginId, pluginScope);
@@ -157,6 +164,22 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                     {
                         var serviceProvider = new AutofacServiceProvider(pluginScope);
                         serviceProvider.UsePluginCodeFirst(assemblyForCodeFirst);
+
+                        // 执行插件的种子数据初始化器
+                        try
+                        {
+                            var initializers = pluginScope.Resolve<IEnumerable<IApplicationInitializer>>();
+                            // 仅执行当前插件的初始化器
+                            var pluginInitializers = initializers.Where(i => i.GetType().Assembly == assemblyForCodeFirst);
+                            foreach (var initializer in pluginInitializers)
+                            {
+                                await initializer.InitializeAsync();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger?.LogWarning(ex, $"执行插件 {pluginId} 的数据初始化时发生错误");
+                        }
                         
                         // 同步插件权限
                         try
