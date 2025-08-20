@@ -98,3 +98,4 @@ plugin-a-app/
 └── vite.config.ts        # Vite 配置
 
 25. qiankun 集成方案，这是一个很重要技术，需要详细说明，包括主应用和插件应用的代码结构，以及插件应用的加载和卸载机制
+26. 这是一个类似php的fastadmin的框架，不过fastdotnet是.net生态的框架，所以fastdotnet的框架和php的框架有区别，但是功能和基本要和php的框架一样
