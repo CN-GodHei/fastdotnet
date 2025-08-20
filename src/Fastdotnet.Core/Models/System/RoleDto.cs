@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Fastdotnet.Core.Models.System
 {
@@ -11,5 +12,24 @@ namespace Fastdotnet.Core.Models.System
         public string Category { get; set; }
         public bool IsSystem { get; set; }
         public DateTime CreateTime { get; set; }
+    }
+
+    public class CreateRoleDto
+    {
+        [Required(ErrorMessage = "角色名称不能为空")]
+        public string Name { get; set; }
+
+        public string? Description { get; set; }
+
+        [Required(ErrorMessage = "角色分类不能为空")]
+        public string Category { get; set; } // "Admin" or "User"
+    }
+
+    public class UpdateRoleDto
+    {
+        [Required(ErrorMessage = "角色名称不能为空")]
+        public string Name { get; set; }
+
+        public string? Description { get; set; }
     }
 }
