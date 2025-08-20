@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
+using Fastdotnet.Core.Utils.Extensions;
 
 namespace Fastdotnet.Core.Controllers
 {
@@ -23,6 +24,8 @@ namespace Fastdotnet.Core.Controllers
     public abstract class GenericDtoControllerBase<TEntity, TKey, TCreateDto, TUpdateDto, TDto> : ControllerBase
         where TEntity : BaseEntity, new()
         where TKey : IEquatable<TKey>
+        where TCreateDto : class
+        where TUpdateDto : class
     {
         protected readonly IRepository<TEntity, TKey> _repository;
         protected readonly IMapper _mapper;
@@ -97,6 +100,7 @@ namespace Fastdotnet.Core.Controllers
         [HttpPost]
         public virtual async Task<TDto> Create(TCreateDto dto)
         {
+            dto.IsValid();
             var entity = _mapper.Map<TEntity>(dto);
             
             // 可以在子类中重写BeforeCreate方法来添加自定义逻辑
@@ -140,6 +144,7 @@ namespace Fastdotnet.Core.Controllers
         [HttpPut("{id}")]
         public virtual async Task<TDto> Update(TKey id, TUpdateDto dto)
         {
+            dto.IsValid();
             var existing = await _repository.GetByIdAsync(id);
             if (existing == null)
             {
@@ -345,6 +350,8 @@ namespace Fastdotnet.Core.Controllers
     /// <typeparam name="TDto">输出 DTO 类型</typeparam>
     public abstract class GenericDtoControllerBase<TEntity, TCreateDto, TUpdateDto, TDto> : GenericDtoControllerBase<TEntity, string, TCreateDto, TUpdateDto, TDto>
         where TEntity : BaseEntity, new()
+        where TCreateDto : class
+        where TUpdateDto : class
     {
         protected GenericDtoControllerBase(IRepository<TEntity, string> repository, IMapper mapper) : base(repository, mapper)
         {
