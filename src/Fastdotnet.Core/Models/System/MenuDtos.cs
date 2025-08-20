@@ -1,6 +1,8 @@
 using AutoMapper;
 using Fastdotnet.Core.Entities.System;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
 namespace Fastdotnet.Core.Models.System
 {
@@ -30,6 +32,14 @@ namespace Fastdotnet.Core.Models.System
         public string ExternalUrl { get; set; }
         public bool IsEnabled { get; set; }
         public string PermissionCode { get; set; }
+        
+        // 新增字段 - 用于对接 vue-next-admin
+        public string? Component { get; set; }
+        public bool IsHide { get; set; }
+        public bool IsKeepAlive { get; set; }
+        public bool IsAffix { get; set; }
+        public bool IsIframe { get; set; }
+
         public List<MenuDto> Children { get; set; }
     }
 
@@ -47,6 +57,13 @@ namespace Fastdotnet.Core.Models.System
         public string ExternalUrl { get; set; }
         public bool IsEnabled { get; set; } = true;
         public string PermissionCode { get; set; }
+        
+        // 新增字段 - 用于对接 vue-next-admin
+        public string? Component { get; set; }
+        public bool IsHide { get; set; } = false;
+        public bool IsKeepAlive { get; set; } = true;
+        public bool IsAffix { get; set; } = false;
+        public bool IsIframe { get; set; } = false;
     }
 
     public class UpdateMenuDto
@@ -64,5 +81,12 @@ namespace Fastdotnet.Core.Models.System
         public string ExternalUrl { get; set; }
         public bool IsEnabled { get; set; }
         public string PermissionCode { get; set; }
+        
+        // 新增字段 - 用于对接 vue-next-admin
+        public string? Component { get; set; }
+        public bool IsHide { get; set; }
+        public bool IsKeepAlive { get; set; }
+        public bool IsAffix { get; set; }
+        public bool IsIframe { get; set; }
     }
 }

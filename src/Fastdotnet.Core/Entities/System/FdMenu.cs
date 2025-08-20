@@ -86,6 +86,32 @@ namespace Fastdotnet.Core.Entities.System
         public string PermissionCode { get; set; }
 
         /// <summary>
+        /// Vue组件路径 (例如: "home/index.vue")
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public string? Component { get; set; }
+
+        /// <summary>
+        /// 是否在导航中隐藏 (对应 vue-next-admin 的 meta.isHide)
+        /// </summary>
+        public bool IsHide { get; set; } = false;
+
+        /// <summary>
+        /// 是否缓存页面 (对应 vue-next-admin 的 meta.isKeepAlive)
+        /// </summary>
+        public bool IsKeepAlive { get; set; } = true;
+
+        /// <summary>
+        /// 是否固定标签页 (对应 vue-next-admin 的 meta.isAffix)
+        /// </summary>
+        public bool IsAffix { get; set; } = false;
+
+        /// <summary>
+        /// 是否以内嵌 iframe 打开 (对应 vue-next-admin 的 meta.isIframe)
+        /// </summary>
+        public bool IsIframe { get; set; } = false;
+
+        /// <summary>
         /// 子菜单
         /// </summary>
         [SugarColumn(IsIgnore = true)]

@@ -102,6 +102,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                     ExternalUrl = m.ExternalUrl,
                     IsEnabled = m.IsEnabled,
                     PermissionCode = m.PermissionCode,
+                    // --- 新增字段映射 ---
+                    Component = m.Component,
+                    IsHide = m.IsHide,
+                    IsKeepAlive = m.IsKeepAlive,
+                    IsAffix = m.IsAffix,
+                    IsIframe = m.IsIframe,
+                    // ---------------------
                     Children = BuildMenuTree(allMenus, m.Code)
                 })
                 .ToList();
