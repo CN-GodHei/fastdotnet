@@ -108,6 +108,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                     IsKeepAlive = m.IsKeepAlive,
                     IsAffix = m.IsAffix,
                     IsIframe = m.IsIframe,
+                    IsFdMicroApp = m.IsFdMicroApp,
                     // ---------------------
                     Children = BuildMenuTree(allMenus, m.Code)
                 })

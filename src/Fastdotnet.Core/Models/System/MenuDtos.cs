@@ -39,6 +39,7 @@ namespace Fastdotnet.Core.Models.System
         public bool IsKeepAlive { get; set; }
         public bool IsAffix { get; set; }
         public bool IsIframe { get; set; }
+        public bool IsFdMicroApp { get; set; }
 
         public List<MenuDto> Children { get; set; }
     }
@@ -64,6 +65,7 @@ namespace Fastdotnet.Core.Models.System
         public bool IsKeepAlive { get; set; } = true;
         public bool IsAffix { get; set; } = false;
         public bool IsIframe { get; set; } = false;
+        public bool IsFdMicroApp { get; set; }
     }
 
     public class UpdateMenuDto
@@ -87,6 +89,7 @@ namespace Fastdotnet.Core.Models.System
         public bool IsHide { get; set; }
         public bool IsKeepAlive { get; set; }
         public bool IsAffix { get; set; }
+        public bool IsFdMicroApp { get; set; }
         public bool IsIframe { get; set; }
     }
 }
