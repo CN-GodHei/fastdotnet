@@ -135,11 +135,6 @@ export async function setBackEndControlRefreshRoutes() {
 /**
  * 后端路由 component 转换
  * @param routes 后端返回的路由表数组
- * @returns 返回处理成函数后的 component
- */
-/**
- * 后端路由 component 转换
- * @param routes 后端返回的路由表数组
  * @returns 返回处理成函数后的 component 和符合 vue-router 格式的路由
  */
 export function backEndComponent(routes: any) {
@@ -147,6 +142,8 @@ export function backEndComponent(routes: any) {
 	if (!routes || !Array.isArray(routes)) return [];
 
 	return routes.map((item: any) => {
+		console.log("Processing menu item:", item.Name, "Path:", item.Path, "IsFdMicroApp:", item.IsFdMicroApp, "Module:", item.Module); // Log each item
+
 		// 1. 创建符合 vue-router 格式的路由对象
 		const route: any = {
 			// 映射属性名
@@ -165,6 +162,9 @@ export function backEndComponent(routes: any) {
 				isKeepAlive: item.IsKeepAlive !== undefined ? item.IsKeepAlive : true,
 				isAffix: item.IsAffix !== undefined ? item.IsAffix : false,
 				isIframe: item.IsIframe !== undefined ? item.IsIframe : false,
+				// 传递微应用相关标识
+				isFdMicroApp: item.IsFdMicroApp || false,
+				module: item.Module || '', // 传递 Module 字段作为微应用标识
 				// roles: item.Roles // 如果后端直接提供了 roles 列表
 				// 如果需要根据 PermissionCode 生成 roles，需要额外逻辑
 			},
@@ -173,8 +173,14 @@ export function backEndComponent(routes: any) {
 		};
 
 		// 2. 处理 component (优先使用后端提供的 Component 字段)
-		// 如果后端提供了 Component 路径，则生成动态导入
-		if (item.Component) {
+		// 特殊处理微应用菜单项
+		if (item.IsFdMicroApp) {
+			console.log("Setting micro app component for menu:", item.Name, item.Path); // Log when setting micro app component
+			// 为微应用菜单项设置特殊的 component
+			// 这个 component 将负责加载对应的 qiankun 微应用
+			route.component = () => import('/@/views/system/microApp/index.vue');
+		} else if (item.Component) {
+			// 如果后端提供了 Component 路径，则生成动态导入
 			// 假设后端 Component 存储的是相对路径，例如 "home/index.vue"
 			// 需要映射到实际的 views 目录下
 			// 注意：这里的路径映射逻辑可能需要根据你的实际项目结构调整

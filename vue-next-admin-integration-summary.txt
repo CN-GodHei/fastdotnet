@@ -1,74 +1,7 @@
 vue-next-admin 集成 Fastdotnet 框架 - 工作摘要
 ==================================================
 
-已完成工作 (Done)
------------------
-
-1. 环境与基础配置:
-   - 拉取 `vue-next-admin` 代码到 `Web/fastdotnet-admin` 目录。
-   - 修改 `.env.development`，将后端 API 地址指向 `http://localhost:18889`。
-
-2. 登录功能对接:
-   - 创建 `src/api/auth/index.ts`，定义适配 Fastdotnet 后端的 `adminLogin` API。
-   - 修改 `src/views/login/component/account.vue`:
-     - 引入并使用新的 `useAuthApi`。
-     - 更新登录逻辑，调用后端 `/api/auth/admin/login` 接口。
-     - 处理后端返回格式 `{ Data: { Token: ... }, Code: 0, Msg: null }`。
-     - 成功登录后存储 Token (使用 `Session.set('token', token)`)。
-   - 修改 `src/utils/request.ts` (Axios 拦截器):
-     - 请求拦截器: 自动添加 `Authorization: Bearer <token>` 头。
-     - 响应拦截器: 统一处理 `{ Data, Code, Msg }` 格式，成功时直接返回 `Data`，失败时显示错误并 `reject`。
-     - 增强错误处理的健壮性，防止访问 `undefined` 属性。
-
-3. 菜单功能对接 (核心):
-   - 修改后端 `FdMenu` 实体 (`src/Fastdotnet.Core/Entities/System/FdMenu.cs`) 和 `MenuDto` (`src/.../Models/System/MenuDtos.cs`):
-     - 新增字段以支持 vue-next-admin 元数据: `Component`, `IsHide`, `IsKeepAlive`, `IsAffix`, `IsIframe`。
-     - 移除了之前不合理的 `Roles` 字段存储方案。
-   - 修改后端 `MenusController.cs` 的 `BuildMenuTree` 方法，确保新增字段被正确映射到返回的菜单树中。
-   - 修改 `src/api/menu/index.ts`，使其调用 Fastdotnet 的 `/api/admin/menus/tree` 接口。
-   - 修改 `src/stores/themeConfig.ts`，设置 `isRequestRoutes: true` 以启用后端路由控制。
-   - 核心修改 `src/router/backEnd.ts`:
-     - 更新 `getBackEndControlRoutes` 以调用新的菜单 API 并处理返回的 `Data`。
-     - 重写 `backEndComponent` 函数，将后端 `MenuDto` 对象转换为标准的 `vue-router` `RouteRecordRaw` 对象：
-       - 映射属性名 (`Name` -> `name`, `Path` -> `path`)。
-       - 构建 `meta` 对象 (`IsHide`, `IsKeepAlive` 等)。
-       - 处理 `component` (优先使用后端 `Component` 字段，通过 `dynamicImport` 转换)。
-       - 递归处理 `Children`。
-   - 添加 `console.log` 用于调试 `backEndComponent` 的输入。
-
-4. 权限模型澄清:
-   - 明确 `FdRoleMenu` 表用于存储角色-菜单关联。
-   - 明确前端不通过 `MenuDto.Roles` 获取角色信息。
-   - 明确未来通过独立 API (如 `/api/user/buttons`) 获取用户按钮权限列表，存入 `userInfo.authBtnList`。
-
-待办工作 (To-Do)
-----------------
-
-1. 数据库迁移:
-   - 为 `FdMenu` 表创建数据库迁移脚本，添加 `Component`, `IsHide`, `IsKeepAlive`, `IsAffix`, `IsIframe` 列。
-
-2. 菜单数据填充:
-   - 更新或创建种子数据，为现有及新菜单项设置正确的 `Component` 路径值。
-   - 示例:
-     - "控制台" (Path: /dashboard) -> Component: "dashboard/index.vue"
-     - "菜单管理" (Path: /system/menu) -> Component: "system/menu/index.vue"
-     - "系统管理" (目录 Path: /system) -> Component: "layout/routerView/parent.vue" (或 null)
-
-3. qiankun 微前端集成 (核心 - 插件化):
-   - 在主应用 (`main.ts`, `vite.config.ts`) 配置 qiankun 主应用。
-   - 开发通用的 qiankun 容器组件 (`/src/layout/qiankunContainer.vue`)。
-   - 修改 `backEndComponent` 或路由生成逻辑，为 `Module` 不为 `System` 的菜单项指向 qiankun 容器组件。
-   - 确定插件注册和菜单聚合方案（安装时预置菜单 vs 运行时动态加载）。
-
-4. 用户按钮权限获取:
-   - 后端实现 API (如 `/api/user/buttons` 或整合在登录返回中) 获取当前用户的按钮权限码列表。
-   - 前端在登录成功后调用此 API，并将结果存入 `userInfo.authBtnList` Store。
-   - 在 Vue 组件中使用 `v-if="hasButtonPermission('PERM_CODE')"` 控制按钮显隐。
-
-5. 完善错误处理与用户体验:
-   - 优化登录和菜单加载失败时的用户提示。
-   - 处理网络错误、超时等异常情况。
-
-6. 测试与验证:
-   - 全面测试登录、登出、菜单加载、页面跳转、权限控制等功能。
-   - 在不同浏览器和设备上验证兼容性。
+1、目前已完成基本功能的对接登录和菜单的动态获取
+2、现在要开始集成qiankun
+3、建一个插件的前端，并让主框架内访问
+4、主应用和插件都是使用vite搭建的，要考虑qiankun和vite的兼容性

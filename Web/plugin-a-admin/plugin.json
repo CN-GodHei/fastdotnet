@@ -1,0 +1,9 @@
+{
+  "id": "PluginA",
+  "name": "Plugin A",
+  "description": "A sample qiankun micro-frontend plugin for Fastdotnet.",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "enabled": true,
+  "entryPoint": "index.html"
+}

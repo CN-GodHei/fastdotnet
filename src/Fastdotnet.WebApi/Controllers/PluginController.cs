@@ -88,6 +88,12 @@ namespace Fastdotnet.WebApi.Controllers
             return Ok(new { IsActive = _pluginLoadService.IsPluginActive(pluginId) });
         }
 
+        [HttpGet("getpluginqiankunentry/{pluginId}")]
+        public IActionResult GetPluginQiankunEntry(string pluginId)
+        {
+            return Ok(new { Entry = "//localhost:8082" });
+        }
+
         [NonAction]
         public void Test()
         {
