@@ -1,0 +1,52 @@
+using Fastdotnet.Core;
+using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Initializers;
+using Fastdotnet.Core.IService;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Fastdotnet.Service.Initializers
+{
+    public class FdMenuConfigInitializer : IApplicationInitializer
+    {
+        private readonly IRepository<FdMenu> _systemConfigRepository;
+        private readonly ILogger<FdMenuConfigInitializer> _logger;
+
+        public FdMenuConfigInitializer(IRepository<FdMenu> systemConfigRepository, ILogger<FdMenuConfigInitializer> logger)
+        {
+            _systemConfigRepository = systemConfigRepository;
+            _logger = logger;
+        }
+
+        public async Task InitializeAsync()
+        {
+            _logger.LogInformation("Start: Initializing System Config...");
+
+            if (await _systemConfigRepository.ExistsAsync(a => a.Id != null))
+            {
+                _logger.LogInformation("System config already seeded. Skipping initialization.");
+                return;
+            }
+
+
+            var configs = new List<FdMenu>
+{
+    new FdMenu { Name = "控制台", Code = "MENU_CODE_11365281228129285", Path = "/dashboard", Icon = "string", Sort = 0, Type = MenuType.Menu, Module = "string", Category = "Admin", IsExternal = false, ExternalUrl = "string", IsEnabled = true, PermissionCode = "string", Component = null, IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = false },
+
+    new FdMenu { Name = "系统管理", Code = "MENU_CODE_11365290021618693", Path = "/system", Icon = "string", Sort = 0, Type = 0, Module = "string", Category = "Admin", IsExternal = false, ExternalUrl = "string", IsEnabled = true, PermissionCode = "string", Component = null, IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = false },
+
+    new FdMenu { Name = "菜单管理", Code = "MENU_CODE_11365291745215493", Path = "/system/menu", Icon = "string", Sort = 0, Type = MenuType.Menu, Module = "string", Category = "Admin", IsExternal = false, ExternalUrl = "string", IsEnabled = true, PermissionCode = "string", Component = "/system/menu/index.vue", IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = false },
+
+    new FdMenu { Name = "Plugin A", Code = "MENU_CODE_11375905679934469", Path = "/app-plugin-a", Icon = "ele-Monitor", Sort = 100, Type = 0, Module = "PluginA", Category = "Admin", IsExternal = false, ExternalUrl = "", IsEnabled = true, PermissionCode = "", Component = "layout/routerView/parent.vue", IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = false },
+
+    new FdMenu { Name = "Plugin A Home", Code = "MENU_CODE_11375910391972869", Path = "/app-plugin-a", Icon = "ele-HomeFilled", Sort = 1, Type = MenuType.Menu, Module = "PluginA", Category = "Admin", IsExternal = false, ExternalUrl = "", IsEnabled = true, PermissionCode = "", Component = "", IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = false },
+
+    new FdMenu { Name = "Plugin A About", Code = "MENU_CODE_11375913497723909", Path = "/app-plugin-a/about", Icon = "ele-InfoFilled", Sort = 2, Type = MenuType.Menu, Module = "PluginA", Category = "Admin", IsExternal = false, ExternalUrl = "", IsEnabled = true, PermissionCode = "", Component = "", IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = false }
+};
+            await _systemConfigRepository.InsertRangeAsync(configs);
+
+            _logger.LogInformation("Finish: System Config initialization complete.");
+        }
+    }
+}
