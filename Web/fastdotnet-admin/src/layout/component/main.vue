@@ -6,7 +6,8 @@
 			wrap-class="layout-main-scroll"
 			view-class="layout-main-scroll"
 		>
-			<LayoutParentView />
+			<LayoutParentView v-show="!isMicroApp" />
+			<div id="subapp-viewport" v-show="isMicroApp" class="h100"></div>
 			<LayoutFooter v-if="isFooter" />
 		</el-scrollbar>
 		<el-backtop :target="setBacktopClass" />
@@ -32,6 +33,8 @@ const storesTagsViewRoutes = useTagsViewRoutes();
 const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const { isTagsViewCurrenFull } = storeToRefs(storesTagsViewRoutes);
+
+const isMicroApp = computed(() => route.path.startsWith('/micro/'));
 
 // 设置 footer 显示/隐藏
 const isFooter = computed(() => {

@@ -25,6 +25,8 @@ const layouModules: any = import.meta.glob('../layout/routerView/*.{vue,tsx}');
 const viewsModules: any = import.meta.glob('../views/**/*.{vue,tsx}');
 const dynamicViewsModules: Record<string, Function> = Object.assign({}, { ...layouModules }, { ...viewsModules });
 
+import { startQiankun } from '/@/main';
+
 /**
  * 后端控制路由：初始化方法，防止刷新时路由丢失
  * @method NextLoading 界面 loading 动画开始执行
@@ -54,6 +56,9 @@ export async function initBackEndControlRoutes() {
 	await setAddRoute();
 	// 设置路由到 pinia routesList 中（已处理成多级嵌套路由）及缓存多级嵌套数组处理后的一维数组
 	setFilterMenuAndCacheTagsViewRoutes();
+
+    // 在所有路由都加载完成后，启动 qiankun
+    await startQiankun();
 }
 
 /**
@@ -178,7 +183,7 @@ export function backEndComponent(routes: any) {
 			console.log("Setting micro app component for menu:", item.Name, item.Path); // Log when setting micro app component
 			// 为微应用菜单项设置特殊的 component
 			// 这个 component 将负责加载对应的 qiankun 微应用
-			route.component = () => import('/@/views/system/microApp/index.vue');
+			route.component = () => import('/@/layout/routerView/parent.vue');
 		} else if (item.Component) {
 			// 如果后端提供了 Component 路径，则生成动态导入
 			// 假设后端 Component 存储的是相对路径，例如 "home/index.vue"
