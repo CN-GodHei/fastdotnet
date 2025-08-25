@@ -170,8 +170,9 @@ export function backEndComponent(routes: any) {
 				// 传递微应用相关标识
 				isFdMicroApp: item.IsFdMicroApp || false,
 				module: item.Module || '', // 传递 Module 字段作为微应用标识
-				// roles: item.Roles // 如果后端直接提供了 roles 列表
-				// 如果需要根据 PermissionCode 生成 roles，需要额外逻辑
+                                // 关键：传递 Code 和 ParentCode 用于面包屑生成
+                                code: item.Code,
+                                parentCode: item.ParentCode,
 			},
 			// 映射 Children
 			children: item.Children || item.children || [], // 后端可能是 Children, 前端递归可能是 children
