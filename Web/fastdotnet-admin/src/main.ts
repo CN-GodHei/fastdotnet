@@ -12,12 +12,13 @@ import { useMenuApi } from '/@/api/menu';
 (window as any).Vue = Vue;
 (window as any).VueRouter = VueRouter;
 (window as any).Pinia = Pinia;
+(window as any).ElementPlus = ElementPlus;
 // --- 共享依赖结束 ---
 
 import { directive } from '/@/directive/index';
 import { i18n } from '/@/i18n/index';
 import other from '/@/utils/other';
-import ElementPlus from 'element-plus';
+import * as ElementPlus from 'element-plus';
 import '/@/theme/index.scss';
 import VueGridLayout from 'vue-grid-layout';
 
@@ -32,10 +33,6 @@ app.use(pinia).use(router).use(ElementPlus).use(i18n).use(VueGridLayout).mount('
 // 定义一个变量，防止 qiankun 被重复启动
 let qiankunStarted = false;
 export async function startQiankun() {
-    if (qiankunStarted) {
-        return;
-    }
-    qiankunStarted = true;
 
     try {
         const menuApi = useMenuApi();

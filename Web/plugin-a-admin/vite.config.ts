@@ -33,12 +33,13 @@ export default defineConfig(({ mode }) => {
         fileName: () => `plugin-a-admin.js`
       },
       rollupOptions: {
-        external: ['vue', 'vue-router', 'pinia'],
+        external: ['vue', 'vue-router', 'pinia', 'element-plus'],
         output: {
           globals: {
             vue: 'Vue',
             'vue-router': 'VueRouter',
-            pinia: 'Pinia'
+            pinia: 'Pinia',
+            'element-plus': 'ElementPlus'
           },
           assetFileNames: `assets/[name].[ext]`,
         }

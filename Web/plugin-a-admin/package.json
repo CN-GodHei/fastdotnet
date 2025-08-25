@@ -1,21 +1,19 @@
 {
   "name": "plugin-a-admin",
+  "private": true,
   "version": "1.0.0",
-  "description": "Plugin A for Fastdotnet Admin",
-  "author": "Your Name",
-  "license": "MIT",
+  "type": "module",
   "scripts": {
-    "dev": "vite", 
-    "dev:micro": "vite --mode development-micro",
-    "build": "vue-tsc && vite build",
-    "build:micro": "vite build --mode micro", 
-    "build:micro:no-check": "vite build --mode micro", 
+    "dev": "vite",
+    "build": "vue-tsc && vite build --mode micro",
+    "build:micro": "vite build --mode micro",
     "preview": "vite preview"
   },
   "dependencies": {
     "vue": "^3.4.0",
     "vue-router": "^4.2.0",
-    "pinia": "^2.1.0"
+    "pinia": "^2.1.0",
+    "element-plus": "^2.7.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",
@@ -23,6 +21,6 @@
     "vite": "^5.0.0",
     "vue-tsc": "^1.8.0",
     "@types/node": "^20.9.0",
-    "vite-plugin-qiankun": "^1.0.0"
+    "vite-plugin-qiankun": "^1.0.15"
   }
 }

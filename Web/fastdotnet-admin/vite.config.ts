@@ -20,7 +20,8 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 		plugins: [vue(), vueSetupExtend(), viteCompression(), JSON.parse(env.VITE_OPEN_CDN) ? buildConfig.cdn() : null],
 		root: process.cwd(),
 		resolve: { alias },
-		base: mode.command === 'serve' ? './' : env.VITE_PUBLIC_PATH,
+		base: mode.command === 'serve' ? '/' : env.VITE_PUBLIC_PATH,
+		appType: 'spa', // 关键: 添加SPA模式，处理history模式刷新404问题
 		optimizeDeps: { exclude: ['vue-demi'] },
 		server: {
 			host: '0.0.0.0',

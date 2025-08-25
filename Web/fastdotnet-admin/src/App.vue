@@ -10,7 +10,7 @@
 
 <script setup lang="ts" name="app">
 import { defineAsyncComponent, computed, ref, onBeforeMount, onMounted, onUnmounted, nextTick, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
@@ -19,6 +19,7 @@ import other from '/@/utils/other';
 import { Local, Session } from '/@/utils/storage';
 import mittBus from '/@/utils/mitt';
 import setIntroduction from '/@/utils/setIconfont';
+import { startQiankun } from '/@/main';
 
 // 引入组件
 const LockScreen = defineAsyncComponent(() => import('/@/layout/lockScreen/index.vue'));
@@ -30,6 +31,7 @@ const Upgrade = defineAsyncComponent(() => import('/@/layout/upgrade/index.vue')
 const { messages, locale } = useI18n();
 const setingsRef = ref();
 const route = useRoute();
+const router = useRouter(); // <--- 获取 router 实例
 const stores = useTagsViewRoutes();
 const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
@@ -66,6 +68,11 @@ onBeforeMount(() => {
 });
 // 页面加载时
 onMounted(() => {
+    // 确保路由准备就绪后再启动 qiankun，解决硬刷新后首次加载微应用失败的问题
+    router.isReady().then(() => {
+        startQiankun();
+    });
+
 	nextTick(() => {
 		// 监听布局配'置弹窗点击打开
 		mittBus.on('openSetingsDrawer', () => {
