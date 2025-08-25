@@ -21,12 +21,8 @@ const init = (props: any = {}) => {
   app.use(router)
   app.use(pinia)
   
-  const mountPoint = container ? container.querySelector('#app') : document.getElementById('app')
-  if (mountPoint) {
-    app.mount(mountPoint)
-  } else {
-    console.error('Failed to find mount point for standalone app')
-  }
+  const mountPoint = container ? container : '#app'
+  app.mount(mountPoint)
   
   return { 
     app, 
@@ -42,6 +38,7 @@ const init = (props: any = {}) => {
 }
 
 if (!(window as any).__POWERED_BY_QIANKUN__) {
+  console.log('[PluginA] not 我进来了');
   init()
 }
 

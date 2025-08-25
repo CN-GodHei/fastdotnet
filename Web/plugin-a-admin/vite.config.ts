@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
       }
     },
     server: {
-      port: 8082, // 确保端口与您部署和访问的一致
+      port: 8089, // 确保端口与您部署和访问的一致
       headers: {
         'Access-Control-Allow-Origin': '*',
       },

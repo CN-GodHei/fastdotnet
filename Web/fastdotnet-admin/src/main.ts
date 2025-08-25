@@ -46,18 +46,23 @@ export async function startQiankun() {
             for (const menu of menus) {
                 if (menu.IsFdMicroApp && menu.Module) {
                     if (!microAppConfigs.has(menu.Module)) {
-                        const entry = menu.EntryPoint || `//localhost:8083`;
-                        const appName = `app-${menu.Module}`;
+                        const entry = menu.EntryPoint || `//localhost:8082`;
+                        const appName = `${menu.Module}`;
+                        const activeRule = `/micro/${menu.Module}`;
                         microAppConfigs.set(menu.Module, {
                             name: appName,
                             entry: entry,
                             container: '#subapp-viewport',
-                            activeRule: `/micro/${menu.Module}`,
+                            activeRule: activeRule,
+                            props: {
+                                base: activeRule,
+                            },
                         });
                     }
                 }
-                if (menu.children && menu.children.length > 0) {
-                    extractMicroApps(menu.children);
+                const children = menu.children || menu.Children;
+                if (children && children.length > 0) {
+                    extractMicroApps(children);
                 }
             }
         };
@@ -65,6 +70,7 @@ export async function startQiankun() {
 
         const apps = Array.from(microAppConfigs.values());
         if (apps.length > 0) {
+            console.log('[MainApp] Registering micro-apps with this configuration:', apps);
             registerMicroApps(apps, {
                 beforeLoad: app => {
                     console.log('[MainApp] before load', app.name);

@@ -6,8 +6,8 @@
 			wrap-class="layout-main-scroll"
 			view-class="layout-main-scroll"
 		>
-			<LayoutParentView v-show="!isMicroApp" />
-			<div id="subapp-viewport" v-show="isMicroApp" class="h100"></div>
+			<LayoutParentView />
+			<div id="subapp-viewport" class="h100"></div>
 			<LayoutFooter v-if="isFooter" />
 		</el-scrollbar>
 		<el-backtop :target="setBacktopClass" />
