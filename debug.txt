@@ -17,319 +17,22 @@ prepare.js:1 🍍 "keepALiveNames" store installed 🆕
 main.ts:73 [MainApp] Registering micro-apps with this configuration: (2) [{…}, {…}]
 main.ts:85 [qiankun] prefetch starting for apps... (2) [{…}, {…}]
 main.ts:89 [MainApp] Qiankun started with apps: (2) [{…}, {…}]
-main.ts:29 [Vue Router warn]: Record with path "/dashboard" is either missing a "component(s)" or "children" property.
-warn @ vue-router.js?v=2b1aeed3:50
-extractComponentsGuards @ vue-router.js?v=2b1aeed3:1445
-(anonymous) @ vue-router.js?v=2b1aeed3:2490
-Promise.then
-navigate @ vue-router.js?v=2b1aeed3:2488
-pushWithRedirect @ vue-router.js?v=2b1aeed3:2391
-(anonymous) @ vue-router.js?v=2b1aeed3:2419
-Promise.then
-pushWithRedirect @ vue-router.js?v=2b1aeed3:2401
-push @ vue-router.js?v=2b1aeed3:2327
-install @ vue-router.js?v=2b1aeed3:2682
-use @ chunk-6D7MZTDA.js?v=c42b540a:5247
-(anonymous) @ main.ts:29
-vue-router.js?v=2b1aeed3:50 [Vue Router warn]: Record with path "/dashboard" is either missing a "component(s)" or "children" property.
-warn @ vue-router.js?v=2b1aeed3:50
-extractComponentsGuards @ vue-router.js?v=2b1aeed3:1445
-navigate @ vue-router.js?v=2b1aeed3:2450
-pushWithRedirect @ vue-router.js?v=2b1aeed3:2391
-push @ vue-router.js?v=2b1aeed3:2327
-handleMenuItemClick @ element-plus.js?v=2d3f2bea:35568
-handleClick @ element-plus.js?v=2d3f2bea:35814
-callWithErrorHandling @ chunk-6D7MZTDA.js?v=c42b540a:2507
-callWithAsyncErrorHandling @ chunk-6D7MZTDA.js?v=c42b540a:2514
-invoker @ chunk-6D7MZTDA.js?v=c42b540a:11573
-vue-router.js?v=2b1aeed3:50 [Vue Router warn]: Record with path "/dashboard" is either missing a "component(s)" or "children" property.
-warn @ vue-router.js?v=2b1aeed3:50
-extractComponentsGuards @ vue-router.js?v=2b1aeed3:1445
-navigate @ vue-router.js?v=2b1aeed3:2450
-(anonymous) @ vue-router.js?v=2b1aeed3:2545
-(anonymous) @ vue-router.js?v=2b1aeed3:317
-popStateHandler @ vue-router.js?v=2b1aeed3:316
-(anonymous) @ qiankun.js?v=f524cc2e:4060
-changeLocation @ vue-router.js?v=2b1aeed3:393
-push @ vue-router.js?v=2b1aeed3:437
-finalizeNavigation @ vue-router.js?v=2b1aeed3:2521
-(anonymous) @ vue-router.js?v=2b1aeed3:2433
-Promise.then
-pushWithRedirect @ vue-router.js?v=2b1aeed3:2401
-push @ vue-router.js?v=2b1aeed3:2327
-handleMenuItemClick @ element-plus.js?v=2d3f2bea:35568
-handleClick @ element-plus.js?v=2d3f2bea:35814
-callWithErrorHandling @ chunk-6D7MZTDA.js?v=c42b540a:2507
-callWithAsyncErrorHandling @ chunk-6D7MZTDA.js?v=c42b540a:2514
-invoker @ chunk-6D7MZTDA.js?v=c42b540a:11573
-main.ts:76 [MainApp] before load plugin-a
-plugin-a-admin.js:1 [PluginA] mounting with props: {container: Proxy(HTMLDocument)}
-plugin-a-admin.js:1 [Vue Router warn]: No match found for location with path "/micro/plugin-a/about"
-warn @ vue-router.js?v=2b1aeed3:50
-resolve @ vue-router.js?v=2b1aeed3:2243
-pushWithRedirect @ vue-router.js?v=2b1aeed3:2359
-push @ vue-router.js?v=2b1aeed3:2327
-install @ vue-router.js?v=2b1aeed3:2682
-use @ chunk-6D7MZTDA.js?v=c42b540a:5247
-a @ plugin-a-admin.js:1
-A @ plugin-a-admin.js:1
-eval @ VM26820:5
-eval @ VM26820:8
-evalCode @ qiankun.js?v=f524cc2e:4599
-geval2 @ qiankun.js?v=f524cc2e:4987
-exec @ qiankun.js?v=f524cc2e:4999
-schedule @ qiankun.js?v=f524cc2e:5036
-schedule @ qiankun.js?v=f524cc2e:5040
-(anonymous) @ qiankun.js?v=f524cc2e:5045
-(anonymous) @ qiankun.js?v=f524cc2e:5044
-Promise.then
-_execScripts @ qiankun.js?v=f524cc2e:4979
-execScripts @ qiankun.js?v=f524cc2e:5095
-_callee17$ @ qiankun.js?v=f524cc2e:7491
-(anonymous) @ qiankun.js?v=f524cc2e:305
-(anonymous) @ qiankun.js?v=f524cc2e:93
-(anonymous) @ qiankun.js?v=f524cc2e:39
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3478
-_next @ qiankun.js?v=f524cc2e:3490
-Promise.then
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
-_next @ qiankun.js?v=f524cc2e:3490
-Promise.then
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
-_next @ qiankun.js?v=f524cc2e:3490
-Promise.then
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
-_next @ qiankun.js?v=f524cc2e:3490
-Promise.then
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
-_next @ qiankun.js?v=f524cc2e:3490
-Promise.then
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
-_next @ qiankun.js?v=f524cc2e:3490
-(anonymous) @ qiankun.js?v=f524cc2e:3495
-(anonymous) @ qiankun.js?v=f524cc2e:3487
-_loadApp @ qiankun.js?v=f524cc2e:7777
-loadApp @ qiankun.js?v=f524cc2e:7403
-_callee3$ @ qiankun.js?v=f524cc2e:7974
-(anonymous) @ qiankun.js?v=f524cc2e:305
-(anonymous) @ qiankun.js?v=f524cc2e:93
-(anonymous) @ qiankun.js?v=f524cc2e:39
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3478
-_next @ qiankun.js?v=f524cc2e:3490
-Promise.then
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
-_next @ qiankun.js?v=f524cc2e:3490
-(anonymous) @ qiankun.js?v=f524cc2e:3495
-(anonymous) @ qiankun.js?v=f524cc2e:3487
-app2 @ qiankun.js?v=f524cc2e:8013
-(anonymous) @ qiankun.js?v=f524cc2e:4001
-Promise.then
-(anonymous) @ qiankun.js?v=f524cc2e:4000
-Promise.then
-X @ qiankun.js?v=f524cc2e:3999
-(anonymous) @ qiankun.js?v=f524cc2e:4322
-(anonymous) @ qiankun.js?v=f524cc2e:4321
-Promise.then
-g2 @ qiankun.js?v=f524cc2e:4313
-Rt @ qiankun.js?v=f524cc2e:4298
-ot @ qiankun.js?v=f524cc2e:4055
-(anonymous) @ qiankun.js?v=f524cc2e:4060
-changeLocation @ vue-router.js?v=2b1aeed3:393
-push @ vue-router.js?v=2b1aeed3:437
-finalizeNavigation @ vue-router.js?v=2b1aeed3:2521
-(anonymous) @ vue-router.js?v=2b1aeed3:2433
-Promise.then
-pushWithRedirect @ vue-router.js?v=2b1aeed3:2401
-push @ vue-router.js?v=2b1aeed3:2327
-handleMenuItemClick @ element-plus.js?v=2d3f2bea:35568
-handleClick @ element-plus.js?v=2d3f2bea:35814
-callWithErrorHandling @ chunk-6D7MZTDA.js?v=c42b540a:2507
-callWithAsyncErrorHandling @ chunk-6D7MZTDA.js?v=c42b540a:2514
-invoker @ chunk-6D7MZTDA.js?v=c42b540a:11573
-plugin-a-admin.js:1 [Vue warn]: There is already an app instance mounted on the host container.
- If you want to mount another app on the same host container, you need to unmount the previous app by calling `app.unmount()` first.
-warn$1 @ chunk-6D7MZTDA.js?v=c42b540a:2423
-mount @ chunk-6D7MZTDA.js?v=c42b540a:5301
-app.mount @ chunk-6D7MZTDA.js?v=c42b540a:12841
-a @ plugin-a-admin.js:1
-A @ plugin-a-admin.js:1
-eval @ VM26820:5
-eval @ VM26820:8
-evalCode @ qiankun.js?v=f524cc2e:4599
-geval2 @ qiankun.js?v=f524cc2e:4987
-exec @ qiankun.js?v=f524cc2e:4999
-schedule @ qiankun.js?v=f524cc2e:5036
-schedule @ qiankun.js?v=f524cc2e:5040
-(anonymous) @ qiankun.js?v=f524cc2e:5045
-(anonymous) @ qiankun.js?v=f524cc2e:5044
-Promise.then
-_execScripts @ qiankun.js?v=f524cc2e:4979
-execScripts @ qiankun.js?v=f524cc2e:5095
-_callee17$ @ qiankun.js?v=f524cc2e:7491
-(anonymous) @ qiankun.js?v=f524cc2e:305
-(anonymous) @ qiankun.js?v=f524cc2e:93
-(anonymous) @ qiankun.js?v=f524cc2e:39
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3478
-_next @ qiankun.js?v=f524cc2e:3490
-Promise.then
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
-_next @ qiankun.js?v=f524cc2e:3490
-Promise.then
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
-_next @ qiankun.js?v=f524cc2e:3490
-Promise.then
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
-_next @ qiankun.js?v=f524cc2e:3490
-Promise.then
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
-_next @ qiankun.js?v=f524cc2e:3490
-Promise.then
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
-_next @ qiankun.js?v=f524cc2e:3490
-(anonymous) @ qiankun.js?v=f524cc2e:3495
-(anonymous) @ qiankun.js?v=f524cc2e:3487
-_loadApp @ qiankun.js?v=f524cc2e:7777
-loadApp @ qiankun.js?v=f524cc2e:7403
-_callee3$ @ qiankun.js?v=f524cc2e:7974
-(anonymous) @ qiankun.js?v=f524cc2e:305
-(anonymous) @ qiankun.js?v=f524cc2e:93
-(anonymous) @ qiankun.js?v=f524cc2e:39
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3478
-_next @ qiankun.js?v=f524cc2e:3490
-Promise.then
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
-_next @ qiankun.js?v=f524cc2e:3490
-(anonymous) @ qiankun.js?v=f524cc2e:3495
-(anonymous) @ qiankun.js?v=f524cc2e:3487
-app2 @ qiankun.js?v=f524cc2e:8013
-(anonymous) @ qiankun.js?v=f524cc2e:4001
-Promise.then
-(anonymous) @ qiankun.js?v=f524cc2e:4000
-Promise.then
-X @ qiankun.js?v=f524cc2e:3999
-(anonymous) @ qiankun.js?v=f524cc2e:4322
-(anonymous) @ qiankun.js?v=f524cc2e:4321
-Promise.then
-g2 @ qiankun.js?v=f524cc2e:4313
-Rt @ qiankun.js?v=f524cc2e:4298
-ot @ qiankun.js?v=f524cc2e:4055
-(anonymous) @ qiankun.js?v=f524cc2e:4060
-changeLocation @ vue-router.js?v=2b1aeed3:393
-push @ vue-router.js?v=2b1aeed3:437
-finalizeNavigation @ vue-router.js?v=2b1aeed3:2521
-(anonymous) @ vue-router.js?v=2b1aeed3:2433
-Promise.then
-pushWithRedirect @ vue-router.js?v=2b1aeed3:2401
-push @ vue-router.js?v=2b1aeed3:2327
-handleMenuItemClick @ element-plus.js?v=2d3f2bea:35568
-handleClick @ element-plus.js?v=2d3f2bea:35814
-callWithErrorHandling @ chunk-6D7MZTDA.js?v=c42b540a:2507
-callWithAsyncErrorHandling @ chunk-6D7MZTDA.js?v=c42b540a:2514
-invoker @ chunk-6D7MZTDA.js?v=c42b540a:11573
-plugin-a-admin.js:1 [PluginA] bootstraped
-plugin-a-admin.js:1 [PluginA] unmounting
-qiankun.js?v=f524cc2e:6326 [qiankun:sandbox] plugin-a modified global properties restore... ['PluginA']
-qiankun.js?v=f524cc2e:7257 Uncaught QiankunError2: application 'plugin-a' died in status NOT_MOUNTED: [qiankun]: Target container with #subapp-viewport not existed while plugin-a mounting!
+qiankun.js?v=f524cc2e:7257 Uncaught QiankunError2: application 'plugin-b' died in status LOADING_SOURCE_CODE: [qiankun]: Target container with #subapp-viewport not existed while plugin-b loading!
     at assertElementExist (http://localhost:18888/node_modules/.vite/deps/qiankun.js?v=f524cc2e:7257:13)
     at render2 (http://localhost:18888/node_modules/.vite/deps/qiankun.js?v=f524cc2e:7368:7)
-    at _callee5$ (http://localhost:18888/node_modules/.vite/deps/qiankun.js?v=f524cc2e:7579:25)
+    at _callee17$ (http://localhost:18888/node_modules/.vite/deps/qiankun.js?v=f524cc2e:7452:11)
     at http://localhost:18888/node_modules/.vite/deps/qiankun.js?v=f524cc2e:305:23
     at Generator.<anonymous> (http://localhost:18888/node_modules/.vite/deps/qiankun.js?v=f524cc2e:93:60)
     at Generator.next (http://localhost:18888/node_modules/.vite/deps/qiankun.js?v=f524cc2e:39:25)
     at asyncGeneratorStep (http://localhost:18888/node_modules/.vite/deps/qiankun.js?v=f524cc2e:3478:20)
     at _next (http://localhost:18888/node_modules/.vite/deps/qiankun.js?v=f524cc2e:3490:9)
-    at http://localhost:18888/node_modules/.vite/deps/qiankun.js?v=f524cc2e:3495:7
-    at new Promise (<anonymous>)
 assertElementExist @ qiankun.js?v=f524cc2e:7257
 render2 @ qiankun.js?v=f524cc2e:7368
-_callee5$ @ qiankun.js?v=f524cc2e:7579
+_callee17$ @ qiankun.js?v=f524cc2e:7452
 (anonymous) @ qiankun.js?v=f524cc2e:305
 (anonymous) @ qiankun.js?v=f524cc2e:93
 (anonymous) @ qiankun.js?v=f524cc2e:39
 asyncGeneratorStep @ qiankun.js?v=f524cc2e:3478
-_next @ qiankun.js?v=f524cc2e:3490
-(anonymous) @ qiankun.js?v=f524cc2e:3495
-(anonymous) @ qiankun.js?v=f524cc2e:3487
-(anonymous) @ qiankun.js?v=f524cc2e:3811
-Promise.then
-(anonymous) @ qiankun.js?v=f524cc2e:3810
-(anonymous) @ qiankun.js?v=f524cc2e:3809
-(anonymous) @ qiankun.js?v=f524cc2e:3970
-q @ qiankun.js?v=f524cc2e:3968
-(anonymous) @ qiankun.js?v=f524cc2e:3861
-Promise.then
-B @ qiankun.js?v=f524cc2e:3860
-(anonymous) @ qiankun.js?v=f524cc2e:4387
-Promise.then
-(anonymous) @ qiankun.js?v=f524cc2e:4386
-Promise.then
-It @ qiankun.js?v=f524cc2e:4385
-(anonymous) @ qiankun.js?v=f524cc2e:4323
-Promise.then
-(anonymous) @ qiankun.js?v=f524cc2e:4322
-(anonymous) @ qiankun.js?v=f524cc2e:4321
-Promise.then
-g2 @ qiankun.js?v=f524cc2e:4313
-Rt @ qiankun.js?v=f524cc2e:4298
-ot @ qiankun.js?v=f524cc2e:4055
-(anonymous) @ qiankun.js?v=f524cc2e:4060
-changeLocation @ vue-router.js?v=2b1aeed3:393
-push @ vue-router.js?v=2b1aeed3:437
-finalizeNavigation @ vue-router.js?v=2b1aeed3:2521
-(anonymous) @ vue-router.js?v=2b1aeed3:2433
-Promise.then
-pushWithRedirect @ vue-router.js?v=2b1aeed3:2401
-push @ vue-router.js?v=2b1aeed3:2327
-handleMenuItemClick @ element-plus.js?v=2d3f2bea:35568
-handleClick @ element-plus.js?v=2d3f2bea:35814
-callWithErrorHandling @ chunk-6D7MZTDA.js?v=c42b540a:2507
-callWithAsyncErrorHandling @ chunk-6D7MZTDA.js?v=c42b540a:2514
-invoker @ chunk-6D7MZTDA.js?v=c42b540a:11573
-chunk-6D7MZTDA.js?v=c42b540a:11973 Uncaught (in promise) TypeError: Cannot read properties of null (reading 'nextSibling')
-    at nextSibling (chunk-6D7MZTDA.js?v=c42b540a:11973:35)
-    at removeFragment (chunk-6D7MZTDA.js?v=c42b540a:7220:14)
-    at remove2 (chunk-6D7MZTDA.js?v=c42b540a:7191:9)
-    at unmount (chunk-6D7MZTDA.js?v=c42b540a:7169:9)
-    at unmountComponent (chunk-6D7MZTDA.js?v=c42b540a:7254:7)
-    at unmount (chunk-6D7MZTDA.js?v=c42b540a:7134:7)
-    at unmountComponent (chunk-6D7MZTDA.js?v=c42b540a:7254:7)
-    at unmount (chunk-6D7MZTDA.js?v=c42b540a:7134:7)
-    at patch (chunk-6D7MZTDA.js?v=c42b540a:5934:7)
-    at render2 (chunk-6D7MZTDA.js?v=c42b540a:7295:7)
-nextSibling @ chunk-6D7MZTDA.js?v=c42b540a:11973
-removeFragment @ chunk-6D7MZTDA.js?v=c42b540a:7220
-remove2 @ chunk-6D7MZTDA.js?v=c42b540a:7191
-unmount @ chunk-6D7MZTDA.js?v=c42b540a:7169
-unmountComponent @ chunk-6D7MZTDA.js?v=c42b540a:7254
-unmount @ chunk-6D7MZTDA.js?v=c42b540a:7134
-unmountComponent @ chunk-6D7MZTDA.js?v=c42b540a:7254
-unmount @ chunk-6D7MZTDA.js?v=c42b540a:7134
-patch @ chunk-6D7MZTDA.js?v=c42b540a:5934
-render2 @ chunk-6D7MZTDA.js?v=c42b540a:7295
-mount @ chunk-6D7MZTDA.js?v=c42b540a:5323
-app.mount @ chunk-6D7MZTDA.js?v=c42b540a:12841
-a @ plugin-a-admin.js:1
-A @ plugin-a-admin.js:1
-eval @ VM26820:5
-eval @ VM26820:8
-evalCode @ qiankun.js?v=f524cc2e:4599
-geval2 @ qiankun.js?v=f524cc2e:4987
-exec @ qiankun.js?v=f524cc2e:4999
-schedule @ qiankun.js?v=f524cc2e:5036
-schedule @ qiankun.js?v=f524cc2e:5040
-(anonymous) @ qiankun.js?v=f524cc2e:5045
-(anonymous) @ qiankun.js?v=f524cc2e:5044
-Promise.then
-_execScripts @ qiankun.js?v=f524cc2e:4979
-execScripts @ qiankun.js?v=f524cc2e:5095
-_callee17$ @ qiankun.js?v=f524cc2e:7491
-(anonymous) @ qiankun.js?v=f524cc2e:305
-(anonymous) @ qiankun.js?v=f524cc2e:93
-(anonymous) @ qiankun.js?v=f524cc2e:39
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3478
-_next @ qiankun.js?v=f524cc2e:3490
-Promise.then
-asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
 _next @ qiankun.js?v=f524cc2e:3490
 Promise.then
 asyncGeneratorStep @ qiankun.js?v=f524cc2e:3482
@@ -364,25 +67,33 @@ Promise.then
 (anonymous) @ qiankun.js?v=f524cc2e:4000
 Promise.then
 X @ qiankun.js?v=f524cc2e:3999
-(anonymous) @ qiankun.js?v=f524cc2e:4322
-(anonymous) @ qiankun.js?v=f524cc2e:4321
+(anonymous) @ qiankun.js?v=f524cc2e:4304
 Promise.then
-g2 @ qiankun.js?v=f524cc2e:4313
+d2 @ qiankun.js?v=f524cc2e:4303
 Rt @ qiankun.js?v=f524cc2e:4298
-ot @ qiankun.js?v=f524cc2e:4055
-(anonymous) @ qiankun.js?v=f524cc2e:4060
-changeLocation @ vue-router.js?v=2b1aeed3:393
-push @ vue-router.js?v=2b1aeed3:437
-finalizeNavigation @ vue-router.js?v=2b1aeed3:2521
-(anonymous) @ vue-router.js?v=2b1aeed3:2433
+bt @ qiankun.js?v=f524cc2e:4210
+(anonymous) @ qiankun.js?v=f524cc2e:7961
+registerMicroApps @ qiankun.js?v=f524cc2e:7959
+startQiankun @ main.ts:74
+await in startQiankun
+initBackEndControlRoutes @ backEnd.ts:61
+await in initBackEndControlRoutes
+(anonymous) @ index.ts:115
+(anonymous) @ vue-router.js?v=2b1aeed3:1404
+runWithContext @ vue-router.js?v=2b1aeed3:1379
+(anonymous) @ vue-router.js?v=2b1aeed3:1404
+(anonymous) @ vue-router.js?v=2b1aeed3:1382
+runWithContext @ chunk-6D7MZTDA.js?v=c42b540a:5384
+runWithContext @ vue-router.js?v=2b1aeed3:2445
+(anonymous) @ vue-router.js?v=2b1aeed3:2717
 Promise.then
-pushWithRedirect @ vue-router.js?v=2b1aeed3:2401
+(anonymous) @ vue-router.js?v=2b1aeed3:2717
+runGuardQueue @ vue-router.js?v=2b1aeed3:2717
+(anonymous) @ vue-router.js?v=2b1aeed3:2464
+Promise.then
+navigate @ vue-router.js?v=2b1aeed3:2458
+pushWithRedirect @ vue-router.js?v=2b1aeed3:2391
 push @ vue-router.js?v=2b1aeed3:2327
-handleMenuItemClick @ element-plus.js?v=2d3f2bea:35568
-handleClick @ element-plus.js?v=2d3f2bea:35814
-callWithErrorHandling @ chunk-6D7MZTDA.js?v=c42b540a:2507
-callWithAsyncErrorHandling @ chunk-6D7MZTDA.js?v=c42b540a:2514
-invoker @ chunk-6D7MZTDA.js?v=c42b540a:11573
-defaults.vue:35 Uncaught TypeError: Cannot read properties of null (reading 'update')
-    at updateScrollbar (defaults.vue:35:27)
-    at defaults.vue:43:4
+install @ vue-router.js?v=2b1aeed3:2682
+use @ chunk-6D7MZTDA.js?v=c42b540a:5247
+(anonymous) @ main.ts:29

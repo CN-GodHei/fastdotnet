@@ -1,36 +1,45 @@
 import { createApp, type App as VueApp } from 'vue';
+import { createRouter, createWebHistory, type Router } from 'vue-router';
+import { createPinia, type Pinia } from 'pinia';
 import App from './App.vue';
-import { renderWithQiankun, qiankunWindow } from 'vite-plugin-qiankun/dist/helper';
+import routes from './router';
 
 let app: VueApp | null = null;
 
-function render(props: any) {
+const init = (props: any = {}) => {
   const { container } = props;
-  const mountPoint = container ? container : '#app';
+  
   app = createApp(App);
+  
+  const historyBase = (window as any).__POWERED_BY_QIANKUN__ ? props.base : '/';
+  const router = createRouter({
+    history: createWebHistory(historyBase),
+    routes,
+  });
+
+  const pinia = createPinia();
+
+  app.use(router);
+  app.use(pinia);
+  
+  const mountPoint = container ? container : '#app';
   app.mount(mountPoint);
+  
+  return {
+    app,
+    router,
+    pinia,
+    unmount() {
+      if (app) {
+        app.unmount();
+        app = null;
+      }
+    },
+  };
+};
+
+if (!(window as any).__POWERED_BY_QIANKUN__) {
+  init();
 }
 
-renderWithQiankun({
-  mount(props) {
-    console.log('[PluginB] mount');
-    render(props);
-  },
-  bootstrap() {
-    console.log('[PluginB] bootstrap');
-  },
-  unmount() {
-    console.log('[PluginB] unmount');
-    if (app) {
-      app.unmount();
-      app = null;
-    }
-  },
-  update(props) {
-    console.log('[PluginB] update');
-  },
-});
-
-if (!qiankunWindow.__POWERED_BY_QIANKUN__) {
-  render({});
-}
+export default init;

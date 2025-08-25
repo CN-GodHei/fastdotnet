@@ -42,11 +42,26 @@ export async function startQiankun() {
         const allMenus = await menuApi.getUserMenuTree();
 
         const microAppConfigs = new Map();
+
+        // 临时的调试函数，用于根据插件模块名获取本地开发服务器入口
+        const getDebugEntry = (moduleName: string) => {
+            const lowerCaseModule = moduleName.toLowerCase();
+            if (lowerCaseModule.includes('plugin-a')) {
+                return '//localhost:8082';
+            }
+            if (lowerCaseModule.includes('plugin-b')) {
+                return '//localhost:8083';
+            }
+            return null; // 如果没有匹配，则返回 null
+        };
+
         const extractMicroApps = (menus: any[]) => {
             for (const menu of menus) {
                 if (menu.IsFdMicroApp && menu.Module) {
                     if (!microAppConfigs.has(menu.Module)) {
-                        const entry = menu.EntryPoint || `//localhost:8082`;
+                        // 优先使用调试入口，如果不存在，则使用后端提供的 EntryPoint
+                        // const entry = menu.EntryPoint || `//localhost:8082`;
+                        const entry = getDebugEntry(menu.Module) || menu.EntryPoint;
                         const appName = `${menu.Module}`;
                         const activeRule = `/micro/${menu.Module}`;
                         microAppConfigs.set(menu.Module, {
