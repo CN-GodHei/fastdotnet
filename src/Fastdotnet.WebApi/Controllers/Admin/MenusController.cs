@@ -110,6 +110,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                     IsIframe = m.IsIframe,
                     IsFdMicroApp = m.IsFdMicroApp,
                     // ---------------------
+                    PluginId =m.PluginId,
                     Children = BuildMenuTree(allMenus, m.Code)
                 })
                 .ToList();

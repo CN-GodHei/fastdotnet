@@ -8,9 +8,9 @@ export default defineConfig(({ mode }) => {
     plugins: [
       vue(),
       // 关键：为微应用启用 qiankun 插件
-      // 'plugin-a' 是微应用的唯一名称，必须和主应用注册时一致
+      // '11375910391972869' 是微应用的唯一名称，必须和主应用注册时一致
       // useDevMode: true 可确保在开发模式下也能正确处理模块导出
-      qiankun('plugin-a', {
+      qiankun('11375910391972869', {
         useDevMode: true
       })
     ],

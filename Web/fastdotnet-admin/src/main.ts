@@ -37,31 +37,35 @@ export async function startQiankun() {
     try {
         const menuApi = useMenuApi();
         const allMenus = await menuApi.getUserMenuTree();
-
         const microAppConfigs = new Map();
 
-        // 临时的调试函数，用于根据插件模块名获取本地开发服务器入口
-        const getDebugEntry = (moduleName: string) => {
-            const lowerCaseModule = moduleName.toLowerCase();
-            if (lowerCaseModule.includes('plugin-a')) {
-                return '//localhost:8082';
+        // 临时的调试函数，用于根据插件ID获取本地开发服务器入口
+        const getDebugEntry = (pluginId: string) => {
+            // 检查当前是否为开发环境
+            const isDevelopment = import.meta.env.MODE === 'development';
+
+            if (isDevelopment) {
+                // 在开发环境中，可以为特定插件ID指定本地开发服务器入口
+                if (pluginId === '这是你开发时的插件Id，为了避免重复编译才能测试，你可以在这里指定本地开发服务器入口') {
+                    return '//localhost:8082';
+                }
+                // 可以为更多插件添加调试入口
             }
-            if (lowerCaseModule.includes('plugin-b')) {
-                return '//localhost:8083';
-            }
-            return null; // 如果没有匹配，则返回 null
+            return null; // 如果没有匹配或者不是开发环境，则返回 null
         };
 
         const extractMicroApps = (menus: any[]) => {
             for (const menu of menus) {
-                if (menu.IsFdMicroApp && menu.Module) {
-                    if (!microAppConfigs.has(menu.Module)) {
-                        // 优先使用调试入口，如果不存在，则使用后端提供的 EntryPoint
-                        // const entry = menu.EntryPoint || `//localhost:8082`;
-                        const entry = getDebugEntry(menu.Module) || menu.EntryPoint;
-                        const appName = `${menu.Module}`;
-                        const activeRule = `/micro/${menu.Module}`;
-                        microAppConfigs.set(menu.Module, {
+                if (menu.IsFdMicroApp && menu.PluginId) {
+                    if (!microAppConfigs.has(menu.PluginId)) {
+                            let entry = getDebugEntry(menu.PluginId);                                       
+                        // 如果还是没有entry，则使用默认的插件地址                                                       
+                        if (!entry) {                                                                                    
+                                entry = import.meta.env.VITE_API_URL+"/plugins/"+menu.PluginId+"/index.html";                
+                        }
+                        const appName = `${menu.PluginId}`;
+                        const activeRule = `/micro/${menu.PluginId}`;
+                        microAppConfigs.set(menu.PluginId, {
                             name: appName,
                             entry: entry,
                             container: '#subapp-viewport',
