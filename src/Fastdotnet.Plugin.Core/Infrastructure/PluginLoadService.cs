@@ -1,5 +1,4 @@
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
+using Fastdotnet.Core.Middleware;
 using Fastdotnet.Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -18,6 +17,8 @@ using Microsoft.AspNetCore.Mvc;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Service;
 using Fastdotnet.Core.Initializers;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 
 namespace Fastdotnet.Plugin.Core.Infrastructure
 {
@@ -40,17 +41,19 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         private readonly ILifetimeScope _rootLifetimeScope;
         private readonly ILogger<PluginLoadService> _logger;
         private readonly ILoggerFactory _loggerFactory;
+        private readonly PluginStaticFileProviderRegistry _registry;
 
         private readonly ConcurrentDictionary<string, ILifetimeScope> _pluginScopes = new();
         private readonly string _pluginsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
         private bool _disposed = false;
 
-        public PluginLoadService(PluginManager pluginManager, ILifetimeScope lifetimeScope, ILogger<PluginLoadService> logger, ILoggerFactory loggerFactory)
+        public PluginLoadService(PluginManager pluginManager, ILifetimeScope lifetimeScope, ILogger<PluginLoadService> logger, ILoggerFactory loggerFactory, PluginStaticFileProviderRegistry registry)
         {
             _pluginManager = pluginManager;
             _rootLifetimeScope = lifetimeScope;
             _logger = logger;
             _loggerFactory = loggerFactory;
+            _registry = registry;
         }
 
         public bool TryGetPluginScope(string pluginId, [MaybeNullWhen(false)] out ILifetimeScope scope)
@@ -81,16 +84,16 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         {
             if (IsPluginActive(pluginId)) return new ApiResult() { Code = 200, Msg = $"插件 {pluginId} 已启用。" };
 
+            var pluginDir = Path.Combine(_pluginsPath, pluginId);
+            if (!Directory.Exists(pluginDir)) return new ApiResult() { Code = -1, Msg = $"找不到插件目录" };
+
             Assembly assembly = _pluginManager.GetPluginAssembly(pluginId);
             System.Runtime.Loader.AssemblyLoadContext loadContext = _pluginManager.GetPluginContext(pluginId);
 
             if (assembly == null)
             {
-                var pluginDir = Path.Combine(_pluginsPath, pluginId);
-                if (!Directory.Exists(pluginDir)) return new ApiResult() { Code = -1, Msg = $"找不到插件目录" } ;
-
                 var configPath = Path.Combine(pluginDir, "plugin.json");
-                if (!File.Exists(configPath)) return new ApiResult() { Code = -1, Msg = $"找不到plugin.json。" } ;
+                if (!File.Exists(configPath)) return new ApiResult() { Code = -1, Msg = $"找不到plugin.json。" };
 
                 var configJson = await File.ReadAllTextAsync(configPath);
                 var config = JsonSerializer.Deserialize<PluginConfig>(configJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -129,13 +132,13 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                     {
                         var tempPluginInstance = (IPlugin)Activator.CreateInstance(pluginType);
                         tempPluginInstance.ConfigureServices(builder);
-                        
+
                         builder.RegisterType(pluginType).As<IPlugin>().InstancePerLifetimeScope();
                         builder.RegisterAssemblyTypes(assembly)
                                .Where(t => typeof(ControllerBase).IsAssignableFrom(t))
                                .AsSelf()
                                .InstancePerDependency();
-                        
+
                         // 注册插件中的IPermissionProvider实现
                         builder.RegisterAssemblyTypes(assembly)
                                .Where(t => typeof(IPermissionProvider).IsAssignableFrom(t) && !t.IsAbstract)
@@ -156,7 +159,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                     _pluginScopes.TryAdd(pluginId, pluginScope);
 
                     var pluginInstance = pluginScope.Resolve<IPlugin>();
-                    
+
                     // 添加插件的CodeFirst支持
                     // 使用已经加载的程序集，避免重复加载
                     var assemblyForCodeFirst = _pluginManager.GetPluginAssembly(pluginId);
@@ -180,16 +183,16 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                         {
                             _logger?.LogWarning(ex, $"执行插件 {pluginId} 的数据初始化时发生错误");
                         }
-                        
+
                         // 同步插件权限
                         try
                         {
                             // 只获取插件程序集中的IPermissionProvider实现
                             var permissionProviders = pluginScope.Resolve<IEnumerable<IPermissionProvider>>()
                                 .Where(p => p.GetType().Assembly == assemblyForCodeFirst);
-                            
+
                             var permissionSyncService = pluginScope.Resolve<IPermissionSyncService>();
-                            
+
                             foreach (var provider in permissionProviders)
                             {
                                 await permissionSyncService.SyncPluginPermissionsAsync(provider, pluginId);
@@ -200,10 +203,18 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                             _logger?.LogWarning(ex, $"同步插件 {pluginId} 的权限时发生错误");
                         }
                     }
-                    
+
                     await pluginInstance.InitializeAsync(new AutofacServiceProvider(pluginScope));
                     await pluginInstance.StartAsync();
                 }
+
+                // Register static files
+                var pluginWwwRoot = Path.Combine(pluginDir, "wwwroot");
+                if (Directory.Exists(pluginWwwRoot))
+                {
+                    _registry.Register($"/plugins/{pluginId}", pluginWwwRoot);
+                }
+
                 _logger?.LogInformation($"插件 {pluginId} 启用成功。");
                 return new ApiResult() { Code = 200, Msg = $"插件 {pluginId} 启用成功。" };
             }
@@ -217,6 +228,9 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
 
         public async Task<ApiResult> DisablePluginAsync(string pluginId)
         {
+            // Unregister static files first
+            _registry.Unregister($"/plugins/{pluginId}");
+
             if (!IsPluginActive(pluginId)) return new ApiResult() { Code = 200, Msg = $"插件 {pluginId} 已停用。" };
 
             var activePlugins = GetActivePlugins();
@@ -248,7 +262,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                     var plugin = pluginScope.Resolve<IPlugin>();
                     await plugin.StopAsync();
                     await plugin.UnloadAsync(new AutofacServiceProvider(pluginScope));
-                    
+
                     pluginScope.Dispose();
                     _logger?.LogInformation("插件 [{pluginId}] 的DI作用域已成功销毁。", pluginId);
                 }
@@ -299,10 +313,10 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             {
                 return new ApiResult() { Code = -1, Msg = $"无法卸载，请先停用插件。" };
             }
-            
+
             if (_pluginManager.IsPluginLoaded(pluginId))
             {
-                 _pluginManager.UnloadPlugin(pluginId);
+                _pluginManager.UnloadPlugin(pluginId);
             }
 
             try
@@ -324,7 +338,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
 
         public bool IsPluginActive(string pluginId) => _pluginScopes.ContainsKey(pluginId);
         public IEnumerable<string> GetActivePlugins() => _pluginScopes.Keys;
-        
+
         public IEnumerable<PluginConfig> GetLoadedPlugins() => _pluginManager.GetLoadedPluginConfigs();
 
         public void Dispose()
@@ -340,7 +354,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
             }
             GC.SuppressFinalize(this);
         }
-        
+
         public void StartInstalledPlugins()
         {
             var pluginDirs = Directory.GetDirectories(_pluginsPath)

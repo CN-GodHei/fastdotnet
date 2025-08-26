@@ -47,7 +47,7 @@ using Yitter.IdGenerator;
 var builder = WebApplication.CreateBuilder(args);
 var options = new IdGeneratorOptions(0001);
 // options.WorkerIdBitLength = 10; // 默认值6，限定 WorkerId 最大值为2^6-1，即默认最多支持64个节点。
- options.SeqBitLength = 10; // 默认值6，限制每毫秒生成的ID个数。若生成速度超过5万个/秒，建议加大 SeqBitLength 到 10。
+options.SeqBitLength = 10; // 默认值6，限制每毫秒生成的ID个数。若生成速度超过5万个/秒，建议加大 SeqBitLength 到 10。
 
 YitIdHelper.SetIdGenerator(options);
 
@@ -302,11 +302,13 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     containerBuilder.RegisterType<PluginManager>().AsSelf().SingleInstance();
+    containerBuilder.RegisterType<PluginStaticFileProviderRegistry>().AsSelf().SingleInstance();
     containerBuilder.Register(c => new PluginLoadService(
         c.Resolve<PluginManager>(),
         c.Resolve<ILifetimeScope>(),
         c.Resolve<ILogger<PluginLoadService>>(),
-        c.Resolve<ILoggerFactory>()
+        c.Resolve<ILoggerFactory>(),
+        c.Resolve<PluginStaticFileProviderRegistry>()
     )).As<IPluginLoadService>().SingleInstance();
     containerBuilder.RegisterType<PluginActionDescriptorProvider>().As<IActionDescriptorProvider>().SingleInstance();
 
@@ -383,6 +385,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseMiddleware<RequestIdMiddleware>();
 app.UseMiddleware<OperationLogMiddleware>();
+app.UseMiddleware<PluginStaticFileMiddleware>();
 app.UseMiddleware<DynamicMiddlewareDispatcher>();
 app.UseAuthentication();
 app.UseAuthorization();
