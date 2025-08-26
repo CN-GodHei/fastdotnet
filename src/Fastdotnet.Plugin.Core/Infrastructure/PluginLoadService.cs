@@ -1,24 +1,26 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Fastdotnet.Core.Initializers;
+using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Middleware;
 using Fastdotnet.Core.Models;
+using Fastdotnet.Core.Service;
+using Fastdotnet.Orm;
+using Fastdotnet.Plugin.Contracts;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System;
-using Fastdotnet.Plugin.Contracts;
-using Fastdotnet.Orm;
-using Microsoft.AspNetCore.Mvc;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Service;
-using Fastdotnet.Core.Initializers;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 
 namespace Fastdotnet.Plugin.Core.Infrastructure
 {
@@ -214,7 +216,8 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 {
                     _registry.Register($"/plugins/{pluginId}", pluginWwwRoot);
                 }
-
+                // 更新 plugin.json 文件，将 enabled 设置为 true
+                await UpdatePluginConfigEnabledAsync(pluginId, true);
                 _logger?.LogInformation($"插件 {pluginId} 启用成功。");
                 return new ApiResult() { Code = 200, Msg = $"插件 {pluginId} 启用成功。" };
             }
@@ -255,6 +258,8 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
 
             try
             {
+                // 更新 plugin.json 文件，将 enabled 设置为 false
+                await UpdatePluginConfigEnabledAsync(pluginId, false);
                 var assembly = _pluginManager.GetPluginAssembly(pluginId);
 
                 if (_pluginScopes.TryRemove(pluginId, out var pluginScope))
@@ -373,5 +378,29 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 }
             }
         }
+
+        private async Task UpdatePluginConfigEnabledAsync(string pluginId, bool enabled)
+        {
+            var pluginConfig = _pluginManager.GetPluginConfig(pluginId);
+            if (pluginConfig != null)
+            {
+                var pluginDir = Path.Combine(_pluginsPath, pluginId);
+                var configPath = Path.Combine(pluginDir, "plugin.json");
+                if (File.Exists(configPath))
+                {
+                    pluginConfig.enabled = enabled;
+                    var options = new JsonSerializerOptions
+                    {
+                        WriteIndented = true,
+                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping // 防止中文被编码为\uXXXX                                                                                                     
+                    };
+                    var updatedConfigJson = JsonSerializer.Serialize(pluginConfig, options);
+                    await File.WriteAllTextAsync(configPath, updatedConfigJson, Encoding.UTF8);
+                    _logger?.LogInformation($"插件 {pluginId} 的 plugin.json 文件已更新，enabled 设置为 {enabled}。");
+                }
+            }
+        }
+
+
     }
 }

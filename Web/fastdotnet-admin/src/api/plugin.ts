@@ -1,74 +1,44 @@
 import request from '/@/utils/request'
 
-// 插件数据类型定义
+// 插件数据类型定义 (根据后端接口调整)
 export interface Plugin {
-  id: string
-  name: string           // 插件名称
-  code: string           // 插件代码
-  version: string        // 插件版本
-  description: string    // 插件描述
-  author: string         // 插件作者
-  enabled: boolean       // 是否启用
-  entryPoint: string     // 入口地址
-  category: 'Admin' | 'App' // 插件分类
-  createdAt: string      // 创建时间
-  updatedAt: string      // 更新时间
+  id: string            // 插件ID
+  name: string          // 插件名称
+  version: string       // 插件版本
+  description: string   // 插件描述
+  enabled: boolean      // 是否启用
+  author: string        // 插件作者
+  entryPoint: string    // 入口地址
 }
 
-// 获取插件列表
-export const getPluginList = () => {
+// 扫描插件
+export const scanPlugins = () => {
   return request({
-    url: '/api/admin/plugins', // 根据你的实际 API 地址调整
+    url: '/api/plugin/scan',
     method: 'get'
-  })
-}
-
-// 获取插件详情
-export const getPluginById = (id: string) => {
-  return request({
-    url: `/api/admin/plugins/${id}`, // 根据你的实际 API 地址调整
-    method: 'get'
-  })
-}
-
-// 创建插件
-export const createPlugin = (data: Partial<Plugin>) => {
-  return request({
-    url: '/api/admin/plugins', // 根据你的实际 API 地址调整
-    method: 'post',
-    data
-  })
-}
-
-// 更新插件
-export const updatePlugin = (id: string, data: Partial<Plugin>) => {
-  return request({
-    url: `/api/admin/plugins/${id}`, // 根据你的实际 API 地址调整
-    method: 'put',
-    data
-  })
-}
-
-// 删除插件
-export const deletePlugin = (id: string) => {
-  return request({
-    url: `/api/admin/plugins/${id}`, // 根据你的实际 API 地址调整
-    method: 'delete'
   })
 }
 
 // 启用插件
-export const enablePlugin = (id: string) => {
+export const enablePlugin = (pluginId: string) => {
   return request({
-    url: `/api/admin/plugins/${id}/enable`, // 根据你的实际 API 地址调整
+    url: `/api/plugin/enable/${pluginId}`,
     method: 'post'
   })
 }
 
 // 禁用插件
-export const disablePlugin = (id: string) => {
+export const disablePlugin = (pluginId: string) => {
   return request({
-    url: `/api/admin/plugins/${id}/disable`, // 根据你的实际 API 地址调整
+    url: `/api/plugin/disable/${pluginId}`,
+    method: 'post'
+  })
+}
+
+// 卸载插件
+export const uninstallPlugin = (pluginId: string) => {
+  return request({
+    url: `/api/plugin/uninstall/${pluginId}`,
     method: 'post'
   })
 }

@@ -87,33 +87,5 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         {
             return Ok(new { IsActive = _pluginLoadService.IsPluginActive(pluginId) });
         }
-
-        [HttpGet("getpluginqiankunentry/{pluginId}")]
-        public IActionResult GetPluginQiankunEntry(string pluginId)
-        {
-            return Ok(new { Entry = "//localhost:8082" });
-        }
-
-        [NonAction]
-        public void Test()
-        {
-            Console.WriteLine("这是一个测试方法");
-        }
-        [HttpGet("gc")]
-        public void ForceGC()
-        {
-            // The final breakthrough: It appears two full, blocking GC cycles are required.
-            // The first cycle runs the finalizers of any lingering objects.
-            // The second cycle collects the now-unreferenced AssemblyLoadContext itself.
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
-            GC.WaitForPendingFinalizers();
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
-            Console.WriteLine("First GC cycle completed.");
-
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
-            GC.WaitForPendingFinalizers();
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
-            Console.WriteLine("Second GC cycle completed.");
-        }
     }
 }
