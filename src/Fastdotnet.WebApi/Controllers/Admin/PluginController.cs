@@ -6,7 +6,7 @@ using System;
 using Fastdotnet.Core.Utils;
 using Microsoft.Extensions.Logging;
 
-namespace Fastdotnet.WebApi.Controllers
+namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
     [Route("api/[controller]")]
