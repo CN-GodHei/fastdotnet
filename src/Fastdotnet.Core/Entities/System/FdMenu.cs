@@ -117,5 +117,7 @@ namespace Fastdotnet.Core.Entities.System
         [SugarColumn(IsIgnore = true)]
         public List<FdMenu> Children { get; set; }
         public bool IsFdMicroApp { get; set; }
+
+        public string PluginId { get; set; }
     }
 }
