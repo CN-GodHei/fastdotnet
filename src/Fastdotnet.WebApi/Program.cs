@@ -151,6 +151,8 @@ builder.Services.AddSwaggerGen(c =>
     // 添加文档过滤器
     c.DocumentFilter<PluginDocumentFilter>();
     c.DocumentFilter<TagOrderDocumentFilter>();
+    // 添加操作过滤器，为继承自GenericDtoControllerBase的控制器生成文档
+    c.OperationFilter<InheritedGenericControllerOperationFilter>();
 
     // 启用 XML 文档注释
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
