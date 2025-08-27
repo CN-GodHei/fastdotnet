@@ -9,6 +9,7 @@ using Fastdotnet.Core.Middleware;
 using Fastdotnet.Core.Service;
 using Fastdotnet.Core.Settings;
 using Fastdotnet.Core.Utils;
+using Fastdotnet.Core.Utils.Extensions;
 using Fastdotnet.Orm;
 using Fastdotnet.Plugin.Contracts;
 using Fastdotnet.Plugin.Core.Infrastructure;
@@ -268,6 +269,9 @@ builder.Services.AddScoped<GlobalExceptionFilter>();
 // 添加内存缓存服务
 builder.Services.AddMemoryCache();
 
+// 添加混合缓存服务
+builder.Services.AddHybridCacheService(builder.Configuration);
+
 // 注册邮件和验证码服务
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IVerificationCodeManager, VerificationCodeManager>();
@@ -328,6 +332,9 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 
         return config.CreateMapper();
     }).As<IMapper>().InstancePerLifetimeScope();
+    
+    // 如果需要在Autofac中进行更精细的缓存服务控制，可以在这里添加
+    // containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().InstancePerLifetimeScope();
 });
 
 // 3. 构建并运行应用
