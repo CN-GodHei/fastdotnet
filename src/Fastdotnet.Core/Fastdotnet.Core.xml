@@ -1,0 +1,2064 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Fastdotnet.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Fastdotnet.Core.Attributes.AutoInjectAttribute">
+            <summary>
+            用于标记需要自动注入的服务类
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Attributes.AutoInjectAttribute.Lifetime">
+            <summary>
+            服务生命周期
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Attributes.AutoInjectAttribute.#ctor(Microsoft.Extensions.DependencyInjection.ServiceLifetime)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="lifetime">服务生命周期，默认为Scoped</param>
+        </member>
+        <member name="T:Fastdotnet.Core.Attributes.CacheResultAttribute">
+            <summary>
+            控制器方法缓存特性
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Attributes.CacheResultAttribute.KeyPrefix">
+            <summary>
+            缓存键前缀
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Attributes.CacheResultAttribute.ExpirationSeconds">
+            <summary>
+            缓存过期时间（秒）
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Attributes.CacheResultAttribute.Enabled">
+            <summary>
+            是否启用缓存
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Attributes.CacheResultAttribute.CacheResultData">
+            <summary>
+            缓存结果数据类
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Attributes.CacheResultAttribute.GenerateCacheKey(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            生成缓存键
+            </summary>
+            <param name="context">动作执行上下文</param>
+            <returns>缓存键</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Attributes.CacheResultAttribute.GenerateParameterSignature(System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            生成参数签名
+            </summary>
+            <param name="parameters">参数字典</param>
+            <returns>参数签名</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Attributes.CacheResultAttribute.GetCacheTags(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            获取缓存标签
+            </summary>
+            <param name="context">动作执行上下文</param>
+            <returns>标签数组</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Attributes.CacheTagAttribute">
+            <summary>
+            缓存标签属性，用于对缓存项进行分类管理
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Attributes.CacheTagAttribute.Tag">
+            <summary>
+            标签名称
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Attributes.CacheTagAttribute.#ctor(System.String)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="tag">标签名称</param>
+        </member>
+        <member name="T:Fastdotnet.Core.Attributes.SkipGlobalResultAttribute">
+            <summary>
+            跳过全局返回结果处理的特性
+            添加此特性的控制器或方法将不会被全局结果过滤器处理
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Constants.Permissions">
+            <summary>
+            定义系统中所有权限的静态常量
+            格式：范围.模块.操作
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Constants.SystemConstants">
+            <summary>
+            系统常量配置
+            </summary>
+        </member>
+        <member name="F:Fastdotnet.Core.Constants.SystemConstants.SystemName">
+            <summary>
+            系统名称
+            </summary>
+        </member>
+        <member name="F:Fastdotnet.Core.Constants.SystemConstants.Version">
+            <summary>
+            系统版本
+            </summary>
+        </member>
+        <member name="F:Fastdotnet.Core.Constants.SystemConstants.JwtSecretKey">
+            <summary>
+            JWT密钥
+            </summary>
+        </member>
+        <member name="F:Fastdotnet.Core.Constants.SystemConstants.JwtExpiresMinutes">
+            <summary>
+            JWT过期时间（分钟）
+            </summary>
+        </member>
+        <member name="F:Fastdotnet.Core.Constants.SystemConstants.DefaultPageSize">
+            <summary>
+            默认分页大小
+            </summary>
+        </member>
+        <member name="F:Fastdotnet.Core.Constants.SystemConstants.MaxPageSize">
+            <summary>
+            最大分页大小
+            </summary>
+        </member>
+        <member name="F:Fastdotnet.Core.Constants.SystemConstants.PasswordKey">
+            <summary>
+            密码加密密钥
+            </summary>
+        </member>
+        <member name="F:Fastdotnet.Core.Constants.SystemConstants.SuperAdminRoleCode">
+            <summary>
+            超级管理员角色编码
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Controllers.GenericControllerBase`2">
+            <summary>
+            通用控制器基类，提供基本的CRUD操作
+            </summary>
+            <typeparam name="TEntity">实体类型</typeparam>
+            <typeparam name="TKey">主键类型</typeparam>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.GetAll">
+            <summary>
+            获取所有实体
+            </summary>
+            <returns>实体列表</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.GetById(`1)">
+            <summary>
+            根据ID获取实体
+            </summary>
+            <param name="id">实体ID</param>
+            <returns>实体对象</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.GetPage(System.Int32,System.Int32)">
+            <summary>
+            分页获取实体
+            </summary>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.GetPageByCondition(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32)">
+            <summary>
+            根据条件分页获取实体
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.Create(`0)">
+            <summary>
+            创建实体
+            </summary>
+            <param name="entity">实体对象</param>
+            <returns>创建后的实体</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.BeforeCreate(`0)">
+            <summary>
+            创建实体前的钩子方法，可在子类中重写以添加自定义逻辑
+            </summary>
+            <param name="entity">要创建的实体</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.AfterCreate(`0)">
+            <summary>
+            创建实体后的钩子方法，可在子类中重写以添加自定义逻辑
+            </summary>
+            <param name="entity">已创建的实体</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.Update(`1,`0)">
+            <summary>
+            更新实体
+            </summary>
+            <param name="id">实体ID</param>
+            <param name="entity">实体对象</param>
+            <returns>更新后的实体</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.BeforeUpdate(`0,`0)">
+            <summary>
+            更新实体前的钩子方法，可在子类中重写以添加自定义逻辑
+            </summary>
+            <param name="existing">数据库中已存在的实体</param>
+            <param name="updated">更新后的实体</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.AfterUpdate(`0)">
+            <summary>
+            更新实体后的钩子方法，可在子类中重写以添加自定义逻辑
+            </summary>
+            <param name="entity">已更新的实体</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.Delete(`1)">
+            <summary>
+            删除实体
+            </summary>
+            <param name="id">实体ID</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.BeforeDelete(`0)">
+            <summary>
+            删除实体前的钩子方法，可在子类中重写以添加自定义逻辑
+            </summary>
+            <param name="entity">要删除的实体</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.AfterDelete(`1,System.Boolean)">
+            <summary>
+            删除实体后的钩子方法，可在子类中重写以添加自定义逻辑
+            </summary>
+            <param name="id">被删除的实体ID</param>
+            <param name="result">删除操作结果</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.BatchDelete(System.Collections.Generic.List{`1})">
+            <summary>
+            批量删除实体
+            </summary>
+            <param name="ids">ID列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.GetRecycleBin(System.Int32,System.Int32)">
+            <summary>
+            获取回收站数据（已软删除的数据）
+            </summary>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.SearchRecycleBin(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32)">
+            <summary>
+            根据条件查询回收站数据
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.Restore(`1)">
+            <summary>
+            恢复回收站中的实体
+            </summary>
+            <param name="id">实体ID</param>
+            <returns>是否恢复成功</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.RestoreBatch(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            批量恢复回收站中的实体
+            </summary>
+            <param name="whereExpression">条件表达式</param>
+            <returns>恢复成功的数量</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.PermanentDelete(`1)">
+            <summary>
+            永久删除回收站中的实体
+            </summary>
+            <param name="id">实体ID</param>
+            <returns>是否删除成功</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericControllerBase`2.PermanentDeleteBatch(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            根据条件永久删除回收站中的实体
+            </summary>
+            <param name="whereExpression">条件表达式</param>
+            <returns>删除成功的数量</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Controllers.GenericControllerBase`1">
+            <summary>
+            通用控制器基类，默认主键为string
+            </summary>
+            <typeparam name="TEntity">实体类型</typeparam>
+        </member>
+        <member name="T:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5">
+            <summary>
+            支持 DTO 的通用控制器基类
+            </summary>
+            <typeparam name="TEntity">实体类型</typeparam>
+            <typeparam name="TKey">主键类型</typeparam>
+            <typeparam name="TCreateDto">创建 DTO 类型</typeparam>
+            <typeparam name="TUpdateDto">更新 DTO 类型</typeparam>
+            <typeparam name="TDto">输出 DTO 类型</typeparam>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.GetAll">
+            <summary>
+            获取所有实体
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.GetById(`1)">
+            <summary>
+            根据ID获取实体
+            </summary>
+            <param name="id">实体ID</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.GetPage(System.Int32,System.Int32)">
+            <summary>
+            分页获取实体
+            </summary>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.GetPageByCondition(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32)">
+            <summary>
+            根据条件分页获取实体
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.Create(`2)">
+            <summary>
+            创建实体
+            </summary>
+            <param name="dto">创建 DTO 对象</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.BeforeCreate(`0,`2)">
+            <summary>
+            创建实体前的钩子方法，可在子类中重写以添加自定义逻辑
+            </summary>
+            <param name="entity">要创建的实体</param>
+            <param name="dto">创建 DTO</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.AfterCreate(`0,`2)">
+            <summary>
+            创建实体后的钩子方法，可在子类中重写以添加自定义逻辑
+            </summary>
+            <param name="entity">已创建的实体</param>
+            <param name="dto">创建 DTO</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.Update(`1,`3)">
+            <summary>
+            更新实体
+            </summary>
+            <param name="id">实体ID</param>
+            <param name="dto">更新 DTO 对象</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.BeforeUpdate(`0,`0,`3)">
+            <summary>
+            更新实体前的钩子方法，可在子类中重写以添加自定义逻辑
+            </summary>
+            <param name="existing">数据库中已存在的实体</param>
+            <param name="updated">更新后的实体</param>
+            <param name="dto">更新 DTO</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.AfterUpdate(`0,`3)">
+            <summary>
+            更新实体后的钩子方法，可在子类中重写以添加自定义逻辑
+            </summary>
+            <param name="entity">已更新的实体</param>
+            <param name="dto">更新 DTO</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.Delete(`1)">
+            <summary>
+            删除实体
+            </summary>
+            <param name="id">实体ID</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.BeforeDelete(`0)">
+            <summary>
+            删除实体前的钩子方法，可在子类中重写以添加自定义逻辑
+            </summary>
+            <param name="entity">要删除的实体</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.AfterDelete(`1,System.Boolean)">
+            <summary>
+            删除实体后的钩子方法，可在子类中重写以添加自定义逻辑
+            </summary>
+            <param name="id">被删除的实体ID</param>
+            <param name="result">删除操作结果</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.BatchDelete(System.Collections.Generic.List{`1})">
+            <summary>
+            批量删除实体
+            </summary>
+            <param name="ids">ID列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.GetRecycleBin(System.Int32,System.Int32)">
+            <summary>
+            获取回收站数据（已软删除的数据）
+            </summary>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.SearchRecycleBin(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32)">
+            <summary>
+            根据条件查询回收站数据
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.Restore(`1)">
+            <summary>
+            恢复回收站中的实体
+            </summary>
+            <param name="id">实体ID</param>
+            <returns>是否恢复成功</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.RestoreBatch(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            批量恢复回收站中的实体
+            </summary>
+            <param name="whereExpression">条件表达式</param>
+            <returns>恢复成功的数量</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.PermanentDelete(`1)">
+            <summary>
+            永久删除回收站中的实体
+            </summary>
+            <param name="id">实体ID</param>
+            <returns>是否删除成功</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.PermanentDeleteBatch(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            根据条件永久删除回收站中的实体
+            </summary>
+            <param name="whereExpression">条件表达式</param>
+            <returns>删除成功的数量</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Controllers.GenericDtoControllerBase`4">
+            <summary>
+            支持 DTO 的通用控制器基类，默认主键为string
+            </summary>
+            <typeparam name="TEntity">实体类型</typeparam>
+            <typeparam name="TCreateDto">创建 DTO 类型</typeparam>
+            <typeparam name="TUpdateDto">更新 DTO 类型</typeparam>
+            <typeparam name="TDto">输出 DTO 类型</typeparam>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.Admin.FdAdminUser">
+            <summary>
+            后台管理员表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.Admin.FdAdminUser.Username">
+            <summary>
+            登录用户名 (必须唯一)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.Admin.FdAdminUser.Password">
+            <summary>
+            哈希后的密码
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.Admin.FdAdminUser.FullName">
+            <summary>
+            真实姓名
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.Admin.FdAdminUser.Email">
+            <summary>
+            管理员邮箱
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.Admin.FdAdminUser.Phone">
+            <summary>
+            联系电话
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.Admin.FdAdminUser.IsActive">
+            <summary>
+            账户是否激活
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.Admin.FdAdminUser.LastLoginTime">
+            <summary>
+            最后登录时间
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.Admin.FdAdminUser.LastLoginIp">
+            <summary>
+            最后登录IP
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.Admin.FdAdminUserRole">
+            <summary>
+            后台管理员角色关联表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.Admin.FdAdminUserRole.AdminUserId">
+            <summary>
+            管理员用户ID
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.Admin.FdAdminUserRole.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.App.FdAppUser">
+            <summary>
+            前台应用用户表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.App.FdAppUser.Username">
+            <summary>
+            登录用户名 (可选, 可能使用手机或邮箱登录)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.App.FdAppUser.Password">
+            <summary>
+            哈希后的密码
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.App.FdAppUser.Email">
+            <summary>
+            邮箱 (可用于登录, 必须唯一)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.App.FdAppUser.PhoneNumber">
+            <summary>
+            手机号 (可用于登录, 必须唯一)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.App.FdAppUser.Nickname">
+            <summary>
+            用户昵称
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.App.FdAppUser.AvatarUrl">
+            <summary>
+            用户头像URL
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.App.FdAppUser.Status">
+            <summary>
+            账户状态 (0:正常, 1:待验证, 2:已禁用)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.App.FdAppUser.RegistrationDate">
+            <summary>
+            注册时间
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.App.FdAppUser.LastLoginTime">
+            <summary>
+            最后登录时间
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.App.FdAppUserRole">
+            <summary>
+            前台用户角色关联表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.App.FdAppUserRole.AppUserId">
+            <summary>
+            应用用户ID
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.App.FdAppUserRole.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.System.EmailConfig">
+            <summary>
+            邮件服务配置
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.EmailConfig.Host">
+            <summary>
+            SMTP服务器地址
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.EmailConfig.Port">
+            <summary>
+            SMTP服务器端口
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.EmailConfig.Username">
+            <summary>
+            SMTP用户名
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.EmailConfig.Password">
+            <summary>
+            SMTP密码或授权码 (注意：生产环境建议使用更安全的加密或密钥管理方案)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.EmailConfig.SenderEmail">
+            <summary>
+            发件人邮箱
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.EmailConfig.SenderName">
+            <summary>
+            发件人名称
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.EmailConfig.EnableSsl">
+            <summary>
+            是否启用SSL
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.System.FdMenu">
+            <summary>
+            菜单表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.Name">
+            <summary>
+            菜单名称
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.Code">
+            <summary>
+            菜单代码
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.Path">
+            <summary>
+            菜单路径（用于前端路由）
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.Icon">
+            <summary>
+            菜单图标
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.ParentCode">
+            <summary>
+            父级菜单Code
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.Sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.Type">
+            <summary>
+            菜单类型 (目录/菜单)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.Module">
+            <summary>
+            所属模块 (System/PluginId)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.Category">
+            <summary>
+            菜单分类: Admin/App
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.IsExternal">
+            <summary>
+            是否外链
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.ExternalUrl">
+            <summary>
+            外链地址
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.IsEnabled">
+            <summary>
+            是否启用
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.PermissionCode">
+            <summary>
+            关联的权限代码 (关联FdPermission)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.Component">
+            <summary>
+            Vue组件路径 (例如: "home/index.vue")
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.IsHide">
+            <summary>
+            是否在导航中隐藏 (对应 vue-next-admin 的 meta.isHide)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.IsKeepAlive">
+            <summary>
+            是否缓存页面 (对应 vue-next-admin 的 meta.isKeepAlive)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.IsAffix">
+            <summary>
+            是否固定标签页 (对应 vue-next-admin 的 meta.isAffix)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.IsIframe">
+            <summary>
+            是否以内嵌 iframe 打开 (对应 vue-next-admin 的 meta.isIframe)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.Children">
+            <summary>
+            子菜单
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.System.FdMenuButton">
+            <summary>
+            菜单按钮表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenuButton.Name">
+            <summary>
+            按钮名称
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenuButton.Code">
+            <summary>
+            按钮代码（用于前端标识）
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenuButton.Description">
+            <summary>
+            按钮描述
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenuButton.MenuId">
+            <summary>
+            关联的菜单ID
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenuButton.Module">
+            <summary>
+            所属模块 (System/PluginId)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenuButton.Category">
+            <summary>
+            按钮分类: Admin/App
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenuButton.Sort">
+            <summary>
+            排序
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenuButton.PermissionCode">
+            <summary>
+            关联的权限代码 (关联FdPermission)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenuButton.IsEnabled">
+            <summary>
+            是否启用
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.System.FdPermission">
+            <summary>
+            权限表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdPermission.Name">
+            <summary>
+            权限名称
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdPermission.Code">
+            <summary>
+            权限代码 (e.g., "admin.user.create")
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdPermission.Description">
+            <summary>
+            权限描述
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdPermission.Module">
+            <summary>
+            所属模块（主框架/插件标识）
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdPermission.Type">
+            <summary>
+            权限类型 (e.g., "Menu", "Api", "Data")
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdPermission.Category">
+            <summary>
+            权限分类: "Admin" 或 "App"
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.System.FdRole">
+            <summary>
+            角色表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRole.Name">
+            <summary>
+            角色名称
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRole.Code">
+            <summary>
+            角色编码
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRole.Description">
+            <summary>
+            角色描述
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRole.Category">
+            <summary>
+            角色类别: "Admin" 或 "App"
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRole.ParentId">
+            <summary>
+            父级角色ID，用于支持角色层级
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRole.IsSystem">
+            <summary>
+            是否为系统内置角色
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.System.FdRoleMenu">
+            <summary>
+            角色菜单关联表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRoleMenu.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRoleMenu.MenuId">
+            <summary>
+            菜单ID
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.System.FdRoleMenuButton">
+            <summary>
+            角色菜单按钮关联表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRoleMenuButton.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRoleMenuButton.MenuButtonId">
+            <summary>
+            菜单按钮ID
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.System.FdRolePermission">
+            <summary>
+            角色权限关联表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRolePermission.RoleId">
+            <summary>
+            角色ID
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRolePermission.PermissionId">
+            <summary>
+            权限ID
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.System.SystemConfig">
+            <summary>
+            系统配置表(键值对)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.SystemConfig.Name">
+            <summary>
+            配置名称
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.SystemConfig.Code">
+            <summary>
+            配置编码 (Key)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.SystemConfig.Value">
+            <summary>
+            配置值 (Value)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.SystemConfig.Description">
+            <summary>
+            配置描述
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.SystemConfig.IsSystem">
+            <summary>
+            是否为系统内置
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Exceptions.BusinessException">
+            <summary>
+            自定义业务异常
+            此类异常被认为是可预期的，不会被日志系统记录。
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Initializers.IApplicationInitializer">
+            <summary>
+            Defines an interface for a service that should be initialized after the application's services are configured.
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Initializers.IApplicationInitializer.InitializeAsync">
+            <summary>
+            Executes the initialization logic for the service.
+            </summary>
+            <returns>A task that represents the asynchronous initialization operation.</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Initializers.IStartupTask">
+            <summary>
+            Defines an interface for tasks that should be executed when the application starts.
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Initializers.IStartupTask.ExecuteAsync">
+            <summary>
+            Executes the task.
+            </summary>
+            <returns>A task that represents the asynchronous operation.</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.IService.IHybridCacheService">
+            <summary>
+            混合缓存服务接口
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IHybridCacheService.GetOrCreateAsync``1(System.String,System.Func{System.Threading.Tasks.Task{``0}},Microsoft.Extensions.Caching.Hybrid.HybridCacheEntryOptions,System.String[])">
+            <summary>
+            获取或创建缓存项
+            </summary>
+            <typeparam name="T">缓存项类型</typeparam>
+            <param name="key">缓存键</param>
+            <param name="factory">缓存项工厂函数</param>
+            <param name="options">缓存选项</param>
+            <param name="tags">标签数组</param>
+            <returns>缓存项</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IHybridCacheService.SetAsync``1(System.String,``0,Microsoft.Extensions.Caching.Hybrid.HybridCacheEntryOptions,System.String[])">
+            <summary>
+            设置缓存项
+            </summary>
+            <typeparam name="T">缓存项类型</typeparam>
+            <param name="key">缓存键</param>
+            <param name="value">缓存值</param>
+            <param name="options">缓存选项</param>
+            <param name="tags">标签数组</param>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IHybridCacheService.GetAsync``1(System.String)">
+            <summary>
+            获取缓存项
+            注意：HybridCache没有直接的Get方法，此方法通过GetOrCreateAsync实现，
+            如果缓存中不存在则返回默认值
+            </summary>
+            <typeparam name="T">缓存项类型</typeparam>
+            <param name="key">缓存键</param>
+            <returns>缓存项，如果不存在则返回默认值</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IHybridCacheService.RemoveAsync(System.String)">
+            <summary>
+            移除缓存项
+            </summary>
+            <param name="key">缓存键</param>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IHybridCacheService.RemoveByTagAsync(System.String[])">
+            <summary>
+            根据标签移除缓存项
+            </summary>
+            <param name="tag">标签</param>
+        </member>
+        <member name="T:Fastdotnet.Core.IService.ILogService">
+            <summary>
+            日志服务接口
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.ILogService.AddOperationLogAsync(Fastdotnet.Core.Models.LogModels.OperationLog)">
+            <summary>
+            添加操作日志
+            </summary>
+            <param name="log"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.ILogService.AddOperationLog(Fastdotnet.Core.Models.LogModels.OperationLog)">
+            <summary>
+            添加操作日志（同步）
+            </summary>
+            <param name="log"></param>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.ILogService.AddExceptionLogAsync(Fastdotnet.Core.Models.LogModels.ExceptionLog)">
+            <summary>
+            添加异常日志
+            </summary>
+            <param name="log"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.ILogService.AddExceptionLog(Fastdotnet.Core.Models.LogModels.ExceptionLog)">
+            <summary>
+            添加异常日志（同步）
+            </summary>
+            <param name="log"></param>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.ILogService.AddDebugLogAsync(Fastdotnet.Core.Models.LogModels.DebugLog)">
+            <summary>
+            添加调试日志
+            </summary>
+            <param name="log"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.ILogService.AddDebugLog(Fastdotnet.Core.Models.LogModels.DebugLog)">
+            <summary>
+            添加调试日志（同步）
+            </summary>
+            <param name="log"></param>
+        </member>
+        <member name="T:Fastdotnet.Core.IService.IRepository`2">
+            <summary>
+            通用仓储接口
+            </summary>
+            <typeparam name="T">实体类型</typeparam>
+            <typeparam name="TKey">主键类型</typeparam>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.GetByIdAsync(`1)">
+            <summary>
+            根据主键获取实体
+            </summary>
+            <param name="id">主键</param>
+            <returns>实体对象</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.GetAllAsync">
+            <summary>
+            获取所有实体
+            </summary>
+            <returns>实体列表</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.GetListAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            根据条件查询实体列表
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <returns>实体列表</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.GetFirstAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            根据条件查询第一个实体
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <returns>实体对象</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.GetPageAsync(System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlSugar.OrderByType)">
+            <summary>
+            分页查询
+            </summary>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+            <param name="orderByExpression">排序表达式</param>
+            <param name="orderByType">排序类型</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.GetPageAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlSugar.OrderByType)">
+            <summary>
+            分页查询
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+            <param name="orderByExpression">排序表达式</param>
+            <param name="orderByType">排序类型</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.ExistsAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            判断是否存在满足条件的实体
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <returns>是否存在</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.InsertAsync(`0)">
+            <summary>
+            插入实体
+            </summary>
+            <param name="entity">实体对象</param>
+            <returns>插入后的实体</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.InsertRangeAsync(System.Collections.Generic.List{`0})">
+            <summary>
+            批量插入实体
+            </summary>
+            <param name="entities">实体列表</param>
+            <returns>插入成功的数量</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.UpdateAsync(`0)">
+            <summary>
+            更新实体
+            </summary>
+            <param name="entity">实体对象</param>
+            <returns>更新后的实体</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.UpdateAsync(`1,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            根据主键更新指定字段
+            </summary>
+            <param name="id">主键</param>
+            <param name="columns">要更新的字段</param>
+            <returns>是否更新成功</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.UpdateRangeAsync(System.Collections.Generic.List{`0})">
+            <summary>
+            批量更新实体
+            </summary>
+            <param name="entities">实体列表</param>
+            <returns>更新成功的数量</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.UpdateRangeAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            根据条件批量更新实体
+            </summary>
+            <param name="whereExpression">条件表达式</param>
+            <param name="columns">要更新的字段</param>
+            <returns>更新成功的数量</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.DeleteAsync(`1)">
+            <summary>
+            根据主键删除实体（软删除）
+            </summary>
+            <param name="id">主键</param>
+            <returns>是否删除成功</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.DeleteAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            根据条件批量删除实体（软删除）
+            </summary>
+            <param name="whereExpression">条件表达式</param>
+            <returns>删除成功的数量</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.GetRecycleBinAsync(System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlSugar.OrderByType)">
+            <summary>
+            获取回收站数据（已删除但未被物理删除的数据）
+            </summary>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+            <param name="orderByExpression">排序表达式</param>
+            <param name="orderByType">排序类型</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.GetRecycleBinAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlSugar.OrderByType)">
+            <summary>
+            根据条件查询回收站数据
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+            <param name="orderByExpression">排序表达式</param>
+            <param name="orderByType">排序类型</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.RestoreAsync(`1)">
+            <summary>
+            恢复回收站中的实体
+            </summary>
+            <param name="id">实体主键</param>
+            <returns>是否恢复成功</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.RestoreAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            批量恢复回收站中的实体
+            </summary>
+            <param name="whereExpression">条件表达式</param>
+            <returns>恢复成功的数量</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.PermanentDeleteAsync(`1)">
+            <summary>
+            永久删除回收站中的实体
+            </summary>
+            <param name="id">实体主键</param>
+            <returns>是否删除成功</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.IService.IRepository`2.PermanentDeleteAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            根据条件永久删除回收站中的实体
+            </summary>
+            <param name="whereExpression">条件表达式</param>
+            <returns>删除成功的数量</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.IService.IRepository`1">
+            <summary>
+            默认主键为string的仓储接口
+            </summary>
+            <typeparam name="T">实体类型</typeparam>
+        </member>
+        <member name="T:Fastdotnet.Core.Middleware.DynamicMiddlewareRegistry">
+            <summary>
+            A thread-safe registry for storing and retrieving types of dynamically loaded middleware.
+            This service is registered as a singleton and acts as the central point of truth for the DynamicMiddlewareDispatcher.
+            It uses WeakReference to hold middleware types, preventing it from blocking plugin assembly unloading.
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Middleware.DynamicMiddlewareRegistry.Register(System.Type)">
+            <summary>
+            Registers a middleware type.
+            </summary>
+            <param name="middlewareType">The type of the middleware to register. Must implement IDynamicMiddleware.</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Middleware.DynamicMiddlewareRegistry.Unregister(System.Type)">
+            <summary>
+            Unregisters a middleware type.
+            </summary>
+            <param name="middlewareType">The type of the middleware to unregister.</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Middleware.DynamicMiddlewareRegistry.GetMiddlewareTypes">
+            <summary>
+            Gets a snapshot of the currently registered and active middleware types.
+            Dead references to garbage-collected types are cleaned up during this process.
+            </summary>
+            <returns>An enumerable of middleware types.</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Middleware.IDynamicMiddleware">
+            <summary>
+            Defines a contract for middleware that can be dynamically discovered and executed by the host application.
+            This allows hot-pluggable plugins to participate in the HTTP request pipeline.
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Middleware.IDynamicMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Handles the HTTP request.
+            </summary>
+            <param name="context">The HttpContext for the current request.</param>
+            <param name="next">The next middleware in the pipeline.</param>
+            <returns>A Task that represents the completion of the middleware execution.</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.Admin.Users.AdminUserDto">
+            <summary>
+            用于显示管理员信息的DTO
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.Admin.Users.CreateAdminUserDto">
+            <summary>
+            用于创建管理员的DTO
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.Admin.Users.UpdateAdminUserDto">
+            <summary>
+            用于更新管理员的DTO
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.ApiResult">
+            <summary>
+            通用返回值类型
+            </summary>
+            <typeparam name="T">返回数据的类型</typeparam>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.ApiResult`1">
+            <summary>
+            不带数据的通用返回值类型
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.Base.IBaseEntity">
+            <summary>
+            基础实体类接口
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Base.IBaseEntity.Id">
+            <summary>
+            主键ID
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Base.IBaseEntity.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Base.IBaseEntity.UpdateTime">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.Base.BaseEntity">
+            <summary>
+            基础实体类
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Base.BaseEntity.Id">
+            <summary>
+            主键ID
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Base.BaseEntity.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Base.BaseEntity.UpdateTime">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Base.BaseEntity.IsDeleted">
+            <summary>
+            是否删除
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Base.BaseEntity.DeleteTime">
+            <summary>
+            删除时间
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.CacheSettings">
+            <summary>
+            缓存配置设置
+            </summary>
+        </member>
+        <member name="F:Fastdotnet.Core.Models.CacheSettings.SectionName">
+            <summary>
+            配置节名称
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.CacheSettings.CacheType">
+            <summary>
+            缓存类型：MemoryCache 或 Redis
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.CacheSettings.RedisConnectionString">
+            <summary>
+            Redis连接字符串（仅在使用Redis时需要）
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.CacheSettings.RedisInstanceName">
+            <summary>
+            Redis实例名称前缀
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.CacheSettings.LocalCacheExpirationMinutes">
+            <summary>
+            本地缓存过期时间（分钟）
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.CacheSettings.DistributedCacheExpirationMinutes">
+            <summary>
+            分布式缓存过期时间（分钟）
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.Interfaces.ISoftDelete">
+            <summary>
+            软删除接口
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Interfaces.ISoftDelete.IsDeleted">
+            <summary>
+            是否删除
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Interfaces.ISoftDelete.DeleteTime">
+            <summary>
+            删除时间
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.LogModels.DebugLog">
+            <summary>
+            调试日志
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.DebugLog.RequestId">
+            <summary>
+            请求ID，用于追踪整个请求链路
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.DebugLog.Message">
+            <summary>
+            日志消息
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.DebugLog.Key">
+            <summary>
+            业务标识
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.DebugLog.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.LogModels.ExceptionLog">
+            <summary>
+            异常日志
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.ExceptionLog.RequestId">
+            <summary>
+            请求ID，用于追踪整个请求链路
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.ExceptionLog.ExceptionType">
+            <summary>
+            异常类型
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.ExceptionLog.Message">
+            <summary>
+            异常信息
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.ExceptionLog.StackTrace">
+            <summary>
+            堆栈跟踪
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.ExceptionLog.Path">
+            <summary>
+            请求路径
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.ExceptionLog.Method">
+            <summary>
+            请求方法
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.ExceptionLog.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.LogModels.OperationLog">
+            <summary>
+            操作日志
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.OperationLog.RequestId">
+            <summary>
+            请求ID，用于追踪整个请求链路
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.OperationLog.Path">
+            <summary>
+            请求路径
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.OperationLog.Method">
+            <summary>
+            请求方法
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.OperationLog.Ip">
+            <summary>
+            请求IP
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.OperationLog.Headers">
+            <summary>
+            请求头
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.OperationLog.Body">
+            <summary>
+            请求体
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.OperationLog.StatusCode">
+            <summary>
+            响应状态码
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.OperationLog.ElapsedMilliseconds">
+            <summary>
+            耗时（毫秒）
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.OperationLog.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.LogModels.SqlExecutionLog">
+            <summary>
+            SQL执行日志
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.SqlExecutionLog.RequestId">
+            <summary>
+            请求ID，用于追踪整个请求链路
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.SqlExecutionLog.FullSql">
+            <summary>
+            执行的完整SQL语句（包含参数值）
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.SqlExecutionLog.ElapsedMilliseconds">
+            <summary>
+            执行耗时（毫秒）
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.SqlExecutionLog.HasError">
+            <summary>
+            是否有错误
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.SqlExecutionLog.ErrorMessage">
+            <summary>
+            错误信息
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.SqlExecutionLog.StackTrace">
+            <summary>
+            堆栈跟踪
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.SqlExecutionLog.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.PageQueryDto">
+            <summary>
+            通用分页查询DTO
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.PageQueryDto.Keyword">
+            <summary>
+            关键词，用于模糊搜索
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.PageInfo">
+            <summary>
+            分页信息实体
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.PageInfo.Total">
+            <summary>
+            总记录数
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.PageInfo.TotalPages">
+            <summary>
+            总页数
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.PageInfo.HasPreviousPage">
+            <summary>
+            是否有上一页
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.PageInfo.HasNextPage">
+            <summary>
+            是否有下一页
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.PageResult`1">
+            <summary>
+            分页结果实体
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.PageResult`1.PageInfo">
+            <summary>
+            分页信息
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.PageResult`1.Items">
+            <summary>
+            数据列表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.InputPage.Page">
+            <summary>
+            当前页码
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.InputPage.PageSize">
+            <summary>
+            每页大小
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.System.EmailConfigDto">
+            <summary>
+            邮件配置 - 输出DTO
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.System.CreateEmailConfigDto">
+            <summary>
+            邮件配置 - 创建DTO
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.System.UpdateEmailConfigDto">
+            <summary>
+            邮件配置 - 更新DTO
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Service.HybridCacheService">
+            <summary>
+            混合缓存服务实现
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.HybridCacheService.GetOrCreateAsync``1(System.String,System.Func{System.Threading.Tasks.Task{``0}},Microsoft.Extensions.Caching.Hybrid.HybridCacheEntryOptions,System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.HybridCacheService.SetAsync``1(System.String,``0,Microsoft.Extensions.Caching.Hybrid.HybridCacheEntryOptions,System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.HybridCacheService.GetAsync``1(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.HybridCacheService.RemoveAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.HybridCacheService.RemoveByTagAsync(System.String[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.HybridCacheService.CreateDefaultOptions">
+            <summary>
+            创建默认缓存选项
+            </summary>
+            <returns>默认缓存选项</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.HybridCacheService.AssociateTagsWithKey(System.String,System.String[])">
+            <summary>
+            关联标签和键
+            </summary>
+            <param name="key">缓存键</param>
+            <param name="tags">标签数组</param>
+        </member>
+        <member name="T:Fastdotnet.Core.Service.IPermissionSyncService">
+            <summary>
+            权限同步服务接口
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.IPermissionSyncService.SyncPluginPermissionsAsync(Fastdotnet.Plugin.Contracts.IPermissionProvider,System.String)">
+            <summary>
+            同步单个插件的权限
+            </summary>
+            <param name="provider">权限提供者</param>
+            <param name="module">模块名称</param>
+            <returns></returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Service.PermissionSyncService">
+            <summary>
+            权限同步服务
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.PermissionSyncService.SyncPluginPermissionsAsync(Fastdotnet.Plugin.Contracts.IPermissionProvider,System.String)">
+            <summary>
+            同步单个插件的权限
+            </summary>
+            <param name="provider">权限提供者</param>
+            <param name="module">模块名称</param>
+            <returns></returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Service.Repository`2">
+            <summary>
+            通用仓储实现
+            </summary>
+            <typeparam name="T">实体类型</typeparam>
+            <typeparam name="TKey">主键类型</typeparam>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.GetByIdAsync(`1)">
+            <summary>
+            根据主键获取实体
+            </summary>
+            <param name="id">主键</param>
+            <returns>实体对象</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.GetAllAsync">
+            <summary>
+            获取所有实体
+            </summary>
+            <returns>实体列表</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.GetListAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            根据条件查询实体列表
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <returns>实体列表</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.GetFirstAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            根据条件查询第一个实体
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <returns>实体对象</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.GetPageAsync(System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlSugar.OrderByType)">
+            <summary>
+            分页查询
+            </summary>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+            <param name="orderByExpression">排序表达式</param>
+            <param name="orderByType">排序类型</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.GetPageAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlSugar.OrderByType)">
+            <summary>
+            分页查询
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+            <param name="orderByExpression">排序表达式</param>
+            <param name="orderByType">排序类型</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.ExistsAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            判断是否存在满足条件的实体
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <returns>是否存在</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.InsertAsync(`0)">
+            <summary>
+            插入实体
+            </summary>
+            <param name="entity">实体对象</param>
+            <returns>插入后的实体</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.InsertRangeAsync(System.Collections.Generic.List{`0})">
+            <summary>
+            批量插入实体
+            </summary>
+            <param name="entities">实体列表</param>
+            <returns>插入成功的数量</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.UpdateAsync(`0)">
+            <summary>
+            更新实体
+            </summary>
+            <param name="entity">实体对象</param>
+            <returns>更新后的实体</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.UpdateAsync(`1,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            根据主键更新指定字段
+            </summary>
+            <param name="id">主键</param>
+            <param name="columns">要更新的字段</param>
+            <returns>是否更新成功</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.UpdateRangeAsync(System.Collections.Generic.List{`0})">
+            <summary>
+            批量更新实体
+            </summary>
+            <param name="entities">实体列表</param>
+            <returns>更新成功的数量</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.UpdateRangeAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            根据条件批量更新实体
+            </summary>
+            <param name="whereExpression">条件表达式</param>
+            <param name="columns">要更新的字段</param>
+            <returns>更新成功的数量</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.DeleteAsync(`1)">
+            <summary>
+            根据主键删除实体（软删除）
+            </summary>
+            <param name="id">主键</param>
+            <returns>是否删除成功</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.DeleteAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            根据条件批量删除实体（软删除）
+            </summary>
+            <param name="whereExpression">条件表达式</param>
+            <returns>删除成功的数量</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.GetRecycleBinAsync(System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlSugar.OrderByType)">
+            <summary>
+            获取回收站数据（已删除但未被物理删除的数据）
+            </summary>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+            <param name="orderByExpression">排序表达式</param>
+            <param name="orderByType">排序类型</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.GetRecycleBinAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},SqlSugar.OrderByType)">
+            <summary>
+            根据条件查询回收站数据
+            </summary>
+            <param name="whereExpression">查询条件表达式</param>
+            <param name="pageIndex">页码（从1开始）</param>
+            <param name="pageSize">页大小</param>
+            <param name="orderByExpression">排序表达式</param>
+            <param name="orderByType">排序类型</param>
+            <returns>分页结果</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.RestoreAsync(`1)">
+            <summary>
+            恢复回收站中的实体
+            </summary>
+            <param name="id">实体主键</param>
+            <returns>是否恢复成功</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.RestoreAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            批量恢复回收站中的实体
+            </summary>
+            <param name="whereExpression">条件表达式</param>
+            <returns>恢复成功的数量</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.PermanentDeleteAsync(`1)">
+            <summary>
+            永久删除回收站中的实体
+            </summary>
+            <param name="id">实体主键</param>
+            <returns>是否删除成功</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.PermanentDeleteAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            根据条件永久删除回收站中的实体
+            </summary>
+            <param name="whereExpression">条件表达式</param>
+            <returns>删除成功的数量</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Service.Repository`2.CombineExpressions(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            合并两个表达式（AND关系）
+            </summary>
+            <param name="expr1">第一个表达式</param>
+            <param name="expr2">第二个表达式</param>
+            <returns>合并后的表达式</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Service.Repository`1">
+            <summary>
+            默认主键为string的仓储实现
+            </summary>
+            <typeparam name="T">实体类型</typeparam>
+        </member>
+        <member name="T:Fastdotnet.Core.Utils.CacheKeyGenerator">
+            <summary>
+            缓存键生成器
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.CacheKeyGenerator.GenerateKey(System.String,System.Object[])">
+            <summary>
+            生成缓存键
+            </summary>
+            <param name="prefix">键前缀</param>
+            <param name="parameters">参数数组</param>
+            <returns>缓存键</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.CacheKeyGenerator.GenerateKeyWithTag(System.String,System.String[],System.Object[])">
+            <summary>
+            生成带标签的缓存键
+            </summary>
+            <param name="prefix">键前缀</param>
+            <param name="tags">标签数组</param>
+            <param name="parameters">参数数组</param>
+            <returns>缓存键</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Utils.DebugLogger">
+            <summary>
+            调试信息输出工具类，供主框架和插件使用
+            主要用于生产环境的问题追踪和信息输出，替代断点调试
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.DebugLogger.Initialize(Fastdotnet.Core.IService.ILogService)">
+            <summary>
+            初始化DebugLogger，通常在程序启动时调用
+            </summary>
+            <param name="logService"></param>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.DebugLogger.PrintAsync(System.String,System.String)">
+            <summary>
+            输出调试信息
+            </summary>
+            <param name="message">信息内容</param>
+            <param name="key">业务标识</param>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.DebugLogger.Print(System.String,System.String)">
+            <summary>
+            输出调试信息（同步）
+            </summary>
+            <param name="message">信息内容</param>
+            <param name="key">业务标识</param>
+        </member>
+        <member name="T:Fastdotnet.Core.Utils.Extensions.CacheServiceExtensions">
+            <summary>
+            缓存服务扩展方法
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.Extensions.CacheServiceExtensions.AddHybridCacheService(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            添加混合缓存服务
+            </summary>
+            <param name="services">服务集合</param>
+            <param name="configuration">配置</param>
+            <returns>服务集合</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Utils.Extensions.ModelValidationExtensions">
+            <summary>
+            提供基于 DataAnnotations 的模型校验扩展方法。
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.Extensions.ModelValidationExtensions.IsValid``1(``0,System.Boolean)">
+            <summary>
+            验证模型及其所有嵌套属性和集合是否符合其 DataAnnotations 特性的要求。
+            </summary>
+            <typeparam name="T">模型类型。</typeparam>
+            <param name="model">要验证的模型实例。</param>
+            <param name="internalReturn">如果为 true，当验证失败时将直接抛出 BusinessException 异常；否则返回一个包含错误信息的 ValidationResult 对象。</param>
+            <returns>一个 ValidationResult 对象，指示验证是否成功以及相关的错误信息。</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.Extensions.ModelValidationExtensions.TraverseObject(System.Object,System.String,System.Collections.Generic.List{Fastdotnet.Core.Utils.Extensions.ModelValidationExtensions.FieldValidationInfo})">
+            <summary>
+            递归遍历对象的所有属性，并根据 ValidationAttribute 进行校验。
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.Extensions.ModelValidationExtensions.ProcessCollection(System.Collections.IEnumerable,System.String,System.Collections.Generic.List{Fastdotnet.Core.Utils.Extensions.ModelValidationExtensions.FieldValidationInfo})">
+            <summary>
+            处理集合中的元素校验。
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.Extensions.ModelValidationExtensions.GetDisplayName(System.Reflection.PropertyInfo)">
+            <summary>
+            获取属性的显示名称，优先于 DisplayAttribute, 其次 DisplayNameAttribute, 最后是属性名。
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.Extensions.ModelValidationExtensions.IsSimpleType(System.Type)">
+            <summary>
+            判断一个类型是否为简单类型。
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.Extensions.ModelValidationExtensions.IsCollectionType(System.Type)">
+            <summary>
+            判断一个类型是否为集合类型（非字符串）。
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Utils.Extensions.ModelValidationExtensions.FieldValidationInfo">
+            <summary>
+            内部类，用于存储字段的验证错误信息。
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Utils.Extensions.ModelValidationExtensions.ValidationResult">
+            <summary>
+            验证结果的返回类。
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Utils.Extensions.StringExtensions">
+            <summary>
+            字符串扩展方法
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.Extensions.StringExtensions.ToMD5(System.String)">
+            <summary>
+            MD5加密
+            </summary>
+            <param name="str">待加密字符串</param>
+            <returns>加密后的字符串</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.Extensions.StringExtensions.IsNullOrWhiteSpace(System.String)">
+            <summary>
+            判断字符串是否为空或空白字符
+            </summary>
+            <param name="str">待判断字符串</param>
+            <returns>是否为空</returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.Extensions.StringExtensions.Cut(System.String,System.Int32,System.String)">
+            <summary>
+            截取字符串
+            </summary>
+            <param name="str">原字符串</param>
+            <param name="length">截取长度</param>
+            <param name="suffix">后缀</param>
+            <returns>截取后的字符串</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Utils.RequestIdManager">
+            <summary>
+            请求ID管理器，用于生成和管理请求ID
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Utils.RequestIdManager.CurrentRequestId">
+            <summary>
+            获取当前请求的ID
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.RequestIdManager.GenerateNewRequestId">
+            <summary>
+            生成新的请求ID
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.RequestIdManager.Clear">
+            <summary>
+            清除当前请求ID
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Utils.SnowflakeIdGenerator">
+            <summary>
+            雪花ID生成器
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.SnowflakeIdGenerator.NextStrId">
+            <summary>
+            生成下一个ID
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.SnowflakeIdGenerator.WaitNextMillis(System.Int64)">
+            <summary>
+            等待下一毫秒
+            </summary>
+            <param name="lastTimestamp"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fastdotnet.Core.Utils.SnowflakeIdGenerator.GetTimestamp">
+            <summary>
+            获取当前时间戳
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Version.FrameworkVersion">
+            <summary>
+            框架版本信息
+            </summary>
+        </member>
+        <member name="F:Fastdotnet.Core.Version.FrameworkVersion.Major">
+            <summary>
+            主版本号
+            </summary>
+        </member>
+        <member name="F:Fastdotnet.Core.Version.FrameworkVersion.Minor">
+            <summary>
+            次版本号
+            </summary>
+        </member>
+        <member name="F:Fastdotnet.Core.Version.FrameworkVersion.Patch">
+            <summary>
+            修订号
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Version.FrameworkVersion.FullVersion">
+            <summary>
+            获取完整的版本号字符串
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Version.FrameworkVersion.IsCompatibleWith(System.String)">
+            <summary>
+            检查版本兼容性
+            </summary>
+            <param name="requiredVersion">所需版本号</param>
+            <returns>是否兼容</returns>
+        </member>
+    </members>
+</doc>

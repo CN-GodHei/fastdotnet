@@ -4,44 +4,119 @@
         <name>Fastdotnet.WebApi</name>
     </assembly>
     <members>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.AdminUsersController.GetAll">
+            <summary>
+            获取所有管理员用户 (自定义注释)
+            </summary>
+            <returns>包含所有管理员用户的列表</returns>
+        </member>
+        <member name="T:Fastdotnet.WebApi.Controllers.Admin.CacheTestController">
+            <summary>
+            缓存测试控制器
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.CacheTestController.GetUserById(System.Int32)">
+            <summary>
+            测试基本缓存功能
+            </summary>
+            <param name="id">用户ID</param>
+            <returns>用户信息</returns>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.CacheTestController.GetProducts(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            测试带多个参数的缓存功能
+            </summary>
+            <param name="categoryId">分类ID</param>
+            <param name="page">页码</param>
+            <param name="pageSize">每页大小</param>
+            <returns>产品列表</returns>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.CacheTestController.SetCache(System.String,System.String)">
+            <summary>
+            手动设置缓存
+            </summary>
+            <param name="key">缓存键</param>
+            <param name="value">缓存值</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.CacheTestController.GetCache(System.String)">
+            <summary>
+            获取缓存值
+            </summary>
+            <param name="key">缓存键</param>
+            <returns>缓存值</returns>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.CacheTestController.ClearCacheByTag(System.String[])">
+            <summary>
+            移除特定标签的缓存
+            </summary>
+            <param name="tag">标签</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.EmailConfigController.GetConfig">
+            <summary>
+            获取唯一的邮件配置
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.EmailConfigController.UpdateConfig(Fastdotnet.Core.Models.System.UpdateEmailConfigDto)">
+            <summary>
+            更新唯一的邮件配置
+            </summary>
+        </member>
         <member name="M:Fastdotnet.WebApi.Controllers.Admin.PermissionsController.GetAll">
             <summary>
             获取所有权限，按模块分组，方便前端展示
             </summary>
         </member>
-        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.ScanPlugins">
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.PluginController.ScanPlugins">
             <summary>
             扫描插件目录以发现所有可用插件
             </summary>
         </member>
-        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.EnablePlugin(System.String)">
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.PluginController.EnablePlugin(System.String)">
             <summary>
             启用一个插件（如果未加载，则先加载）
             </summary>
         </member>
-        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.DisablePlugin(System.String)">
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.PluginController.DisablePlugin(System.String)">
             <summary>
             停用一个插件（停止业务并卸载其代码）
             </summary>
         </member>
-        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.UninstallPlugin(System.String)">
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.PluginController.UninstallPlugin(System.String)">
             <summary>
             从磁盘物理删除一个已停用的插件
             </summary>
         </member>
-        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.GetLoadedPlugins">
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.PluginController.GetLoadedPlugins">
             <summary>
             获取所有已加载的插件（无论是否激活）
             </summary>
         </member>
-        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.GetActivePlugins">
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.PluginController.GetActivePlugins">
             <summary>
             获取所有当前活动的插件
             </summary>
         </member>
-        <member name="M:Fastdotnet.WebApi.Controllers.PluginController.IsPluginActive(System.String)">
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.PluginController.IsPluginActive(System.String)">
             <summary>
             检查一个插件当前是否处于活动状态
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.SystemConfigController.GetPublicConfigs">
+            <summary>
+            [Public] 获取所有系统配置项（用于客户端初始化）
+            </summary>
+            <returns>返回一个包含所有配置的字典</returns>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.AuthController.SendRegistrationCode(Fastdotnet.Core.Models.Auth.SendRegistrationCodeDto)">
+            <summary>
+            发送App注册验证码
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.AuthController.AppRegister(Fastdotnet.Core.Models.Auth.AppRegisterDto)">
+            <summary>
+            App端用户注册
             </summary>
         </member>
         <member name="T:Fastdotnet.WebApi.Extensions.ApplicationInitializerExtensions">
@@ -58,6 +133,31 @@
         <member name="T:Fastdotnet.WebApi.Filters.GlobalResultFilter">
             <summary>
             全局结果过滤器，用于统一API返回格式
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.WebApi.Filters.InheritedGenericControllerOperationFilter">
+            <summary>
+            为继承自 GenericDtoControllerBase 的控制器方法自动生成 Swagger 文档摘要和描述
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Filters.InheritedGenericControllerOperationFilter.GetCustomSummary(System.Reflection.MethodInfo)">
+            <summary>
+            从XML注释中获取方法的自定义摘要
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Filters.InheritedGenericControllerOperationFilter.IsSubclassOfGeneric(System.Type,System.Type)">
+            <summary>
+            检查类型是否继承自指定的泛型基类
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.WebApi.Filters.PluginDocumentFilter">
+            <summary>
+            根据插件信息过滤Swagger文档内容的过滤器
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.WebApi.Filters.TagOrderDocumentFilter">
+            <summary>
+            控制Swagger标签排序的文档过滤器
             </summary>
         </member>
         <member name="T:Fastdotnet.WebApi.Middleware.Authentication.JwtMiddleware">

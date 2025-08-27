@@ -29,6 +29,10 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             _currentUser = currentUser;
         }
 
+        /// <summary>
+        /// 获取所有管理员用户 (自定义注释)
+        /// </summary>
+        /// <returns>包含所有管理员用户的列表</returns>
         [Authorize(Policy = Permissions.Admin.Users.View)]
         public override Task<System.Collections.Generic.List<AdminUserDto>> GetAll() => base.GetAll();
 
