@@ -77,11 +77,22 @@ service.interceptors.response.use(
 			}
 		} else if (response.status === 401) {
 			// HTTP 401 未授权访问
-			Session.clear(); // 清除浏览器全部临时缓存
-			window.location.href = '/'; // 去登录页
-			ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
-				.then(() => {})
-				.catch(() => {});
+			// 检查当前页面是否已经是登录页，避免无限重定向
+			const currentPath = window.location.pathname + window.location.search;
+			if (currentPath !== '/login' && !currentPath.startsWith('/login')) {
+				Session.clear(); // 清除浏览器全部临时缓存
+				// 将当前页面路径作为查询参数传递给登录页
+				const redirectUrl = encodeURIComponent(currentPath);
+				// 弹窗提示登录已过期，请重新登录
+				ElMessageBox.alert('登录已过期，请重新登录', '提示', {
+					confirmButtonText: '确定',
+					type: 'warning'
+				}).then(() => {
+					window.location.href = `/login?redirect=${redirectUrl}`; // 去登录页并携带重定向信息
+				}).catch(() => {
+					window.location.href = `/login?redirect=${redirectUrl}`; // 去登录页并携带重定向信息
+				});
+			}
 			return Promise.reject(new Error('未授权访问'));
 		} else if (response.status === 422) {
 			// HTTP 422 验证错误，是后端返回的一种可控异常，主要是提示消息

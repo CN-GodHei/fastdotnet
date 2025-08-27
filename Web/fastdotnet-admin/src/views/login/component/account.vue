@@ -154,10 +154,25 @@ const signInSuccess = (isNoPower: boolean | undefined) => {
 		// 登录成功，跳到转首页
 		// 如果是复制粘贴的路径，非首页/登录页，那么登录成功后重定向到对应的路径中
 		if (route.query?.redirect) {
-			router.push({
-				path: <string>route.query?.redirect,
-				query: Object.keys(<string>route.query?.params).length > 0 ? JSON.parse(<string>route.query?.params) : '',
-			});
+			try {
+				// 解码 redirect 参数
+				const redirectPath = decodeURIComponent(<string>route.query.redirect);
+				
+				// 检查是否有 params 参数（来自路由守卫的跳转）
+				if (route.query?.params) {
+					const redirectQuery = Object.keys(<string>route.query.params).length > 0 ? JSON.parse(<string>route.query.params) : {};
+					router.push({
+						path: redirectPath,
+						query: redirectQuery
+					});
+				} else {
+					// 只有路径，没有额外参数（来自401错误处理的跳转）
+					router.push(redirectPath);
+				}
+			} catch (e) {
+				// console.error('解析重定向参数失败:', e);
+				router.push('/');
+			}
 		} else {
 			router.push('/');
 		}
