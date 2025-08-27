@@ -109,6 +109,12 @@ export async function setAddRoute() {
  */
 export async function getBackEndControlRoutes() {
 	try {
+		// 检查是否有 token，如果没有则不请求菜单
+		if (!Session.get('token')) {
+			console.log('无 token，跳过菜单请求');
+			return { data: [] };
+		}
+		
 		// 从适配的菜单 API 获取用户菜单树
 		// 由于 request.ts 已修改为直接返回 res.Data，
 		// 这里的 res 就是 res.Data，即菜单数组 [...]

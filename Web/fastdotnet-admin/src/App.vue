@@ -69,8 +69,12 @@ onBeforeMount(() => {
 // 页面加载时
 onMounted(() => {
     // 确保路由准备就绪后再启动 qiankun，解决硬刷新后首次加载微应用失败的问题
+    // 只有在用户已登录时才启动 qiankun
     router.isReady().then(() => {
-        startQiankun();
+        const token = Session.get('token');
+        if (token) {
+            startQiankun();
+        }
     });
 
 	nextTick(() => {

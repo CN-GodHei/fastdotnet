@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Session } from '/@/utils/storage';
 import qs from 'qs';
@@ -13,11 +13,16 @@ const service: AxiosInstance = axios.create({
 			return qs.stringify(params, { allowDots: true });
 		},
 	},
+	// 只将200、401、422状态码视为成功，其他状态码走error处理
+	// 422是后端返回的一种可控异常，主要是提示消息
+	validateStatus: (status) => {
+		return status === 200 || status === 401 || status === 422;
+	}
 });
 
 // 添加请求拦截器
 service.interceptors.request.use(
-	(config) => {
+	(config: InternalAxiosRequestConfig) => {
 		// 在发送请求之前做些什么 token
 		const token = Session.get('token');
 		// 添加调试日志
@@ -39,64 +44,71 @@ service.interceptors.request.use(
 
 // 添加响应拦截器
 service.interceptors.response.use(
-	(response) => {
+	(response: AxiosResponse) => {
 		// 对响应数据做点什么
 		const res = response.data;
-		// 根据后端返回的格式 { Data: ..., Code: ..., Msg: ... } 进行处理
-		if (res.Code !== 0) {
-			// `token` 过期或者账号已在别处登录 (假设后端用 401 或 4001 表示)
-			if (res.Code === 401 || res.Code === 4001) {
-				Session.clear(); // 清除浏览器全部临时缓存
-				window.location.href = '/'; // 去登录页
-				ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
-					.then(() => {})
-					.catch(() => {});
-				// 对于登出错误，可以返回一个特定的 rejected promise 或者让其继续以触发全局错误处理
-				return Promise.reject(new Error('登录已过期'));
+		
+		// 根据HTTP状态码进行不同处理
+		if (response.status === 200) {
+			// HTTP 200 表示成功请求
+			// 根据后端返回的格式 { Data: ..., Code: ..., Msg: ... } 进行处理
+			if (res.Code !== 0) {
+				// `token` 过期或者账号已在别处登录 (假设后端用 401 或 4001 表示)
+				if (res.Code === 401 || res.Code === 4001) {
+					Session.clear(); // 清除浏览器全部临时缓存
+					window.location.href = '/'; // 去登录页
+					ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
+						.then(() => {})
+						.catch(() => {});
+					// 对于登出错误，可以返回一个特定的 rejected promise 或者让其继续以触发全局错误处理
+					return Promise.reject(new Error('登录已过期'));
+				} 
+				else {
+					// 其他业务错误
+					const errorMsg = res.Msg || `Error Code: ${res.Code}`;
+					ElMessage.error(errorMsg);
+				}
+				// 返回 reject 以便调用方可以处理错误
+				return Promise.reject(new Error(res.Msg || `Error Code: ${res.Code}`));
 			} else {
-				// 其他业务错误
-				const errorMsg = res.Msg || `Error Code: ${res.Code}`;
-				ElMessage.error(errorMsg);
+				// Code 为 0 表示成功，直接返回 Data 部分
+				// 这样业务代码可以直接使用返回的数据，无需再 .Data
+				return res.Data;
 			}
-			// 返回 reject 以便调用方可以处理错误
-			return Promise.reject(new Error(res.Msg || `Error Code: ${res.Code}`));
-		} else {
-			// Code 为 0 表示成功，直接返回 Data 部分
-			// 这样业务代码可以直接使用返回的数据，无需再 .Data
-			return res.Data;
+		} else if (response.status === 401) {
+			// HTTP 401 未授权访问
+			Session.clear(); // 清除浏览器全部临时缓存
+			window.location.href = '/'; // 去登录页
+			ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
+				.then(() => {})
+				.catch(() => {});
+			return Promise.reject(new Error('未授权访问'));
+		} else if (response.status === 422) {
+			// HTTP 422 验证错误，是后端返回的一种可控异常，主要是提示消息
+			// 422虽然在validateStatus中被视为成功，但仍需要reject以便调用方可以处理错误
+        	return Promise.reject(new Error(res.Msg || res.message || '验证错误'));
 		}
 	},
 	(error) => {
 		// 对响应错误做点什么
 		console.error('Axios Error:', error); // 添加日志以便调试
-
-		// 更安全地检查 error 对象及其属性
-		if (error) {
-			// 检查是否是超时错误
-			if (error.code === 'ECONNABORTED' && typeof error.message === 'string' && error.message.includes('timeout')) {
-				ElMessage.error('网络请求超时');
-			}
-			// 检查是否是网络错误
-			else if (typeof error.message === 'string' && error.message === 'Network Error') {
-				ElMessage.error('网络连接错误');
-			}
-			// 尝试从响应中获取更具体的错误信息
-			else if (error.response && error.response.data) {
-				const res = error.response.data;
-				// 尝试获取后端返回的错误信息
-				const errorMsg = res.Msg || res.msg || res.message || res.Message || (error.response.statusText || '请求失败');
-				ElMessage.error(typeof errorMsg === 'string' ? errorMsg : '请求失败');
-			}
-			// 其他未知错误
-			else {
-				ElMessage.error('接口请求失败或未响应');
-			}
+		
+		// 只有当请求完全失败（例如网络断开、DNS 解析失败、服务器无响应等）时才显示网络错误
+		if (error.response) {
+			// 请求已发出，但服务器响应的状态码不在 validateStatus 定义的范围内
+			const res = error.response.data;
+			const errorMsg = res.Msg || res.msg || res.message || error.message || '请求失败';
+			ElMessage.error(typeof errorMsg === 'string' ? errorMsg : '请求失败');
+			return Promise.reject(error);
+		} else if (error.request) {
+			// 请求已发出，但没有收到响应
+			ElMessage.error('网络错误，请稍后重试');
+			return Promise.reject(error);
 		} else {
-			// 极少数情况下 error 可能是 undefined
-			console.error('Unexpected undefined error in axios interceptor');
-			ElMessage.error('发生未知错误');
+			// 其他未知错误
+			ElMessage.error('未知错误，请稍后重试');
+			return Promise.reject(error);
 		}
-		return Promise.reject(error);
 	}
 );
 

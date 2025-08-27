@@ -7,6 +7,7 @@ import router from '/@/router';
 import * as VueRouter from 'vue-router';
 import { registerMicroApps, start } from 'qiankun';
 import { useMenuApi } from '/@/api/menu';
+import { Session } from '/@/utils/storage';
 
 // --- 共享依赖 ---
 (window as any).Vue = Vue;
@@ -33,6 +34,12 @@ app.use(pinia).use(router).use(ElementPlus).use(i18n).use(VueGridLayout).mount('
 // 定义一个变量，防止 qiankun 被重复启动
 let qiankunStarted = false;
 export async function startQiankun() {
+    // 检查是否有 token，如果没有则不启动 qiankun
+    const token = Session.get('token');
+    if (!token) {
+        console.log('[MainApp] No token found, skipping Qiankun initialization');
+        return;
+    }
 
     try {
         const menuApi = useMenuApi();

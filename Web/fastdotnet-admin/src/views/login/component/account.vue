@@ -69,6 +69,7 @@ import { Session } from '/@/utils/storage';
 import { formatAxis } from '/@/utils/formatTime';
 import { NextLoading } from '/@/utils/loading';
 import { useAuthApi } from '/@/api/auth/index'; // 引入适配的登录 API
+import { startQiankun } from '/@/main'; // 导入 startQiankun 函数
 
 // 定义变量内容
 const { t } = useI18n();
@@ -165,6 +166,9 @@ const signInSuccess = (isNoPower: boolean | undefined) => {
 		ElMessage.success(`${currentTimeInfo}，${signInText}`);
 		// 添加 loading，防止第一次进入界面时出现短暂空白
 		NextLoading.start();
+		
+		// 启动 qiankun
+		startQiankun();
 	}
 	state.loading.signIn = false;
 };
