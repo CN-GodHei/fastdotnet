@@ -7,7 +7,9 @@
 	"scripts": {
 		"dev": "vite --force",
 		"build": "vite build",
-		"lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue src/"
+		"lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue src/",
+		"generate:types": "openapi-typescript http://localhost:18889/swagger/main/swagger.json --output src/api/types.ts"
+		// npx openapi-typescript-codegen --input http://localhost:18889/swagger/main/swagger.json --output ./src/api --client axios
 	},
 	"dependencies": {
 		"@element-plus/icons-vue": "^2.3.1",
@@ -50,6 +52,8 @@
 		"@vue/compiler-sfc": "^3.4.21",
 		"eslint": "^8.57.0",
 		"eslint-plugin-vue": "^9.23.0",
+		"openapi-typescript": "^7.9.1",
+		"openapi-typescript-codegen": "^0.29.0",
 		"prettier": "^3.2.5",
 		"sass": "^1.72.0",
 		"typescript": "^5.4.2",
