@@ -1,5 +1,6 @@
 using Fastdotnet.Core.Attributes;
 using Fastdotnet.Core.IService;
+using Fastdotnet.Core.Utils.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -110,10 +111,15 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// <param name="tag">标签</param>
         /// <returns>操作结果</returns>
         [HttpDelete("clear-by-tag")]
-        public async Task<ActionResult> ClearCacheByTag([FromQuery] string tag)
+        public async Task<ActionResult> ClearCacheByTag([FromQuery] string[] tags)
         {
-            await _cacheService.RemoveByTagAsync(tag);
-            return Ok($"Cache cleared for tag: {tag}");
+            if (tags.Length==0)
+            {
+                return BadRequest("标签不能为空");
+            }
+            //string[] strings = ["cache-test", "admin", "user-data"];
+            await _cacheService.RemoveByTagAsync(tags);
+            return Ok($"Cache cleared for tag: {tags}");
         }
     }
 }

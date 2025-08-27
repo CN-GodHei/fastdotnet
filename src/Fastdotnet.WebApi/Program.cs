@@ -267,7 +267,7 @@ builder.Services.AddScoped<IPermissionProvider, FrameworkPermissionProvider>();
 builder.Services.AddScoped<GlobalExceptionFilter>();
 
 // 添加内存缓存服务
-builder.Services.AddMemoryCache();
+//builder.Services.AddMemoryCache();
 
 // 添加混合缓存服务
 builder.Services.AddHybridCacheService(builder.Configuration);
@@ -334,7 +334,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     }).As<IMapper>().InstancePerLifetimeScope();
     
     // 如果需要在Autofac中进行更精细的缓存服务控制，可以在这里添加
-    // containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().InstancePerLifetimeScope();
+     //containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().InstancePerLifetimeScope();
+     //containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().OwnedByLifetimeScope();
 });
 
 // 3. 构建并运行应用

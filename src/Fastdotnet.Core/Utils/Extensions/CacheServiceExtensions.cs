@@ -53,7 +53,7 @@ namespace Fastdotnet.Core.Utils.Extensions
             }
 
             // 注册缓存服务
-            services.AddScoped<IHybridCacheService, HybridCacheService>();
+            services.AddSingleton<IHybridCacheService, HybridCacheService>();
 
             return services;
         }

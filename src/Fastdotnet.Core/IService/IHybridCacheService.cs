@@ -53,6 +53,6 @@ namespace Fastdotnet.Core.IService
         /// 根据标签移除缓存项
         /// </summary>
         /// <param name="tag">标签</param>
-        Task RemoveByTagAsync(string tag);
+        Task RemoveByTagAsync(string[] tag);
     }
 }

@@ -35,7 +35,7 @@ namespace Fastdotnet.Core.Service
         {
             // 如果没有提供选项，使用配置文件中的默认值
             var cacheOptions = options ?? CreateDefaultOptions();
-            
+
             var result = await _hybridCache.GetOrCreateAsync(key, async (ct) =>
             {
                 return await factory();
@@ -55,8 +55,8 @@ namespace Fastdotnet.Core.Service
         {
             // 如果没有提供选项，使用配置文件中的默认值
             var cacheOptions = options ?? CreateDefaultOptions();
-            
-            await _hybridCache.SetAsync(key, value, cacheOptions);
+
+            await _hybridCache.SetAsync(key, value, cacheOptions, tags);
 
             // 关联标签和键
             if (tags != null && tags.Length > 0)
@@ -98,6 +98,11 @@ namespace Fastdotnet.Core.Service
                     if (_tagToKeysMap.TryGetValue(tag, out var keys))
                     {
                         keys.Remove(key);
+                        // 如果标签下没有键了，也移除标签
+                        if (keys.Count == 0)
+                        {
+                            _tagToKeysMap.TryRemove(tag, out _);
+                        }
                     }
                 }
                 _keyToTagsMap.TryRemove(key, out _);
@@ -105,21 +110,34 @@ namespace Fastdotnet.Core.Service
         }
 
         /// <inheritdoc/>
-        public async Task RemoveByTagAsync(string tag)
+        public async Task RemoveByTagAsync(string[] tags)
         {
-            await _hybridCache.RemoveByTagAsync(tag);
-
-            if (_tagToKeysMap.TryGetValue(tag, out var keys))
+            // 使用HybridCache的原生RemoveByTagAsync方法
+            await _hybridCache.RemoveByTagAsync(tags);
+            for (var i = 0; i < tags.Length; i++)
             {
-                // 移除所有关联的键
-                foreach (var key in keys.ToList())
+                string tag = tags[i];
+                // 更新我们自己的标签映射
+                if (_tagToKeysMap.TryGetValue(tag, out var keys))
                 {
-                    await RemoveAsync(key);
-                }
+                    // 移除所有关联的键的标签引用
+                    foreach (var key in keys.ToList())
+                    {
+                        if (_keyToTagsMap.TryGetValue(key, out var keyTags))
+                        {
+                            keyTags.Remove(tag);
+                            if (keyTags.Count == 0)
+                            {
+                                _keyToTagsMap.TryRemove(key, out _);
+                            }
+                        }
+                    }
 
-                // 清空标签映射
-                _tagToKeysMap.TryRemove(tag, out _);
+                    // 清空标签映射
+                    _tagToKeysMap.TryRemove(tag, out _);
+                }
             }
+
         }
 
         /// <summary>
