@@ -104,3 +104,5 @@ plugin-a-app/
 29. **DTO与实体的一致性**: 在定义或修改DTO时，其属性（特别是可空性`?`和数据校验特性如`[Required]`）必须参考 `src/Fastdotnet.Core/Entities` 中对应的数据库实体定义，以确保数据约束在校验层和数据层保持一致。
 30. 前端一律使用pnmp进行管理
 31. 前端切换为vue-next-admin，并与后端集成，主框架集成完成后再进行qiankun的集成
+32. 缓存使用HybridCache实现，默认使用MemoryCache，如需使用Redis，请修改配置文件中的CacheType为"Redis"并提供连接字符串
+33. CacheResultAttribute 控制器方法缓存特性

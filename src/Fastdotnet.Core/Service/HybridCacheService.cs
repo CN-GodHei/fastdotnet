@@ -160,7 +160,7 @@ namespace Fastdotnet.Core.Service
         /// <param name="key">缓存键</param>
         /// <param name="tags">标签数组</param>
         private void AssociateTagsWithKey(string key, string[] tags)
-        {
+        { 
             // 记录键到标签的映射
             var keyTags = _keyToTagsMap.GetOrAdd(key, _ => new HashSet<string>());
             foreach (var tag in tags)

@@ -132,6 +132,61 @@ public interface IPlugin
 - 文件系统监控自动检测插件变更
 - 插件状态实时更新，支持优雅停止
 
+## 缓存系统
+
+### 技术栈
+缓存系统基于Microsoft HybridCache构建，具有以下特点：
+
+- **双层缓存架构**：本地内存缓存 + 分布式缓存（Redis/MemoryCache）
+- **高性能**：本地缓存提供最快的访问速度
+- **高可用**：分布式缓存确保多实例间的数据一致性
+- **灵活配置**：支持MemoryCache和Redis两种后端存储
+
+### 核心组件
+1. **IHybridCacheService** - 核心缓存服务接口
+2. **CacheResultAttribute** - 控制器方法缓存特性
+3. **CacheTagAttribute** - 缓存标签特性
+
+### 使用方式
+
+#### 控制器层使用
+```csharp
+[ApiController]
+[Route("api/[controller]")]
+public class UserController : ControllerBase
+{
+    [HttpGet("{id}")]
+    [CacheResult(ExpirationSeconds = 600)]
+    [CacheTag("user")]
+    public async Task<ActionResult<UserDto>> GetUser(int id)
+    {
+        // 实际业务逻辑
+    }
+}
+```
+
+#### 服务层使用
+```csharp
+public class UserService : IUserService
+{
+    private readonly IHybridCacheService _cacheService;
+    
+    public async Task<UserDto> GetUserAsync(int userId)
+    {
+        var key = $"user:{userId}";
+        return await _cacheService.GetOrCreateAsync(key, async () =>
+        {
+            // 从数据库获取数据
+        });
+    }
+}
+```
+
+### 安全性说明
+缓存机制与JWT认证完全兼容，认证检查始终在缓存检查之前执行，确保安全性。
+
+更多详细信息请参阅 [缓存使用指南](docs/HybridCache使用指南.md)
+
 ## 设计原则
 1. **依赖倒置原则(DIP)**
    - 高层模块不应依赖低层模块，两者都应依赖抽象
