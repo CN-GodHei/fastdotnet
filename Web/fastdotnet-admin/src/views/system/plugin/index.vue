@@ -46,11 +46,11 @@ import { ref, onMounted } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 // 导入插件相关的API
 import {
-  scanPlugins,
-  enablePlugin,
-  disablePlugin,
-  uninstallPlugin
-} from '/@/api/plugin'
+  getPluginScan,
+  postPluginEnablePluginId,
+  postPluginDisablePluginId,
+  postPluginUninstallPluginId
+} from '/@/api/fd-system-api/Plugin'
 
 // 定义插件数据类型
 interface Plugin {
@@ -71,7 +71,7 @@ const searchName = ref('')
 // 获取插件列表
 const getPluginList = () => {
   // 扫描插件
-  scanPlugins().then((res: any) => {
+  getPluginScan().then((res: any) => {
     pluginList.value = res
   })
 }
@@ -99,7 +99,7 @@ const handleEnable = (row: Plugin) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    enablePlugin(row.id).then(() => {
+    postPluginEnablePluginId({ pluginId: row.id }).then(() => {
       ElMessage.success('启用成功')
       getPluginList() // 重新获取插件列表
     })
@@ -113,7 +113,7 @@ const handleDisable = (row: Plugin) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    disablePlugin(row.id).then(() => {
+    postPluginDisablePluginId({ pluginId: row.id }).then(() => {
       ElMessage.success('停用成功')
       getPluginList() // 重新获取插件列表
     })
@@ -127,7 +127,7 @@ const handleUninstall = (row: Plugin) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    uninstallPlugin(row.id).then(() => {
+    postPluginUninstallPluginId({ pluginId: row.id }).then(() => {
       ElMessage.success('卸载成功')
       getPluginList() // 重新获取插件列表
     })

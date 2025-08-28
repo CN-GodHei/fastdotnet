@@ -68,7 +68,8 @@ import { initBackEndControlRoutes } from '/@/router/backEnd';
 import { Session } from '/@/utils/storage';
 import { formatAxis } from '/@/utils/formatTime';
 import { NextLoading } from '/@/utils/loading';
-import { useAuthApi } from '/@/api/auth/index'; // 引入适配的登录 API
+// import { useAuthApi } from '/@/api/auth/index'; // 引入适配的登录 API
+import { postAuthAdminLogin } from '/@/api/fd-system-api/auth'; // 引入适配的登录 API
 import { startQiankun } from '/@/main'; // 导入 startQiankun 函数
 
 // 定义变量内容
@@ -77,7 +78,7 @@ const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const route = useRoute();
 const router = useRouter();
-const authApi = useAuthApi(); // 实例化登录 API
+// const authApi = useAuthApi(); // 实例化登录 API
 
 const state = reactive({
 	isShowPassword: false,
@@ -100,7 +101,7 @@ const onSignIn = async () => {
 	state.loading.signIn = true;
 	try {
 		// 1. 调用后端登录接口
-		const res = await authApi.adminLogin({
+		const res = await postAuthAdminLogin({
 			Username: state.ruleForm.userName,
 			Password: state.ruleForm.password,
 		});

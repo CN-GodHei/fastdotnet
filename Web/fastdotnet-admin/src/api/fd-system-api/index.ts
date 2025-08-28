@@ -1,0 +1,28 @@
+// @ts-ignore
+/* eslint-disable */
+// API 更新时间：
+// API 唯一标识：
+import * as Auth from './Auth';
+import * as AdminUsers from './AdminUsers';
+import * as AppMenus from './AppMenus';
+import * as CacheTest from './CacheTest';
+import * as EmailConfig from './EmailConfig';
+import * as MenuButtons from './MenuButtons';
+import * as Menus from './Menus';
+import * as Permissions from './Permissions';
+import * as Plugin from './Plugin';
+import * as Roles from './Roles';
+import * as SystemConfig from './SystemConfig';
+export default {
+	Auth,
+	AdminUsers,
+	AppMenus,
+	CacheTest,
+	EmailConfig,
+	MenuButtons,
+	Menus,
+	Permissions,
+	Plugin,
+	Roles,
+	SystemConfig,
+};
