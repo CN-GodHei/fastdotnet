@@ -9,7 +9,6 @@
 		"build": "vite build",
 		"lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue src/",
 		"generate:types": "openapi-typescript http://localhost:18889/swagger/main/swagger.json --output src/api/types.ts"
-		// npx openapi-typescript-codegen --input http://localhost:18889/swagger/main/swagger.json --output ./src/api --client axios
 	},
 	"dependencies": {
 		"@element-plus/icons-vue": "^2.3.1",
@@ -48,6 +47,7 @@
 		"@types/sortablejs": "^1.15.8",
 		"@typescript-eslint/eslint-plugin": "^7.2.0",
 		"@typescript-eslint/parser": "^7.2.0",
+		"@umijs/openapi": "^1.13.15",
 		"@vitejs/plugin-vue": "^5.0.4",
 		"@vue/compiler-sfc": "^3.4.21",
 		"eslint": "^8.57.0",
