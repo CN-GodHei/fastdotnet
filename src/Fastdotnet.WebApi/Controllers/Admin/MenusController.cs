@@ -62,15 +62,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             {
                 // 超管获取所有菜单
                 menus = await _repository.GetListAsync(m => m.Category == "Admin" && m.IsEnabled);
-                JsonConvert.SerializeObject(menus, Formatting.Indented);
-                //将menus 转为 JSON 字符串输出
-                var menusJson = JsonConvert.SerializeObject(menus, Formatting.Indented);
-
-
-                var ss = menus.ToString();
                 menus = BuildMenuTree(menus, null);
-                var menusJson1 = JsonConvert.SerializeObject(menus, Formatting.Indented);
-
             }
             else
             {
@@ -116,8 +108,21 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 .ToList();
         }
 
+        [HttpGet]
         [Authorize(Policy = Permissions.Admin.Menus.View)]
-        public override Task<List<MenuDto>> GetAll() => base.GetAll();
+        public override async Task<List<MenuDto>> GetAll()
+        {
+            // 获取所有菜单
+            var menus = await _repository.GetListAsync(m => m.Category == "Admin");
+            
+            // 构建树形结构
+            var menuTree = BuildMenuTree(menus, null);
+            
+            // 转换为 DTO
+            var menuDtos = _mapper.Map<List<MenuDto>>(menuTree);
+            
+            return menuDtos;
+        }
 
         [Authorize(Policy = Permissions.Admin.Menus.View)]
         public override Task<MenuDto> GetById(string id) => base.GetById(id);
