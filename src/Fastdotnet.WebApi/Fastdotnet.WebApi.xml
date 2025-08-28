@@ -109,6 +109,25 @@
             </summary>
             <returns>返回一个包含所有配置的字典</returns>
         </member>
+        <member name="T:Fastdotnet.WebApi.Controllers.AuthController">
+            <summary>
+            登录授权管理
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.AuthController.AdminLogin(Fastdotnet.Core.Models.Auth.LoginDto)">
+            <summary>
+            管理员端登录
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.AuthController.AppLogin(Fastdotnet.Core.Models.Auth.LoginDto)">
+            <summary>
+            用户端登录
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
         <member name="M:Fastdotnet.WebApi.Controllers.AuthController.SendRegistrationCode(Fastdotnet.Core.Models.Auth.SendRegistrationCodeDto)">
             <summary>
             发送App注册验证码

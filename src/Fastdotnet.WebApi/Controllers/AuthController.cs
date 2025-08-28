@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Fastdotnet.WebApi.Controllers
 {
+    /// <summary>
+    /// 登录授权管理
+    /// </summary>
     [ApiController]
     [Route("api/auth")]
     [AllowAnonymous] // 将此控制器标记为允许匿名访问
@@ -19,7 +22,11 @@ namespace Fastdotnet.WebApi.Controllers
             _authService = authService;
             _verificationCodeManager = verificationCodeManager;
         }
-
+        /// <summary>
+        /// 管理员端登录
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost("admin/login")]
         public async Task<IActionResult> AdminLogin([FromBody] LoginDto dto)
         {
@@ -27,6 +34,11 @@ namespace Fastdotnet.WebApi.Controllers
             return Ok(new { Token = token });
         }
 
+        /// <summary>
+        /// 用户端登录
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost("app/login")]
         public async Task<IActionResult> AppLogin([FromBody] LoginDto dto)
         {
