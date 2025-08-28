@@ -110,12 +110,13 @@ namespace Fastdotnet.Core.Entities.System
         /// 是否以内嵌 iframe 打开 (对应 vue-next-admin 的 meta.isIframe)
         /// </summary>
         public bool IsIframe { get; set; } = false;
+        public bool isLink { get; set; } = false;
 
         /// <summary>
         /// 子菜单
         /// </summary>
-        [SugarColumn(IsIgnore = true)]
-        public List<FdMenu> Children { get; set; }
+        //[SugarColumn(IsIgnore = true)]
+        //public List<FdMenu> Children { get; set; }
         public bool IsFdMicroApp { get; set; }
 
         public string PluginId { get; set; }

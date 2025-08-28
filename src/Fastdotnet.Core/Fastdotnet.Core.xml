@@ -711,7 +711,7 @@
             是否以内嵌 iframe 打开 (对应 vue-next-admin 的 meta.isIframe)
             </summary>
         </member>
-        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.Children">
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenu.IsFdMicroApp">
             <summary>
             子菜单
             </summary>

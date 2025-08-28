@@ -1,7 +1,9 @@
+using AutoMapper;
 using Fastdotnet.Core.Entities.Admin;
 using Fastdotnet.Core.Entities.App;
 using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.IService;
+using Fastdotnet.Core.Models.System;
 using Fastdotnet.Service.IService;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,22 +18,24 @@ namespace Fastdotnet.Service.Service
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
         private readonly IRepository<FdAppUserRole> _appUserRoleRepository;
         private readonly IPermissionService _permissionService;
-
+        private readonly IMapper _mapper;
         public MenuService(
             IRepository<FdMenu> menuRepository,
             IRepository<FdRoleMenu> roleMenuRepository,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
             IRepository<FdAppUserRole> appUserRoleRepository,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IMapper mapper)
         {
             _menuRepository = menuRepository;
             _roleMenuRepository = roleMenuRepository;
             _adminUserRoleRepository = adminUserRoleRepository;
             _appUserRoleRepository = appUserRoleRepository;
             _permissionService = permissionService;
+            _mapper = mapper;
         }
 
-        public async Task<List<FdMenu>> GetUserMenusAsync(string userId, string category)
+        public async Task<List<MenuDto>> GetUserMenusAsync(string userId, string category)
         {
             // 1. Get user's roles
             List<string> roleIds;
@@ -48,7 +52,7 @@ namespace Fastdotnet.Service.Service
 
             if (!roleIds.Any())
             {
-                return new List<FdMenu>();
+                return new List<MenuDto>();
             }
 
             // 2. Get menu ids from roles
@@ -57,7 +61,7 @@ namespace Fastdotnet.Service.Service
 
             if (!menuIds.Any())
             {
-                return new List<FdMenu>();
+                return new List<MenuDto>();
             }
 
             // 3. Get menus
@@ -70,34 +74,44 @@ namespace Fastdotnet.Service.Service
                 .ToList();
 
             // 5. Build menu tree
-            return BuildMenuTree(accessibleMenus, null);
+            return await BuildMenuTree(accessibleMenus, null);
         }
 
-        private List<FdMenu> BuildMenuTree(List<FdMenu> allMenus, string? parentCode)
+        public async Task<List<MenuDto>> BuildMenuTree(List<FdMenu> allMenus, string? parentCode)
         {
-            return allMenus
-                .Where(m => m.ParentCode == parentCode)
-                .OrderBy(m => m.Sort)
-                .Select(m => new FdMenu
+            // 预处理：构建父子关系字典，处理 null ParentCode
+            var menuDict = allMenus
+                .GroupBy(m => m.ParentCode ?? string.Empty) // 将 null 转换为 ""
+                .ToDictionary(g => g.Key, g => g.OrderBy(m => m.Sort).ToList());
+
+            // 递归构建树
+            async Task<List<MenuDto>> BuildTreeRecursive(string? currentParentCode)
+            {
+                // 将 null 转换为 "" 以匹配字典中的键
+                var key = currentParentCode ?? string.Empty;
+
+                // 快速查找子菜单
+                if (!menuDict.TryGetValue(key, out var childMenus))
                 {
-                    // You might need to map other properties as well
-                    Id = m.Id,
-                    Name = m.Name,
-                    Code = m.Code,
-                    Path = m.Path,
-                    Icon = m.Icon,
-                    ParentCode = m.ParentCode,
-                    Sort = m.Sort,
-                    Type = m.Type,
-                    Module = m.Module,
-                    Category = m.Category,
-                    IsExternal = m.IsExternal,
-                    ExternalUrl = m.ExternalUrl,
-                    IsEnabled = m.IsEnabled,
-                    PermissionCode = m.PermissionCode,
-                    Children = BuildMenuTree(allMenus, m.Code) // Recursive call
-                })
-                .ToList();
+                    return new List<MenuDto>();
+                }
+
+                // 使用 AutoMapper 和异步处理
+                var tasks = childMenus.Select(async m => {
+                    // 使用 AutoMapper 映射基本属性
+                    var menuDto = _mapper.Map<MenuDto>(m);
+                    // 递归构建子菜单
+                    menuDto.Children = await BuildTreeRecursive(m.Code);
+                    return menuDto;
+                });
+
+                // 等待所有任务完成
+                var menuDtos = await Task.WhenAll(tasks);
+                return menuDtos.ToList();
+            }
+
+            return await BuildTreeRecursive(parentCode);
         }
+
     }
 }

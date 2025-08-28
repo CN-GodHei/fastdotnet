@@ -56,13 +56,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
             // 判断是否为超管角色
             bool isSuperAdmin = await _adminUserService.IsSuperAdminAsync(userId);
-            List<FdMenu> menus;
+            List<MenuDto> menus;
 
             if (isSuperAdmin)
             {
                 // 超管获取所有菜单
-                menus = await _repository.GetListAsync(m => m.Category == "Admin" && m.IsEnabled);
-                menus = BuildMenuTree(menus, null);
+                var menutemp = await _repository.GetListAsync(m => m.Category == "Admin" && m.IsEnabled);
+                menus = await _menuService.BuildMenuTree(menutemp, null);
             }
             else
             {
@@ -73,40 +73,6 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             return Ok(menus);
         }
 
-        private List<FdMenu> BuildMenuTree(List<FdMenu> allMenus, string? parentCode)
-        {
-            return allMenus
-                .Where(m => m.ParentCode == parentCode)
-                .OrderBy(m => m.Sort)
-                .Select(m => new FdMenu
-                {
-                    Id = m.Id,
-                    Name = m.Name,
-                    Code = m.Code,
-                    Path = m.Path,
-                    Icon = m.Icon,
-                    ParentCode = m.ParentCode,
-                    Sort = m.Sort,
-                    Type = m.Type,
-                    Module = m.Module,
-                    Category = m.Category,
-                    IsExternal = m.IsExternal,
-                    ExternalUrl = m.ExternalUrl,
-                    IsEnabled = m.IsEnabled,
-                    PermissionCode = m.PermissionCode,
-                    // --- 新增字段映射 ---
-                    Component = m.Component,
-                    IsHide = m.IsHide,
-                    IsKeepAlive = m.IsKeepAlive,
-                    IsAffix = m.IsAffix,
-                    IsIframe = m.IsIframe,
-                    IsFdMicroApp = m.IsFdMicroApp,
-                    // ---------------------
-                    PluginId =m.PluginId,
-                    Children = BuildMenuTree(allMenus, m.Code)
-                })
-                .ToList();
-        }
 
         [HttpGet]
         [Authorize(Policy = Permissions.Admin.Menus.View)]
@@ -116,7 +82,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             var menus = await _repository.GetListAsync(m => m.Category == "Admin");
             
             // 构建树形结构
-            var menuTree = BuildMenuTree(menus, null);
+            var menuTree = await _menuService.BuildMenuTree(menus, null);
             
             // 转换为 DTO
             var menuDtos = _mapper.Map<List<MenuDto>>(menuTree);

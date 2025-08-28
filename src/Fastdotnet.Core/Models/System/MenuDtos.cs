@@ -35,11 +35,13 @@ namespace Fastdotnet.Core.Models.System
         
         // 新增字段 - 用于对接 vue-next-admin
         public string? Component { get; set; }
+        public string? PluginId { get; set; }
         public bool IsHide { get; set; }
         public bool IsKeepAlive { get; set; }
         public bool IsAffix { get; set; }
         public bool IsIframe { get; set; }
         public bool IsFdMicroApp { get; set; }
+        public bool isLink { get; set; }
 
         public List<MenuDto> Children { get; set; }
     }
@@ -66,6 +68,7 @@ namespace Fastdotnet.Core.Models.System
         public bool IsAffix { get; set; } = false;
         public bool IsIframe { get; set; } = false;
         public bool IsFdMicroApp { get; set; }
+        public bool isLink { get; set; }
     }
 
     public class UpdateMenuDto
@@ -91,5 +94,6 @@ namespace Fastdotnet.Core.Models.System
         public bool IsAffix { get; set; }
         public bool IsFdMicroApp { get; set; }
         public bool IsIframe { get; set; }
+        public bool isLink { get; set; }
     }
 }
