@@ -67,6 +67,7 @@ declare namespace APIModel {
 		IsAffix?: boolean;
 		IsIframe?: boolean;
 		IsFdMicroApp?: boolean;
+		isLink?: boolean;
 	};
 
 	type CreateRoleDto = {
@@ -474,11 +475,13 @@ declare namespace APIModel {
 		IsEnabled?: boolean;
 		PermissionCode?: string;
 		Component?: string;
+		PluginId?: string;
 		IsHide?: boolean;
 		IsKeepAlive?: boolean;
 		IsAffix?: boolean;
 		IsIframe?: boolean;
 		IsFdMicroApp?: boolean;
+		isLink?: boolean;
 		Children?: MenuDto[];
 	};
 
@@ -821,6 +824,7 @@ declare namespace APIModel {
 		IsAffix?: boolean;
 		IsFdMicroApp?: boolean;
 		IsIframe?: boolean;
+		isLink?: boolean;
 	};
 
 	type UpdateRoleDto = {
