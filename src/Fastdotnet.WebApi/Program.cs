@@ -218,6 +218,8 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+builder.Services.AddSwaggerGenNewtonsoftSupport(); // ✅ Swagger启用 Newtonsoft 支持
+
 builder.Services.AddSingleton<IActionDescriptorChangeProvider>(ActionDescriptorChangeProvider.Instance);
 builder.Services.AddSingleton<DynamicMiddlewareRegistry>();
 builder.Services.AddSqlSugar(builder.Configuration);
@@ -450,4 +452,5 @@ static void SetNewtonsoftJsonSetting(JsonSerializerSettings setting)
     setting.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
     //不改变字段大小写：还是注释吧，总有人分不清大小写，但程序不会，通吃就行
     setting.ContractResolver = new DefaultContractResolver();
+
 }
