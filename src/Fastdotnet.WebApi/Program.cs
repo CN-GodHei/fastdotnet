@@ -140,7 +140,8 @@ builder.Services.AddSwaggerGen(c =>
                 // 为AuthController设置特殊标签名，使其排在最前面
                 if (controllerName == "Auth")
                 {
-                    return new[] { "00-认证接口" };
+                    //return new[] { "00-认证接口" };
+                    return new[] { " Auth" };
                 }
                 return new[] { controllerName };
             }
