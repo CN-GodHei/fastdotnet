@@ -1,4 +1,5 @@
 using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.Auth;
 using Fastdotnet.Service.IService;
@@ -55,13 +56,15 @@ namespace Fastdotnet.WebApi.Controllers.System
                     // 5. 检查验证码字段是否为空
                     if (string.IsNullOrEmpty(dto.CaptchaId) || string.IsNullOrEmpty(dto.CaptchaCode))
                     {
-                        return BadRequest(new { success = false, message = "验证码不能为空" });
+                        //return BadRequest(new { success = false, message = "验证码不能为空" });
+                        throw new BusinessException("验证码不能为空");
                     }
-                    
+
                     // 6. 验证图形验证码
                     if (!_captcha.Validate(dto.CaptchaId, dto.CaptchaCode))
                     {
-                        return BadRequest(new { success = false, message = "验证码错误" });
+                        throw new BusinessException("验证码错误");
+                        //return BadRequest(new { success = false, message = "验证码错误" });
                     }
                 }
                 // 如果是其他类型的验证码（如行为验证码），可以在这里添加相应的验证逻辑

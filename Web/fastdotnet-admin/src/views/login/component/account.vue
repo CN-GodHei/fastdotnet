@@ -44,7 +44,14 @@
 			</el-col>
 			<el-col :span="1"></el-col>
 			<el-col :span="8">
-				<el-button class="login-content-code" v-waves>1234</el-button>
+				<div class="captcha-container">
+					<img 
+						:src="state.captchaUrl" 
+						alt="验证码" 
+						class="login-content-code" 
+						@click="refreshCaptcha"
+					/>
+				</div>
 			</el-col>
 		</el-form-item>
 		<el-form-item class="login-animation4">
@@ -56,7 +63,7 @@
 </template>
 
 <script setup lang="ts" name="loginAccount">
-import { reactive, computed } from 'vue';
+import { reactive, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
@@ -68,9 +75,9 @@ import { initBackEndControlRoutes } from '/@/router/backEnd';
 import { Session } from '/@/utils/storage';
 import { formatAxis } from '/@/utils/formatTime';
 import { NextLoading } from '/@/utils/loading';
-// import { useAuthApi } from '/@/api/auth/index'; // 引入适配的登录 API
-import { postAuthAdminLogin } from '/@/api/fd-system-api/auth'; // 引入适配的登录 API
-import { startQiankun } from '/@/main'; // 导入 startQiankun 函数
+// 引入适配的登录 API
+import { postAuthAdminLogin } from '/@/api/fd-system-api/auth';
+import { startQiankun } from '/@/main';
 
 // 定义变量内容
 const { t } = useI18n();
@@ -78,24 +85,46 @@ const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const route = useRoute();
 const router = useRouter();
-// const authApi = useAuthApi(); // 实例化登录 API
 
 const state = reactive({
 	isShowPassword: false,
 	ruleForm: {
 		userName: 'superadmin', // 默认用户名
 		password: '123456', // 默认密码
-		code: '1234', // 默认验证码
+		code: '', // 验证码
 	},
 	loading: {
 		signIn: false,
 	},
+	captchaId: '', // 验证码ID
+	captchaUrl: '', // 验证码图片URL
 });
 
 // 时间获取
 const currentTime = computed(() => {
 	return formatAxis(new Date());
 });
+
+// 生成验证码ID
+const generateCaptchaId = () => {
+	return Date.now().toString(); // 使用时间戳作为验证码ID
+};
+
+// 刷新验证码
+const refreshCaptcha = async () => {
+	try {
+		// 生成新的验证码ID
+		state.captchaId = generateCaptchaId();
+		
+		// 生成验证码图片URL
+		const baseUrl = import.meta.env.VITE_API_URL || '';
+		state.captchaUrl = `${baseUrl}/api/Captcha/generate?id=${state.captchaId}&t=${Date.now()}`;
+	} catch (error) {
+		console.error('获取验证码失败:', error);
+		ElMessage.error('获取验证码失败，请稍后重试');
+	}
+};
+
 // 登录 (适配 Fastdotnet 后端)
 const onSignIn = async () => {
 	state.loading.signIn = true;
@@ -104,6 +133,8 @@ const onSignIn = async () => {
 		const res = await postAuthAdminLogin({
 			Username: state.ruleForm.userName,
 			Password: state.ruleForm.password,
+			CaptchaId: state.captchaId,
+			CaptchaCode: state.ruleForm.code,
 		});
 
 		// 2. 检查响应并存储 token
@@ -142,8 +173,12 @@ const onSignIn = async () => {
 		console.error('登录请求失败:', error);
 		ElMessage.error(error.message || '登录请求失败，请检查网络或联系管理员');
 		state.loading.signIn = false;
+		
+		// 刷新验证码
+		refreshCaptcha();
 	}
 };
+
 // 登录成功后的跳转
 const signInSuccess = (isNoPower: boolean | undefined) => {
 	if (isNoPower) {
@@ -188,6 +223,11 @@ const signInSuccess = (isNoPower: boolean | undefined) => {
 	}
 	state.loading.signIn = false;
 };
+
+// 组件挂载时生成验证码
+onMounted(() => {
+	refreshCaptcha();
+});
 </script>
 
 <style scoped lang="scss">
@@ -212,9 +252,12 @@ const signInSuccess = (isNoPower: boolean | undefined) => {
 	}
 	.login-content-code {
 		width: 100%;
-		padding: 0;
-		font-weight: bold;
-		letter-spacing: 5px;
+		height: 40px;
+		cursor: pointer;
+		border: 1px solid #dcdfe6;
+		border-radius: 4px;
+		object-fit: cover;
+		vertical-align: middle;
 	}
 	.login-content-submit {
 		width: 100%;
