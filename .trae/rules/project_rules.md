@@ -23,7 +23,7 @@
 23. Axios (HTTP 客户端)，自己封装了一个，封装了请求拦截器和响应拦截器，自己定义了一个请求参数的格式，自己定义了一个响应参数的格式，自己定义了一个错误处理的格式
 24. 前端代码目录结构
 管理端主应用 (admin-base)
-admin-base/
+fastdotnet-admin/
 ├── src/
 │   ├── api/              # 主应用API接口
 │   ├── assets/           # 静态资源
@@ -44,7 +44,7 @@ admin-base/
 │   └── index.html        # 主页面
 └── vite.config.ts        # Vite 配置
 客户端主应用 (app-base)
-app-base/
+fastdotnet-app/
 ├── src/
 │   ├── api/              # 主应用API接口
 │   ├── assets/           # 静态资源
