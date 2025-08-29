@@ -6,6 +6,7 @@ import * as Auth from './Auth';
 import * as AdminUsers from './AdminUsers';
 import * as AppMenus from './AppMenus';
 import * as CacheTest from './CacheTest';
+import * as Captcha from './Captcha';
 import * as EmailConfig from './EmailConfig';
 import * as MenuButtons from './MenuButtons';
 import * as Menus from './Menus';
@@ -18,6 +19,7 @@ export default {
 	AdminUsers,
 	AppMenus,
 	CacheTest,
+	Captcha,
 	EmailConfig,
 	MenuButtons,
 	Menus,

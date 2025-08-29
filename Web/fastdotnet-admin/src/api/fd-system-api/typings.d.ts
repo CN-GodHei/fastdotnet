@@ -432,6 +432,11 @@ declare namespace APIModel {
 		pageSize?: number;
 	};
 
+	type getCaptchaGenerateParams = {
+		/** 验证码标识符，通常是用户会话ID或GUID */
+		id?: string;
+	};
+
 	type getPluginActivePluginIdParams = {
 		pluginId: string;
 	};
@@ -439,6 +444,8 @@ declare namespace APIModel {
 	type LoginDto = {
 		Username: string;
 		Password: string;
+		CaptchaId?: string;
+		CaptchaCode?: string;
 	};
 
 	type MenuButtonDto = {
@@ -653,6 +660,13 @@ declare namespace APIModel {
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
+	};
+
+	type postCaptchaValidateParams = {
+		/** 验证码标识符 */
+		id?: string;
+		/** 用户输入的验证码 */
+		code?: string;
 	};
 
 	type postPluginDisablePluginIdParams = {

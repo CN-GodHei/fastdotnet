@@ -2,7 +2,7 @@
 /* eslint-disable */
 import request from '/@/utils/request';
 
-/** 此处后端没有提供注释 POST /api/auth/admin/login */
+/** 管理员端登录 POST /api/auth/admin/login */
 export async function postAuthAdminLogin(body: APIModel.LoginDto, options?: { [key: string]: any }) {
 	return request<any>('/api/auth/admin/login', {
 		method: 'POST',
@@ -14,7 +14,7 @@ export async function postAuthAdminLogin(body: APIModel.LoginDto, options?: { [k
 	});
 }
 
-/** 此处后端没有提供注释 POST /api/auth/app/login */
+/** 用户端登录 POST /api/auth/app/login */
 export async function postAuthAppLogin(body: APIModel.LoginDto, options?: { [key: string]: any }) {
 	return request<any>('/api/auth/app/login', {
 		method: 'POST',
