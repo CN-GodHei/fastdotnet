@@ -288,6 +288,9 @@ builder.Services.Scan(scan => scan
     .AsImplementedInterfaces()
     .WithScopedLifetime());
 
+// 注册LAZY.CAPTCHA服务
+builder.Services.AddCaptcha(builder.Configuration);
+
 // 注册新权限同步服务
 builder.Services.AddScoped<IPermissionSyncService, PermissionSyncService>();
 

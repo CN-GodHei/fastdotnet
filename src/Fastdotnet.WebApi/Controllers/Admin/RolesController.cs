@@ -38,7 +38,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         [Authorize(Policy = Permissions.Admin.Roles.View)]
-        public override Task<System.Collections.Generic.List<RoleDto>> GetAll() => base.GetAll();
+        public override Task<List<RoleDto>> GetAll() => base.GetAll();
 
         [Authorize(Policy = Permissions.Admin.Roles.View)]
         public override Task<RoleDto> GetById(string id) => base.GetById(id);

@@ -34,7 +34,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// </summary>
         /// <returns>包含所有管理员用户的列表</returns>
         [Authorize(Policy = Permissions.Admin.Users.View)]
-        public override Task<System.Collections.Generic.List<AdminUserDto>> GetAll() => base.GetAll();
+        public override Task<List<AdminUserDto>> GetAll() => base.GetAll();
 
         //[Authorize(Policy = Permissions.Admin.Users.View)]
         //public async Task<AdminUserDto> GetById(string id)

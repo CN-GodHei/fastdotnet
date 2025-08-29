@@ -53,7 +53,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         #region === 禁用通用接口 ===
 
         [NonAction]
-        public override Task<System.Collections.Generic.List<EmailConfigDto>> GetAll() => throw new BusinessException("此功能对邮件配置无效。");
+        public override Task<List<EmailConfigDto>> GetAll() => throw new BusinessException("此功能对邮件配置无效。");
 
         [NonAction]
         public override Task<EmailConfigDto> GetById(string id) => throw new BusinessException("此功能对邮件配置无效。");

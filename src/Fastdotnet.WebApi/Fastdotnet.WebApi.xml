@@ -109,34 +109,55 @@
             </summary>
             <returns>返回一个包含所有配置的字典</returns>
         </member>
-        <member name="T:Fastdotnet.WebApi.Controllers.AuthController">
+        <member name="T:Fastdotnet.WebApi.Controllers.System.AuthController">
             <summary>
             登录授权管理
             </summary>
         </member>
-        <member name="M:Fastdotnet.WebApi.Controllers.AuthController.AdminLogin(Fastdotnet.Core.Models.Auth.LoginDto)">
+        <member name="M:Fastdotnet.WebApi.Controllers.System.AuthController.AdminLogin(Fastdotnet.Core.Models.Auth.LoginDto)">
             <summary>
             管理员端登录
             </summary>
             <param name="dto"></param>
             <returns></returns>
         </member>
-        <member name="M:Fastdotnet.WebApi.Controllers.AuthController.AppLogin(Fastdotnet.Core.Models.Auth.LoginDto)">
+        <member name="M:Fastdotnet.WebApi.Controllers.System.AuthController.AppLogin(Fastdotnet.Core.Models.Auth.LoginDto)">
             <summary>
             用户端登录
             </summary>
             <param name="dto"></param>
             <returns></returns>
         </member>
-        <member name="M:Fastdotnet.WebApi.Controllers.AuthController.SendRegistrationCode(Fastdotnet.Core.Models.Auth.SendRegistrationCodeDto)">
+        <member name="M:Fastdotnet.WebApi.Controllers.System.AuthController.SendRegistrationCode(Fastdotnet.Core.Models.Auth.SendRegistrationCodeDto)">
             <summary>
             发送App注册验证码
             </summary>
         </member>
-        <member name="M:Fastdotnet.WebApi.Controllers.AuthController.AppRegister(Fastdotnet.Core.Models.Auth.AppRegisterDto)">
+        <member name="M:Fastdotnet.WebApi.Controllers.System.AuthController.AppRegister(Fastdotnet.Core.Models.Auth.AppRegisterDto)">
             <summary>
             App端用户注册
             </summary>
+        </member>
+        <member name="T:Fastdotnet.WebApi.Controllers.CaptchaController">
+            <summary>
+            验证码控制器
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.CaptchaController.Generate(System.String)">
+            <summary>
+            生成验证码图片
+            </summary>
+            <param name="id">验证码标识符，通常是用户会话ID或GUID</param>
+            <returns>GIF/PNG格式的验证码图片</returns>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.CaptchaController.Validate(System.String,System.String)">
+            <summary>
+            验证验证码 (仅供测试使用)
+            在正常的登录流程中，验证码验证应在后端完成，而不是通过此接口。
+            </summary>
+            <param name="id">验证码标识符</param>
+            <param name="code">用户输入的验证码</param>
+            <returns>验证结果</returns>
         </member>
         <member name="T:Fastdotnet.WebApi.Extensions.ApplicationInitializerExtensions">
             <summary>

@@ -1272,6 +1272,16 @@
             不带数据的通用返回值类型
             </summary>
         </member>
+        <member name="P:Fastdotnet.Core.Models.Auth.LoginDto.CaptchaId">
+            <summary>
+            验证码ID
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Auth.LoginDto.CaptchaCode">
+            <summary>
+            用户输入的验证码
+            </summary>
+        </member>
         <member name="T:Fastdotnet.Core.Models.Base.IBaseEntity">
             <summary>
             基础实体类接口
