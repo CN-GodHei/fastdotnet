@@ -1,0 +1,523 @@
+declare namespace APIModel {
+  type AdminUserDto = {
+    Id?: string;
+    Username?: string;
+    FullName?: string;
+    Email?: string;
+    Phone?: string;
+    IsActive?: boolean;
+    LastLoginTime?: string;
+    LastLoginIp?: string;
+    CreateTime?: string;
+  };
+
+  type AdminUserDtoPageResult = {
+    PageInfo?: PageInfo;
+    Items?: AdminUserDto[];
+  };
+
+  type AppRegisterDto = {
+    Username: string;
+    Password: string;
+    Email: string;
+    VerificationCode: string;
+  };
+
+  type AssignPermissionsDto = {
+    PermissionIds?: string[];
+  };
+
+  type CreateAdminUserDto = {
+    Username: string;
+    Password: string;
+    FullName?: string;
+    Email?: string;
+    Phone?: string;
+    IsActive?: boolean;
+  };
+
+  type CreateMenuButtonDto = {
+    Name?: string;
+    Code?: string;
+    Description?: string;
+    MenuId?: string;
+    Module?: string;
+    Category?: string;
+    Sort?: number;
+    PermissionCode?: string;
+    IsEnabled?: boolean;
+  };
+
+  type CreateMenuDto = {
+    Name?: string;
+    Path?: string;
+    Icon?: string;
+    ParentCode?: string;
+    Sort?: number;
+    Type?: MenuType;
+    Module?: string;
+    Category?: string;
+    IsExternal?: boolean;
+    ExternalUrl?: string;
+    IsEnabled?: boolean;
+    PermissionCode?: string;
+    Component?: string;
+    IsHide?: boolean;
+    IsKeepAlive?: boolean;
+    IsAffix?: boolean;
+    IsIframe?: boolean;
+    IsFdMicroApp?: boolean;
+    isLink?: boolean;
+  };
+
+  type CreateRoleDto = {
+    Name: string;
+    Description?: string;
+    Category: string;
+  };
+
+  type deleteIdParams = {
+    /** 要删除的记录的唯一标识符 */
+    id: string;
+  };
+
+  type deleteRecyclebinIdPermanentParams = {
+    /** 要永久删除的记录的唯一标识符 */
+    id: string;
+  };
+
+  type EmailConfigBooleanFuncExpression = {
+    Type?: string;
+    NodeType?: ExpressionType;
+    Parameters?: ParameterExpression[];
+    Name?: string;
+    Body?: Expression;
+    ReturnType?: string;
+    TailCall?: boolean;
+    CanReduce?: boolean;
+  };
+
+  type EmailConfigDto = {
+    Id?: string;
+    Host?: string;
+    Port?: number;
+    Username?: string;
+    Password?: string;
+    SenderEmail?: string;
+    SenderName?: string;
+    EnableSsl?: boolean;
+  };
+
+  type EmailConfigDtoPageResult = {
+    PageInfo?: PageInfo;
+    Items?: EmailConfigDto[];
+  };
+
+  type Expression = {
+    NodeType?: ExpressionType;
+    Type?: string;
+    CanReduce?: boolean;
+  };
+
+  enum ExpressionType {
+    0 = "0",
+    1 = "1",
+    2 = "2",
+    3 = "3",
+    4 = "4",
+    5 = "5",
+    6 = "6",
+    7 = "7",
+    8 = "8",
+    9 = "9",
+    10 = "10",
+    11 = "11",
+    12 = "12",
+    13 = "13",
+    14 = "14",
+    15 = "15",
+    16 = "16",
+    17 = "17",
+    18 = "18",
+    19 = "19",
+    20 = "20",
+    21 = "21",
+    22 = "22",
+    23 = "23",
+    24 = "24",
+    25 = "25",
+    26 = "26",
+    27 = "27",
+    28 = "28",
+    29 = "29",
+    30 = "30",
+    31 = "31",
+    32 = "32",
+    33 = "33",
+    34 = "34",
+    35 = "35",
+    36 = "36",
+    37 = "37",
+    38 = "38",
+    39 = "39",
+    40 = "40",
+    41 = "41",
+    42 = "42",
+    43 = "43",
+    44 = "44",
+    45 = "45",
+    46 = "46",
+    47 = "47",
+    48 = "48",
+    49 = "49",
+    50 = "50",
+    51 = "51",
+    52 = "52",
+    53 = "53",
+    54 = "54",
+    55 = "55",
+    56 = "56",
+    57 = "57",
+    58 = "58",
+    59 = "59",
+    60 = "60",
+    61 = "61",
+    62 = "62",
+    63 = "63",
+    64 = "64",
+    65 = "65",
+    66 = "66",
+    67 = "67",
+    68 = "68",
+    69 = "69",
+    70 = "70",
+    71 = "71",
+    72 = "72",
+    73 = "73",
+    74 = "74",
+    75 = "75",
+    76 = "76",
+    77 = "77",
+    78 = "78",
+    79 = "79",
+    80 = "80",
+    81 = "81",
+    82 = "82",
+    83 = "83",
+    84 = "84",
+  }
+
+  type FdAdminUserBooleanFuncExpression = {
+    Type?: string;
+    NodeType?: ExpressionType;
+    Parameters?: ParameterExpression[];
+    Name?: string;
+    Body?: Expression;
+    ReturnType?: string;
+    TailCall?: boolean;
+    CanReduce?: boolean;
+  };
+
+  type FdMenuBooleanFuncExpression = {
+    Type?: string;
+    NodeType?: ExpressionType;
+    Parameters?: ParameterExpression[];
+    Name?: string;
+    Body?: Expression;
+    ReturnType?: string;
+    TailCall?: boolean;
+    CanReduce?: boolean;
+  };
+
+  type FdMenuButtonBooleanFuncExpression = {
+    Type?: string;
+    NodeType?: ExpressionType;
+    Parameters?: ParameterExpression[];
+    Name?: string;
+    Body?: Expression;
+    ReturnType?: string;
+    TailCall?: boolean;
+    CanReduce?: boolean;
+  };
+
+  type FdRoleBooleanFuncExpression = {
+    Type?: string;
+    NodeType?: ExpressionType;
+    Parameters?: ParameterExpression[];
+    Name?: string;
+    Body?: Expression;
+    ReturnType?: string;
+    TailCall?: boolean;
+    CanReduce?: boolean;
+  };
+
+  type getIdParams = {
+    /** 记录的唯一标识符 */
+    id: string;
+  };
+
+  type getPageParams = {
+    /** 页码 (从1开始) */
+    pageIndex?: number;
+    /** 页面大小 */
+    pageSize?: number;
+  };
+
+  type getRecyclebinParams = {
+    /** 页码 (从1开始) */
+    pageIndex?: number;
+    /** 页面大小 */
+    pageSize?: number;
+  };
+
+  type LoginDto = {
+    Username: string;
+    Password: string;
+    CaptchaId?: string;
+    CaptchaCode?: string;
+  };
+
+  type MenuButtonDto = {
+    Id?: string;
+    Name?: string;
+    Code?: string;
+    Description?: string;
+    MenuId?: string;
+    Module?: string;
+    Category?: string;
+    Sort?: number;
+    PermissionCode?: string;
+    IsEnabled?: boolean;
+  };
+
+  type MenuButtonDtoPageResult = {
+    PageInfo?: PageInfo;
+    Items?: MenuButtonDto[];
+  };
+
+  type MenuDto = {
+    Id?: string;
+    Name?: string;
+    Code?: string;
+    Path?: string;
+    Icon?: string;
+    ParentCode?: string;
+    Sort?: number;
+    Type?: MenuType;
+    Module?: string;
+    Category?: string;
+    IsExternal?: boolean;
+    ExternalUrl?: string;
+    IsEnabled?: boolean;
+    PermissionCode?: string;
+    Component?: string;
+    PluginId?: string;
+    IsHide?: boolean;
+    IsKeepAlive?: boolean;
+    IsAffix?: boolean;
+    IsIframe?: boolean;
+    IsFdMicroApp?: boolean;
+    isLink?: boolean;
+    Children?: MenuDto[];
+  };
+
+  type MenuDtoPageResult = {
+    PageInfo?: PageInfo;
+    Items?: MenuDto[];
+  };
+
+  enum MenuType {
+    0 = "0",
+    1 = "1",
+  }
+
+  type PageInfo = {
+    Total?: number;
+    TotalPages?: number;
+    HasPreviousPage?: boolean;
+    HasNextPage?: boolean;
+    Page?: number;
+    PageSize?: number;
+  };
+
+  type ParameterExpression = {
+    Type?: string;
+    NodeType?: ExpressionType;
+    Name?: string;
+    IsByRef?: boolean;
+    CanReduce?: boolean;
+  };
+
+  type PluginATestBooleanFuncExpression = {
+    Type?: string;
+    NodeType?: ExpressionType;
+    Parameters?: ParameterExpression[];
+    Name?: string;
+    Body?: Expression;
+    ReturnType?: string;
+    TailCall?: boolean;
+    CanReduce?: boolean;
+  };
+
+  type PluginATestCreateDto = {
+    Name?: string;
+    Description?: string;
+    TestValue?: number;
+    IsEnabled?: boolean;
+    Creator?: string;
+  };
+
+  type PluginATestDto = {
+    Id?: string;
+    Name?: string;
+    Description?: string;
+    TestValue?: number;
+    IsEnabled?: boolean;
+    Creator?: string;
+    CreateTime?: string;
+    UpdateTime?: string;
+  };
+
+  type PluginATestDtoPageResult = {
+    PageInfo?: PageInfo;
+    Items?: PluginATestDto[];
+  };
+
+  type PluginATestUpdateDto = {
+    Id?: string;
+    Name?: string;
+    Description?: string;
+    TestValue?: number;
+    IsEnabled?: boolean;
+    Creator?: string;
+  };
+
+  type postPageSearchParams = {
+    /** 页码 (从1开始) */
+    pageIndex?: number;
+    /** 页面大小 */
+    pageSize?: number;
+  };
+
+  type postRecyclebinSearchParams = {
+    /** 页码 (从1开始) */
+    pageIndex?: number;
+    /** 页面大小 */
+    pageSize?: number;
+  };
+
+  type putIdParams = {
+    /** 要更新的记录的唯一标识符 */
+    id: string;
+  };
+
+  type putRecyclebinIdRestoreParams = {
+    /** 要恢复的记录的唯一标识符 */
+    id: string;
+  };
+
+  type ResetPasswordDto = {
+    NewPassword: string;
+  };
+
+  type RoleDto = {
+    Id?: string;
+    Name?: string;
+    Code?: string;
+    Description?: string;
+    Category?: string;
+    IsSystem?: boolean;
+    CreateTime?: string;
+  };
+
+  type RoleDtoPageResult = {
+    PageInfo?: PageInfo;
+    Items?: RoleDto[];
+  };
+
+  type SendRegistrationCodeDto = {
+    Email: string;
+  };
+
+  type SystemConfigBooleanFuncExpression = {
+    Type?: string;
+    NodeType?: ExpressionType;
+    Parameters?: ParameterExpression[];
+    Name?: string;
+    Body?: Expression;
+    ReturnType?: string;
+    TailCall?: boolean;
+    CanReduce?: boolean;
+  };
+
+  type SystemConfigDto = {
+    Id?: string;
+    Name?: string;
+    Code?: string;
+    Value?: any;
+    Description?: string;
+    IsSystem?: boolean;
+  };
+
+  type SystemConfigDtoPageResult = {
+    PageInfo?: PageInfo;
+    Items?: SystemConfigDto[];
+  };
+
+  type UpdateAdminUserDto = {
+    FullName?: string;
+    Email?: string;
+    Phone?: string;
+    IsActive?: boolean;
+  };
+
+  type UpdateEmailConfigDto = {
+    Host: string;
+    Port: number;
+    Username: string;
+    Password: string;
+    SenderEmail: string;
+    SenderName: string;
+    EnableSsl?: boolean;
+  };
+
+  type UpdateMenuButtonDto = {
+    Name?: string;
+    Code?: string;
+    Description?: string;
+    MenuId?: string;
+    Module?: string;
+    Category?: string;
+    Sort?: number;
+    PermissionCode?: string;
+    IsEnabled?: boolean;
+  };
+
+  type UpdateMenuDto = {
+    Name?: string;
+    Code?: string;
+    Path?: string;
+    Icon?: string;
+    ParentCode?: string;
+    Sort?: number;
+    Type?: MenuType;
+    Module?: string;
+    Category?: string;
+    IsExternal?: boolean;
+    ExternalUrl?: string;
+    IsEnabled?: boolean;
+    PermissionCode?: string;
+    Component?: string;
+    IsHide?: boolean;
+    IsKeepAlive?: boolean;
+    IsAffix?: boolean;
+    IsFdMicroApp?: boolean;
+    IsIframe?: boolean;
+    isLink?: boolean;
+  };
+
+  type UpdateRoleDto = {
+    Name: string;
+    Description?: string;
+  };
+}
