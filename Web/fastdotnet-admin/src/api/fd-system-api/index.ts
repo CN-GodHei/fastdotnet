@@ -5,6 +5,7 @@
 import * as Auth from './Auth';
 import * as AdminUsers from './AdminUsers';
 import * as AppMenus from './AppMenus';
+import * as Blacklists from './Blacklists';
 import * as CacheTest from './CacheTest';
 import * as Captcha from './Captcha';
 import * as EmailConfig from './EmailConfig';
@@ -12,12 +13,14 @@ import * as MenuButtons from './MenuButtons';
 import * as Menus from './Menus';
 import * as Permissions from './Permissions';
 import * as Plugin from './Plugin';
+import * as RateLimitRules from './RateLimitRules';
 import * as Roles from './Roles';
 import * as SystemConfig from './SystemConfig';
 export default {
 	Auth,
 	AdminUsers,
 	AppMenus,
+	Blacklists,
 	CacheTest,
 	Captcha,
 	EmailConfig,
@@ -25,6 +28,7 @@ export default {
 	Menus,
 	Permissions,
 	Plugin,
+	RateLimitRules,
 	Roles,
 	SystemConfig,
 };

@@ -36,6 +36,21 @@ declare namespace APIModel {
 		IsActive?: boolean;
 	};
 
+	type CreateFdBlacklistDto = {
+		Type: string;
+		Value: string;
+		Reason?: string;
+		ExpiredAt?: string;
+	};
+
+	type CreateFdRateLimitRuleDto = {
+		Type: string;
+		Key: string;
+		PermitLimit: number;
+		WindowSeconds: number;
+		Description?: string;
+	};
+
 	type CreateMenuButtonDto = {
 		Name?: string;
 		Code?: string;
@@ -76,6 +91,16 @@ declare namespace APIModel {
 		Category: string;
 	};
 
+	type deleteAdminBlacklistsIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminBlacklistsRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
 	type deleteAdminCacheTestClearByTagParams = {
 		tags?: string[];
 	};
@@ -101,6 +126,16 @@ declare namespace APIModel {
 	};
 
 	type deleteAdminMenusRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminRateLimitRulesIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminRateLimitRulesRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -267,6 +302,34 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
+	type FdBlacklistBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type FdBlacklistDto = {
+		Id?: number;
+		Type: string;
+		Value: string;
+		Reason?: string;
+		ExpiredAt?: string;
+		IsSystem?: boolean;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+	};
+
+	type FdBlacklistDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdBlacklistDto[];
+	};
+
 	type FdMenuBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -289,6 +352,35 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
+	type FdRateLimitRuleBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type FdRateLimitRuleDto = {
+		Id?: number;
+		Type: string;
+		Key: string;
+		PermitLimit: number;
+		WindowSeconds: number;
+		Description?: string;
+		IsSystem?: boolean;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+	};
+
+	type FdRateLimitRuleDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdRateLimitRuleDto[];
+	};
+
 	type FdRoleBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -298,6 +390,30 @@ declare namespace APIModel {
 		ReturnType?: string;
 		TailCall?: boolean;
 		CanReduce?: boolean;
+	};
+
+	type getAdminBlacklistsCheckParams = {
+		type?: string;
+		value?: string;
+	};
+
+	type getAdminBlacklistsIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getAdminBlacklistsPageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminBlacklistsRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
 	};
 
 	type getAdminCacheTestGetParams = {
@@ -365,6 +481,35 @@ declare namespace APIModel {
 	};
 
 	type getAdminMenusRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminRateLimitRulesByTypeAndKeyParams = {
+		type?: string;
+		key?: string;
+	};
+
+	type getAdminRateLimitRulesCheckParams = {
+		type?: string;
+		key?: string;
+	};
+
+	type getAdminRateLimitRulesIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getAdminRateLimitRulesPageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminRateLimitRulesRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
@@ -563,6 +708,20 @@ declare namespace APIModel {
 		Creator?: string;
 	};
 
+	type postAdminBlacklistsPageSearchParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type postAdminBlacklistsRecyclebinSearchParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
 	type postAdminCacheTestSetParams = {
 		/** 缓存键 */
 		key?: string;
@@ -606,6 +765,20 @@ declare namespace APIModel {
 	};
 
 	type postAdminMenusRecyclebinSearchParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type postAdminRateLimitRulesPageSearchParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type postAdminRateLimitRulesRecyclebinSearchParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
@@ -681,6 +854,16 @@ declare namespace APIModel {
 		pluginId: string;
 	};
 
+	type putAdminBlacklistsIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminBlacklistsRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
 	type putAdminEmailConfigIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
@@ -707,6 +890,16 @@ declare namespace APIModel {
 	};
 
 	type putAdminMenusRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminRateLimitRulesIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminRateLimitRulesRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
@@ -804,6 +997,21 @@ declare namespace APIModel {
 		SenderEmail: string;
 		SenderName: string;
 		EnableSsl?: boolean;
+	};
+
+	type UpdateFdBlacklistDto = {
+		Type: string;
+		Value: string;
+		Reason?: string;
+		ExpiredAt?: string;
+	};
+
+	type UpdateFdRateLimitRuleDto = {
+		Type: string;
+		Key: string;
+		PermitLimit: number;
+		WindowSeconds: number;
+		Description?: string;
 	};
 
 	type UpdateMenuButtonDto = {
