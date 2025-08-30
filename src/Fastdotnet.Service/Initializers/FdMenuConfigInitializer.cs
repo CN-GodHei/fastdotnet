@@ -45,7 +45,9 @@ namespace Fastdotnet.Service.Initializers
 
     new FdMenu { Name = "Plugin A About", Code = "MENU_CODE_11375913497723909", Path = "/micro/11375910391972869/about", Icon = "ele-InfoFilled", Sort = 2, Type = MenuType.Menu, Module = "plugin-a", Category = "Admin", IsExternal = false, ExternalUrl = "", IsEnabled = true, PermissionCode = "", Component = "", IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = true ,ParentCode="MENU_CODE_11375905679934469",PluginId="11375910391972869"},
 
-    new FdMenu { Name = "Plugin B (Test)", Code = "MENU_CODE_PLUGIN_B_TEST", Path = "/micro/plugin-b", Icon = "ele-Cpu", Sort = 101, Type = MenuType.Menu, Module = "plugin-b", Category = "Admin", IsEnabled = true, IsFdMicroApp = true, ParentCode=null }
+    new FdMenu { Name = "Plugin B (Test)", Code = "MENU_CODE_PLUGIN_B_TEST", Path = "/micro/plugin-b", Icon = "ele-Cpu", Sort = 101, Type = MenuType.Menu, Module = "plugin-b", Category = "Admin", IsEnabled = false, IsFdMicroApp = true, ParentCode=null },
+    new FdMenu { Name = "黑名单管理", Code = "MENU_CODE_11365291745215493", Path = "/system/blacklist", Icon = "string", Sort = 0, Type = MenuType.Menu, Module = "string", Category = "Admin", IsExternal = false, ExternalUrl = "string", IsEnabled = true, PermissionCode = "string", Component = "/system/blacklist/index.vue", IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = false ,ParentCode="MENU_CODE_11365290021618693"},
+    new FdMenu { Name = "限流管理", Code = "MENU_CODE_11365291745215493", Path = "/system/ratelimit", Icon = "string", Sort = 0, Type = MenuType.Menu, Module = "string", Category = "Admin", IsExternal = false, ExternalUrl = "string", IsEnabled = true, PermissionCode = "string", Component = "/system/ratelimit/index.vue", IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = false ,ParentCode="MENU_CODE_11365290021618693"},
 };
             await _systemConfigRepository.InsertRangeAsync(configs);
 

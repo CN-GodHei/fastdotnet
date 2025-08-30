@@ -8,7 +8,7 @@ namespace Fastdotnet.Core.Entities.System
     /// <summary>
     /// 菜单表
     /// </summary>
-    [SugarTable("FdMenu")]
+    [SugarTable("fd_menu", "菜单表")]
     public class FdMenu : BaseEntity, ISoftDelete
     {
         /// <summary>
@@ -119,6 +119,7 @@ namespace Fastdotnet.Core.Entities.System
         //public List<FdMenu> Children { get; set; }
         public bool IsFdMicroApp { get; set; }
 
+        [SugarColumn(IsNullable = true,ColumnDescription ="插件Id",ColumnName = "plugin_id")]
         public string PluginId { get; set; }
     }
 }
