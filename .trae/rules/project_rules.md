@@ -113,3 +113,8 @@ plugin-a-app/
 38. 后端封装了全局可控异常处理，src\Fastdotnet.WebApi\Filters\GlobalExceptionFilter.cs，可控异常统一使用422状态码返回，非可控异常返回500状态码
 39. 前端项目使用@umijs/openapi库，进行swagger/openapi接口文档生成前端的api请求地址和模型，相关配置在openapi2ts.config.ts，插件也支持生成相应的接口
 40. 前端项目管理端基于vue-next-admin开发
+41. **动态条件查询**: 控制器支持通过 `PageQueryByConditionDto` 进行动态条件查询，前端可传递 `dynamicQuery` 和 `queryParameters` 实现复杂查询。示例：
+    - 简单条件：`{ dynamicQuery: "Age > @0 and IsActive == @1", queryParameters: [25, true] }`
+    - 字符串匹配：`{ dynamicQuery: "Name.Contains(@0)", queryParameters: ["John"] }`
+    - 复合条件：`{ dynamicQuery: "Age >= @0 and Age <= @1 and !string.IsNullOrEmpty(Name)", queryParameters: [18, 65] }`
+    - OR条件：`{ dynamicQuery: "Age < @0 or Age > @1", queryParameters: [18, 65] }`
