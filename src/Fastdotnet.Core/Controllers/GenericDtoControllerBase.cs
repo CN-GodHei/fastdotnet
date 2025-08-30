@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Fastdotnet.Core.Utils.Extensions;
+using System.Linq.Dynamic.Core;
 
 namespace Fastdotnet.Core.Controllers
 {
@@ -74,18 +75,30 @@ namespace Fastdotnet.Core.Controllers
         }
 
         /// <summary>
-        /// 根据条件分页获取实体
+        /// 根据条件分页获取实体 (使用 PageQueryByConditionDto)
         /// </summary>
-        /// <param name="whereExpression">查询条件表达式</param>
-        /// <param name="pageIndex">页码（从1开始）</param>
-        /// <param name="pageSize">页大小</param>
+        /// <param name="query">分页和查询条件</param>
         [HttpPost("page/search")]
-        public virtual async Task<PageResult<TDto>> GetPageByCondition(
-            [FromBody] Expression<Func<TEntity, bool>> whereExpression,
-            [FromQuery] int pageIndex = 1,
-            [FromQuery] int pageSize = 10)
+        public virtual async Task<PageResult<TDto>> GetPageByCondition([FromBody] PageQueryByConditionDto query)
         {
-            var pageResult = await _repository.GetPageAsync(whereExpression, pageIndex, pageSize);
+            // 构建动态表达式
+            Expression<Func<TEntity, bool>>? whereExpression = null;
+            
+            // 如果有动态查询条件，则构建表达式
+            if (!string.IsNullOrEmpty(query.DynamicQuery))
+            {
+                whereExpression = DynamicExpressionParser.ParseLambda<TEntity, bool>(
+                    ParsingConfig.Default, 
+                    false, 
+                    query.DynamicQuery, 
+                    query.QueryParameters ?? new object[0]);
+            }
+            
+            var pageResult = await _repository.GetPageAsync(
+                whereExpression,
+                query.PageIndex,
+                query.PageSize);
+                
             return new PageResult<TDto>
             {
                 Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),
@@ -270,18 +283,30 @@ namespace Fastdotnet.Core.Controllers
         }
 
         /// <summary>
-        /// 根据条件查询回收站数据
+        /// 根据条件查询回收站数据 (使用 PageQueryByConditionDto)
         /// </summary>
-        /// <param name="whereExpression">查询条件表达式</param>
-        /// <param name="pageIndex">页码（从1开始）</param>
-        /// <param name="pageSize">页大小</param>
+        /// <param name="query">分页和查询条件</param>
         [HttpPost("recyclebin/search")]
-        public virtual async Task<PageResult<TDto>> SearchRecycleBin(
-            [FromBody] Expression<Func<TEntity, bool>> whereExpression,
-            [FromQuery] int pageIndex = 1,
-            [FromQuery] int pageSize = 10)
+        public virtual async Task<PageResult<TDto>> SearchRecycleBin([FromBody] PageQueryByConditionDto query)
         {
-            var pageResult = await _repository.GetRecycleBinAsync(whereExpression, pageIndex, pageSize);
+            // 构建动态表达式
+            Expression<Func<TEntity, bool>>? whereExpression = null;
+            
+            // 如果有动态查询条件，则构建表达式
+            if (!string.IsNullOrEmpty(query.DynamicQuery))
+            {
+                whereExpression = DynamicExpressionParser.ParseLambda<TEntity, bool>(
+                    ParsingConfig.Default, 
+                    false, 
+                    query.DynamicQuery, 
+                    query.QueryParameters ?? new object[0]);
+            }
+            
+            var pageResult = await _repository.GetRecycleBinAsync(
+                whereExpression,
+                query.PageIndex,
+                query.PageSize);
+                
             return new PageResult<TDto>
             {
                 Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),

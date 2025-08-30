@@ -327,13 +327,11 @@
             <param name="pageIndex">页码（从1开始）</param>
             <param name="pageSize">页大小</param>
         </member>
-        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.GetPageByCondition(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32)">
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.GetPageByCondition(Fastdotnet.Core.Models.PageQueryByConditionDto)">
             <summary>
-            根据条件分页获取实体
+            根据条件分页获取实体 (使用 PageQueryByConditionDto)
             </summary>
-            <param name="whereExpression">查询条件表达式</param>
-            <param name="pageIndex">页码（从1开始）</param>
-            <param name="pageSize">页大小</param>
+            <param name="query">分页和查询条件</param>
         </member>
         <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.Create(`2)">
             <summary>
@@ -411,13 +409,11 @@
             <param name="pageIndex">页码（从1开始）</param>
             <param name="pageSize">页大小</param>
         </member>
-        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.SearchRecycleBin(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32)">
+        <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.SearchRecycleBin(Fastdotnet.Core.Models.PageQueryByConditionDto)">
             <summary>
-            根据条件查询回收站数据
+            根据条件查询回收站数据 (使用 PageQueryByConditionDto)
             </summary>
-            <param name="whereExpression">查询条件表达式</param>
-            <param name="pageIndex">页码（从1开始）</param>
-            <param name="pageSize">页大小</param>
+            <param name="query">分页和查询条件</param>
         </member>
         <member name="M:Fastdotnet.Core.Controllers.GenericDtoControllerBase`5.Restore(`1)">
             <summary>
@@ -1819,6 +1815,28 @@
         <member name="P:Fastdotnet.Core.Models.LogModels.SqlExecutionLog.CreateTime">
             <summary>
             创建时间
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.PageQueryByConditionDto">
+            <summary>
+            通用分页查询DTO
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.PageQueryByConditionDto.Keyword">
+            <summary>
+            关键词，用于模糊搜索
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.PageQueryByConditionDto.DynamicQuery">
+            <summary>
+            动态查询条件，使用 System.Linq.Dynamic.Core 语法
+            例如: \"Age > 18 and Name.Contains(\\\"John\\\")
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.PageQueryByConditionDto.QueryParameters">
+            <summary>
+            查询参数，与 DynamicQuery 配合使用
+            例如: new object[] { 18, \"John\" }
             </summary>
         </member>
         <member name="T:Fastdotnet.Core.Models.PageQueryDto">
