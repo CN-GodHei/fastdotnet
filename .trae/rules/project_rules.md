@@ -106,4 +106,10 @@ plugin-a-app/
 31. 前端切换为vue-next-admin，并与后端集成，主框架集成完成后再进行qiankun的集成
 32. 缓存使用HybridCache实现，默认使用MemoryCache，如需使用Redis，请修改配置文件中的CacheType为"Redis"并提供连接字符串
 33. CacheResultAttribute 控制器方法缓存特性
-34. 控制器可以继承通用控制器 GenericDtoControllerBase，里面已经实现了通用的crud方法,
+34. 控制器可以继承通用控制器 GenericDtoControllerBase，里面已经实现了通用的crud方法,如有其他逻辑可重写自定义逻辑，只是简单的逻辑的话可以使用
+35. 接口归一化返回，通过全局拦截器(GlobalResultFilter)实现，返回格式{Data:xxx,Msg:xxx,Code:xxx},可使用SkipGlobalResultAttribute 跳过全局返回结果
+36. 数据返回格式{Data:xxx,Msg:xxx,Code:xxx}前端request.ts 封装了全局请求拦截器，请求时自动添加token，请求成功时自动处理返回结果Data的值，具体业务不需要重复.Data，请求失败时自动处理错误
+37. 前端主程序已共享封装的request.ts axios实例，插件通过主框架的qiankun共享实例props传递
+38. 后端封装了全局可控异常处理，src\Fastdotnet.WebApi\Filters\GlobalExceptionFilter.cs，可控异常统一使用422状态码返回，非可控异常返回500状态码
+39. 前端项目使用@umijs/openapi库，进行swagger/openapi接口文档生成前端的api请求地址和模型，相关配置在openapi2ts.config.ts，插件也支持生成相应的接口
+40. 前端项目管理端基于vue-next-admin开发
