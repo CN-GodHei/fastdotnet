@@ -4,25 +4,30 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import routes from './router'
 // --- 添加类型导入 ---
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from 'axios'
 
 let app: ReturnType<typeof createApp> | null = null;
 
 // --- 添加一个变量来存储接收到的 FdRequest 实例 ---
 let sharedFdRequest: AxiosInstance | null = null;
+// --- 添加查询构建器变量 ---
+let sharedFdQueryBuilder: any | null = null;
 // --- 添加结束 ---
 
 // --- 导出一个函数，让插件内部可以获取到共享的 FdRequest 实例 ---
 export const getSharedFdRequest = () => sharedFdRequest;
+// --- 导出查询构建器 ---
+export const getSharedFdQueryBuilder = () => sharedFdQueryBuilder;
 // --- 导出结束 ---
 
 const init = (props: any = {}) => {
-  // --- 从 props 中解构出 FdRequest ---
-  const { container, FdRequest } = props
+  // --- 从 props 中解构出 FdRequest 和 FdQueryBuilder ---
+  const { container, FdRequest, FdQueryBuilder } = props
   // --- 解构结束 ---
 
-  // --- 保存接收到的 FdRequest 实例 ---
+  // --- 保存接收到的 FdRequest 实例和查询构建器 ---
   sharedFdRequest = FdRequest;
+  sharedFdQueryBuilder = FdQueryBuilder;
   // --- 保存结束 ---
 
   app = createApp(App)
@@ -37,8 +42,9 @@ const init = (props: any = {}) => {
   app.use(router)
   app.use(pinia)
 
-  // --- 可选：将 FdRequest 实例挂载到 app.config.globalProperties 上 ---
+  // --- 可选：将 FdRequest 实例和查询构建器挂载到 app.config.globalProperties 上 ---
   // app.config.globalProperties.$FdRequest = FdRequest;
+  // app.config.globalProperties.$FdQueryBuilder = FdQueryBuilder;
   // --- 可选结束 ---
 
   const mountPoint = container ? container : '#app'
@@ -48,16 +54,18 @@ const init = (props: any = {}) => {
     app,
     router,
     pinia,
-    // --- 将 FdRequest 实例也返回 ---
+    // --- 将 FdRequest 实例和查询构建器也返回 ---
     FdRequest,
+    FdQueryBuilder,
     // --- 返回结束 ---
     unmount() {
       if (app) {
         app.unmount();
         app = null;
       }
-      // --- 清理共享的 FdRequest 实例 ---
+      // --- 清理共享的 FdRequest 实例和查询构建器 ---
       sharedFdRequest = null;
+      sharedFdQueryBuilder = null;
       // --- 清理结束 ---
     }
   }

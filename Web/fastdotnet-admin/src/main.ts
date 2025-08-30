@@ -9,6 +9,7 @@ import { registerMicroApps, start } from 'qiankun';
 import { useMenuApi } from '/@/api/menu';
 import { Session } from '/@/utils/storage';
 import request from '/@/utils/request'; // 引入主应用的 Axios 实例
+import { buildMixedQuery } from '/@/utils/queryBuilder'; // 引入查询构建工具
 
 // --- 共享依赖 ---
 (window as any).Vue = Vue;
@@ -81,7 +82,9 @@ export async function startQiankun() {
                             props: {
                                 base: activeRule,
                                 // --- 添加这行 ---
-                                FdRequest: request // 将主应用的 Axios 实例通过 props 传递，名称为 FdRequest
+                                FdRequest: request, // 将主应用的 Axios 实例通过 props 传递，名称为 FdRequest
+                                // --- 添加查询构建工具 ---
+                                FdQueryBuilder: { buildMixedQuery } // 将查询构建工具通过 props 传递
                                 // --- 添加结束 ---
                             },
                         });
