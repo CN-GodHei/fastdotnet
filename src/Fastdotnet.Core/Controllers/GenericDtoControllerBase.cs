@@ -79,6 +79,7 @@ namespace Fastdotnet.Core.Controllers
         /// </summary>
         /// <param name="query">分页和查询条件</param>
         [HttpPost("page/search")]
+        [Consumes("application/json")]
         public virtual async Task<PageResult<TDto>> GetPageByCondition([FromBody] PageQueryByConditionDto query)
         {
             // 构建动态表达式
@@ -287,6 +288,7 @@ namespace Fastdotnet.Core.Controllers
         /// </summary>
         /// <param name="query">分页和查询条件</param>
         [HttpPost("recyclebin/search")]
+        [Consumes("application/json")]
         public virtual async Task<PageResult<TDto>> SearchRecycleBin([FromBody] PageQueryByConditionDto query)
         {
             // 构建动态表达式
