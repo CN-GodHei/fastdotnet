@@ -1018,12 +1018,20 @@
         </member>
         <member name="P:Fastdotnet.Core.Entities.System.FdRateLimitRule.Type">
             <summary>
-            限流类型 (IP, User, ApiKey)
+            限流类型 (IP, User, ApiKey, Route)
+            IP: 针对IP地址的限流
+            User: 针对用户ID的限流
+            ApiKey: 针对API密钥的限流
+            Route: 针对路由的全局限流
             </summary>
         </member>
         <member name="P:Fastdotnet.Core.Entities.System.FdRateLimitRule.Key">
             <summary>
-            限流键 (具体的IP地址、用户ID或API密钥)
+            限流键 
+            当 Type=IP 时，Key=具体的IP地址
+            当 Type=User 时，Key=具体的用户ID
+            当 Type=ApiKey 时，Key=具体的API密钥
+            当 Type=Route 时，Key=具体的路由路径，如 "/api/auth/login"
             </summary>
         </member>
         <member name="P:Fastdotnet.Core.Entities.System.FdRateLimitRule.PermitLimit">
@@ -1510,6 +1518,16 @@
         <member name="T:Fastdotnet.Core.Middleware.RateLimitMiddleware">
             <summary>
             限流中间件
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Middleware.RateLimitMiddleware.IsRateLimitedForRouteAsync(Fastdotnet.Core.Services.System.IRateLimitCacheService,System.String)">
+            <summary>
+            检查路由是否触发限流
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Middleware.RateLimitMiddleware.IsRateLimitedForClientAsync(Fastdotnet.Core.Services.System.IRateLimitCacheService,System.String)">
+            <summary>
+            检查客户端是否触发限流
             </summary>
         </member>
         <member name="T:Fastdotnet.Core.Models.Admin.Users.AdminUserDto">

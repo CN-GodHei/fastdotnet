@@ -3,7 +3,6 @@ using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 // 添加AutoMapper相关引用
 using AutoMapper;
-using Fastdotnet.Core.Extensions;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Middleware;
@@ -253,7 +252,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
 // 注册日志服务
 builder.Services.AddScoped<ILogService, LogService>();
 //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -273,6 +271,8 @@ builder.Services.Scan(scan => scan
     .AsImplementedInterfaces()
     .WithScopedLifetime());
 builder.Services.AddScoped<IPermissionProvider, FrameworkPermissionProvider>();
+
+// 注册全局异常过滤器
 builder.Services.AddScoped<GlobalExceptionFilter>();
 
 // 添加内存缓存服务
@@ -304,9 +304,6 @@ builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProv
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 
-// 注册限流和黑名单缓存服务
-builder.Services.AddScoped<IRateLimitCacheService, RateLimitCacheService>();
-
 // 扫描并注册所有 IStartupTask 实现
 builder.Services.Scan(scan => scan
     .FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
@@ -315,6 +312,9 @@ builder.Services.Scan(scan => scan
     .WithScopedLifetime());
 
 builder.Services.AddSingleton<IControllerActivator, PluginControllerActivator>();
+
+// 注册限流和黑名单缓存服务
+builder.Services.AddScoped<IRateLimitCacheService, RateLimitCacheService>();
 
 // 2. 配置 Autofac 容器
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -411,8 +411,8 @@ app.UseMiddleware<OperationLogMiddleware>();
 app.UseMiddleware<PluginStaticFileMiddleware>();
 
 // 注册限流和黑名单中间件
-app.UseBlacklist();
-app.UseRateLimit();
+app.UseMiddleware<BlacklistMiddleware>();
+app.UseMiddleware<RateLimitMiddleware>();
 
 app.UseMiddleware<DynamicMiddlewareDispatcher>();
 app.UseAuthentication();

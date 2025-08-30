@@ -36,84 +36,89 @@ namespace Fastdotnet.Service.Initializers
 
             var rateLimitRules = new List<FdRateLimitRule>
             {
-                // 示例：添加一些默认的IP限流规则
-                new FdRateLimitRule 
-                { 
-                    Type = "IP", 
-                    Key = "default-ip-rule", 
-                    PermitLimit = 100, 
-                    WindowSeconds = 60, 
-                    Description = "默认IP限流规则：每分钟最多100次请求",
-                    IsSystem = true // 标记为系统预设的限流规则
-                },
-                new FdRateLimitRule 
-                { 
-                    Type = "IP", 
-                    Key = "strict-ip-rule", 
-                    PermitLimit = 10, 
-                    WindowSeconds = 60, 
-                    Description = "严格IP限流规则：每分钟最多10次请求",
-                    IsSystem = true // 标记为系统预设的限流规则
-                },
-
-                // 示例：添加一些默认的用户ID限流规则
-                new FdRateLimitRule 
-                { 
-                    Type = "UserId", 
-                    Key = "default-user-rule", 
-                    PermitLimit = 1000, 
-                    WindowSeconds = 3600, 
-                    Description = "默认用户ID限流规则：每小时最多1000次请求",
-                    IsSystem = true // 标记为系统预设的限流规则
-                },
-                new FdRateLimitRule 
-                { 
-                    Type = "UserId", 
-                    Key = "premium-user-rule", 
-                    PermitLimit = 10000, 
-                    WindowSeconds = 3600, 
-                    Description = "高级用户ID限流规则：每小时最多10000次请求",
-                    IsSystem = true // 标记为系统预设的限流规则
-                },
-
-                // 示例：添加一些默认的API密钥限流规则
-                new FdRateLimitRule 
-                { 
-                    Type = "ApiKey", 
-                    Key = "default-apikey-rule", 
-                    PermitLimit = 1000, 
-                    WindowSeconds = 3600, 
-                    Description = "默认API密钥限流规则：每小时最多1000次请求",
-                    IsSystem = true // 标记为系统预设的限流规则
-                },
-                new FdRateLimitRule 
-                { 
-                    Type = "ApiKey", 
-                    Key = "premium-apikey-rule", 
-                    PermitLimit = 10000, 
-                    WindowSeconds = 3600, 
-                    Description = "高级API密钥限流规则：每小时最多10000次请求",
-                    IsSystem = true // 标记为系统预设的限流规则
-                },
-
-                // 示例：添加一些默认的路由限流规则
+                // ==================== 全局限流规则 (Global Rate Limiting) ====================
+                // 这些规则限制整个系统范围内对特定路由的访问频率
+                
                 new FdRateLimitRule 
                 { 
                     Type = "Route", 
                     Key = "/api/auth/login", 
-                    PermitLimit = 10, 
+                    PermitLimit = 1000, 
                     WindowSeconds = 60, 
-                    Description = "登录接口限流规则：每分钟最多10次请求",
-                    IsSystem = true // 标记为系统预设的限流规则
+                    Description = "登录接口全局限流规则：每分钟最多1000次请求（整个系统范围内）",
+                    IsSystem = true
                 },
                 new FdRateLimitRule 
                 { 
                     Type = "Route", 
                     Key = "/api/users/register", 
-                    PermitLimit = 5, 
+                    PermitLimit = 100, 
                     WindowSeconds = 60, 
-                    Description = "注册接口限流规则：每分钟最多5次请求",
-                    IsSystem = true // 标记为系统预设的限流规则
+                    Description = "注册接口全局限流规则：每分钟最多100次请求（整个系统范围内）",
+                    IsSystem = true
+                },
+
+                // ==================== 客户端限流规则 (Per-Client Rate Limiting) ====================
+                // 这些规则限制特定客户端对系统的访问频率
+
+                // IP地址限流规则
+                new FdRateLimitRule 
+                { 
+                    Type = "IP", 
+                    Key = "default", 
+                    PermitLimit = 100, 
+                    WindowSeconds = 60, 
+                    Description = "默认IP限流规则：每个IP地址每分钟最多100次请求",
+                    IsSystem = true
+                },
+                new FdRateLimitRule 
+                { 
+                    Type = "IP", 
+                    Key = "strict", 
+                    PermitLimit = 10, 
+                    WindowSeconds = 60, 
+                    Description = "严格IP限流规则：每个IP地址每分钟最多10次请求",
+                    IsSystem = true
+                },
+
+                // 用户ID限流规则
+                new FdRateLimitRule 
+                { 
+                    Type = "UserId", 
+                    Key = "default", 
+                    PermitLimit = 1000, 
+                    WindowSeconds = 3600, 
+                    Description = "默认用户ID限流规则：每个用户每小时最多1000次请求",
+                    IsSystem = true
+                },
+                new FdRateLimitRule 
+                { 
+                    Type = "UserId", 
+                    Key = "premium", 
+                    PermitLimit = 10000, 
+                    WindowSeconds = 3600, 
+                    Description = "高级用户ID限流规则：每个高级用户每小时最多10000次请求",
+                    IsSystem = true
+                },
+
+                // API密钥限流规则
+                new FdRateLimitRule 
+                { 
+                    Type = "ApiKey", 
+                    Key = "default", 
+                    PermitLimit = 1000, 
+                    WindowSeconds = 3600, 
+                    Description = "默认API密钥限流规则：每个API密钥每小时最多1000次请求",
+                    IsSystem = true
+                },
+                new FdRateLimitRule 
+                { 
+                    Type = "ApiKey", 
+                    Key = "premium", 
+                    PermitLimit = 10000, 
+                    WindowSeconds = 3600, 
+                    Description = "高级API密钥限流规则：每个高级API密钥每小时最多10000次请求",
+                    IsSystem = true
                 }
             };
 

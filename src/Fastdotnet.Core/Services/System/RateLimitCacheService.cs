@@ -68,8 +68,16 @@ namespace Fastdotnet.Core.Services.System
         /// </summary>
         public async Task<FdRateLimitRuleDto?> GetRateLimitRuleAsync(string type, string key)
         {
-            var cacheKey = $"ratelimit:rule:{type}:{key}";
-            return await _hybridCacheService.GetAsync<FdRateLimitRuleDto>(cacheKey);
+            // 首先尝试获取具体的规则
+            var specificCacheKey = $"ratelimit:rule:{type}:{key}";
+            var specificRule = await _hybridCacheService.GetAsync<FdRateLimitRuleDto>(specificCacheKey);
+            
+            if (specificRule != null)
+                return specificRule;
+
+            // 如果没有具体的规则，尝试获取默认规则
+            var defaultCacheKey = $"ratelimit:rule:{type}:default";
+            return await _hybridCacheService.GetAsync<FdRateLimitRuleDto>(defaultCacheKey);
         }
 
         /// <summary>
@@ -143,7 +151,7 @@ namespace Fastdotnet.Core.Services.System
             var currentCount = await _hybridCacheService.GetAsync<long>(cacheKey);
 
             // 检查是否超过限制
-            return currentCount > rule.PermitLimit;
+            return currentCount >= rule.PermitLimit;
         }
     }
 }
