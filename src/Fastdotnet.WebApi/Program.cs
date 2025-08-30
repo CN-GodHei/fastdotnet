@@ -3,10 +3,12 @@ using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 // 添加AutoMapper相关引用
 using AutoMapper;
+using Fastdotnet.Core.Extensions;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Middleware;
 using Fastdotnet.Core.Service;
+using Fastdotnet.Core.Services.System;
 using Fastdotnet.Core.Settings;
 using Fastdotnet.Core.Utils;
 using Fastdotnet.Core.Utils.Extensions;
@@ -262,6 +264,8 @@ builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IApplicationInitializer, OrmCodeFirstInitializer>();
+builder.Services.AddScoped<IApplicationInitializer, BlacklistInitializer>();
+builder.Services.AddScoped<IApplicationInitializer, RateLimitRuleInitializer>();
 // 扫描并注册所有 IApplicationInitializer 实现
 builder.Services.Scan(scan => scan
     .FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
@@ -299,6 +303,9 @@ builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
+
+// 注册限流和黑名单缓存服务
+builder.Services.AddScoped<IRateLimitCacheService, RateLimitCacheService>();
 
 // 扫描并注册所有 IStartupTask 实现
 builder.Services.Scan(scan => scan
@@ -402,6 +409,11 @@ app.UseHttpsRedirection();
 app.UseMiddleware<RequestIdMiddleware>();
 app.UseMiddleware<OperationLogMiddleware>();
 app.UseMiddleware<PluginStaticFileMiddleware>();
+
+// 注册限流和黑名单中间件
+app.UseBlacklist();
+app.UseRateLimit();
+
 app.UseMiddleware<DynamicMiddlewareDispatcher>();
 app.UseAuthentication();
 app.UseAuthorization();

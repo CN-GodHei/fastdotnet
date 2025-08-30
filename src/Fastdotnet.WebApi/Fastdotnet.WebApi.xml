@@ -10,6 +10,31 @@
             </summary>
             <returns>包含所有管理员用户的列表</returns>
         </member>
+        <member name="T:Fastdotnet.WebApi.Controllers.Admin.BlacklistsController">
+            <summary>
+            黑名单管理控制器
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.BlacklistsController.IsBlacklisted(System.String,System.String)">
+            <summary>
+            检查值是否在黑名单中
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.BlacklistsController.AfterCreate(Fastdotnet.Core.Entities.System.FdBlacklist,Fastdotnet.Core.Dtos.System.CreateFdBlacklistDto)">
+            <summary>
+            创建黑名单条目后的回调方法
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.BlacklistsController.AfterUpdate(Fastdotnet.Core.Entities.System.FdBlacklist,Fastdotnet.Core.Dtos.System.UpdateFdBlacklistDto)">
+            <summary>
+            更新黑名单条目后的回调方法
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.BlacklistsController.AfterDelete(System.String,System.Boolean)">
+            <summary>
+            删除黑名单条目后的回调方法
+            </summary>
+        </member>
         <member name="T:Fastdotnet.WebApi.Controllers.Admin.CacheTestController">
             <summary>
             缓存测试控制器
@@ -101,6 +126,40 @@
         <member name="M:Fastdotnet.WebApi.Controllers.Admin.PluginController.IsPluginActive(System.String)">
             <summary>
             检查一个插件当前是否处于活动状态
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.WebApi.Controllers.Admin.RateLimitRulesController">
+            <summary>
+            限流规则管理控制器
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.RateLimitRulesController.GetByTypeAndKey(System.String,System.String)">
+            <summary>
+            根据类型和键获取限流规则
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.RateLimitRulesController.IsRateLimited(System.String,System.String)">
+            <summary>
+            检查是否触发限流
+            </summary>
+            <remarks>
+            注意：这个方法仅作演示用途。实际的限流检查应该在中间件中完成，
+            而不是通过API调用。这里只是为了展示如何在控制器中使用仓储。
+            </remarks>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.RateLimitRulesController.AfterCreate(Fastdotnet.Core.Entities.System.FdRateLimitRule,Fastdotnet.Core.Dtos.System.CreateFdRateLimitRuleDto)">
+            <summary>
+            创建限流规则后的回调方法
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.RateLimitRulesController.AfterUpdate(Fastdotnet.Core.Entities.System.FdRateLimitRule,Fastdotnet.Core.Dtos.System.UpdateFdRateLimitRuleDto)">
+            <summary>
+            更新限流规则后的回调方法
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.RateLimitRulesController.AfterDelete(System.String,System.Boolean)">
+            <summary>
+            删除限流规则后的回调方法
             </summary>
         </member>
         <member name="M:Fastdotnet.WebApi.Controllers.Admin.SystemConfigController.GetPublicConfigs">

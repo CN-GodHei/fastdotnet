@@ -94,6 +94,11 @@
             格式：范围.模块.操作
             </summary>
         </member>
+        <member name="T:Fastdotnet.Core.Constants.RateLimitCacheKeys">
+            <summary>
+            限流缓存键常量
+            </summary>
+        </member>
         <member name="T:Fastdotnet.Core.Constants.SystemConstants">
             <summary>
             系统常量配置
@@ -451,6 +456,181 @@
             <typeparam name="TUpdateDto">更新 DTO 类型</typeparam>
             <typeparam name="TDto">输出 DTO 类型</typeparam>
         </member>
+        <member name="T:Fastdotnet.Core.Dtos.System.FdBlacklistDto">
+            <summary>
+            黑名单DTO
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.FdBlacklistDto.Type">
+            <summary>
+            黑名单类型 (IP, User, ApiKey)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.FdBlacklistDto.Value">
+            <summary>
+            黑名单值 (具体的IP地址、用户ID或API密钥)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.FdBlacklistDto.Reason">
+            <summary>
+            加入黑名单的原因
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.FdBlacklistDto.ExpiredAt">
+            <summary>
+            过期时间 (可选)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.FdBlacklistDto.IsSystem">
+            <summary>
+            是否为系统内置
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Dtos.System.CreateFdBlacklistDto">
+            <summary>
+            创建黑名单DTO
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.CreateFdBlacklistDto.Type">
+            <summary>
+            黑名单类型 (IP, User, ApiKey)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.CreateFdBlacklistDto.Value">
+            <summary>
+            黑名单值 (具体的IP地址、用户ID或API密钥)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.CreateFdBlacklistDto.Reason">
+            <summary>
+            加入黑名单的原因
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.CreateFdBlacklistDto.ExpiredAt">
+            <summary>
+            过期时间 (可选)
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Dtos.System.UpdateFdBlacklistDto">
+            <summary>
+            更新黑名单DTO
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.UpdateFdBlacklistDto.Type">
+            <summary>
+            黑名单类型 (IP, User, ApiKey)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.UpdateFdBlacklistDto.Value">
+            <summary>
+            黑名单值 (具体的IP地址、用户ID或API密钥)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.UpdateFdBlacklistDto.Reason">
+            <summary>
+            加入黑名单的原因
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.UpdateFdBlacklistDto.ExpiredAt">
+            <summary>
+            过期时间 (可选)
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Dtos.System.FdRateLimitRuleDto">
+            <summary>
+            限流规则DTO
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.FdRateLimitRuleDto.Type">
+            <summary>
+            限流类型 (IP, User, ApiKey)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.FdRateLimitRuleDto.Key">
+            <summary>
+            限流键 (具体的IP地址、用户ID或API密钥)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.FdRateLimitRuleDto.PermitLimit">
+            <summary>
+            允许的最大请求数
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.FdRateLimitRuleDto.WindowSeconds">
+            <summary>
+            时间窗口 (以秒为单位)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.FdRateLimitRuleDto.Description">
+            <summary>
+            规则描述
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.FdRateLimitRuleDto.IsSystem">
+            <summary>
+            是否为系统内置
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Dtos.System.CreateFdRateLimitRuleDto">
+            <summary>
+            创建限流规则DTO
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.CreateFdRateLimitRuleDto.Type">
+            <summary>
+            限流类型 (IP, User, ApiKey)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.CreateFdRateLimitRuleDto.Key">
+            <summary>
+            限流键 (具体的IP地址、用户ID或API密钥)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.CreateFdRateLimitRuleDto.PermitLimit">
+            <summary>
+            允许的最大请求数
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.CreateFdRateLimitRuleDto.WindowSeconds">
+            <summary>
+            时间窗口 (以秒为单位)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.CreateFdRateLimitRuleDto.Description">
+            <summary>
+            规则描述
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Dtos.System.UpdateFdRateLimitRuleDto">
+            <summary>
+            更新限流规则DTO
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.UpdateFdRateLimitRuleDto.Type">
+            <summary>
+            限流类型 (IP, User, ApiKey)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.UpdateFdRateLimitRuleDto.Key">
+            <summary>
+            限流键 (具体的IP地址、用户ID或API密钥)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.UpdateFdRateLimitRuleDto.PermitLimit">
+            <summary>
+            允许的最大请求数
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.UpdateFdRateLimitRuleDto.WindowSeconds">
+            <summary>
+            时间窗口 (以秒为单位)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Dtos.System.UpdateFdRateLimitRuleDto.Description">
+            <summary>
+            规则描述
+            </summary>
+        </member>
         <member name="T:Fastdotnet.Core.Entities.Admin.FdAdminUser">
             <summary>
             后台管理员表
@@ -614,6 +794,36 @@
         <member name="P:Fastdotnet.Core.Entities.System.EmailConfig.EnableSsl">
             <summary>
             是否启用SSL
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Entities.System.FdBlacklist">
+            <summary>
+            黑名单表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdBlacklist.Type">
+            <summary>
+            黑名单类型 (IP, User, ApiKey)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdBlacklist.Value">
+            <summary>
+            黑名单值 (具体的IP地址、用户ID或API密钥)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdBlacklist.Reason">
+            <summary>
+            加入黑名单的原因
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdBlacklist.ExpiredAt">
+            <summary>
+            过期时间 (可选)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdBlacklist.IsSystem">
+            <summary>
+            是否为系统内置
             </summary>
         </member>
         <member name="T:Fastdotnet.Core.Entities.System.FdMenu">
@@ -801,6 +1011,41 @@
             权限分类: "Admin" 或 "App"
             </summary>
         </member>
+        <member name="T:Fastdotnet.Core.Entities.System.FdRateLimitRule">
+            <summary>
+            限流规则表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRateLimitRule.Type">
+            <summary>
+            限流类型 (IP, User, ApiKey)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRateLimitRule.Key">
+            <summary>
+            限流键 (具体的IP地址、用户ID或API密钥)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRateLimitRule.PermitLimit">
+            <summary>
+            允许的最大请求数
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRateLimitRule.WindowSeconds">
+            <summary>
+            时间窗口 (以秒为单位)
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRateLimitRule.Description">
+            <summary>
+            规则描述
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Entities.System.FdRateLimitRule.IsSystem">
+            <summary>
+            是否为系统内置
+            </summary>
+        </member>
         <member name="T:Fastdotnet.Core.Entities.System.FdRole">
             <summary>
             角色表
@@ -917,6 +1162,11 @@
             此类异常被认为是可预期的，不会被日志系统记录。
             </summary>
         </member>
+        <member name="T:Fastdotnet.Core.Extensions.RateLimitMiddlewareExtensions">
+            <summary>
+            限流中间件扩展方法
+            </summary>
+        </member>
         <member name="T:Fastdotnet.Core.Initializers.IApplicationInitializer">
             <summary>
             Defines an interface for a service that should be initialized after the application's services are configured.
@@ -938,6 +1188,12 @@
             Executes the task.
             </summary>
             <returns>A task that represents the asynchronous operation.</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.IService.IBaseRepository`1">
+            <summary>
+            长整型主键仓储接口
+            </summary>
+            <typeparam name="T">实体类型</typeparam>
         </member>
         <member name="T:Fastdotnet.Core.IService.IHybridCacheService">
             <summary>
@@ -1206,6 +1462,11 @@
             </summary>
             <typeparam name="T">实体类型</typeparam>
         </member>
+        <member name="T:Fastdotnet.Core.Middleware.BlacklistMiddleware">
+            <summary>
+            黑名单中间件
+            </summary>
+        </member>
         <member name="T:Fastdotnet.Core.Middleware.DynamicMiddlewareRegistry">
             <summary>
             A thread-safe registry for storing and retrieving types of dynamically loaded middleware.
@@ -1245,6 +1506,11 @@
             <param name="context">The HttpContext for the current request.</param>
             <param name="next">The next middleware in the pipeline.</param>
             <returns>A Task that represents the completion of the middleware execution.</returns>
+        </member>
+        <member name="T:Fastdotnet.Core.Middleware.RateLimitMiddleware">
+            <summary>
+            限流中间件
+            </summary>
         </member>
         <member name="T:Fastdotnet.Core.Models.Admin.Users.AdminUserDto">
             <summary>
@@ -1611,6 +1877,116 @@
         <member name="T:Fastdotnet.Core.Models.System.UpdateEmailConfigDto">
             <summary>
             邮件配置 - 更新DTO
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Services.System.IRateLimitCacheService">
+            <summary>
+            限流缓存服务接口
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.IRateLimitCacheService.GetBlacklistAsync(System.String)">
+            <summary>
+            获取指定类型的黑名单集合
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.IRateLimitCacheService.IsBlacklistedAsync(System.String,System.String)">
+            <summary>
+            检查值是否在黑名单中
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.IRateLimitCacheService.AddToBlacklistAsync(System.String,System.String)">
+            <summary>
+            添加黑名单条目到缓存
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.IRateLimitCacheService.RemoveFromBlacklistAsync(System.String,System.String)">
+            <summary>
+            从缓存中移除黑名单条目
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.IRateLimitCacheService.GetRateLimitRuleAsync(System.String,System.String)">
+            <summary>
+            获取限流规则
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.IRateLimitCacheService.SetRateLimitRuleAsync(System.String,System.String,Fastdotnet.Core.Dtos.System.FdRateLimitRuleDto)">
+            <summary>
+            设置限流规则到缓存
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.IRateLimitCacheService.RemoveRateLimitRuleAsync(System.String,System.String)">
+            <summary>
+            移除限流规则缓存
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.IRateLimitCacheService.IncrementRateLimitCounterAsync(System.String,System.String,System.Int32)">
+            <summary>
+            增加限流计数器
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.IRateLimitCacheService.ResetRateLimitCounterAsync(System.String,System.String)">
+            <summary>
+            重置限流计数器
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.IRateLimitCacheService.IsRateLimitedAsync(System.String,System.String)">
+            <summary>
+            检查是否触发限流
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Services.System.RateLimitCacheService">
+            <summary>
+            限流缓存服务实现
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.RateLimitCacheService.GetBlacklistAsync(System.String)">
+            <summary>
+            获取指定类型的黑名单集合
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.RateLimitCacheService.IsBlacklistedAsync(System.String,System.String)">
+            <summary>
+            检查值是否在黑名单中
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.RateLimitCacheService.AddToBlacklistAsync(System.String,System.String)">
+            <summary>
+            添加黑名单条目到缓存
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.RateLimitCacheService.RemoveFromBlacklistAsync(System.String,System.String)">
+            <summary>
+            从缓存中移除黑名单条目
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.RateLimitCacheService.GetRateLimitRuleAsync(System.String,System.String)">
+            <summary>
+            获取限流规则
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.RateLimitCacheService.SetRateLimitRuleAsync(System.String,System.String,Fastdotnet.Core.Dtos.System.FdRateLimitRuleDto)">
+            <summary>
+            设置限流规则到缓存
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.RateLimitCacheService.RemoveRateLimitRuleAsync(System.String,System.String)">
+            <summary>
+            移除限流规则缓存
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.RateLimitCacheService.IncrementRateLimitCounterAsync(System.String,System.String,System.Int32)">
+            <summary>
+            增加限流计数器
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.RateLimitCacheService.ResetRateLimitCounterAsync(System.String,System.String)">
+            <summary>
+            重置限流计数器
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.Core.Services.System.RateLimitCacheService.IsRateLimitedAsync(System.String,System.String)">
+            <summary>
+            检查是否触发限流
             </summary>
         </member>
         <member name="T:Fastdotnet.Core.Service.HybridCacheService">
