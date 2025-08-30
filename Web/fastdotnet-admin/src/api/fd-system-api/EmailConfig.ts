@@ -61,23 +61,11 @@ export async function getAdminEmailConfigPage(
 }
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/EmailConfig/page/search */
-export async function postAdminEmailConfigPageSearch(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postAdminEmailConfigPageSearchParams,
-	body: APIModel.EmailConfigBooleanFuncExpression,
-	options?: { [key: string]: any }
-) {
+export async function postAdminEmailConfigPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.EmailConfigDtoPageResult>('/api/admin/EmailConfig/page/search', {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json-patch+json',
-		},
-		params: {
-			// pageIndex has a default value: 1
-			pageIndex: '1',
-			// pageSize has a default value: 10
-			pageSize: '10',
-			...params,
+			'Content-Type': 'application/json',
 		},
 		data: body,
 		...(options || {}),
@@ -156,23 +144,11 @@ export async function postAdminEmailConfigRecyclebinRestore(body: APIModel.Email
 }
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/EmailConfig/recyclebin/search */
-export async function postAdminEmailConfigRecyclebinSearch(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postAdminEmailConfigRecyclebinSearchParams,
-	body: APIModel.EmailConfigBooleanFuncExpression,
-	options?: { [key: string]: any }
-) {
+export async function postAdminEmailConfigRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.EmailConfigDtoPageResult>('/api/admin/EmailConfig/recyclebin/search', {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json-patch+json',
-		},
-		params: {
-			// pageIndex has a default value: 1
-			pageIndex: '1',
-			// pageSize has a default value: 10
-			pageSize: '10',
-			...params,
+			'Content-Type': 'application/json',
 		},
 		data: body,
 		...(options || {}),

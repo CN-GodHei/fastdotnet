@@ -134,23 +134,11 @@ export async function getAdminRolesPage(
 }
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/roles/page/search */
-export async function postAdminRolesPageSearch(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postAdminRolesPageSearchParams,
-	body: APIModel.FdRoleBooleanFuncExpression,
-	options?: { [key: string]: any }
-) {
+export async function postAdminRolesPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.RoleDtoPageResult>('/api/admin/roles/page/search', {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json-patch+json',
-		},
-		params: {
-			// pageIndex has a default value: 1
-			pageIndex: '1',
-			// pageSize has a default value: 10
-			pageSize: '10',
-			...params,
+			'Content-Type': 'application/json',
 		},
 		data: body,
 		...(options || {}),
@@ -229,23 +217,11 @@ export async function postAdminRolesRecyclebinRestore(body: APIModel.FdRoleBoole
 }
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/roles/recyclebin/search */
-export async function postAdminRolesRecyclebinSearch(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postAdminRolesRecyclebinSearchParams,
-	body: APIModel.FdRoleBooleanFuncExpression,
-	options?: { [key: string]: any }
-) {
+export async function postAdminRolesRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.RoleDtoPageResult>('/api/admin/roles/recyclebin/search', {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json-patch+json',
-		},
-		params: {
-			// pageIndex has a default value: 1
-			pageIndex: '1',
-			// pageSize has a default value: 10
-			pageSize: '10',
-			...params,
+			'Content-Type': 'application/json',
 		},
 		data: body,
 		...(options || {}),

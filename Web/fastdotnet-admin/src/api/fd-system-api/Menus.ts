@@ -101,23 +101,11 @@ export async function getAdminMenusPage(
 }
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/menus/page/search */
-export async function postAdminMenusPageSearch(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postAdminMenusPageSearchParams,
-	body: APIModel.FdMenuBooleanFuncExpression,
-	options?: { [key: string]: any }
-) {
+export async function postAdminMenusPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.MenuDtoPageResult>('/api/admin/menus/page/search', {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json-patch+json',
-		},
-		params: {
-			// pageIndex has a default value: 1
-			pageIndex: '1',
-			// pageSize has a default value: 10
-			pageSize: '10',
-			...params,
+			'Content-Type': 'application/json',
 		},
 		data: body,
 		...(options || {}),
@@ -196,23 +184,11 @@ export async function postAdminMenusRecyclebinRestore(body: APIModel.FdMenuBoole
 }
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/menus/recyclebin/search */
-export async function postAdminMenusRecyclebinSearch(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postAdminMenusRecyclebinSearchParams,
-	body: APIModel.FdMenuBooleanFuncExpression,
-	options?: { [key: string]: any }
-) {
+export async function postAdminMenusRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.MenuDtoPageResult>('/api/admin/menus/recyclebin/search', {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json-patch+json',
-		},
-		params: {
-			// pageIndex has a default value: 1
-			pageIndex: '1',
-			// pageSize has a default value: 10
-			pageSize: '10',
-			...params,
+			'Content-Type': 'application/json',
 		},
 		data: body,
 		...(options || {}),

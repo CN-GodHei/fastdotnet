@@ -320,8 +320,8 @@ declare namespace APIModel {
 		Reason?: string;
 		ExpiredAt?: string;
 		IsSystem?: boolean;
-		CreatedAt?: string;
-		UpdatedAt?: string;
+		CreateTime?: string;
+		UpdateTime?: string;
 		IsDeleted?: boolean;
 	};
 
@@ -656,6 +656,14 @@ declare namespace APIModel {
 		PageSize?: number;
 	};
 
+	type PageQueryByConditionDto = {
+		PageIndex?: number;
+		PageSize?: number;
+		Keyword?: string;
+		DynamicQuery?: string;
+		QueryParameters?: any[];
+	};
+
 	type ParameterExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -708,20 +716,6 @@ declare namespace APIModel {
 		Creator?: string;
 	};
 
-	type postAdminBlacklistsPageSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type postAdminBlacklistsRecyclebinSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
 	type postAdminCacheTestSetParams = {
 		/** 缓存键 */
 		key?: string;
@@ -729,110 +723,12 @@ declare namespace APIModel {
 		value?: string;
 	};
 
-	type postAdminEmailConfigPageSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type postAdminEmailConfigRecyclebinSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type postAdminMenuButtonsPageSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type postAdminMenuButtonsRecyclebinSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type postAdminMenusPageSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type postAdminMenusRecyclebinSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type postAdminRateLimitRulesPageSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type postAdminRateLimitRulesRecyclebinSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
 	type postAdminRolesIdPermissionsParams = {
 		id: string;
 	};
 
-	type postAdminRolesPageSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type postAdminRolesRecyclebinSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type postAdminSystemConfigPageSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type postAdminSystemConfigRecyclebinSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
 	type postAdminUsersIdResetPasswordParams = {
 		id: string;
-	};
-
-	type postAdminUsersPageSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type postAdminUsersRecyclebinSearchParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
 	};
 
 	type postCaptchaValidateParams = {

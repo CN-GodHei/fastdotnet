@@ -120,23 +120,11 @@ export async function getAdminUsersPage(
 }
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/users/page/search */
-export async function postAdminUsersPageSearch(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postAdminUsersPageSearchParams,
-	body: APIModel.FdAdminUserBooleanFuncExpression,
-	options?: { [key: string]: any }
-) {
+export async function postAdminUsersPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.AdminUserDtoPageResult>('/api/admin/users/page/search', {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json-patch+json',
-		},
-		params: {
-			// pageIndex has a default value: 1
-			pageIndex: '1',
-			// pageSize has a default value: 10
-			pageSize: '10',
-			...params,
+			'Content-Type': 'application/json',
 		},
 		data: body,
 		...(options || {}),
@@ -215,23 +203,11 @@ export async function postAdminUsersRecyclebinRestore(body: APIModel.FdAdminUser
 }
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/users/recyclebin/search */
-export async function postAdminUsersRecyclebinSearch(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postAdminUsersRecyclebinSearchParams,
-	body: APIModel.FdAdminUserBooleanFuncExpression,
-	options?: { [key: string]: any }
-) {
+export async function postAdminUsersRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.AdminUserDtoPageResult>('/api/admin/users/recyclebin/search', {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json-patch+json',
-		},
-		params: {
-			// pageIndex has a default value: 1
-			pageIndex: '1',
-			// pageSize has a default value: 10
-			pageSize: '10',
-			...params,
+			'Content-Type': 'application/json',
 		},
 		data: body,
 		...(options || {}),

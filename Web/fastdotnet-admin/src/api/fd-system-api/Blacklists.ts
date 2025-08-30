@@ -117,22 +117,13 @@ export async function getAdminBlacklistsPage(
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/Blacklists/page/search */
 export async function postAdminBlacklistsPageSearch(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postAdminBlacklistsPageSearchParams,
-	body: APIModel.FdBlacklistBooleanFuncExpression,
+	body: APIModel.PageQueryByConditionDto,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.FdBlacklistDtoPageResult>('/api/admin/Blacklists/page/search', {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json-patch+json',
-		},
-		params: {
-			// pageIndex has a default value: 1
-			pageIndex: '1',
-			// pageSize has a default value: 10
-			pageSize: '10',
-			...params,
+			'Content-Type': 'application/json',
 		},
 		data: body,
 		...(options || {}),
@@ -211,23 +202,11 @@ export async function postAdminBlacklistsRecyclebinRestore(body: APIModel.FdBlac
 }
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/Blacklists/recyclebin/search */
-export async function postAdminBlacklistsRecyclebinSearch(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postAdminBlacklistsRecyclebinSearchParams,
-	body: APIModel.FdBlacklistBooleanFuncExpression,
-	options?: { [key: string]: any }
-) {
+export async function postAdminBlacklistsRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdBlacklistDtoPageResult>('/api/admin/Blacklists/recyclebin/search', {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json-patch+json',
-		},
-		params: {
-			// pageIndex has a default value: 1
-			pageIndex: '1',
-			// pageSize has a default value: 10
-			pageSize: '10',
-			...params,
+			'Content-Type': 'application/json',
 		},
 		data: body,
 		...(options || {}),
