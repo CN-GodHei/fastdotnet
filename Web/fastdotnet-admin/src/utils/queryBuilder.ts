@@ -13,11 +13,11 @@ export type QueryCondition = {
 };
 
 /**
- * 构建动态查询条件
+ * 构建动态查询条件（内部方法）
  * @param conditions 查询条件数组
  * @returns { dynamicQuery: string, queryParameters: any[] } 动态查询对象
  */
-export function buildDynamicQuery(conditions: QueryCondition[]): { 
+function buildDynamicQuery(conditions: QueryCondition[]): { 
   dynamicQuery: string; 
   queryParameters: any[] 
 } {
@@ -85,7 +85,7 @@ export function buildDynamicQuery(conditions: QueryCondition[]): {
 }
 
 /**
- * 构建混合查询条件（支持多种类型的条件组合）
+ * 构建混合查询条件（对外提供的主要接口）
  * @param config 查询配置对象
  * @returns { dynamicQuery: string, queryParameters: any[] } 动态查询对象
  */
