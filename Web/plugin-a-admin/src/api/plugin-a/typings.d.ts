@@ -36,6 +36,21 @@ declare namespace APIModel {
     IsActive?: boolean;
   };
 
+  type CreateFdBlacklistDto = {
+    Type: string;
+    Value: string;
+    Reason?: string;
+    ExpiredAt?: string;
+  };
+
+  type CreateFdRateLimitRuleDto = {
+    Type: string;
+    Key: string;
+    PermitLimit: number;
+    WindowSeconds: number;
+    Description?: string;
+  };
+
   type CreateMenuButtonDto = {
     Name?: string;
     Code?: string;
@@ -218,6 +233,34 @@ declare namespace APIModel {
     CanReduce?: boolean;
   };
 
+  type FdBlacklistBooleanFuncExpression = {
+    Type?: string;
+    NodeType?: ExpressionType;
+    Parameters?: ParameterExpression[];
+    Name?: string;
+    Body?: Expression;
+    ReturnType?: string;
+    TailCall?: boolean;
+    CanReduce?: boolean;
+  };
+
+  type FdBlacklistDto = {
+    Id?: number;
+    Type: string;
+    Value: string;
+    Reason?: string;
+    ExpiredAt?: string;
+    IsSystem?: boolean;
+    CreateTime?: string;
+    UpdateTime?: string;
+    IsDeleted?: boolean;
+  };
+
+  type FdBlacklistDtoPageResult = {
+    PageInfo?: PageInfo;
+    Items?: FdBlacklistDto[];
+  };
+
   type FdMenuBooleanFuncExpression = {
     Type?: string;
     NodeType?: ExpressionType;
@@ -238,6 +281,35 @@ declare namespace APIModel {
     ReturnType?: string;
     TailCall?: boolean;
     CanReduce?: boolean;
+  };
+
+  type FdRateLimitRuleBooleanFuncExpression = {
+    Type?: string;
+    NodeType?: ExpressionType;
+    Parameters?: ParameterExpression[];
+    Name?: string;
+    Body?: Expression;
+    ReturnType?: string;
+    TailCall?: boolean;
+    CanReduce?: boolean;
+  };
+
+  type FdRateLimitRuleDto = {
+    Id?: number;
+    Type: string;
+    Key: string;
+    PermitLimit: number;
+    WindowSeconds: number;
+    Description?: string;
+    IsSystem?: boolean;
+    CreatedAt?: string;
+    UpdatedAt?: string;
+    IsDeleted?: boolean;
+  };
+
+  type FdRateLimitRuleDtoPageResult = {
+    PageInfo?: PageInfo;
+    Items?: FdRateLimitRuleDto[];
   };
 
   type FdRoleBooleanFuncExpression = {
@@ -340,6 +412,14 @@ declare namespace APIModel {
     PageSize?: number;
   };
 
+  type PageQueryByConditionDto = {
+    PageIndex?: number;
+    PageSize?: number;
+    Keyword?: string;
+    DynamicQuery?: string;
+    QueryParameters?: any[];
+  };
+
   type ParameterExpression = {
     Type?: string;
     NodeType?: ExpressionType;
@@ -390,20 +470,6 @@ declare namespace APIModel {
     TestValue?: number;
     IsEnabled?: boolean;
     Creator?: string;
-  };
-
-  type postPageSearchParams = {
-    /** 页码 (从1开始) */
-    pageIndex?: number;
-    /** 页面大小 */
-    pageSize?: number;
-  };
-
-  type postRecyclebinSearchParams = {
-    /** 页码 (从1开始) */
-    pageIndex?: number;
-    /** 页面大小 */
-    pageSize?: number;
   };
 
   type putIdParams = {
@@ -479,6 +545,21 @@ declare namespace APIModel {
     SenderEmail: string;
     SenderName: string;
     EnableSsl?: boolean;
+  };
+
+  type UpdateFdBlacklistDto = {
+    Type: string;
+    Value: string;
+    Reason?: string;
+    ExpiredAt?: string;
+  };
+
+  type UpdateFdRateLimitRuleDto = {
+    Type: string;
+    Key: string;
+    PermitLimit: number;
+    WindowSeconds: number;
+    Description?: string;
   };
 
   type UpdateMenuButtonDto = {

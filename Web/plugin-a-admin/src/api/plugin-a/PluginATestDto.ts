@@ -131,9 +131,7 @@ export async function getPage(
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/plugins/11375910391972869/PluginATestDto/page/search */
 export async function postPageSearch(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: APIModel.postPageSearchParams,
-  body: APIModel.PluginATestBooleanFuncExpression,
+  body: APIModel.PageQueryByConditionDto,
   options?: { [key: string]: any }
 ) {
   return request<APIModel.PluginATestDtoPageResult>(
@@ -141,14 +139,7 @@ export async function postPageSearch(
     {
       method: "POST",
       headers: {
-        "Content-Type": "application/json-patch+json",
-      },
-      params: {
-        // pageIndex has a default value: 1
-        pageIndex: "1",
-        // pageSize has a default value: 10
-        pageSize: "10",
-        ...params,
+        "Content-Type": "application/json",
       },
       data: body,
       ...(options || {}),
@@ -250,9 +241,7 @@ export async function postRecyclebinRestore(
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/plugins/11375910391972869/PluginATestDto/recyclebin/search */
 export async function postRecyclebinSearch(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: APIModel.postRecyclebinSearchParams,
-  body: APIModel.PluginATestBooleanFuncExpression,
+  body: APIModel.PageQueryByConditionDto,
   options?: { [key: string]: any }
 ) {
   return request<APIModel.PluginATestDtoPageResult>(
@@ -260,14 +249,7 @@ export async function postRecyclebinSearch(
     {
       method: "POST",
       headers: {
-        "Content-Type": "application/json-patch+json",
-      },
-      params: {
-        // pageIndex has a default value: 1
-        pageIndex: "1",
-        // pageSize has a default value: 10
-        pageSize: "10",
-        ...params,
+        "Content-Type": "application/json",
       },
       data: body,
       ...(options || {}),
