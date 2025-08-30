@@ -106,3 +106,4 @@ plugin-a-app/
 31. 前端切换为vue-next-admin，并与后端集成，主框架集成完成后再进行qiankun的集成
 32. 缓存使用HybridCache实现，默认使用MemoryCache，如需使用Redis，请修改配置文件中的CacheType为"Redis"并提供连接字符串
 33. CacheResultAttribute 控制器方法缓存特性
+34. 控制器可以继承通用控制器 GenericDtoControllerBase，里面已经实现了通用的crud方法,
