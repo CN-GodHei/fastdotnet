@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Middleware;
@@ -119,6 +120,7 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
                 if (!licenseValidator.Validate(pluginDir))
                 {
                     await UpdatePluginConfigEnabledAsync(pluginId, false);
+                    throw new BusinessException("插件授权验证失败!");
                     _logger.LogError($"插件 {pluginId} 的授权验证失败。请检查授权文件是否有效。");
                     return new ApiResult() { Code = -1, Msg = $"插件 '{pluginId}' 授权验证失败。" };
                 }
