@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Fastdotnet.Plugin.Marketplace</AssemblyName>
+    <RootNamespace>Fastdotnet.Plugin.Marketplace</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
+    <ProjectReference Include="..\..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" />
+    <ProjectReference Include="..\..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dto\" />
+    <Folder Include="Entities\" />
+    <Folder Include="IService\" />
+    <Folder Include="Middleware\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+</Project>
