@@ -1,4 +1,5 @@
 using Fastdotnet.Plugin.Marketplace.Dto;
+using Fastdotnet.Plugin.Marketplace.IService;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Security.Cryptography;

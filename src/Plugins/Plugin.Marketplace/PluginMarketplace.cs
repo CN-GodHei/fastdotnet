@@ -1,5 +1,6 @@
 using Autofac;
 using Fastdotnet.Plugin.Contracts;
+using Fastdotnet.Plugin.Marketplace.IService;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
@@ -38,7 +39,8 @@ namespace Fastdotnet.Plugin.Marketplace
         public void ConfigureServices(ContainerBuilder builder)
         {
             // 在此注册插件内部的服务
-            builder.RegisterType<Services.LicenseService>().As<Services.ILicenseService>().InstancePerLifetimeScope();
+            builder.RegisterType<Services.LicenseService>().As<ILicenseService>().InstancePerLifetimeScope();
+            builder.RegisterType<Services.UserLicenseLookupService>().As<IUserLicenseLookupService>().InstancePerLifetimeScope();
         }
     }
 }

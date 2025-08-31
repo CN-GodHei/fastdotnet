@@ -1,6 +1,6 @@
 using Fastdotnet.Core.Utils.Extensions;
 using Fastdotnet.Plugin.Marketplace.Dto;
-using Fastdotnet.Plugin.Marketplace.Services;
+using Fastdotnet.Plugin.Marketplace.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,13 +11,12 @@ namespace Fastdotnet.Plugin.Marketplace.Controllers
     public class LicenseIssuanceController : ControllerBase
     {
         private readonly ILicenseService _licenseService;
-        // 假设我们有一个服务来查询用户授权信息
-        // private readonly IUserLicenseLookupService _userLicenseLookupService; 
+        private readonly IUserLicenseLookupService _userLicenseLookupService;
 
-        public LicenseIssuanceController(ILicenseService licenseService /*, IUserLicenseLookupService userLicenseLookupService*/)
+        public LicenseIssuanceController(ILicenseService licenseService, IUserLicenseLookupService userLicenseLookupService)
         {
             _licenseService = licenseService;
-            // _userLicenseLookupService = userLicenseLookupService;
+            _userLicenseLookupService = userLicenseLookupService;
         }
 
         /// <summary>
@@ -26,7 +25,8 @@ namespace Fastdotnet.Plugin.Marketplace.Controllers
         /// <param name="request">包含生成授权所需信息的请求对象。</param>
         /// <returns>生成的授权文件内容。</returns>
         [HttpPost("generate")]
-        [AllowAnonymous] // 根据需求决定是否允许匿名访问
+        //[Authorize(Policy = "AdminOnly")] // 假设需要管理员权限才能生成授权
+        [AllowAnonymous]
         public IActionResult GenerateLicense([FromBody] GenerateLicenseRequestDto request)
         {
             if (request == null)
@@ -35,21 +35,39 @@ namespace Fastdotnet.Plugin.Marketplace.Controllers
             }
 
             // 使用自定义扩展方法进行模型验证 (包括 PluginId, UserId, MachineFingerprint)
-            request.IsValid();
-            request.MachineFingerprint = Utils.FingerprintUtil.GenerateMachineFingerprint();
+            var validationResult = request.IsValid(internalReturn: false);
+            if (!validationResult.IsValid)
+            {
+                ModelState.AddModelError(string.Empty, validationResult.Message);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
+
             try
             {
-                // 在真实场景中，这里需要查询数据库或调用其他服务来获取用户的授权类型
-                // var userLicenseInfo = _userLicenseLookupService.GetUserLicenseInfo(request.UserId, request.PluginId);
-                // if (userLicenseInfo == null)
-                // {
-                //     return NotFound("未找到该用户对此插件的授权记录。");
-                // }
-                // string licenseType = userLicenseInfo.LicenseType;
+                // ---------------------------------------------------
+                // 调用 IUserLicenseLookupService 查询用户的授权信息
+                // ---------------------------------------------------
+                var userLicenseInfo = _userLicenseLookupService.GetUserLicenseInfo(request.UserId, request.PluginId);
                 
-                // 临时示例：假设所有请求都是 SingleServer 类型
-                // 实际应用中应替换为上面的查询逻辑
-                string licenseType = "SingleServer"; 
+                if (userLicenseInfo == null)
+                {
+                    ModelState.AddModelError(string.Empty, "未找到该用户对此插件的有效授权记录。");
+                    return ValidationProblem(ModelState);
+                }
+
+                string licenseType = userLicenseInfo.LicenseType;
+
+                // 根据查询到的 LicenseType 验证 MachineFingerprint
+                if (licenseType.Equals("SingleServer", StringComparison.OrdinalIgnoreCase) &&
+                    string.IsNullOrWhiteSpace(request.MachineFingerprint))
+                {
+                    ModelState.AddModelError("MachineFingerprint", "对于 SingleServer 类型的授权，必须提供 MachineFingerprint。");
+                    return ValidationProblem(ModelState);
+                }
 
                 // 准备用于生成授权文件的指纹
                 string fingerprintToUse = request.MachineFingerprint;
@@ -61,9 +79,6 @@ namespace Fastdotnet.Plugin.Marketplace.Controllers
                 //     fingerprintToUse = "MULTI_SERVER_LICENSE"; // 或者其他逻辑
                 // }
                 // 对于 SingleServer, 直接使用 request.MachineFingerprint
-                
-                // 当前示例直接使用传入的指纹
-                // （在实际应用中，可能还需要验证指纹的有效性或格式）
 
                 var licenseDto = _licenseService.GenerateLicense(
                     request.PluginId,

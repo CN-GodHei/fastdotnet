@@ -1,6 +1,6 @@
 using Fastdotnet.Plugin.Marketplace.Dto;
 
-namespace Fastdotnet.Plugin.Marketplace.Services
+namespace Fastdotnet.Plugin.Marketplace.IService
 {
     public interface ILicenseService
     {
