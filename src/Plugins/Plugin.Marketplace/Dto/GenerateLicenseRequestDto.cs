@@ -9,8 +9,8 @@ namespace Fastdotnet.Plugin.Marketplace.Dto
         [Required(ErrorMessage = "PluginId 是必需的。")]
         public string PluginId { get; set; }
 
-        [Required(ErrorMessage = "UserId 是必需的。")]
-        public string UserId { get; set; }
+        //[Required(ErrorMessage = "UserId 是必需的。")]
+        //public string UserId { get; set; }
 
         /// <summary>
         /// 客户端机器指纹。对于 SingleServer 授权是必需的，
