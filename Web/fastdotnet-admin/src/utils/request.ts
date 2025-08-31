@@ -95,9 +95,11 @@ service.interceptors.response.use(
 			}
 			return Promise.reject(new Error('未授权访问'));
 		} else if (response.status === 422) {
+			ElMessage.error(res.Msg || res.message || '验证错误');
 			// HTTP 422 验证错误，是后端返回的一种可控异常，主要是提示消息
 			// 422虽然在validateStatus中被视为成功，但仍需要reject以便调用方可以处理错误
-        	return Promise.reject(new Error(res.Msg || res.message || '验证错误'));
+        	// return Promise.reject(new Error(res.Msg || res.message || '验证错误'));
+        	return Promise.reject(new Error());
 		}
 	},
 	(error) => {

@@ -171,7 +171,7 @@ const onSignIn = async () => {
 	} catch (error: any) {
 		// 4. 处理登录错误
 		console.error('登录请求失败:', error);
-		ElMessage.error(error.message || '登录请求失败，请检查网络或联系管理员');
+		// ElMessage.error(error.message || '登录请求失败，请检查网络或联系管理员');
 		state.loading.signIn = false;
 		
 		// 刷新验证码
