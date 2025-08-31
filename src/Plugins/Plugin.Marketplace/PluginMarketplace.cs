@@ -38,7 +38,7 @@ namespace Fastdotnet.Plugin.Marketplace
         public void ConfigureServices(ContainerBuilder builder)
         {
             // 在此注册插件内部的服务
-            // 例如: builder.RegisterType<MyMarketplaceService>().As<IMarketplaceService>().InstancePerLifetimeScope();
+            builder.RegisterType<Services.LicenseService>().As<Services.ILicenseService>().InstancePerLifetimeScope();
         }
     }
 }

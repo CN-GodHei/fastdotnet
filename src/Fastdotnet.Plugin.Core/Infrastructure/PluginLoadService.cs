@@ -8,6 +8,7 @@ using Fastdotnet.Core.Service;
 using Fastdotnet.Orm;
 using Fastdotnet.Plugin.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -44,18 +45,20 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
         private readonly ILogger<PluginLoadService> _logger;
         private readonly ILoggerFactory _loggerFactory;
         private readonly PluginStaticFileProviderRegistry _registry;
+        private readonly IConfiguration _configuration;
 
         private readonly ConcurrentDictionary<string, ILifetimeScope> _pluginScopes = new();
         private readonly string _pluginsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
         private bool _disposed = false;
 
-        public PluginLoadService(PluginManager pluginManager, ILifetimeScope lifetimeScope, ILogger<PluginLoadService> logger, ILoggerFactory loggerFactory, PluginStaticFileProviderRegistry registry)
+        public PluginLoadService(PluginManager pluginManager, ILifetimeScope lifetimeScope, ILogger<PluginLoadService> logger, ILoggerFactory loggerFactory, PluginStaticFileProviderRegistry registry, IConfiguration configuration)
         {
             _pluginManager = pluginManager;
             _rootLifetimeScope = lifetimeScope;
             _logger = logger;
             _loggerFactory = loggerFactory;
             _registry = registry;
+            _configuration = configuration;
         }
 
         public bool TryGetPluginScope(string pluginId, [MaybeNullWhen(false)] out ILifetimeScope scope)
@@ -88,6 +91,41 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
 
             var pluginDir = Path.Combine(_pluginsPath, pluginId);
             if (!Directory.Exists(pluginDir)) return new ApiResult() { Code = -1, Msg = $"找不到插件目录" };
+
+            // --- 最终的授权验证逻辑 ---
+
+            bool skipLicenseCheck = false;
+
+            // 1. 官方插件豁免 (永久有效)
+            if (pluginId.Equals("11365281228129286", StringComparison.OrdinalIgnoreCase))
+            {
+                skipLicenseCheck = true;
+                _logger.LogInformation($"插件 {pluginId} 是官方核心插件，跳过授权验证。");
+            }
+
+            // 2. 开发者模式豁免 (仅在Debug编译模式下生效)
+#if DEBUG
+            var devModeEnabled = _configuration.GetValue<bool>("PluginSettings:EnableDeveloperMode");
+            if (devModeEnabled)
+            {
+                skipLicenseCheck = true;
+                _logger.LogWarning($"开发者模式已启用，所有插件的授权验证将被跳过。请确保不要在生产环境中使用此配置。");
+            }
+#endif
+
+            if (!skipLicenseCheck)
+            {
+                var licenseValidator = new Security.LicenseValidator();
+                if (!licenseValidator.Validate(pluginDir))
+                {
+                    await UpdatePluginConfigEnabledAsync(pluginId, false);
+                    _logger.LogError($"插件 {pluginId} 的授权验证失败。请检查授权文件是否有效。");
+                    return new ApiResult() { Code = -1, Msg = $"插件 '{pluginId}' 授权验证失败。" };
+                }
+                _logger.LogInformation($"插件 {pluginId} 授权验证通过。");
+            }
+            
+            // --- 授权验证结束 ---
 
             Assembly assembly = _pluginManager.GetPluginAssembly(pluginId);
             System.Runtime.Loader.AssemblyLoadContext loadContext = _pluginManager.GetPluginContext(pluginId);
@@ -381,22 +419,59 @@ namespace Fastdotnet.Plugin.Core.Infrastructure
 
         private async Task UpdatePluginConfigEnabledAsync(string pluginId, bool enabled)
         {
-            var pluginConfig = _pluginManager.GetPluginConfig(pluginId);
+            var pluginDir = Path.Combine(_pluginsPath, pluginId);
+            var configPath = Path.Combine(pluginDir, "plugin.json");
+
+            // 尝试从插件管理器获取已有配置
+            PluginConfig? pluginConfig = _pluginManager.GetPluginConfig(pluginId);
+
+            // 如果缓存中没有，尝试从文件加载
+            if (pluginConfig == null)
+            {
+                if (!File.Exists(configPath))
+                {
+                    _logger?.LogWarning($"插件 {pluginId} 的 plugin.json 文件不存在，无法更新 enabled 状态。");
+                    return; // 或抛出异常：throw new FileNotFoundException($"插件配置文件不存在：{configPath}");
+                }
+
+                try
+                {
+                    string jsonContent = await File.ReadAllTextAsync(configPath, Encoding.UTF8);
+                    pluginConfig = JsonSerializer.Deserialize<PluginConfig>(jsonContent);
+                    if (pluginConfig == null)
+                    {
+                        _logger?.LogError($"无法反序列化插件 {pluginId} 的 plugin.json 文件。");
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, $"读取或解析插件 {pluginId} 的 plugin.json 时发生错误。");
+                    throw; // 可根据需要改为不抛出
+                }
+            }
+
+            // 确保配置对象存在后再更新
             if (pluginConfig != null)
             {
-                var pluginDir = Path.Combine(_pluginsPath, pluginId);
-                var configPath = Path.Combine(pluginDir, "plugin.json");
-                if (File.Exists(configPath))
+                pluginConfig.enabled = enabled; // 注意：属性名应统一为 PascalCase，如 Enabled（假设类中是这样定义的）
+
+                var options = new JsonSerializerOptions
                 {
-                    pluginConfig.enabled = enabled;
-                    var options = new JsonSerializerOptions
-                    {
-                        WriteIndented = true,
-                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping // 防止中文被编码为\uXXXX                                                                                                     
-                    };
+                    WriteIndented = true,
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping // 防止中文被编码为 \uXXXX
+                };
+
+                try
+                {
                     var updatedConfigJson = JsonSerializer.Serialize(pluginConfig, options);
                     await File.WriteAllTextAsync(configPath, updatedConfigJson, Encoding.UTF8);
-                    _logger?.LogInformation($"插件 {pluginId} 的 plugin.json 文件已更新，enabled 设置为 {enabled}。");
+                    _logger?.LogInformation($"插件 {pluginId} 的 plugin.json 文件已更新，Enabled 设置为 {enabled}。");
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, $"写入插件 {pluginId} 的 plugin.json 文件失败。");
+                    throw;
                 }
             }
         }

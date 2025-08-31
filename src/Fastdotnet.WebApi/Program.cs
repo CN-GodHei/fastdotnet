@@ -327,7 +327,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
         c.Resolve<ILifetimeScope>(),
         c.Resolve<ILogger<PluginLoadService>>(),
         c.Resolve<ILoggerFactory>(),
-        c.Resolve<PluginStaticFileProviderRegistry>()
+        c.Resolve<PluginStaticFileProviderRegistry>(),
+        c.Resolve<IConfiguration>()
     )).As<IPluginLoadService>().SingleInstance();
     containerBuilder.RegisterType<PluginActionDescriptorProvider>().As<IActionDescriptorProvider>().SingleInstance();
 
