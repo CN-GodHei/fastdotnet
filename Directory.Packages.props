@@ -29,5 +29,6 @@
     <PackageVersion Include="SqlSugarCore" Version="5.1.4.199" />
     <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.6.7" />
     <PackageVersion Include="Yitter.IdGenerator" Version="1.0.14" />
+    <PackageVersion Include="System.Management" Version="9.0.8" />
   </ItemGroup>
 </Project>

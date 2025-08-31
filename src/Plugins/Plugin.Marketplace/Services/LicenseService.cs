@@ -3,16 +3,10 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
+// using System.Text.Json; // 如果你之前用到了序列化，但服务本身不直接返回 JSON 字符串，可以移除
 
 namespace Fastdotnet.Plugin.Marketplace.Services
 {
-
-    public interface ILicenseService
-    {
-        LicenseFileDto GenerateLicense(string pluginId, string userId, string licenseType, string machineFingerprint);
-    }
-
     public class LicenseService : ILicenseService
     {
         private readonly RSA _privateKeyProvider;
@@ -33,37 +27,34 @@ namespace Fastdotnet.Plugin.Marketplace.Services
         {
             var license = new LicenseFileDto
             {
-                PluginId = pluginId,
-                UserId = userId,
-                LicenseType = licenseType,
-                MachineFingerprint = machineFingerprint,
-                IssueDate = DateTime.Now,
-                UpdatesUntil = DateTime.Now.AddYears(1) // 默认为1年的更新期限
+                PluginId = pluginId ?? throw new ArgumentNullException(nameof(pluginId)),
+                UserId = userId ?? throw new ArgumentNullException(nameof(userId)),
+                LicenseType = licenseType ?? throw new ArgumentNullException(nameof(licenseType)),
+                MachineFingerprint = machineFingerprint, // 可以为 null (对于 MultiServer)
+                IssueDate = DateTime.UtcNow, // 使用 UTC 时间更标准
+                UpdatesUntil = DateTime.UtcNow.AddYears(1) // 默认为1年的更新期限
             };
-            // 构造要签名的数据字符串，必须与验证器的逻辑相匹配
 
-            // 统一转为 Unix 时间戳（秒）
-            long ToUtcTimestamp(DateTime dt) =>
-                ((DateTimeOffset)dt.ToUniversalTime()).ToUnixTimeSeconds();
+            // 构造要签名的数据字符串，必须与验证器的逻辑相匹配
+            // 统一转为 Unix 时间戳（秒）以确保跨平台一致性
+            long ToUtcTimestamp(DateTime dt) => ((DateTimeOffset)dt.ToUniversalTime()).ToUnixTimeSeconds();
 
             var dataToSign = string.Concat(
                 license.PluginId,
                 license.UserId,
                 license.LicenseType,
-                license.MachineFingerprint,
+                license.MachineFingerprint ?? "", // Handle null for MultiServer
                 ToUtcTimestamp(license.IssueDate),
                 ToUtcTimestamp(license.UpdatesUntil)
             );
-            //var dataToSign = $"{license.PluginId}{license.UserId}{license.LicenseType}{license.MachineFingerprint}{license.IssueDate:O}{license.UpdatesUntil:O}";
+
             var dataBytes = Encoding.UTF8.GetBytes(dataToSign);
 
             // 对数据进行签名
             var signatureBytes = _privateKeyProvider.SignData(dataBytes, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
             license.Signature = Convert.ToBase64String(signatureBytes);
 
-            // 序列化为 JSON 字符串
-            //return JsonSerializer.Serialize(license, new JsonSerializerOptions { WriteIndented = true });
-            return license;
+            return license; // 返回 DTO 对象，由 ASP.NET Core 自动序列化为 JSON
         }
     }
 }
