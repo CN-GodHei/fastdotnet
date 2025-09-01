@@ -8,44 +8,44 @@ namespace Fastdotnet.Core.Entities.System
     /// <summary>
     /// 权限表
     /// </summary>
-    [SugarTable("FdPermission")]
+    [SugarTable("fd_permission", "权限表")]
     [SugarIndex("idx_perm_code", nameof(Code), OrderByType.Asc, IsUnique = true)]
     public class FdPermission : BaseEntity, ISoftDelete
     {
         /// <summary>
         /// 权限名称
         /// </summary>
-        [SugarColumn(IsNullable = false)]
+        [SugarColumn(ColumnName = "name", IsNullable = false, ColumnDescription = "权限名称")]
         public string Name { get; set; }
 
         /// <summary>
         /// 权限代码 (e.g., "admin.user.create")
         /// </summary>
-        [SugarColumn(IsNullable = false)]
+        [SugarColumn(ColumnName = "code", IsNullable = false, ColumnDescription = "权限代码 (e.g., \"admin.user.create\")")]
         public string Code { get; set; }
 
         /// <summary>
         /// 权限描述
         /// </summary>
-        [SugarColumn(IsNullable = true)]
+        [SugarColumn(ColumnName = "description", IsNullable = true, ColumnDescription = "权限描述")]
         public string Description { get; set; }
 
         /// <summary>
         /// 所属模块（主框架/插件标识）
         /// </summary>
-        [SugarColumn(IsNullable = true)]
+        [SugarColumn(ColumnName = "module", IsNullable = true, ColumnDescription = "所属模块（主框架/插件标识）")]
         public string Module { get; set; }
 
         /// <summary>
         /// 权限类型 (e.g., "Menu", "Api", "Data")
         /// </summary>
-        [SugarColumn(IsNullable = false, Length = 50)]
+        [SugarColumn(ColumnName = "type", IsNullable = false, Length = 50, ColumnDescription = "权限类型 (e.g., \"Menu\", \"Api\", \"Data\")")]
         public PermissionType Type { get; set; }
 
         /// <summary>
         /// 权限分类: "Admin" 或 "App"
         /// </summary>
-        [SugarColumn(IsNullable = false, Length = 50)]
+        [SugarColumn(ColumnName = "category", IsNullable = false, Length = 50, ColumnDescription = "权限分类: \"Admin\" 或 \"App\"")]
         public string Category { get; set; }
     }
 }

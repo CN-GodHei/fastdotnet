@@ -7,7 +7,7 @@ namespace Fastdotnet.Core.Entities.System
     /// <summary>
     /// 限流规则表
     /// </summary>
-    [SugarTable("FdRateLimitRule")]
+    [SugarTable("fd_ratelimit_rule", "限流规则表")]
     [SugarIndex("idx_ratelimit_type_key", nameof(Type), OrderByType.Asc, nameof(Key), OrderByType.Asc, true)]
     public class FdRateLimitRule : BaseEntity, ISoftDelete
     {
@@ -18,7 +18,7 @@ namespace Fastdotnet.Core.Entities.System
         /// ApiKey: 针对API密钥的限流
         /// Route: 针对路由的全局限流
         /// </summary>
-        [SugarColumn(IsNullable = false, Length = 50)]
+        [SugarColumn(ColumnName = "type", IsNullable = false, Length = 50, ColumnDescription = "限流类型 (IP, User, ApiKey, Route)")]
         public string Type { get; set; }
 
         /// <summary>
@@ -28,30 +28,31 @@ namespace Fastdotnet.Core.Entities.System
         /// 当 Type=ApiKey 时，Key=具体的API密钥
         /// 当 Type=Route 时，Key=具体的路由路径，如 "/api/auth/login"
         /// </summary>
-        [SugarColumn(IsNullable = false, Length = 255)]
+        [SugarColumn(ColumnName = "key", IsNullable = false, Length = 255, ColumnDescription = "限流键")]
         public string Key { get; set; }
 
         /// <summary>
         /// 允许的最大请求数
         /// </summary>
-        [SugarColumn(IsNullable = false)]
+        [SugarColumn(ColumnName = "permit_limit", IsNullable = false, ColumnDescription = "允许的最大请求数")]
         public int PermitLimit { get; set; }
 
         /// <summary>
         /// 时间窗口 (以秒为单位)
         /// </summary>
-        [SugarColumn(IsNullable = false)]
+        [SugarColumn(ColumnName = "window_seconds", IsNullable = false, ColumnDescription = "时间窗口 (以秒为单位)")]
         public int WindowSeconds { get; set; }
 
         /// <summary>
         /// 规则描述
         /// </summary>
-        [SugarColumn(IsNullable = true, Length = 500)]
+        [SugarColumn(ColumnName = "description", IsNullable = true, Length = 500, ColumnDescription = "规则描述")]
         public string Description { get; set; }
 
         /// <summary>
         /// 是否为系统内置
         /// </summary>
+        [SugarColumn(ColumnName = "is_system", ColumnDescription = "是否为系统内置")]
         public bool IsSystem { get; set; } = false;
     }
 }

@@ -739,7 +739,7 @@
         </member>
         <member name="T:Fastdotnet.Core.Entities.App.FdAppUserRole">
             <summary>
-            前台用户角色关联表
+            前台应用用户角色关联表
             </summary>
         </member>
         <member name="P:Fastdotnet.Core.Entities.App.FdAppUserRole.AppUserId">

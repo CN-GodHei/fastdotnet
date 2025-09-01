@@ -8,7 +8,7 @@ namespace Fastdotnet.Plugin.Marketplace.Entities
     /// 活动赠送详情实体
     /// 对应表: GiftRecords
     /// </summary>
-    [SugarTable("mk_Gift_Records", "活动赠送详情")]
+    [SugarTable("mk_gift_records", "活动赠送详情")]
     public class GiftRecord : BaseEntity
     {
         /// <summary>

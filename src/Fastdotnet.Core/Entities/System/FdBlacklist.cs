@@ -14,30 +14,31 @@ namespace Fastdotnet.Core.Entities.System
         /// <summary>
         /// 黑名单类型 (IP, User, ApiKey)
         /// </summary>
-        [SugarColumn(IsNullable = false, Length = 150)]
+        [SugarColumn(ColumnName = "type", IsNullable = false, Length = 150, ColumnDescription = "黑名单类型 (IP, User, ApiKey)")]
         public string Type { get; set; }
 
         /// <summary>
         /// 黑名单值 (具体的IP地址、用户ID或API密钥)
         /// </summary>
-        [SugarColumn(IsNullable = false, Length = 255)]
+        [SugarColumn(ColumnName = "value", IsNullable = false, Length = 255, ColumnDescription = "黑名单值 (具体的IP地址、用户ID或API密钥)")]
         public string Value { get; set; }
 
         /// <summary>
         /// 加入黑名单的原因
         /// </summary>
-        [SugarColumn(IsNullable = true, Length = 500)]
+        [SugarColumn(ColumnName = "reason", IsNullable = true, Length = 500, ColumnDescription = "加入黑名单的原因")]
         public string Reason { get; set; }
 
         /// <summary>
         /// 过期时间 (可选)
         /// </summary>
-        [SugarColumn(IsNullable = true)]
+        [SugarColumn(ColumnName = "expired_at", IsNullable = true, ColumnDescription = "过期时间 (可选)")]
         public DateTime? ExpiredAt { get; set; }
 
         /// <summary>
         /// 是否为系统内置
         /// </summary>
+        [SugarColumn(ColumnName = "is_system", ColumnDescription = "是否为系统内置")]
         public bool IsSystem { get; set; } = false;
     }
 }
