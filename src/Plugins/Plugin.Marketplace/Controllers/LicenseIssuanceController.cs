@@ -32,7 +32,7 @@ namespace Fastdotnet.Plugin.Marketplace.Controllers
         /// <returns>生成的授权文件内容。</returns>
         [HttpPost("generate")]
         //[Authorize(Policy = "AdminOnly")] // 假设需要管理员权限才能生成授权
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public IActionResult GenerateLicense([FromBody] GenerateLicenseRequestDto request)
         {
             if (request == null)
@@ -51,7 +51,8 @@ namespace Fastdotnet.Plugin.Marketplace.Controllers
             {
                 return ValidationProblem(ModelState);
             }
-
+            //后续可以改为前端传递
+            request.MachineFingerprint = Utils.FingerprintUtil.GenerateMachineFingerprint();
             try
             {
                 // ---------------------------------------------------
