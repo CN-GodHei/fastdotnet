@@ -17,6 +17,8 @@
     <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.8" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.5.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="Obfuscar" Version="2.2.47" />
+    <PackageVersion Include="Obfuscar.MsBuild" Version="2.2.47" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageVersion Include="Scrutor" Version="4.2.2" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Newtonsoft" Version="8.1.4" />
