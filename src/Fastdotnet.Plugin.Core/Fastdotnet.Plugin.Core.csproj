@@ -4,6 +4,33 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <!-- NuGet Package Properties -->
+    <PackageId>Fastdotnet.Plugin.Core</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Your Company Name</Authors>
+    <Company>Your Company Name</Company>
+    <Product>Fastdotnet Plugin Core</Product>
+    <Description>Core library for Fastdotnet plugin system, including plugin loading, management, and licensing validation.</Description>
+    <Copyright>Copyright (c) 2025 Your Company Name</Copyright>
+    <PackageProjectUrl>https://your-project-url.com</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/your-company/Fastdotnet.Plugin.Core.Private</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>fastdotnet;plugin;core;licensing</PackageTags>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    
+    <!-- Enable deterministic builds for better reproducibility -->
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    
+    <!-- Generate a NuGet package during build -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    
+    <!-- Include XML documentation file in the package -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    
+    <!-- Optional: Embed untracked sources for Source Link (if using a supported repository) -->
+    <!-- <EmbedUntrackedSources>true</EmbedUntrackedSources> -->
+    
   </PropertyGroup>
 
   <ItemGroup>
