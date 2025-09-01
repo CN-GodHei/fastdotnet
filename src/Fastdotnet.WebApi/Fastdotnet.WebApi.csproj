@@ -19,6 +19,7 @@
     <PackageReference Include="Autofac" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" />
     <PackageReference Include="AutoMapper" />
+    <PackageReference Include="Fastdotnet.Plugin.Core" />
     <PackageReference Include="Lazy.Captcha.Core" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
@@ -35,7 +36,6 @@
     <ProjectReference Include="..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
     <ProjectReference Include="..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" />
     <ProjectReference Include="..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" />
-    <ProjectReference Include="..\Fastdotnet.Plugin.Core\Fastdotnet.Plugin.Core.csproj" />
     <ProjectReference Include="..\Fastdotnet.Service\Fastdotnet.Service.csproj" />
   </ItemGroup>
 
