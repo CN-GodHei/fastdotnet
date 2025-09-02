@@ -197,6 +197,17 @@
             App端用户注册
             </summary>
         </member>
+        <member name="T:Fastdotnet.WebApi.Controllers.System.SystemController">
+            <summary>
+            系统信息控制器
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.System.SystemController.GetMachineFingerprint">
+            <summary>
+            获取当前服务器的唯一机器指纹
+            </summary>
+            <returns>服务器的机器指纹字符串</returns>
+        </member>
         <member name="T:Fastdotnet.WebApi.Controllers.CaptchaController">
             <summary>
             验证码控制器
