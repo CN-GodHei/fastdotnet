@@ -1,5 +1,5 @@
 ﻿using Fastdotnet.Core.Initializers;
-using Fastdotnet.Plugin.Core.Infrastructure;
+using Fastdotnet.Plugin.Shared.AdapterAOT;
 using Fastdotnet.WebApi.Controllers;
 using System;
 using System.Threading.Tasks;

@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
+    <ProjectReference Include="..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

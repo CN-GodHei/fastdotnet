@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Fastdotnet.Plugin.Core.Infrastructure;
 using System.Threading.Tasks;
 using Fastdotnet.Core.Exceptions;
 using System;
 using Fastdotnet.Core.Utils;
 using Microsoft.Extensions.Logging;
+using Fastdotnet.Plugin.Shared.AdapterAOT;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
 {

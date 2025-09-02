@@ -32,11 +32,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\fastdotnet.-plugin.-core\Fastdotnet.Plugin.Core\Fastdotnet.Plugin.Core.csproj" />
     <ProjectReference Include="..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
     <ProjectReference Include="..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" />
     <ProjectReference Include="..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" />
+    <ProjectReference Include="..\Fastdotnet.Plugin.Shared\Fastdotnet.Plugin.Shared.csproj" />
     <ProjectReference Include="..\Fastdotnet.Service\Fastdotnet.Service.csproj" />
+	
+
   </ItemGroup>
 
   <ItemGroup>

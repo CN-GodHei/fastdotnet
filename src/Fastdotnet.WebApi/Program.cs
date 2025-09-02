@@ -13,7 +13,7 @@ using Fastdotnet.Core.Utils;
 using Fastdotnet.Core.Utils.Extensions;
 using Fastdotnet.Orm;
 using Fastdotnet.Plugin.Contracts;
-using Fastdotnet.Plugin.Core.Infrastructure;
+using Fastdotnet.Plugin.Shared.AdapterAOT;
 using Fastdotnet.Service;
 using Fastdotnet.Service.Initializers;
 using Fastdotnet.Service.IService;
@@ -43,6 +43,7 @@ using Newtonsoft.Json.Serialization;
 using Scrutor;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Text;
 using Yitter.IdGenerator;
 
@@ -322,14 +323,69 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     containerBuilder.RegisterType<PluginManager>().AsSelf().SingleInstance();
     containerBuilder.RegisterType<PluginStaticFileProviderRegistry>().AsSelf().SingleInstance();
-    containerBuilder.Register(c => new PluginLoadService(
-        c.Resolve<PluginManager>(),
-        c.Resolve<ILifetimeScope>(),
-        c.Resolve<ILogger<PluginLoadService>>(),
-        c.Resolve<ILoggerFactory>(),
-        c.Resolve<PluginStaticFileProviderRegistry>(),
-        c.Resolve<IConfiguration>()
-    )).As<IPluginLoadService>().SingleInstance();
+
+    //containerBuilder.Register(c => new PluginLoadService(
+    //    c.Resolve<PluginManager>(),
+    //    c.Resolve<ILifetimeScope>(),
+    //    c.Resolve<ILogger<PluginLoadService>>(),
+    //    c.Resolve<ILoggerFactory>(),
+    //    c.Resolve<PluginStaticFileProviderRegistry>(),
+    //    c.Resolve<IConfiguration>()
+    //)).As<IPluginLoadService>().SingleInstance();
+
+    // ===================================================
+    // 🚀 关键：加载 AOT 编译的 Fastdotnet.Plugin.Core.dll
+    // ===================================================
+    var coreDllName = "Fastdotnet.Plugin.Core.dll";
+    var coreDllPath = Path.Combine(AppContext.BaseDirectory, coreDllName);
+    if (File.Exists(coreDllPath))
+    {
+        try
+        {
+            // 🔧 加载原生 AOT 程序集
+            var asm = AssemblyLoadContext.Default.LoadFromAssemblyPath(coreDllPath);
+
+            // 🔍 查找 PluginServiceRegistrar 类型
+            var registrarType = asm.GetType("Fastdotnet.Plugin.Core.PluginServiceRegistrar");
+            if (registrarType == null)
+            {
+                Console.WriteLine($"❌ 找不到类型：Fastdotnet.Plugin.Core.PluginServiceRegistrar，请检查 DLL 是否正确。");
+                return;
+            }
+
+            // 🔍 查找 RegisterAutofacServices 方法
+            var registerMethod = registrarType.GetMethod(
+                "RegisterAutofacServices",
+                BindingFlags.Public | BindingFlags.Static,
+                null,
+                new[] { typeof(ContainerBuilder) },
+                null);
+
+            if (registerMethod == null)
+            {
+                Console.WriteLine($"❌ 找不到方法：RegisterAutofacServices(ContainerBuilder)，请检查 PluginServiceRegistrar 是否公开。");
+                return;
+            }
+
+            // ✅ 调用注册方法
+            registerMethod.Invoke(null, new object[] { containerBuilder });
+
+            Console.WriteLine($"✅ 成功加载并注册 Fastdotnet.Plugin.Core 插件服务。");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ 加载 Fastdotnet.Plugin.Core.dll 失败：{ex.Message}");
+            Console.WriteLine($"💡 请确保：");
+            Console.WriteLine($"   1. {coreDllName} 存在于输出目录");
+            Console.WriteLine($"   2. 你的系统架构匹配（x64）");
+            Console.WriteLine($"   3. 所有依赖（如 vcruntime 等）已安装");
+        }
+    }
+    else
+    {
+        Console.WriteLine($"⚠️ 未找到 {coreDllName}，插件功能将不可用。");
+        Console.WriteLine($"   请将 Fastdotnet.Plugin.Core.dll 放入发布目录以启用授权功能。");
+    }
     containerBuilder.RegisterType<PluginActionDescriptorProvider>().As<IActionDescriptorProvider>().SingleInstance();
 
     // 在Autofac中注册AutoMapper
