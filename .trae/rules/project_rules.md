@@ -118,3 +118,4 @@ plugin-a-app/
     - 字符串匹配：`{ dynamicQuery: "Name.Contains(@0)", queryParameters: ["John"] }`
     - 复合条件：`{ dynamicQuery: "Age >= @0 and Age <= @1 and !string.IsNullOrEmpty(Name)", queryParameters: [18, 65] }`
     - OR条件：`{ dynamicQuery: "Age < @0 or Age > @1", queryParameters: [18, 65] }`
+42. **插件核心模块**: 闭源：代码在src\fastdotnet.-plugin.-core\Fastdotnet.Plugin.Core 是一个单独git库，Obfuscar.MSBuild混淆+数字签名+反调试，nuget包发布到nuget.org，插件核心模块使用nuget包引用
