@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="AutoMapper" Version="15.0.1" />
-    <PackageVersion Include="Fastdotnet.Plugin.Core" Version="1.0.0" />
+    <PackageVersion Include="Fastdotnet.Plugin.Core" Version="1.0.2" />
     <PackageVersion Include="Lazy.Captcha.Core" Version="2.2.2" />
     <PackageVersion Include="MailKit" Version="4.13.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication" Version="2.3.0" />
@@ -17,6 +17,7 @@
     <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid" Version="9.8.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.8" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.5.0" />
+    <PackageVersion Include="MinVer" Version="6.0.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="Obfuscar" Version="2.2.47" />
     <PackageVersion Include="Obfuscar.MsBuild" Version="2.2.47" />
