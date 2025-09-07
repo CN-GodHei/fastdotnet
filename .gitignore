@@ -121,8 +121,11 @@ node_modules
 build/
 *.db
 issueDemo
+#辅助代码文件夹
 Auxiliary code
 FastdotnetDocs
 dist
 fastdotnet.-plugin.-core
+.trae/
 .trae
+docs
