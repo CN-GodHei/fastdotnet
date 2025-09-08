@@ -35,6 +35,11 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 					changeOrigin: true,
 					rewrite: (path) => path.replace(/^\/gitee/, ''),
 				},
+				'/api': {
+					target: 'http://localhost:18889',
+					ws: true,
+					changeOrigin: true,
+				},
 			},
 		},
 		build: {
