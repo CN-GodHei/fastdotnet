@@ -9,7 +9,7 @@
 9. 当前项目使用Jwt作为认证和授权,根据是否需要精细化权限控制可以使用        [Authorize(Policy = Permissions.Admin.Users.View)]，\fd\src\Fastdotnet.Core\Constants\Permissions.cs里定义
 10. 当前项目使用对象转换工具为AutoMapper
 11. 当前项目使用分为数据库实体和传输实体，数据库实体是和数据库表对应的，传输实体是和前端交互的，传输实体可以和数据库实体进行转换
-12. fd\src目录是后端的代码目录，fd\Web目录是前端的代码目录，fastdotnet-docs目录是文档目录，如果功能变更，需要在文档目录下进行更新
+12. Fastdotnet\backend 目录是后端的代码目录，Fastdotnet\Web目录是前端的代码目录，fastdotnet-docs目录是文档目录，如果功能变更，需要在文档目录下进行更新
 13. fd\Auxiliary code目录是辅助代码目录，里面是一些辅助代码，比如用到了一些开源库，你使用方式不清楚的时候可以自己下载到这个目录，或者让我拉取
 14. 后端nuget包是使用中央包管理器管理的，要增加nuget包时需要注意这个问题
 15. 当前项目使用git作为版本管理，如果你需要修改复杂的逻辑并不确定是否会影响其他功能，建议先创建一个新的分支，在新的分支上进行修改，修改完成后，再合并到主分支
@@ -22,7 +22,7 @@
 22. Element Plus (UI 组件库)
 23. Axios (HTTP 客户端)，自己封装了一个，封装了请求拦截器和响应拦截器，自己定义了一个请求参数的格式，自己定义了一个响应参数的格式，自己定义了一个错误处理的格式
 24. 前端代码目录结构
-管理端主应用 (admin-base)
+管理端主应用 (Fastdotnet\Web\fastdotnet-admin)
 fastdotnet-admin/
 ├── src/
 │   ├── api/              # 主应用API接口
@@ -43,7 +43,7 @@ fastdotnet-admin/
 ├── public/
 │   └── index.html        # 主页面
 └── vite.config.ts        # Vite 配置
-客户端主应用 (app-base)
+客户端主应用 (Fastdotnet\Web\fastdotnet-app)
 fastdotnet-app/
 ├── src/
 │   ├── api/              # 主应用API接口
