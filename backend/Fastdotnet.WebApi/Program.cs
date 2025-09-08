@@ -3,6 +3,7 @@ using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 // 添加AutoMapper相关引用
 using AutoMapper;
+using Fastdotnet.Core.Hubs;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Middleware;
@@ -35,6 +36,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -318,6 +320,9 @@ builder.Services.AddSingleton<IControllerActivator, PluginControllerActivator>()
 // 注册限流和黑名单缓存服务
 builder.Services.AddScoped<IRateLimitCacheService, RateLimitCacheService>();
 
+// 添加SignalR服务
+builder.Services.AddSignalR();
+
 // 2. 配置 Autofac 容器
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
@@ -473,9 +478,17 @@ app.UseMiddleware<BlacklistMiddleware>();
 app.UseMiddleware<RateLimitMiddleware>();
 
 app.UseMiddleware<DynamicMiddlewareDispatcher>();
+
+app.UseRouting(); // 添加路由中间件
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    // 注册主框架的SignalR端点
+    endpoints.MapHub<UniversalHub>("/api/signalr");
+});
 
 // 5. 应用程序启动后执行启动任务
 var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
