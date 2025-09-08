@@ -9,12 +9,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Fastdotnet.Plugin.Contracts;
 using PluginA.IService;
 //using PluginA.Services;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 
 // The namespace for the WebApi project must be included to find the DynamicMiddlewareRegistry.
 
 namespace PluginA
 {
-    public class PluginAImpl : IPlugin
+    public class PluginAImpl : IPlugin, IPluginSignalREndpoint
     {
         public string Name => "PluginA";
         public string Version => "1.0.0";
@@ -84,6 +87,33 @@ namespace PluginA
             builder.RegisterType<PluginAMiddleware>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<PluginAPermissionProvider>().As<IPermissionProvider>().InstancePerLifetimeScope();
             //builder.RegisterType<PluginEntityService>().As<IPluginEntityService>().InstancePerLifetimeScope();
+            
+            // 注册PluginAHub作为服务，以便其他组件可以使用它
+            // 注意：这仅在插件内部需要直接使用Hub实例时才需要
+            builder.RegisterType<Hubs.PluginAHub>().AsSelf().InstancePerLifetimeScope();
+            
+            // 注册插件的服务，用于向客户端发送消息
+            builder.RegisterType<Services.PluginAMessageService>().As<IPluginAMessageService>().InstancePerLifetimeScope();
+        }
+
+        /// <summary>
+        /// 插件自主注册SignalR端点（文档用途，实际端点注册由主框架统一处理）
+        /// </summary>
+        /// <param name="endpoints">端点路由构建器</param>
+        public void RegisterSignalREndpoints(IEndpointRouteBuilder endpoints)
+        {
+            // 注意：由于ASP.NET Core不支持动态注册SignalR端点，
+            // 插件的SignalR功能通过主框架的通用Hub（UniversalHub）来实现。
+            // 此方法仅作为文档用途，指示插件的SignalR端点路径。
+            // 实际的端点路径：/api/signalr
+            // 插件可以通过UniversalHub的插件特定方法来实现功能：
+            // - SendPluginNotification(pluginId, message)
+            // - JoinPluginRoom(pluginId, roomName)
+            // - LeavePluginRoom(pluginId, roomName)
+            // - SendToPluginRoom(pluginId, roomName, message)
+            // - InvokePluginMethod(pluginId, methodName, args)
+            
+            Console.WriteLine($"[PluginA] SignalR端点信息：插件通过主框架的通用Hub实现SignalR功能");
         }
     }
 }
