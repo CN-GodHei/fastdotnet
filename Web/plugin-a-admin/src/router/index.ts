@@ -18,6 +18,14 @@ const routes: RouteRecordRaw[] = [
     meta: {
       title: 'Plugin A About'
     }
+  },
+  {
+    path: '/signalr-demo', // SignalR Demo页面
+    name: 'SignalRDemo',
+    component: () => import('../views/signalr-demo.vue'),
+    meta: {
+      title: 'Plugin A SignalR Demo'
+    }
   }
 ];
 
