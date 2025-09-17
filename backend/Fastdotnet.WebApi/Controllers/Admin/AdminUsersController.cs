@@ -5,6 +5,7 @@ using Fastdotnet.Core.Entities.Admin;
 using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.Admin.Users;
+using Fastdotnet.Core.Service;
 using Fastdotnet.Service.IService.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -103,6 +104,14 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         { 
             await _adminUserService.ResetPasswordAsync(id, dto.NewPassword);
             return NoContent();
+        }
+
+        [HttpGet("getUserInfo")]
+        [Authorize(Policy = Permissions.Admin.Users.ResetPassword)]
+        public async Task<AdminUserDto> getUserInfo()
+        {
+          var user = await _repository.GetByIdAsync(_currentUser.Id);
+           return _mapper.Map<AdminUserDto>(user);
         }
     }
 }
