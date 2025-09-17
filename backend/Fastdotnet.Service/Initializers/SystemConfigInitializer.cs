@@ -32,7 +32,7 @@ namespace Fastdotnet.Service.Initializers
             {
                 new SystemConfig { Name = "App版本号", Code = "AppVersion", Value = "1.0.0", Description = "当前应用版本号", IsSystem = true },
                 new SystemConfig { Name = "水印内容", Code = "Watermark", Value = "Fastdotnet", Description = "系统水印内容。在“启用水印”开启后生效。", IsSystem = true },
-                new SystemConfig { Name = "启用验证码", Code = "EnableCaptcha", Value = true, Description = "控制登录、注册等功能是否开启图片或行为验证码", IsSystem = true },
+                new SystemConfig { Name = "启用验证码", Code = "EnableCaptcha", Value = false, Description = "控制登录、注册等功能是否开启图片或行为验证码", IsSystem = true },
                 new SystemConfig { Name = "验证码类型", Code = "CaptchaType", Value = "normal", Description = "验证码类型，可选值：normal (图形验证码), behavioral (行为验证)", IsSystem = true },
                 new SystemConfig { Name = "注册邮箱验证", Code = "EnableRegisterEmailVerification", Value = false, Description = "控制用户注册时是否必须通过邮箱验证", IsSystem = true },
 

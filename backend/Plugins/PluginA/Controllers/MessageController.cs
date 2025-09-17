@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using PluginA.IService;
 using PluginA.Services;
 using System.Threading.Tasks;
 

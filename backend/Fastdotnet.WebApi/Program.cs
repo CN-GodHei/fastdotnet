@@ -81,7 +81,11 @@ builder.Services.AddControllers(options =>
     {
         SetNewtonsoftJsonSetting(options.SerializerSettings);
     });
-
+//模型验证失败，也会正常进入 Controller
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true; // 关键：禁用自动 400 响应
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -430,7 +434,8 @@ if (app.Environment.IsDevelopment())
     {
         // 添加主API文档
         c.SwaggerEndpoint("/swagger/main/swagger.json", "主系统 API v1");
-
+        string p = Path.Combine(AppContext.BaseDirectory, "Plugins");
+        Directory.CreateDirectory(p); // 如果不存在则创建，存在则无操作
         // 为插件动态添加API文档
         var pluginDirs = Directory.GetDirectories(Path.Combine(AppContext.BaseDirectory, "Plugins"));
         foreach (var pluginDir in pluginDirs)
@@ -537,6 +542,6 @@ static void SetNewtonsoftJsonSetting(JsonSerializerSettings setting)
     setting.DateFormatString = "yyyy-MM-dd HH:mm:ss";
     setting.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
     //不改变字段大小写：还是注释吧，总有人分不清大小写，但程序不会，通吃就行
-    setting.ContractResolver = new DefaultContractResolver();
+    //setting.ContractResolver = new DefaultContractResolver();
 
 }
