@@ -1,8 +1,10 @@
+@use './app';
+@use 'common/transition';
+@use './other';
+@use './element';
+@use './media/media' as media;
+@use './waves';
+@use './dark';
+
 @import 'element-plus/dist/index.css';
-@import './app.scss';
-@import 'common/transition.scss';
-@import './other.scss';
-@import './element.scss';
-@import './media/media.scss';
-@import './waves.scss';
-@import './dark.scss';
+
