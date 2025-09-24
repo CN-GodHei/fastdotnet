@@ -65,6 +65,8 @@ import { formatDate } from '/@/utils/formatTime';
 import { Local } from '/@/utils/storage';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
+import { postAdminUsersUnlock } from '/@/api/fd-system-api/AdminUsers';
+import { ElMessage } from 'element-plus';
 
 // 定义变量内容
 const layoutLockScreenDateRef = ref<HtmlType>();
@@ -177,10 +179,32 @@ const setLocalThemeConfig = () => {
 	Local.set('themeConfig', themeConfig.value);
 };
 // 密码输入点击事件
-const onLockScreenSubmit = () => {
-	themeConfig.value.isLockScreen = false;
-	themeConfig.value.lockScreenTime = 30;
-	setLocalThemeConfig();
+const onLockScreenSubmit = async () => {
+	if (!state.lockScreenPassword) {
+		// 密码为空，不执行解锁操作
+		return;
+	}
+	
+	try {
+		// 调用后端解锁接口
+		const response = await postAdminUsersUnlock({
+			Password: state.lockScreenPassword
+		});
+		console.log('response', response);
+		if (response) {
+			// 解锁成功
+			themeConfig.value.isLockScreen = false;
+			themeConfig.value.lockScreenTime = 30;
+			setLocalThemeConfig();
+			// 清空密码
+			// state.lockScreenPassword = '';
+		} else {
+			// 解锁失败，显示错误提示
+			ElMessage.error('密码错误，请重新输入');
+		}
+	} catch (error) {
+		ElMessage.error('解锁失败，请重试');
+	}
 };
 // 页面加载时
 onMounted(() => {
