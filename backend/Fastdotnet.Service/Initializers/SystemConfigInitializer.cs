@@ -47,7 +47,7 @@ namespace Fastdotnet.Service.Initializers
                 new SystemConfig { Name = "版权信息", Code = "CopyrightInfo", Value = "© 2025 Fastdotnet 开源系统 · 商业插件需授权", Description="版权信息"},
                 new SystemConfig { Name = "App版本号", Code = "AppVersion", Value = "1.0.0", Description = "当前应用版本号", IsSystem = true },
                 new SystemConfig { Name = "启用验证码", Code = "EnableCaptcha", Value = false, Description = "控制登录、注册等功能是否开启图片或行为验证码", IsSystem = true },
-                new SystemConfig { Name = "验证码类型", Code = "CaptchaType", Value = "normal", Description = "验证码类型，可选值：normal (图形验证码), behavioral (行为验证)", IsSystem = true },
+                new SystemConfig { Name = "验证码类型", Code = "CaptchaType", Value = "normal", Description = "验证码类型，可选值：normal (图形验证码), behavioral (行为验证:暂未实现)", IsSystem = true },
                 new SystemConfig { Name = "注册邮箱验证", Code = "EnableRegisterEmailVerification", Value = false, Description = "控制用户注册时是否必须通过邮箱验证", IsSystem = true },
 
     // ========== 布局配置抽屉 ==========
@@ -114,7 +114,7 @@ namespace Fastdotnet.Service.Initializers
     // ========== 全局网站标题 / 副标题 ==========
     new SystemConfig { Name = "网站主标题", Code = "globalTitle", Value = "Fastdotnet", Description = "显示在浏览器标签和菜单导航的主标题", IsSystem = true },
     new SystemConfig { Name = "网站副标题", Code = "globalViceTitle", Value = "Fastdotnet", Description = "登录页顶部显示的副标题", IsSystem = true },
-    new SystemConfig { Name = "网站副标题描述", Code = "globalViceTitleMsg", Value = "专注、免费、开源、维护、解疑、插件化", Description = "登录页副标题下方的描述文案", IsSystem = true },
+    new SystemConfig { Name = "网站副标题描述", Code = "globalViceTitleMsg", Value = "dotnet 生态真正意义上企业级插件化系统", Description = "登录页副标题下方的描述文案", IsSystem = true },
     new SystemConfig { Name = "默认初始语言", Code = "globalI18n", Value = "zh-cn", Description = "系统默认语言，可选值：zh-cn / en / zh-tw", IsSystem = true },
     new SystemConfig { Name = "默认全局组件大小", Code = "globalComponentSize", Value = "small", Description = "组件默认尺寸，可选值：large / default / small", IsSystem = true }
 };
