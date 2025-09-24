@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { getAdminSystemConfigPublicAll } from '/@/api/fd-system-api/SystemConfig';
 
 /**
  * 布局配置
@@ -112,7 +113,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 			// Tagsview 风格：可选值"<tags-style-one|tags-style-four|tags-style-five>"，默认 tags-style-five
 			// 定义的值与 `/src/layout/navBars/tagsView/tagsView.vue` 中的 class 同名
 			tagsStyle: 'tags-style-five',
-			// 主页面切换动画：可选值"<slide-right|slide-left|opacitys>"，默认 slide-right
+			// 主页面切换动画：可选值"<slide-right|slide-left|opacitys>\"，默认 slide-right
 			animation: 'slide-right',
 			// 分栏高亮风格：可选值"<columns-round|columns-card>"，默认 columns-round
 			columnsAsideStyle: 'columns-round',
@@ -146,11 +147,110 @@ export const useThemeConfig = defineStore('themeConfig', {
 			globalI18n: 'zh-cn',
 			// 默认全局组件大小，可选值"<large|'default'|small>"，默认 'large'
 			globalComponentSize: 'small',
-		},
+
+			// 用于存储后端动态配置的通用字段
+			// 这将包含所有后端配置，包括前端未预定义的配置项
+			additionalConfig: {},
+	},
+		
 	}),
 	actions: {
 		setThemeConfig(data: ThemeConfigState) {
 			this.themeConfig = data.themeConfig;
 		},
+		
+		// 从后端获取配置并更新主题配置
+		async setThemeConfigFromBackend() {
+			try {
+				const response = await getAdminSystemConfigPublicAll();
+				const configData = response;
+				
+				if (configData) {
+					// 创建一个临时对象来扩展当前配置
+					const updatedConfig = { ...this.themeConfig };
+					
+					// 存储前端未定义的配置项
+					const additionalConfigs: Record<string, any> = {};
+					
+					// 遍历所有后端配置项
+					for (const [key, value] of Object.entries(configData)) {
+						// 对于前端已定义的配置项，直接更新
+						if (this.themeConfig.hasOwnProperty(key) && key !== 'additionalConfig') {
+							(updatedConfig as any)[key] = value;
+						}
+						// 特殊处理：如果后端返回了 SystemName，更新 globalTitle 和 globalViceTitle
+						else if (key === 'SystemName' && value) {
+							updatedConfig.globalTitle = value as string;
+							updatedConfig.globalViceTitle = value as string;
+						}
+						// 如果是前端未定义的配置项，存储到 additionalConfigs
+						else if (!this.themeConfig.hasOwnProperty(key)) {
+							additionalConfigs[key] = value;
+						}
+					}
+					
+					// 只将前端未预定义的配置项存储在 additionalConfig 中
+					updatedConfig.additionalConfig = additionalConfigs;
+					
+					// 更新整个配置对象，这将确保所有配置项（包括 additionalConfig）都会被缓存
+					this.themeConfig = updatedConfig;
+				}
+				return true;
+			} catch (error) {
+				console.error('获取后端配置失败:', error);
+				// 如果获取失败，保持前端的默认值不变
+				// 前端将继续使用初始化时的默认值
+				return true; // 返回 true 表示处理完成，即使失败也继续
+			}
+		},
+		
+		// 获取特定配置项的值
+		getConfigValue(key: string) {
+			// 优先从主题配置中获取（这些是前端常用的配置）
+			if (this.themeConfig.hasOwnProperty(key) && key !== 'additionalConfig') {
+				return (this.themeConfig as any)[key];
+			}
+			// 如果没有找到，尝试从额外配置中获取
+			if (this.themeConfig.additionalConfig && this.themeConfig.additionalConfig.hasOwnProperty(key)) {
+				return this.themeConfig.additionalConfig[key];
+			}
+			// 如果都没有找到，返回 undefined
+			return undefined;
+		},
+		
+		// 获取所有额外配置
+		getAllAdditionalConfigs() {
+			return this.themeConfig.additionalConfig || {};
+		},
+		
+		// 获取所有配置（包括前端预定义的和后端额外的）
+		getAllConfigs() {
+			// 合并前端预定义配置和后端额外配置
+			const allConfigs: Record<string, any> = { ...this.themeConfig };
+			// 移除 additionalConfig 字段自身，避免重复
+			delete allConfigs.additionalConfig;
+			
+			// 合并额外的配置项
+			if (this.themeConfig.additionalConfig) {
+				Object.assign(allConfigs, this.themeConfig.additionalConfig);
+			}
+			
+			return allConfigs;
+		}
+	},
+}, {
+	// 持久化配置
+	persist: {
+		key: 'themeConfig',
+		storage: localStorage,
+		// 持久化整个 themeConfig 对象，包括后端动态添加的配置项
+		paths: ['themeConfig'],
 	},
 });
+
+// 在 store 定义后立即初始化
+// 将初始化调用封装到一个函数中，以便在应用启动时调用
+export async function initializeThemeConfig() {
+	const themeConfigStore = useThemeConfig();
+	await themeConfigStore.setThemeConfigFromBackend();
+}

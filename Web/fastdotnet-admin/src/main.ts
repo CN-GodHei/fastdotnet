@@ -33,6 +33,14 @@ other.elSvg(app);
 
 app.use(pinia).use(router).use(ElementPlus).use(i18n).use(VueGridLayout).mount('#app');
 
+// 初始化主题配置（获取后端配置）
+import { initializeThemeConfig } from '/@/stores/themeConfig';
+initializeThemeConfig().then(() => {
+    // console.log('[MainApp] Theme configuration initialized from backend');
+}).catch(error => {
+    console.error('[MainApp] Failed to initialize theme configuration:', error);
+});
+
 // --- Qiankun 启动逻辑 ---
 // 定义一个变量，防止 qiankun 被重复启动
 let qiankunStarted = false;
