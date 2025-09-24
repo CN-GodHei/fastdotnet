@@ -100,6 +100,14 @@ export async function deleteAdminUsersBatch(body: string[], options?: { [key: st
 	});
 }
 
+/** 此处后端没有提供注释 GET /api/admin/users/getUserInfo */
+export async function getAdminUsersGetUserInfo(options?: { [key: string]: any }) {
+	return request<APIModel.AdminUserDto>('/api/admin/users/getUserInfo', {
+		method: 'GET',
+		...(options || {}),
+	});
+}
+
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/admin/users/page */
 export async function getAdminUsersPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -208,6 +216,18 @@ export async function postAdminUsersRecyclebinSearch(body: APIModel.PageQueryByC
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
+/** 解锁屏幕 POST /api/admin/users/unlock */
+export async function postAdminUsersUnlock(body: APIModel.UnlockDto, options?: { [key: string]: any }) {
+	return request<boolean>('/api/admin/users/unlock', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
 		},
 		data: body,
 		...(options || {}),

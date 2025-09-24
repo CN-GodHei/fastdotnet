@@ -6,9 +6,14 @@ using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.Admin.Users;
 using Fastdotnet.Core.Service;
+using Fastdotnet.Core.Utils.Extensions;
 using Fastdotnet.Service.IService.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
@@ -19,6 +24,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     {
         private readonly IAdminUserService _adminUserService;
         private readonly ICurrentUser _currentUser;
+        private readonly IRepository<FdAdminUser> _repository;
 
         public AdminUsersController(
             IAdminUserService adminUserService,
@@ -27,6 +33,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             ICurrentUser currentUser) : base(repository, mapper)
         {
             _adminUserService = adminUserService;
+            _repository = repository;
             _currentUser = currentUser;
         }
 
@@ -112,6 +119,37 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         {
           var user = await _repository.GetByIdAsync(_currentUser.Id);
            return _mapper.Map<AdminUserDto>(user);
+        }
+
+        /// <summary>
+        /// 解锁屏幕
+        /// </summary>
+        /// <param name="dto">包含密码的解锁信息</param>
+        /// <returns>解锁结果</returns>
+        [HttpPost("unlock")]
+        [Authorize]
+        public async Task<bool> Unlock([FromBody] UnlockDto dto)
+        {
+            dto.IsValid();
+            // 获取当前用户的ID
+            var userId = _currentUser.Id;
+            
+            if (string.IsNullOrEmpty(userId))
+            {
+                return false;
+            }
+
+            // 获取当前用户信息
+            var user = await _repository.GetFirstAsync(u => u.Id == userId&&u.Password==dto.Password);
+            if (user == null)
+            {
+                return false;
+            }
+
+            // 验证密码
+            bool isValid = user.Password == dto.Password;
+            
+            return isValid;
         }
     }
 }

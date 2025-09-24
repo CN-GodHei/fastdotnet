@@ -672,50 +672,6 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
-	type PluginATestBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type PluginATestCreateDto = {
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-	};
-
-	type PluginATestDto = {
-		Id?: string;
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-	};
-
-	type PluginATestDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: PluginATestDto[];
-	};
-
-	type PluginATestUpdateDto = {
-		Id?: string;
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-	};
-
 	type postAdminCacheTestSetParams = {
 		/** 缓存键 */
 		key?: string;
@@ -876,6 +832,10 @@ declare namespace APIModel {
 	type SystemConfigDtoPageResult = {
 		PageInfo?: PageInfo;
 		Items?: SystemConfigDto[];
+	};
+
+	type UnlockDto = {
+		Password: string;
 	};
 
 	type UpdateAdminUserDto = {

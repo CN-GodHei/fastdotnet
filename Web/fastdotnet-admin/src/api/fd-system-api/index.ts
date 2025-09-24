@@ -15,6 +15,7 @@ import * as Permissions from './Permissions';
 import * as Plugin from './Plugin';
 import * as RateLimitRules from './RateLimitRules';
 import * as Roles from './Roles';
+import * as System from './System';
 import * as SystemConfig from './SystemConfig';
 export default {
 	Auth,
@@ -30,5 +31,6 @@ export default {
 	Plugin,
 	RateLimitRules,
 	Roles,
+	System,
 	SystemConfig,
 };

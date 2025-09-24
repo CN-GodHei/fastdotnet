@@ -116,10 +116,7 @@ export async function getAdminBlacklistsPage(
 }
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/Blacklists/page/search */
-export async function postAdminBlacklistsPageSearch(
-	body: APIModel.PageQueryByConditionDto,
-	options?: { [key: string]: any }
-) {
+export async function postAdminBlacklistsPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdBlacklistDtoPageResult>('/api/admin/Blacklists/page/search', {
 		method: 'POST',
 		headers: {

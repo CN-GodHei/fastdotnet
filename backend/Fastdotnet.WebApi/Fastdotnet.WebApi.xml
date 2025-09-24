@@ -10,6 +10,13 @@
             </summary>
             <returns>包含所有管理员用户的列表</returns>
         </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.Admin.AdminUsersController.Unlock(Fastdotnet.Core.Models.Admin.Users.UnlockDto)">
+            <summary>
+            解锁屏幕
+            </summary>
+            <param name="dto">包含密码的解锁信息</param>
+            <returns>解锁结果</returns>
+        </member>
         <member name="T:Fastdotnet.WebApi.Controllers.Admin.BlacklistsController">
             <summary>
             黑名单管理控制器
