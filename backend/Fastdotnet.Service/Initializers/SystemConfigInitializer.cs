@@ -44,6 +44,7 @@ namespace Fastdotnet.Service.Initializers
             //};
             var configs = new List<SystemConfig>
 {
+                new SystemConfig { Name = "版权信息", Code = "CopyrightInfo", Value = "© 2025 Fastdotnet 开源系统 · 商业插件需授权", Description="版权信息"},
                 new SystemConfig { Name = "App版本号", Code = "AppVersion", Value = "1.0.0", Description = "当前应用版本号", IsSystem = true },
                 new SystemConfig { Name = "启用验证码", Code = "EnableCaptcha", Value = false, Description = "控制登录、注册等功能是否开启图片或行为验证码", IsSystem = true },
                 new SystemConfig { Name = "验证码类型", Code = "CaptchaType", Value = "normal", Description = "验证码类型，可选值：normal (图形验证码), behavioral (行为验证)", IsSystem = true },
@@ -79,8 +80,8 @@ namespace Fastdotnet.Service.Initializers
     new SystemConfig { Name = "是否开启固定 Header", Code = "isFixedHeader", Value = true, Description = "页面滚动时是否固定顶部导航栏", IsSystem = true },
     new SystemConfig { Name = "初始化变量（勿删）", Code = "isFixedHeaderChange", Value = false, Description = "用于更新菜单 el-scrollbar 高度，请勿删除", IsSystem = true },
     new SystemConfig { Name = "是否开启经典布局分割菜单", Code = "isClassicSplitMenu", Value = false, Description = "仅经典布局生效，是否分割菜单显示", IsSystem = true },
-    new SystemConfig { Name = "是否开启自动锁屏", Code = "isLockScreen", Value = false, Description = "用户无操作时是否自动锁屏", IsSystem = true },
-    new SystemConfig { Name = "自动锁屏倒计时(秒)", Code = "lockScreenTime", Value = 30, Description = "自动锁屏等待时间，单位：秒", IsSystem = true },
+    new SystemConfig { Name = "是否开启自动锁屏", Code = "isLockScreen", Value = true, Description = "用户无操作时是否自动锁屏", IsSystem = true },
+    new SystemConfig { Name = "自动锁屏倒计时(秒)", Code = "lockScreenTime", Value = 300, Description = "自动锁屏等待时间，单位：秒", IsSystem = true },
 
     // ========== 界面显示 ==========
     new SystemConfig { Name = "是否开启侧边栏 Logo", Code = "isShowLogo", Value = false, Description = "侧边栏顶部是否显示 Logo", IsSystem = true },
@@ -96,7 +97,7 @@ namespace Fastdotnet.Service.Initializers
     new SystemConfig { Name = "是否开启灰色模式", Code = "isGrayscale", Value = false, Description = "是否启用灰度显示模式", IsSystem = true },
     new SystemConfig { Name = "是否开启色弱模式", Code = "isInvert", Value = false, Description = "是否启用色弱辅助模式", IsSystem = true },
     new SystemConfig { Name = "是否开启水印", Code = "isWartermark", Value = true, Description = "是否在页面显示水印", IsSystem = true },
-    new SystemConfig { Name = "水印文案", Code = "wartermarkText", Value = "fastdotnet", Description = "水印显示的文字内容", IsSystem = true },
+    new SystemConfig { Name = "水印文案", Code = "wartermarkText", Value = "Fastdotnet", Description = "水印显示的文字内容", IsSystem = true },
 
     // ========== 其它设置 ==========
     new SystemConfig { Name = "Tagsview 风格", Code = "tagsStyle", Value = "tags-style-five", Description = "标签页样式，可选值：tags-style-one / four / five", IsSystem = true },
