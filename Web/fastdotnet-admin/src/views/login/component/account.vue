@@ -27,7 +27,8 @@
 				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item class="login-animation3">
+		<!-- 验证码输入框，仅在启用验证码时显示 -->
+		<el-form-item v-if="state.showCaptcha" class="login-animation3">
 			<el-col :span="15">
 				<el-input
 					text
@@ -63,7 +64,7 @@
 </template>
 
 <script setup lang="ts" name="loginAccount">
-import { reactive, computed, onMounted } from 'vue';
+import { reactive, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
@@ -96,9 +97,31 @@ const state = reactive({
 	loading: {
 		signIn: false,
 	},
+	showCaptcha: true, // 是否显示验证码
+	captchaType: 'normal', // 验证码类型
 	captchaId: '', // 验证码ID
 	captchaUrl: '', // 验证码图片URL
 });
+
+// 从配置中更新验证码显示状态和类型
+const updateCaptchaConfig = () => {
+	const enableCaptcha = storesThemeConfig.getConfigValue('EnableCaptcha');
+	const captchaType = storesThemeConfig.getConfigValue('CaptchaType') || 'normal';
+	
+	// 更新状态
+	state.showCaptcha = enableCaptcha !== undefined ? enableCaptcha : true; // 默认启用验证码
+	state.captchaType = captchaType;
+	
+	// 如果验证码已禁用，则清空验证码输入
+	if (!state.showCaptcha) {
+		state.ruleForm.code = '';
+	}
+	
+	// 如果启用验证码，则刷新验证码图片
+	if (state.showCaptcha) {
+		refreshCaptcha();
+	}
+};
 
 // 时间获取
 const currentTime = computed(() => {
@@ -112,6 +135,8 @@ const generateCaptchaId = () => {
 
 // 刷新验证码
 const refreshCaptcha = async () => {
+	if (!state.showCaptcha) return; // 仅在需要时才刷新验证码
+	
 	try {
 		// 生成新的验证码ID
 		state.captchaId = generateCaptchaId();
@@ -127,15 +152,27 @@ const refreshCaptcha = async () => {
 
 // 登录 (适配 Fastdotnet 后端)
 const onSignIn = async () => {
+	// 如果验证码启用，但未输入验证码，则提示用户
+	if (state.showCaptcha && (!state.ruleForm.code || state.ruleForm.code.trim() === '')) {
+		ElMessage.error('请输入验证码');
+		return;
+	}
+	
 	state.loading.signIn = true;
 	try {
 		// 1. 调用后端登录接口
-		const res = await postAuthAdminLogin({
+		const loginData: any = {
 			Username: state.ruleForm.userName,
 			Password: state.ruleForm.password,
-			CaptchaId: state.captchaId,
-			CaptchaCode: state.ruleForm.code,
-		});
+		};
+		
+		// 仅在验证码启用时添加验证码参数
+		if (state.showCaptcha) {
+			loginData.CaptchaId = state.captchaId;
+			loginData.CaptchaCode = state.ruleForm.code;
+		}
+		
+		const res = await postAuthAdminLogin(loginData);
 
 		// 2. 检查响应并存储 token
 		// 由于 request.ts 响应拦截器已修改为直接返回 res.Data,
@@ -174,8 +211,10 @@ const onSignIn = async () => {
 		// ElMessage.error(error.message || '登录请求失败，请检查网络或联系管理员');
 		state.loading.signIn = false;
 		
-		// 刷新验证码
-		refreshCaptcha();
+		// 如果启用验证码，则刷新验证码以确保安全性
+		if (state.showCaptcha) {
+			refreshCaptcha();
+		}
 	}
 };
 
@@ -224,9 +263,18 @@ const signInSuccess = (isNoPower: boolean | undefined) => {
 	state.loading.signIn = false;
 };
 
-// 组件挂载时生成验证码
+// 监听配置变化，更新验证码显示
+watch(
+	() => storesThemeConfig.themeConfig.additionalConfig,
+	() => {
+		updateCaptchaConfig();
+	},
+	{ deep: true }
+);
+
+// 组件挂载时获取配置并设置验证码
 onMounted(() => {
-	refreshCaptcha();
+	updateCaptchaConfig();
 });
 </script>
 
