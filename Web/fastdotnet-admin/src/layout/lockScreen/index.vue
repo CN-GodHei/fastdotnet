@@ -72,12 +72,15 @@ import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { postAdminUsersUnlock } from '/@/api/fd-system-api/AdminUsers';
 import { ElMessage } from 'element-plus';
+import { useRouter, useRoute } from 'vue-router';
 
 // 定义变量内容
 const layoutLockScreenDateRef = ref<HtmlType>();
 const layoutLockScreenInputRef = ref();
 const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
+const router = useRouter();
+const route = useRoute();
 
 // 保存后端原始配置的锁屏时间
 const originalLockScreenTime = ref(30); // 在 onMounted 中会更新为实际值
@@ -171,6 +174,11 @@ const initSetTime = () => {
 };
 // 锁屏时间定时器
 const initLockScreen = () => {
+	// 如果当前在登录页面，则不启动锁屏定时器
+	if (isLoginPage()) {
+		return;
+	}
+	
 	// 使用后端配置的原始锁屏时间作为当前倒计时
 	let currentCountdown = themeConfig.value.lockScreenTime;
 	
@@ -271,13 +279,30 @@ const onLockScreenSubmit = async () => {
 			}, 100);
 			// 不隐藏锁屏界面，保持在解锁界面，让用户可以重新输入密码
 		}
-	} catch (error) {
-		state.lockScreenPassword = '';
-		state.lockScreenErrorMsg = '解锁失败，请重试';
+	} catch (error: any) {
+		// 检查是否为401错误（未授权），如果401则跳转到登录页
+		if (error.response && error.response.status === 401) {
+			// 清除本地存储的认证信息
+			Local.remove('token');
+			// 跳转到登录页
+			router.push('/login');
+		} else {
+			ElMessage.error('解锁失败，请重试');
+		}
 	}
 };
+// 检查当前是否在登录页面
+const isLoginPage = () => {
+	return route.path === '/login';
+};
+
 // 页面加载时
 onMounted(() => {
+	// 如果当前在登录页面，则不启动锁屏功能
+	if (isLoginPage()) {
+		return;
+	}
+	
 	// 初始化原始锁屏时间，使用后端配置的初始值
 	originalLockScreenTime.value = themeConfig.value.lockScreenTime;
 	
@@ -294,8 +319,36 @@ onMounted(() => {
 	addEventListeners();
 });
 
+// 监听路由变化
+watch(
+	() => route.path,
+	(newPath) => {
+		// 如果切换到登录页面，隐藏锁屏界面
+		if (newPath === '/login') {
+			state.isShowLockScreen = false;
+			// 停止锁屏定时器
+			if (state.isShowLockScreenIntervalTime) {
+				clearInterval(state.isShowLockScreenIntervalTime);
+			}
+			// 移除事件监听器
+			removeEventListeners();
+		} else if (!state.isShowLockScreen && themeConfig.value.isLockScreen) {
+			// 如果从登录页面返回到其他页面，且锁屏功能已启用，重新启动锁屏定时器
+			if (!isLoginPage()) {
+				initLockScreen();
+				addEventListeners();
+			}
+		}
+	}
+);
+
 // 添加全局事件监听器
 const addEventListeners = () => {
+	// 如果当前在登录页面，则不添加锁屏相关的事件监听器
+	if (isLoginPage()) {
+		return;
+	}
+	
 	window.addEventListener('keydown', resetLockScreenTimer);
 	window.addEventListener('mousedown', handleUserActivity);
 	window.addEventListener('mousemove', handleUserActivity);
