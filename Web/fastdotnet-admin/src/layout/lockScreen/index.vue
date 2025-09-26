@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts" name="layoutLockScreen">
-import { nextTick, onMounted, reactive, ref, onUnmounted } from 'vue';
+import { nextTick, onMounted, reactive, ref, onUnmounted, watch } from 'vue';
 import { formatDate } from '/@/utils/formatTime';
 import { Local } from '/@/utils/storage';
 import { storeToRefs } from 'pinia';
@@ -73,6 +73,10 @@ const layoutLockScreenDateRef = ref<HtmlType>();
 const layoutLockScreenInputRef = ref();
 const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
+
+// 保存后端原始配置的锁屏时间
+const originalLockScreenTime = ref(30); // 在 onMounted 中会更新为实际值
+
 const state = reactive({
 	transparency: 1,
 	downClientY: 0,
@@ -160,14 +164,23 @@ const initSetTime = () => {
 };
 // 锁屏时间定时器
 const initLockScreen = () => {
+	// 使用后端配置的原始锁屏时间作为当前倒计时
+	let currentCountdown = themeConfig.value.lockScreenTime;
+	
 	if (themeConfig.value.isLockScreen) {
+		// 在启动锁屏定时器时添加事件监听器
+		addEventListeners();
 		state.isShowLockScreenIntervalTime = window.setInterval(() => {
-			if (themeConfig.value.lockScreenTime <= 1) {
+			if (currentCountdown <= 1) {
+				// 锁屏时移除事件监听器，停止重置倒计时
+				removeEventListeners();
 				state.isShowLockScreen = true;
 				setLocalThemeConfig();
-				return false;
+				// 清除定时器，停止倒计时
+				clearInterval(state.isShowLockScreenIntervalTime);
+				return;
 			}
-			themeConfig.value.lockScreenTime--;
+			currentCountdown--;
 		}, 1000);
 	} else {
 		clearInterval(state.isShowLockScreenIntervalTime);
@@ -178,6 +191,37 @@ const setLocalThemeConfig = () => {
 	themeConfig.value.isDrawer = false;
 	Local.set('themeConfig', themeConfig.value);
 };
+
+// 重置锁屏倒计时
+const resetLockScreenTimer = () => {
+	if (themeConfig.value.isLockScreen) {
+		// 重新初始化锁屏定时器
+		if (state.isShowLockScreenIntervalTime) {
+			clearInterval(state.isShowLockScreenIntervalTime);
+		}
+		initLockScreen();
+	}
+};
+
+// 处理用户活动，避免在锁屏界面交互时重置锁屏计时器
+const handleUserActivity = (event: Event) => {
+	// 检查事件目标是否在锁屏界面内
+	const target = event.target as HTMLElement;
+	const isLockScreenElement = target.closest('.layout-lock-screen') !== null;
+	
+	// 只有当事件不是发生在锁屏界面内时，才重置锁屏计时器
+	if (!isLockScreenElement) {
+		resetLockScreenTimer();
+	}
+};
+
+// 监听锁屏时间配置变化，更新原始锁屏时间
+watch(
+	() => themeConfig.value.lockScreenTime,
+	(newVal) => {
+		originalLockScreenTime.value = newVal;
+	}
+);
 // 密码输入点击事件
 const onLockScreenSubmit = async () => {
 	if (!state.lockScreenPassword) {
@@ -190,14 +234,27 @@ const onLockScreenSubmit = async () => {
 		const response = await postAdminUsersUnlock({
 			Password: state.lockScreenPassword
 		});
-		console.log('response', response);
 		if (response) {
 			// 解锁成功
-			themeConfig.value.isLockScreen = false;
-			themeConfig.value.lockScreenTime = 30;
+			// 隐藏锁屏界面
+			state.isShowLockScreen = false;
+			// 保存后端配置值不变，只是重新开始定时器
 			setLocalThemeConfig();
 			// 清空密码
 			// state.lockScreenPassword = '';
+			
+			// 重新初始化锁屏定时器，开始新的倒计时
+			if (state.isShowLockScreenIntervalTime) {
+				clearInterval(state.isShowLockScreenIntervalTime);
+			}
+			if (themeConfig.value.isLockScreen) {
+				// 在解锁后重新添加事件监听器
+				addEventListeners();
+				initLockScreen();
+			}
+			
+			// 清空密码
+			state.lockScreenPassword = '';
 		} else {
 			// 解锁失败，显示错误提示
 			ElMessage.error('密码错误，请重新输入');
@@ -208,14 +265,47 @@ const onLockScreenSubmit = async () => {
 };
 // 页面加载时
 onMounted(() => {
+	// 初始化原始锁屏时间，使用后端配置的初始值
+	originalLockScreenTime.value = themeConfig.value.lockScreenTime;
+	
 	initGetElement();
 	initSetTime();
-	initLockScreen();
+	
+	// 初始化锁屏功能
+	if (themeConfig.value.isLockScreen) {
+		initLockScreen();
+	}
+	
+	// 添加全局用户活动监听器，用于重置锁屏倒计时
+	// 注意：只在用户真正使用系统时才重置锁屏计时器，而不是在与锁屏界面交互时
+	addEventListeners();
 });
+
+// 添加全局事件监听器
+const addEventListeners = () => {
+	window.addEventListener('keydown', resetLockScreenTimer);
+	window.addEventListener('mousedown', handleUserActivity);
+	window.addEventListener('mousemove', handleUserActivity);
+	window.addEventListener('scroll', handleUserActivity);
+	window.addEventListener('touchstart', handleUserActivity);
+};
+
+// 移除全局事件监听器
+const removeEventListeners = () => {
+	window.removeEventListener('keydown', resetLockScreenTimer);
+	window.removeEventListener('mousedown', handleUserActivity);
+	window.removeEventListener('mousemove', handleUserActivity);
+	window.removeEventListener('scroll', handleUserActivity);
+	window.removeEventListener('touchstart', handleUserActivity);
+};
+
 // 页面卸载时
 onUnmounted(() => {
 	window.clearInterval(state.setIntervalTime);
 	window.clearInterval(state.isShowLockScreenIntervalTime);
+	
+	// 移除全局事件监听器
+	removeEventListeners();
 });
 </script>
 
