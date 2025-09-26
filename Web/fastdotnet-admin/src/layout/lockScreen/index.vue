@@ -372,7 +372,7 @@ const onLockScreenSubmit = async () => {
 		}
 	} catch (error: any) {
 		// 检查是否为401错误（未授权），如果401则跳转到登录页
-		if (error.response && error.response.status === 401) {
+		if (error.status === 401) {
 			// 清除本地存储的认证信息
 			Local.remove('token');
 			// 跳转到登录页

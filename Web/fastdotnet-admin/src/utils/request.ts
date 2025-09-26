@@ -93,7 +93,8 @@ service.interceptors.response.use(
 					window.location.href = `/login?redirect=${redirectUrl}`; // 去登录页并携带重定向信息
 				});
 			}
-			return Promise.reject(new Error('未授权访问'));
+			// return Promise.reject(new Error('未授权访问'));
+			return Promise.reject(response);
 		} else if (response.status === 422) {
 			ElMessage.error(res.Msg || res.message || '验证错误');
 			// HTTP 422 验证错误，是后端返回的一种可控异常，主要是提示消息
