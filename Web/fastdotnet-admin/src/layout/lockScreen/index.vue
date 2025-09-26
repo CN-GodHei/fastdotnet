@@ -49,8 +49,8 @@
 						</div>
 					</div>
 					<div class="layout-lock-screen-login-icon">
-						<SvgIcon name="ele-Microphone" :size="20" />
-						<SvgIcon name="ele-AlarmClock" :size="20" />
+						<!-- <SvgIcon name="ele-Microphone" :size="20" />
+						<SvgIcon name="ele-AlarmClock" :size="20" /> -->
 						<SvgIcon name="ele-SwitchButton" :size="20" />
 					</div>
 				</div>
@@ -237,7 +237,8 @@ onUnmounted(() => {
 }
 .layout-lock-screen-img {
 	@extend .layout-lock-screen-fixed;
-	background-image: url('https://i.hd-r.cn/e4a19d84364f185266666765ac21a5db.jpg');
+	// background-image: url('');
+	background-color: rgb(57, 80, 80);
 	background-size: 100% 100%;
 	z-index: 9999991;
 }
