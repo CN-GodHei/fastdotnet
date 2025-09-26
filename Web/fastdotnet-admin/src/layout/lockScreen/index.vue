@@ -132,16 +132,28 @@ const onMove = () => {
 		const opacitys = (state.transparency -= 1 / 200);
 		if (state.moveDifference >= 0) return false;
 		el.setAttribute('style', `top:${state.moveDifference}px;cursor:pointer;opacity:${opacitys};`);
-		if (state.moveDifference < -400) {
-			el.setAttribute('style', `top:${-el.clientHeight}px;cursor:pointer;transition:all 0.3s ease;`);
+		
+		// 使用范围判断，而不是精确匹配，提高滑动解锁的可靠性
+		if (state.moveDifference <= -el.clientHeight || state.moveDifference < -400) {
+			el.setAttribute('style', `top:${-el.clientHeight}px;cursor:pointer;transition:all 0.3s ease;opacity:0;`);
+			// 确保记录正确的滑动距离
 			state.moveDifference = -el.clientHeight;
+			
+			// 确保只设置一次密码界面显示状态
+			if (!state.isShowLoockLogin) {
+				state.isShowLoockLogin = true;
+				// 添加短暂延迟确保界面状态已更新
+				setTimeout(() => {
+					layoutLockScreenInputRef.value.focus();
+				}, 100);
+			}
+			
+			// 不删除元素，而是稍后隐藏它（保持DOM结构完整性）
 			setTimeout(() => {
-				el && el.parentNode?.removeChild(el);
+				if (el) {
+					el.style.display = 'none';
+				}
 			}, 300);
-		}
-		if (state.moveDifference === -el.clientHeight) {
-			state.isShowLoockLogin = true;
-			layoutLockScreenInputRef.value.focus();
 		}
 	}
 };
@@ -149,8 +161,9 @@ const onMove = () => {
 const onEnd = () => {
 	state.isFlags = false;
 	state.transparency = 1;
-	if (state.moveDifference >= -400) {
-		(<HTMLElement>state.querySelectorEl).setAttribute('style', `top:0px;opacity:1;transition:all 0.3s ease;`);
+	const el = <HTMLElement>state.querySelectorEl;
+	if (state.moveDifference > -el.clientHeight) {
+		el.setAttribute('style', `top:0px;opacity:1;transition:all 0.3s ease;`);
 	}
 };
 // 获取要拖拽的初始元素
@@ -192,6 +205,21 @@ const initLockScreen = () => {
 				state.isShowLockScreen = true;
 				// 同步更新全局锁屏状态
 				themeConfig.value.lockScreenState = true;
+				// 重置滑动状态，确保显示滑动解锁界面（而不是直接显示密码输入框）
+				state.isShowLoockLogin = false;
+				
+				// 重置滑动元素的样式和可见性，确保在下次显示时是可见的
+				nextTick(() => {
+					const el = <HTMLElement>state.querySelectorEl;
+					if (el) {
+						// 重置元素样式，确保它可见
+						el.style.display = 'block';
+						el.style.top = '0px';
+						el.style.opacity = '1';
+						el.style.transition = '';
+					}
+				});
+				
 				setLocalThemeConfig();
 				// 清除定时器，停止倒计时
 				clearInterval(state.isShowLockScreenIntervalTime);
@@ -213,7 +241,9 @@ const setLocalThemeConfig = () => {
 
 // 重置锁屏倒计时
 const resetLockScreenTimer = () => {
-	if (themeConfig.value.isLockScreen) {
+	// 只有在非锁屏状态下才重置定时器
+	// 如果当前处于锁屏状态，则不重置定时器
+	if (themeConfig.value.isLockScreen && !state.isShowLockScreen) {
 		// 重新初始化锁屏定时器
 		if (state.isShowLockScreenIntervalTime) {
 			clearInterval(state.isShowLockScreenIntervalTime);
@@ -259,6 +289,18 @@ const onLockScreenSubmit = async () => {
 			state.isShowLockScreen = false;
 			// 同步更新全局锁屏状态
 			themeConfig.value.lockScreenState = false;
+			// 重置滑动状态，确保下次锁屏时显示滑动解锁界面
+			state.isShowLoockLogin = false;
+			
+			// 重置滑动元素的样式和可见性
+			const el = <HTMLElement>state.querySelectorEl;
+			if (el) {
+				el.style.display = 'block';
+				el.style.top = '0px';
+				el.style.opacity = '1';
+				el.style.transition = '';
+			}
+			
 			// 保存后端配置值不变，只是重新开始定时器
 			setLocalThemeConfig();
 			// 清空密码和错误消息
@@ -321,6 +363,19 @@ onMounted(() => {
 	// 如果锁屏功能开启且当前是锁屏状态，则直接显示锁屏界面
 	if (themeConfig.value.isLockScreen && themeConfig.value.lockScreenState) {
 		state.isShowLockScreen = true;
+		// 如果是持久化的锁屏状态，也需要重置滑动状态，确保下次显示滑动解锁界面
+		state.isShowLoockLogin = false;
+		
+		// 确保滑动元素是可见的
+		nextTick(() => {
+			const el = <HTMLElement>state.querySelectorEl;
+			if (el) {
+				el.style.display = 'block';
+				el.style.top = '0px';
+				el.style.opacity = '1';
+				el.style.transition = '';
+			}
+		});
 	} else if (themeConfig.value.isLockScreen) {
 		// 如果锁屏功能开启但当前不是锁屏状态，则启动锁屏定时器
 		initLockScreen();
