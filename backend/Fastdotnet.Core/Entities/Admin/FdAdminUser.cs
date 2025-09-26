@@ -43,6 +43,12 @@ namespace Fastdotnet.Core.Entities.Admin
         public string Phone { get; set; }
 
         /// <summary>
+        /// 头像
+        /// </summary>
+        [SugarColumn(ColumnName = "avatar", IsNullable = true, ColumnDescription = "头像")]
+        public string Avatar { get; set; }
+
+        /// <summary>
         /// 账户是否激活
         /// </summary>
         [SugarColumn(ColumnName = "is_active", ColumnDescription = "账户是否激活")]

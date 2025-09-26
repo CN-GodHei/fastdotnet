@@ -25,6 +25,8 @@ namespace Fastdotnet.Core.Models.Admin.Users
         public string? LastLoginIp { get; set; }
 
         public DateTime CreateTime { get; set; }
+        public string Avatar { get; set; }
+
     }
 
     /// <summary>
@@ -48,6 +50,8 @@ namespace Fastdotnet.Core.Models.Admin.Users
         public string? Phone { get; set; }
 
         public bool IsActive { get; set; } = true;
+        public string Avatar { get; set; }
+
     }
 
     /// <summary>
@@ -63,5 +67,7 @@ namespace Fastdotnet.Core.Models.Admin.Users
         public string? Phone { get; set; }
 
         public bool? IsActive { get; set; }
+        public string Avatar { get; set; }
+
     }
 }
