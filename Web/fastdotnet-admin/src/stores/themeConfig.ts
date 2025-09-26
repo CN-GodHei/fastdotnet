@@ -147,6 +147,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 			globalI18n: 'zh-cn',
 			// 默认全局组件大小，可选值"<large|'default'|small>"，默认 'large'
 			globalComponentSize: 'small',
+			lockScreenState:false,
 
 			// 用于存储后端动态配置的通用字段
 			// 这将包含所有后端配置，包括前端未预定义的配置项

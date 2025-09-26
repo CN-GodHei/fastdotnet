@@ -90,5 +90,7 @@ declare interface ThemeConfigState {
 		globalComponentSize: string;
 		// 用于存储后端动态配置的通用字段
 		additionalConfig: Record<string, any>;
+		lockScreenState:boolean,
+
 	};
 }
