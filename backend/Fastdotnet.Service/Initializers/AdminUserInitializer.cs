@@ -60,7 +60,7 @@ namespace Fastdotnet.Service.Initializers
             {
                 _logger.LogInformation("Default admin user not found, creating it...");
                 // 在真实项目中，初始密码应从安全配置中读取
-                await _adminUserService.CreateAsync(new Core.Models.Admin.Users.CreateAdminUserDto { Username = "superadmin", Password = "123456",FullName= "超级管理员" });
+                await _adminUserService.CreateAsync(new Core.Models.Admin.Users.CreateAdminUserDto { Username = "superadmin", Password = "123456",Name= "超级管理员" });
                 SuperAdminUser = await _adminUserRepository.GetFirstAsync(u => u.Username == "superadmin");
                 _logger.LogInformation("Default admin user created successfully.");
             }

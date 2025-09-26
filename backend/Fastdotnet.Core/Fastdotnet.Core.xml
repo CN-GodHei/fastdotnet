@@ -642,7 +642,7 @@
             哈希后的密码
             </summary>
         </member>
-        <member name="P:Fastdotnet.Core.Entities.Admin.FdAdminUser.FullName">
+        <member name="P:Fastdotnet.Core.Entities.Admin.FdAdminUser.Name">
             <summary>
             真实姓名
             </summary>

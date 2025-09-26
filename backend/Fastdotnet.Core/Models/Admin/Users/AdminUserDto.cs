@@ -12,7 +12,7 @@ namespace Fastdotnet.Core.Models.Admin.Users
 
         public string Username { get; set; }
 
-        public string? FullName { get; set; }
+        public string? Name { get; set; }
 
         public string? Email { get; set; }
 
@@ -40,7 +40,7 @@ namespace Fastdotnet.Core.Models.Admin.Users
         [StringLength(100, MinimumLength = 6, ErrorMessage = "密码长度至少为6个字符")]
         public string Password { get; set; }
 
-        public string? FullName { get; set; }
+        public string? Name { get; set; }
 
         [EmailAddress(ErrorMessage = "无效的邮箱地址")]
         public string? Email { get; set; }
@@ -55,7 +55,7 @@ namespace Fastdotnet.Core.Models.Admin.Users
     /// </summary>
     public class UpdateAdminUserDto
     {
-        public string? FullName { get; set; }
+        public string? Name { get; set; }
 
         [EmailAddress(ErrorMessage = "无效的邮箱地址")]
         public string? Email { get; set; }

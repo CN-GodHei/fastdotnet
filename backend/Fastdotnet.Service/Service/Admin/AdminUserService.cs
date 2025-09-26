@@ -66,7 +66,7 @@ namespace Fastdotnet.Service.Service.Admin
         public async Task<PageResult<AdminUserDto>> GetPageAsync(PageQueryDto query)
         {
             var pageResult = await _repository.GetPageAsync(
-                u => string.IsNullOrEmpty(query.Keyword) || u.Username.Contains(query.Keyword) || u.FullName.Contains(query.Keyword),
+                u => string.IsNullOrEmpty(query.Keyword) || u.Username.Contains(query.Keyword) || u.Name.Contains(query.Keyword),
                 query.PageIndex,
                 query.PageSize
             );

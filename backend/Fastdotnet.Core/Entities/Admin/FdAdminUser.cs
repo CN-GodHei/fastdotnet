@@ -27,8 +27,8 @@ namespace Fastdotnet.Core.Entities.Admin
         /// <summary>
         /// 真实姓名
         /// </summary>
-        [SugarColumn(ColumnName = "full_name", IsNullable = true, ColumnDescription = "真实姓名")]
-        public string FullName { get; set; }
+        [SugarColumn(ColumnName = "name", IsNullable = true, ColumnDescription = "真实姓名")]
+        public string Name { get; set; }
 
         /// <summary>
         /// 管理员邮箱
