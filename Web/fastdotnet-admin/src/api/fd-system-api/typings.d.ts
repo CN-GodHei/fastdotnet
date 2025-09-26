@@ -2,13 +2,14 @@ declare namespace APIModel {
 	type AdminUserDto = {
 		Id?: string;
 		Username?: string;
-		FullName?: string;
+		Name?: string;
 		Email?: string;
 		Phone?: string;
 		IsActive?: boolean;
 		LastLoginTime?: string;
 		LastLoginIp?: string;
 		CreateTime?: string;
+		Avatar?: string;
 	};
 
 	type AdminUserDtoPageResult = {
@@ -30,10 +31,11 @@ declare namespace APIModel {
 	type CreateAdminUserDto = {
 		Username: string;
 		Password: string;
-		FullName?: string;
+		Name?: string;
 		Email?: string;
 		Phone?: string;
 		IsActive?: boolean;
+		Avatar?: string;
 	};
 
 	type CreateFdBlacklistDto = {
@@ -839,10 +841,11 @@ declare namespace APIModel {
 	};
 
 	type UpdateAdminUserDto = {
-		FullName?: string;
+		Name?: string;
 		Email?: string;
 		Phone?: string;
 		IsActive?: boolean;
+		Avatar?: string;
 	};
 
 	type UpdateEmailConfigDto = {
