@@ -190,6 +190,8 @@ const initLockScreen = () => {
 				// 锁屏时移除事件监听器，停止重置倒计时
 				removeEventListeners();
 				state.isShowLockScreen = true;
+				// 同步更新全局锁屏状态
+				themeConfig.value.lockScreenState = true;
 				setLocalThemeConfig();
 				// 清除定时器，停止倒计时
 				clearInterval(state.isShowLockScreenIntervalTime);
@@ -204,6 +206,8 @@ const initLockScreen = () => {
 // 存储布局配置
 const setLocalThemeConfig = () => {
 	themeConfig.value.isDrawer = false;
+	// 保存当前锁屏状态到全局状态
+	themeConfig.value.lockScreenState = state.isShowLockScreen;
 	Local.set('themeConfig', themeConfig.value);
 };
 
@@ -253,6 +257,8 @@ const onLockScreenSubmit = async () => {
 			// 解锁成功
 			// 隐藏锁屏界面
 			state.isShowLockScreen = false;
+			// 同步更新全局锁屏状态
+			themeConfig.value.lockScreenState = false;
 			// 保存后端配置值不变，只是重新开始定时器
 			setLocalThemeConfig();
 			// 清空密码和错误消息
@@ -278,6 +284,8 @@ const onLockScreenSubmit = async () => {
 				layoutLockScreenInputRef.value?.focus();
 			}, 100);
 			// 不隐藏锁屏界面，保持在解锁界面，让用户可以重新输入密码
+			// 确保全局锁屏状态保持为 true
+			themeConfig.value.lockScreenState = true;
 		}
 	} catch (error: any) {
 		// 检查是否为401错误（未授权），如果401则跳转到登录页
@@ -309,8 +317,12 @@ onMounted(() => {
 	initGetElement();
 	initSetTime();
 	
-	// 初始化锁屏功能
-	if (themeConfig.value.isLockScreen) {
+	// 检查是否应该显示锁屏界面
+	// 如果锁屏功能开启且当前是锁屏状态，则直接显示锁屏界面
+	if (themeConfig.value.isLockScreen && themeConfig.value.lockScreenState) {
+		state.isShowLockScreen = true;
+	} else if (themeConfig.value.isLockScreen) {
+		// 如果锁屏功能开启但当前不是锁屏状态，则启动锁屏定时器
 		initLockScreen();
 	}
 	
@@ -326,6 +338,8 @@ watch(
 		// 如果切换到登录页面，隐藏锁屏界面
 		if (newPath === '/login') {
 			state.isShowLockScreen = false;
+			// 同步更新全局锁屏状态
+			themeConfig.value.lockScreenState = false;
 			// 停止锁屏定时器
 			if (state.isShowLockScreenIntervalTime) {
 				clearInterval(state.isShowLockScreenIntervalTime);
@@ -372,6 +386,14 @@ onUnmounted(() => {
 	
 	// 移除全局事件监听器
 	removeEventListeners();
+	
+	// 确保锁屏状态被保存
+	if (state.isShowLockScreen) {
+		themeConfig.value.lockScreenState = true;
+	} else {
+		themeConfig.value.lockScreenState = false;
+	}
+	setLocalThemeConfig();
 });
 </script>
 
