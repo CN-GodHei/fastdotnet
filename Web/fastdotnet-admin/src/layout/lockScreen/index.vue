@@ -30,9 +30,16 @@
 				<div v-show="state.isShowLoockLogin" class="layout-lock-screen-login">
 					<div class="layout-lock-screen-login-box">
 						<div class="layout-lock-screen-login-box-img">
-							<img src="https://img2.baidu.com/it/u=1978192862,2048448374&fm=253&fmt=auto&app=138&f=JPEG?w=504&h=500" />
+							<template v-if="userInfos.photo">
+								<img :src="userInfos.photo" />
+							</template>
+							<template v-else>
+								<div class="layout-lock-screen-login-box-img-avatar" :style="getAvatarStyle()">
+									<span class="avatar-text">{{ getInitials(userInfos.Name) }}</span>
+								</div>
+							</template>
 						</div>
-						<div class="layout-lock-screen-login-box-name">Administrator</div>
+						<div class="layout-lock-screen-login-box-name">{{ userInfos.Name || 'Administrator' }}</div>
 						<div class="layout-lock-screen-login-box-value">
 							<el-input
 								placeholder="请输入密码"
@@ -72,6 +79,7 @@ import { formatDate } from '/@/utils/formatTime';
 import { Local } from '/@/utils/storage';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
+import { useUserInfo } from '/@/stores/userInfo';
 import { postAdminUsersUnlock } from '/@/api/fd-system-api/AdminUsers';
 import { ElMessage } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
@@ -80,7 +88,9 @@ import { useRouter, useRoute } from 'vue-router';
 const layoutLockScreenDateRef = ref<HtmlType>();
 const layoutLockScreenInputRef = ref();
 const storesThemeConfig = useThemeConfig();
+const storesUserInfo = useUserInfo();
 const { themeConfig } = storeToRefs(storesThemeConfig);
+const { userInfos } = storeToRefs(storesUserInfo);
 const router = useRouter();
 const route = useRoute();
 
@@ -481,6 +491,37 @@ onUnmounted(() => {
 	}
 	setLocalThemeConfig();
 });
+
+// 获取用户名首字母或首字符
+const getInitials = (username: string) => {
+	if (!username) return '?';
+	// 如果是中文名，取第一个字符；如果是英文名，取首字母
+	const firstChar = username.trim().charAt(0).toUpperCase();
+	return firstChar || '?';
+};
+
+// 根据用户名生成头像背景色
+const getAvatarStyle = () => {
+	const userName = userInfos.userName;
+	if (!userName) {
+		// 默认背景色
+		return {
+			backgroundColor: '#409EFF',
+		};
+	}
+	
+	// 基于用户名生成一个简单的哈希值来确定颜色
+	let hash = 0;
+	for (let i = 0; i < userName.length; i++) {
+		hash = userName.charCodeAt(i) + ((hash << 5) - hash);
+	}
+	
+	// 使用哈希值生成色调，确保颜色丰富多样
+	const hue = hash % 360;
+	return {
+		backgroundColor: `hsl(${hue}, 70%, 50%)`,
+	};
+};
 </script>
 
 <style scoped lang="scss">
@@ -644,5 +685,18 @@ onUnmounted(() => {
 	color: #f56c6c; /* Element Plus error color */
 	text-align: center;
 	font-size: 14px;
+}
+
+/* 自定义头像样式 */
+.layout-lock-screen-login-box-img .layout-lock-screen-login-box-img-avatar {
+	border-radius: 100%;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	font-size: 64px; /* 适合 180px 容器的大字号 */
+	line-height: 1;
 }
 </style>
