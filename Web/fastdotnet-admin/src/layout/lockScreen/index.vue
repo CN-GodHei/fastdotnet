@@ -36,6 +36,8 @@
 								placeholder="请输入密码"
 								ref="layoutLockScreenInputRef"
 								v-model="state.lockScreenPassword"
+								type="password"
+								show-password
 								@keyup.enter.native.stop="onLockScreenSubmit()"
 							>
 								<template #append>
@@ -46,6 +48,9 @@
 									</el-button>
 								</template>
 							</el-input>
+							<div v-if="state.lockScreenErrorMsg" class="layout-lock-screen-error-msg">
+								{{ state.lockScreenErrorMsg }}
+							</div>
 						</div>
 					</div>
 					<div class="layout-lock-screen-login-icon">
@@ -93,6 +98,8 @@ const state = reactive({
 	isShowLockScreen: false,
 	isShowLockScreenIntervalTime: 0,
 	lockScreenPassword: '',
+	// 锁屏错误信息
+	lockScreenErrorMsg: '',
 });
 
 // 鼠标按下 pc
@@ -240,8 +247,9 @@ const onLockScreenSubmit = async () => {
 			state.isShowLockScreen = false;
 			// 保存后端配置值不变，只是重新开始定时器
 			setLocalThemeConfig();
-			// 清空密码
-			// state.lockScreenPassword = '';
+			// 清空密码和错误消息
+			state.lockScreenPassword = '';
+			state.lockScreenErrorMsg = '';
 			
 			// 重新初始化锁屏定时器，开始新的倒计时
 			if (state.isShowLockScreenIntervalTime) {
@@ -252,15 +260,20 @@ const onLockScreenSubmit = async () => {
 				addEventListeners();
 				initLockScreen();
 			}
-			
-			// 清空密码
-			state.lockScreenPassword = '';
 		} else {
 			// 解锁失败，显示错误提示
-			ElMessage.error('密码错误，请重新输入');
+			state.lockScreenErrorMsg = '密码错误，请重新输入';
+			// 清空密码输入框，让用户可以重新输入
+			state.lockScreenPassword = '';
+			// 使输入框重新获得焦点，方便用户重新输入
+			setTimeout(() => {
+				layoutLockScreenInputRef.value?.focus();
+			}, 100);
+			// 不隐藏锁屏界面，保持在解锁界面，让用户可以重新输入密码
 		}
 	} catch (error) {
-		ElMessage.error('解锁失败，请重试');
+		state.lockScreenPassword = '';
+		state.lockScreenErrorMsg = '解锁失败，请重试';
 	}
 };
 // 页面加载时
@@ -463,5 +476,12 @@ onUnmounted(() => {
 	&:hover {
 		border-color: var(--el-border-color-extra-light);
 	}
+}
+
+.layout-lock-screen-error-msg {
+	margin-top: 10px;
+	color: #f56c6c; /* Element Plus error color */
+	text-align: center;
+	font-size: 14px;
 }
 </style>
