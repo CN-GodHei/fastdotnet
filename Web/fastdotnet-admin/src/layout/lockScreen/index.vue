@@ -4,15 +4,17 @@
 		<div class="layout-lock-screen-img" :class="{ 'layout-lock-screen-filter': state.isShowLoockLogin }"></div>
 		<div class="layout-lock-screen">
 			<div
-				class="layout-lock-screen-date"
-				ref="layoutLockScreenDateRef"
-				@mousedown="onDownPc"
-				@mousemove="onMovePc"
-				@mouseup="onEnd"
-				@touchstart.stop="onDownApp"
-				@touchmove.stop="onMoveApp"
-				@touchend.stop="onEnd"
-			>
+			class="layout-lock-screen-date"
+			ref="layoutLockScreenDateRef"
+			@mousedown="onDownPc"
+			@mousemove="onMovePc"
+			@mouseup="onEnd"
+			@touchstart.stop="onDownApp"
+			@touchmove.stop="onMoveApp"
+			@touchend.stop="onEnd"
+			@keydown.enter="onEnterPress"
+			tabindex="0"
+		>
 				<div class="layout-lock-screen-date-box">
 					<div class="layout-lock-screen-date-box-time">
 						{{ state.time.hm }}<span class="layout-lock-screen-date-box-minutes">{{ state.time.s }}</span>
@@ -164,6 +166,35 @@ const onEnd = () => {
 	const el = <HTMLElement>state.querySelectorEl;
 	if (state.moveDifference > -el.clientHeight) {
 		el.setAttribute('style', `top:0px;opacity:1;transition:all 0.3s ease;`);
+	}
+};
+
+// 回车键事件处理，直接跳转到密码输入框
+const onEnterPress = () => {
+	// 直接显示密码输入界面，模拟滑动解锁的效果
+	if (!state.isShowLoockLogin) {
+		state.isShowLoockLogin = true;
+		
+		// 设置元素状态，使其显示为已滑动状态
+		const el = <HTMLElement>state.querySelectorEl;
+		if (el) {
+			el.setAttribute('style', `top:${-el.clientHeight}px;cursor:pointer;transition:all 0.3s ease;opacity:0;`);
+			
+			// 在动画完成后隐藏元素
+			setTimeout(() => {
+				if (el) {
+					el.style.display = 'none';
+				}
+			}, 300);
+		}
+		
+		// 稍后聚焦到密码输入框
+		setTimeout(() => {
+			layoutLockScreenInputRef.value.focus();
+		}, 350); // 略长于动画时间
+	} else {
+		// 如果密码输入界面已经显示，则直接聚焦
+		layoutLockScreenInputRef.value.focus();
 	}
 };
 // 获取要拖拽的初始元素
