@@ -98,6 +98,9 @@ importers:
       vue-router:
         specifier: ^4.3.0
         version: 4.5.1(vue@3.5.18(typescript@5.9.2))
+      vue3-avatar:
+        specifier: ^3.1.0
+        version: 3.1.0(vue@3.5.18(typescript@5.9.2))
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.3.1
@@ -3228,6 +3231,12 @@ packages:
     resolution: {integrity: sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==}
     peerDependencies:
       vue: ^3.2.0
+
+  vue3-avatar@3.1.0:
+    resolution: {integrity: sha512-K1h98jJckc3WksZsme80CHxTLDU7aMSOujrhPGFcJ5Yxoq3I+cqgbe4wUh52G8vM65JbxfbS+BmCcladg0o6GA==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      vue: ^3.0.5
 
   vue@3.5.18:
     resolution: {integrity: sha512-7W4Y4ZbMiQ3SEo+m9lnoNpV9xG7QVMLa+/0RFwwiAVkeYoyGXqWE85jabU4pllJNUzqfLShJ5YLptewhCWUgNA==}
@@ -6591,6 +6600,10 @@ snapshots:
   vue-router@4.5.1(vue@3.5.18(typescript@5.9.2)):
     dependencies:
       '@vue/devtools-api': 6.6.4
+      vue: 3.5.18(typescript@5.9.2)
+
+  vue3-avatar@3.1.0(vue@3.5.18(typescript@5.9.2)):
+    dependencies:
       vue: 3.5.18(typescript@5.9.2)
 
   vue@3.5.18(typescript@5.9.2):

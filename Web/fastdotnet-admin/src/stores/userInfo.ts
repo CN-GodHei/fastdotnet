@@ -36,6 +36,7 @@ export const useUserInfo = defineStore('userInfo', {
 				const userInfos = {
 					userName: apiUserInfo.Username,
 					photo: apiUserInfo.Avatar,
+					// photo: 'https://img2.baidu.com/it/u=1978192862,2048448374&fm=253&fmt=auto&app=138&f=JPEG?w=504&h=500',
 					Name: apiUserInfo.Name,
 					time: Date.now(),
 					// roles: apiUserInfo.roles || [],

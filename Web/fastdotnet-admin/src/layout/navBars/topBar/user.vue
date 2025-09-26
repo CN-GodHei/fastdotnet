@@ -64,8 +64,15 @@
 		</div>
 		<el-dropdown :show-timeout="70" :hide-timeout="50" @command="onHandleCommandClick">
 			<span class="layout-navbars-breadcrumb-user-link">
-				<img :src="userInfos.photo" class="layout-navbars-breadcrumb-user-link-photo mr5" />
-				{{ userInfos.userName === '' ? 'common' : userInfos.userName }}
+				<template v-if="userInfos.photo">
+					<img :src="userInfos.photo" class="layout-navbars-breadcrumb-user-link-photo mr5" />
+				</template>
+				<template v-else>
+					<div class="layout-navbars-breadcrumb-user-link-avatar mr5" :style="getAvatarStyle()">
+						<span class="avatar-text">{{ getInitials(userInfos.Name) }}</span>
+					</div>
+				</template>
+				{{ userInfos.userName === '' ? 'common' : userInfos.Name }}
 				<el-icon class="el-icon--right">
 					<ele-ArrowDown />
 				</el-icon>
@@ -212,6 +219,38 @@ const onLanguageChange = (lang: string) => {
 const initI18nOrSize = (value: string, attr: string) => {
 	(<any>state)[attr] = Local.get('themeConfig')[value];
 };
+
+// 获取用户名首字母或首字符
+const getInitials = (username: string) => {
+	if (!username) return '?';
+	// 如果是中文名，取第一个字符；如果是英文名，取首字母
+	const firstChar = username.trim().charAt(0).toUpperCase();
+	return firstChar || '?';
+};
+
+// 根据用户名生成头像背景色
+const getAvatarStyle = () => {
+	const userName = userInfos.userName;
+	if (!userName) {
+		// 默认背景色
+		return {
+			backgroundColor: '#409EFF',
+		};
+	}
+	
+	// 基于用户名生成一个简单的哈希值来确定颜色
+	let hash = 0;
+	for (let i = 0; i < userName.length; i++) {
+		hash = userName.charCodeAt(i) + ((hash << 5) - hash);
+	}
+	
+	// 使用哈希值生成色调，确保颜色丰富多样
+	const hue = hash % 360;
+	return {
+		backgroundColor: `hsl(${hue}, 70%, 50%)`,
+	};
+};
+
 // 页面加载时
 onMounted(() => {
 	if (Local.get('themeConfig')) {
@@ -235,6 +274,17 @@ onMounted(() => {
 			width: 25px;
 			height: 25px;
 			border-radius: 100%;
+		}
+		&-avatar {
+			width: 25px;
+			height: 25px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 100%;
+			color: white;
+			font-size: 12px;
+			line-height: 1;
 		}
 	}
 	&-icon {
@@ -265,5 +315,11 @@ onMounted(() => {
 	:deep(.el-badge__content.is-fixed) {
 		top: 12px;
 	}
+}
+
+// 专门针对头像文本的样式
+.avatar-text {
+	position: relative;
+	top: 1px; /* 微调垂直位置 */
 }
 </style>
