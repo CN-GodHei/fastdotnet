@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { getAdminUsersGetUserInfo } from '/@/api/fd-system-api/AdminUsers';
 import { Session } from '/@/utils/storage';
+
 /**
  * 用户信息
  * @methods setUserInfos 设置用户信息
@@ -32,16 +33,22 @@ export const useUserInfo = defineStore('userInfo', {
 				// 由于 request.ts 的响应拦截器已经返回了 res.Data，所以这里直接获取 AdminUserDto 对象
 				const apiUserInfo: APIModel.AdminUserDto = await getAdminUsersGetUserInfo();
 				console.log('apiUserInfo', apiUserInfo);
+				
+				
+				
 				// 将API返回的用户信息映射到前端UserInfos格式
 				const userInfos = {
-					userName: apiUserInfo.Username,
-					photo: apiUserInfo.Avatar,
-					// photo: 'https://img2.baidu.com/it/u=1978192862,2048448374&fm=253&fmt=auto&app=138&f=JPEG?w=504&h=500',
-					Name: apiUserInfo.Name,
+					userName: apiUserInfo.Username || '',
+					photo: apiUserInfo.Avatar || '',
+					Name: apiUserInfo.Name || '',
 					time: Date.now(),
-					// roles: apiUserInfo.roles || [],
-					// authBtnList: apiUserInfo.permissions || apiUserInfo.authBtnList || [],
+					// 从后端获取角色信息，现在AdminUserDto已扩展包含RoleIds
+					roles: apiUserInfo.RoleIds || [], // 现在AdminUserDto包含RoleIds字段
+					// 使用后端返回的按钮权限，不再单独获取按钮权限
+					authBtnList: apiUserInfo.Buttons || [], // 使用AdminUserDto中包含的Buttons字段
 				};
+				
+				console.log('Final userInfos with roles and permissions:', userInfos);
 				
 				// 存储到会话存储中
 				Session.set('userInfo', userInfos);

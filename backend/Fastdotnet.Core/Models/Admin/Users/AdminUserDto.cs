@@ -26,7 +26,16 @@ namespace Fastdotnet.Core.Models.Admin.Users
 
         public DateTime CreateTime { get; set; }
         public string Avatar { get; set; }
-
+        
+        /// <summary>
+        /// 用户的角色ID列表
+        /// </summary>
+        public List<string> RoleIds { get; set; } = new List<string>();
+        
+        /// <summary>
+        /// 用户的按钮权限列表
+        /// </summary>
+        public List<string> Buttons { get; set; } = new List<string>();
     }
 
     /// <summary>

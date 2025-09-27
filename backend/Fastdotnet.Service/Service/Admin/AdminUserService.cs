@@ -18,17 +18,23 @@ namespace Fastdotnet.Service.Service.Admin
         private readonly IMapper _mapper;
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
         private readonly IRepository<FdRole> _roleRepository;
+        private readonly IRepository<FdMenuButton> _menuButtonRepository;
+        private readonly IRepository<FdRoleMenuButton> _roleMenuButtonRepository;
 
         public AdminUserService(
             IRepository<FdAdminUser> repository, 
             IMapper mapper,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
-            IRepository<FdRole> roleRepository)
+            IRepository<FdRole> roleRepository,
+            IRepository<FdMenuButton> menuButtonRepository,
+            IRepository<FdRoleMenuButton> roleMenuButtonRepository)
         {
             _repository = repository;
             _mapper = mapper;
             _adminUserRoleRepository = adminUserRoleRepository;
             _roleRepository = roleRepository;
+            _menuButtonRepository = menuButtonRepository;
+            _roleMenuButtonRepository = roleMenuButtonRepository;
         }
 
         public async Task<string> CreateAsync(CreateAdminUserDto dto)
@@ -121,6 +127,32 @@ namespace Fastdotnet.Service.Service.Admin
 
             // 检查是否包含超管角色
             return roles.Any(r => r.Code == SystemConstants.SuperAdminRoleCode);
+        }
+        
+        public async Task<List<FdAdminUserRole>> GetUserRoleRelationsAsync(string userId)
+        {
+            return await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
+        }
+        
+        public async Task<List<string>> GetUserButtonPermissionsAsync(string userId)
+        {
+            // 1. 获取用户的角色
+            var userRoles = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
+            var roleIds = userRoles.Select(ur => ur.RoleId).ToList();
+            
+            if (!roleIds.Any()) return new List<string>();
+
+            // 2. 获取角色分配的菜单按钮权限
+            var roleMenuButtons = await _roleMenuButtonRepository.GetListAsync(rmb => roleIds.Contains(rmb.RoleId));
+            
+            if (!roleMenuButtons.Any()) return new List<string>();
+
+            // 3. 获取具体的菜单按钮信息
+            var menuButtonIds = roleMenuButtons.Select(rmb => rmb.MenuButtonId).ToList();
+            var menuButtons = await _menuButtonRepository.GetListAsync(mb => menuButtonIds.Contains(mb.Id));
+            
+            // 4. 返回按钮权限码列表
+            return menuButtons.Select(mb => mb.Code).ToList();
         }
     }
 }

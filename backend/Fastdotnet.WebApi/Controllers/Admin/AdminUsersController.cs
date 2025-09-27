@@ -114,11 +114,29 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         [HttpGet("getUserInfo")]
-        [Authorize(Policy = Permissions.Admin.Users.ResetPassword)]
+        [Authorize(Policy = Permissions.Admin.Users.View)]
         public async Task<AdminUserDto> getUserInfo()
         {
-          var user = await _repository.GetByIdAsync(_currentUser.Id);
-           return _mapper.Map<AdminUserDto>(user);
+            // 获取当前用户信息
+            var user = await _repository.GetByIdAsync(_currentUser.Id);
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("用户不存在");
+            }
+
+            // 获取用户角色
+            var userRoleRelations = await _adminUserService.GetUserRoleRelationsAsync(_currentUser.Id);
+            var roleIds = userRoleRelations.Select(ur => ur.RoleId).ToList();
+
+            // 获取用户按钮权限
+            var buttons = await _adminUserService.GetUserButtonPermissionsAsync(_currentUser.Id);
+
+            // 构造返回对象
+            var userDto = _mapper.Map<AdminUserDto>(user);
+            userDto.RoleIds = roleIds;
+            userDto.Buttons = buttons;
+
+            return userDto;
         }
 
         /// <summary>

@@ -1622,6 +1622,16 @@
             用于显示管理员信息的DTO
             </summary>
         </member>
+        <member name="P:Fastdotnet.Core.Models.Admin.Users.AdminUserDto.RoleIds">
+            <summary>
+            用户的角色ID列表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Admin.Users.AdminUserDto.Buttons">
+            <summary>
+            用户的按钮权限列表
+            </summary>
+        </member>
         <member name="T:Fastdotnet.Core.Models.Admin.Users.CreateAdminUserDto">
             <summary>
             用于创建管理员的DTO
@@ -1640,6 +1650,21 @@
         <member name="P:Fastdotnet.Core.Models.Admin.Users.UnlockDto.Password">
             <summary>
             密码
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.Core.Models.Admin.Users.UserPermissionsDto">
+            <summary>
+            用户权限信息DTO，包含用户基本信息、角色和按钮权限
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Admin.Users.UserPermissionsDto.RoleIds">
+            <summary>
+            用户的角色ID列表
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.Admin.Users.UserPermissionsDto.Buttons">
+            <summary>
+            用户的按钮权限列表
             </summary>
         </member>
         <member name="T:Fastdotnet.Core.Models.ApiResult">

@@ -1,3 +1,4 @@
+using Fastdotnet.Core.Entities.Admin;
 using Fastdotnet.Core.Models;
 using Fastdotnet.Core.Models.Admin.Users;
 using System.Threading.Tasks;
@@ -46,5 +47,19 @@ namespace Fastdotnet.Service.IService.Admin
         /// <param name="userId">用户ID</param>
         /// <returns>是否为超级管理员</returns>
         Task<bool> IsSuperAdminAsync(string userId);
+        
+        /// <summary>
+        /// 获取用户角色关联信息
+        /// </summary>
+        /// <param name="userId">用户ID</param>
+        /// <returns>用户角色关联列表</returns>
+        Task<List<FdAdminUserRole>> GetUserRoleRelationsAsync(string userId);
+        
+        /// <summary>
+        /// 获取用户按钮权限
+        /// </summary>
+        /// <param name="userId">用户ID</param>
+        /// <returns>按钮权限列表</returns>
+        Task<List<string>> GetUserButtonPermissionsAsync(string userId);
     }
 }
