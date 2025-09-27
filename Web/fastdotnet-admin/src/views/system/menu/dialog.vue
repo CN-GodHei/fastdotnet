@@ -4,79 +4,115 @@
 			<el-form ref="menuDialogFormRef" :model="state.ruleForm" size="default" label-width="80px">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-						<el-form-item label="上级菜单">
-							<el-cascader
-								:options="state.menuData"
-								:props="{ checkStrictly: true, value: 'Code', label: 'Name', children: 'Children' }"
-								placeholder="请选择上级菜单"
-								clearable
-								class="w100"
-								v-model="state.ruleForm.menuSuperior"
-							>
-								<template #default="{ node, data }">
-									<span>{{ data.Name || '未知菜单' }}</span>
-									<span v-if="!node.isLeaf && data.Children && data.Children.length > 0"> ({{ data.Children.length }}) </span>
-								</template>
-							</el-cascader>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-form-item label="菜单类型">
 							<el-radio-group v-model="state.ruleForm.menuType">
+								<el-radio label="directory">目录</el-radio>
 								<el-radio label="menu">菜单</el-radio>
 								<el-radio label="btn">按钮</el-radio>
 							</el-radio-group>
 						</el-form-item>
 					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="菜单名称">
-							<el-input v-model="state.ruleForm.Name" placeholder="请输入菜单名称" clearable></el-input>
-						</el-form-item>
-					</el-col>
-					<template v-if="state.ruleForm.menuType === 'menu'">
-						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-							<el-form-item label="路由名称">
-								<el-input v-model="state.ruleForm.Code" placeholder="请输入路由名称" clearable></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-							<el-form-item label="路由路径">
-								<el-input v-model="state.ruleForm.Path" placeholder="请输入路由路径" clearable></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-							<el-form-item label="重定向">
-								<el-input v-model="state.ruleForm.Redirect" placeholder="请输入路由重定向" clearable></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-							<el-form-item label="菜单图标">
-								<IconSelector placeholder="请输入菜单图标" v-model="state.ruleForm.Icon" />
-							</el-form-item>
-						</el-col>
-						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-							<el-form-item label="组件路径">
-								<el-input v-model="state.ruleForm.Component" placeholder="请输入组件路径" clearable></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-							<el-form-item label="链接地址">
-								<el-input
-									v-model="state.ruleForm.ExternalUrl"
-									placeholder="外链/内嵌时链接地址（http:xxx.com）"
+					<template v-if="state.ruleForm.menuType !== 'btn'">
+						<!-- 目录和菜单需要上级菜单，按钮不需要 -->
+						<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20" v-if="state.ruleForm.menuType !== 'directory'">
+							<el-form-item label="上级菜单">
+								<el-cascader
+									:options="state.menuData"
+									:props="{ checkStrictly: true, value: 'Code', label: 'Name', children: 'Children' }"
+									placeholder="请选择上级菜单"
 									clearable
-									:disabled="!state.ruleForm.isLink"
+									class="w100"
+									v-model="state.ruleForm.menuSuperior"
 								>
-								</el-input>
+									<template #default="{ node, data }">
+										<span>{{ data.Name || '未知菜单' }}</span>
+										<span v-if="!node.isLeaf && data.Children && data.Children.length > 0"> ({{ data.Children.length }}) </span>
+									</template>
+								</el-cascader>
 							</el-form-item>
 						</el-col>
 						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-							<el-form-item label="权限标识">
-								<el-input v-model="state.ruleForm.PermissionCode" placeholder="请输入权限标识" clearable></el-input>
+							<el-form-item label="菜单名称">
+								<el-input v-model="state.ruleForm.Name" placeholder="请输入菜单名称" clearable></el-input>
 							</el-form-item>
 						</el-col>
+						<template v-if="state.ruleForm.menuType === 'directory'">
+							<!-- 目录类型的特有字段 -->
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="菜单图标">
+									<IconSelector placeholder="请输入菜单图标" v-model="state.ruleForm.Icon" />
+								</el-form-item>
+							</el-col>
+						</template>
+						<template v-if="state.ruleForm.menuType === 'menu'">
+							<!-- 菜单类型的特有字段 -->
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="路由名称">
+									<el-input v-model="state.ruleForm.Code" placeholder="请输入路由名称" clearable></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="路由路径">
+									<el-input v-model="state.ruleForm.Path" placeholder="请输入路由路径" clearable></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="重定向">
+									<el-input v-model="state.ruleForm.Redirect" placeholder="请输入路由重定向" clearable></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="菜单图标">
+									<IconSelector placeholder="请输入菜单图标" v-model="state.ruleForm.Icon" />
+								</el-form-item>
+							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="组件路径">
+									<el-input v-model="state.ruleForm.Component" placeholder="请输入组件路径" clearable></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="链接地址">
+									<el-input
+										v-model="state.ruleForm.ExternalUrl"
+										placeholder="外链/内嵌时链接地址（http:xxx.com）"
+										clearable
+										:disabled="!state.ruleForm.isLink"
+									>
+									</el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="权限标识">
+									<el-input v-model="state.ruleForm.PermissionCode" placeholder="请输入权限标识" clearable></el-input>
+								</el-form-item>
+							</el-col>
+						</template>
 					</template>
 					<template v-if="state.ruleForm.menuType === 'btn'">
+						<!-- 按钮类型特有字段 -->
+						<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
+							<el-form-item label="上级菜单">
+								<el-cascader
+									:options="state.menuData"
+									:props="{ checkStrictly: true, value: 'Code', label: 'Name', children: 'Children' }"
+									placeholder="请选择按钮关联的菜单"
+									clearable
+									class="w100"
+									v-model="state.ruleForm.menuSuperior"
+								>
+									<template #default="{ node, data }">
+										<span>{{ data.Name || '未知菜单' }}</span>
+										<span v-if="!node.isLeaf && data.Children && data.Children.length > 0"> ({{ data.Children.length }}) </span>
+									</template>
+								</el-cascader>
+							</el-form-item>
+						</el-col>
+						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+							<el-form-item label="菜单名称">
+								<el-input v-model="state.ruleForm.Name" placeholder="请输入按钮名称" clearable></el-input>
+							</el-form-item>
+						</el-col>
 						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 							<el-form-item label="权限标识">
 								<el-input v-model="state.ruleForm.PermissionCode" placeholder="请输入权限标识" clearable></el-input>
@@ -88,47 +124,61 @@
 							<el-input-number v-model="state.ruleForm.Sort" controls-position="right" placeholder="请输入排序" class="w100" />
 						</el-form-item>
 					</el-col>
-					<template v-if="state.ruleForm.menuType === 'menu'">
-						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-							<el-form-item label="是否隐藏">
-								<el-radio-group v-model="state.ruleForm.IsHide">
-									<el-radio :label="true">隐藏</el-radio>
-									<el-radio :label="false">不隐藏</el-radio>
-								</el-radio-group>
-							</el-form-item>
-						</el-col>
-						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-							<el-form-item label="页面缓存">
-								<el-radio-group v-model="state.ruleForm.IsKeepAlive">
-									<el-radio :label="true">缓存</el-radio>
-									<el-radio :label="false">不缓存</el-radio>
-								</el-radio-group>
-							</el-form-item>
-						</el-col>
-						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-							<el-form-item label="是否固定">
-								<el-radio-group v-model="state.ruleForm.IsAffix">
-									<el-radio :label="true">固定</el-radio>
-									<el-radio :label="false">不固定</el-radio>
-								</el-radio-group>
-							</el-form-item>
-						</el-col>
-						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-							<el-form-item label="是否外链">
-								<el-radio-group v-model="state.ruleForm.isLink" :disabled="state.ruleForm.IsIframe">
-									<el-radio :label="true">是</el-radio>
-									<el-radio :label="false">否</el-radio>
-								</el-radio-group>
-							</el-form-item>
-						</el-col>
-						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-							<el-form-item label="是否内嵌">
-								<el-radio-group v-model="state.ruleForm.IsIframe" @change="onSelectIframeChange">
-									<el-radio :label="true">是</el-radio>
-									<el-radio :label="false">否</el-radio>
-								</el-radio-group>
-							</el-form-item>
-						</el-col>
+					<template v-if="state.ruleForm.menuType !== 'btn'">
+						<!-- 目录和菜单类型的特有字段 -->
+						<template v-if="state.ruleForm.menuType === 'menu'">
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="是否隐藏">
+									<el-radio-group v-model="state.ruleForm.IsHide">
+										<el-radio :label="true">隐藏</el-radio>
+										<el-radio :label="false">不隐藏</el-radio>
+									</el-radio-group>
+								</el-form-item>
+							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="页面缓存">
+									<el-radio-group v-model="state.ruleForm.IsKeepAlive">
+										<el-radio :label="true">缓存</el-radio>
+										<el-radio :label="false">不缓存</el-radio>
+									</el-radio-group>
+								</el-form-item>
+							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="是否固定">
+									<el-radio-group v-model="state.ruleForm.IsAffix">
+										<el-radio :label="true">固定</el-radio>
+										<el-radio :label="false">不固定</el-radio>
+									</el-radio-group>
+								</el-form-item>
+							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="是否外链">
+									<el-radio-group v-model="state.ruleForm.isLink" :disabled="state.ruleForm.IsIframe">
+										<el-radio :label="true">是</el-radio>
+										<el-radio :label="false">否</el-radio>
+									</el-radio-group>
+								</el-form-item>
+							</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="是否内嵌">
+									<el-radio-group v-model="state.ruleForm.IsIframe" @change="onSelectIframeChange">
+										<el-radio :label="true">是</el-radio>
+										<el-radio :label="false">否</el-radio>
+									</el-radio-group>
+								</el-form-item>
+							</el-col>
+						</template>
+						<template v-else-if="state.ruleForm.menuType === 'directory'">
+							<!-- 目录类型的特有字段 -->
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="是否隐藏">
+									<el-radio-group v-model="state.ruleForm.IsHide">
+										<el-radio :label="true">隐藏</el-radio>
+										<el-radio :label="false">不隐藏</el-radio>
+									</el-radio-group>
+								</el-form-item>
+							</el-col>
+						</template>
 					</template>
 				</el-row>
 			</el-form>
@@ -231,24 +281,33 @@ const state = reactive({
 // 打开弹窗
 const openDialog = (type: string, row?: APIModel.MenuDto) => {
 	if (type === 'edit') {
-		// 编辑菜单
+				// 编辑模式：需要根据MenuType判断是目录、菜单或按钮
 		state.ruleForm = JSON.parse(JSON.stringify(row));
-		// 默认都设置为菜单类型，按钮类型后面会通过Btns字段来处理
-		state.ruleForm.menuType = 'menu';
+		
+		if (row) {
+			// 根据实际MenuType判断
+			if (row.Type === 0) { // Directory (后端的MenuType.Directory)
+				state.ruleForm.menuType = 'directory';
+				state.dialog.title = '修改目录';
+			} else { // Menu (后端的MenuType.Menu)
+				state.ruleForm.menuType = 'menu';
+				state.dialog.title = '修改菜单';
+			}
+		}
+		
 		// 设置上级菜单的值
 		if (row?.ParentCode) {
 			state.ruleForm.menuSuperior = [row.ParentCode];
 		} else {
 			state.ruleForm.menuSuperior = [];
 		}
-		state.dialog.title = '修改菜单';
 		state.dialog.submitTxt = '修 改';
 	} else {
-		// 新增菜单
-		state.dialog.title = '新增菜单';
-		state.dialog.submitTxt = '新 增';
-		// 默认设置为菜单类型
+		// 新增模式
+		// 保持默认类型为菜单，但用户可以在界面上选择
 		state.ruleForm.menuType = 'menu';
+		state.dialog.title = '新增目录/菜单/按钮';
+		state.dialog.submitTxt = '新 增';
 		// 清空表单，此项需加表单验证才能使用
 		// nextTick(() => {
 		// 	menuDialogFormRef.value.resetFields();
@@ -273,48 +332,121 @@ const onCancel = () => {
 // 提交
 const onSubmit = async () => {
 	// 根据menuType设置Type字段
-	// 目前只处理菜单类型，按钮类型后续通过Btns字段处理
-	state.ruleForm.Type = state.ruleForm.menuType === 'menu' ? 1 : 1; // 默认都设为菜单类型
-	
-	try {
-		if (state.dialog.type === 'edit') {
-			// 编辑菜单
-			if (state.ruleForm.Id) {
-				// 准备更新数据
-				const updateData = {
-					...state.ruleForm,
-					ParentCode: state.ruleForm.menuSuperior && state.ruleForm.menuSuperior.length > 0 
-						? state.ruleForm.menuSuperior[0] 
-						: null
+	// 如果是按钮类型，使用按钮API处理
+	if (state.ruleForm.menuType === 'btn') {
+		// 按钮类型的处理 - 按钮与菜单关联
+		try {
+			// 验证菜单关联
+			let menuCode = '';
+			if (state.ruleForm.menuSuperior && state.ruleForm.menuSuperior.length > 0) {
+				menuCode = state.ruleForm.menuSuperior[state.ruleForm.menuSuperior.length - 1];
+			} else if (state.ruleForm.ParentCode) {
+				menuCode = state.ruleForm.ParentCode;
+			}
+			
+			if (!menuCode) {
+				ElMessage.error('请选择按钮关联的菜单');
+				return; // 不执行后续操作
+			}
+			
+			if (state.dialog.type === 'edit') {
+				// 编辑按钮
+				if (state.ruleForm.Id) {
+					// 准备更新数据
+					const updateData: APIModel.UpdateMenuButtonDto = {
+						Name: state.ruleForm.Name,
+						Code: state.ruleForm.PermissionCode || state.ruleForm.Code || state.ruleForm.Name, // 按钮的权限码作为Code
+						Description: state.ruleForm.Name, // 描述使用名称
+						MenuCode: menuCode, // 关联的菜单Code
+						Module: state.ruleForm.Module || 'System',
+						Category: 'Admin',
+						Sort: state.ruleForm.Sort,
+						IsEnabled: state.ruleForm.IsEnabled ?? true,
+						PermissionCode: state.ruleForm.PermissionCode // 权限代码
+					};
+					
+					await import('/@/api/fd-system-api/MenuButtons').then(MenuButtonsApi => {
+						MenuButtonsApi.putAdminMenuButtonsId(
+							{ id: state.ruleForm.Id },
+							updateData
+						);
+					});
+					
+					ElMessage.success('按钮更新成功');
+				} else {
+					ElMessage.error('按钮ID不存在，无法更新');
+				}
+			} else {
+				// 新增按钮
+				// 准备创建数据
+				const createData: APIModel.CreateMenuButtonDto = {
+					Name: state.ruleForm.Name,
+					Code: state.ruleForm.PermissionCode || state.ruleForm.Code || state.ruleForm.Name, // 按钮的权限码
+					Description: state.ruleForm.Name, // 描述使用名称
+					MenuCode: menuCode, // 关联的菜单Code
+					Module: state.ruleForm.Module || 'System',
+					Category: 'Admin',
+					Sort: state.ruleForm.Sort,
+					IsEnabled: state.ruleForm.IsEnabled ?? true,
+					PermissionCode: state.ruleForm.PermissionCode // 权限代码
 				};
 				
-				await MenuApi.putAdminMenusId(
-					{ id: state.ruleForm.Id },
-					updateData
-				);
+				await import('/@/api/fd-system-api/MenuButtons').then(MenuButtonsApi => {
+					MenuButtonsApi.postAdminMenuButtons(createData);
+				});
 				
-				ElMessage.success('菜单更新成功');
-			} else {
-				ElMessage.error('菜单ID不存在，无法更新');
+				ElMessage.success('按钮创建成功');
 			}
-		} else {
-			// 新增菜单
-			// 准备创建数据
-			const createData = {
-				...state.ruleForm,
-				ParentCode: state.ruleForm.menuSuperior && state.ruleForm.menuSuperior.length > 0 
-					? state.ruleForm.menuSuperior[0] 
-					: null,
-			};
-			createData.Category='Admin';
-			await MenuApi.postAdminMenus(createData);
-			ElMessage.success('菜单创建成功');
+			
+			closeDialog(); // 关闭弹窗
+			emit('refresh');
+		} catch (error) {
+			ElMessage.error(state.dialog.type === 'edit' ? '按钮更新失败' : '按钮创建失败');
 		}
-		
-		closeDialog(); // 关闭弹窗
-		emit('refresh');
-	} catch (error) {
-		ElMessage.error(state.dialog.type === 'edit' ? '菜单更新失败' : '菜单创建失败');
+	} else {
+		// 菜单类型的处理
+		try {
+			if (state.dialog.type === 'edit') {
+				// 编辑菜单/目录
+				if (state.ruleForm.Id) {
+					// 准备更新数据
+					const updateData: APIModel.UpdateMenuDto = {
+						...state.ruleForm,
+						Type: state.ruleForm.menuType === 'menu' ? 1 : 0, // 1=Menu, 0=Directory
+						ParentCode: state.ruleForm.menuSuperior && state.ruleForm.menuSuperior.length > 0 
+							? state.ruleForm.menuSuperior[state.ruleForm.menuSuperior.length - 1] // 使用最后一级菜单
+							: null
+					};
+					
+					await MenuApi.putAdminMenusId(
+						{ id: state.ruleForm.Id },
+						updateData
+					);
+					
+					ElMessage.success((state.ruleForm.menuType === 'directory' ? '目录' : '菜单') + '更新成功');
+				} else {
+					ElMessage.error('菜单ID不存在，无法更新');
+				}
+			} else {
+				// 新增菜单/目录
+				// 准备创建数据
+				const createData: APIModel.CreateMenuDto = {
+					...state.ruleForm,
+					Type: state.ruleForm.menuType === 'menu' ? 1 : 0, // 1=Menu, 0=Directory
+					ParentCode: state.ruleForm.menuSuperior && state.ruleForm.menuSuperior.length > 0 
+						? state.ruleForm.menuSuperior[state.ruleForm.menuSuperior.length - 1] // 使用最后一级菜单
+						: null,
+				};
+				createData.Category = 'Admin';
+				await MenuApi.postAdminMenus(createData);
+				ElMessage.success((state.ruleForm.menuType === 'directory' ? '目录' : '菜单') + '创建成功');
+			}
+			
+			closeDialog(); // 关闭弹窗
+			emit('refresh');
+		} catch (error) {
+			ElMessage.error(state.dialog.type === 'edit' ? (state.ruleForm.menuType === 'directory' ? '目录' : '菜单') + '更新失败' : (state.ruleForm.menuType === 'directory' ? '目录' : '菜单') + '创建失败');
+		}
 	}
 };
 // 页面加载时
