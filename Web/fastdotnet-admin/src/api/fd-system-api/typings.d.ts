@@ -88,7 +88,7 @@ declare namespace APIModel {
 		Name?: string;
 		Code?: string;
 		Description?: string;
-		MenuId?: string;
+		MenuCode?: string;
 		Module?: string;
 		Category?: string;
 		Sort?: number;
@@ -749,7 +749,7 @@ declare namespace APIModel {
 		Name?: string;
 		Code?: string;
 		Description?: string;
-		MenuId?: string;
+		MenuCode?: string;
 		Module?: string;
 		Category?: string;
 		Sort?: number;
@@ -1175,7 +1175,7 @@ declare namespace APIModel {
 		Name?: string;
 		Code?: string;
 		Description?: string;
-		MenuId?: string;
+		MenuCode?: string;
 		Module?: string;
 		Category?: string;
 		Sort?: number;

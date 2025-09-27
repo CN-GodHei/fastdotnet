@@ -947,9 +947,9 @@
             按钮描述
             </summary>
         </member>
-        <member name="P:Fastdotnet.Core.Entities.System.FdMenuButton.MenuId">
+        <member name="P:Fastdotnet.Core.Entities.System.FdMenuButton.MenuCode">
             <summary>
-            关联的菜单ID
+            关联的菜单编码
             </summary>
         </member>
         <member name="P:Fastdotnet.Core.Entities.System.FdMenuButton.Module">

@@ -29,10 +29,10 @@ namespace Fastdotnet.Core.Entities.System
         public string Description { get; set; }
 
         /// <summary>
-        /// 关联的菜单ID
+        /// 关联的菜单编码
         /// </summary>
-        [SugarColumn(ColumnName = "menu_id", ColumnDescription = "关联的菜单ID")]
-        public string MenuId { get; set; }
+        [SugarColumn(ColumnName = "menu_code", ColumnDescription = "关联的菜单编码")]
+        public string MenuCode { get; set; }
 
         /// <summary>
         /// 所属模块 (System/PluginId)
