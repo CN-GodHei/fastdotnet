@@ -3,13 +3,13 @@
 		<el-card shadow="hover">
 			<div class="system-menu-search mb15">
 				<el-input size="default" placeholder="请输入菜单名称" style="max-width: 180px"> </el-input>
-				<el-button size="default" type="primary" class="ml10">
+				<el-button v-auth="'menu_code_11365291745215493_queryModule'" size="default" type="primary" class="ml10">
 					<el-icon>
 						<ele-Search />
 					</el-icon>
 					查询
 				</el-button>
-				<el-button size="default" type="success" class="ml10" @click="onOpenAddMenu">
+				<el-button v-auth="'menu_code_11365291745215493_add'" size="default" type="success" class="ml10" @click="onOpenAddMenu">
 					<el-icon>
 						<ele-FolderAdd />
 					</el-icon>
@@ -47,12 +47,12 @@
 					</template>
 				</el-table-column>
 				<el-table-column label="操作" show-overflow-tooltip width="140">
-					<template #default="scope">
-						<el-button size="small" text type="primary" @click="onOpenAddMenu('add')">新增</el-button>
-						<el-button size="small" text type="primary" @click="onOpenEditMenu('edit', scope.row)">修改</el-button>
-						<el-button size="small" text type="primary" @click="onTabelRowDel(scope.row)">删除</el-button>
-					</template>
-				</el-table-column>
+						<template #default="scope">
+							<el-button v-auth="'menu_code_11365291745215493_add'" size="small" text type="primary" @click="onOpenAddMenu('add')">新增</el-button>
+							<el-button v-auth="'menu_code_11365291745215493_edit'" size="small" text type="primary" @click="onOpenEditMenu('edit', scope.row)">修改</el-button>
+							<el-button v-auth="'menu_code_11365291745215493_delete'" size="small" text type="primary" @click="onTabelRowDel(scope.row)">删除</el-button>
+						</template>
+					</el-table-column>
 			</el-table>
 		</el-card>
 		<MenuDialog ref="menuDialogRef" @refresh="getTableData()" />

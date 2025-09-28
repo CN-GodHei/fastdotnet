@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace Fastdotnet.Service.Initializers
 {
-    public class MenuButtonsInitializer :IStartupTask
-        //: IApplicationInitializer
+    public class MenuButtonsInitializer : IStartupTask
+    //: IApplicationInitializer
     {
         private readonly IRepository<FdMenuButton> _MenuButtonrepository;
         private readonly IRepository<FdMenu> _Menurepository;
@@ -24,14 +24,38 @@ namespace Fastdotnet.Service.Initializers
         public async Task ExecuteAsync()
         {
             // 查询所有菜单
-            var menus = await _Menurepository.GetListAsync(x => x.Type==Core.MenuType.Menu);
-            
+            var menus = await _Menurepository.GetListAsync(x => x.Type == Core.MenuType.Menu);
+
             // 为每个菜单生成默认的按钮按钮
             foreach (var menu in menus)
             {
                 // 为每个菜单创建标准的CRUD按钮按钮
                 var defaultButtons = new List<FdMenuButton>
                 {
+                    new FdMenuButton
+                    {
+                        Name = "查询模块",
+                        Code = $"{menu.Code?.ToLower() ?? menu.Id}_queryModule", // 使用菜单Code或ID作为前缀
+                        Description = $"{menu.Name} - 查询模块",
+                        MenuCode = menu.Code,
+                        Module = menu.Module ?? "System",
+                        Category = menu.Category ?? "Admin",
+                        Sort = 1,
+                        IsEnabled = true,
+                        PermissionCode = $"{menu.Code?.ToLower() ?? menu.Id}_queryModule"
+                    },
+                    new FdMenuButton
+                    {
+                        Name = "详情",
+                        Code = $"{menu.Code?.ToLower() ?? menu.Id}_detail", // 使用菜单Code或ID作为前缀
+                        Description = $"{menu.Name} - 详情",
+                        MenuCode = menu.Code,
+                        Module = menu.Module ?? "System",
+                        Category = menu.Category ?? "Admin",
+                        Sort = 1,
+                        IsEnabled = true,
+                        PermissionCode = $"{menu.Code?.ToLower() ?? menu.Id}_detail"
+                    },
                     new FdMenuButton
                     {
                         Name = "查看",
