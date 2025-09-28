@@ -1,14 +1,15 @@
 using AutoMapper;
+using Fastdotnet.Core.Constants;
 using Fastdotnet.Core.Entities.Admin;
+using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models;
 using Fastdotnet.Core.Models.Admin.Users;
 using Fastdotnet.Service.IService.Admin;
-using System.Threading.Tasks;
-using Fastdotnet.Core.Entities.System;
 using System.Linq;
-using Fastdotnet.Core.Constants;
+using System.Threading.Tasks;
+using static Fastdotnet.Core.Constants.Permissions.Admin;
 
 namespace Fastdotnet.Service.Service.Admin
 {
@@ -136,6 +137,16 @@ namespace Fastdotnet.Service.Service.Admin
         
         public async Task<List<string>> GetUserButtonPermissionsAsync(string userId)
         {
+            if (await IsSuperAdminAsync(userId))
+            {
+                var menuButtons = await _menuButtonRepository.GetListAsync(x=>true);
+
+                // 4. 返回按钮权限码列表
+                return menuButtons.Select(mb => mb.Code).ToList();
+            }
+            else
+            {
+
             // 1. 获取用户的角色
             var userRoles = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
             var roleIds = userRoles.Select(ur => ur.RoleId).ToList();
@@ -153,6 +164,8 @@ namespace Fastdotnet.Service.Service.Admin
             
             // 4. 返回按钮权限码列表
             return menuButtons.Select(mb => mb.Code).ToList();
+            }
+
         }
     }
 }
