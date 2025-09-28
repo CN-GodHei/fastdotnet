@@ -204,6 +204,23 @@
             App端用户注册
             </summary>
         </member>
+        <member name="T:Fastdotnet.WebApi.Controllers.System.CondeGenController">
+            <summary>
+            代码生成相关接口
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.System.CondeGenController.GetTableList">
+            <summary>
+            获取库表数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Controllers.System.CondeGenController.GetTableColumnList(System.String)">
+            <summary>
+            获取表的列数据
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Fastdotnet.WebApi.Controllers.System.SystemController">
             <summary>
             系统信息控制器
