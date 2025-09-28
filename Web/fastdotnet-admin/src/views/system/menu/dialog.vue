@@ -4,14 +4,14 @@
 			<el-form ref="menuDialogFormRef" :model="state.ruleForm" size="default" label-width="80px">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-						<el-form-item label="菜单类型">
-							<el-radio-group v-model="state.ruleForm.menuType">
-								<el-radio label="directory">目录</el-radio>
-								<el-radio label="menu">菜单</el-radio>
-								<el-radio label="btn">按钮</el-radio>
-							</el-radio-group>
-						</el-form-item>
-					</el-col>
+					<el-form-item label="菜单类型">
+						<el-radio-group v-model="state.ruleForm.menuType" :disabled="state.dialog.type === 'edit' ">
+							<el-radio label="directory">目录</el-radio>
+							<el-radio label="menu">菜单</el-radio>
+							<el-radio label="btn">按钮</el-radio>
+						</el-radio-group>
+					</el-form-item>
+				</el-col>
 					<template v-if="state.ruleForm.menuType !== 'btn'">
 						<!-- 目录和菜单需要上级菜单，按钮不需要 -->
 						<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20" v-if="state.ruleForm.menuType !== 'directory'">
@@ -118,6 +118,11 @@
 								<el-input v-model="state.ruleForm.PermissionCode" placeholder="请输入权限标识" clearable></el-input>
 							</el-form-item>
 						</el-col>
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="按钮编码">
+							<el-input v-model="state.ruleForm.Code" placeholder="请输入按钮编码" :disabled="state.dialog.type === 'edit' "clearable></el-input>
+						</el-form-item>
+					</el-col>
 					</template>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="菜单排序">
@@ -355,7 +360,7 @@ const onSubmit = async () => {
 					// 准备更新数据
 					const updateData: APIModel.UpdateMenuButtonDto = {
 						Name: state.ruleForm.Name,
-						Code: state.ruleForm.PermissionCode || state.ruleForm.Code || state.ruleForm.Name, // 按钮的权限码作为Code
+						Code: state.ruleForm.Code, // 按钮的权限码作为Code
 						Description: state.ruleForm.Name, // 描述使用名称
 						MenuCode: menuCode, // 关联的菜单Code
 						Module: state.ruleForm.Module || 'System',
@@ -381,7 +386,7 @@ const onSubmit = async () => {
 				// 准备创建数据
 				const createData: APIModel.CreateMenuButtonDto = {
 					Name: state.ruleForm.Name,
-					Code: state.ruleForm.PermissionCode || state.ruleForm.Code || state.ruleForm.Name, // 按钮的权限码
+					Code: state.ruleForm.Code, // 按钮的权限码
 					Description: state.ruleForm.Name, // 描述使用名称
 					MenuCode: menuCode, // 关联的菜单Code
 					Module: state.ruleForm.Module || 'System',
@@ -395,7 +400,7 @@ const onSubmit = async () => {
 					MenuButtonsApi.postAdminMenuButtons(createData);
 				});
 				
-				ElMessage.success('按钮创建成功');
+				// ElMessage.success('按钮创建成功');
 			}
 			
 			closeDialog(); // 关闭弹窗
