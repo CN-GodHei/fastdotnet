@@ -115,6 +115,8 @@ const state = reactive({
 	lockScreenPassword: '',
 	// 锁屏错误信息
 	lockScreenErrorMsg: '',
+	// 新增状态：是否正在解锁过程中
+	isUnlocking: false,
 });
 
 // 鼠标按下 pc
@@ -151,12 +153,15 @@ const onMove = () => {
 			// 确保记录正确的滑动距离
 			state.moveDifference = -el.clientHeight;
 			
+			// 设置解锁标志，防止其他地方重置锁屏
+			state.isUnlocking = true;
+			
 			// 确保只设置一次密码界面显示状态
 			if (!state.isShowLoockLogin) {
 				state.isShowLoockLogin = true;
 				// 添加短暂延迟确保界面状态已更新
 				setTimeout(() => {
-					layoutLockScreenInputRef.value.focus();
+					layoutLockScreenInputRef.value?.focus();
 				}, 100);
 			}
 			
@@ -174,8 +179,18 @@ const onEnd = () => {
 	state.isFlags = false;
 	state.transparency = 1;
 	const el = <HTMLElement>state.querySelectorEl;
-	if (state.moveDifference > -el.clientHeight) {
-		el.setAttribute('style', `top:0px;opacity:1;transition:all 0.3s ease;`);
+	if (state.moveDifference <= -el.clientHeight) {
+		// 如果已经滑动完成，则保持解锁状态
+		state.isUnlocking = true;
+	} else {
+		// 如果未完全滑动，则重置状态
+		if (el) {
+			el.setAttribute('style', `top:0px;opacity:1;transition:all 0.3s ease;`);
+		}
+		// 只有在未完成解锁时才重置解锁标志
+		if (state.moveDifference > -el.clientHeight) {
+			state.isUnlocking = false;
+		}
 	}
 };
 
@@ -299,6 +314,11 @@ const handleUserActivity = (event: Event) => {
 	const target = event.target as HTMLElement;
 	const isLockScreenElement = target.closest('.layout-lock-screen') !== null;
 	
+	// 当正在解锁时，不重置锁屏定时器
+	if (state.isUnlocking) {
+		return;
+	}
+
 	// 只有当事件不是发生在锁屏界面内时，才重置锁屏计时器
 	if (!isLockScreenElement) {
 		resetLockScreenTimer();
@@ -314,6 +334,9 @@ watch(
 );
 // 密码输入点击事件
 const onLockScreenSubmit = async () => {
+	// 在解锁过程中设置标志
+	state.isUnlocking = true;
+	
 	if (!state.lockScreenPassword) {
 		// 密码为空，不执行解锁操作
 		return;
@@ -332,7 +355,8 @@ const onLockScreenSubmit = async () => {
 			themeConfig.value.lockScreenState = false;
 			// 重置滑动状态，确保下次锁屏时显示滑动解锁界面
 			state.isShowLoockLogin = false;
-			
+			state.isUnlocking = false; // 重置解锁标志
+
 			// 重置滑动元素的样式和可见性
 			const el = <HTMLElement>state.querySelectorEl;
 			if (el) {
@@ -341,13 +365,13 @@ const onLockScreenSubmit = async () => {
 				el.style.opacity = '1';
 				el.style.transition = '';
 			}
-			
+
 			// 保存后端配置值不变，只是重新开始定时器
 			setLocalThemeConfig();
 			// 清空密码和错误消息
 			state.lockScreenPassword = '';
 			state.lockScreenErrorMsg = '';
-			
+
 			// 重新初始化锁屏定时器，开始新的倒计时
 			if (state.isShowLockScreenIntervalTime) {
 				clearInterval(state.isShowLockScreenIntervalTime);
@@ -379,6 +403,7 @@ const onLockScreenSubmit = async () => {
 			router.push('/login');
 		} else {
 			ElMessage.error('解锁失败，请重试');
+			state.isUnlocking = false; // 重置解锁标志
 		}
 	}
 };
@@ -479,6 +504,9 @@ const removeEventListeners = () => {
 onUnmounted(() => {
 	window.clearInterval(state.setIntervalTime);
 	window.clearInterval(state.isShowLockScreenIntervalTime);
+	
+	// 重置解锁标志
+	state.isUnlocking = false;
 	
 	// 移除全局事件监听器
 	removeEventListeners();
