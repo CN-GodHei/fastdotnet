@@ -416,10 +416,10 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 
         return config.CreateMapper();
     }).As<IMapper>().InstancePerLifetimeScope();
-    
+
     // 如果需要在Autofac中进行更精细的缓存服务控制，可以在这里添加
-     //containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().InstancePerLifetimeScope();
-     //containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().OwnedByLifetimeScope();
+    //containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().InstancePerLifetimeScope();
+    //containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().OwnedByLifetimeScope();
 });
 
 // 3. 构建并运行应用

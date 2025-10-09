@@ -10,13 +10,31 @@ namespace Fastdotnet.Core.Models.LogModels;
 [SugarTable("log_operation")]
 public class OperationLog
 {
-    [SugarColumn(IsPrimaryKey = true)]
+    [SugarColumn(IsPrimaryKey = true, ColumnDescription = "")]
     public string Id { get; set; } = SnowflakeIdGenerator.NextStrId();
 
     /// <summary>
     /// 请求ID，用于追踪整个请求链路
     /// </summary>
     public string RequestId { get; set; }
+
+    /// <summary>
+    /// 操作人用户ID（如：UserId），匿名或系统任务可为 null
+    /// </summary>
+    [SugarColumn(IsNullable = true)]
+    public string? OperatorId { get; set; }
+
+    /// <summary>
+    /// 操作人用户名/昵称
+    /// </summary>
+    [SugarColumn(Length = 100, IsNullable = true,ColumnDescription ="")]
+    public string? OperatorName { get; set; }
+
+    /// <summary>
+    /// 操作描述，如“创建用户”、“删除订单”
+    /// </summary>
+    [SugarColumn(Length = 200, IsNullable = true, ColumnDescription = "")]
+    public string? Operation { get; set; }
 
     /// <summary>
     /// 请求路径
@@ -54,6 +72,9 @@ public class OperationLog
     /// 耗时（毫秒）
     /// </summary>
     public string ElapsedMilliseconds { get; set; }
+
+    [SugarColumn(Length = 15, IsNullable = true,ColumnDescription = "操作用户类型：Admin/App")]
+    public string UserType { get; set; }
 
     /// <summary>
     /// 创建时间

@@ -1874,6 +1874,21 @@
             请求ID，用于追踪整个请求链路
             </summary>
         </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.OperationLog.OperatorId">
+            <summary>
+            操作人用户ID（如：UserId），匿名或系统任务可为 null
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.OperationLog.OperatorName">
+            <summary>
+            操作人用户名/昵称
+            </summary>
+        </member>
+        <member name="P:Fastdotnet.Core.Models.LogModels.OperationLog.Operation">
+            <summary>
+            操作描述，如“创建用户”、“删除订单”
+            </summary>
+        </member>
         <member name="P:Fastdotnet.Core.Models.LogModels.OperationLog.Path">
             <summary>
             请求路径

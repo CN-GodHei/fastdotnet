@@ -54,9 +54,11 @@
   <ItemGroup>
     <Compile Remove="Filters\CustomOperationFilter.cs" />
     <Compile Remove="Filters\GlobalExceptionFilter.cs" />
+    <Compile Remove="Middleware\Authentication\JwtMiddleware.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Middleware\Authentication\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

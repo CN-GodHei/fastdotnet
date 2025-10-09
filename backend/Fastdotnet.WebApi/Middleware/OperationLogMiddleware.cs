@@ -20,13 +20,19 @@ public class OperationLogMiddleware
 {
     private readonly RequestDelegate _next;
     //private readonly ILogger<OperationLogMiddleware> _logger;
-
+    private readonly ILogService _logService; // 👈 直接注入
+    private readonly ICurrentUser _currentUser; // 👈 注入 ICurrentUser
     public OperationLogMiddleware(RequestDelegate next
         //, ILogger<OperationLogMiddleware> logger
+        , ICurrentUser currentUser
+        , ILogService logService
         )
     {
         _next = next;
         //_logger = logger;
+        _currentUser = currentUser;
+        _logService = logService;
+
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -91,7 +97,11 @@ public class OperationLogMiddleware
                 Body = body,
                 StatusCode = context.Response.StatusCode,
                 ElapsedMilliseconds = stopwatch.ElapsedMilliseconds.ToString(),
-                CreateTime = DateTime.Now
+                CreateTime = DateTime.Now,
+                // ✅ 关键增强：操作人信息
+                OperatorId = _currentUser.Id,        // 来自 Claims: NameIdentifier
+                OperatorName = _currentUser.UserName, // 来自 Claims: Name
+                UserType = _currentUser.UserType,
             };
 
             // 异步写入操作日志（fire-and-forget，但捕获异常）
@@ -99,11 +109,7 @@ public class OperationLogMiddleware
             {
                 try
                 {
-                    var logService = context.RequestServices.GetService<ILogService>();
-                    if (logService != null)
-                    {
-                        await logService.AddOperationLogAsync(operationLog);
-                    }
+                    await _logService.AddOperationLogAsync(operationLog);
                 }
                 catch (Exception ex)
                 {

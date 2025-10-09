@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using Fastdotnet.Core.IService;
@@ -22,8 +23,7 @@ namespace Fastdotnet.Core.Service
         {
             get
             {
-                var claim = User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-                return claim != null ? claim.Value : null;
+                return User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             }
         }
 
@@ -31,7 +31,7 @@ namespace Fastdotnet.Core.Service
         {
             get
             {
-                return User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+                return User?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Name)?.Value;
             }
         }
 
@@ -39,8 +39,8 @@ namespace Fastdotnet.Core.Service
         {
             get
             {
-                // 这里的 "user_type" 需要与您在生成 Token 时使用的 Claim Key 一致
-                return User?.Claims.FirstOrDefault(c => c.Type == "user_type")?.Value;
+                // 这里的 "category" 需要与您在生成 Token 时使用的 Claim Key 一致
+                return User?.Claims.FirstOrDefault(c => c.Type == "category")?.Value;
             }
         }
     }

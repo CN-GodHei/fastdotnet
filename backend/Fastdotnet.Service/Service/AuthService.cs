@@ -114,7 +114,7 @@ namespace Fastdotnet.Service.Service
                     throw new BusinessException("用户名或密码错误");
                 }
                 userId = user.Id;
-                userName = user.Nickname;
+                userName = user.Username;
 
                 var userRoles = await _appUserRoleRepository.GetListAsync(ur => ur.AppUserId == userId);
                 var roleIds = userRoles.Select(ur => ur.RoleId).ToList();
@@ -139,7 +139,8 @@ namespace Fastdotnet.Service.Service
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                //new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                new Claim(JwtRegisteredClaimNames.NameId, userId),   // "nameid"
                 new Claim(JwtRegisteredClaimNames.Name, userName),
                 new Claim("category", category) // Custom claim for user category
             };

@@ -181,7 +181,7 @@ const onSignIn = async () => {
 			const token = res.Token;
 			Session.set('token', token); // 存储从后端获取的真实 token 到 Cookies
 			// 添加调试日志
-			console.log('Login Success - Token Set to Cookie:', token);
+			// console.log('Login Success - Token Set to Cookie:', token);
 			// 存储用户名用于模拟用户信息获取（实际项目中可能由后端返回或通过 token 解析）
 			Cookies.set('userName', state.ruleForm.userName);
 

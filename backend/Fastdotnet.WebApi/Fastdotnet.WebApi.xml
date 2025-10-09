@@ -295,11 +295,6 @@
             控制Swagger标签排序的文档过滤器
             </summary>
         </member>
-        <member name="T:Fastdotnet.WebApi.Middleware.Authentication.JwtMiddleware">
-            <summary>
-            JWT认证中间件
-            </summary>
-        </member>
         <member name="T:Fastdotnet.WebApi.Middleware.DynamicMiddlewareDispatcher">
             <summary>
             A dispatcher middleware that executes dynamic middlewares from a central registry.
