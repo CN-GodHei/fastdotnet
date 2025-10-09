@@ -1,9 +1,10 @@
+using Fastdotnet.Core.Attributes;
+using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.LogModels;
 using Fastdotnet.Core.Utils;
-using Fastdotnet.Core.IService;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Text;
@@ -30,6 +31,18 @@ public class OperationLogMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
+        var endpoint = context.GetEndpoint();
+        if (endpoint != null)
+        {
+            // 检查是否标记了 SkipOperationLog
+            var skipLog = endpoint.Metadata.GetMetadata<SkipOperationLogAttribute>() != null;
+            if (skipLog)
+            {
+                // 跳过记录操作日志，直接继续管道
+                await _next(context);
+                return;
+            }
+        }
         var stopwatch = Stopwatch.StartNew();
         var request = context.Request;
         var path = request.Path.ToString();
@@ -101,30 +114,6 @@ public class OperationLogMiddleware
         }
     }
 
-    /// <summary>
-    /// 获取客户端真实 IP（支持反向代理）
-    /// </summary>
-    //private static string GetClientIp(HttpContext context)
-    //{
-    //    // 优先从 X-Forwarded-For 获取（支持多层代理）
-    //    if (context.Request.Headers.TryGetValue("X-Forwarded-For", out var forwardedFor))
-    //    {
-    //        var firstIp = forwardedFor.ToString().Split(',')[0].Trim();
-    //        if (!string.IsNullOrWhiteSpace(firstIp))
-    //            return firstIp;
-    //    }
-
-    //    // 回退到 RemoteIpAddress
-    //    var remoteIp = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-
-    //    // 处理 IPv4 映射地址（如 ::ffff:192.168.1.1 → 192.168.1.1）
-    //    if (remoteIp.StartsWith("::ffff:", StringComparison.OrdinalIgnoreCase))
-    //    {
-    //        return remoteIp.Substring(7);
-    //    }
-
-    //    return remoteIp;
-    //}
 
     private static string GetClientIp(HttpContext context)
     {
