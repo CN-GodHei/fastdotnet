@@ -1,3 +1,4 @@
+using Azure.Core;
 using Fastdotnet.Core.Models.Base;
 using Fastdotnet.Core.Models.Interfaces;
 using Fastdotnet.Core.Models.LogModels;
@@ -46,10 +47,12 @@ public static class SqlSugarServiceCollectionExtensions
                 {
                     try
                     {
+                        // ✅ 在还能拿到 RequestId 的时候立即捕获！
+                        string currentRequestId = RequestIdManager.CurrentRequestId; // 可能为 null，但这是当前上下文的真实值
                         // 使用日志框架记录SQL
-                        var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
+                        //var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
                         //logger?.LogInformation("SqlSugar Executing SQL: {Sql}", sql);
-                        
+
                         // 根据配置决定是否将SQL执行日志记录到专门的日志表中
                         if (options.EnableSqlExecutionLogging)
                         {
@@ -60,7 +63,8 @@ public static class SqlSugarServiceCollectionExtensions
                             db.Aop.OnLogExecuted = (sqlExecuted, parsExecuted) =>
                             {
                                 stopwatch.Stop();
-                                RecordSqlExecutionToLogTable(serviceProvider, sqlCopy, parsCopy, stopwatch.ElapsedMilliseconds.ToString(), null);
+                                RecordSqlExecutionToLogTable(serviceProvider, sqlCopy, 
+                                    parsCopy, stopwatch.ElapsedMilliseconds.ToString(), null, currentRequestId);
                                 db.Aop.OnLogExecuted = null; // 重置事件处理程序
                             };
                         }
@@ -68,8 +72,8 @@ public static class SqlSugarServiceCollectionExtensions
                     catch (Exception ex)
                     {
                         // 记录AOP处理过程中的任何错误，避免影响主流程
-                        var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
-                        logger?.LogError(ex, "Error in SqlSugar OnLogExecuting AOP handler");
+                        //var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
+                        //logger?.LogError(ex, "Error in SqlSugar OnLogExecuting AOP handler");
                     }
                 };
 
@@ -77,10 +81,12 @@ public static class SqlSugarServiceCollectionExtensions
                 {
                     try
                     {
+                        string currentRequestId = RequestIdManager.CurrentRequestId; // 捕获当前 RequestId
+
                         // 使用日志框架记录错误
                         var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
                         logger?.LogError(ex, "SqlSugar SQL execution error: {Message}", ex.Message);
-                        
+
                         // 根据配置决定是否将SQL错误记录到专门的日志表中
                         if (options.EnableSqlExecutionLogging)
                         {
@@ -106,8 +112,8 @@ public static class SqlSugarServiceCollectionExtensions
                             {
                                 parameters = new SugarParameter[0];
                             }
-                            
-                            RecordSqlExecutionToLogTable(serviceProvider, ex.Sql, parameters, "0", ex);
+
+                            RecordSqlExecutionToLogTable(serviceProvider, ex.Sql, parameters, "0", ex, currentRequestId);
                         }
                     }
                     catch (Exception ex2)
@@ -121,7 +127,7 @@ public static class SqlSugarServiceCollectionExtensions
                 // 配置全局软删除过滤器
                 db.QueryFilter.AddTableFilter<ISoftDelete>(u => u.IsDeleted == false);
                 //db.QueryFilter.Add<ISoftDelete>(u => u.IsDeleted == false);
-                
+
                 // 插入前自动填充雪花ID和创建时间
                 db.Aop.DataExecuting = (oldValue, entityInfo) =>
                 {
@@ -133,7 +139,7 @@ public static class SqlSugarServiceCollectionExtensions
                             entityInfo.SetValue(SnowflakeIdGenerator.NextStrId());
                             entityInfo.SetValue(YitIdHelper.NextId());
                         }
-                        
+
                         // 自动填充创建时间（如果CreateTime为默认值）
                         else if (entityInfo.PropertyName == nameof(IBaseEntity.CreateTime) && (DateTime)oldValue == default)
                         {
@@ -170,7 +176,9 @@ public static class SqlSugarServiceCollectionExtensions
     /// <param name="parameters">SQL参数</param>
     /// <param name="elapsedMilliseconds">执行耗时（毫秒）</param>
     /// <param name="exception">异常信息（如果有）</param>
-    private static void RecordSqlExecutionToLogTable(IServiceProvider rootServiceProvider, string sql, SugarParameter[] parameters, string elapsedMilliseconds, Exception exception)
+    private static void RecordSqlExecutionToLogTable(IServiceProvider rootServiceProvider, 
+        string sql, SugarParameter[] parameters, string elapsedMilliseconds,
+        Exception exception,string currentRequestId)
     {
         try
         {
@@ -180,7 +188,7 @@ public static class SqlSugarServiceCollectionExtensions
 
             // 构造完整的SQL语句（包含参数值）
             var formattedSql = sql;
-            
+
             // 如果有参数，则尝试构建完整的SQL语句
             if (parameters != null && parameters.Length > 0)
             {
@@ -190,7 +198,8 @@ public static class SqlSugarServiceCollectionExtensions
             // 创建SQL执行日志对象
             var sqlExecutionLog = new SqlExecutionLog
             {
-                RequestId = RequestIdManager.CurrentRequestId,
+                //RequestId = RequestIdManager.CurrentRequestId,
+                RequestId = currentRequestId ?? "no-request-id", // 使用传入的值，避免依赖上下文
                 FullSql = formattedSql,
                 ElapsedMilliseconds = elapsedMilliseconds,
                 HasError = exception != null,
@@ -213,11 +222,11 @@ public static class SqlSugarServiceCollectionExtensions
 
                 // 尝试将日志记录到日志数据库
                 var logDb = sqlClient.AsTenant().GetConnection("log") ?? sqlClient;
-                
+
                 // 添加调试日志
                 var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
                 //logger?.LogInformation("准备记录SQL执行日志到数据库: {Sql}", formattedSql);
-                
+
                 var result = logDb.Insertable(sqlExecutionLog).ExecuteCommand();
                 //logger?.LogInformation("SQL执行日志记录结果: {Result}", result);
             }
@@ -250,10 +259,10 @@ public static class SqlSugarServiceCollectionExtensions
         }
 
         var formattedSql = sql;
-        
+
         // 按参数名长度降序排列，避免短名称替换影响长名称（例如@p1和@p10的情况）
         var sortedParameters = parameters.OrderByDescending(p => p.ParameterName?.Length ?? 0);
-        
+
         foreach (var parameter in sortedParameters)
         {
             if (string.IsNullOrEmpty(parameter.ParameterName))
@@ -318,7 +327,7 @@ public static class SqlSugarServiceCollectionExtensions
         var entityTypes = pluginAssembly.GetTypes()
             .Where(t => t.IsClass && !t.IsAbstract && t.GetCustomAttribute<SugarTable>() != null)
             .ToArray();
-        
+
         if (entityTypes.Any())
         {
             sqlClient.CodeFirst.InitTables(entityTypes);
@@ -351,7 +360,7 @@ public static class SqlSugarServiceCollectionExtensions
                 // 通过反射获取私有字段 _entityInfoList
                 var entityMaintenance = sqlClient.EntityMaintenance;
                 var fieldInfo = typeof(EntityMaintenance).GetField("EntityList", BindingFlags.NonPublic | BindingFlags.Instance);
-                
+
                 if (fieldInfo != null)
                 {
                     // 获取当前缓存的实体列表
