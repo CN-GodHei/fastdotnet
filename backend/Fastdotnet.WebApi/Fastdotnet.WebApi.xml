@@ -318,11 +318,6 @@
             注意：不记录响应体，仅记录请求信息和状态码
             </summary>
         </member>
-        <member name="M:Fastdotnet.WebApi.Middleware.OperationLogMiddleware.GetClientIp(Microsoft.AspNetCore.Http.HttpContext)">
-            <summary>
-            获取客户端真实 IP（支持反向代理）
-            </summary>
-        </member>
         <member name="M:Fastdotnet.WebApi.Middleware.OperationLogMiddleware.NormalizeLocalhost(System.String)">
             <summary>
             将 IPv6 回环地址 ::1 或 IPv4 127.0.0.1 统一标准化为 "127.0.0.1"

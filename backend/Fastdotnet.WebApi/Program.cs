@@ -7,6 +7,7 @@ using Fastdotnet.Core.Hubs;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Middleware;
+using Fastdotnet.Core.Models.LogModels;
 using Fastdotnet.Core.Service;
 using Fastdotnet.Core.Services.System;
 using Fastdotnet.Core.Settings;
@@ -48,6 +49,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Text;
+using System.Threading.Tasks;
 using Yitter.IdGenerator;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -508,15 +510,39 @@ lifetime.ApplicationStarted.Register(() =>
             using (var scope = app.Services.CreateScope())
             {
                 var startupTasks = scope.ServiceProvider.GetServices<IStartupTask>();
+                var _logService = scope.ServiceProvider.GetRequiredService<ILogService>(); // ✅ 提前获取日志服务
+
                 foreach (var task in startupTasks)
                 {
+                    var taskId = $"StartupTask-{Guid.NewGuid():N}";
+                    var taskType = task.GetType().Name;
                     try
                     {
                         await task.ExecuteAsync();
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error executing startup task {task.GetType().Name}: {ex.Message}");
+                        // ❗ 统一记录异常到日志系统
+                        var exceptionLog = new ExceptionLog
+                        {
+                            RequestId = taskId,
+                            ExceptionType = ex.GetType().FullName,
+                            Message = ex.Message,
+                            StackTrace = ex.StackTrace ?? string.Empty,
+                            Path = "/startup-task",
+                            Method = taskType,
+                            CreateTime = DateTime.Now
+                        };
+
+                        try
+                        {
+                            await _logService.AddExceptionLogAsync(exceptionLog);
+                        }
+                        catch (Exception logEx)
+                        {
+                            // 如果写日志也失败，至少输出到控制台
+                            Console.WriteLine($"Failed to log exception for {taskType}: {logEx.Message}");
+                        }
                     }
                 }
             }
