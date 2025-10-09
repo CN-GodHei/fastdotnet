@@ -2538,14 +2538,13 @@
         </member>
         <member name="P:Fastdotnet.Core.Utils.RequestIdManager.CurrentRequestId">
             <summary>
-            获取当前请求的ID
+            获取当前请求的ID（可能为 null）
             </summary>
         </member>
         <member name="M:Fastdotnet.Core.Utils.RequestIdManager.GenerateNewRequestId">
             <summary>
-            生成新的请求ID
+            生成新的请求ID（不自动设置到 CurrentRequestId）
             </summary>
-            <returns></returns>
         </member>
         <member name="M:Fastdotnet.Core.Utils.RequestIdManager.Clear">
             <summary>

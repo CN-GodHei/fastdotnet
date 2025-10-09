@@ -8,32 +8,23 @@ namespace Fastdotnet.Core.Utils;
 /// </summary>
 public static class RequestIdManager
 {
-    private static readonly AsyncLocal<string> _asyncLocalRequestId = new AsyncLocal<string>();
+    private static readonly AsyncLocal<string> _asyncLocalRequestId = new();
 
     /// <summary>
-    /// 获取当前请求的ID
+    /// 获取当前请求的ID（可能为 null）
     /// </summary>
-    public static string CurrentRequestId
+    public static string? CurrentRequestId
     {
-        get
-        {
-            return _asyncLocalRequestId.Value ??= Guid.NewGuid().ToString("N");
-        }
-        set
-        {
-            _asyncLocalRequestId.Value = value;
-        }
+        get => _asyncLocalRequestId.Value;
+        set => _asyncLocalRequestId.Value = value;
     }
 
     /// <summary>
-    /// 生成新的请求ID
+    /// 生成新的请求ID（不自动设置到 CurrentRequestId）
     /// </summary>
-    /// <returns></returns>
     public static string GenerateNewRequestId()
     {
-        var requestId = Guid.NewGuid().ToString("N"); // 不带连字符的GUID
-        CurrentRequestId = requestId;
-        return requestId;
+        return Guid.NewGuid().ToString("N"); // 只生成，不赋值
     }
 
     /// <summary>

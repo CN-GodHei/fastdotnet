@@ -38,10 +38,11 @@ namespace Fastdotnet.Core.Models
         {
         }
 
-        public ApiResult(int code, string msg, T data)
-            : base(code, msg)
-        {
-            Data = data;
-        }
+        //public ApiResult(int code, string msg, T data)
+        //    : base(code, msg)
+        //{
+        //    Data = data;
+        //}
+        public static ApiResult<T> Success(T data) => new ApiResult<T> { Data = data };
     }
 }

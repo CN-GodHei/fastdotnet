@@ -4,137 +4,132 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Linq;
-using System.Reflection;
 
 namespace Fastdotnet.WebApi.Filters
 {
     /// <summary>
-    /// 全局结果过滤器，用于统一API返回格式
+    /// 全局结果过滤器，用于统一API返回格式（仅处理非异常结果）
+    /// 异常应由全局异常中间件统一处理
     /// </summary>
     public class GlobalResultFilter : IResultFilter
     {
         public void OnResultExecuting(ResultExecutingContext context)
         {
-            var aa = context.ActionDescriptor.EndpointMetadata.Where(x => x.GetType() == typeof(SkipGlobalResultAttribute));
-            // 检查是否标记了跳过全局结果处理的特性
-            if (context.ActionDescriptor.EndpointMetadata.Any(em => em.GetType() == typeof(SkipGlobalResultAttribute)))
+            // 1. 检查是否跳过全局结果处理
+            if (context.ActionDescriptor.EndpointMetadata.Any(em => em is SkipGlobalResultAttribute))
             {
                 return;
             }
 
-            // 对不同的结果类型进行统一包装
-            switch (context.Result)
+            // 2. 只处理非异常结果（异常应已被中间件捕获）
+            if (context.Result is ObjectResult objResult)
             {
-                case ObjectResult objResult:
-                    // 如果已经是ApiResult类型，则不重复包装
-                    if (objResult.Value != null && objResult.Value.GetType().IsGenericType &&
-                        objResult.Value.GetType().GetGenericTypeDefinition() == typeof(ApiResult<>))
+                // 如果已经是 ApiResult<T>，跳过包装
+                if (IsApiResult(objResult.Value))
+                {
+                    return;
+                }
+
+                // 处理 PageResult<T>
+                if (objResult.Value != null && IsPageResult(objResult.Value, out var pageResultInfo))
+                {
+                    // 构造包含分页信息的匿名对象
+                    var pageData = new
                     {
-                        break;
-                    }
-                    //归一化
-                    context.Result = new ObjectResult(new ApiResult<object>() { Data = objResult.Value });
-
-                    //if (objResult.Value != null && objResult.Value.GetType().IsGenericType &&
-                    //objResult.Value.GetType().GetGenericTypeDefinition() == typeof(PageResult<>))
-                    //{
-                    ////    break;
-                    ////}
-
-                    ////// 检查是否为PageResult类型
-                    ////if (objResult.Value != null && objResult.Value.GetType().FullName.StartsWith("Fastdotnet.Core.Models.ApiResult+PageResult"))
-                    ////{
-                    //    // 获取PageResult实例的属性值
-                    //    var pageResult = objResult.Value;
-                    //    var dataType = pageResult.GetType().GetGenericArguments()[0];
-
-                    //    // 通过反射获取PageResult的属性值
-                    //    var dataProperty = pageResult.GetType().GetProperty("Data");
-                    //    var totalCountProperty = pageResult.GetType().GetProperty("TotalCount");
-                    //    var pageIndexProperty = pageResult.GetType().GetProperty("PageIndex");
-                    //    var pageSizeProperty = pageResult.GetType().GetProperty("PageSize");
-                    //    var totalPagesProperty = pageResult.GetType().GetProperty("TotalPages");
-
-                    //    var dataValue = dataProperty.GetValue(pageResult);
-                    //    var totalCountValue = totalCountProperty.GetValue(pageResult);
-                    //    var pageIndexValue = pageIndexProperty.GetValue(pageResult);
-                    //    var pageSizeValue = pageSizeProperty.GetValue(pageResult);
-                    //    var totalPagesValue = totalPagesProperty.GetValue(pageResult);
-
-                    //    // 创建一个匿名对象包含分页信息和数据
-                    //    var resultObject = new {
-                    //        Data = dataValue,
-                    //        TotalCount = totalCountValue,
-                    //        PageIndex = pageIndexValue,
-                    //        PageSize = pageSizeValue,
-                    //        TotalPages = totalPagesValue
-                    //    };
-
-                    //    // 包装为ApiResult
-                    //    var ApiResultType = typeof(ApiResult<>).MakeGenericType(resultObject.GetType());
-                    //    var successMethod = ApiResultType.GetMethod("Success", new[] { resultObject.GetType() });
-                    //    var wrappedResult = successMethod?.Invoke(null, new[] { resultObject });
-
-                    //    context.Result = new ObjectResult(wrappedResult)
-                    //    {
-                    //        StatusCode = objResult.StatusCode
-                    //    };
-                    //    break;
-                    //}
-                    //// 包装普通对象结果
-                    //else if (objResult.Value != null)
-                    //{
-                    //    var resultType = objResult.Value.GetType();
-                    //    var ApiResultType = typeof(ApiResult<>).MakeGenericType(resultType);
-                    //    var successMethod = ApiResultType.GetMethod("Success", new[] { resultType });
-                    //    var wrappedResult = successMethod?.Invoke(null, new[] { objResult.Value });
-                    //    context.Result = new ObjectResult(wrappedResult)
-                    //    {
-                    //        StatusCode = objResult.StatusCode
-                    //    };
-                    //}
-                    //else
-                    //{
-                    //    // 处理返回null的情况
-                    //    var ApiResultType = typeof(ApiResult<object>);
-                    //    var successMethod = ApiResultType.GetMethod("Success", new[] { typeof(object) });
-                    //    var wrappedResult = successMethod?.Invoke(null, new object[] { null });
-                    //    context.Result = new ObjectResult(wrappedResult)
-                    //    {
-                    //        StatusCode = objResult.StatusCode
-                    //    };
-                    //}
-                    break;
-
-                case EmptyResult emptyResult:
-                    // 包装空结果
-                    context.Result = new ObjectResult(new ApiResult<object>() { Data = null })
-                    {
-                        StatusCode = 200
+                        Data = pageResultInfo.Data,
+                        TotalCount = pageResultInfo.TotalCount,
+                        PageIndex = pageResultInfo.PageIndex,
+                        PageSize = pageResultInfo.PageSize,
+                        TotalPages = pageResultInfo.TotalPages
                     };
-                    break;
 
-                case StatusCodeResult statusCodeResult:
-                    // 包装状态码结果
-                    context.Result = new ObjectResult(new ApiResult<object>() { Data = $"请求失败，状态码: {statusCodeResult.StatusCode}" })
+                    var wrappedResult = ApiResult<object>.Success(pageData);
+                    context.Result = new ObjectResult(wrappedResult)
                     {
-                        StatusCode = statusCodeResult.StatusCode
+                        StatusCode = objResult.StatusCode
                     };
-                    break;
+                    return;
+                }
 
-                case ContentResult contentResult:
-                    // 包装内容结果
-                    context.Result = new ObjectResult(new ApiResult<string>() { Data = contentResult.Content })
-                    {
-                        StatusCode = contentResult.StatusCode
-                    };
-                    break;
+                // 普通对象或 null
+                var finalResult = objResult.Value == null
+                    ? ApiResult<object>.Success(null)
+                    : ApiResult<object>.Success(objResult.Value);
+
+                context.Result = new ObjectResult(finalResult)
+                {
+                    StatusCode = objResult.StatusCode // 保留原始状态码（如 201 Created）
+                };
             }
+            else if (context.Result is EmptyResult)
+            {
+                context.Result = new ObjectResult(ApiResult<object>.Success(null))
+                {
+                    StatusCode = 200
+                };
+            }
+            else if (context.Result is StatusCodeResult statusCodeResult)
+            {
+                // 保留状态码，但包装消息（可选）
+                var message = $"请求完成，状态码: {statusCodeResult.StatusCode}";
+                context.Result = new ObjectResult(ApiResult<object>.Success(message))
+                {
+                    StatusCode = statusCodeResult.StatusCode
+                };
+            }
+            else if (context.Result is ContentResult contentResult)
+            {
+                context.Result = new ObjectResult(ApiResult<string>.Success(contentResult.Content))
+                {
+                    StatusCode = contentResult.StatusCode
+                };
+            }
+            // 其他 Result 类型（如 RedirectResult）通常不用于 API，可忽略
         }
 
         public void OnResultExecuted(ResultExecutedContext context)
         {
-            // 执行后处理（如果需要）
+            // 无需处理
+        }
+
+        // 判断是否已经是 ApiResult<T>
+        private static bool IsApiResult(object value)
+        {
+            if (value == null) return false;
+            var type = value.GetType();
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ApiResult<>);
+        }
+
+        // 尝试识别 PageResult<T> 并提取属性
+        private static bool IsPageResult(object value, out (object Data, long TotalCount, int PageIndex, int PageSize, int TotalPages) info)
+        {
+            info = default;
+            if (value == null) return false;
+
+            var type = value.GetType();
+            // 检查是否是 Fastdotnet.Core.Models.ApiResult.PageResult<T>
+            if (!type.IsGenericType || type.DeclaringType?.Name != "ApiResult" || type.Name != "PageResult")
+                return false;
+
+            // 使用属性名反射（比硬编码类型更安全）
+            var dataProp = type.GetProperty("Data");
+            var totalCountProp = type.GetProperty("TotalCount");
+            var pageIndexProp = type.GetProperty("PageIndex");
+            var pageSizeProp = type.GetProperty("PageSize");
+            var totalPagesProp = type.GetProperty("TotalPages");
+
+            if (dataProp == null || totalCountProp == null || pageIndexProp == null ||
+                pageSizeProp == null || totalPagesProp == null)
+                return false;
+
+            info = (
+                Data: dataProp.GetValue(value),
+                TotalCount: (long)totalCountProp.GetValue(value)!,
+                PageIndex: (int)pageIndexProp.GetValue(value)!,
+                PageSize: (int)pageSizeProp.GetValue(value)!,
+                TotalPages: (int)totalPagesProp.GetValue(value)!
+            );
+            return true;
         }
     }
 }

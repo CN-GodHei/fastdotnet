@@ -73,7 +73,7 @@ builder.Services.AddControllers(options =>
         .Build();
     options.Filters.Add(new AuthorizeFilter(policy));
 
-    options.Filters.Add<GlobalExceptionFilter>();
+    //options.Filters.Add<GlobalExceptionFilter>();
     options.Filters.Add<GlobalResultFilter>(); // 添加全局结果过滤器
 })
     .AddControllersAsServices()
@@ -281,7 +281,7 @@ builder.Services.Scan(scan => scan
 builder.Services.AddScoped<IPermissionProvider, FrameworkPermissionProvider>();
 
 // 注册全局异常过滤器
-builder.Services.AddScoped<GlobalExceptionFilter>();
+//builder.Services.AddScoped<GlobalExceptionFilter>();
 
 // 添加内存缓存服务
 //builder.Services.AddMemoryCache();
@@ -475,6 +475,7 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 app.UseMiddleware<RequestIdMiddleware>();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<OperationLogMiddleware>();
 app.UseMiddleware<PluginStaticFileMiddleware>();
 

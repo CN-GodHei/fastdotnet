@@ -266,7 +266,8 @@
         </member>
         <member name="T:Fastdotnet.WebApi.Filters.GlobalResultFilter">
             <summary>
-            全局结果过滤器，用于统一API返回格式
+            全局结果过滤器，用于统一API返回格式（仅处理非异常结果）
+            异常应由全局异常中间件统一处理
             </summary>
         </member>
         <member name="T:Fastdotnet.WebApi.Filters.InheritedGenericControllerOperationFilter">
@@ -305,16 +306,41 @@
             This enables hot-pluggable plugins to participate in the HTTP request pipeline.
             </summary>
         </member>
+        <member name="T:Fastdotnet.WebApi.Middleware.GlobalExceptionMiddleware">
+            <summary>
+            全局异常处理中间件
+            注意：操作日志由 OperationLogMiddleware 统一记录，此处不再记录
+            </summary>
+        </member>
+        <member name="T:Fastdotnet.WebApi.Middleware.OperationLogMiddleware">
+            <summary>
+            操作日志中间件：记录每个 HTTP 请求的操作日志（成功/失败均记录）
+            注意：不记录响应体，仅记录请求信息和状态码
+            </summary>
+        </member>
         <member name="M:Fastdotnet.WebApi.Middleware.OperationLogMiddleware.GetClientIp(Microsoft.AspNetCore.Http.HttpContext)">
             <summary>
-            获取客户端IP地址，优化IPv4映射地址格式
+            获取客户端真实 IP（支持反向代理）
             </summary>
-            <param name="context"></param>
-            <returns></returns>
         </member>
-        <member name="T:Fastdotnet.WebApi.Middleware.RequestIdMiddleware">
+        <member name="M:Fastdotnet.WebApi.Middleware.OperationLogMiddleware.NormalizeLocalhost(System.String)">
             <summary>
-            请求ID中间件，为每个请求生成唯一的请求ID
+            将 IPv6 回环地址 ::1 或 IPv4 127.0.0.1 统一标准化为 "127.0.0.1"
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Middleware.OperationLogMiddleware.IsValidIpAddress(System.String)">
+            <summary>
+            简单校验是否为有效 IP（防止 X-Forwarded-For 注入非法值）
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Middleware.OperationLogMiddleware.GetHeaders(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            获取请求头字符串（限制总长度 ≤1900，防止超数据库字段）
+            </summary>
+        </member>
+        <member name="M:Fastdotnet.WebApi.Middleware.OperationLogMiddleware.GetBody(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            异步读取请求体（已确保 ContentLength ≤ 2000）
             </summary>
         </member>
     </members>

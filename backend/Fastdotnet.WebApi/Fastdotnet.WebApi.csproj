@@ -53,6 +53,7 @@
 
   <ItemGroup>
     <Compile Remove="Filters\CustomOperationFilter.cs" />
+    <Compile Remove="Filters\GlobalExceptionFilter.cs" />
   </ItemGroup>
 
   <ItemGroup>
