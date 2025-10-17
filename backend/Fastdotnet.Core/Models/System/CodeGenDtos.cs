@@ -85,13 +85,6 @@ namespace Fastdotnet.Core.Models.System
         [StringLength(100, ErrorMessage = "表名长度不能超过100个字符")]
         public string? TableName { get; set; }
 
-        /// <summary>
-        /// 实体名
-        /// </summary>
-        [Required(ErrorMessage = "实体名不能为空")]
-        [StringLength(100, ErrorMessage = "实体名长度不能超过100个字符")]
-        public string? EntityName { get; set; }
-
 
         /// <summary>
         /// 命名空间

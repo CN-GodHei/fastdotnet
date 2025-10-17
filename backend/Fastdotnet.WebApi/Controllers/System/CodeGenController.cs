@@ -1,12 +1,14 @@
 using AutoMapper;
+using Fastdotnet.Core.Constants;
 using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.System;
+using Fastdotnet.Core.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SqlSugar;
-using Fastdotnet.Core.Constants;
 using System;
 
 namespace Fastdotnet.WebApi.Controllers.System
@@ -26,7 +28,14 @@ namespace Fastdotnet.WebApi.Controllers.System
         {
             _codeGenConfigService = codeGenConfigService;
         }
-
+        protected override async Task BeforeCreate(CodeGenConfig entity, CreateCodeGenConfigDto dto)
+        {
+            if (string.IsNullOrEmpty(entity.EntityName))
+            {
+                entity.EntityName = _codeGenConfigService.GetEntityNameByTableName(entity.TableName);
+            }
+            await base.BeforeCreate(entity, dto);
+        }
         /// <summary>
         /// 获取库表数据
         /// </summary>

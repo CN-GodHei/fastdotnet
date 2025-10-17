@@ -120,6 +120,7 @@ const state = reactive({
 	ruleForm: {} as APIModel.CreateCodeGenConfigDto & APIModel.UpdateCodeGenConfigDto,
 	tableData: [] as APIModel.TableInfoDto[],
 	columnData: [] as APIModel.ColumnInfoDto[],
+	isInitializing: false, // 标识是否正在初始化，避免初始化时重置 tableUniqueList
 });
 
 
@@ -130,7 +131,10 @@ const tableChanged = (tableName: string) => {
 		const tableInfo = state.tableData.find(t => t.TableName === tableName);
 		if(tableInfo) {
 			state.ruleForm.tableName = tableInfo.TableName;
-			state.ruleForm.tableUniqueList = [];
+			// 只有在非初始化状态下才重置 tableUniqueList，避免在初始化时覆盖编辑的数据
+			if (!state.isInitializing) {
+				state.ruleForm.tableUniqueList = [];
+			}
 			getColumnInfoList(tableInfo.TableName);
 		}
 	}
@@ -159,7 +163,11 @@ const getColumnInfoList = async (tableName: string) => {
 
 // 打开弹窗
 const openDialog = async (row: APIModel.CreateCodeGenConfigDto & APIModel.UpdateCodeGenConfigDto) => {
+	// 设置初始化标志
+	state.isInitializing = true;
 	state.ruleForm = JSON.parse(JSON.stringify(row));
+	// 确保 tableUniqueList 是数组格式，即使原数据为 null
+	state.ruleForm.tableUniqueList = state.ruleForm.tableUniqueList || [];
 	try {
 		// 获取表列表
 		const res = await getCodeGenGettablelist();
@@ -172,9 +180,11 @@ const openDialog = async (row: APIModel.CreateCodeGenConfigDto & APIModel.Update
 		console.error('获取表列表失败', error);
 		state.tableData = [];
 	}
-  state.ruleForm.tableUniqueList = state.ruleForm.tableUniqueList || [];
+	// 重置初始化标志
+	state.isInitializing = false;
 	state.isShowDialog = true;
-	ruleFormRef.value?.resetFields();
+	// 移除 resetFields 调用，因为它会清除我们刚刚设置的值
+	// ruleFormRef.value?.resetFields();
 };
 
 // 关闭弹窗
