@@ -59,5 +59,16 @@ namespace Fastdotnet.Core.Constants
             }
         }
         */
+
+        public static class System
+        {
+            public static class CodeGen
+            {
+                public const string View = "system.codegen.view";
+                public const string Create = "system.codegen.create";
+                public const string Edit = "system.codegen.edit";
+                public const string Delete = "system.codegen.delete";
+            }
+        }
     }
 }

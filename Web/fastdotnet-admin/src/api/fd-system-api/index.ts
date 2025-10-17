@@ -8,6 +8,7 @@ import * as AppMenus from './AppMenus';
 import * as Blacklists from './Blacklists';
 import * as CacheTest from './CacheTest';
 import * as Captcha from './Captcha';
+import * as CodeGen from './CodeGen';
 import * as EmailConfig from './EmailConfig';
 import * as MenuButtons from './MenuButtons';
 import * as Menus from './Menus';
@@ -24,6 +25,7 @@ export default {
 	Blacklists,
 	CacheTest,
 	Captcha,
+	CodeGen,
 	EmailConfig,
 	MenuButtons,
 	Menus,

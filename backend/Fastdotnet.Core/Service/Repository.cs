@@ -19,6 +19,11 @@ namespace Fastdotnet.Core.Service
     {
         protected readonly ISqlSugarClient _db;
 
+        /// <summary>
+        /// 获取数据库客户端实例
+        /// </summary>
+        public ISqlSugarClient Db => _db;
+
         public Repository(ISqlSugarClient db)
         {
             _db = db;
