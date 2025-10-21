@@ -5,7 +5,7 @@ import vueSetupExtend from 'vite-plugin-vue-setup-extend-plus';
 import viteCompression from 'vite-plugin-compression2';
 
 import { buildConfig } from './src/utils/build';
-
+import vueDevTools from 'vite-plugin-vue-devtools'
 const pathResolve = (dir: string) => {
 	return resolve(__dirname, '.', dir);
 };
@@ -18,7 +18,7 @@ const alias: Record<string, string> = {
 const viteConfig = defineConfig((mode: ConfigEnv) => {
 	const env = loadEnv(mode.mode, process.cwd());
 	return {
-		plugins: [vue(), vueSetupExtend(), viteCompression(), JSON.parse(env.VITE_OPEN_CDN) ? buildConfig.cdn() : null],
+		plugins: [vue(), vueSetupExtend(), viteCompression(), JSON.parse(env.VITE_OPEN_CDN) ? buildConfig.cdn() : null,vueDevTools()],
 		root: process.cwd(),
 		resolve: { alias },
 		base: mode.command === 'serve' ? '/' : env.VITE_PUBLIC_PATH,

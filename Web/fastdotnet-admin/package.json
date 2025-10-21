@@ -75,7 +75,9 @@
 		"vite-plugin-cdn-import": "^1.0.1",
 		"vite-plugin-compression2": "^2.2.1",
 		"vite-plugin-vue-setup-extend-plus": "^0.1.0",
-		"vue-eslint-parser": "^10.2.0"
+		"vue-eslint-parser": "^10.2.0",
+    	"vite-plugin-vue-devtools": "^8.0.2"
+
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
