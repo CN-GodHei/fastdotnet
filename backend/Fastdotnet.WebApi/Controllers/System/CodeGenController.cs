@@ -17,18 +17,18 @@ namespace Fastdotnet.WebApi.Controllers.System
     /// 代码生成相关接口
     /// </summary>
     [Route("api/[controller]")]
-    public class CodeGenController : GenericDtoControllerBase<CodeGenConfig, string, CreateCodeGenConfigDto, UpdateCodeGenConfigDto, CodeGenConfigDto>
+    public class CodeGenController : GenericDtoControllerBase<FdCodeGen, string, CreateCodeGenDto, UpdateCodeGenDto, CodeGenConfigDto>
     {
         private readonly ICodeGenConfigService _codeGenConfigService;
 
         public CodeGenController(
             ICodeGenConfigService codeGenConfigService,
-            IRepository<CodeGenConfig> repository,
+            IRepository<FdCodeGen> repository,
             IMapper mapper) : base(repository, mapper)
         {
             _codeGenConfigService = codeGenConfigService;
         }
-        protected override async Task BeforeCreate(CodeGenConfig entity, CreateCodeGenConfigDto dto)
+        protected override async Task BeforeCreate(FdCodeGen entity, CreateCodeGenDto dto)
         {
             if (string.IsNullOrEmpty(entity.EntityName))
             {

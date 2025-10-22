@@ -168,7 +168,7 @@ const openAddDialog = () => {
 		entityName: undefined,
 		tableUniqueList: null,
 		menuPid: undefined
-	} as APIModel.CreateCodeGenConfigDto);
+	} as APIModel.CreateCodeGenDto);
 };
 
 // 打开表编辑页面

@@ -75,7 +75,7 @@ namespace Fastdotnet.Core.Models.System
     /// <summary>
     /// 创建代码生成配置 DTO
     /// </summary>
-    public class CreateCodeGenConfigDto
+    public class CreateCodeGenDto
     {
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Fastdotnet.Core.Models.System
     /// <summary>
     /// 更新代码生成配置 DTO
     /// </summary>
-    public class UpdateCodeGenConfigDto
+    public class UpdateCodeGenDto
     {
        
 

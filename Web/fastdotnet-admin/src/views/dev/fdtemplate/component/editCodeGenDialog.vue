@@ -118,7 +118,7 @@ const ruleFormRef = ref();
 const state = reactive({
 	isShowDialog: false,
 	dialogTitle: '',
-	ruleForm: {} as APIModel.CreateCodeGenConfigDto & APIModel.UpdateCodeGenConfigDto,
+	ruleForm: {} as APIModel.CreateCodeGenDto & APIModel.UpdateCodeGenDto,
 	tableData: [] as APIModel.TableInfoDto[],
 	columnData: [] as APIModel.ColumnInfoDto[],
 	isInitializing: false, // 标识是否正在初始化，避免初始化时重置 TableUniqueList
@@ -169,7 +169,7 @@ const getColumnInfoList = async (tableName: string) => {
 };
 
 // 打开弹窗
-const openDialog = async (row: APIModel.CreateCodeGenConfigDto & APIModel.UpdateCodeGenConfigDto) => {
+const openDialog = async (row: APIModel.CreateCodeGenDto & APIModel.UpdateCodeGenDto) => {
 	// 设置初始化标志
 	state.isInitializing = true;
 	
@@ -282,11 +282,11 @@ const submit = () => {
 		try {
 			if (state.ruleForm.Id && state.ruleForm.Id !== '') {
 				// 更新操作
-				await putCodeGenId({ id: state.ruleForm.Id }, state.ruleForm as APIModel.UpdateCodeGenConfigDto);
+				await putCodeGenId({ id: state.ruleForm.Id }, state.ruleForm as APIModel.UpdateCodeGenDto);
 				ElMessage.success('更新成功');
 			} else {
 				// 添加操作
-				await postCodeGen(state.ruleForm as APIModel.CreateCodeGenConfigDto);
+				await postCodeGen(state.ruleForm as APIModel.CreateCodeGenDto);
 				ElMessage.success('添加成功');
 			}
 			closeDialog();

@@ -11,7 +11,7 @@ export async function getCodeGen(options?: { [key: string]: any }) {
 }
 
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/CodeGen */
-export async function postCodeGen(body: APIModel.CreateCodeGenConfigDto, options?: { [key: string]: any }) {
+export async function postCodeGen(body: APIModel.CreateCodeGenDto, options?: { [key: string]: any }) {
 	return request<APIModel.CodeGenConfigDto>('/api/CodeGen', {
 		method: 'POST',
 		headers: {
@@ -40,7 +40,7 @@ export async function getCodeGenId(
 export async function putCodeGenId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
 	params: APIModel.putCodeGenIdParams,
-	body: APIModel.UpdateCodeGenConfigDto,
+	body: APIModel.UpdateCodeGenDto,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -99,14 +99,6 @@ export async function getCodeGenColumnlistTableNameConfigId(
 	return request<APIModel.ColumnInfoDto[]>(`/api/CodeGen/columnlist/${param0}/${param1}`, {
 		method: 'GET',
 		params: { ...queryParams },
-		...(options || {}),
-	});
-}
-
-/** 获取数据库列表（模拟，实际项目中应从配置中获取） GET /api/CodeGen/databaselist */
-export async function getCodeGenDatabaselist(options?: { [key: string]: any }) {
-	return request<APIModel.CodeGenConfigDto[]>('/api/CodeGen/databaselist', {
-		method: 'GET',
 		...(options || {}),
 	});
 }
@@ -255,7 +247,7 @@ export async function putCodeGenRecyclebinIdRestore(
 }
 
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/CodeGen/recyclebin/permanent */
-export async function postCodeGenRecyclebinPermanent(body: APIModel.CodeGenConfigBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postCodeGenRecyclebinPermanent(body: APIModel.FdCodeGenBooleanFuncExpression, options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGen/recyclebin/permanent', {
 		method: 'POST',
 		headers: {
@@ -267,7 +259,7 @@ export async function postCodeGenRecyclebinPermanent(body: APIModel.CodeGenConfi
 }
 
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/CodeGen/recyclebin/restore */
-export async function postCodeGenRecyclebinRestore(body: APIModel.CodeGenConfigBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postCodeGenRecyclebinRestore(body: APIModel.FdCodeGenBooleanFuncExpression, options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGen/recyclebin/restore', {
 		method: 'POST',
 		headers: {

@@ -30,26 +30,10 @@ declare namespace APIModel {
 		PermissionIds?: string[];
 	};
 
-	type CodeGenConfigBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type CodeGenConfigDto = {
 		Id?: string;
-		ConfigId?: string;
-		DbNickName?: string;
-		DbType?: string;
-		ConnectionString?: string;
 		TableName?: string;
 		EntityName?: string;
-		BusName?: string;
 		NameSpace?: string;
 		AuthorName?: string;
 		GenerateType?: string;
@@ -68,12 +52,12 @@ declare namespace APIModel {
 	};
 
 	type CodeGenInput = {
-		ConfigId?: string;
-		TableName?: string;
-		BusName?: string;
-		NameSpace?: string;
-		AuthorName?: string;
-		GenerateType?: string;
+		ConfigId: string;
+		TableName: string;
+		BusName: string;
+		NameSpace: string;
+		AuthorName: string;
+		GenerateType: string;
 		GenerateMenu?: boolean;
 		MenuIcon?: string;
 		MenuPid?: string;
@@ -105,16 +89,9 @@ declare namespace APIModel {
 		Avatar?: string;
 	};
 
-	type CreateCodeGenConfigDto = {
-		ConfigId: string;
-		DbNickName: string;
-		DbType: string;
-		ConnectionString: string;
+	type CreateCodeGenDto = {
 		TableName: string;
-		EntityName: string;
-		BusName: string;
 		NameSpace: string;
-		AuthorName: string;
 		GenerateType: string;
 		GenerateMenu?: boolean;
 		MenuIcon?: string;
@@ -427,6 +404,17 @@ declare namespace APIModel {
 	type FdBlacklistDtoPageResult = {
 		PageInfo?: PageInfo;
 		Items?: FdBlacklistDto[];
+	};
+
+	type FdCodeGenBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
 	};
 
 	type FdMenuBooleanFuncExpression = {
@@ -994,7 +982,7 @@ declare namespace APIModel {
 	};
 
 	type TableUniqueConfigDto = {
-		Columns?: string[];
+		Columns: string[];
 		Message?: string;
 	};
 
@@ -1010,16 +998,10 @@ declare namespace APIModel {
 		Avatar?: string;
 	};
 
-	type UpdateCodeGenConfigDto = {
-		ConfigId: string;
-		DbNickName: string;
-		DbType: string;
-		ConnectionString: string;
+	type UpdateCodeGenDto = {
 		TableName: string;
 		EntityName: string;
-		BusName: string;
 		NameSpace: string;
-		AuthorName: string;
 		GenerateType: string;
 		GenerateMenu?: boolean;
 		MenuIcon?: string;

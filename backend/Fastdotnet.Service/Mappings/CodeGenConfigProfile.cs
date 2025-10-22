@@ -1,18 +1,12 @@
-using AutoMapper;
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.Models.System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Fastdotnet.Service.Mappings
 {
-    public class CodeGenConfigProfile : Profile
+    internal class CodeGenConfigProfile
     {
-        public CodeGenConfigProfile()
-        {
-            CreateMap<CodeGenConfig, CodeGenConfigDto>();
-            CreateMap<CreateCodeGenConfigDto, CodeGenConfig>();
-            CreateMap<UpdateCodeGenConfigDto, CodeGenConfig>();
-            CreateMap<CodeGenConfig, UpdateCodeGenConfigDto>();
-            CreateMap<CodeGenConfig, CreateCodeGenConfigDto>();
-        }
     }
 }

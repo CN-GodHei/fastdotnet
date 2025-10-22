@@ -9,10 +9,10 @@ namespace Fastdotnet.Service.Service
 {
     public class CodeGenConfigService : ICodeGenConfigService
     {
-        protected readonly IRepository<CodeGenConfig> _repository;
+        protected readonly IRepository<FdCodeGen> _repository;
         protected readonly ISqlSugarClient _db;
 
-        public CodeGenConfigService(IRepository<CodeGenConfig> repository, ISqlSugarClient db)
+        public CodeGenConfigService(IRepository<FdCodeGen> repository, ISqlSugarClient db)
         {
             _repository = repository;
             _db = db;

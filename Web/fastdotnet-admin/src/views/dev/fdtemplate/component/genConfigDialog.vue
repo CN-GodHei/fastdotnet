@@ -93,8 +93,9 @@
 
 <script lang="ts" setup name="sysCodeConfig">
 import { reactive, ref } from 'vue';
-import { getCodeGenGettablecolumnlist } from '/@/api/fd-system-api/CodeGen';
+import { getCodeGenGettablecolumnlist, putCodeGenId } from '/@/api/fd-system-api/CodeGen';
 import APIModel from '/@/api/fd-system-api';
+import { ElMessage } from 'element-plus';
 
 const emits = defineEmits(['handleQuery']);
 const ruleFormRef = ref();
@@ -135,9 +136,25 @@ const cancel = () => {
 };
 
 // 提交
-const submit = () => {
-	// 这里需要调用API保存配置
-	closeDialog();
+const submit = async () => {
+	try {
+		// 调用API保存配置
+		await putCodeGenId({ id: state.ruleForm.Id }, {
+			TableName: state.ruleForm.tableName,
+			EntityName: state.ruleForm.entityName,
+			BusName: state.ruleForm.busName,
+			NameSpace: state.ruleForm.nameSpace,
+			AuthorName: state.ruleForm.authorName,
+			GenerateType: state.ruleForm.generateType,
+			GenerateMenu: state.ruleForm.generateMenu,
+			MenuIcon: state.ruleForm.menuIcon
+		} as APIModel.UpdateCodeGenDto);
+		ElMessage.success('配置保存成功');
+		closeDialog();
+	} catch (error) {
+		console.error('配置保存失败', error);
+		ElMessage.error('配置保存失败');
+	}
 };
 
 // 导出对象
