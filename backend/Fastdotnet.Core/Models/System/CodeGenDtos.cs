@@ -158,12 +158,12 @@ namespace Fastdotnet.Core.Models.System
         [StringLength(100, ErrorMessage = "实体名长度不能超过100个字符")]
         public string? EntityName { get; set; }
 
-        /// <summary>
-        /// 业务名
-        /// </summary>
-        [Required(ErrorMessage = "业务名不能为空")]
-        [StringLength(100, ErrorMessage = "业务名长度不能超过100个字符")]
-        public string? BusName { get; set; }
+        ///// <summary>
+        ///// 业务名
+        ///// </summary>
+        //[Required(ErrorMessage = "业务名不能为空")]
+        //[StringLength(100, ErrorMessage = "业务名长度不能超过100个字符")]
+        //public string? BusName { get; set; }
 
         /// <summary>
         /// 命名空间
@@ -172,12 +172,6 @@ namespace Fastdotnet.Core.Models.System
         [StringLength(200, ErrorMessage = "命名空间长度不能超过200个字符")]
         public string? NameSpace { get; set; }
 
-        /// <summary>
-        /// 作者姓名
-        /// </summary>
-        [Required(ErrorMessage = "作者姓名不能为空")]
-        [StringLength(50, ErrorMessage = "作者姓名长度不能超过50个字符")]
-        public string? AuthorName { get; set; }
 
         /// <summary>
         /// 生成方式
