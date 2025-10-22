@@ -130,7 +130,15 @@ namespace Fastdotnet.WebApi.Filters
                         createBodyParam.Description = "创建记录所需的数据";
                     }
                     break;
-
+                case "CreateMany":
+                    operation.Summary = "批量创建新记录";
+                    operation.Description = "根据提供的数据批量创建新记录。";
+                    var CreateManyBodyParam = operation.RequestBody;
+                    if (CreateManyBodyParam != null)
+                    {
+                        CreateManyBodyParam.Description = "创建记录所需的数据";
+                    }
+                    break;
                 case "Update":
                     operation.Summary = "更新现有记录";
                     operation.Description = "根据提供的ID和更新数据，修改现有记录的信息。";

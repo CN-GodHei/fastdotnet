@@ -1,15 +1,16 @@
+using AutoMapper;
+using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models;
 using Fastdotnet.Core.Models.Base;
+using Fastdotnet.Core.Utils.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using AutoMapper;
-using Fastdotnet.Core.Utils.Extensions;
-using System.Linq.Dynamic.Core;
 
 namespace Fastdotnet.Core.Controllers
 {
@@ -145,6 +146,53 @@ namespace Fastdotnet.Core.Controllers
         /// <param name="entity">已创建的实体</param>
         /// <param name="dto">创建 DTO</param>
         protected virtual Task AfterCreate(TEntity entity, TCreateDto dto)
+        {
+            // 默认实现为空，子类可以重写添加自定义逻辑
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 批量创建实体
+        /// </summary>
+        /// <param name="dto">创建 DTO 对象</param>
+        [HttpPost("batch")]
+        public virtual async Task<int> CreateMany([FromBody] List<TCreateDto> dtos)
+        {
+            if (dtos==null)
+            {
+                throw new BusinessException("参数不能为空!");
+            }
+            dtos.IsValid();
+            var entitys = _mapper.Map<List<TEntity>>(dtos);
+
+            // 可以在子类中重写BeforeCreate方法来添加自定义逻辑
+            await BeforeCreateMany(entitys, dtos);
+
+            var result = await _repository.InsertRangeAsync(entitys);
+
+            // 可以在子类中重写AfterCreate方法来添加自定义逻辑
+            await AfterCreateMany(entitys, dtos);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 批量创建实体前的钩子方法，可在子类中重写以添加自定义逻辑
+        /// </summary>
+        /// <param name="entity">要创建的实体</param>
+        /// <param name="dto">创建 DTO</param>
+        protected virtual Task BeforeCreateMany(List<TEntity> entitys, List<TCreateDto> dtos)
+        {
+            // 默认实现为空，子类可以重写添加自定义逻辑
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 批量创建实体后的钩子方法，可在子类中重写以添加自定义逻辑
+        /// </summary>
+        /// <param name="entity">已创建的实体</param>
+        /// <param name="dto">创建 DTO</param>
+        protected virtual Task AfterCreateMany(List<TEntity> entitys, List<TCreateDto> dtos)
         {
             // 默认实现为空，子类可以重写添加自定义逻辑
             return Task.CompletedTask;
