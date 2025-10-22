@@ -109,6 +109,37 @@ declare namespace APIModel {
 		ExpiredAt?: string;
 	};
 
+	type CreateFdCodeGenConfigDto = {
+		CodeGenId: number;
+		ColumnName: string;
+		ColumnKey?: string;
+		PropertyName: string;
+		ColumnLength?: number;
+		ColumnComment?: string;
+		DataType?: string;
+		NetType?: string;
+		DefaultValue?: string;
+		EffectType?: string;
+		FkConfigId?: string;
+		FkEntityName?: string;
+		FkTableName?: string;
+		FkDisplayColumns?: string;
+		FkLinkColumnName?: string;
+		FkColumnNetType?: string;
+		PidColumn?: string;
+		DictTypeCode?: string;
+		QueryType?: string;
+		WhetherQuery?: string;
+		WhetherRetract?: string;
+		WhetherRequired?: string;
+		WhetherSortable?: string;
+		WhetherTable?: string;
+		WhetherAddUpdate?: string;
+		WhetherImport?: string;
+		WhetherCommon?: string;
+		OrderNo?: number;
+	};
+
 	type CreateFdRateLimitRuleDto = {
 		Type: string;
 		Key: string;
@@ -232,6 +263,16 @@ declare namespace APIModel {
 	};
 
 	type deleteAdminUsersRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteCodeGenConfigIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteCodeGenConfigRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -415,6 +456,54 @@ declare namespace APIModel {
 		ReturnType?: string;
 		TailCall?: boolean;
 		CanReduce?: boolean;
+	};
+
+	type FdCodeGenConfigBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type FdCodeGenConfigDto = {
+		Id?: string;
+		CodeGenId?: number;
+		ColumnName?: string;
+		ColumnKey?: string;
+		PropertyName?: string;
+		ColumnLength?: number;
+		ColumnComment?: string;
+		DataType?: string;
+		NetType?: string;
+		DefaultValue?: string;
+		EffectType?: string;
+		FkConfigId?: string;
+		FkEntityName?: string;
+		FkTableName?: string;
+		FkDisplayColumns?: string;
+		FkLinkColumnName?: string;
+		FkColumnNetType?: string;
+		PidColumn?: string;
+		DictTypeCode?: string;
+		QueryType?: string;
+		WhetherQuery?: string;
+		WhetherRetract?: string;
+		WhetherRequired?: string;
+		WhetherSortable?: string;
+		WhetherTable?: string;
+		WhetherAddUpdate?: string;
+		WhetherImport?: string;
+		WhetherCommon?: string;
+		OrderNo?: number;
+	};
+
+	type FdCodeGenConfigDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdCodeGenConfigDto[];
 	};
 
 	type FdMenuBooleanFuncExpression = {
@@ -676,6 +765,25 @@ declare namespace APIModel {
 		configId: string;
 	};
 
+	type getCodeGenConfigIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getCodeGenConfigPageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getCodeGenConfigRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
 	type getCodeGenDownloadParams = {
 		/** 文件路径 */
 		filePath?: string;
@@ -917,6 +1025,16 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type putCodeGenConfigIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putCodeGenConfigRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
 	type putCodeGenIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
@@ -1027,6 +1145,37 @@ declare namespace APIModel {
 		Value: string;
 		Reason?: string;
 		ExpiredAt?: string;
+	};
+
+	type UpdateFdCodeGenConfigDto = {
+		CodeGenId: number;
+		ColumnName: string;
+		ColumnKey?: string;
+		PropertyName: string;
+		ColumnLength?: number;
+		ColumnComment?: string;
+		DataType?: string;
+		NetType?: string;
+		DefaultValue?: string;
+		EffectType?: string;
+		FkConfigId?: string;
+		FkEntityName?: string;
+		FkTableName?: string;
+		FkDisplayColumns?: string;
+		FkLinkColumnName?: string;
+		FkColumnNetType?: string;
+		PidColumn?: string;
+		DictTypeCode?: string;
+		QueryType?: string;
+		WhetherQuery?: string;
+		WhetherRetract?: string;
+		WhetherRequired?: string;
+		WhetherSortable?: string;
+		WhetherTable?: string;
+		WhetherAddUpdate?: string;
+		WhetherImport?: string;
+		WhetherCommon?: string;
+		OrderNo?: number;
 	};
 
 	type UpdateFdRateLimitRuleDto = {
