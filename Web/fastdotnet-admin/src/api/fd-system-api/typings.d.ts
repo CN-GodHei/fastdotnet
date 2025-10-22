@@ -102,6 +102,16 @@ declare namespace APIModel {
 		TableUniqueList?: TableUniqueConfigDto[];
 	};
 
+	type CreateEmailConfigDto = {
+		Host: string;
+		Port: number;
+		Username: string;
+		Password: string;
+		SenderEmail: string;
+		SenderName: string;
+		EnableSsl?: boolean;
+	};
+
 	type CreateFdBlacklistDto = {
 		Type: string;
 		Value: string;

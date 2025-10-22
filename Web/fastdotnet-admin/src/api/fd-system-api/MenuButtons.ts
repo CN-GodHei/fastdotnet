@@ -69,6 +69,18 @@ export async function deleteAdminMenuButtonsId(
 	});
 }
 
+/** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/menu-buttons/batch */
+export async function postAdminMenuButtonsBatch(body: APIModel.CreateMenuButtonDto[], options?: { [key: string]: any }) {
+	return request<number>('/api/admin/menu-buttons/batch', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/admin/menu-buttons/batch */
 export async function deleteAdminMenuButtonsBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/menu-buttons/batch', {

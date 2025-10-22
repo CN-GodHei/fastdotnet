@@ -102,6 +102,18 @@ export async function postAdminRolesIdPermissions(
 	});
 }
 
+/** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/roles/batch */
+export async function postAdminRolesBatch(body: APIModel.CreateRoleDto[], options?: { [key: string]: any }) {
+	return request<number>('/api/admin/roles/batch', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/admin/roles/batch */
 export async function deleteAdminRolesBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/roles/batch', {

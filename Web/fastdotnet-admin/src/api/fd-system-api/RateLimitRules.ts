@@ -69,6 +69,18 @@ export async function deleteAdminRateLimitRulesId(
 	});
 }
 
+/** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/RateLimitRules/batch */
+export async function postAdminRateLimitRulesBatch(body: APIModel.CreateFdRateLimitRuleDto[], options?: { [key: string]: any }) {
+	return request<number>('/api/admin/RateLimitRules/batch', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/admin/RateLimitRules/batch */
 export async function deleteAdminRateLimitRulesBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/RateLimitRules/batch', {

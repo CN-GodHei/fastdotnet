@@ -77,6 +77,18 @@ export async function getCodeGenApplicationnamespaces(options?: { [key: string]:
 	});
 }
 
+/** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/CodeGen/batch */
+export async function postCodeGenBatch(body: APIModel.CreateCodeGenDto[], options?: { [key: string]: any }) {
+	return request<number>('/api/CodeGen/batch', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/CodeGen/batch */
 export async function deleteCodeGenBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGen/batch', {
