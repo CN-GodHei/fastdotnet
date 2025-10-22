@@ -182,7 +182,7 @@ const openEditDialog = (row: any) => {
 const openCopyDialog = (row: any) => {
 	state.editTitle = '复制';
 	const copyRow = JSON.parse(JSON.stringify(row));
-	copyRow.id = undefined;
+	copyRow.Id = undefined;
 	copyRow.busName = '';
 	copyRow.tableName = '';
 	copyRow.tableUniqueList = undefined;
@@ -197,7 +197,7 @@ const deleConfig = (row: any) => {
 		type: 'warning',
 	}).then(async () => {
 		try {
-			const res = await deleteCodeGenId({ id: row.id });
+			const res = await deleteCodeGenId({ id: row.Id });
 			if (res) {
 				ElMessage.success('删除成功');
 				await handleQuery();
