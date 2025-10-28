@@ -1,15 +1,19 @@
 using AutoMapper;
 using Fastdotnet.Core.Constants;
 using Fastdotnet.Core.Controllers;
+using Fastdotnet.Core.Dtos.System;
 using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.System;
 using Fastdotnet.Core.Service;
+using Fastdotnet.Service.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SqlSugar;
 using System;
+using static Fastdotnet.Core.Constants.Permissions.System;
 
 namespace Fastdotnet.WebApi.Controllers.System
 {
@@ -20,16 +24,27 @@ namespace Fastdotnet.WebApi.Controllers.System
     public class CodeGenController : GenericDtoControllerBase<FdCodeGen, string, CreateCodeGenDto, UpdateCodeGenDto, CodeGenConfigDto>
     {
         private readonly ICodeGenConfigService _codeGenConfigService;
+        private readonly IRepository<FdCodeGen> _repository;
+        private readonly IRepository<FdCodeGenConfig> _configRepository;
 
         public CodeGenController(
             ICodeGenConfigService codeGenConfigService,
             IRepository<FdCodeGen> repository,
+            IRepository<FdCodeGenConfig> configRepository,
             IMapper mapper) : base(repository, mapper)
         {
             _codeGenConfigService = codeGenConfigService;
+            _repository = repository;
+            _configRepository = configRepository;
         }
         protected override async Task BeforeCreate(FdCodeGen entity, CreateCodeGenDto dto)
         {
+            var record = await _repository.GetListAsync(w => w.TableName == dto.TableName);
+            if (record.Count > 0)
+            {
+                throw new BusinessException("该表已生成!");
+            }
+
             if (string.IsNullOrEmpty(entity.EntityName))
             {
                 entity.EntityName = _codeGenConfigService.GetEntityNameByTableName(entity.TableName);
@@ -155,7 +170,7 @@ namespace Fastdotnet.WebApi.Controllers.System
             }
 
             var fullPath = Path.GetFullPath(filePath);
-            
+
             // 确保路径在临时目录中以防止路径遍历攻击
             var tempPath = Path.GetTempPath();
             if (!fullPath.StartsWith(tempPath, StringComparison.OrdinalIgnoreCase))
@@ -170,8 +185,133 @@ namespace Fastdotnet.WebApi.Controllers.System
 
             var fileName = Path.GetFileName(fullPath);
             var fileStream = global::System.IO.File.OpenRead(fullPath);
-            
+
             return File(fileStream, "application/zip", fileName);
+        }
+
+        protected override async Task AfterCreate(FdCodeGen entity, CreateCodeGenDto dto)
+        {
+            var tableColumns = await _codeGenConfigService.GetTableColumnListAsync(entity.TableName);
+
+            // 将表列信息转换为 FdCodeGenConfig 实体列表并保存
+            if (tableColumns != null && tableColumns.Any())
+            {
+                // 转换并插入新的配置数据
+                var configList = tableColumns.Select((col, index) => new FdCodeGenConfig
+                {
+                    CodeGenId = entity.Id, // 直接使用字符串ID
+                    ColumnName = col.ColumnName,
+                    ColumnKey = col.IsPrimarykey, // 主键标识
+                    PropertyName = col.PropertyName,
+                    ColumnLength = col.Length,
+                    ColumnComment = col.ColumnComment,
+                    DataType = col.DataType,
+                    NetType = col.NetType,
+                    DefaultValue = col.DefaultValue,
+                    EffectType = GetEffectTypeByColumnName(col.ColumnName, col.DataType), // 根据字段名和数据类型推断作用类型
+                    OrderNo = index + 100 // 默认排序
+                }).ToList();
+
+                await _configRepository.InsertRangeAsync(configList);
+            }
+
+            await base.AfterCreate(entity, dto);
+        }
+
+        /// <summary>
+        /// 根据字段名和数据类型推断EffectType
+        /// 规范：
+        /// - 包含 'status' 字眼 → 'select' (下拉框)
+        /// - 包含 'type' 字眼 → 'select' (下拉框) 
+        /// - 包含 'time'/'date'/'create'/'update' 字眼 → 'datetime' (日期时间选择器)
+        /// - 包含 'image'/'img' 字眼 → 'upload' (上传组件)
+        /// - 包含 'file' 字眼 → 'upload' (上传组件)
+        /// - 包含 'desc'/'detail'/'content' 字眼 → 'textarea' (文本域)
+        /// - 包含 'url'/'link' 字眼 → 'url' (链接输入框)
+        /// - 包含 'email' 字眼 → 'email' (邮箱输入框)
+        /// - 包含 'phone'/'tel'/'mobile' 字眼 → 'phone' (电话输入框)
+        /// - 包含 'password' 字眼 → 'password' (密码框)
+        /// - 包含 'gender'/'sex' 字眼 → 'radio' (单选框)
+        /// - 包含 'tags'/'category' 字眼 → 'checkbox' (多选框)
+        /// - 包含 'dict' 字眼 → 'dict' (字典选择)
+        /// - 长度 > 200 的字符串 → 'textarea' (文本域)
+        /// - 其他情况 → 根据数据类型决定
+        /// </summary>
+        /// <param name="columnName">字段名</param>
+        /// <param name="dataType">数据类型</param>
+        /// <returns>推断的作用类型</returns>
+        private static string GetEffectTypeByColumnName(string columnName, string dataType)
+        {
+            if (string.IsNullOrEmpty(columnName))
+                return GetEffectTypeByDataType(dataType);
+
+            columnName = columnName.ToLower();
+
+            // 根据字段名推断
+            if (columnName.Contains("status")) return "select";
+            if (columnName.Contains("type")) return "select";
+            if (columnName.Contains("time") || columnName.Contains("date") || 
+                columnName.Contains("create") || columnName.Contains("update") || 
+                columnName.Contains("modify") || columnName.Contains("gmt_")) return "datetime";
+            if (columnName.Contains("image") || columnName.Contains("img")) return "upload";
+            if (columnName.Contains("file")) return "upload";
+            if (columnName.Contains("desc") || columnName.Contains("detail") || 
+                columnName.Contains("content") || columnName.Contains("memo") || 
+                columnName.Contains("note")) return "textarea";
+            if (columnName.Contains("url") || columnName.Contains("link")) return "url";
+            if (columnName.Contains("email")) return "email";
+            if (columnName.Contains("phone") || columnName.Contains("tel") || 
+                columnName.Contains("mobile")) return "phone";
+            if (columnName.Contains("password")) return "password";
+            if (columnName.Contains("gender") || columnName.Contains("sex")) return "radio";
+            if (columnName.Contains("tags") || columnName.Contains("category") || 
+                columnName.Contains("role")) return "checkbox";
+            if (columnName.Contains("dict")) return "dict";
+
+            // 根据数据类型推断（如果字段名没有明确含义）
+            return GetEffectTypeByDataType(dataType);
+        }
+
+        /// <summary>
+        /// 根据数据类型推断EffectType
+        /// </summary>
+        /// <param name="dataType">数据类型</param>
+        /// <returns>作用类型</returns>
+        private static string GetEffectTypeByDataType(string dataType)
+        {
+            if (string.IsNullOrEmpty(dataType))
+                return "input";
+
+            dataType = dataType.ToLower();
+
+            // 数值类型
+            if (dataType.Contains("int") || dataType.Contains("decimal") || 
+                dataType.Contains("double") || dataType.Contains("float") || 
+                dataType.Contains("tiny") || dataType.Contains("small") || 
+                dataType.Contains("big") || dataType.Contains("number"))
+                return "input-number";
+
+            // 日期时间类型
+            if (dataType.Contains("date") || dataType.Contains("time") || 
+                dataType.Contains("timestamp"))
+                return "datetime";
+
+            // 布尔类型
+            if (dataType.Contains("bool") || dataType.Contains("bit"))
+                return "switch";
+
+            // 文本类型（长度较长）
+            if (dataType.Contains("text") || dataType.Contains("memo"))
+                return "textarea";
+
+            // 默认为普通输入框
+            return "input";
+        }
+
+        protected override async Task AfterDelete(string id, bool result)
+        {
+            await _configRepository.DeleteAsync(w => w.CodeGenId == id);
+            await base.AfterDelete(id, result);
         }
     }
 }

@@ -58,14 +58,14 @@
 						<div style="color: #b1b3b8">数据唯一性配置</div>
 					</el-divider>
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-						<el-button icon="ele-Plus" type="primary" plain @click="() => state.ruleForm.TableUniqueList?.push({})"> 增加配置 </el-button>
+						<el-button icon="ele-Plus" type="primary" plain @click="() => state.ruleForm.TableUniqueList?.push({ Columns: [], Message: '' })"> 增加配置 </el-button>
 						<span style="font-size: 12px; color: gray; padding-left: 5px"> 保证字段值的唯一性，排除null值 </span>
 					</el-col>
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<template v-if="state.ruleForm.TableUniqueList != undefined && state.ruleForm.TableUniqueList.length > 0">
 							<el-row :gutter="35" v-for="(v, k) in state.ruleForm.TableUniqueList" :key="k">
 								<el-col :xs="24" :sm="14" :md="14" :lg="14" :xl="14" class="mb20">
-									<el-form-item label="字段" :prop="`TableUniqueList[${k}].columns`" :rules="[{ required: true, message: '字段不能为空', trigger: 'blur' }]">
+									<el-form-item label="字段" :prop="`TableUniqueList[${k}].Columns`" :rules="[{ required: true, message: '字段不能为空', trigger: 'blur' }]">
 										<template #label>
 												<el-button icon="ele-Delete" type="danger" circle plain size="small" @click="() => state.ruleForm.TableUniqueList?.splice(k, 1)" />
 												<span class="ml5">字段</span>
@@ -76,7 +76,7 @@
 									</el-form-item>
 								</el-col>
 								<el-col :xs="24" :sm="10" :md="10" :lg="10" :xl="10" class="mb20">
-									<el-form-item label="描述信息" :prop="`TableUniqueList[${k}].message`" :rules="[{ required: true, message: '描述信息不能为空', trigger: 'blur' }]">
+									<el-form-item label="描述信息" :prop="`TableUniqueList[${k}].Message`" :rules="[{ required: true, message: '描述信息不能为空', trigger: 'blur' }]">
 										<el-input v-model="state.ruleForm.TableUniqueList[k].Message" clearable placeholder="请输入" />
 									</el-form-item>
 								</el-col>
@@ -149,10 +149,10 @@ const tableChanged = (tableName: string) => {
 
 // 表唯一约束配置项字段改变事件
 const changeTableUniqueColumn = (value: any, index: number) => {
-  if (value?.length === 1 && !state.ruleForm.TableUniqueList[index]?.message) {
+  if (value?.length === 1 && !state.ruleForm.TableUniqueList[index]?.Message) {
     const column = state.columnData.find((u: any) => u.PropertyName === value[0]);
 		if (column) {
-			state.ruleForm.TableUniqueList[index].message = column.columnComment;
+			state.ruleForm.TableUniqueList[index].Message = column.ColumnComment;
 		}
   }
 }

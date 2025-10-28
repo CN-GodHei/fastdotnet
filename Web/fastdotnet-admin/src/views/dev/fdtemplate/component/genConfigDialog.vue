@@ -1,127 +1,234 @@
 <template>
-	<div class="sys-codeConfig-container">
-		<el-dialog v-model="state.isShowDialog" draggable :close-on-click-modal="false" width="800px">
+	<div class="sys-codeGenConfig-container">
+		<el-dialog v-model="state.isShowDialog" draggable :close-on-click-modal="false" width="1500px">
 			<template #header>
 				<div style="color: #fff">
-					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Setting /> </el-icon>
-					<span> 代码生成配置 </span>
+					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Edit /> </el-icon>
+					<span> 生成配置 </span>
 				</div>
 			</template>
-			<el-form :model="state.ruleForm" ref="ruleFormRef" label-width="auto">
-				<el-tabs v-model="state.activeTab" tab-position="left" class="demo-tabs">
-					<el-tab-pane label="基本信息" name="basic">
-						<el-row :gutter="35">
-							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-								<el-form-item label="库定位器" prop="configId">
-									<el-input v-model="state.ruleForm.configId" disabled />
-								</el-form-item>
-							</el-col>
-							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-								<el-form-item label="表名" prop="tableName">
-									<el-input v-model="state.ruleForm.tableName" disabled />
-								</el-form-item>
-							</el-col>
-							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-								<el-form-item label="实体名" prop="entityName">
-									<el-input v-model="state.ruleForm.entityName" disabled />
-								</el-form-item>
-							</el-col>
-							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-								<el-form-item label="业务名" prop="busName">
-									<el-input v-model="state.ruleForm.busName" placeholder="请输入业务名" />
-								</el-form-item>
-							</el-col>
-							<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-								<el-form-item label="命名空间" prop="nameSpace">
-									<el-input v-model="state.ruleForm.nameSpace" placeholder="请输入命名空间" />
-								</el-form-item>
-							</el-col>
-						</el-row>
-					</el-tab-pane>
-					<el-tab-pane label="字段信息" name="columns">
-						<el-table :data="state.columnData" style="width: 100%" border max-height="400">
-							<el-table-column prop="columnName" label="字段名" width="150" />
-							<el-table-column prop="propertyName" label="属性名" width="150" />
-							<el-table-column prop="dataType" label="数据类型" width="120" />
-							<el-table-column prop="netType" label=".NET类型" width="120" />
-							<el-table-column prop="columnComment" label="字段描述" show-overflow-tooltip />
-							<el-table-column label="操作" width="150" fixed="right">
-								<template #default="scope">
-									<el-button icon="ele-Edit" size="small" text type="primary" @click="editColumnConfig(scope.row)">配置</el-button>
-								</template>
-							</el-table-column>
-						</el-table>
-					</el-tab-pane>
-					<el-tab-pane label="生成设置" name="generate">
-						<el-row :gutter="35">
-							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-								<el-form-item label="作者姓名" prop="authorName">
-									<el-input v-model="state.ruleForm.authorName" placeholder="请输入作者姓名" />
-								</el-form-item>
-							</el-col>
-							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-								<el-form-item label="生成方式" prop="generateType">
-									<el-select v-model="state.ruleForm.generateType" class="w100" placeholder="请选择生成方式">
-										<el-option label="生成ZIP包" value="zip" />
-										<el-option label="直接生成到项目" value="project" />
-									</el-select>
-								</el-form-item>
-							</el-col>
-							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-								<el-form-item label="生成菜单" prop="generateMenu">
-									<el-switch v-model="state.ruleForm.generateMenu" />
-								</el-form-item>
-							</el-col>
-							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="state.ruleForm.generateMenu">
-								<el-form-item label="菜单图标" prop="menuIcon">
-									<el-input v-model="state.ruleForm.menuIcon" placeholder="请输入菜单图标" />
-								</el-form-item>
-							</el-col>
-						</el-row>
-					</el-tab-pane>
-				</el-tabs>
-			</el-form>
+			<el-table :data="state.tableData" style="width: 100%" v-loading="state.loading" border>
+				<el-table-column type="index" label="序号" width="55" align="center" />
+				<el-table-column prop="PropertyName" label="实体属性" show-overflow-tooltip />
+				<el-table-column prop="ColumnComment" label="字段描述" show-overflow-tooltip>
+					<template #default="scope">
+						<el-input v-model="scope.row.ColumnComment" autocomplete="off" />
+					</template>
+				</el-table-column>
+				<el-table-column prop="NetType" label="数据类型" width="130" show-overflow-tooltip />
+				<el-table-column prop="EffectType" label="作用类型" width="150" show-overflow-tooltip>
+					<template #default="scope">
+						<div class="effect-type-container">
+							<el-select v-model="scope.row.EffectType" 
+								@change="effectTypeChange(scope.row, scope.$index)" 
+								:disabled="judgeColumns(scope.row)" 
+								class="m-2" 
+								placeholder="请选择作用类型">
+								<el-option label="文本框" value="Input" />
+								<el-option label="文本域" value="Textarea" />
+								<el-option label="数字输入框" value="NumberInput" />
+								<el-option label="下拉选择框" value="Select" />
+								<el-option label="单选框" value="Radio" />
+								<el-option label="复选框" value="Checkbox" />
+								<el-option label="日期选择器" value="DatePicker" />
+								<el-option label="时间选择器" value="TimePicker" />
+								<el-option label="开关" value="Switch" />
+								<el-option label="字典选择器" value="DictSelector" />
+								<el-option label="外键关联" value="ForeignKey" />
+								<el-option label="树形选择器" value="ApiTreeSelector" />
+							</el-select>
+						</div>
+					</template>
+				</el-table-column>
+				<el-table-column prop="DictTypeCode" label="字典编码" width="150" show-overflow-tooltip>
+					<template #default="scope">
+						<el-select v-model="scope.row.DictTypeCode" 
+							:disabled="effectTypeEnable(scope.row)" 
+							class="m-2" 
+							placeholder="请选择字典">
+							<el-option 
+								v-for="item in state.dictList" 
+								:key="item.code" 
+								:label="item.name" 
+								:value="item.code" />
+						</el-select>
+					</template>
+				</el-table-column>
+				<el-table-column prop="WhetherTable" label="列表显示" width="70" align="center" show-overflow-tooltip>
+					<template #default="scope">
+						<el-checkbox v-model="scope.row.WhetherTable" true-value="是" false-value="否" />
+					</template>
+				</el-table-column>
+				<el-table-column prop="WhetherAddUpdate" label="增改显示" width="70" align="center" show-overflow-tooltip>
+					<template #default="scope">
+						<el-checkbox v-model="scope.row.WhetherAddUpdate" true-value="是" false-value="否" :disabled="judgeColumns(scope.row)" />
+					</template>
+				</el-table-column>
+				<el-table-column prop="WhetherImport" label="导入" width="70" align="center" show-overflow-tooltip>
+					<template #default="scope">
+						<el-checkbox v-model="scope.row.WhetherImport" true-value="是" false-value="否" :disabled="judgeColumns(scope.row)" />
+					</template>
+				</el-table-column>
+				<el-table-column prop="WhetherRequired" label="必填" width="70" align="center" show-overflow-tooltip>
+					<template #default="scope">
+						<el-checkbox v-model="scope.row.WhetherRequired" true-value="是" false-value="否" :disabled="judgeColumns(scope.row)" />
+					</template>
+				</el-table-column>
+				<el-table-column prop="WhetherSortable" label="可排序" width="70" align="center" show-overflow-tooltip>
+					<template #default="scope">
+						<el-checkbox v-model="scope.row.WhetherSortable" true-value="是" false-value="否" />
+					</template>
+				</el-table-column>
+				<el-table-column prop="WhetherQuery" label="查询" width="70" align="center" show-overflow-tooltip>
+					<template #default="scope">
+						<el-switch v-model="scope.row.WhetherQuery" active-value="是" inactive-value="否" />
+					</template>
+				</el-table-column>
+				<el-table-column prop="QueryType" label="查询方式" width="110" align="center" show-overflow-tooltip>
+					<template #default="scope">
+						<el-select v-model="scope.row.QueryType" 
+							class="m-2" 
+							placeholder="Select" 
+							:disabled="!scope.row.WhetherQuery">
+							<el-option label="=" value="EQ" />
+							<el-option label="!=" value="NE" />
+							<el-option label=">" value="GT" />
+							<el-option label="<" value="LT" />
+							<el-option label=">=" value="GTE" />
+							<el-option label="<=" value="LTE" />
+							<el-option label="LIKE" value="LIKE" />
+							<el-option label="BETWEEN" value="BETWEEN" />
+						</el-select>
+					</template>
+				</el-table-column>
+				<el-table-column prop="OrderNo" label="排序" width="80" show-overflow-tooltip>
+					<template #default="scope">
+						<el-input v-model="scope.row.OrderNo" autocomplete="off" type="number" />
+					</template>
+				</el-table-column>
+			</el-table>
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="cancel">取 消</el-button>
-					<el-button type="primary" @click="submit">保 存</el-button>
+					<el-button type="primary" @click="submit">确 定</el-button>
 				</span>
 			</template>
 		</el-dialog>
 	</div>
 </template>
 
-<script lang="ts" setup name="sysCodeConfig">
-import { reactive, ref } from 'vue';
-import { getCodeGenGettablecolumnlist, putCodeGenId } from '/@/api/fd-system-api/CodeGen';
+<script lang="ts" setup name="sysCodeGenConfig">
+import { onMounted, reactive, ref } from 'vue';
+import { 
+	getCodeGenConfigPage, 
+	putCodeGenConfigId,
+	postCodeGenConfig,
+	postCodeGenConfigBatch,
+	postCodeGenConfigPageSearch,
+	putCodeGenConfigBatch
+} from '/@/api/fd-system-api/CodeGenConfig';
+import { buildMixedQuery } from '/@/utils/queryBuilder';
 import APIModel from '/@/api/fd-system-api';
 import { ElMessage } from 'element-plus';
 
 const emits = defineEmits(['handleQuery']);
-const ruleFormRef = ref();
-
 const state = reactive({
 	isShowDialog: false,
-	activeTab: 'basic',
-	ruleForm: {} as APIModel.CodeGenConfigDto,
-	columnData: [] as APIModel.ColumnInfoDto[],
+	loading: false,
+	dictList: [] as { code: string; name: string }[], // 字典列表
+	tableData: [] as APIModel.FdCodeGenConfigDto[],
+	originalData: [] as APIModel.FdCodeGenConfigDto[], // 原始数据备份
+	configId: '' // 用于关联的CodeGenId
 });
 
-// 打开弹窗
-const openDialog = async (row: any) => {
-	state.ruleForm = { ...row };
-	// 获取列信息
-	if (state.ruleForm.tableName) {
-		const res = await getCodeGenGettablecolumnlist({ tableName: state.ruleForm.tableName });
-		state.columnData = res || [];
+// 初始化时加载字典数据
+onMounted(async () => {
+	// 模拟加载字典数据，实际项目中应该从API获取
+	state.dictList = [
+		{ code: 'sex', name: '性别' },
+		{ code: 'status', name: '状态' },
+		{ code: 'type', name: '类型' }
+	];
+});
+
+// 查询操作
+const handleQuery = async (row: any) => {
+	if (!row.Id) return;
+	
+	state.loading = true;
+	state.configId = row.Id;
+	
+	try {
+		// 使用混合查询构建器构建查询条件
+		const queryConfig = {
+			equals: {
+				CodeGenId: row.Id // 使用字符串类型的ID
+			}
+		};
+		
+		const queryResult = buildMixedQuery(queryConfig);
+		
+		// 使用搜索接口获取字段配置信息，按CodeGenId筛选
+		const searchParams = {
+			PageIndex: 1,
+			PageSize: 1000, // 获取所有字段配置
+			DynamicQuery: queryResult.dynamicQuery,
+			QueryParameters: queryResult.queryParameters
+		} as APIModel.PageQueryByConditionDto;
+		
+		const configRes = await postCodeGenConfigPageSearch(searchParams);
+		const existingConfigs = configRes?.Items || [];
+		
+		state.tableData = existingConfigs;
+		state.originalData = JSON.parse(JSON.stringify(existingConfigs)); // 备份原始数据
+	} catch (error) {
+		console.error('加载字段配置失败', error);
+		ElMessage.error('加载字段配置失败');
+	} finally {
+		state.loading = false;
 	}
-	state.isShowDialog = true;
 };
 
-// 编辑列配置
-const editColumnConfig = (column: any) => {
-	// 这里可以打开列配置的弹窗
-	console.log('编辑列配置', column);
+// 根据数据类型返回默认作用类型
+function getDefaultEffectType(netType: string | undefined): string {
+	if (!netType) return 'Input';
+	
+	const typeMap: { [key: string]: string } = {
+		'string': 'Input',
+		'int': 'NumberInput',
+		'long': 'NumberInput',
+		'decimal': 'NumberInput',
+		'double': 'NumberInput',
+		'date': 'DatePicker',
+		'datetime': 'DatePicker',
+		'bool': 'Switch',
+		'boolean': 'Switch'
+	};
+	
+	return typeMap[netType.toLowerCase()] || 'Input';
+}
+
+// 控件类型改变
+const effectTypeChange = (data: APIModel.FdCodeGenConfigDto, index: number) => {
+	// 如果是特定类型，需要选择对应字典
+	if (['Radio', 'Checkbox', 'DictSelector', 'ConstSelector', 'EnumSelector'].some(type => data.EffectType === type)) {
+		data.DictTypeCode = ''; // 需要重新选择字典
+	}
+};
+
+// 判断是否（用于是否能选择或输入等）
+function judgeColumns(data: APIModel.FdCodeGenConfigDto) {
+	return data.WhetherCommon === '是' || data.ColumnKey === 'True';
+}
+
+function effectTypeEnable(data: APIModel.FdCodeGenConfigDto) {
+	return !['Radio', 'Checkbox', 'DictSelector', 'ConstSelector', 'EnumSelector'].some((e: any) => e === data.EffectType)
+}
+
+// 打开弹窗
+const openDialog = (row: any) => {
+	handleQuery(row);
+	state.isShowDialog = true;
 };
 
 // 关闭弹窗
@@ -137,36 +244,27 @@ const cancel = () => {
 
 // 提交
 const submit = async () => {
+	state.loading = true;
 	try {
-		// 调用API保存配置
-		await putCodeGenId({ id: state.ruleForm.Id }, {
-			TableName: state.ruleForm.tableName,
-			EntityName: state.ruleForm.entityName,
-			BusName: state.ruleForm.busName,
-			NameSpace: state.ruleForm.nameSpace,
-			AuthorName: state.ruleForm.authorName,
-			GenerateType: state.ruleForm.generateType,
-			GenerateMenu: state.ruleForm.generateMenu,
-			MenuIcon: state.ruleForm.menuIcon
-		} as APIModel.UpdateCodeGenDto);
-		ElMessage.success('配置保存成功');
+		// 由于查询出来的都是数据库已有的记录，直接使用批量更新接口
+		await putCodeGenConfigBatch(state.tableData as APIModel.UpdateFdCodeGenConfigDto[]);
+		
+		ElMessage.success('字段配置保存成功');
 		closeDialog();
 	} catch (error) {
-		console.error('配置保存失败', error);
-		ElMessage.error('配置保存失败');
+		console.error('保存字段配置失败', error);
+		ElMessage.error('保存字段配置失败');
+	} finally {
+		state.loading = false;
 	}
 };
 
 // 导出对象
 defineExpose({ openDialog });
 </script>
-
-<style lang="scss" scoped>
-:deep(.el-dialog__body) {
-	min-height: 500px;
-}
-:deep(.el-tabs__content) {
-	height: 400px;
-	overflow-y: auto;
+<style scoped>
+.effect-type-container {
+	display: flex;
+	align-items: center;
 }
 </style>

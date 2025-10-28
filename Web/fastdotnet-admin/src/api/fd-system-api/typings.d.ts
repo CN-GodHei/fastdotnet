@@ -1098,6 +1098,11 @@ declare namespace APIModel {
 		IsSystem?: boolean;
 	};
 
+	type SystemConfigDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: SystemConfigDto;
+	};
+
 	type SystemConfigDtoPageResult = {
 		PageInfo?: PageInfo;
 		Items?: SystemConfigDto[];
@@ -1126,6 +1131,11 @@ declare namespace APIModel {
 		Avatar?: string;
 	};
 
+	type UpdateAdminUserDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateAdminUserDto;
+	};
+
 	type UpdateCodeGenDto = {
 		TableName: string;
 		EntityName: string;
@@ -1140,6 +1150,11 @@ declare namespace APIModel {
 		TableUniqueList?: TableUniqueConfigDto[];
 	};
 
+	type UpdateCodeGenDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateCodeGenDto;
+	};
+
 	type UpdateEmailConfigDto = {
 		Host: string;
 		Port: number;
@@ -1150,11 +1165,21 @@ declare namespace APIModel {
 		EnableSsl?: boolean;
 	};
 
+	type UpdateEmailConfigDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateEmailConfigDto;
+	};
+
 	type UpdateFdBlacklistDto = {
 		Type: string;
 		Value: string;
 		Reason?: string;
 		ExpiredAt?: string;
+	};
+
+	type UpdateFdBlacklistDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdBlacklistDto;
 	};
 
 	type UpdateFdCodeGenConfigDto = {
@@ -1188,12 +1213,22 @@ declare namespace APIModel {
 		OrderNo?: number;
 	};
 
+	type UpdateFdCodeGenConfigDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdCodeGenConfigDto;
+	};
+
 	type UpdateFdRateLimitRuleDto = {
 		Type: string;
 		Key: string;
 		PermitLimit: number;
 		WindowSeconds: number;
 		Description?: string;
+	};
+
+	type UpdateFdRateLimitRuleDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdRateLimitRuleDto;
 	};
 
 	type UpdateMenuButtonDto = {
@@ -1206,6 +1241,11 @@ declare namespace APIModel {
 		Sort?: number;
 		PermissionCode?: string;
 		IsEnabled?: boolean;
+	};
+
+	type UpdateMenuButtonDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateMenuButtonDto;
 	};
 
 	type UpdateMenuDto = {
@@ -1231,8 +1271,18 @@ declare namespace APIModel {
 		isLink?: boolean;
 	};
 
+	type UpdateMenuDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateMenuDto;
+	};
+
 	type UpdateRoleDto = {
 		Name: string;
 		Description?: string;
+	};
+
+	type UpdateRoleDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateRoleDto;
 	};
 }

@@ -37,7 +37,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// 更新唯一的邮件配置
         /// </summary>
         [HttpPut("UpdateConfig")]
-        public async Task<IActionResult> UpdateConfig([FromBody] UpdateEmailConfigDto dto)
+        public async Task<bool> UpdateConfig([FromBody] UpdateEmailConfigDto dto)
         {
             var existingConfig = await _repository.GetFirstAsync(e => true);
             if (existingConfig == null)
@@ -47,7 +47,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
             _mapper.Map(dto, existingConfig);
             await _repository.UpdateAsync(existingConfig);
-            return Ok();
+            return true;
         }
 
         #region === 禁用通用接口 ===

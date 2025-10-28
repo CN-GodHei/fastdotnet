@@ -88,6 +88,18 @@ export async function postAdminUsersIdResetPassword(
 	});
 }
 
+/** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/users/batch */
+export async function putAdminUsersBatch(body: APIModel.UpdateAdminUserDto[], options?: { [key: string]: any }) {
+	return request<number>('/api/admin/users/batch', {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/users/batch */
 export async function postAdminUsersBatch(body: APIModel.CreateAdminUserDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/users/batch', {
@@ -104,6 +116,21 @@ export async function postAdminUsersBatch(body: APIModel.CreateAdminUserDto[], o
 export async function deleteAdminUsersBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/users/batch', {
 		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
+/** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/users/batch/updatebycondition */
+export async function putAdminUsersBatchUpdatebycondition(
+	body: APIModel.UpdateAdminUserDtoBatchUpdateByConditionDto,
+	options?: { [key: string]: any }
+) {
+	return request<number>('/api/admin/users/batch/updatebycondition', {
+		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
 		},

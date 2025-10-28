@@ -20,4 +20,12 @@ namespace Fastdotnet.Core.Models.Auth
         /// </summary>
         public string CaptchaCode { get; set; }
     }
+
+    public class LoginResultDto
+    {
+        /// <summary>
+        /// token
+        /// </summary>
+        public string Token { get; set; }
+    }
 }

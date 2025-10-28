@@ -69,6 +69,18 @@ export async function deleteAdminRateLimitRulesId(
 	});
 }
 
+/** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/RateLimitRules/batch */
+export async function putAdminRateLimitRulesBatch(body: APIModel.UpdateFdRateLimitRuleDto[], options?: { [key: string]: any }) {
+	return request<number>('/api/admin/RateLimitRules/batch', {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/RateLimitRules/batch */
 export async function postAdminRateLimitRulesBatch(body: APIModel.CreateFdRateLimitRuleDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/RateLimitRules/batch', {
@@ -85,6 +97,21 @@ export async function postAdminRateLimitRulesBatch(body: APIModel.CreateFdRateLi
 export async function deleteAdminRateLimitRulesBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/RateLimitRules/batch', {
 		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
+/** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/RateLimitRules/batch/updatebycondition */
+export async function putAdminRateLimitRulesBatchUpdatebycondition(
+	body: APIModel.UpdateFdRateLimitRuleDtoBatchUpdateByConditionDto,
+	options?: { [key: string]: any }
+) {
+	return request<number>('/api/admin/RateLimitRules/batch/updatebycondition', {
+		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
 		},

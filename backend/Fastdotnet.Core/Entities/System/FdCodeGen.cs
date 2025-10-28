@@ -1,6 +1,7 @@
-using SqlSugar;
 using Fastdotnet.Core.Models.Base;
-
+using SqlSugar;
+using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 namespace Fastdotnet.Core.Entities.System
 {
     /// <summary>
@@ -71,11 +72,17 @@ namespace Fastdotnet.Core.Entities.System
         [SugarColumn(Length = 100, IsNullable = true, ColumnDescription = "打印模板")]
         public string? PrintName { get; set; }
 
+
+        [SugarColumn(ColumnDescription = "表唯一字段配置", Length = 512, IsNullable = true)]
+        [MaxLength(128)]
+        public string? TableUniqueConfig { get; set; }
+
         /// <summary>
-        /// 数据唯一性配置
+        /// 表唯一字段列表
         /// </summary>
-        [SugarColumn(IsNullable = true, ColumnDescription = "数据唯一性配置")]
-        public List<TableUniqueConfig>? TableUniqueList { get; set; }
+        //[SugarColumn(IsIgnore = true)]
+        //public virtual List<TableUniqueConfig> TableUniqueList => string.IsNullOrWhiteSpace(TableUniqueConfig) ? null : JsonConvert.DeserializeObject<List<TableUniqueConfig>>(TableUniqueConfig);
+
     }
 
     /// <summary>

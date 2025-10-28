@@ -152,6 +152,24 @@ namespace Fastdotnet.WebApi.Filters
                         updateBodyParam.Description = "更新记录所需的数据";
                     }
                     break;
+                case "UpdateMany":
+                    operation.Summary = "根据实体主键批量更新实体信息";
+                    operation.Description = "根据实体主键批量更新实体信息";
+                    var UpdateManyBodyParam = operation.RequestBody;
+                    if (UpdateManyBodyParam != null)
+                    {
+                        UpdateManyBodyParam.Description = "批量更新实体数据";
+                    }
+                    break;
+                case "UpdateManyByCondition":
+                    operation.Summary = "根据条件批量更新实体属性（部分字段更新）";
+                    operation.Description = "根据条件批量更新实体属性（部分字段更新）";
+                    var UpdateManyByConditionBodyParam = operation.RequestBody;
+                    if (UpdateManyByConditionBodyParam != null)
+                    {
+                        UpdateManyByConditionBodyParam.Description = "根据条件批量更新实体属性（部分字段更新）";
+                    }
+                    break;
 
                 case "Delete":
                     operation.Summary = "删除记录";

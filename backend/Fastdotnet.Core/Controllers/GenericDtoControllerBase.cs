@@ -15,6 +15,113 @@ using System.Threading.Tasks;
 namespace Fastdotnet.Core.Controllers
 {
     /// <summary>
+    /// 批量更新ID列表的 DTO
+    /// </summary>
+    public class BatchUpdateByIdsDto<TUpdateDto>
+    {
+        /// <summary>
+        /// ID 列表
+        /// </summary>
+        public List<object> Ids { get; set; }
+
+        /// <summary>
+        /// 更新 DTO
+        /// </summary>
+        public TUpdateDto Dto { get; set; }
+    }
+    
+    /// <summary>
+    /// 根据条件批量更新的 DTO
+    /// </summary>
+    public class BatchUpdateByConditionDto<TUpdateDto>
+    {
+        /// <summary>
+        /// 查询条件
+        /// </summary>
+        public PageQueryByConditionDto? Query { get; set; }
+
+        /// <summary>
+        /// 更新 DTO
+        /// </summary>
+        public TUpdateDto Dto { get; set; }
+    }
+    
+    /// <summary>
+    /// 查询操作符枚举
+    /// </summary>
+    public enum QueryOperator
+    {
+        Equal = 0,
+        NotEqual = 1,
+        GreaterThan = 2,
+        GreaterThanOrEqual = 3,
+        LessThan = 4,
+        LessThanOrEqual = 5,
+        Contains = 6,
+        StartsWith = 7,
+        EndsWith = 8,
+        In = 9,
+        NotIn = 10,
+        Between = 11
+    }
+
+    /// <summary>
+    /// 查询条件项
+    /// </summary>
+    public class QueryConditionItem
+    {
+        /// <summary>
+        /// 属性名
+        /// </summary>
+        public string PropertyName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 操作符
+        /// </summary>
+        public QueryOperator Operator { get; set; }
+
+        /// <summary>
+        /// 值
+        /// </summary>
+        public object? Value { get; set; }
+
+        /// <summary>
+        /// 第二个值（用于BETWEEN等操作符）
+        /// </summary>
+        public object? Value2 { get; set; }
+    }
+
+    /// <summary>
+    /// 强类型分页查询 DTO
+    /// </summary>
+    public class TypedPageQueryDto<TConditionDto>
+    {
+        /// <summary>
+        /// 强类型查询条件
+        /// </summary>
+        public TConditionDto? TypedCondition { get; set; }
+
+        /// <summary>
+        /// 查询条件列表
+        /// </summary>
+        public List<QueryConditionItem>? Conditions { get; set; }
+
+        /// <summary>
+        /// 条件连接方式（AND/OR）
+        /// </summary>
+        public string Logic { get; set; } = "And"; // "And" or "Or"
+
+        /// <summary>
+        /// 页码（从1开始）
+        /// </summary>
+        public int PageIndex { get; set; } = 1;
+
+        /// <summary>
+        /// 页大小
+        /// </summary>
+        public int PageSize { get; set; } = 10;
+    }
+    /// <summary>
     /// 支持 DTO 的通用控制器基类
     /// </summary>
     /// <typeparam name="TEntity">实体类型</typeparam>
@@ -252,6 +359,28 @@ namespace Fastdotnet.Core.Controllers
         }
 
         /// <summary>
+        /// 批量更新实体前的钩子方法，可在子类中重写以添加自定义逻辑
+        /// </summary>
+        /// <param name="entities">待更新的实体列表</param>
+        /// <param name="dtos">更新 DTO 列表</param>
+        protected virtual Task BeforeUpdateMany(List<TEntity> entities, List<TUpdateDto> dtos)
+        {
+            // 默认实现为空，子类可以重写添加自定义逻辑
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 批量更新实体后的钩子方法，可在子类中重写以添加自定义逻辑
+        /// </summary>
+        /// <param name="entities">已更新的实体列表</param>
+        /// <param name="dtos">更新 DTO 列表</param>
+        protected virtual Task AfterUpdateMany(List<TEntity> entities, List<TUpdateDto> dtos)
+        {
+            // 默认实现为空，子类可以重写添加自定义逻辑
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// 删除实体
         /// </summary>
         /// <param name="id">实体ID</param>
@@ -311,6 +440,255 @@ namespace Fastdotnet.Core.Controllers
             var idObjects = ids.Cast<object>().ToList();
             Expression<Func<TEntity, bool>> whereExpression = entity => idObjects.Contains(entity.Id);
             return await _repository.DeleteAsync(whereExpression);
+        }
+
+        /// <summary>
+        /// 批量更新实体
+        /// </summary>
+        /// <param name="dtos">更新 DTO 对象列表</param>
+        /// <returns>操作结果</returns>
+        [HttpPut("batch")]
+        public virtual async Task<int> UpdateMany([FromBody] List<TUpdateDto> dtos)
+        {
+            if (dtos == null || !dtos.Any())
+            {
+                throw new BusinessException("参数不能为空!");
+            }
+            
+            dtos.IsValid();
+            var updatedEntities = _mapper.Map<List<TEntity>>(dtos);
+
+            // 可以在子类中重写BeforeUpdateMany方法来添加自定义逻辑
+            await BeforeUpdateMany(updatedEntities, dtos);
+
+            var result = await _repository.UpdateRangeAsync(updatedEntities);
+
+            // 可以在子类中重写AfterUpdateMany方法来添加自定义逻辑
+            await AfterUpdateMany(updatedEntities, dtos);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 根据条件批量更新实体属性（部分字段更新）
+        /// </summary>
+        /// <param name="updateInfo">更新信息，包含条件和更新值</param>
+        /// <returns>操作结果</returns>
+        [HttpPut("batch/updatebycondition")]
+        public virtual async Task<int> UpdateManyByCondition([FromBody] BatchUpdateByConditionDto<TUpdateDto> updateInfo)
+        {
+            if (updateInfo == null)
+            {
+                throw new BusinessException("参数不能为空!");
+            }
+
+            // 使用 AutoMapper 将 DTO 映射为实体，以便提取要更新的字段
+            var updateEntity = _mapper.Map<TEntity>(updateInfo.Dto);
+            
+            // 获取要更新的字段和值
+            var updateColumns = new Dictionary<string, object>();
+            var updateEntityProps = typeof(TEntity).GetProperties()
+                .Where(p => p.Name != nameof(BaseEntity.Id) && p.CanWrite)
+                .ToList();
+
+            foreach (var prop in updateEntityProps)
+            {
+                var value = prop.GetValue(updateEntity);
+                if (value != null)
+                {
+                    updateColumns.Add(prop.Name, value);
+                }
+            }
+
+            if (!updateColumns.Any())
+            {
+                return 0; // 没有需要更新的字段
+            }
+
+            // 使用动态查询条件
+            Expression<Func<TEntity, bool>>? whereExpression = null;
+            
+            // 如果提供了动态查询条件，则构建表达式
+            if (!string.IsNullOrEmpty(updateInfo.Query?.DynamicQuery))
+            {
+                whereExpression = DynamicExpressionParser.ParseLambda<TEntity, bool>(
+                    ParsingConfig.Default, 
+                    false, 
+                    updateInfo.Query.DynamicQuery, 
+                    updateInfo.Query.QueryParameters ?? new object[0]);
+            }
+
+            // 可以在子类中重写BeforeUpdateMany方法来添加自定义逻辑
+            // 这里传入空列表，因为实际更新的实体还未从数据库获取
+            await BeforeUpdateMany(new List<TEntity>(), new List<TUpdateDto>());
+
+            // 调用 Repository 的批量更新方法
+            var result = await _repository.UpdateRangeAsync(whereExpression ?? (_ => true), updateColumns);
+
+            // 可以在子类中重写AfterUpdateMany方法来添加自定义逻辑
+            await AfterUpdateMany(new List<TEntity>(), new List<TUpdateDto>());
+
+            return result;
+        }
+
+        /// <summary>
+        /// 从更新 DTO 中提取 ID 值
+        /// </summary>
+        /// <param name="dto">更新 DTO</param>
+        /// <returns>ID 值</returns>
+        private TKey GetIdFromDto(TUpdateDto dto)
+        {
+            var property = typeof(TUpdateDto).GetProperty("Id");
+            if (property == null)
+            {
+                throw new BusinessException($"更新 DTO {typeof(TUpdateDto).Name} 中未找到 Id 属性");
+            }
+            var value = property.GetValue(dto);
+            return (TKey)(value ?? throw new BusinessException($"更新 DTO 中的 Id 值不能为空"));
+        }
+
+        /// <summary>
+        /// 根据强类型条件分页获取实体
+        /// </summary>
+        /// <param name="query">包含强类型查询条件的参数</param>
+        //[HttpPost("page/typedsearch")]
+        //[Consumes("application/json")]
+        //public virtual async Task<PageResult<TDto>> GetPageByTypedCondition1([FromBody] TypedPageQueryDto<TUpdateDto> query)
+        //{
+        //    Expression<Func<TEntity, bool>>? whereExpression = null;
+            
+        //    var expressions = new List<Expression>();
+            
+        //    // 使用DTO属性作为条件（传统的相等查询）
+        //    if (query.TypedCondition != null)
+        //    {
+        //        expressions.AddRange(BuildTypedExpressions(query.TypedCondition));
+        //    }
+            
+        //    // 使用明确的查询条件列表
+        //    if (query.Conditions != null && query.Conditions.Any())
+        //    {
+        //        expressions.AddRange(BuildConditionExpressions(query.Conditions));
+        //    }
+            
+        //    if (expressions.Any())
+        //    {
+        //        // 根据逻辑连接符合并表达式
+        //        var combinedExpression = expressions.Aggregate((expr1, expr2) =>
+        //            query.Logic.ToLower() == "or" 
+        //                ? Expression.OrElse(expr1, expr2) 
+        //                : Expression.AndAlso(expr1, expr2));
+                
+        //        var parameter = Expression.Parameter(typeof(TEntity), "x");
+        //        whereExpression = Expression.Lambda<Func<TEntity, bool>>(combinedExpression, parameter);
+        //    }
+        //    else
+        //    {
+        //        // 没有条件时返回所有记录
+        //        whereExpression = _ => true;
+        //    }
+            
+        //    var pageResult = await _repository.GetPageAsync(
+        //        whereExpression,
+        //        query.PageIndex,
+        //        query.PageSize);
+                
+        //    return new PageResult<TDto>
+        //    {
+        //        Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),
+        //        PageInfo = pageResult.PageInfo,
+        //    };
+        //}
+
+        /// <summary>
+        /// 基于DTO构建表达式（所有属性使用相等操作符）
+        /// </summary>
+        /// <param name="condition">条件 DTO</param>
+        /// <returns>查询表达式列表</returns>
+        private List<Expression> BuildTypedExpressions(TUpdateDto condition)
+        {
+            var expressions = new List<Expression>();
+            var parameter = Expression.Parameter(typeof(TEntity), "x");
+
+            foreach (var dtoProperty in typeof(TUpdateDto).GetProperties())
+            {
+                var value = dtoProperty.GetValue(condition);
+                if (value == null) continue; // 跳过 null 值
+
+                var entityProperty = typeof(TEntity).GetProperty(dtoProperty.Name);
+                if (entityProperty != null && entityProperty.CanRead)
+                {
+                    var propertyExpression = Expression.Property(parameter, entityProperty);
+                    var valueExpression = Expression.Constant(value);
+                    var equalExpression = Expression.Equal(propertyExpression, valueExpression);
+                    expressions.Add(equalExpression);
+                }
+            }
+
+            return expressions;
+        }
+        
+        /// <summary>
+        /// 基于条件列表构建表达式
+        /// </summary>
+        /// <param name="conditions">查询条件列表</param>
+        /// <returns>查询表达式列表</returns>
+        private List<Expression> BuildConditionExpressions(List<QueryConditionItem> conditions)
+        {
+            var expressions = new List<Expression>();
+            var parameter = Expression.Parameter(typeof(TEntity), "x");
+
+            foreach (var condition in conditions)
+            {
+                if (string.IsNullOrEmpty(condition.PropertyName)) continue;
+
+                var entityProperty = typeof(TEntity).GetProperty(condition.PropertyName);
+                if (entityProperty == null) continue;
+
+                var propertyExpression = Expression.Property(parameter, entityProperty);
+
+                Expression conditionExpression = condition.Operator switch
+                {
+                    QueryOperator.Equal => Expression.Equal(propertyExpression, Expression.Constant(condition.Value)),
+                    QueryOperator.NotEqual => Expression.NotEqual(propertyExpression, Expression.Constant(condition.Value)),
+                    QueryOperator.GreaterThan => Expression.GreaterThan(propertyExpression, Expression.Constant(condition.Value)),
+                    QueryOperator.GreaterThanOrEqual => Expression.GreaterThanOrEqual(propertyExpression, Expression.Constant(condition.Value)),
+                    QueryOperator.LessThan => Expression.LessThan(propertyExpression, Expression.Constant(condition.Value)),
+                    QueryOperator.LessThanOrEqual => Expression.LessThanOrEqual(propertyExpression, Expression.Constant(condition.Value)),
+                    QueryOperator.Contains when entityProperty.PropertyType == typeof(string) => 
+                        Expression.Call(propertyExpression, typeof(string).GetMethod("Contains", new[] { typeof(string) })!, 
+                            Expression.Constant(condition.Value)),
+                    QueryOperator.StartsWith when entityProperty.PropertyType == typeof(string) => 
+                        Expression.Call(propertyExpression, typeof(string).GetMethod("StartsWith", new[] { typeof(string) })!, 
+                            Expression.Constant(condition.Value)),
+                    QueryOperator.EndsWith when entityProperty.PropertyType == typeof(string) => 
+                        Expression.Call(propertyExpression, typeof(string).GetMethod("EndsWith", new[] { typeof(string) })!, 
+                            Expression.Constant(condition.Value)),
+                    QueryOperator.Between => BuildBetweenExpression(propertyExpression, condition.Value, condition.Value2),
+                    _ => Expression.Equal(propertyExpression, Expression.Constant(condition.Value))
+                };
+
+                expressions.Add(conditionExpression);
+            }
+
+            return expressions;
+        }
+        
+        /// <summary>
+        /// 构建 BETWEEN 表达式
+        /// </summary>
+        /// <param name="propertyExpression">属性表达式</param>
+        /// <param name="value1">起始值</param>
+        /// <param name="value2">结束值</param>
+        /// <returns>Between 表达式</returns>
+        private Expression BuildBetweenExpression(Expression propertyExpression, object? value1, object? value2)
+        {
+            if (value1 == null || value2 == null) return Expression.Constant(true);
+            
+            var lowerBound = Expression.GreaterThanOrEqual(propertyExpression, Expression.Constant(value1));
+            var upperBound = Expression.LessThanOrEqual(propertyExpression, Expression.Constant(value2));
+            
+            return Expression.AndAlso(lowerBound, upperBound);
         }
 
         #region 回收站相关接口

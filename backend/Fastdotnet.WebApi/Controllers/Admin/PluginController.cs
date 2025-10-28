@@ -1,10 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using Fastdotnet.Core.Exceptions;
-using System;
+using Fastdotnet.Core.Models;
 using Fastdotnet.Core.Utils;
-using Microsoft.Extensions.Logging;
+using Fastdotnet.Plugin.Contracts;
 using Fastdotnet.Plugin.Shared.AdapterAOT;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
@@ -25,40 +27,40 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// 扫描插件目录以发现所有可用插件
         /// </summary>
         [HttpGet("scan")]
-        public async Task<IActionResult> ScanPlugins()
+        public async Task<List<PluginConfig>> ScanPlugins()
         {
             var result = await _pluginLoadService.ScanPluginsAsync();
-            return Ok(result);
+            return result;
         }
 
         /// <summary>
         /// 启用一个插件（如果未加载，则先加载）
         /// </summary>
         [HttpPost("enable/{pluginId}")]
-        public async Task<IActionResult> EnablePlugin(string pluginId)
+        public async Task<ApiResult> EnablePlugin(string pluginId)
         {
             var result = await _pluginLoadService.EnablePluginAsync(pluginId);
-            return Ok(result);
+            return result;
         }
 
         /// <summary>
         /// 停用一个插件（停止业务并卸载其代码）
         /// </summary>
         [HttpPost("disable/{pluginId}")]
-        public async Task<IActionResult> DisablePlugin(string pluginId)
+        public async Task<ApiResult> DisablePlugin(string pluginId)
         {
             var result = await _pluginLoadService.DisablePluginAsync(pluginId);
-            return Ok(result);
+            return result;
         }
 
         /// <summary>
         /// 从磁盘物理删除一个已停用的插件
         /// </summary>
         [HttpPost("uninstall/{pluginId}")]
-        public async Task<IActionResult> UninstallPlugin(string pluginId)
+        public async Task<ApiResult> UninstallPlugin(string pluginId)
         {
             var result = await _pluginLoadService.UninstallPluginAsync(pluginId);
-            return Ok(result);
+            return result;
         }
 
         /// <summary>

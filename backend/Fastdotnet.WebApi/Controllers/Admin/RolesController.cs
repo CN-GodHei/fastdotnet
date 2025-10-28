@@ -90,7 +90,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         [HttpPost("{id}/permissions")]
         [Authorize(Policy = Permissions.Admin.Roles.AssignPermissions)]
-        public async Task<IActionResult> AssignPermissions(string id, [FromBody] AssignPermissionsDto dto)
+        public async Task<bool> AssignPermissions(string id, [FromBody] AssignPermissionsDto dto)
         {
             await _rolePermissionRepository.DeleteAsync(rp => rp.RoleId == id);
 
@@ -103,7 +103,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 }).ToList();
                 await _rolePermissionRepository.InsertRangeAsync(newPermissions);
             }
-            return NoContent();
+            return true;
         }
     }
 }

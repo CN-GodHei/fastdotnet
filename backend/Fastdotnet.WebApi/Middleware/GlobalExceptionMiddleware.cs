@@ -89,11 +89,21 @@ public class GlobalExceptionMiddleware
         }
 
         // 返回统一错误响应（不暴露堆栈）
-        var result = new ApiResult<object>
+        var result = new ApiResult<object>();
+#if DEBUG
+        result = new ApiResult<object>
         {
             Code = statusCode,
-            Msg = errorMsg
+            Msg = errorMsg + "Debug模式输出具体错误:" + exception.Message
         };
+#else
+                 result = new ApiResult<object>
+                {
+                    Code = statusCode,
+                    Msg = errorMsg
+                };
+#endif
+
 
         context.Response.StatusCode = statusCode;
         context.Response.ContentType = "application/json; charset=utf-8";

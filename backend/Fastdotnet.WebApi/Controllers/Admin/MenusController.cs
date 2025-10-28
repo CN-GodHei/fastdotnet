@@ -1,21 +1,22 @@
 using AutoMapper;
 using Fastdotnet.Core.Constants;
 using Fastdotnet.Core.Controllers;
+using Fastdotnet.Core.Entities.Admin;
 using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.System;
+using Fastdotnet.Core.Utils;
 using Fastdotnet.Service.IService;
+using Fastdotnet.Service.IService.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Fastdotnet.Core.Utils;
-using Fastdotnet.Core.Entities.Admin;
-using System.Linq;
-using System;
-using Fastdotnet.Service.IService.Admin;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
@@ -46,12 +47,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         [HttpGet("tree")]
         [Authorize(Policy = Permissions.Admin.Menus.View)]
-        public async Task<IActionResult> GetUserMenuTree()
+        public async Task<List<MenuDto>> GetUserMenuTree()
         {
             var userId = _currentUser.Id;
             if (userId == null)
             {
-                return Unauthorized();
+                //return Unauthorized();
+                throw new BusinessException("用户未登录");
             }
 
             // 判断是否为超管角色
@@ -70,7 +72,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 menus = await _menuService.GetUserMenusAsync(userId, "Admin");
             }
 
-            return Ok(menus);
+            return menus;
         }
 
 

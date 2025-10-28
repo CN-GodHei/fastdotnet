@@ -69,6 +69,18 @@ export async function deleteAdminSystemConfigId(
 	});
 }
 
+/** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/SystemConfig/batch */
+export async function putAdminSystemConfigBatch(body: APIModel.SystemConfigDto[], options?: { [key: string]: any }) {
+	return request<number>('/api/admin/SystemConfig/batch', {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/SystemConfig/batch */
 export async function postAdminSystemConfigBatch(body: APIModel.SystemConfigDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/SystemConfig/batch', {
@@ -85,6 +97,21 @@ export async function postAdminSystemConfigBatch(body: APIModel.SystemConfigDto[
 export async function deleteAdminSystemConfigBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/SystemConfig/batch', {
 		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
+/** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/SystemConfig/batch/updatebycondition */
+export async function putAdminSystemConfigBatchUpdatebycondition(
+	body: APIModel.SystemConfigDtoBatchUpdateByConditionDto,
+	options?: { [key: string]: any }
+) {
+	return request<number>('/api/admin/SystemConfig/batch/updatebycondition', {
+		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
 		},

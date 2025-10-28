@@ -50,9 +50,9 @@ namespace PluginA.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("test")]
-        public async Task<IActionResult> Test()
+        public async Task<string> Test()
         {
-            return Ok("这是一个测试方法");
+            return "这是一个测试方法";
         }
     }
 }

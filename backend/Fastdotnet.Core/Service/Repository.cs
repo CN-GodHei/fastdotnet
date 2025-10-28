@@ -2,6 +2,7 @@ using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models;
 using Fastdotnet.Core.Models.Base;
 using Fastdotnet.Core.Models.Interfaces;
+using Fastdotnet.Core.Utils;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -157,7 +158,25 @@ namespace Fastdotnet.Core.Service
         /// <returns>插入成功的数量</returns>
         public virtual async Task<int> InsertRangeAsync(List<T> entities)
         {
-            var result = await _db.Insertable(entities).ExecuteCommandAsync();
+            // 在批量插入前，为所有实体生成ID和设置创建时间
+            // 这样可以确保每个实体都有唯一ID，避免AOP事件在批量操作中可能的问题
+            foreach (var entity in entities)
+            {
+                if (string.IsNullOrEmpty(entity.Id))
+                {
+                    entity.Id = SnowflakeIdGenerator.NextStrId();
+                }
+                
+                if (entity.CreateTime == default(DateTime))
+                {
+                    entity.CreateTime = DateTime.Now;
+                }
+            }
+            
+            var insertable = _db.Insertable(entities);
+            
+            // 使用SqlSugar的批量插入方法
+            var result = await insertable.ExecuteCommandAsync();
             return result;
         }
 
@@ -262,10 +281,21 @@ namespace Fastdotnet.Core.Service
             // 如果实体实现了软删除接口，则执行软删除
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(T)))
             {
-                result = await _db.Updateable<T>()
-                    .SetColumns(it => new T { IsDeleted = true, DeleteTime = DateTime.Now })
-                    .WhereIF(whereExpression != null, whereExpression)
-                    .ExecuteCommandAsync();
+                // 使用 Updateable 进行软删除
+                var updateable = _db.Updateable<T>()
+                    .SetColumns(it => new T { IsDeleted = true, DeleteTime = DateTime.Now });
+                
+                // 只有当条件表达式不为 null 时，才添加 WHERE 条件
+                if (whereExpression != null)
+                {
+                    updateable = updateable.Where(whereExpression);
+                    result = await updateable.ExecuteCommandAsync();
+                }
+                else
+                {
+                    // 如果没有条件，抛出异常防止意外更新整个表
+                    throw new ArgumentException("软删除操作必须提供条件表达式，以防止意外更新整个表。");
+                }
             }
             else
             {

@@ -16,13 +16,15 @@ namespace Fastdotnet.Core.Models
 
         /// <summary>
         /// 动态查询条件，使用 System.Linq.Dynamic.Core 语法
-        /// 例如: \"Age > 18 and Name.Contains(\\\"John\\\")
+        /// 例如: "Age > 18 and Name.Contains(\"John\")"
         /// </summary>
         public string? DynamicQuery { get; set; }
+        
         /// <summary>
         /// 查询参数，与 DynamicQuery 配合使用
-        /// 例如: new object[] { 18, \"John\" }
+        /// 例如: new object[] { 18, "John" }
         /// </summary>
         public object[]? QueryParameters { get; set; }
+        
     }
 }

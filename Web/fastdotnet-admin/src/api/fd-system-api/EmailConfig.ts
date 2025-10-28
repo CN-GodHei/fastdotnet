@@ -21,6 +21,18 @@ export async function putAdminEmailConfigId(
 	});
 }
 
+/** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/EmailConfig/batch */
+export async function putAdminEmailConfigBatch(body: APIModel.UpdateEmailConfigDto[], options?: { [key: string]: any }) {
+	return request<number>('/api/admin/EmailConfig/batch', {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/EmailConfig/batch */
 export async function postAdminEmailConfigBatch(body: APIModel.CreateEmailConfigDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/EmailConfig/batch', {
@@ -37,6 +49,21 @@ export async function postAdminEmailConfigBatch(body: APIModel.CreateEmailConfig
 export async function deleteAdminEmailConfigBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/EmailConfig/batch', {
 		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
+/** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/EmailConfig/batch/updatebycondition */
+export async function putAdminEmailConfigBatchUpdatebycondition(
+	body: APIModel.UpdateEmailConfigDtoBatchUpdateByConditionDto,
+	options?: { [key: string]: any }
+) {
+	return request<number>('/api/admin/EmailConfig/batch/updatebycondition', {
+		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
 		},

@@ -69,6 +69,18 @@ export async function deleteAdminMenusId(
 	});
 }
 
+/** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/menus/batch */
+export async function putAdminMenusBatch(body: APIModel.UpdateMenuDto[], options?: { [key: string]: any }) {
+	return request<number>('/api/admin/menus/batch', {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/menus/batch */
 export async function postAdminMenusBatch(body: APIModel.CreateMenuDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/menus/batch', {
@@ -85,6 +97,18 @@ export async function postAdminMenusBatch(body: APIModel.CreateMenuDto[], option
 export async function deleteAdminMenusBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/menus/batch', {
 		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
+/** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/menus/batch/updatebycondition */
+export async function putAdminMenusBatchUpdatebycondition(body: APIModel.UpdateMenuDtoBatchUpdateByConditionDto, options?: { [key: string]: any }) {
+	return request<number>('/api/admin/menus/batch/updatebycondition', {
+		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
 		},

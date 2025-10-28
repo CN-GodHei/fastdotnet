@@ -1,4 +1,6 @@
+using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
+using Fastdotnet.Core.Models.System;
 using Fastdotnet.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,17 +25,17 @@ namespace Fastdotnet.WebApi.Controllers.App
         [HttpGet("tree")]
         // 提醒：您可能需要为 App 用户定义新的权限策略，例如 "app.menus.view"
         // [Authorize(Policy = "app.menus.view")] 
-        public async Task<IActionResult> GetUserMenuTree()
+        public async Task<List<MenuDto>> GetUserMenuTree()
         {
             var userId = _currentUser.Id;
             if (userId == null)
             {
-                return Unauthorized();
+                throw new BusinessException("用户未登录");
             }
 
             // 注意这里的 "App"
             var menus = await _menuService.GetUserMenusAsync(userId, "App");
-            return Ok(menus);
+            return menus;
         }
     }
 }

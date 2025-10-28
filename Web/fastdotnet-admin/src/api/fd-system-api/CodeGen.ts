@@ -77,6 +77,18 @@ export async function getCodeGenApplicationnamespaces(options?: { [key: string]:
 	});
 }
 
+/** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/CodeGen/batch */
+export async function putCodeGenBatch(body: APIModel.UpdateCodeGenDto[], options?: { [key: string]: any }) {
+	return request<number>('/api/CodeGen/batch', {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/CodeGen/batch */
 export async function postCodeGenBatch(body: APIModel.CreateCodeGenDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGen/batch', {
@@ -93,6 +105,18 @@ export async function postCodeGenBatch(body: APIModel.CreateCodeGenDto[], option
 export async function deleteCodeGenBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGen/batch', {
 		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
+/** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/CodeGen/batch/updatebycondition */
+export async function putCodeGenBatchUpdatebycondition(body: APIModel.UpdateCodeGenDtoBatchUpdateByConditionDto, options?: { [key: string]: any }) {
+	return request<number>('/api/CodeGen/batch/updatebycondition', {
+		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
 		},

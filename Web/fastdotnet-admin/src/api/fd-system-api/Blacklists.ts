@@ -69,6 +69,18 @@ export async function deleteAdminBlacklistsId(
 	});
 }
 
+/** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/Blacklists/batch */
+export async function putAdminBlacklistsBatch(body: APIModel.UpdateFdBlacklistDto[], options?: { [key: string]: any }) {
+	return request<number>('/api/admin/Blacklists/batch', {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/Blacklists/batch */
 export async function postAdminBlacklistsBatch(body: APIModel.CreateFdBlacklistDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/Blacklists/batch', {
@@ -85,6 +97,21 @@ export async function postAdminBlacklistsBatch(body: APIModel.CreateFdBlacklistD
 export async function deleteAdminBlacklistsBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/Blacklists/batch', {
 		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+
+/** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/Blacklists/batch/updatebycondition */
+export async function putAdminBlacklistsBatchUpdatebycondition(
+	body: APIModel.UpdateFdBlacklistDtoBatchUpdateByConditionDto,
+	options?: { [key: string]: any }
+) {
+	return request<number>('/api/admin/Blacklists/batch/updatebycondition', {
+		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
 		},

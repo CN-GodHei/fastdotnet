@@ -26,7 +26,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// 获取所有权限，按模块分组，方便前端展示
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<Dictionary<string,List<PermissionDto>>> GetAll()
         {
             var permissions = await _permissionRepository.GetAllAsync();
             var permissionDtos = _mapper.Map<List<PermissionDto>>(permissions);
@@ -35,7 +35,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 .GroupBy(p => p.Module ?? "System") // 将没有模块的权限归类到"System"
                 .ToDictionary(g => g.Key, g => g.ToList());
 
-            return Ok(groupedPermissions);
+            return groupedPermissions;
         }
     }
 }
