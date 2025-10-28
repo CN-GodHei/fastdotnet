@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Fastdotnet.Desktop/Fastdotnet.Desktop.csproj" />
+  <Project Path="GenerateAPI/GenerateAPI.csproj" />
+</Solution>

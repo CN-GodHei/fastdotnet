@@ -1,0 +1,79 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="using:Fastdotnet.Desktop.Models"
+        mc:Ignorable="d" 
+        d:DesignWidth="800" 
+        d:DesignHeight="450"
+        x:Class="Fastdotnet.Desktop.MainWindow"
+        Title="Avalonia Application - Layout &amp; Menu Example"
+        MinWidth="800"
+        MinHeight="600">
+  <!-- 使用 Grid 定义整个窗口的布局 -->
+  <Grid>
+    <Grid.RowDefinitions>
+      <!-- 顶部导航栏 -->
+      <RowDefinition Height="Auto" />
+      <!-- 主体内容区 (中间和侧边栏) -->
+      <RowDefinition Height="*" />
+      <!-- 底部 -->
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <!-- 顶部 Header -->
+    <Border Grid.Row="0" Background="SteelBlue" Padding="10">
+      <TextBlock Text="Top Navigation" VerticalAlignment="Center" Foreground="White"/>
+    </Border>
+
+    <!-- 主体内容区 -->
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <!-- 侧边栏 -->
+        <ColumnDefinition Width="200" />
+        <!-- 主内容区 -->
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+
+      <!-- 侧边栏 Aside (放置菜单) -->
+      <Border Grid.Column="0" Background="#f0f0f0" Padding="5">
+        <ScrollViewer>
+          <!-- ItemsControl 用于绑定菜单数据 -->
+          <ItemsControl ItemsSource="{Binding MenuItems}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <!-- Expander 用于实现可展开/收起的菜单项 -->
+                <Expander Header="{Binding Name}" Margin="2">
+                  <!-- 子菜单项的 ItemsControl -->
+                  <ItemsControl ItemsSource="{Binding Children}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <!-- 最终的菜单项按钮 -->
+                        <Button Content="{Binding Name}"
+                                Margin="20,2,2,2"
+                                Tag="{Binding Id}"
+                                Click="OnSubMenuItemClick" />
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </Expander>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Border>
+
+      <!-- 主内容区 Main -->
+      <Border Grid.Column="1" Background="White" Padding="10">
+        <TextBlock Text="Main Content Area"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"/>
+      </Border>
+    </Grid>
+
+    <!-- 底部 Footer -->
+    <Border Grid.Row="2" Background="Gainsboro" Padding="10">
+      <TextBlock Text="Footer Information" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+    </Border>
+  </Grid>
+</Window>

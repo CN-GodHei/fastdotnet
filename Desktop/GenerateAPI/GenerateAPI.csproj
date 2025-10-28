@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="8.0.0" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
+    <PackageReference Include="Refit.Newtonsoft.Json" Version="8.0.0" />
+    <PackageReference Include="Refitter.MSBuild" Version="1.5.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <!-- 将 .refitter 文件作为附加文件包含，以便 MSBuild 任务可以找到它 -->
+  <ItemGroup>
+    <AdditionalFiles Include=".refitter" />
+  </ItemGroup>
+
+  <!-- 自定义 Target 来重命名生成的 DTO 文件 -->
+  <Target Name="RenameDtoFile" AfterTargets="RefitterGenerate" Condition="Exists('..\Fastdotnet.Desktop\Api\Models\Contracts.cs')">
+    <Message Text="Renaming Contracts.cs to ApiModels.cs..." Importance="high" />
+    <Move SourceFiles="..\Fastdotnet.Desktop\Api\Models\Contracts.cs" DestinationFiles="..\Fastdotnet.Desktop\Api\Models\ApiModels.cs" />
+  </Target>
+
+</Project>
