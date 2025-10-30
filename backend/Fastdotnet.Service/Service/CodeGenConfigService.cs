@@ -4,6 +4,7 @@ using Fastdotnet.Core.Models.System;
 using SqlSugar;
 using global::System.IO;
 using global::System.IO.Compression;
+using System.Reflection;
 
 namespace Fastdotnet.Service.Service
 {
@@ -97,7 +98,7 @@ namespace Fastdotnet.Service.Service
             return entityName;
         }
 
-        public async Task<string> GenerateCodeAsync(CodeGenInput input)
+        public async Task<string> GenerateCodeAsync(CodeGenInput input, string TableComment)
         {
             var tableColumns = await GetTableColumnListAsync(input.TableName ?? string.Empty);
             var entityName = GetEntityNameByTableName(input.TableName ?? string.Empty);
@@ -112,22 +113,22 @@ namespace Fastdotnet.Service.Service
             try
             {
                 // 生成实体类
-                await GenerateEntityFile(tempDir, input.TableName, entityName, tableColumns, input.NameSpace);
+                await GenerateEntityFile(tempDir, input.TableName, entityName, tableColumns, input.NameSpace, TableComment);
                 
                 // 生成DTO类
-                await GenerateDtoFiles(tempDir, entityName, tableColumns, input.NameSpace);
+                await GenerateDtoFiles(tempDir, entityName, tableColumns, input.NameSpace, TableComment);
                 
                 // 生成服务接口
-                await GenerateServiceInterfaceFile(tempDir, entityName, input.NameSpace);
+                await GenerateServiceInterfaceFile(tempDir, entityName, input.NameSpace, TableComment);
                 
                 // 生成服务实现
-                await GenerateServiceImplementationFile(tempDir, entityName, input.NameSpace);
+                await GenerateServiceImplementationFile(tempDir, entityName, input.NameSpace, TableComment);
                 
                 // 生成控制器
-                await GenerateControllerFile(tempDir, entityName, input.NameSpace, "Developer"); // 使用默认作者名
+                await GenerateControllerFile(tempDir, entityName, input.NameSpace, "Developer", TableComment); // 使用默认作者名
                 
                 // 生成前端页面
-                await GenerateFrontendFiles(tempDir, entityName, tableColumns, input.TableName, input.PagePath); // 使用表名代替业务名
+                await GenerateFrontendFiles(tempDir, entityName, tableColumns, input.TableName, input.PagePath, TableComment); // 使用表名代替业务名
 
                 // 压缩为ZIP文件
                 var zipPath = global::System.IO.Path.Combine(global::System.IO.Path.GetTempPath(), $"codegen_{input.TableName}_{DateTime.Now:yyyyMMddHHmmss}.zip");
@@ -150,7 +151,7 @@ namespace Fastdotnet.Service.Service
             }
         }
 
-        private async Task GenerateEntityFile(string outputDir, string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace)
+        private async Task GenerateEntityFile(string outputDir, string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
         {
             var entityDir = global::System.IO.Path.Combine(outputDir, "Entity");
             if (!global::System.IO.Directory.Exists(entityDir))
@@ -163,9 +164,9 @@ namespace Fastdotnet.Service.Service
 namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
 {{
     /// <summary>
-    /// {entityName} - {tableName}
+    /// {TableComment} - {tableName}
     /// </summary>
-    [SugarTable(""{tableName}"")]
+    [SugarTable(""{tableName}"",""{TableComment}"")]
     public class {entityName} : BaseEntity
     {{
 {string.Join("\n", columns.Select(col => GeneratePropertyDefinition(col)))}
@@ -191,8 +192,15 @@ namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
             return $"        {attrStr}public {column.NetType} {column.PropertyName} {{ get; set; }}";
         }
 
-        private async Task GenerateDtoFiles(string outputDir, string entityName, List<ColumnInfoDto> columns, string nameSpace)
+        private async Task GenerateDtoFiles(string outputDir, string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
         {
+            // 使用反射获取BaseEntity的所有公共属性名称
+            var baseEntityProperties = GetBaseEntityPropertyNames();
+            
+            var filteredColumns = columns.Where(col => 
+                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) && 
+                !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
+
             var dtoDir = global::System.IO.Path.Combine(outputDir, "Dto");
             if (!global::System.IO.Directory.Exists(dtoDir))
             {
@@ -206,7 +214,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
 {{
     public class Create{entityName}Dto
     {{
-{string.Join("\n", columns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col => GenerateDtoProperty(col, true)))}
+{string.Join("\n", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col => GenerateDtoProperty(col, true)))}
     }}
 }}";
 
@@ -217,7 +225,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
 {{
     public class Update{entityName}Dto
     {{
-{string.Join("\n", columns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col => GenerateDtoProperty(col, false)))}
+{string.Join("\n", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col => GenerateDtoProperty(col, false)))}
     }}
 }}";
 
@@ -226,7 +234,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
 {{
     public class {entityName}Dto
     {{
-{string.Join("\n", columns.Select(col => GenerateDtoProperty(col, false)))}
+{string.Join("\n", filteredColumns.Select(col => GenerateDtoProperty(col, false)))}
     }}
 }}";
 
@@ -271,7 +279,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
             return result;
         }
 
-        private async Task GenerateServiceInterfaceFile(string outputDir, string entityName, string nameSpace)
+        private async Task GenerateServiceInterfaceFile(string outputDir, string entityName, string nameSpace, string TableComment)
         {
             var serviceDir = global::System.IO.Path.Combine(outputDir, "ServiceInterface");
             if (!Directory.Exists(serviceDir))
@@ -293,7 +301,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.IService"}
             await global::System.IO.File.WriteAllTextAsync(serviceInterfacePath, serviceInterfaceContent);
         }
 
-        private async Task GenerateServiceImplementationFile(string outputDir, string entityName, string nameSpace)
+        private async Task GenerateServiceImplementationFile(string outputDir, string entityName, string nameSpace, string TableComment)
         {
             var serviceDir = global::System.IO.Path.Combine(outputDir, "ServiceImplementation");
             if (!Directory.Exists(serviceDir))
@@ -318,7 +326,7 @@ namespace {nameSpace ?? "Fastdotnet.Service.Service"}
             await global::System.IO.File.WriteAllTextAsync(serviceImplementationPath, serviceImplementationContent);
         }
 
-        private async Task GenerateControllerFile(string outputDir, string entityName, string nameSpace, string authorName)
+        private async Task GenerateControllerFile(string outputDir, string entityName, string nameSpace, string authorName, string TableComment)
         {
             var controllerDir = global::System.IO.Path.Combine(outputDir, "Controller");
             if (!Directory.Exists(controllerDir))
@@ -355,7 +363,7 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
             await global::System.IO.File.WriteAllTextAsync(controllerPath, controllerContent);
         }
 
-        private async Task GenerateFrontendFiles(string outputDir, string entityName, List<ColumnInfoDto> columns, string busName, string pagePath)
+        private async Task GenerateFrontendFiles(string outputDir, string entityName, List<ColumnInfoDto> columns, string busName, string pagePath, string TableComment)
         {
             var frontendDir = global::System.IO.Path.Combine(outputDir, "Frontend");
             if (!Directory.Exists(frontendDir))
@@ -653,7 +661,7 @@ onMounted(() => {{
             return fileList;
         }
 
-        public async Task<string> GetGeneratedFileContentAsync(CodeGenInput input, string filePath)
+        public async Task<string> GetGeneratedFileContentAsync(CodeGenInput input, string filePath,string TableComment)
         {
             var tableColumns = await GetTableColumnListAsync(input.TableName ?? string.Empty);
             var entityName = GetEntityNameByTableName(input.TableName ?? string.Empty);
@@ -661,31 +669,31 @@ onMounted(() => {{
             // 这里我们根据文件路径返回对应的生成内容
             if (filePath.EndsWith($"{entityName}.cs"))
             {
-                return await GenerateEntityContent(input.TableName, entityName, tableColumns, input.NameSpace);
+                return await GenerateEntityContent(input.TableName, entityName, tableColumns, input.NameSpace, TableComment);
             }
             else if (filePath.EndsWith($"{entityName}Dto.cs"))
             {
-                return await GenerateDtoContent(entityName, tableColumns, input.NameSpace);
+                return await GenerateDtoContent(entityName, tableColumns, input.NameSpace, TableComment);
             }
             else if (filePath.EndsWith($"I{entityName}Service.cs"))
             {
-                return await GenerateServiceInterfaceContent(entityName, input.NameSpace);
+                return await GenerateServiceInterfaceContent(entityName, input.NameSpace, TableComment);
             }
             else if (filePath.EndsWith($"{entityName}Service.cs"))
             {
-                return await GenerateServiceImplementationContent(entityName, input.NameSpace);
+                return await GenerateServiceImplementationContent(entityName, input.NameSpace, TableComment);
             }
             else if (filePath.EndsWith($"{entityName}Controller.cs"))
             {
-                return await GenerateControllerContent(entityName, input.NameSpace, "Developer"); // 使用默认作者名
+                return await GenerateControllerContent(entityName, input.NameSpace,  TableComment); // 使用默认作者名
             }
             else if (filePath.EndsWith("-api.ts"))
             {
-                return await GenerateFrontendApiContent(entityName, input.TableName); // 使用表名代替业务名
+                return await GenerateFrontendApiContent(entityName, input.TableName, TableComment); // 使用表名代替业务名
             }
             else if (filePath.EndsWith(".vue"))
             {
-                return await GenerateFrontendVueContent(entityName, tableColumns, input.TableName, input.PagePath); // 使用表名代替业务名
+                return await GenerateFrontendVueContent(entityName, tableColumns, input.TableName, input.PagePath, TableComment); // 使用表名代替业务名
             }
             
             return "// 文件不存在或无法生成预览内容";
@@ -701,25 +709,52 @@ onMounted(() => {{
             return previewResult;
         }
 
-        protected async Task<string> GenerateEntityContent(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace)
+        protected async Task<string> GenerateEntityContent(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace,string TableComment)
         {
+            // 使用反射获取BaseEntity的所有公共属性名称
+            var baseEntityProperties = GetBaseEntityPropertyNames();
+            
+            var filteredColumns = columns.Where(col => 
+                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) && 
+                !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
+
             return $@"using SqlSugar;
 
 namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
 {{
     /// <summary>
-    /// {entityName} - {tableName}
+    /// {TableComment} - 实体信息
     /// </summary>
-    [SugarTable(""{tableName}"")]
+    [SugarTable(""{tableName}"",""{TableComment}"")]
     public class {entityName} : BaseEntity
     {{
-{string.Join("\n", columns.Select(col => GeneratePropertyDefinition(col)))}
+{string.Join("\n", filteredColumns.Select(col => GeneratePropertyDefinition(col)))}
     }}
 }}";
         }
 
-        protected async Task<string> GenerateDtoContent(string entityName, List<ColumnInfoDto> columns, string nameSpace)
+        private HashSet<string> GetBaseEntityPropertyNames()
         {
+            var baseEntityProperties = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            
+            var properties = typeof(Core.Models.Base.BaseEntity).GetProperties();
+            foreach (var property in properties)
+            {
+                baseEntityProperties.Add(property.Name);
+            }
+            
+            return baseEntityProperties;
+        }
+
+        protected async Task<string> GenerateDtoContent(string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
+        {
+            // 使用反射获取BaseEntity的所有公共属性名称
+            var baseEntityProperties = GetBaseEntityPropertyNames();
+            
+            var filteredColumns = columns.Where(col => 
+                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) && 
+                !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
+
             // Create DTO
             var createDtoContent = $@"using System.ComponentModel.DataAnnotations;
 
@@ -727,7 +762,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
 {{
     public class Create{entityName}Dto
     {{
-{string.Join("\n", columns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col => GenerateDtoProperty(col, true)))}
+{string.Join("\n", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col => GenerateDtoProperty(col, true)))}
     }}
 }}";
 
@@ -738,7 +773,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
 {{
     public class Update{entityName}Dto
     {{
-{string.Join("\n", columns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col => GenerateDtoProperty(col, false)))}
+{string.Join("\n", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col => GenerateDtoProperty(col, false)))}
     }}
 }}";
 
@@ -747,7 +782,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
 {{
     public class {entityName}Dto
     {{
-{string.Join("\n", columns.Select(col => GenerateDtoProperty(col, false)))}
+{string.Join("\n", filteredColumns.Select(col => GenerateDtoProperty(col, false)))}
     }}
 }}";
 
@@ -758,7 +793,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
 {outputDtoContent}";
         }
 
-        protected async Task<string> GenerateServiceInterfaceContent(string entityName, string nameSpace)
+        protected async Task<string> GenerateServiceInterfaceContent(string entityName, string nameSpace, string TableComment)
         {
             return $@"using Fastdotnet.Core.Entities;
 
@@ -771,7 +806,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.IService"}
 }}";
         }
 
-        protected async Task<string> GenerateServiceImplementationContent(string entityName, string nameSpace)
+        protected async Task<string> GenerateServiceImplementationContent(string entityName, string nameSpace, string TableComment)
         {
             return $@"using Fastdotnet.Core.Entities;
 using Fastdotnet.Core.IService;
@@ -787,7 +822,7 @@ namespace {nameSpace ?? "Fastdotnet.Service.Service"}
 }}";
         }
 
-        protected async Task<string> GenerateControllerContent(string entityName, string nameSpace, string authorName = "Developer")
+        protected async Task<string> GenerateControllerContent(string entityName, string nameSpace,  string TableComment)
         {
             return $@"using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.Entities;
@@ -815,7 +850,7 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 }}";
         }
 
-        private async Task<string> GenerateFrontendApiContent(string entityName, string busName)
+        private async Task<string> GenerateFrontendApiContent(string entityName, string busName, string TableComment)
         {
             return $@"// @ts-ignore
 /* eslint-disable */
@@ -908,33 +943,40 @@ export async function get{entityName}Page(
 }}";
         }
 
-        public async Task<string> GenerateEntityContentAsync(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace)
+        public async Task<string> GenerateEntityContentAsync(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
         {
-            return await GenerateEntityContent(tableName, entityName, columns, nameSpace);
+            return await GenerateEntityContent(tableName, entityName, columns, nameSpace, TableComment);
         }
 
-        public async Task<string> GenerateDtoContentAsync(string entityName, List<ColumnInfoDto> columns, string nameSpace)
+        public async Task<string> GenerateDtoContentAsync(string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
         {
-            return await GenerateDtoContent(entityName, columns, nameSpace);
+            return await GenerateDtoContent(entityName, columns, nameSpace, TableComment);
         }
 
-        public async Task<string> GenerateServiceImplementationContentAsync(string entityName, string nameSpace)
+        public async Task<string> GenerateServiceImplementationContentAsync(string entityName, string nameSpace, string TableComment)
         {
-            return await GenerateServiceImplementationContent(entityName, nameSpace);
+            return await GenerateServiceImplementationContent(entityName, nameSpace, TableComment);
         }
 
-        public async Task<string> GenerateControllerContentAsync(string entityName, string nameSpace)
+        public async Task<string> GenerateControllerContentAsync(string entityName, string nameSpace, string TableComment)
         {
             return await GenerateControllerContent(entityName, nameSpace, "Developer"); // 使用默认作者名
         }
 
-        public async Task<string> GenerateFrontendVueContentAsync(string entityName, List<ColumnInfoDto> columns, string tableName, string pagePath)
+        public async Task<string> GenerateFrontendVueContentAsync(string entityName, List<ColumnInfoDto> columns, string tableName, string pagePath, string TableComment)
         {
-            return await GenerateFrontendVueContent(entityName, columns, tableName, pagePath);
+            return await GenerateFrontendVueContent(entityName, columns, tableName, pagePath,TableComment);
         }
 
-        private async Task<string> GenerateFrontendVueContent(string entityName, List<ColumnInfoDto> columns, string busName, string pagePath)
+        private async Task<string> GenerateFrontendVueContent(string entityName, List<ColumnInfoDto> columns, string busName, string pagePath, string TableComment)
         {
+            // 使用反射获取BaseEntity的所有公共属性名称
+            var baseEntityProperties = GetBaseEntityPropertyNames();
+            
+            var filteredColumns = columns.Where(col => 
+                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) && 
+                !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
+
             return $@"<template>
 	<div class=""{entityName.ToLower()}-container"">
 		<el-card shadow=""hover"" :body-style=""{{ padding: 5 }}"">
@@ -956,7 +998,7 @@ export async function get{entityName}Page(
 
 		<el-card class=""full-table"" shadow=""hover"" style=""margin-top: 5px"">
 			<el-table :data=""tableData"" style=""width: 100%"" v-loading=""loading"" border>
-				{string.Join("\n\t\t\t\t", columns.Take(3).Select((col, idx) => 
+				{string.Join("\n\t\t\t\t", filteredColumns.Take(3).Select((col, idx) => 
                     $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ColumnComment ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
                 ))}
 				<el-table-column label=""操作"" width=""180"" fixed=""right"" align=""center"">
@@ -987,7 +1029,7 @@ export async function get{entityName}Page(
 				</div>
 			</template>
 			<el-form :model=""formData"" ref=""formRef"" label-width=""auto"">
-				{string.Join("\n\t\t\t\t", columns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Take(5).Select(col => 
+				{string.Join("\n\t\t\t\t", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Take(5).Select(col => 
                     $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ColumnComment ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"formData.{col.PropertyName}\" placeholder=\"请输入{col.ColumnComment ?? col.PropertyName}\" clearable />\n					</el-form-item>\n				</el-col>"
                 ))}
 			</el-form>

@@ -16,6 +16,11 @@ namespace Fastdotnet.Core.Models.System
         public string? TableName { get; set; }
 
         /// <summary>
+        /// 表注释
+        /// </summary>
+        public string? TableComment { get; set; }
+
+        /// <summary>
         /// 实体名
         /// </summary>
         public string? EntityName { get; set; }
@@ -80,6 +85,10 @@ namespace Fastdotnet.Core.Models.System
         [StringLength(100, ErrorMessage = "表名长度不能超过100个字符")]
         public string? TableName { get; set; }
 
+        /// <summary>
+        /// 表注释
+        /// </summary>
+        public string? TableComment { get; set; }
 
         /// <summary>
         /// 命名空间
@@ -145,6 +154,11 @@ namespace Fastdotnet.Core.Models.System
         [Required(ErrorMessage = "表名不能为空")]
         [StringLength(100, ErrorMessage = "表名长度不能超过100个字符")]
         public string? TableName { get; set; }
+
+        /// <summary>
+        /// 表注释
+        /// </summary>
+        public string? TableComment { get; set; }
 
         /// <summary>
         /// 实体名

@@ -30,7 +30,7 @@ namespace Fastdotnet.Core.IService
         /// </summary>
         /// <param name="input">代码生成输入</param>
         /// <returns></returns>
-        Task<string> GenerateCodeAsync(CodeGenInput input);
+        Task<string> GenerateCodeAsync(CodeGenInput input, string TableComment);
         
         /// <summary>
         /// 获取生成的文件列表
@@ -45,7 +45,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="input">代码生成输入</param>
         /// <param name="filePath">文件路径</param>
         /// <returns></returns>
-        Task<string> GetGeneratedFileContentAsync(CodeGenInput input, string filePath);
+        Task<string> GetGeneratedFileContentAsync(CodeGenInput input, string filePath,string TableComment);
         
         /// <summary>
         /// 预览代码
@@ -62,7 +62,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="columns">列信息列表</param>
         /// <param name="nameSpace">命名空间</param>
         /// <returns></returns>
-        Task<string> GenerateEntityContentAsync(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace);
+        Task<string> GenerateEntityContentAsync(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace,string TableComment);
         
         /// <summary>
         /// 生成DTO代码
@@ -71,7 +71,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="columns">列信息列表</param>
         /// <param name="nameSpace">命名空间</param>
         /// <returns></returns>
-        Task<string> GenerateDtoContentAsync(string entityName, List<ColumnInfoDto> columns, string nameSpace);
+        Task<string> GenerateDtoContentAsync(string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment);
         
         /// <summary>
         /// 生成服务实现代码
@@ -79,7 +79,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="entityName">实体名</param>
         /// <param name="nameSpace">命名空间</param>
         /// <returns></returns>
-        Task<string> GenerateServiceImplementationContentAsync(string entityName, string nameSpace);
+        Task<string> GenerateServiceImplementationContentAsync(string entityName, string nameSpace, string TableComment);
         
         /// <summary>
         /// 生成控制器代码
@@ -87,7 +87,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="entityName">实体名</param>
         /// <param name="nameSpace">命名空间</param>
         /// <returns></returns>
-        Task<string> GenerateControllerContentAsync(string entityName, string nameSpace);
+        Task<string> GenerateControllerContentAsync(string entityName, string nameSpace, string TableComment);
         
         /// <summary>
         /// 生成前端页面代码
@@ -97,6 +97,6 @@ namespace Fastdotnet.Core.IService
         /// <param name="tableName">表名</param>
         /// <param name="pagePath">页面路径</param>
         /// <returns></returns>
-        Task<string> GenerateFrontendVueContentAsync(string entityName, List<ColumnInfoDto> columns, string tableName, string pagePath);
+        Task<string> GenerateFrontendVueContentAsync(string entityName, List<ColumnInfoDto> columns, string tableName, string pagePath, string TableComment);
     }
 }

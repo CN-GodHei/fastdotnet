@@ -38,6 +38,7 @@ declare namespace APIModel {
 	type CodeGenConfigDto = {
 		Id?: string;
 		TableName?: string;
+		TableComment?: string;
 		EntityName?: string;
 		NameSpace?: string;
 		GenerateType?: string;
@@ -95,6 +96,7 @@ declare namespace APIModel {
 
 	type CreateCodeGenDto = {
 		TableName: string;
+		TableComment?: string;
 		NameSpace: string;
 		GenerateType: string;
 		GenerateMenu?: boolean;
@@ -1175,6 +1177,7 @@ declare namespace APIModel {
 
 	type UpdateCodeGenDto = {
 		TableName: string;
+		TableComment?: string;
 		EntityName: string;
 		NameSpace: string;
 		GenerateType: string;

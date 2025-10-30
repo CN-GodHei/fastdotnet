@@ -134,6 +134,7 @@ const tableChanged = (tableName: string) => {
 			const tableInfo = state.tableData.find(t => t.TableName === tableName);
 			if(tableInfo) {
 				state.ruleForm.TableName = tableInfo.TableName;
+				state.ruleForm.TableComment = tableInfo.TableComment;
 				// 只有在新增模式下才重置 TableUniqueList，避免在编辑时覆盖已有的数据
 				if (!state.ruleForm.Id) {
 					state.ruleForm.TableUniqueList = [];
@@ -185,6 +186,7 @@ const openDialog = async (row: APIModel.CreateCodeGenDto & APIModel.UpdateCodeGe
 	const originalMenuPid = row.MenuPid;
 	const originalPrintType = row.PrintType;
 	const originalPrintName = row.PrintName;
+	const originalTableComment = row.TableComment;
 	
 	// 复制数据到表单，但暂时不设置tableName（防止在表列表加载前触发tableChanged）
 	const rowData = JSON.parse(JSON.stringify(row));
@@ -208,6 +210,7 @@ const openDialog = async (row: APIModel.CreateCodeGenDto & APIModel.UpdateCodeGe
 		// 添加其他可能的字段
 		PrintType: originalPrintType,
 		PrintName: originalPrintName,
+		TableComment: originalTableComment,
 		// 展开其他可能存在的字段
 	};
 	

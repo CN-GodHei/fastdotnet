@@ -13,63 +13,69 @@ namespace Fastdotnet.Core.Entities.System
         /// <summary>
         /// 表名
         /// </summary>
-        [SugarColumn(Length = 100, IsNullable = false, ColumnDescription = "表名")]
+        [SugarColumn(ColumnName = "table_name", Length = 100, IsNullable = false, ColumnDescription = "表名")]
         public string? TableName { get; set; }
+
+        /// <summary>
+        /// 表注释
+        /// </summary>
+        [SugarColumn(ColumnName = "table_comment", Length = 100, IsNullable = true, ColumnDescription = "表注释")]
+        public string? TableComment { get; set; }
 
         /// <summary>
         /// 实体名
         /// </summary>
-        [SugarColumn(Length = 100, IsNullable = true, ColumnDescription = "实体名")]
+        [SugarColumn(ColumnName = "entity_name", Length = 100, IsNullable = true, ColumnDescription = "实体名")]
         public string? EntityName { get; set; }
 
 
         /// <summary>
         /// 命名空间
         /// </summary>
-        [SugarColumn(Length = 200, IsNullable = true, ColumnDescription = "命名空间")]
+        [SugarColumn(ColumnName = "name_space", Length = 200, IsNullable = true, ColumnDescription = "命名空间")]
         public string? NameSpace { get; set; }
 
 
         /// <summary>
         /// 生成方式
         /// </summary>
-        [SugarColumn(Length = 50, IsNullable = true, ColumnDescription = "生成方式")]
+        [SugarColumn(ColumnName = "generate_type", Length = 50, IsNullable = true, ColumnDescription = "生成方式")]
         public string? GenerateType { get; set; }
 
         /// <summary>
         /// 生成菜单
         /// </summary>
-        [SugarColumn(ColumnDescription = "生成菜单", IsNullable = true)]
+        [SugarColumn(ColumnName = "generate_menu", ColumnDescription = "生成菜单", IsNullable = true)]
         public bool GenerateMenu { get; set; } = false;
 
         /// <summary>
         /// 菜单图标
         /// </summary>
-        [SugarColumn(Length = 100, IsNullable = true, ColumnDescription = "菜单图标")]
+        [SugarColumn(ColumnName = "menu_icon", Length = 100, IsNullable = true, ColumnDescription = "菜单图标")]
         public string? MenuIcon { get; set; }
 
         /// <summary>
         /// 菜单父级ID
         /// </summary>
-        [SugarColumn(Length = 32, IsNullable = true, ColumnDescription = "菜单父级ID")]
+        [SugarColumn(ColumnName = "menu_pid", Length = 32, IsNullable = true, ColumnDescription = "菜单父级ID")]
         public string? MenuPid { get; set; }
 
         /// <summary>
         /// 前端页面路径
         /// </summary>
-        [SugarColumn(Length = 200, IsNullable = true, ColumnDescription = "前端页面路径")]
+        [SugarColumn(ColumnName = "page_path", Length = 200, IsNullable = true, ColumnDescription = "前端页面路径")]
         public string? PagePath { get; set; }
 
         /// <summary>
         /// 支持打印
         /// </summary>
-        [SugarColumn(Length = 50, IsNullable = true, ColumnDescription = "支持打印")]
+        [SugarColumn(ColumnName = "print_type", Length = 50, IsNullable = true, ColumnDescription = "支持打印")]
         public string? PrintType { get; set; }
 
         /// <summary>
         /// 打印模板
         /// </summary>
-        [SugarColumn(Length = 100, IsNullable = true, ColumnDescription = "打印模板")]
+        [SugarColumn(ColumnName = "print_name", Length = 100, IsNullable = true, ColumnDescription = "打印模板")]
         public string? PrintName { get; set; }
 
 

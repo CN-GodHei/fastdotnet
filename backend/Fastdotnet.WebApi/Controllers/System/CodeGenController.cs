@@ -104,7 +104,7 @@ namespace Fastdotnet.WebApi.Controllers.System
             {
                 throw new ArgumentException("表名不能为空");
             }
-            return await _codeGenConfigService.GenerateCodeAsync(input);
+            return await _codeGenConfigService.GenerateCodeAsync(input,"");
         }
 
 
@@ -183,12 +183,12 @@ namespace Fastdotnet.WebApi.Controllers.System
             // 根据类型生成不同的代码
             return type?.ToLower() switch
             {
-                "entity" => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumns, config.NameSpace),
-                "dto" => await _codeGenConfigService.GenerateDtoContentAsync(entityName, tableColumns, config.NameSpace),
-                "service" => await _codeGenConfigService.GenerateServiceImplementationContentAsync(entityName, config.NameSpace),
-                "controller" => await _codeGenConfigService.GenerateControllerContentAsync(entityName, config.NameSpace),
-                "frontend" => await _codeGenConfigService.GenerateFrontendVueContentAsync(entityName, tableColumns, config.TableName, config.PagePath),
-                _ => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumns, config.NameSpace) // 默认返回实体代码
+                "entity" => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumns, config.NameSpace, config.TableComment),
+                "dto" => await _codeGenConfigService.GenerateDtoContentAsync(entityName, tableColumns, config.NameSpace, config.TableComment),
+                "service" => await _codeGenConfigService.GenerateServiceImplementationContentAsync(entityName, config.NameSpace, config.TableComment),
+                "controller" => await _codeGenConfigService.GenerateControllerContentAsync(entityName, config.NameSpace, config.TableComment),
+                "frontend" => await _codeGenConfigService.GenerateFrontendVueContentAsync(entityName, tableColumns, config.TableName, config.PagePath, config.TableComment),
+                _ => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumns, config.NameSpace, config.TableComment) // 默认返回实体代码
             };
         }
 
