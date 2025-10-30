@@ -26,6 +26,7 @@
 		"js-table2excel": "^1.1.2",
 		"jsplumb": "^2.15.6",
 		"mitt": "^3.0.1",
+		"monaco-editor": "^0.54.0",
 		"nprogress": "^0.2.0",
 		"pinia": "^2.1.7",
 		"print-js": "^1.6.0",
@@ -74,10 +75,9 @@
 		"vite-auto-i18n-plugin": "^1.1.9",
 		"vite-plugin-cdn-import": "^1.0.1",
 		"vite-plugin-compression2": "^2.2.1",
+		"vite-plugin-vue-devtools": "^8.0.2",
 		"vite-plugin-vue-setup-extend-plus": "^0.1.0",
-		"vue-eslint-parser": "^10.2.0",
-    	"vite-plugin-vue-devtools": "^8.0.2"
-
+		"vue-eslint-parser": "^10.2.0"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
