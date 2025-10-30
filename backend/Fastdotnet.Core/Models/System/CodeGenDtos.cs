@@ -27,11 +27,6 @@ namespace Fastdotnet.Core.Models.System
         public string? NameSpace { get; set; }
 
         /// <summary>
-        /// 作者姓名
-        /// </summary>
-        public string? AuthorName { get; set; }
-
-        /// <summary>
         /// 生成方式
         /// </summary>
         public string? GenerateType { get; set; }
@@ -342,25 +337,11 @@ namespace Fastdotnet.Core.Models.System
         public string? TableName { get; set; }
 
         /// <summary>
-        /// 业务名
-        /// </summary>
-        [Required(ErrorMessage = "业务名不能为空")]
-        [StringLength(100, ErrorMessage = "业务名长度不能超过100个字符")]
-        public string? BusName { get; set; }
-
-        /// <summary>
         /// 命名空间
         /// </summary>
         [Required(ErrorMessage = "命名空间不能为空")]
         [StringLength(200, ErrorMessage = "命名空间长度不能超过200个字符")]
         public string? NameSpace { get; set; }
-
-        /// <summary>
-        /// 作者姓名
-        /// </summary>
-        [Required(ErrorMessage = "作者姓名不能为空")]
-        [StringLength(50, ErrorMessage = "作者姓名长度不能超过50个字符")]
-        public string? AuthorName { get; set; }
 
         /// <summary>
         /// 生成方式
@@ -391,5 +372,52 @@ namespace Fastdotnet.Core.Models.System
         /// </summary>
         [StringLength(200, ErrorMessage = "前端页面路径长度不能超过200个字符")]
         public string? PagePath { get; set; }
+        
+        /// <summary>
+        /// 预览操作类型（filelist获取文件列表，其他为获取文件内容）
+        /// </summary>
+        public string? Action { get; set; }
+        
+        /// <summary>
+        /// 选中的预览文件路径
+        /// </summary>
+        public string? SelectedFile { get; set; }
+    }
+    
+    /// <summary>
+    /// 代码生成预览结果 DTO
+    /// </summary>
+    public class CodeGenPreviewResult
+    {
+        /// <summary>
+        /// 文件内容
+        /// </summary>
+        public string? Content { get; set; }
+        
+        /// <summary>
+        /// 文件列表
+        /// </summary>
+        public List<PreviewFileItem>? FileList { get; set; }
+    }
+    
+    /// <summary>
+    /// 预览文件项 DTO
+    /// </summary>
+    public class PreviewFileItem
+    {
+        /// <summary>
+        /// 文件名
+        /// </summary>
+        public string? Name { get; set; }
+        
+        /// <summary>
+        /// 文件路径
+        /// </summary>
+        public string? Path { get; set; }
+        
+        /// <summary>
+        /// 文件类型
+        /// </summary>
+        public string? Type { get; set; }
     }
 }

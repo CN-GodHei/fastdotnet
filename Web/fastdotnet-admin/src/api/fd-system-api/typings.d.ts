@@ -19,6 +19,11 @@ declare namespace APIModel {
 		Items?: AdminUserDto[];
 	};
 
+	type ApiResult = {
+		Code?: number;
+		Msg?: string;
+	};
+
 	type AppRegisterDto = {
 		Username: string;
 		Password: string;
@@ -35,7 +40,6 @@ declare namespace APIModel {
 		TableName?: string;
 		EntityName?: string;
 		NameSpace?: string;
-		AuthorName?: string;
 		GenerateType?: string;
 		GenerateMenu?: boolean;
 		MenuIcon?: string;
@@ -54,14 +58,14 @@ declare namespace APIModel {
 	type CodeGenInput = {
 		ConfigId: string;
 		TableName: string;
-		BusName: string;
 		NameSpace: string;
-		AuthorName: string;
 		GenerateType: string;
 		GenerateMenu?: boolean;
 		MenuIcon?: string;
 		MenuPid?: string;
 		PagePath?: string;
+		Action?: string;
+		SelectedFile?: string;
 	};
 
 	type ColumnInfoDto = {
@@ -819,6 +823,13 @@ declare namespace APIModel {
 		pageSize?: number;
 	};
 
+	type getCodeGenPreviewConfigIdParams = {
+		/** 代码生成配置ID */
+		configId: string;
+		/** 代码类型：entity, dto, service, controller, frontend */
+		type?: string;
+	};
+
 	type getCodeGenRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
@@ -840,6 +851,10 @@ declare namespace APIModel {
 		Password: string;
 		CaptchaId?: string;
 		CaptchaCode?: string;
+	};
+
+	type LoginResultDto = {
+		Token?: string;
 	};
 
 	type MenuButtonDto = {
@@ -919,6 +934,28 @@ declare namespace APIModel {
 		Name?: string;
 		IsByRef?: boolean;
 		CanReduce?: boolean;
+	};
+
+	type PermissionDto = {
+		Id?: string;
+		Name?: string;
+		Code?: string;
+		Description?: string;
+		Module?: string;
+		Type?: string;
+		Category?: string;
+	};
+
+	type PluginConfig = {
+		id?: string;
+		name?: string;
+		description?: string;
+		version?: string;
+		enabled?: boolean;
+		author?: string;
+		dependencies?: string[];
+		tags?: string[];
+		entryPoint?: string;
 	};
 
 	type postAdminCacheTestSetParams = {
@@ -1183,6 +1220,7 @@ declare namespace APIModel {
 	};
 
 	type UpdateFdCodeGenConfigDto = {
+		Id: number;
 		CodeGenId: number;
 		ColumnName: string;
 		ColumnKey?: string;

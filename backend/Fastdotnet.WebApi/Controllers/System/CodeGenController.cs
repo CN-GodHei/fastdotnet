@@ -156,6 +156,43 @@ namespace Fastdotnet.WebApi.Controllers.System
         }
 
         /// <summary>
+        /// 预览生成的代码
+        /// </summary>
+        /// <param name="configId">代码生成配置ID</param>
+        /// <param name="type">代码类型：entity, dto, service, controller, frontend</param>
+        /// <returns></returns>
+        [HttpGet("preview/{configId}")]
+        [Authorize(Policy = Permissions.System.CodeGen.View)]
+        public async Task<string> PreviewCode(string configId, [FromQuery] string type = "entity")
+        {
+            if (string.IsNullOrEmpty(configId))
+            {
+                throw new ArgumentException("配置ID不能为空");
+            }
+
+            // 获取配置信息
+            var config = await _repository.GetByIdAsync(configId);
+            if (config == null)
+            {
+                throw new ArgumentException("配置不存在");
+            }
+
+            var entityName = _codeGenConfigService.GetEntityNameByTableName(config.TableName);
+            var tableColumns = await _codeGenConfigService.GetTableColumnListAsync(config.TableName);
+            
+            // 根据类型生成不同的代码
+            return type?.ToLower() switch
+            {
+                "entity" => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumns, config.NameSpace),
+                "dto" => await _codeGenConfigService.GenerateDtoContentAsync(entityName, tableColumns, config.NameSpace),
+                "service" => await _codeGenConfigService.GenerateServiceImplementationContentAsync(entityName, config.NameSpace),
+                "controller" => await _codeGenConfigService.GenerateControllerContentAsync(entityName, config.NameSpace),
+                "frontend" => await _codeGenConfigService.GenerateFrontendVueContentAsync(entityName, tableColumns, config.TableName, config.PagePath),
+                _ => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumns, config.NameSpace) // 默认返回实体代码
+            };
+        }
+
+        /// <summary>
         /// 下载生成的代码文件
         /// </summary>
         /// <param name="filePath">文件路径</param>

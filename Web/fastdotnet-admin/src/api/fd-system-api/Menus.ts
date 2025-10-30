@@ -233,7 +233,7 @@ export async function postAdminMenusRecyclebinSearch(body: APIModel.PageQueryByC
 
 /** 此处后端没有提供注释 GET /api/admin/menus/tree */
 export async function getAdminMenusTree(options?: { [key: string]: any }) {
-	return request<any>('/api/admin/menus/tree', {
+	return request<APIModel.MenuDto[]>('/api/admin/menus/tree', {
 		method: 'GET',
 		...(options || {}),
 	});

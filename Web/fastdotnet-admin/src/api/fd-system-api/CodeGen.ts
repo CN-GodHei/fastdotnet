@@ -235,6 +235,24 @@ export async function postCodeGenPageSearch(body: APIModel.PageQueryByConditionD
 	});
 }
 
+/** 预览生成的代码 GET /api/CodeGen/preview/${param0} */
+export async function getCodeGenPreviewConfigId(
+	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+	params: APIModel.getCodeGenPreviewConfigIdParams,
+	options?: { [key: string]: any }
+) {
+	const { configId: param0, ...queryParams } = params;
+	return request<string>(`/api/CodeGen/preview/${param0}`, {
+		method: 'GET',
+		params: {
+			// type has a default value: entity
+			type: 'entity',
+			...queryParams,
+		},
+		...(options || {}),
+	});
+}
+
 /** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/CodeGen/recyclebin */
 export async function getCodeGenRecyclebin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

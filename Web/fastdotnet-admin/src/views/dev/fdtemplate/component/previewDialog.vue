@@ -4,10 +4,11 @@
 			<template #header>
 				<div style="color: #fff">
 					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-View /> </el-icon>
-					<span> {{ props.title }} </span>
+					<span> {{ state.dialogTitle }} </span>
 				</div>
 			</template>
-			<el-tabs v-model="state.activeTab" type="card">
+			
+			<el-tabs v-model="state.activeTab" type="card" @tab-change="onTabChange">
 				<el-tab-pane label="Entity" name="entity">
 					<pre class="code-content">{{ state.entityCode }}</pre>
 				</el-tab-pane>
@@ -24,6 +25,7 @@
 					<pre class="code-content">{{ state.frontendCode }}</pre>
 				</el-tab-pane>
 			</el-tabs>
+			
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="cancel">关 闭</el-button>
@@ -35,29 +37,104 @@
 
 <script lang="ts" setup name="sysPreview">
 import { reactive } from 'vue';
+import { ElMessage } from 'element-plus';
+import { getCodeGenPreviewConfigId } from '/@/api/fd-system-api/CodeGen';
 
-const props = defineProps({
-	title: String,
-});
+interface PreviewRow {
+	Id: string;
+	TableName: string;
+	EntityName: string;
+	NameSpace: string;
+	PagePath: string;
+}
 
 const state = reactive({
 	isShowDialog: false,
+	dialogTitle: '预览代码',
 	activeTab: 'entity',
-	entityCode: '',
+	entityCode: '// 正在加载...',
 	dtoCode: '',
 	serviceCode: '',
 	controllerCode: '',
 	frontendCode: '',
+	currentRow: null as PreviewRow | null,
 });
 
+// 标签页切换事件
+const onTabChange = async (tabName: string) => {
+	if (state.currentRow?.Id) {
+		await loadCodeContent(state.currentRow.Id, tabName);
+	}
+};
+
+// 加载代码内容
+const loadCodeContent = async (configId: string, type: string) => {
+	try {
+		const res = await getCodeGenPreviewConfigId({
+			configId: configId,
+			type: type
+		});
+		
+		switch(type) {
+			case 'entity':
+				state.entityCode = res;
+				break;
+			case 'dto':
+				state.dtoCode = res;
+				break;
+			case 'service':
+				state.serviceCode = res;
+				break;
+			case 'controller':
+				state.controllerCode = res;
+				break;
+			case 'frontend':
+				state.frontendCode = res;
+				break;
+		}
+	} catch (error) {
+		console.error(`加载${type}代码失败`, error);
+		ElMessage.error(`加载${type}代码失败`);
+		
+		// 设置错误信息到对应字段
+		const errorContent = `// 加载${type}代码失败\n// 错误: ${(error as Error).message}`;
+		switch(type) {
+			case 'entity':
+				state.entityCode = errorContent;
+				break;
+			case 'dto':
+				state.dtoCode = errorContent;
+				break;
+			case 'service':
+				state.serviceCode = errorContent;
+				break;
+			case 'controller':
+				state.controllerCode = errorContent;
+				break;
+			case 'frontend':
+				state.frontendCode = errorContent;
+				break;
+		}
+	}
+};
+
 // 打开弹窗
-const openDialog = (row: any) => {
-	// 模拟生成代码内容
-	state.entityCode = `// ${row.tableName} 实体类\npublic class ${row.entityName} : BaseEntity\n{\n    // 实体属性将根据表结构生成\n}`;
-	state.dtoCode = `// DTO 类将根据表结构生成`;
-	state.serviceCode = `// Service 类将根据表结构生成`;
-	state.controllerCode = `// Controller 类将根据表结构生成`;
-	state.frontendCode = `// 前端页面将根据表结构生成`;
+const openDialog = async (row: PreviewRow) => {
+	state.currentRow = row;
+	state.dialogTitle = `预览代码 - ${row.EntityName || row.TableName}`;
+	
+	// 默认加载Entity代码，并预加载其他代码
+	if (row.Id) {
+		// 首先加载当前选中的标签页内容
+		await loadCodeContent(row.Id, state.activeTab);
+		
+		// 预加载其他标签页内容
+		const otherTypes = ['entity', 'dto', 'service', 'controller', 'frontend'].filter(t => t !== state.activeTab);
+		for (const type of otherTypes) {
+			// 我们不等待这些请求，以便用户界面能更快响应
+			loadCodeContent(row.Id, type);
+		}
+	}
 	
 	state.isShowDialog = true;
 };

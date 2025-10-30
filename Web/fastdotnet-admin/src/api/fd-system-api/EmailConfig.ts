@@ -196,7 +196,7 @@ export async function postAdminEmailConfigRecyclebinSearch(body: APIModel.PageQu
 
 /** 更新唯一的邮件配置 PUT /api/admin/EmailConfig/UpdateConfig */
 export async function putAdminEmailConfigUpdateConfig(body: APIModel.UpdateEmailConfigDto, options?: { [key: string]: any }) {
-	return request<any>('/api/admin/EmailConfig/UpdateConfig', {
+	return request<boolean>('/api/admin/EmailConfig/UpdateConfig', {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json-patch+json',

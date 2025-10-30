@@ -335,6 +335,12 @@ namespace Fastdotnet.Core.Models.System
     public class UpdateFdCodeGenConfigDto
     {
         /// <summary>
+        /// 主键Id不能为空
+        /// </summary>
+        [Required(ErrorMessage = "主键Id不能为空")]
+        public long Id { get; set; }
+
+        /// <summary>
         /// 代码生成主表Id
         /// </summary>
         [Required(ErrorMessage = "代码生成主表Id不能为空")]

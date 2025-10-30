@@ -31,5 +31,72 @@ namespace Fastdotnet.Core.IService
         /// <param name="input">代码生成输入</param>
         /// <returns></returns>
         Task<string> GenerateCodeAsync(CodeGenInput input);
+        
+        /// <summary>
+        /// 获取生成的文件列表
+        /// </summary>
+        /// <param name="input">代码生成输入</param>
+        /// <returns></returns>
+        Task<List<PreviewFileItem>> GetGeneratedFileListAsync(CodeGenInput input);
+        
+        /// <summary>
+        /// 获取生成的文件内容
+        /// </summary>
+        /// <param name="input">代码生成输入</param>
+        /// <param name="filePath">文件路径</param>
+        /// <returns></returns>
+        Task<string> GetGeneratedFileContentAsync(CodeGenInput input, string filePath);
+        
+        /// <summary>
+        /// 预览代码
+        /// </summary>
+        /// <param name="input">代码生成输入</param>
+        /// <returns></returns>
+        Task<CodeGenPreviewResult> PreviewCodeAsync(CodeGenInput input);
+        
+        /// <summary>
+        /// 生成实体类代码
+        /// </summary>
+        /// <param name="tableName">表名</param>
+        /// <param name="entityName">实体名</param>
+        /// <param name="columns">列信息列表</param>
+        /// <param name="nameSpace">命名空间</param>
+        /// <returns></returns>
+        Task<string> GenerateEntityContentAsync(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace);
+        
+        /// <summary>
+        /// 生成DTO代码
+        /// </summary>
+        /// <param name="entityName">实体名</param>
+        /// <param name="columns">列信息列表</param>
+        /// <param name="nameSpace">命名空间</param>
+        /// <returns></returns>
+        Task<string> GenerateDtoContentAsync(string entityName, List<ColumnInfoDto> columns, string nameSpace);
+        
+        /// <summary>
+        /// 生成服务实现代码
+        /// </summary>
+        /// <param name="entityName">实体名</param>
+        /// <param name="nameSpace">命名空间</param>
+        /// <returns></returns>
+        Task<string> GenerateServiceImplementationContentAsync(string entityName, string nameSpace);
+        
+        /// <summary>
+        /// 生成控制器代码
+        /// </summary>
+        /// <param name="entityName">实体名</param>
+        /// <param name="nameSpace">命名空间</param>
+        /// <returns></returns>
+        Task<string> GenerateControllerContentAsync(string entityName, string nameSpace);
+        
+        /// <summary>
+        /// 生成前端页面代码
+        /// </summary>
+        /// <param name="entityName">实体名</param>
+        /// <param name="columns">列信息列表</param>
+        /// <param name="tableName">表名</param>
+        /// <param name="pagePath">页面路径</param>
+        /// <returns></returns>
+        Task<string> GenerateFrontendVueContentAsync(string entityName, List<ColumnInfoDto> columns, string tableName, string pagePath);
     }
 }

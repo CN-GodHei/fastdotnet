@@ -31,7 +31,7 @@ export async function postPluginDisablePluginId(
 	options?: { [key: string]: any }
 ) {
 	const { pluginId: param0, ...queryParams } = params;
-	return request<any>(`/api/Plugin/disable/${param0}`, {
+	return request<APIModel.ApiResult>(`/api/Plugin/disable/${param0}`, {
 		method: 'POST',
 		params: { ...queryParams },
 		...(options || {}),
@@ -45,7 +45,7 @@ export async function postPluginEnablePluginId(
 	options?: { [key: string]: any }
 ) {
 	const { pluginId: param0, ...queryParams } = params;
-	return request<any>(`/api/Plugin/enable/${param0}`, {
+	return request<APIModel.ApiResult>(`/api/Plugin/enable/${param0}`, {
 		method: 'POST',
 		params: { ...queryParams },
 		...(options || {}),
@@ -62,7 +62,7 @@ export async function getPluginLoaded(options?: { [key: string]: any }) {
 
 /** 扫描插件目录以发现所有可用插件 GET /api/Plugin/scan */
 export async function getPluginScan(options?: { [key: string]: any }) {
-	return request<any>('/api/Plugin/scan', {
+	return request<APIModel.PluginConfig[]>('/api/Plugin/scan', {
 		method: 'GET',
 		...(options || {}),
 	});
@@ -75,7 +75,7 @@ export async function postPluginUninstallPluginId(
 	options?: { [key: string]: any }
 ) {
 	const { pluginId: param0, ...queryParams } = params;
-	return request<any>(`/api/Plugin/uninstall/${param0}`, {
+	return request<APIModel.ApiResult>(`/api/Plugin/uninstall/${param0}`, {
 		method: 'POST',
 		params: { ...queryParams },
 		...(options || {}),

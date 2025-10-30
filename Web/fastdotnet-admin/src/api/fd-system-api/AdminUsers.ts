@@ -77,7 +77,7 @@ export async function postAdminUsersIdResetPassword(
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
-	return request<any>(`/api/admin/users/${param0}/reset-password`, {
+	return request<boolean>(`/api/admin/users/${param0}/reset-password`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
