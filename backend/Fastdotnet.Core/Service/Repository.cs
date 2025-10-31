@@ -167,9 +167,9 @@ namespace Fastdotnet.Core.Service
                     entity.Id = SnowflakeIdGenerator.NextStrId();
                 }
                 
-                if (entity.CreateTime == default(DateTime))
+                if (entity.CreatedAt == default(DateTime))
                 {
-                    entity.CreateTime = DateTime.Now;
+                    entity.CreatedAt = DateTime.Now;
                 }
             }
             
@@ -260,7 +260,7 @@ namespace Fastdotnet.Core.Service
             // 如果实体实现了软删除接口，则执行软删除
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(T)))
             {
-               return await _db.Deleteable<T>().In(id).IsLogic().ExecuteCommandAsync("IsDeleted",true, "DeleteTime")>0;
+               return await _db.Deleteable<T>().In(id).IsLogic().ExecuteCommandAsync("IsDeleted",true, "DeletedAt")>0;
             }
             else
             {
@@ -283,7 +283,7 @@ namespace Fastdotnet.Core.Service
             {
                 // 使用 Updateable 进行软删除
                 var updateable = _db.Updateable<T>()
-                    .SetColumns(it => new T { IsDeleted = true, DeleteTime = DateTime.Now });
+                    .SetColumns(it => new T { IsDeleted = true, DeletedAt = DateTime.Now });
                 
                 // 只有当条件表达式不为 null 时，才添加 WHERE 条件
                 if (whereExpression != null)
@@ -337,7 +337,7 @@ namespace Fastdotnet.Core.Service
             else
             {
                 // 默认按删除时间倒序排列
-                query = query.OrderBy(entity => entity.DeleteTime, OrderByType.Desc);
+                query = query.OrderBy(entity => entity.DeletedAt, OrderByType.Desc);
             }
             
             var list = await query.ToPageListAsync(pageIndex, pageSize, totalCount);
@@ -383,7 +383,7 @@ namespace Fastdotnet.Core.Service
             else
             {
                 // 默认按删除时间倒序排列
-                query = query.OrderBy(entity => entity.DeleteTime, OrderByType.Desc);
+                query = query.OrderBy(entity => entity.DeletedAt, OrderByType.Desc);
             }
             
             var list = await query.ToPageListAsync(pageIndex, pageSize, totalCount);
@@ -413,8 +413,8 @@ namespace Fastdotnet.Core.Service
                     .SetColumns(it => new T 
                     { 
                         IsDeleted = false, 
-                        DeleteTime = null,
-                        UpdateTime = DateTime.Now
+                        DeletedAt = null,
+                        UpdatedAt = DateTime.Now
                     })
                     .Where(it => it.Id.Equals(id) && it.IsDeleted)
                     .ExecuteCommandAsync();
@@ -441,8 +441,8 @@ namespace Fastdotnet.Core.Service
                     .SetColumns(it => new T 
                     { 
                         IsDeleted = false, 
-                        DeleteTime = null,
-                        UpdateTime = DateTime.Now
+                        DeletedAt = null,
+                        UpdatedAt = DateTime.Now
                     })
                     .WhereIF(combinedExpression != null, combinedExpression)
                     .ExecuteCommandAsync();

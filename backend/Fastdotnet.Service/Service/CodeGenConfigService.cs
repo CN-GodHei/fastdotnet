@@ -831,7 +831,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
     /// </summary>
     public class {entityName}Dto
     {{
-{string.Join("\n", columns.Where(x => x.ColumnName != "is_deleted" && x.ColumnName != "delete_time").Select(col => GenerateDtoProperty(col, false,true)))}
+{string.Join("\n", columns.Where(x => x.ColumnName != "is_deleted" && x.ColumnName != "deleted_at").Select(col => GenerateDtoProperty(col, false,true)))}
     }}
 }}";
 

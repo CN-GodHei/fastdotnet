@@ -17,12 +17,12 @@ namespace Fastdotnet.Core.Models.Base
         /// <summary>
         /// 创建时间
         /// </summary>
-        DateTime CreateTime { get; set; }
+        DateTime CreatedAt { get; set; }
         
         /// <summary>
         /// 更新时间
         /// </summary>
-        DateTime? UpdateTime { get; set; }
+        DateTime? UpdatedAt { get; set; }
     }
     
     /// <summary>
@@ -39,14 +39,14 @@ namespace Fastdotnet.Core.Models.Base
         /// <summary>
         /// 创建时间
         /// </summary>
-        [SugarColumn(ColumnName = "create_time", ColumnDescription = "创建时间", ColumnDataType = "datetime")]
-        public DateTime CreateTime { get; set; } = DateTime.Now;
+        [SugarColumn(ColumnName = "created_at", ColumnDescription = "创建时间", ColumnDataType = "datetime")]
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         /// <summary>
         /// 更新时间
         /// </summary>
-        [SugarColumn(ColumnName = "update_time", ColumnDescription = "更新时间", IsNullable = true, ColumnDataType = "datetime")]
-        public DateTime? UpdateTime { get; set; }
+        [SugarColumn(ColumnName = "updated_at", ColumnDescription = "更新时间", IsNullable = true, ColumnDataType = "datetime")]
+        public DateTime? UpdatedAt { get; set; }
 
         /// <summary>
         /// 是否删除
@@ -57,7 +57,7 @@ namespace Fastdotnet.Core.Models.Base
         /// <summary>
         /// 删除时间
         /// </summary>
-        [SugarColumn(ColumnName = "delete_time", ColumnDescription = "删除时间", IsNullable = true, ColumnDataType = "datetime")]
-        public DateTime? DeleteTime { get; set; }
+        [SugarColumn(ColumnName = "deleted_at", ColumnDescription = "删除时间", IsNullable = true, ColumnDataType = "datetime")]
+        public DateTime? DeletedAt { get; set; }
     }
 }

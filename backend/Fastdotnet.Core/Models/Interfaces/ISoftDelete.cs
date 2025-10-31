@@ -13,5 +13,5 @@ public interface ISoftDelete
     /// <summary>
     /// 删除时间
     /// </summary>
-    DateTime? DeleteTime { get; set; }
+    DateTime? DeletedAt { get; set; }
 }
