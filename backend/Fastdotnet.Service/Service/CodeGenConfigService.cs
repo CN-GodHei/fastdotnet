@@ -1,10 +1,11 @@
 ﻿using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.System;
-using SqlSugar;
 using global::System.IO;
 using global::System.IO.Compression;
+using SqlSugar;
 using System.Reflection;
+using static Npgsql.Replication.PgOutput.Messages.RelationMessage;
 
 namespace Fastdotnet.Service.Service
 {
@@ -23,7 +24,7 @@ namespace Fastdotnet.Service.Service
         {
             var db = _db;
             var tables = db.DbMaintenance.GetTableInfoList(false);
-            
+
             var result = new List<TableInfoDto>();
             foreach (var table in tables)
             {
@@ -63,7 +64,7 @@ namespace Fastdotnet.Service.Service
                     Length = column.Length,
                     Scale = column.Scale,
                     DefaultValue = column.DefaultValue,
-                    ColumnComment = column.ColumnDescription ?? column.DbColumnName
+                    ColumnComment = column.ColumnDescription ?? column.DbColumnName,
                 });
             }
 
@@ -86,9 +87,9 @@ namespace Fastdotnet.Service.Service
 
             // 转换为 PascalCase
             var parts = cleanName.Split('_');
-            var entityName = string.Join("", parts.Select(part => 
+            var entityName = string.Join("", parts.Select(part =>
                 char.ToUpper(part.FirstOrDefault()) + (part.Length > 1 ? part.Substring(1).ToLower() : "")));
-            
+
             // 确保首字母大写
             if (!string.IsNullOrEmpty(entityName))
             {
@@ -102,7 +103,7 @@ namespace Fastdotnet.Service.Service
         {
             var tableColumns = await GetTableColumnListAsync(input.TableName ?? string.Empty);
             var entityName = GetEntityNameByTableName(input.TableName ?? string.Empty);
-            
+
             // 创建临时目录用于生成代码文件
             var tempDir = global::System.IO.Path.Combine(global::System.IO.Path.GetTempPath(), $"codegen_{input.TableName}_{DateTime.Now:yyyyMMddHHmmss}");
             if (!global::System.IO.Directory.Exists(tempDir))
@@ -114,19 +115,19 @@ namespace Fastdotnet.Service.Service
             {
                 // 生成实体类
                 await GenerateEntityFile(tempDir, input.TableName, entityName, tableColumns, input.NameSpace, TableComment);
-                
+
                 // 生成DTO类
                 await GenerateDtoFiles(tempDir, entityName, tableColumns, input.NameSpace, TableComment);
-                
+
                 // 生成服务接口
                 await GenerateServiceInterfaceFile(tempDir, entityName, input.NameSpace, TableComment);
-                
+
                 // 生成服务实现
                 await GenerateServiceImplementationFile(tempDir, entityName, input.NameSpace, TableComment);
-                
+
                 // 生成控制器
                 await GenerateControllerFile(tempDir, entityName, input.NameSpace, "Developer", TableComment); // 使用默认作者名
-                
+
                 // 生成前端页面
                 await GenerateFrontendFiles(tempDir, entityName, tableColumns, input.TableName, input.PagePath, TableComment); // 使用表名代替业务名
 
@@ -182,23 +183,61 @@ namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
             var attrStr = "";
             if (column.IsPrimarykey)
             {
-                attrStr = "[SugarColumn(IsPrimaryKey = true)]\n        ";
+                attrStr = $"[SugarColumn(IsPrimaryKey = true,ColumnName = \"{column.ColumnName.ToLower()}\", {GetLength(column.Length)} IsNullable = {column.IsNullable.ToString().ToLower()}, ColumnDescription = \"{column.ColumnComment}\" {GetDefaultValue(column.DefaultValue)})]";
             }
             else if (column.IsIdentity)
             {
-                attrStr = "[SugarColumn(IsIdentity = true)]\n        ";
+                attrStr = $@"[SugarColumn(IsIdentity = true,ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.Length)} IsNullable = {column.IsNullable.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}""{GetDefaultValue(column.DefaultValue)})]";
             }
-            
-            return $"        {attrStr}public {column.NetType} {column.PropertyName} {{ get; set; }}";
+            if (string.IsNullOrEmpty(attrStr))
+            {
+                attrStr += $@"[SugarColumn(ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.Length)} IsNullable = {column.IsNullable.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}"" {GetDefaultValue(column.DefaultValue)})]";
+            }
+            return $"        {GenGenerateColumnComment(column.ColumnComment)}\n        {attrStr}\n        public {column.NetType} {column.PropertyName} {{ get; set; }}";
+        }
+        private string getIsNullableStr(bool IsNullable)
+        {
+            return IsNullable ? "?" : string.Empty;
+        }
+
+        private string GetLength(int Length)
+        {
+            if (Length > 0)
+            {
+                return $"Length = {Length},";
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+        private string GetDefaultValue(string DefaultValue)
+        {
+            if (string.IsNullOrEmpty(DefaultValue))
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return $",DefaultValue ={DefaultValue}";
+            }
+        }
+
+        private string GenGenerateColumnComment(string ColumnComment)
+        {
+            return $@"
+        /// <summary>
+        /// {ColumnComment}
+        /// </summary>";
         }
 
         private async Task GenerateDtoFiles(string outputDir, string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
         {
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
-            
-            var filteredColumns = columns.Where(col => 
-                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) && 
+
+            var filteredColumns = columns.Where(col =>
+                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) &&
                 !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
 
             var dtoDir = global::System.IO.Path.Combine(outputDir, "Dto");
@@ -248,34 +287,44 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
             await global::System.IO.File.WriteAllTextAsync(dtoPath, fullContent);
         }
 
-        private string GenerateDtoProperty(ColumnInfoDto column, bool isCreate = false)
+        private string GenerateDtoProperty(ColumnInfoDto column, bool isCreate = false, bool isOutput = false)
         {
             var validations = new List<string>();
             if (!column.IsNullable && !column.IsPrimarykey && !column.IsIdentity && isCreate)
             {
-                validations.Add("[Required]");
+                validations.Add("[Required(ErrorMessage = \"" + column.ColumnComment + "不能为空\")]");
             }
 
             var lengthValidation = "";
             if (column.Length > 0 && (column.DataType?.Contains("char") == true || column.DataType?.Contains("text") == true))
             {
-                lengthValidation = $"[StringLength({column.Length})]";
+                if (!isOutput)
+                {
+                    lengthValidation = $"[StringLength({column.Length},ErrorMessage = \"{column.ColumnComment}最多{column.Length}个字符\")]";
+                }
+                else
+                {
+                    lengthValidation = "        ";
+                }
             }
 
             var validationStr = string.Join(" ", validations);
             if (!string.IsNullOrEmpty(lengthValidation))
             {
-                validationStr = string.IsNullOrEmpty(validationStr) ? lengthValidation : $"{validationStr} {lengthValidation}";
+                validationStr = string.IsNullOrEmpty(validationStr) ? lengthValidation : $"{validationStr}\n        {lengthValidation}";
             }
 
-            var result = "";
+            var result = $"{GenGenerateColumnComment(column.ColumnName)}\n";
             if (!string.IsNullOrEmpty(validationStr))
             {
                 result += $"        {validationStr}\n        ";
             }
-
+            else
+            {
+                result += $"        ";
+            }
             result += $"public {column.NetType} {column.PropertyName} {{ get; set; }}";
-            
+
             return result;
         }
 
@@ -400,9 +449,9 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 
 		<el-card class=""full-table"" shadow=""hover"" style=""margin-top: 5px"">
 			<el-table :data=""tableData"" style=""width: 100%"" v-loading=""loading"" border>
-				{string.Join("\n\t\t\t\t", columns.Take(3).Select((col, idx) => 
-					$"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ColumnComment ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
-				))}
+				{string.Join("\n\t\t\t\t", columns.Take(3).Select((col, idx) =>
+                    $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ColumnComment ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
+                ))}
 				<el-table-column label=""操作"" width=""180"" fixed=""right"" align=""center"">
 					<template #default=""scope"">
 						<el-button icon=""ele-Edit"" size=""small"" text type=""primary"" @click=""openEditDialog(scope.row)"">修改</el-button>
@@ -431,9 +480,9 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 				</div>
 			</template>
 			<el-form :model=""formData"" ref=""formRef"" label-width=""auto"">
-				{string.Join("\n\t\t\t\t", columns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Take(5).Select(col => 
-					$"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ColumnComment ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"formData.{col.PropertyName}\" placeholder=\"请输入{col.ColumnComment ?? col.PropertyName}\" clearable />\n					</el-form-item>\n				</el-col>"
-				))}
+				{string.Join("\n\t\t\t\t", columns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Take(5).Select(col =>
+                    $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ColumnComment ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"formData.{col.PropertyName}\" placeholder=\"请输入{col.ColumnComment ?? col.PropertyName}\" clearable />\n					</el-form-item>\n				</el-col>"
+                ))}
 			</el-form>
 			<template #footer>
 				<span class=""dialog-footer"">
@@ -587,7 +636,7 @@ onMounted(() => {{
             };
 
             // 如果可空且非 string 类型，追加 ?
-            if (isNullable && netType != "string")
+            if (isNullable)
             {
                 netType += "?";
             }
@@ -599,73 +648,73 @@ onMounted(() => {{
         {
             var tableColumns = await GetTableColumnListAsync(input.TableName ?? string.Empty);
             var entityName = GetEntityNameByTableName(input.TableName ?? string.Empty);
-            
+
             var fileList = new List<PreviewFileItem>();
-            
+
             // 实体类
-            fileList.Add(new PreviewFileItem 
-            { 
-                Name = $"{entityName}.cs", 
-                Path = $"src/{input.NameSpace}/Entities/{entityName}.cs", 
-                Type = "cs" 
+            fileList.Add(new PreviewFileItem
+            {
+                Name = $"{entityName}.cs",
+                Path = $"src/{input.NameSpace}/Entities/{entityName}.cs",
+                Type = "cs"
             });
-            
+
             // DTO类
-            fileList.Add(new PreviewFileItem 
-            { 
-                Name = $"{entityName}Dto.cs", 
-                Path = $"src/{input.NameSpace}/Dtos/{entityName}Dto.cs", 
-                Type = "cs" 
+            fileList.Add(new PreviewFileItem
+            {
+                Name = $"{entityName}Dto.cs",
+                Path = $"src/{input.NameSpace}/Dtos/{entityName}Dto.cs",
+                Type = "cs"
             });
-            
+
             // 服务接口
-            fileList.Add(new PreviewFileItem 
-            { 
-                Name = $"I{entityName}Service.cs", 
-                Path = $"src/{input.NameSpace}/IService/I{entityName}Service.cs", 
-                Type = "cs" 
+            fileList.Add(new PreviewFileItem
+            {
+                Name = $"I{entityName}Service.cs",
+                Path = $"src/{input.NameSpace}/IService/I{entityName}Service.cs",
+                Type = "cs"
             });
-            
+
             // 服务实现
-            fileList.Add(new PreviewFileItem 
-            { 
-                Name = $"{entityName}Service.cs", 
-                Path = $"src/{input.NameSpace}/Service/{entityName}Service.cs", 
-                Type = "cs" 
+            fileList.Add(new PreviewFileItem
+            {
+                Name = $"{entityName}Service.cs",
+                Path = $"src/{input.NameSpace}/Service/{entityName}Service.cs",
+                Type = "cs"
             });
-            
+
             // 控制器
-            fileList.Add(new PreviewFileItem 
-            { 
-                Name = $"{entityName}Controller.cs", 
-                Path = $"src/{input.NameSpace}/Controllers/{entityName}Controller.cs", 
-                Type = "cs" 
+            fileList.Add(new PreviewFileItem
+            {
+                Name = $"{entityName}Controller.cs",
+                Path = $"src/{input.NameSpace}/Controllers/{entityName}Controller.cs",
+                Type = "cs"
             });
-            
+
             // 前端API
-            fileList.Add(new PreviewFileItem 
-            { 
-                Name = $"{entityName?.ToLower()}-api.ts", 
-                Path = $"src/api/{input.TableName}-api.ts", 
-                Type = "ts" 
+            fileList.Add(new PreviewFileItem
+            {
+                Name = $"{entityName?.ToLower()}-api.ts",
+                Path = $"src/api/{input.TableName}-api.ts",
+                Type = "ts"
             });
-            
+
             // 前端页面
-            fileList.Add(new PreviewFileItem 
-            { 
-                Name = $"{entityName}.vue", 
-                Path = $"src/views/{input.PagePath}/{entityName?.ToLower()}/index.vue", 
-                Type = "vue" 
+            fileList.Add(new PreviewFileItem
+            {
+                Name = $"{entityName}.vue",
+                Path = $"src/views/{input.PagePath}/{entityName?.ToLower()}/index.vue",
+                Type = "vue"
             });
-            
+
             return fileList;
         }
 
-        public async Task<string> GetGeneratedFileContentAsync(CodeGenInput input, string filePath,string TableComment)
+        public async Task<string> GetGeneratedFileContentAsync(CodeGenInput input, string filePath, string TableComment)
         {
             var tableColumns = await GetTableColumnListAsync(input.TableName ?? string.Empty);
             var entityName = GetEntityNameByTableName(input.TableName ?? string.Empty);
-            
+
             // 这里我们根据文件路径返回对应的生成内容
             if (filePath.EndsWith($"{entityName}.cs"))
             {
@@ -685,7 +734,7 @@ onMounted(() => {{
             }
             else if (filePath.EndsWith($"{entityName}Controller.cs"))
             {
-                return await GenerateControllerContent(entityName, input.NameSpace,  TableComment); // 使用默认作者名
+                return await GenerateControllerContent(entityName, input.NameSpace, TableComment); // 使用默认作者名
             }
             else if (filePath.EndsWith("-api.ts"))
             {
@@ -695,7 +744,7 @@ onMounted(() => {{
             {
                 return await GenerateFrontendVueContent(entityName, tableColumns, input.TableName, input.PagePath, TableComment); // 使用表名代替业务名
             }
-            
+
             return "// 文件不存在或无法生成预览内容";
         }
 
@@ -705,17 +754,17 @@ onMounted(() => {{
             {
                 FileList = await GetGeneratedFileListAsync(input)
             };
-            
+
             return previewResult;
         }
 
-        protected async Task<string> GenerateEntityContent(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace,string TableComment)
+        protected async Task<string> GenerateEntityContent(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
         {
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
-            
-            var filteredColumns = columns.Where(col => 
-                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) && 
+
+            var filteredColumns = columns.Where(col =>
+                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) &&
                 !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
 
             return $@"using SqlSugar;
@@ -736,13 +785,13 @@ namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
         private HashSet<string> GetBaseEntityPropertyNames()
         {
             var baseEntityProperties = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            
+
             var properties = typeof(Core.Models.Base.BaseEntity).GetProperties();
             foreach (var property in properties)
             {
                 baseEntityProperties.Add(property.Name);
             }
-            
+
             return baseEntityProperties;
         }
 
@@ -750,47 +799,43 @@ namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
         {
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
-            
-            var filteredColumns = columns.Where(col => 
-                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) && 
-                !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
 
-            // Create DTO
+            var filteredColumns = columns.Where(col =>
+                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) &&
+                !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
+            var primaryKeyColumns = columns.Where(x => x.IsPrimarykey).ToList();
+            primaryKeyColumns.AddRange(filteredColumns);
+
             var createDtoContent = $@"using System.ComponentModel.DataAnnotations;
 
 namespace {nameSpace ?? "Fastdotnet.Core.Models"}
 {{
+    /// <summary>
+    ///新增传输模型
+    /// </summary>
     public class Create{entityName}Dto
     {{
 {string.Join("\n", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col => GenerateDtoProperty(col, true)))}
     }}
-}}";
 
-            // Update DTO
-            var updateDtoContent = $@"using System.ComponentModel.DataAnnotations;
-
-namespace {nameSpace ?? "Fastdotnet.Core.Models"}
-{{
+    /// <summary>
+    ///修改传输模型
+    /// </summary>
     public class Update{entityName}Dto
     {{
-{string.Join("\n", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col => GenerateDtoProperty(col, false)))}
+{string.Join("\n", primaryKeyColumns.Select(col => GenerateDtoProperty(col, false)))}
     }}
-}}";
 
-            // Output DTO
-            var outputDtoContent = $@"namespace {nameSpace ?? "Fastdotnet.Core.Models"}
-{{
+    /// <summary>
+    ///输出传输模型
+    /// </summary>
     public class {entityName}Dto
     {{
-{string.Join("\n", filteredColumns.Select(col => GenerateDtoProperty(col, false)))}
+{string.Join("\n", columns.Where(x => x.ColumnName != "is_deleted" && x.ColumnName != "delete_time").Select(col => GenerateDtoProperty(col, false,true)))}
     }}
 }}";
 
-            return $@"{createDtoContent}
-
-{updateDtoContent}
-
-{outputDtoContent}";
+            return $@"{createDtoContent}";
         }
 
         protected async Task<string> GenerateServiceInterfaceContent(string entityName, string nameSpace, string TableComment)
@@ -822,7 +867,7 @@ namespace {nameSpace ?? "Fastdotnet.Service.Service"}
 }}";
         }
 
-        protected async Task<string> GenerateControllerContent(string entityName, string nameSpace,  string TableComment)
+        protected async Task<string> GenerateControllerContent(string entityName, string nameSpace, string TableComment)
         {
             return $@"using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.Entities;
@@ -965,16 +1010,16 @@ export async function get{entityName}Page(
 
         public async Task<string> GenerateFrontendVueContentAsync(string entityName, List<ColumnInfoDto> columns, string tableName, string pagePath, string TableComment)
         {
-            return await GenerateFrontendVueContent(entityName, columns, tableName, pagePath,TableComment);
+            return await GenerateFrontendVueContent(entityName, columns, tableName, pagePath, TableComment);
         }
 
         private async Task<string> GenerateFrontendVueContent(string entityName, List<ColumnInfoDto> columns, string busName, string pagePath, string TableComment)
         {
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
-            
-            var filteredColumns = columns.Where(col => 
-                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) && 
+
+            var filteredColumns = columns.Where(col =>
+                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) &&
                 !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
 
             return $@"<template>
@@ -998,7 +1043,7 @@ export async function get{entityName}Page(
 
 		<el-card class=""full-table"" shadow=""hover"" style=""margin-top: 5px"">
 			<el-table :data=""tableData"" style=""width: 100%"" v-loading=""loading"" border>
-				{string.Join("\n\t\t\t\t", filteredColumns.Take(3).Select((col, idx) => 
+				{string.Join("\n\t\t\t\t", filteredColumns.Take(3).Select((col, idx) =>
                     $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ColumnComment ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
                 ))}
 				<el-table-column label=""操作"" width=""180"" fixed=""right"" align=""center"">
@@ -1029,7 +1074,7 @@ export async function get{entityName}Page(
 				</div>
 			</template>
 			<el-form :model=""formData"" ref=""formRef"" label-width=""auto"">
-				{string.Join("\n\t\t\t\t", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Take(5).Select(col => 
+				{string.Join("\n\t\t\t\t", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Take(5).Select(col =>
                     $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ColumnComment ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"formData.{col.PropertyName}\" placeholder=\"请输入{col.ColumnComment ?? col.PropertyName}\" clearable />\n					</el-form-item>\n				</el-col>"
                 ))}
 			</el-form>

@@ -229,7 +229,7 @@ namespace Fastdotnet.WebApi.Controllers.System
         protected override async Task AfterCreate(FdCodeGen entity, CreateCodeGenDto dto)
         {
             var tableColumns = await _codeGenConfigService.GetTableColumnListAsync(entity.TableName);
-
+            var baseEntityProperties = GetBaseEntityPropertyNames();
             // 将表列信息转换为 FdCodeGenConfig 实体列表并保存
             if (tableColumns != null && tableColumns.Any())
             {
@@ -246,7 +246,14 @@ namespace Fastdotnet.WebApi.Controllers.System
                     NetType = col.NetType,
                     DefaultValue = col.DefaultValue,
                     EffectType = GetEffectTypeByColumnName(col.ColumnName, col.DataType), // 根据字段名和数据类型推断作用类型
-                    OrderNo = index + 100 // 默认排序
+                    OrderNo = index + 100, // 默认排序
+                    WhetherTable = baseEntityProperties.Contains(col.PropertyName) ? "否" : "是",
+                    WhetherAddUpdate = baseEntityProperties.Contains(col.PropertyName) ? "否" : "是",
+                    WhetherImport = baseEntityProperties.Contains(col.PropertyName) ? "否" : "是",
+                    WhetherSortable = baseEntityProperties.Contains(col.PropertyName) ? "否" : "是",
+                    WhetherQuery = baseEntityProperties.Contains(col.PropertyName) ? "否" : "是",
+                    QueryType = baseEntityProperties.Contains(col.PropertyName) ? "" : "EQ",//一般来说检索是Like合适但是，这个是批量生成的，避免所有查询都like影响性能，直接按等于生成，可以自己在页面上调整
+                    WhetherRequired= col.IsNullable? "否" : "是",
                 }).ToList();
 
                 await _configRepository.InsertRangeAsync(configList);
@@ -350,5 +357,18 @@ namespace Fastdotnet.WebApi.Controllers.System
             await _configRepository.DeleteAsync(w => w.CodeGenId == id);
             await base.AfterDelete(id, result);
         }
+        private HashSet<string> GetBaseEntityPropertyNames()
+        {
+            var baseEntityProperties = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            var properties = typeof(Core.Models.Base.BaseEntity).GetProperties();
+            foreach (var property in properties)
+            {
+                baseEntityProperties.Add(property.Name);
+            }
+
+            return baseEntityProperties;
+        }
+
     }
 }

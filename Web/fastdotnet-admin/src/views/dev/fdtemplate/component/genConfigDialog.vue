@@ -71,7 +71,7 @@
 				</el-table-column>
 				<el-table-column prop="WhetherRequired" label="必填" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-checkbox v-model="scope.row.WhetherRequired" true-value="是" false-value="否" :disabled="judgeColumns(scope.row)" />
+						<el-checkbox v-model="scope.row.WhetherRequired" true-value="是" false-value="否" :disabled="true" />
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherSortable" label="可排序" width="70" align="center" show-overflow-tooltip>
