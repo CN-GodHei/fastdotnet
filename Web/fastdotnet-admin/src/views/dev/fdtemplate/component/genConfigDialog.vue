@@ -61,12 +61,12 @@
 				</el-table-column>
 				<el-table-column prop="WhetherAddUpdate" label="增改显示" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-checkbox v-model="scope.row.WhetherAddUpdate" true-value="是" false-value="否" :disabled="judgeColumns(scope.row)" />
+						<el-checkbox v-model="scope.row.WhetherAddUpdate" true-value="是" false-value="否" />
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherImport" label="导入" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-checkbox v-model="scope.row.WhetherImport" true-value="是" false-value="否" :disabled="judgeColumns(scope.row)" />
+						<el-checkbox v-model="scope.row.WhetherImport" true-value="是" false-value="否"  />
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherRequired" label="必填" width="70" align="center" show-overflow-tooltip>

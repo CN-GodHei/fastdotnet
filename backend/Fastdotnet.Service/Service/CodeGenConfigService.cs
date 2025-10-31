@@ -448,7 +448,7 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 		</el-card>
 
 		<el-card class=""full-table"" shadow=""hover"" style=""margin-top: 5px"">
-			<el-table :data=""tableData"" style=""width: 100%"" v-loading=""loading"" border>
+			<el-table :data=""state.tableData"" style=""width: 100%"" v-loading=""state.loading"" border>
 				{string.Join("\n\t\t\t\t", columns.Take(3).Select((col, idx) =>
                     $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ColumnComment ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
                 ))}
@@ -460,9 +460,9 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 				</el-table-column>
 			</el-table>
 			<el-pagination
-				v-model:currentPage=""tableParams.page""
-				v-model:page-size=""tableParams.pageSize""
-				:total=""tableParams.total""
+				v-model:currentPage=""state.tableParams.page""
+				v-model:page-size=""state.tableParams.pageSize""
+				:total=""state.tableParams.total""
 				:page-sizes=""[10, 20, 50, 100]""
 				size=""small""
 				background
@@ -472,21 +472,21 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 			/>
 		</el-card>
 
-		<el-dialog v-model=""dialog.visible"" draggable :close-on-click-modal=""false"" width=""700px"">
+		<el-dialog v-model=""state.dialog.visible"" draggable :close-on-click-modal=""false"" width=""700px"">
 			<template #header>
 				<div style=""color: #fff"">
 					<el-icon size=""16"" style=""margin-right: 3px; display: inline; vertical-align: middle""> <ele-Edit /> </el-icon>
-					<span> {{ dialog.title }} </span>
+					<span> {{ state.dialog.title }} </span>
 				</div>
 			</template>
-			<el-form :model=""formData"" ref=""formRef"" label-width=""auto"">
+			<el-form :model=""state.formData"" ref=""formRef"" label-width=""auto"">
 				{string.Join("\n\t\t\t\t", columns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Take(5).Select(col =>
-                    $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ColumnComment ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"formData.{col.PropertyName}\" placeholder=\"请输入{col.ColumnComment ?? col.PropertyName}\" clearable />\n					</el-form-item>\n				</el-col>"
+                    $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ColumnComment ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"state.formData.{col.PropertyName}\" placeholder=\"请输入{col.ColumnComment ?? col.PropertyName}\" clearable />\n					</el-form-item>\n				</el-col>"
                 ))}
 			</el-form>
 			<template #footer>
 				<span class=""dialog-footer"">
-					<el-button @click=""dialog.visible = false"">取 消</el-button>
+					<el-button @click=""state.dialog.visible = false"">取 消</el-button>
 					<el-button type=""primary"" @click=""submitForm"">确 定</el-button>
 				</span>
 			</template>
@@ -1025,9 +1025,9 @@ export async function get{entityName}Page(
             return $@"<template>
 	<div class=""{entityName.ToLower()}-container"">
 		<el-card shadow=""hover"" :body-style=""{{ padding: 5 }}"">
-			<el-form :model=""queryParams"" ref=""queryForm"" :inline=""true"">
+			<el-form :model=""state.queryParams"" ref=""queryForm"" :inline=""true"">
 				<el-form-item label=""搜索条件"">
-					<el-input placeholder=""请输入搜索条件"" clearable @keyup.enter=""handleQuery"" v-model=""queryParams.searchValue"" />
+					<el-input placeholder=""请输入搜索条件"" clearable @keyup.enter=""handleQuery"" v-model=""state.queryParams.searchValue"" />
 				</el-form-item>
 				<el-form-item>
 					<el-button-group>
@@ -1042,7 +1042,7 @@ export async function get{entityName}Page(
 		</el-card>
 
 		<el-card class=""full-table"" shadow=""hover"" style=""margin-top: 5px"">
-			<el-table :data=""tableData"" style=""width: 100%"" v-loading=""loading"" border>
+			<el-table :data=""state.tableData"" style=""width: 100%"" v-loading=""state.loading"" border>
 				{string.Join("\n\t\t\t\t", filteredColumns.Take(3).Select((col, idx) =>
                     $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ColumnComment ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
                 ))}
@@ -1054,9 +1054,9 @@ export async function get{entityName}Page(
 				</el-table-column>
 			</el-table>
 			<el-pagination
-				v-model:currentPage=""tableParams.page""
-				v-model:page-size=""tableParams.pageSize""
-				:total=""tableParams.total""
+				v-model:currentPage=""state.tableParams.page""
+				v-model:page-size=""state.tableParams.pageSize""
+				:total=""state.tableParams.total""
 				:page-sizes=""[10, 20, 50, 100]""
 				size=""small""
 				background
@@ -1066,21 +1066,21 @@ export async function get{entityName}Page(
 			/>
 		</el-card>
 
-		<el-dialog v-model=""dialog.visible"" draggable :close-on-click-modal=""false"" width=""700px"">
+		<el-dialog v-model=""state.dialog.visible"" draggable :close-on-click-modal=""false"" width=""700px"">
 			<template #header>
 				<div style=""color: #fff"">
 					<el-icon size=""16"" style=""margin-right: 3px; display: inline; vertical-align: middle""> <ele-Edit /> </el-icon>
-					<span> {{ dialog.title }} </span>
+					<span> {{ state.dialog.title }} </span>
 				</div>
 			</template>
-			<el-form :model=""formData"" ref=""formRef"" label-width=""auto"">
+			<el-form :model=""state.formData"" ref=""formRef"" label-width=""auto"">
 				{string.Join("\n\t\t\t\t", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Take(5).Select(col =>
-                    $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ColumnComment ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"formData.{col.PropertyName}\" placeholder=\"请输入{col.ColumnComment ?? col.PropertyName}\" clearable />\n					</el-form-item>\n				</el-col>"
+                    $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ColumnComment ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"state.formData.{col.PropertyName}\" placeholder=\"请输入{col.ColumnComment ?? col.PropertyName}\" clearable />\n					</el-form-item>\n				</el-col>"
                 ))}
 			</el-form>
 			<template #footer>
 				<span class=""dialog-footer"">
-					<el-button @click=""dialog.visible = false"">取 消</el-button>
+					<el-button @click=""state.dialog.visible = false"">取 消</el-button>
 					<el-button type=""primary"" @click=""submitForm"">确 定</el-button>
 				</span>
 			</template>
