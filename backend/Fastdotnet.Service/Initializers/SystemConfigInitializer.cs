@@ -114,7 +114,7 @@ namespace Fastdotnet.Service.Initializers
     // ========== 全局网站标题 / 副标题 ==========
     new SystemConfig { Name = "网站主标题", Code = "globalTitle", Value = "Fastdotnet", Description = "显示在浏览器标签和菜单导航的主标题", IsSystem = true },
     new SystemConfig { Name = "网站副标题", Code = "globalViceTitle", Value = "Fastdotnet", Description = "登录页顶部显示的副标题", IsSystem = true },
-    new SystemConfig { Name = "网站副标题描述", Code = "globalViceTitleMsg", Value = "dotnet 生态真正意义上企业级插件化系统", Description = "登录页副标题下方的描述文案", IsSystem = true },
+    new SystemConfig { Name = "网站副标题描述", Code = "globalViceTitleMsg", Value = "不是又一个 CRUD 框架，而是.NET生态可扩展的企业级插件平台", Description = "登录页副标题下方的描述文案", IsSystem = true },
     new SystemConfig { Name = "默认初始语言", Code = "globalI18n", Value = "zh-cn", Description = "系统默认语言，可选值：zh-cn / en / zh-tw", IsSystem = true },
     new SystemConfig { Name = "默认全局组件大小", Code = "globalComponentSize", Value = "small", Description = "组件默认尺寸，可选值：large / default / small", IsSystem = true }
 };
