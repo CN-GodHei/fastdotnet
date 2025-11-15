@@ -88,14 +88,16 @@
 					<template #default="scope">
 						<el-select v-model="scope.row.QueryType" class="m-2" placeholder="Select"
 							:disabled="!scope.row.WhetherQuery">
-							<el-option label="=" value="EQ" />
-							<el-option label="!=" value="NE" />
-							<el-option label=">" value="GT" />
-							<el-option label="<" value="LT" />
-							<el-option label=">=" value="GTE" />
-							<el-option label="<=" value="LTE" />
-							<el-option label="LIKE" value="LIKE" />
+							<el-option label="=" value="eq" />
+							<el-option label="!=" value="ne" />
+							<el-option label=">" value="gt" />
+							<el-option label="<" value="lt" />
+							<el-option label=">=" value="gte" />
+							<el-option label="<=" value="lte" />
+							<el-option label="LIKE" value="contains" />
 							<el-option label="BETWEEN" value="BETWEEN" />
+							<el-option label="开始于xxx" value="startswith" />
+							<el-option label="结束于xxx" value="endswith" />
 						</el-select>
 					</template>
 				</el-table-column>

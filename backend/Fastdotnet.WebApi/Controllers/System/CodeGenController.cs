@@ -192,7 +192,7 @@ namespace Fastdotnet.WebApi.Controllers.System
                 "dto" => await _codeGenConfigService.GenerateDtoContentAsync(entityName, tableColumns, config.NameSpace, config.TableComment),
                 "service" => await _codeGenConfigService.GenerateServiceImplementationContentAsync(entityName, config.NameSpace, config.TableComment),
                 "controller" => await _codeGenConfigService.GenerateControllerContentAsync(entityName, config.NameSpace, config.TableComment),
-                "frontend" => await _codeGenConfigService.GenerateFrontendVueContentAsync(entityName, tableColumns, config.TableName, config.PagePath, config.TableComment),
+                "frontend" => await _codeGenConfigService.GenerateFrontendVueContentAsync(entityName, tableColumns, config.TableName, config.PagePath, config.TableComment, tableColumnsconfig),
                 _ => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumns, config.NameSpace, config.TableComment) // 默认返回实体代码
             };
         }

@@ -2,9 +2,42 @@
 	<div class="fdadminuser-container">
 		<el-card shadow="hover" :body-style="{ padding: 5 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
-				<el-form-item label="搜索条件">
-					<el-input placeholder="请输入搜索条件" clearable @keyup.enter="handleQuery"
-						v-model="state.queryParams.searchValue" />
+				<el-form-item label="Username" prop="Username">
+					<el-input placeholder="请输入Username" clearable v-model="state.queryParams.Username" />
+				</el-form-item>
+				<el-form-item label="Password" prop="Password">
+					<el-input placeholder="请输入Password" clearable v-model="state.queryParams.Password" />
+				</el-form-item>
+				<el-form-item label="Name" prop="Name">
+					<el-input placeholder="请输入Name" clearable v-model="state.queryParams.Name" />
+				</el-form-item>
+				<el-form-item label="Email" prop="Email">
+					<el-input placeholder="请输入Email" clearable v-model="state.queryParams.Email" />
+				</el-form-item>
+				<el-form-item label="Phone" prop="Phone">
+					<el-input placeholder="请输入Phone" clearable v-model="state.queryParams.Phone" />
+				</el-form-item>
+				<el-form-item label="Avatar" prop="Avatar">
+					<el-input placeholder="请输入Avatar" clearable v-model="state.queryParams.Avatar" />
+				</el-form-item>
+				<el-form-item label="IsActive" prop="IsActive">
+					<el-input placeholder="请输入IsActive" clearable v-model="state.queryParams.IsActive" />
+				</el-form-item>
+				<el-form-item label="LastLoginTime" prop="LastLoginTime">
+					<div style="display: flex; gap: 8px;">
+						<el-input placeholder="请输入起始LastLoginTime" clearable v-model="state.queryParams.LastLoginTime"
+							style="flex: 1;" />
+						<span style="align-self: center;">至</span>
+						<el-input placeholder="请输入结束LastLoginTime" clearable v-model="state.queryParams.LastLoginTime_1"
+							style="flex: 1;" />
+					</div>
+				</el-form-item>
+				<el-form-item prop="LastLoginTime_1" style="display:none;"></el-form-item>
+				<el-form-item label="LastLoginIp" prop="LastLoginIp">
+					<el-input placeholder="请输入LastLoginIp" clearable v-model="state.queryParams.LastLoginIp" />
+				</el-form-item>
+				<el-form-item label="CreatedAt" prop="CreatedAt">
+					<el-input placeholder="请输入CreatedAt" clearable v-model="state.queryParams.CreatedAt" />
 				</el-form-item>
 				<el-form-item>
 					<el-button-group>
@@ -20,10 +53,10 @@
 
 		<el-card class="full-table" shadow="hover" style="margin-top: 5px">
 			<el-table :data="state.tableData" style="width: 100%" v-loading="state.loading" border>
-				<el-table-column prop="Username" label="用户名" align="center" show-overflow-tooltip />
-				<el-table-column prop="Password" label="密码" align="center" show-overflow-tooltip />
-				<el-table-column prop="Name" label="名称" align="center" show-overflow-tooltip />
-				<el-table-column prop="Email" label="邮箱" align="center" show-overflow-tooltip />
+				<el-table-column prop="Username" label="Username" align="center" show-overflow-tooltip />
+				<el-table-column prop="Password" label="Password" align="center" show-overflow-tooltip />
+				<el-table-column prop="Name" label="Name" align="center" show-overflow-tooltip />
+				<el-table-column prop="Email" label="Email" align="center" show-overflow-tooltip />
 				<el-table-column prop="Phone" label="Phone" align="center" show-overflow-tooltip />
 				<el-table-column prop="Avatar" label="Avatar" align="center" show-overflow-tooltip />
 				<el-table-column prop="IsActive" label="IsActive" align="center" show-overflow-tooltip />
@@ -54,48 +87,55 @@
 			</template>
 			<el-form :model="state.formData" ref="formRef" label-width="auto">
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="username" prop="Username">
-						<el-input v-model="state.formData.Username" placeholder="请输入username" clearable />
+					<el-form-item label="Username" prop="Username">
+						<el-input v-model="state.formData.Username" placeholder="请输入Username" maxlength="255"
+							show-word-limit clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="password" prop="Password">
-						<el-input v-model="state.formData.Password" placeholder="请输入password" clearable />
+					<el-form-item label="Password" prop="Password">
+						<el-input v-model="state.formData.Password" placeholder="请输入Password" maxlength="255"
+							show-word-limit clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="name" prop="Name">
-						<el-input v-model="state.formData.Name" placeholder="请输入name" clearable />
+					<el-form-item label="Name" prop="Name">
+						<el-input v-model="state.formData.Name" placeholder="请输入Name" maxlength="255" show-word-limit
+							clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="email" prop="Email">
-						<el-input v-model="state.formData.Email" placeholder="请输入email" clearable />
+					<el-form-item label="Email" prop="Email">
+						<el-input v-model="state.formData.Email" placeholder="请输入Email" maxlength="255" show-word-limit
+							clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="phone" prop="Phone">
-						<el-input v-model="state.formData.Phone" placeholder="请输入phone" clearable />
+					<el-form-item label="Phone" prop="Phone">
+						<el-input v-model="state.formData.Phone" placeholder="请输入Phone" maxlength="255" show-word-limit
+							clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="avatar" prop="Avatar">
-						<el-input v-model="state.formData.Avatar" placeholder="请输入avatar" clearable />
+					<el-form-item label="Avatar" prop="Avatar">
+						<el-input v-model="state.formData.Avatar" placeholder="请输入Avatar" maxlength="255"
+							show-word-limit clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="is_active" prop="IsActive">
-						<el-input v-model="state.formData.IsActive" placeholder="请输入is_active" clearable />
+					<el-form-item label="IsActive" prop="IsActive">
+						<el-input v-model="state.formData.IsActive" placeholder="请输入IsActive" clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="last_login_time" prop="LastLoginTime">
-						<el-input v-model="state.formData.LastLoginTime" placeholder="请输入last_login_time" clearable />
+					<el-form-item label="LastLoginTime" prop="LastLoginTime">
+						<el-input v-model="state.formData.LastLoginTime" placeholder="请输入LastLoginTime" clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="last_login_ip" prop="LastLoginIp">
-						<el-input v-model="state.formData.LastLoginIp" placeholder="请输入last_login_ip" clearable />
+					<el-form-item label="LastLoginIp" prop="LastLoginIp">
+						<el-input v-model="state.formData.LastLoginIp" placeholder="请输入LastLoginIp" maxlength="50"
+							show-word-limit clearable />
 					</el-form-item>
 				</el-col>
 			</el-form>
@@ -112,7 +152,7 @@
 <script lang="ts" setup name="FdAdminUser">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-
+import { buildMixedQuery } from '/@/utils/queryBuilder';
 const queryForm = ref();
 const formRef = ref();
 
@@ -120,7 +160,17 @@ const state = reactive({
 	loading: false,
 	tableData: [],
 	queryParams: {
-		searchValue: undefined
+		Username: '',
+		Password: '',
+		Name: '',
+		Email: '',
+		Phone: '',
+		Avatar: '',
+		IsActive: '',
+		LastLoginTime: '',
+		LastLoginIp: '',
+		CreatedAt: '',
+		LastLoginTime_1: '',
 	},
 	tableParams: {
 		page: 1,
@@ -131,9 +181,39 @@ const state = reactive({
 		visible: false,
 		title: ''
 	},
-	formData: {}
+	formData: {
+		Username: '',
+		Password: '',
+		Name: '',
+		Email: '',
+		Phone: '',
+		Avatar: '',
+		IsActive: '',
+		LastLoginTime: '',
+		LastLoginIp: '',
+	}
 });
-
+//构建查询条件
+const queryConfig =
+{
+	custom: {
+		Username: state.queryParams.Username,
+		Password: state.queryParams.Password,
+		Name: state.queryParams.Name,
+		Email: state.queryParams.Email,
+		Phone: state.queryParams.Phone,
+		Avatar: state.queryParams.Avatar,
+		IsActive: state.queryParams.IsActive,
+		LastLoginIp: state.queryParams.LastLoginIp,
+		CreatedAt: state.queryParams.CreatedAt,
+	},
+	ranges: {
+		LastLoginTime: {
+			from: state.queryParams.LastLoginTime,
+			to: state.queryParams.LastLoginTime_1
+		},
+	}
+}
 // 获取列表
 const getList = async () => {
 	state.loading = true;
@@ -185,7 +265,7 @@ const submitForm = () => {
 	formRef.value.validate(async (valid: boolean) => {
 		if (!valid) return;
 		try {
-			if (state.formData.id) {
+			if (state.formData.Id) {
 				// 更新接口调用
 				ElMessage.success('更新成功');
 			} else {

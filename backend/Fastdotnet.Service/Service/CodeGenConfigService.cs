@@ -3,8 +3,13 @@ using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.System;
 using global::System.IO;
 using global::System.IO.Compression;
+using MailKit.Search;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using SqlSugar;
 using System.Reflection;
+using System.Text;
+using System.Text.Json;
 using static Npgsql.Replication.PgOutput.Messages.RelationMessage;
 
 namespace Fastdotnet.Service.Service
@@ -129,7 +134,7 @@ namespace Fastdotnet.Service.Service
                 await GenerateControllerFile(tempDir, entityName, input.NameSpace, "Developer", TableComment); // 使用默认作者名
 
                 // 生成前端页面
-                await GenerateFrontendFiles(tempDir, entityName, tableColumns, input.TableName, input.PagePath, TableComment); // 使用表名代替业务名
+                //await GenerateFrontendFiles(tempDir, entityName, tableColumns, input.TableName, input.PagePath, TableComment); // 使用表名代替业务名
 
                 // 压缩为ZIP文件
                 var zipPath = global::System.IO.Path.Combine(global::System.IO.Path.GetTempPath(), $"codegen_{input.TableName}_{DateTime.Now:yyyyMMddHHmmss}.zip");
@@ -412,198 +417,6 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
             await global::System.IO.File.WriteAllTextAsync(controllerPath, controllerContent);
         }
 
-        private async Task GenerateFrontendFiles(string outputDir, string entityName, List<ColumnInfoDto> columns, string busName, string pagePath, string TableComment)
-        {
-            var frontendDir = global::System.IO.Path.Combine(outputDir, "Frontend");
-            if (!Directory.Exists(frontendDir))
-            {
-                global::System.IO.Directory.CreateDirectory(frontendDir);
-            }
-
-            // 创建页面目录
-            var pageDir = global::System.IO.Path.Combine(frontendDir, pagePath ?? "default");
-            if (!Directory.Exists(pageDir))
-            {
-                global::System.IO.Directory.CreateDirectory(pageDir);
-            }
-
-            // 创建Vue页面
-            var vueContent = $@"<template>
-	<div class=""{entityName.ToLower()}-container"">
-		<el-card shadow=""hover"" :body-style=""{{ padding: 5 }}"">
-			<el-form :model=""queryParams"" ref=""queryForm"" :inline=""true"">
-				<el-form-item label=""搜索条件"">
-					<el-input placeholder=""请输入搜索条件"" clearable @keyup.enter=""handleQuery"" v-model=""queryParams.searchValue"" />
-				</el-form-item>
-				<el-form-item>
-					<el-button-group>
-						<el-button type=""primary"" icon=""ele-Search"" @click=""handleQuery""> 查询 </el-button>
-						<el-button icon=""ele-Refresh"" @click=""resetQuery""> 重置 </el-button>
-					</el-button-group>
-				</el-form-item>
-				<el-form-item>
-					<el-button type=""primary"" icon=""ele-Plus"" @click=""openAddDialog""> 新增 </el-button>
-				</el-form-item>
-			</el-form>
-		</el-card>
-
-		<el-card class=""full-table"" shadow=""hover"" style=""margin-top: 5px"">
-			<el-table :data=""state.tableData"" style=""width: 100%"" v-loading=""state.loading"" border>
-				{string.Join("\n\t\t\t\t", columns.Take(3).Select((col, idx) =>
-                    $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ColumnComment ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
-                ))}
-				<el-table-column label=""操作"" width=""180"" fixed=""right"" align=""center"">
-					<template #default=""scope"">
-						<el-button icon=""ele-Edit"" size=""small"" text type=""primary"" @click=""openEditDialog(scope.row)"">修改</el-button>
-						<el-button icon=""ele-Delete"" size=""small"" text type=""danger"" @click=""handleDelete(scope.row)"">删除</el-button>
-					</template>
-				</el-table-column>
-			</el-table>
-			<el-pagination
-				v-model:currentPage=""state.tableParams.page""
-				v-model:page-size=""state.tableParams.pageSize""
-				:total=""state.tableParams.total""
-				:page-sizes=""[10, 20, 50, 100]""
-				size=""small""
-				background
-				@size-change=""handleSizeChange""
-				@current-change=""handleCurrentChange""
-				layout=""total, sizes, prev, pager, next, jumper""
-			/>
-		</el-card>
-
-		<el-dialog v-model=""state.dialog.visible"" draggable :close-on-click-modal=""false"" width=""700px"">
-			<template #header>
-				<div style=""color: #fff"">
-					<el-icon size=""16"" style=""margin-right: 3px; display: inline; vertical-align: middle""> <ele-Edit /> </el-icon>
-					<span> {{ state.dialog.title }} </span>
-				</div>
-			</template>
-			<el-form :model=""state.formData"" ref=""formRef"" label-width=""auto"">
-				{string.Join("\n\t\t\t\t", columns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Take(5).Select(col =>
-                    $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ColumnComment ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"state.formData.{col.PropertyName}\" placeholder=\"请输入{col.ColumnComment ?? col.PropertyName}\" clearable />\n					</el-form-item>\n				</el-col>"
-                ))}
-			</el-form>
-			<template #footer>
-				<span class=""dialog-footer"">
-					<el-button @click=""state.dialog.visible = false"">取 消</el-button>
-					<el-button type=""primary"" @click=""submitForm"">确 定</el-button>
-				</span>
-			</template>
-		</el-dialog>
-	</div>
-</template>
-
-<script lang=""ts"" setup name=""{entityName}"">
-import {{ ref, reactive, onMounted }} from 'vue';
-import {{ ElMessageBox, ElMessage }} from 'element-plus';
-
-const queryForm = ref();
-const formRef = ref();
-
-const state = reactive({{
-	loading: false,
-	tableData: [],
-	queryParams: {{
-		searchValue: undefined
-	}},
-	tableParams: {{
-		page: 1,
-		pageSize: 20,
-		total: 0
-	}},
-	dialog: {{
-		visible: false,
-		title: ''
-	}},
-	formData: {{}}
-}});
-
-// 获取列表
-const getList = async () => {{
-	state.loading = true;
-	// TODO: 实现获取列表接口调用
-	state.loading = false;
-}};
-
-// 查询
-const handleQuery = () => {{
-	state.tableParams.page = 1;
-	getList();
-}};
-
-// 重置
-const resetQuery = () => {{
-	queryForm.value.resetFields();
-	handleQuery();
-}};
-
-// 改变页面容量
-const handleSizeChange = (val: number) => {{
-	state.tableParams.pageSize = val;
-	getList();
-}};
-
-// 改变页码序号
-const handleCurrentChange = (val: number) => {{
-	state.tableParams.page = val;
-	getList();
-}};
-
-// 打开新增对话框
-const openAddDialog = () => {{
-	state.dialog.visible = true;
-	state.dialog.title = '新增{busName}';
-	formRef.value?.resetFields();
-	state.formData = {{}};
-}};
-
-// 打开编辑对话框
-const openEditDialog = (row: any) => {{
-	state.dialog.visible = true;
-	state.dialog.title = '编辑{busName}';
-	state.formData = {{ ...row }};
-}};
-
-// 提交表单
-const submitForm = () => {{
-	formRef.value.validate(async (valid: boolean) => {{
-		if (!valid) return;
-		try {{
-			if (state.formData.id) {{
-				// 更新接口调用
-				ElMessage.success('更新成功');
-			}} else {{
-				// 新增接口调用
-				ElMessage.success('新增成功');
-			}}
-			state.dialog.visible = false;
-			getList();
-		}} catch (error) {{
-			console.error(error);
-		}}
-	}});
-}};
-
-// 删除
-const handleDelete = (row: any) => {{
-	ElMessageBox.confirm('确定删除吗？')
-		.then(async () => {{
-			// 删除接口调用
-			ElMessage.success('删除成功');
-			getList();
-		}})
-		.catch(() => {{}});
-}};
-
-onMounted(() => {{
-	getList();
-}});
-</script>
-";
-            var vuePath = global::System.IO.Path.Combine(pageDir, $"{entityName}.vue");
-            await global::System.IO.File.WriteAllTextAsync(vuePath, vueContent);
-        }
 
         private string ToPascalCase(string columnName)
         {
@@ -742,7 +555,7 @@ onMounted(() => {{
             }
             else if (filePath.EndsWith(".vue"))
             {
-                return await GenerateFrontendVueContent(entityName, tableColumns, input.TableName, input.PagePath, TableComment); // 使用表名代替业务名
+                //return await GenerateFrontendVueContent(entityName, tableColumns, input.TableName, input.PagePath, TableComment); // 使用表名代替业务名
             }
 
             return "// 文件不存在或无法生成预览内容";
@@ -831,7 +644,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
     /// </summary>
     public class {entityName}Dto
     {{
-{string.Join("\n", columns.Where(x => x.ColumnName != "is_deleted" && x.ColumnName != "deleted_at").Select(col => GenerateDtoProperty(col, false,true)))}
+{string.Join("\n", columns.Where(x => x.ColumnName != "is_deleted" && x.ColumnName != "deleted_at").Select(col => GenerateDtoProperty(col, false, true)))}
     }}
 }}";
 
@@ -1008,27 +821,29 @@ export async function get{entityName}Page(
             return await GenerateControllerContent(entityName, nameSpace, "Developer"); // 使用默认作者名
         }
 
-        public async Task<string> GenerateFrontendVueContentAsync(string entityName, List<ColumnInfoDto> columns, string tableName, string pagePath, string TableComment)
+        public async Task<string> GenerateFrontendVueContentAsync(string entityName, List<ColumnInfoDto> columns, string tableName, string pagePath, string TableComment, List<FdCodeGenConfig> configcolumns)
         {
-            return await GenerateFrontendVueContent(entityName, columns, tableName, pagePath, TableComment);
+            return await GenerateFrontendVueContent(entityName, columns, tableName, pagePath, TableComment, configcolumns);
         }
 
-        private async Task<string> GenerateFrontendVueContent(string entityName, List<ColumnInfoDto> columns, string busName, string pagePath, string TableComment)
+        private async Task<string> GenerateFrontendVueContent(string entityName, List<ColumnInfoDto> columns, string busName, string pagePath, string TableComment, List<FdCodeGenConfig> configcolumns)
         {
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
 
-            var filteredColumns = columns.Where(col =>
-                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) &&
-                !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
-
+            //var filteredColumns = columns.Where(col =>
+            //    !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) &&
+            //    !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
+            //var configcolumnsisshow = configcolumns.Where(x=>x.WhetherTable=="是");
+            var WhetherQuery = configcolumns.Where(x => x.WhetherQuery == "是" && x.QueryType == "BETWEEN");
             return $@"<template>
 	<div class=""{entityName.ToLower()}-container"">
 		<el-card shadow=""hover"" :body-style=""{{ padding: 5 }}"">
 			<el-form :model=""state.queryParams"" ref=""queryForm"" :inline=""true"">
-				<el-form-item label=""搜索条件"">
-					<el-input placeholder=""请输入搜索条件"" clearable @keyup.enter=""handleQuery"" v-model=""state.queryParams.searchValue"" />
-				</el-form-item>
+                    {string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == "是").Select((col, idx) =>
+                                       $@"{getFrontendQueryTemp(col)}"
+
+                    ))}
 				<el-form-item>
 					<el-button-group>
 						<el-button type=""primary"" icon=""ele-Search"" @click=""handleQuery""> 查询 </el-button>
@@ -1043,7 +858,7 @@ export async function get{entityName}Page(
 
 		<el-card class=""full-table"" shadow=""hover"" style=""margin-top: 5px"">
 			<el-table :data=""state.tableData"" style=""width: 100%"" v-loading=""state.loading"" border>
-				{string.Join("\n\t\t\t\t", filteredColumns.Select((col, idx) =>
+				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherTable == "是").Select((col, idx) =>
                     $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ShowColumnName ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
                 ))}
 				<el-table-column label=""操作"" width=""180"" fixed=""right"" align=""center"">
@@ -1074,8 +889,8 @@ export async function get{entityName}Page(
 				</div>
 			</template>
 			<el-form :model=""state.formData"" ref=""formRef"" label-width=""auto"">
-				{string.Join("\n\t\t\t\t", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col =>
-                    $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ColumnComment ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"state.formData.{col.PropertyName}\" placeholder=\"请输入{col.ColumnComment ?? col.PropertyName}\" clearable />\n					</el-form-item>\n				</el-col>"
+				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherAddUpdate == "是").Select(col =>
+                    $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ShowColumnName ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"state.formData.{col.PropertyName}\" placeholder=\"请输入{col.ShowColumnName ?? col.PropertyName}\" {getFrontendmMaxLenghtTemp(col, columns)} clearable />\n					</el-form-item>\n				</el-col>"
                 ))}
 			</el-form>
 			<template #footer>
@@ -1091,7 +906,7 @@ export async function get{entityName}Page(
 <script lang=""ts"" setup name=""{entityName}"">
 import {{ ref, reactive, onMounted }} from 'vue';
 import {{ ElMessageBox, ElMessage }} from 'element-plus';
-
+import {{buildMixedQuery}} from '/@/utils/queryBuilder';
 const queryForm = ref();
 const formRef = ref();
 
@@ -1099,8 +914,9 @@ const state = reactive({{
 	loading: false,
 	tableData: [],
 	queryParams: {{
-		searchValue: undefined
-	}},
+	{string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == "是").Select((col, idx) => $@"{col.PropertyName}:'',"))}
+	{string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == "是"&&x.QueryType == "BETWEEN").Select((col, idx) => $@"{col.PropertyName}_1:'',"))}
+}},
 	tableParams: {{
 		page: 1,
 		pageSize: 20,
@@ -1110,9 +926,15 @@ const state = reactive({{
 		visible: false,
 		title: ''
 	}},
-	formData: {{}}
+	formData: {{
+	{string.Join("\n\t", configcolumns.Where(x => x.WhetherAddUpdate == "是").Select((col, idx) => $@"{col.PropertyName}:'',"))}
+}}
 }});
-
+//构建查询条件
+    const queryConfig = 
+            {{
+{GetFrontendCondition(configcolumns)}
+}}
 // 获取列表
 const getList = async () => {{
 	state.loading = true;
@@ -1164,7 +986,7 @@ const submitForm = () => {{
 	formRef.value.validate(async (valid: boolean) => {{
 		if (!valid) return;
 		try {{
-			if (state.formData.id) {{
+			if (state.formData.{configcolumns.Where(w => w.ColumnKey == true).FirstOrDefault().PropertyName ?? configcolumns.FirstOrDefault().PropertyName}) {{
 				// 更新接口调用
 				ElMessage.success('更新成功');
 			}} else {{
@@ -1194,6 +1016,66 @@ onMounted(() => {{
 	getList();
 }});
 </script>";
+        }
+
+        /// <summary>
+        /// 获取前端最大输入值模板
+        /// </summary>
+        /// <returns></returns>
+        private string getFrontendmMaxLenghtTemp(FdCodeGenConfig fdCodeGenConfig, List<ColumnInfoDto> columns)
+        {
+            var columnInfoDto = columns.FirstOrDefault(w => w.ColumnName == fdCodeGenConfig.ColumnName);
+            if (columnInfoDto.Length > 0)
+            {
+                return $@"maxlength=""{columnInfoDto.Length}"" show-word-limit";
+            }
+            return string.Empty;
+        }
+
+
+        private string GetFrontendCondition(List<FdCodeGenConfig> fdCodeGenConfig)
+        {
+            var ranges = new Dictionary<string, Dictionary<string, object>>();
+            var jsObject = new global::System.Text.StringBuilder();
+            jsObject.Append("ranges:{");
+
+            foreach (var item in fdCodeGenConfig.Where(x => x.WhetherQuery == "是" && x.QueryType == "BETWEEN"))
+            {
+                jsObject.Append("\n" + $@"{item.PropertyName}:" + "{\n\tfrom:" + $@"state.queryParams.{item.PropertyName}," + "\n\tto:" + $@"state.queryParams.{item.PropertyName}_1" + "},\n");
+
+            }
+            jsObject.Append("}");
+            var sb = new global::System.Text.StringBuilder();
+            sb.Append("custom:{\n");
+            foreach (var item in fdCodeGenConfig.Where(x => x.WhetherQuery == "是" && x.QueryType != "BETWEEN"))
+            {
+                sb.Append($@"{item.PropertyName}:state.queryParams.{item.PropertyName}," + "\n");
+            }
+            sb.Append("}");
+            return sb.ToString() + ",\n" + jsObject.ToString();
+        }
+
+        private string getFrontendQueryTemp(FdCodeGenConfig fdCodeGenConfig)
+        {
+            if (fdCodeGenConfig.WhetherQuery == "是" && fdCodeGenConfig.QueryType == "BETWEEN")
+            {
+                return $@"<el-form-item label=""{fdCodeGenConfig.ShowColumnName}"" prop=""{fdCodeGenConfig.PropertyName}"">
+                <div style=""display: flex; gap: 8px;"">
+                    <el-input placeholder=""请输入起始{fdCodeGenConfig.ShowColumnName}"" clearable v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" style=""flex: 1;"" />
+                    <span style=""align-self: center;"">-</span>
+                    <el-input placeholder=""请输入结束{fdCodeGenConfig.ShowColumnName}"" clearable v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}_1"" style=""flex: 1;"" />
+                </div>
+            </el-form-item>
+            <el-form-item prop=""{fdCodeGenConfig.PropertyName}_1"" style=""display:none;""></el-form-item>";
+            }
+
+            else
+            {
+                return $@"<el-form-item label=""{fdCodeGenConfig.ShowColumnName}"" prop=""{fdCodeGenConfig.PropertyName}"">
+					<el-input placeholder=""请输入{fdCodeGenConfig.ShowColumnName}"" clearable  v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" />
+				</el-form-item>";
+            }
+
         }
     }
 }
