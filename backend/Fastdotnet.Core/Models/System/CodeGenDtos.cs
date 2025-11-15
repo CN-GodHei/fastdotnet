@@ -329,6 +329,9 @@ namespace Fastdotnet.Core.Models.System
         /// 是否忽略
         /// </summary>
         public bool IsIgnore { get; set; }
+
+        public virtual string ShowColumnName { get; set; }
+
     }
 
     /// <summary>

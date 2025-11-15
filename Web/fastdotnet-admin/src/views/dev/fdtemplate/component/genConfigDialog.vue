@@ -3,13 +3,19 @@
 		<el-dialog v-model="state.isShowDialog" draggable :close-on-click-modal="false" width="1500px">
 			<template #header>
 				<div style="color: #fff">
-					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Edit /> </el-icon>
+					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Edit />
+					</el-icon>
 					<span> 生成配置 </span>
 				</div>
 			</template>
 			<el-table :data="state.tableData" style="width: 100%" v-loading="state.loading" border>
 				<el-table-column type="index" label="序号" width="55" align="center" />
 				<el-table-column prop="PropertyName" label="实体属性" show-overflow-tooltip />
+				<el-table-column prop="ShowColumnName" label="显示名称" show-overflow-tooltip>
+					<template #default="scope">
+						<el-input v-model="scope.row.ShowColumnName" autocomplete="off" />
+					</template>
+				</el-table-column>
 				<el-table-column prop="ColumnComment" label="字段描述" show-overflow-tooltip>
 					<template #default="scope">
 						<el-input v-model="scope.row.ColumnComment" autocomplete="off" />
@@ -19,11 +25,9 @@
 				<el-table-column prop="EffectType" label="作用类型" width="150" show-overflow-tooltip>
 					<template #default="scope">
 						<div class="effect-type-container">
-							<el-select v-model="scope.row.EffectType" 
-								@change="effectTypeChange(scope.row, scope.$index)" 
-								:disabled="judgeColumns(scope.row)" 
-								class="m-2" 
-								placeholder="请选择作用类型">
+							<el-select v-model="scope.row.EffectType"
+								@change="effectTypeChange(scope.row, scope.$index)" :disabled="judgeColumns(scope.row)"
+								class="m-2" placeholder="请选择作用类型">
 								<el-option label="文本框" value="Input" />
 								<el-option label="文本域" value="Textarea" />
 								<el-option label="数字输入框" value="NumberInput" />
@@ -42,14 +46,9 @@
 				</el-table-column>
 				<el-table-column prop="DictTypeCode" label="字典编码" width="150" show-overflow-tooltip>
 					<template #default="scope">
-						<el-select v-model="scope.row.DictTypeCode" 
-							:disabled="effectTypeEnable(scope.row)" 
-							class="m-2" 
+						<el-select v-model="scope.row.DictTypeCode" :disabled="effectTypeEnable(scope.row)" class="m-2"
 							placeholder="请选择字典">
-							<el-option 
-								v-for="item in state.dictList" 
-								:key="item.code" 
-								:label="item.name" 
+							<el-option v-for="item in state.dictList" :key="item.code" :label="item.name"
 								:value="item.code" />
 						</el-select>
 					</template>
@@ -66,12 +65,13 @@
 				</el-table-column>
 				<el-table-column prop="WhetherImport" label="导入" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-checkbox v-model="scope.row.WhetherImport" true-value="是" false-value="否"  />
+						<el-checkbox v-model="scope.row.WhetherImport" true-value="是" false-value="否" />
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherRequired" label="必填" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-checkbox v-model="scope.row.WhetherRequired" true-value="是" false-value="否" :disabled="true" />
+						<el-checkbox v-model="scope.row.WhetherRequired" true-value="是" false-value="否"
+							:disabled="true" />
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherSortable" label="可排序" width="70" align="center" show-overflow-tooltip>
@@ -86,9 +86,7 @@
 				</el-table-column>
 				<el-table-column prop="QueryType" label="查询方式" width="110" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-select v-model="scope.row.QueryType" 
-							class="m-2" 
-							placeholder="Select" 
+						<el-select v-model="scope.row.QueryType" class="m-2" placeholder="Select"
 							:disabled="!scope.row.WhetherQuery">
 							<el-option label="=" value="EQ" />
 							<el-option label="!=" value="NE" />
@@ -119,8 +117,8 @@
 
 <script lang="ts" setup name="sysCodeGenConfig">
 import { onMounted, reactive, ref } from 'vue';
-import { 
-	getCodeGenConfigPage, 
+import {
+	getCodeGenConfigPage,
 	putCodeGenConfigId,
 	postCodeGenConfig,
 	postCodeGenConfigBatch,
@@ -154,10 +152,10 @@ onMounted(async () => {
 // 查询操作
 const handleQuery = async (row: any) => {
 	if (!row.Id) return;
-	
+
 	state.loading = true;
 	state.configId = row.Id;
-	
+
 	try {
 		// 使用混合查询构建器构建查询条件
 		const queryConfig = {
@@ -165,9 +163,9 @@ const handleQuery = async (row: any) => {
 				CodeGenId: row.Id // 使用字符串类型的ID
 			}
 		};
-		
+
 		const queryResult = buildMixedQuery(queryConfig);
-		
+
 		// 使用搜索接口获取字段配置信息，按CodeGenId筛选
 		const searchParams = {
 			PageIndex: 1,
@@ -175,10 +173,10 @@ const handleQuery = async (row: any) => {
 			DynamicQuery: queryResult.dynamicQuery,
 			QueryParameters: queryResult.queryParameters
 		} as APIModel.PageQueryByConditionDto;
-		
+
 		const configRes = await postCodeGenConfigPageSearch(searchParams);
 		const existingConfigs = configRes?.Items || [];
-		
+
 		state.tableData = existingConfigs;
 		state.originalData = JSON.parse(JSON.stringify(existingConfigs)); // 备份原始数据
 	} catch (error) {
@@ -192,7 +190,7 @@ const handleQuery = async (row: any) => {
 // 根据数据类型返回默认作用类型
 function getDefaultEffectType(netType: string | undefined): string {
 	if (!netType) return 'Input';
-	
+
 	const typeMap: { [key: string]: string } = {
 		'string': 'Input',
 		'int': 'NumberInput',
@@ -204,7 +202,7 @@ function getDefaultEffectType(netType: string | undefined): string {
 		'bool': 'Switch',
 		'boolean': 'Switch'
 	};
-	
+
 	return typeMap[netType.toLowerCase()] || 'Input';
 }
 
@@ -248,7 +246,7 @@ const submit = async () => {
 	try {
 		// 由于查询出来的都是数据库已有的记录，直接使用批量更新接口
 		await putCodeGenConfigBatch(state.tableData as APIModel.UpdateFdCodeGenConfigDto[]);
-		
+
 		ElMessage.success('字段配置保存成功');
 		closeDialog();
 	} catch (error) {

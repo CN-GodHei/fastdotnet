@@ -178,8 +178,13 @@ namespace Fastdotnet.WebApi.Controllers.System
             }
 
             var entityName = _codeGenConfigService.GetEntityNameByTableName(config.TableName);
-            var tableColumns = await _codeGenConfigService.GetTableColumnListAsync(config.TableName);
-            
+            List<ColumnInfoDto>? tableColumns = await _codeGenConfigService.GetTableColumnListAsync(config.TableName);
+            List<FdCodeGenConfig>? tableColumnsconfig = await _configRepository.GetListAsync(w=>w.CodeGenId== configId);
+            tableColumns.ForEach(x =>
+            {
+                x.ShowColumnName = tableColumnsconfig.FirstOrDefault(s => s.ColumnName == x.ColumnName)?.ShowColumnName ?? x.PropertyName;
+            });
+
             // 根据类型生成不同的代码
             return type?.ToLower() switch
             {
@@ -238,6 +243,7 @@ namespace Fastdotnet.WebApi.Controllers.System
                 {
                     CodeGenId = entity.Id, // 直接使用字符串ID
                     ColumnName = col.ColumnName,
+                    ShowColumnName = col.PropertyName,
                     ColumnKey = col.IsPrimarykey, // 主键标识
                     PropertyName = col.PropertyName,
                     ColumnLength = col.Length,

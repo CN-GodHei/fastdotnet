@@ -24,6 +24,13 @@ namespace Fastdotnet.Core.Entities.System
         public virtual string ColumnName { get; set; }
 
         /// <summary>
+        /// 显示字段名称
+        /// </summary>
+        [SugarColumn(ColumnDescription = "显示字段名称", Length = 128)]
+        [MaxLength(128)]
+        public virtual string ShowColumnName { get; set; }
+
+        /// <summary>
         /// 主键
         /// </summary>
         [SugarColumn(ColumnDescription = "主键", Length = 8,IsNullable =true)]

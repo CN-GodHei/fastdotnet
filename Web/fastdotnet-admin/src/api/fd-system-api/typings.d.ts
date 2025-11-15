@@ -1,4 +1,10 @@
 declare namespace APIModel {
+	enum ActivationStatusDto {
+		0 = '0',
+		1 = '1',
+		2 = '2',
+	}
+
 	type AdminUserDto = {
 		Id?: string;
 		Username?: string;
@@ -82,6 +88,7 @@ declare namespace APIModel {
 		DefaultValue?: string;
 		ColumnComment?: string;
 		IsIgnore?: boolean;
+		ShowColumnName?: string;
 	};
 
 	type CreateAdminUserDto = {
@@ -154,6 +161,7 @@ declare namespace APIModel {
 		WhetherImport?: string;
 		WhetherCommon?: string;
 		OrderNo?: number;
+		ShowColumnName?: string;
 	};
 
 	type CreateFdRateLimitRuleDto = {
@@ -162,6 +170,29 @@ declare namespace APIModel {
 		PermitLimit: number;
 		WindowSeconds: number;
 		Description?: string;
+	};
+
+	type CreateGiftRecordDto = {
+		PurchaseId: number;
+		Reason?: string;
+		GivenBy?: string;
+		GivenTime?: string;
+	};
+
+	type CreateMarketplacePluginDto = {
+		PluginId: string;
+		Name: string;
+		Description?: string;
+		Version: string;
+		Author?: string;
+		Category?: string;
+		SupportedLicenseMode?: SupportedLicenseModeDto;
+		Price_SingleServer?: number;
+		Price_MultiServer?: number;
+		IsActive?: boolean;
+		IsFree?: boolean;
+		DownloadUrl?: string;
+		DocumentationUrl?: string;
 	};
 
 	type CreateMenuButtonDto = {
@@ -198,10 +229,57 @@ declare namespace APIModel {
 		isLink?: boolean;
 	};
 
+	type CreateOnlinePaymentDto = {
+		PurchaseId: number;
+		Channel?: OnlinePaymentChannelDto;
+		TransactionId: string;
+		ThirdPartyData?: string;
+		CallbackData?: string;
+		PaidTime?: string;
+	};
+
+	type CreatePointRedemptionDto = {
+		PurchaseId: number;
+		PointsUsed?: number;
+		UserId: string;
+		RedeemedTime?: string;
+	};
+
 	type CreateRoleDto = {
 		Name: string;
 		Description?: string;
 		Category: string;
+	};
+
+	type CreateUserPluginActivationDto = {
+		PurchaseId: number;
+		PluginId: string;
+		UserId: string;
+		LicenseType: LicenseTypeDto;
+		ActivationDate?: string;
+		MachineFingerprint: string;
+		IpAddress?: string;
+		Hostname?: string;
+		LicenseFileContent?: string;
+		Status?: ActivationStatusDto;
+		DeactivationDate?: string;
+		RevocationReason?: string;
+		Notes?: string;
+	};
+
+	type CreateUserPluginPurchaseDto = {
+		UserId: string;
+		PluginId: string;
+		OrderId: string;
+		LicenseType: LicenseTypeDto;
+		Quantity?: number;
+		PurchasePrice?: number;
+		Currency?: string;
+		PurchaseDate?: string;
+		UpdatesUntil?: string;
+		IsLifetime?: boolean;
+		Status?: PurchaseStatusDto;
+		Notes?: string;
 	};
 
 	type deleteAdminBlacklistsIdParams = {
@@ -515,6 +593,7 @@ declare namespace APIModel {
 		WhetherImport?: string;
 		WhetherCommon?: string;
 		OrderNo?: number;
+		ShowColumnName?: string;
 	};
 
 	type FdCodeGenConfigDtoPageResult = {
@@ -582,6 +661,11 @@ declare namespace APIModel {
 		ReturnType?: string;
 		TailCall?: boolean;
 		CanReduce?: boolean;
+	};
+
+	type GenerateLicenseRequestDto = {
+		PluginId: string;
+		MachineFingerprint: string;
 	};
 
 	type getAdminBlacklistsCheckParams = {
@@ -848,6 +932,37 @@ declare namespace APIModel {
 		pluginId: string;
 	};
 
+	type GiftRecordBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type GiftRecordDto = {
+		Id?: string;
+		PurchaseId?: number;
+		Reason?: string;
+		GivenBy?: string;
+		GivenTime?: string;
+		CreateTime?: string;
+		UpdateTime?: string;
+	};
+
+	type GiftRecordDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: GiftRecordDto[];
+	};
+
+	enum LicenseTypeDto {
+		0 = '0',
+		1 = '1',
+	}
+
 	type LoginDto = {
 		Username: string;
 		Password: string;
@@ -857,6 +972,41 @@ declare namespace APIModel {
 
 	type LoginResultDto = {
 		Token?: string;
+	};
+
+	type MarketplacePluginBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type MarketplacePluginDto = {
+		Id?: string;
+		PluginId: string;
+		Name: string;
+		Description?: string;
+		Version: string;
+		Author?: string;
+		Category?: string;
+		SupportedLicenseMode?: SupportedLicenseModeDto;
+		Price_SingleServer?: number;
+		Price_MultiServer?: number;
+		IsActive?: boolean;
+		IsFree?: boolean;
+		DownloadUrl?: string;
+		DocumentationUrl?: string;
+		CreateTime?: string;
+		UpdateTime?: string;
+	};
+
+	type MarketplacePluginDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: MarketplacePluginDto[];
 	};
 
 	type MenuButtonDto = {
@@ -913,6 +1063,50 @@ declare namespace APIModel {
 		1 = '1',
 	}
 
+	type OfflineActivationRequestDto = {
+		PluginId: string;
+		MachineFingerprint: string;
+		RequestTimestamp?: string;
+		ClientInfo?: string;
+		Nonce?: string;
+	};
+
+	type OnlinePaymentBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	enum OnlinePaymentChannelDto {
+		0 = '0',
+		1 = '1',
+		2 = '2',
+		3 = '3',
+		4 = '4',
+	}
+
+	type OnlinePaymentDto = {
+		Id?: string;
+		PurchaseId?: number;
+		Channel?: OnlinePaymentChannelDto;
+		TransactionId?: string;
+		ThirdPartyData?: string;
+		CallbackData?: string;
+		PaidTime?: string;
+		CreateTime?: string;
+		UpdateTime?: string;
+	};
+
+	type OnlinePaymentDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: OnlinePaymentDto[];
+	};
+
 	type PageInfo = {
 		Total?: number;
 		TotalPages?: number;
@@ -948,6 +1142,55 @@ declare namespace APIModel {
 		Category?: string;
 	};
 
+	type PluginATestBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type PluginATestCreateDto = {
+		Name?: string;
+		Description?: string;
+		TestValue?: number;
+		IsEnabled?: boolean;
+		Creator?: string;
+	};
+
+	type PluginATestDto = {
+		Id?: string;
+		Name?: string;
+		Description?: string;
+		TestValue?: number;
+		IsEnabled?: boolean;
+		Creator?: string;
+		CreateTime?: string;
+		UpdateTime?: string;
+	};
+
+	type PluginATestDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: PluginATestDto[];
+	};
+
+	type PluginATestUpdateDto = {
+		Id?: string;
+		Name?: string;
+		Description?: string;
+		TestValue?: number;
+		IsEnabled?: boolean;
+		Creator?: string;
+	};
+
+	type PluginATestUpdateDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: PluginATestUpdateDto;
+	};
+
 	type PluginConfig = {
 		id?: string;
 		name?: string;
@@ -958,6 +1201,30 @@ declare namespace APIModel {
 		dependencies?: string[];
 		tags?: string[];
 		entryPoint?: string;
+	};
+
+	type PointRedemptionBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type PointRedemptionDto = {
+		Id?: string;
+		PurchaseId?: number;
+		PointsUsed?: number;
+		UserId?: string;
+		RedeemedTime?: string;
+	};
+
+	type PointRedemptionDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: PointRedemptionDto[];
 	};
 
 	type postAdminCacheTestSetParams = {
@@ -993,6 +1260,12 @@ declare namespace APIModel {
 	type postPluginUninstallPluginIdParams = {
 		pluginId: string;
 	};
+
+	enum PurchaseStatusDto {
+		0 = '0',
+		1 = '1',
+		2 = '2',
+	}
 
 	type putAdminBlacklistsIdParams = {
 		/** 要更新的记录的唯一标识符 */
@@ -1116,6 +1389,12 @@ declare namespace APIModel {
 	type SendRegistrationCodeDto = {
 		Email: string;
 	};
+
+	enum SupportedLicenseModeDto {
+		0 = '0',
+		1 = '1',
+		2 = '2',
+	}
 
 	type SystemConfigBooleanFuncExpression = {
 		Type?: string;
@@ -1252,6 +1531,7 @@ declare namespace APIModel {
 		WhetherImport?: string;
 		WhetherCommon?: string;
 		OrderNo?: number;
+		ShowColumnName?: string;
 	};
 
 	type UpdateFdCodeGenConfigDtoBatchUpdateByConditionDto = {
@@ -1270,6 +1550,41 @@ declare namespace APIModel {
 	type UpdateFdRateLimitRuleDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateFdRateLimitRuleDto;
+	};
+
+	type UpdateGiftRecordDto = {
+		Id?: string;
+		PurchaseId?: number;
+		Reason?: string;
+		GivenBy?: string;
+		GivenTime?: string;
+	};
+
+	type UpdateGiftRecordDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateGiftRecordDto;
+	};
+
+	type UpdateMarketplacePluginDto = {
+		Id?: string;
+		PluginId: string;
+		Name: string;
+		Description?: string;
+		Version: string;
+		Author?: string;
+		Category?: string;
+		SupportedLicenseMode?: SupportedLicenseModeDto;
+		Price_SingleServer?: number;
+		Price_MultiServer?: number;
+		IsActive?: boolean;
+		IsFree?: boolean;
+		DownloadUrl?: string;
+		DocumentationUrl?: string;
+	};
+
+	type UpdateMarketplacePluginDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateMarketplacePluginDto;
 	};
 
 	type UpdateMenuButtonDto = {
@@ -1317,6 +1632,34 @@ declare namespace APIModel {
 		Dto?: UpdateMenuDto;
 	};
 
+	type UpdateOnlinePaymentDto = {
+		Id?: string;
+		PurchaseId?: number;
+		Channel?: OnlinePaymentChannelDto;
+		TransactionId?: string;
+		ThirdPartyData?: string;
+		CallbackData?: string;
+		PaidTime?: string;
+	};
+
+	type UpdateOnlinePaymentDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateOnlinePaymentDto;
+	};
+
+	type UpdatePointRedemptionDto = {
+		Id?: string;
+		PurchaseId?: number;
+		PointsUsed?: number;
+		UserId?: string;
+		RedeemedTime?: string;
+	};
+
+	type UpdatePointRedemptionDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdatePointRedemptionDto;
+	};
+
 	type UpdateRoleDto = {
 		Name: string;
 		Description?: string;
@@ -1325,5 +1668,117 @@ declare namespace APIModel {
 	type UpdateRoleDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateRoleDto;
+	};
+
+	type UpdateUserPluginActivationDto = {
+		Id?: string;
+		PurchaseId?: number;
+		PluginId?: string;
+		UserId?: string;
+		LicenseType?: LicenseTypeDto;
+		ActivationDate?: string;
+		MachineFingerprint?: string;
+		IpAddress?: string;
+		Hostname?: string;
+		LicenseFileContent?: string;
+		Status?: ActivationStatusDto;
+		DeactivationDate?: string;
+		RevocationReason?: string;
+		Notes?: string;
+	};
+
+	type UpdateUserPluginActivationDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateUserPluginActivationDto;
+	};
+
+	type UpdateUserPluginPurchaseDto = {
+		Id?: string;
+		UserId?: string;
+		PluginId?: string;
+		OrderId?: string;
+		LicenseType?: LicenseTypeDto;
+		Quantity?: number;
+		PurchasePrice?: number;
+		Currency?: string;
+		PurchaseDate?: string;
+		UpdatesUntil?: string;
+		IsLifetime?: boolean;
+		Status?: PurchaseStatusDto;
+		Notes?: string;
+	};
+
+	type UpdateUserPluginPurchaseDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateUserPluginPurchaseDto;
+	};
+
+	type UserPluginActivationBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type UserPluginActivationDto = {
+		Id?: string;
+		PurchaseId?: number;
+		PluginId?: string;
+		UserId?: string;
+		LicenseType?: LicenseTypeDto;
+		ActivationDate?: string;
+		MachineFingerprint?: string;
+		IpAddress?: string;
+		Hostname?: string;
+		LicenseFileContent?: string;
+		Status?: ActivationStatusDto;
+		DeactivationDate?: string;
+		RevocationReason?: string;
+		Notes?: string;
+		CreateTime?: string;
+		UpdateTime?: string;
+	};
+
+	type UserPluginActivationDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: UserPluginActivationDto[];
+	};
+
+	type UserPluginPurchaseBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type UserPluginPurchaseDto = {
+		Id?: string;
+		UserId?: string;
+		PluginId?: string;
+		OrderId?: string;
+		LicenseType?: LicenseTypeDto;
+		Quantity?: number;
+		PurchasePrice?: number;
+		Currency?: string;
+		PurchaseDate?: string;
+		UpdatesUntil?: string;
+		IsLifetime?: boolean;
+		Status?: PurchaseStatusDto;
+		Notes?: string;
+		CreateTime?: string;
+		UpdateTime?: string;
+	};
+
+	type UserPluginPurchaseDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: UserPluginPurchaseDto[];
 	};
 }

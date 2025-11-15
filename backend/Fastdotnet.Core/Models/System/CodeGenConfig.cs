@@ -154,6 +154,9 @@ namespace Fastdotnet.Core.Models.System
         /// 排序
         /// </summary>
         public int OrderNo { get; set; }
+
+        public virtual string ShowColumnName { get; set; }
+
     }
 
     /// <summary>
@@ -327,6 +330,9 @@ namespace Fastdotnet.Core.Models.System
         /// 排序
         /// </summary>
         public int OrderNo { get; set; } = 100;
+
+        public virtual string ShowColumnName { get; set; }
+
     }
 
     /// <summary>
@@ -506,5 +512,8 @@ namespace Fastdotnet.Core.Models.System
         /// 排序
         /// </summary>
         public int OrderNo { get; set; } = 100;
+
+        public virtual string ShowColumnName { get; set; }
+
     }
 }

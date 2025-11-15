@@ -1043,8 +1043,8 @@ export async function get{entityName}Page(
 
 		<el-card class=""full-table"" shadow=""hover"" style=""margin-top: 5px"">
 			<el-table :data=""state.tableData"" style=""width: 100%"" v-loading=""state.loading"" border>
-				{string.Join("\n\t\t\t\t", filteredColumns.Take(3).Select((col, idx) =>
-                    $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ColumnComment ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
+				{string.Join("\n\t\t\t\t", filteredColumns.Select((col, idx) =>
+                    $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ShowColumnName ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
                 ))}
 				<el-table-column label=""操作"" width=""180"" fixed=""right"" align=""center"">
 					<template #default=""scope"">
@@ -1074,7 +1074,7 @@ export async function get{entityName}Page(
 				</div>
 			</template>
 			<el-form :model=""state.formData"" ref=""formRef"" label-width=""auto"">
-				{string.Join("\n\t\t\t\t", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Take(5).Select(col =>
+				{string.Join("\n\t\t\t\t", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col =>
                     $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ColumnComment ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"state.formData.{col.PropertyName}\" placeholder=\"请输入{col.ColumnComment ?? col.PropertyName}\" clearable />\n					</el-form-item>\n				</el-col>"
                 ))}
 			</el-form>
