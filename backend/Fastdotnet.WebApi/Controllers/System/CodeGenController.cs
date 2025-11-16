@@ -258,7 +258,7 @@ namespace Fastdotnet.WebApi.Controllers.System
                     WhetherImport = baseEntityProperties.Contains(col.PropertyName) ? "否" : "是",
                     WhetherSortable = baseEntityProperties.Contains(col.PropertyName) ? "否" : "是",
                     WhetherQuery = baseEntityProperties.Contains(col.PropertyName) ? "否" : "是",
-                    QueryType = baseEntityProperties.Contains(col.PropertyName) ? "" : "EQ",//一般来说检索是Like合适但是，这个是批量生成的，避免所有查询都like影响性能，直接按等于生成，可以自己在页面上调整
+                    QueryType = baseEntityProperties.Contains(col.PropertyName) ? "" : "eq",//一般来说检索是Like合适但是，这个是批量生成的，避免所有查询都like影响性能，直接按等于生成，可以自己在页面上调整
                     WhetherRequired= col.IsNullable? "否" : "是",
                 }).ToList();
 

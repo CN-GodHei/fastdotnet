@@ -1,4 +1,5 @@
-﻿using Fastdotnet.Core.Entities.System;
+﻿using Fastdotnet.Core.Dtos.System;
+using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.System;
 using global::System.IO;
@@ -857,7 +858,7 @@ export async function get{entityName}Page(
 		</el-card>
 
 		<el-card class=""full-table"" shadow=""hover"" style=""margin-top: 5px"">
-			<el-table :data=""state.tableData"" style=""width: 100%"" v-loading=""state.loading"" border>
+			<el-table :data=""state.tableData.data"" style=""width: 100%"" v-loading=""state.loading"" border>
 				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherTable == "是").Select((col, idx) =>
                     $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ShowColumnName ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
                 ))}
@@ -907,15 +908,24 @@ export async function get{entityName}Page(
 import {{ ref, reactive, onMounted }} from 'vue';
 import {{ ElMessageBox, ElMessage }} from 'element-plus';
 import {{buildMixedQuery}} from '/@/utils/queryBuilder';
+import type {{{entityName}}} from '/@/api/fd-system-api/typings';
 const queryForm = ref();
 const formRef = ref();
 
 const state = reactive({{
 	loading: false,
-	tableData: [],
+	tableData: {{
+		data: [],
+		total: 0,
+		loading: false,
+		param: {{
+			pageNum: 1,
+			pageSize: 10,
+		}},
+	}},
 	queryParams: {{
-	{string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == "是").Select((col, idx) => $@"{col.PropertyName}:'',"))}
-	{string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == "是"&&x.QueryType == "BETWEEN").Select((col, idx) => $@"{col.PropertyName}_1:'',"))}
+	{string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == "是").Select((col, idx) => $@"{col.PropertyName}:null,"))}
+	{string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == "是"&&x.QueryType == "BETWEEN").Select((col, idx) => $@"{col.PropertyName}_1:null,"))}
 }},
 	tableParams: {{
 		page: 1,
@@ -930,15 +940,26 @@ const state = reactive({{
 	{string.Join("\n\t", configcolumns.Where(x => x.WhetherAddUpdate == "是").Select((col, idx) => $@"{col.PropertyName}:'',"))}
 }}
 }});
-//构建查询条件
-    const queryConfig = 
-            {{
-{GetFrontendCondition(configcolumns)}
-}}
+
 // 获取列表
 const getList = async () => {{
 	state.loading = true;
-	// TODO: 实现获取列表接口调用
+	//构建查询条件
+    const queryConfig = 
+            {{
+    {GetFrontendCondition(configcolumns)}
+    }}
+	const searchBody: APIModel.PageQueryByConditionDto = {{
+		PageIndex: state.tableData.param.pageNum,
+		PageSize: state.tableData.param.pageSize
+	}};
+	const queryResult = buildMixedQuery(queryConfig);
+	if (queryResult.dynamicQuery) {{
+		searchBody.DynamicQuery = queryResult.dynamicQuery;
+		searchBody.QueryParameters = queryResult.queryParameters;
+	}}
+    // 调试日志
+    console.log('Search request body:', searchBody);
 	state.loading = false;
 }};
 
@@ -1046,12 +1067,12 @@ onMounted(() => {{
             }
             jsObject.Append("}");
             var sb = new global::System.Text.StringBuilder();
-            sb.Append("custom:{\n");
+            sb.Append("customs:[\n");
             foreach (var item in fdCodeGenConfig.Where(x => x.WhetherQuery == "是" && x.QueryType != "BETWEEN"))
             {
-                sb.Append($@"{item.PropertyName}:state.queryParams.{item.PropertyName}," + "\n");
+                sb.Append($@"{{field:'{item.PropertyName}',operator:'{item.QueryType}',value:state.queryParams.{item.PropertyName},}}," + "\n");
             }
-            sb.Append("}");
+            sb.Append("]");
             return sb.ToString() + ",\n" + jsObject.ToString();
         }
 

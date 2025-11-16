@@ -27,7 +27,7 @@
 					<div style="display: flex; gap: 8px;">
 						<el-input placeholder="请输入起始LastLoginTime" clearable v-model="state.queryParams.LastLoginTime"
 							style="flex: 1;" />
-						<span style="align-self: center;">至</span>
+						<span style="align-self: center;">-</span>
 						<el-input placeholder="请输入结束LastLoginTime" clearable v-model="state.queryParams.LastLoginTime_1"
 							style="flex: 1;" />
 					</div>
@@ -52,7 +52,7 @@
 		</el-card>
 
 		<el-card class="full-table" shadow="hover" style="margin-top: 5px">
-			<el-table :data="state.tableData" style="width: 100%" v-loading="state.loading" border>
+			<el-table :data="state.tableData.data" style="width: 100%" v-loading="state.loading" border>
 				<el-table-column prop="Username" label="Username" align="center" show-overflow-tooltip />
 				<el-table-column prop="Password" label="Password" align="center" show-overflow-tooltip />
 				<el-table-column prop="Name" label="Name" align="center" show-overflow-tooltip />
@@ -153,24 +153,33 @@
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { buildMixedQuery } from '/@/utils/queryBuilder';
+import type { FdAdminUser } from '/@/api/fd-system-api/typings';
 const queryForm = ref();
 const formRef = ref();
 
 const state = reactive({
 	loading: false,
-	tableData: [],
+	tableData: {
+		data: [],
+		total: 0,
+		loading: false,
+		param: {
+			pageNum: 1,
+			pageSize: 10,
+		},
+	},
 	queryParams: {
-		Username: '',
-		Password: '',
-		Name: '',
-		Email: '',
-		Phone: '',
-		Avatar: '',
-		IsActive: '',
-		LastLoginTime: '',
-		LastLoginIp: '',
-		CreatedAt: '',
-		LastLoginTime_1: '',
+		Username: null,
+		Password: null,
+		Name: null,
+		Email: null,
+		Phone: null,
+		Avatar: null,
+		IsActive: null,
+		LastLoginTime: null,
+		LastLoginIp: null,
+		CreatedAt: null,
+		LastLoginTime_1: null,
 	},
 	tableParams: {
 		page: 1,
@@ -193,31 +202,42 @@ const state = reactive({
 		LastLoginIp: '',
 	}
 });
-//构建查询条件
-const queryConfig =
-{
-	custom: {
-		Username: state.queryParams.Username,
-		Password: state.queryParams.Password,
-		Name: state.queryParams.Name,
-		Email: state.queryParams.Email,
-		Phone: state.queryParams.Phone,
-		Avatar: state.queryParams.Avatar,
-		IsActive: state.queryParams.IsActive,
-		LastLoginIp: state.queryParams.LastLoginIp,
-		CreatedAt: state.queryParams.CreatedAt,
-	},
-	ranges: {
-		LastLoginTime: {
-			from: state.queryParams.LastLoginTime,
-			to: state.queryParams.LastLoginTime_1
-		},
-	}
-}
+
 // 获取列表
 const getList = async () => {
 	state.loading = true;
-	// TODO: 实现获取列表接口调用
+	//构建查询条件
+	const queryConfig =
+	{
+		customs: [
+			{ field: 'Username', operator: 'eq', value: state.queryParams.Username, },
+			{ field: 'Password', operator: 'ne', value: state.queryParams.Password, },
+			{ field: 'Name', operator: 'gt', value: state.queryParams.Name, },
+			{ field: 'Email', operator: 'lt', value: state.queryParams.Email, },
+			{ field: 'Phone', operator: 'gte', value: state.queryParams.Phone, },
+			{ field: 'Avatar', operator: 'lte', value: state.queryParams.Avatar, },
+			{ field: 'IsActive', operator: 'contains', value: state.queryParams.IsActive, },
+			{ field: 'LastLoginIp', operator: 'startswith', value: state.queryParams.LastLoginIp, },
+			{ field: 'CreatedAt', operator: 'endswith', value: state.queryParams.CreatedAt, },
+		],
+		ranges: {
+			LastLoginTime: {
+				from: state.queryParams.LastLoginTime,
+				to: state.queryParams.LastLoginTime_1
+			},
+		}
+	}
+	const searchBody: APIModel.PageQueryByConditionDto = {
+		PageIndex: state.tableData.param.pageNum,
+		PageSize: state.tableData.param.pageSize
+	};
+	const queryResult = buildMixedQuery(queryConfig);
+	if (queryResult.dynamicQuery) {
+		searchBody.DynamicQuery = queryResult.dynamicQuery;
+		searchBody.QueryParameters = queryResult.queryParameters;
+	}
+	// 调试日志
+	console.log('Search request body:', searchBody);
 	state.loading = false;
 };
 
