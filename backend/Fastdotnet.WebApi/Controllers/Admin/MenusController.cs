@@ -78,7 +78,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         [HttpGet]
         [Authorize(Policy = Permissions.Admin.Menus.View)]
-        public override async Task<List<MenuDto>> GetAll()
+        public override async Task<List<MenuDto>> GetAll( CancellationToken cancellationToken = default)
         {
             // 获取所有菜单
             var menus = await _repository.GetListAsync(m => m.Category == "Admin");
@@ -93,13 +93,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         [Authorize(Policy = Permissions.Admin.Menus.View)]
-        public override Task<MenuDto> GetById(string id) => base.GetById(id);
+        public override Task<MenuDto> GetById(string id, CancellationToken cancellationToken = default) => base.GetById(id);
 
         [Authorize(Policy = Permissions.Admin.Menus.View)]
-        public override Task<Fastdotnet.Core.Models.PageResult<MenuDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10) => base.GetPage(pageIndex, pageSize);
+        public override Task<Fastdotnet.Core.Models.PageResult<MenuDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
 
-        [Authorize(Policy = Permissions.Admin.Menus.Create)]
-        public override Task<MenuDto> Create(CreateMenuDto dto) => base.Create(dto);
+        //[Authorize(Policy = Permissions.Admin.Menus.Create)]
+        //public override Task<MenuDto> Create(CreateMenuDto dto) => base.Create(dto);
 
         [Authorize(Policy = Permissions.Admin.Menus.Edit)]
         public override Task<MenuDto> Update(string id, UpdateMenuDto dto) => base.Update(id, dto);

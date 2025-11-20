@@ -149,7 +149,7 @@ namespace Fastdotnet.Core.Controllers
         /// 获取所有实体
         /// </summary>
         [HttpGet]
-        public virtual async Task<List<TDto>> GetAll()
+        public virtual async Task<List<TDto>> GetAll(CancellationToken cancellationToken=default)
         {
             var entities = await _repository.GetAllAsync();
             return _mapper.Map<List<TDto>>(entities);
@@ -160,7 +160,7 @@ namespace Fastdotnet.Core.Controllers
         /// </summary>
         /// <param name="id">实体ID</param>
         [HttpGet("{id}")]
-        public virtual async Task<TDto> GetById(TKey id)
+        public virtual async Task<TDto> GetById(TKey id, CancellationToken cancellationToken = default)
         {
             var entity = await _repository.GetByIdAsync(id);
             return _mapper.Map<TDto>(entity);
@@ -172,7 +172,7 @@ namespace Fastdotnet.Core.Controllers
         /// <param name="pageIndex">页码（从1开始）</param>
         /// <param name="pageSize">页大小</param>
         [HttpGet("page")]
-        public virtual async Task<PageResult<TDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
+        public virtual async Task<PageResult<TDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default)
         {
             var pageResult = await _repository.GetPageAsync(pageIndex, pageSize);
             return new PageResult<TDto>
@@ -188,7 +188,7 @@ namespace Fastdotnet.Core.Controllers
         /// <param name="query">分页和查询条件</param>
         [HttpPost("page/search")]
         [Consumes("application/json")]
-        public virtual async Task<PageResult<TDto>> GetPageByCondition([FromBody] PageQueryByConditionDto query)
+        public virtual async Task<PageResult<TDto>> GetPageByCondition([FromBody] PageQueryByConditionDto query, CancellationToken cancellationToken = default)
         {
             // 构建动态表达式
             Expression<Func<TEntity, bool>>? whereExpression = null;

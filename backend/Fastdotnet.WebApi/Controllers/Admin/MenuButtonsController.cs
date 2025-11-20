@@ -28,13 +28,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.View)]
-        public override Task<List<MenuButtonDto>> GetAll() => base.GetAll();
+        public override Task<List<MenuButtonDto>> GetAll(CancellationToken cancellationToken = default) => base.GetAll();
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.View)]
-        public override Task<MenuButtonDto> GetById(string id) => base.GetById(id);
+        public override Task<MenuButtonDto> GetById(string id, CancellationToken cancellationToken = default) => base.GetById(id);
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.View)]
-        public override Task<Fastdotnet.Core.Models.PageResult<MenuButtonDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10) => base.GetPage(pageIndex, pageSize);
+        public override Task<Fastdotnet.Core.Models.PageResult<MenuButtonDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.Create)]
         public override Task<MenuButtonDto> Create(CreateMenuButtonDto dto) => base.Create(dto);

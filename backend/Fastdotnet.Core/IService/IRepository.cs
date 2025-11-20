@@ -22,27 +22,27 @@ namespace Fastdotnet.Core.IService
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns>实体对象</returns>
-        Task<T> GetByIdAsync(TKey id);
+        Task<T> GetByIdAsync(TKey id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 获取所有实体
         /// </summary>
         /// <returns>实体列表</returns>
-        Task<List<T>> GetAllAsync();
+        Task<List<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 根据条件查询实体列表
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体列表</returns>
-        Task<List<T>> GetListAsync(Expression<Func<T, bool>> whereExpression);
+        Task<List<T>> GetListAsync(Expression<Func<T, bool>> whereExpression, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 根据条件查询第一个实体
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体对象</returns>
-        Task<T> GetFirstAsync(Expression<Func<T, bool>> whereExpression);
+        Task<T> GetFirstAsync(Expression<Func<T, bool>> whereExpression, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 分页查询
@@ -56,7 +56,7 @@ namespace Fastdotnet.Core.IService
             int pageIndex,
             int pageSize,
             Expression<Func<T, object>> orderByExpression = null,
-            OrderByType orderByType = OrderByType.Asc);
+            OrderByType orderByType = OrderByType.Asc, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 分页查询
@@ -72,7 +72,7 @@ namespace Fastdotnet.Core.IService
             int pageIndex,
             int pageSize,
             Expression<Func<T, object>> orderByExpression = null,
-            OrderByType orderByType = OrderByType.Asc);
+            OrderByType orderByType = OrderByType.Asc, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 判断是否存在满足条件的实体

@@ -2,8 +2,8 @@
 	<div class="fdadminuser-container">
 		<el-card shadow="hover" :body-style="{ padding: 5 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
-				<el-form-item label="Username" prop="Username">
-					<el-input placeholder="请输入Username" clearable v-model="state.queryParams.Username" />
+				<el-form-item label="用户名" prop="Username">
+					<el-input placeholder="请输入用户名" clearable v-model="state.queryParams.Username" />
 				</el-form-item>
 				<el-form-item label="Password" prop="Password">
 					<el-input placeholder="请输入Password" clearable v-model="state.queryParams.Password" />
@@ -53,7 +53,7 @@
 
 		<el-card class="full-table" shadow="hover" style="margin-top: 5px">
 			<el-table :data="state.tableData.data" style="width: 100%" v-loading="state.loading" border>
-				<el-table-column prop="Username" label="Username" align="center" show-overflow-tooltip />
+				<el-table-column prop="Username" label="用户名" align="center" show-overflow-tooltip />
 				<el-table-column prop="Password" label="Password" align="center" show-overflow-tooltip />
 				<el-table-column prop="Name" label="Name" align="center" show-overflow-tooltip />
 				<el-table-column prop="Email" label="Email" align="center" show-overflow-tooltip />
@@ -87,9 +87,9 @@
 			</template>
 			<el-form :model="state.formData" ref="formRef" label-width="auto">
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="Username" prop="Username">
-						<el-input v-model="state.formData.Username" placeholder="请输入Username" maxlength="255"
-							show-word-limit clearable />
+					<el-form-item label="用户名" prop="Username">
+						<el-input v-model="state.formData.Username" placeholder="请输入用户名" maxlength="255" show-word-limit
+							clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">

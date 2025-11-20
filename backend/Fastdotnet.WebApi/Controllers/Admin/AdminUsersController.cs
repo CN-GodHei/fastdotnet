@@ -42,7 +42,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// </summary>
         /// <returns>包含所有管理员用户的列表</returns>
         [Authorize(Policy = Permissions.Admin.Users.View)]
-        public override Task<List<AdminUserDto>> GetAll() => base.GetAll();
+        public override Task<List<AdminUserDto>> GetAll( CancellationToken cancellationToken = default) => base.GetAll();
 
         //[Authorize(Policy = Permissions.Admin.Users.View)]
         //public async Task<AdminUserDto> GetById(string id)
@@ -59,7 +59,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         //}
 
         [Authorize(Policy = Permissions.Admin.Users.View)]
-        public override Task<Fastdotnet.Core.Models.PageResult<AdminUserDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10) => base.GetPage(pageIndex, pageSize);
+        public override Task<Fastdotnet.Core.Models.PageResult<AdminUserDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
 
         [Authorize(Policy = Permissions.Admin.Users.Create)]
         public override async Task<AdminUserDto> Create(CreateAdminUserDto dto)

@@ -37,7 +37,7 @@ namespace Fastdotnet.Core.Service
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns>实体对象</returns>
-        public virtual async Task<T> GetByIdAsync(TKey id)
+        public virtual async Task<T> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
         {
             return await _db.Queryable<T>().InSingleAsync(id);
         }
@@ -46,7 +46,7 @@ namespace Fastdotnet.Core.Service
         /// 获取所有实体
         /// </summary>
         /// <returns>实体列表</returns>
-        public virtual async Task<List<T>> GetAllAsync()
+        public virtual async Task<List<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _db.Queryable<T>().ToListAsync();
         }
@@ -56,7 +56,7 @@ namespace Fastdotnet.Core.Service
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体列表</returns>
-        public virtual async Task<List<T>> GetListAsync(Expression<Func<T, bool>> whereExpression)
+        public virtual async Task<List<T>> GetListAsync(Expression<Func<T, bool>> whereExpression, CancellationToken cancellationToken = default)
         {
             return await _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression).ToListAsync();
         }
@@ -66,7 +66,7 @@ namespace Fastdotnet.Core.Service
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体对象</returns>
-        public virtual async Task<T> GetFirstAsync(Expression<Func<T, bool>> whereExpression)
+        public virtual async Task<T> GetFirstAsync(Expression<Func<T, bool>> whereExpression, CancellationToken cancellationToken = default)
         {
             return await _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression).FirstAsync();
         }
@@ -83,7 +83,7 @@ namespace Fastdotnet.Core.Service
             int pageIndex,
             int pageSize,
             Expression<Func<T, object>> orderByExpression = null,
-            OrderByType orderByType = OrderByType.Asc)
+            OrderByType orderByType = OrderByType.Asc, CancellationToken cancellationToken = default)
         {
             return await GetPageAsync(null, pageIndex, pageSize, orderByExpression, orderByType);
         }
@@ -102,7 +102,7 @@ namespace Fastdotnet.Core.Service
             int pageIndex,
             int pageSize,
             Expression<Func<T, object>> orderByExpression = null,
-            OrderByType orderByType = OrderByType.Asc)
+            OrderByType orderByType = OrderByType.Asc, CancellationToken cancellationToken = default)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression);
