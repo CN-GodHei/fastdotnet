@@ -1,7 +1,7 @@
 using Fastdotnet.Plugin.Contracts;
 using System.Threading.Tasks;
 
-namespace Fastdotnet.Core.Service
+namespace Fastdotnet.Core.Services.System
 {
     /// <summary>
     /// 权限同步服务接口

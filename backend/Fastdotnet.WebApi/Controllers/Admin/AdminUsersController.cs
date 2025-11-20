@@ -5,7 +5,6 @@ using Fastdotnet.Core.Entities.Admin;
 using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.Admin.Users;
-using Fastdotnet.Core.Service;
 using Fastdotnet.Core.Utils.Extensions;
 using Fastdotnet.Service.IService.Admin;
 using Microsoft.AspNetCore.Authorization;

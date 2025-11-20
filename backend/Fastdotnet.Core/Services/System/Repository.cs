@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Fastdotnet.Core.Service
+namespace Fastdotnet.Core.Services.System
 {
     /// <summary>
     /// 通用仓储实现

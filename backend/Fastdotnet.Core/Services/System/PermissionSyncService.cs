@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fastdotnet.Core.Service
+namespace Fastdotnet.Core.Services.System
 {
     /// <summary>
     /// 权限同步服务

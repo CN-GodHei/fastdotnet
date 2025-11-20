@@ -8,7 +8,6 @@ using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Middleware;
 using Fastdotnet.Core.Models.LogModels;
-using Fastdotnet.Core.Service;
 using Fastdotnet.Core.Services.System;
 using Fastdotnet.Core.Settings;
 using Fastdotnet.Core.Utils;

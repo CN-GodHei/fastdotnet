@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fastdotnet.Core.Service
+namespace Fastdotnet.Core.Services.System
 {
     /// <summary>
     /// 混合缓存服务实现

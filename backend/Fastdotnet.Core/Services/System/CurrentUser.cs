@@ -4,7 +4,7 @@ using System.Security.Claims;
 using Fastdotnet.Core.IService;
 using Microsoft.AspNetCore.Http;
 
-namespace Fastdotnet.Core.Service
+namespace Fastdotnet.Core.Services.System
 {
     public class CurrentUser : ICurrentUser
     {

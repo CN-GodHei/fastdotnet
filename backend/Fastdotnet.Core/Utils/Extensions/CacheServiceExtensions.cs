@@ -1,6 +1,6 @@
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models;
-using Fastdotnet.Core.Service;
+using Fastdotnet.Core.Services.System;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
