@@ -672,7 +672,9 @@ using Fastdotnet.Core.IService;
 
 namespace {nameSpace ?? "Fastdotnet.Service.Service"}
 {{
-    public class {entityName}Service : BaseService<{entityName}>, I{entityName}Service
+    //除非要自定义自己的业务逻辑，否则不需要此文件
+    public class {entityName}Service : BaseService<{entityName}>
+    //, I{entityName}Service
     {{
         public {entityName}Service(IRepository<{entityName}> repository) : base(repository)
         {{
@@ -699,11 +701,14 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
     [Route(""api/[controller]"")]
     public class {entityName}Controller : GenericDtoControllerBase<{entityName}, string, Create{entityName}Dto, Update{entityName}Dto, {entityName}Dto>
     {{
+        private readonly IBaseService<{entityName}, string> _baseservice;
+
         public {entityName}Controller(
-            I{entityName}Service {entityName.ToLower()}Service,
-            IRepository<{entityName}> repository,
-            IMapper mapper) : base(repository, mapper)
+            //I{entityName}Service {entityName.ToLower()}Service,
+            IBaseService<{entityName}, string> service,
+            IMapper mapper) : base(service, mapper)
         {{
+            _baseservice = service;
         }}
     }}
 }}";
