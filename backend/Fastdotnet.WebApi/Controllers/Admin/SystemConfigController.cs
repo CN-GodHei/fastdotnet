@@ -17,7 +17,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     [Route("api/admin/[controller]")]
     public class SystemConfigController : GenericDtoControllerBase<SystemConfig, SystemConfigDto, SystemConfigDto, SystemConfigDto>
     {
-        public SystemConfigController(IRepository<SystemConfig, string> repository, IMapper mapper) : base(repository, mapper)
+        public SystemConfigController(IBaseService<SystemConfig, string> service, IMapper mapper) : base(service, mapper)
         {
         }
 
@@ -26,7 +26,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             // 如果前端提供了Code，检查是否重复
             if (!string.IsNullOrWhiteSpace(entity.Code))
             {
-                var exists = await _repository.ExistsAsync(e => e.Code == entity.Code);
+                var exists = await _service.ExistsAsync(e => e.Code == entity.Code);
                 if (exists)
                 {
                     throw new BusinessException($"配置编码 '{entity.Code}' 已存在，请使用不同的编码。");
@@ -75,7 +75,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         [AllowAnonymous] // 此接口允许匿名访问
         public async Task<Dictionary<string, object>> GetPublicConfigs()
         {
-            var configs = await _repository.GetAllAsync();
+            var configs = await _service.GetAllAsync();
             return configs.ToDictionary(c => c.Code, c => c.Value);
         }
     }

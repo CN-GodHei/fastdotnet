@@ -20,8 +20,8 @@ namespace PluginA.Controllers
     [Route("api/[controller]")]
     public class PluginATestDtoController : GenericDtoControllerBase<PluginATest, string, PluginATestCreateDto, PluginATestUpdateDto, PluginATestDto>
     {
-        public PluginATestDtoController(IRepository<PluginATest, string> pluginATestRepository, IMapper mapper) 
-            : base(pluginATestRepository, mapper)
+        public PluginATestDtoController(IBaseService<PluginATest, string> pluginATestService, IMapper mapper) 
+            : base(pluginATestService, mapper)
         {
         }
 

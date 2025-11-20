@@ -26,11 +26,11 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         private readonly IRepository<FdRolePermission> _rolePermissionRepository;
 
         public RolesController(
-            IRepository<FdRole> repository,
+            IBaseService<FdRole, string> service,
             IMapper mapper,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
             IRepository<FdAppUserRole> appUserRoleRepository,
-            IRepository<FdRolePermission> rolePermissionRepository) : base(repository, mapper)
+            IRepository<FdRolePermission> rolePermissionRepository) : base(service, mapper)
         {
             _adminUserRoleRepository = adminUserRoleRepository;
             _appUserRoleRepository = appUserRoleRepository;

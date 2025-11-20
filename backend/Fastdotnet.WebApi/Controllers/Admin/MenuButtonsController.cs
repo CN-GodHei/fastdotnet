@@ -19,12 +19,12 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     [Authorize]
     public class MenuButtonsController : GenericDtoControllerBase<FdMenuButton, string, CreateMenuButtonDto, UpdateMenuButtonDto, MenuButtonDto>
     {
-        private readonly IRepository<FdMenuButton> _repository1;
+        private readonly IBaseService<FdMenuButton, string> _service1;
         public MenuButtonsController(
-            IRepository<FdMenuButton> repository,
-            IMapper mapper) : base(repository, mapper)
+            IBaseService<FdMenuButton, string> service,
+            IMapper mapper) : base(service, mapper)
         {
-            _repository1 = repository;
+            _service1 = service;
         }
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.View)]
@@ -48,10 +48,10 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             {
                 entity.Code = $"{dto.MenuCode}_{dto.Code}";
             }
-            var et = await _repository1.GetFirstAsync(x => x.Code == entity.Code&&x.MenuCode==entity.MenuCode);
+            var et = await _service1.GetFirstAsync(x => x.Code == entity.Code&&x.MenuCode==entity.MenuCode);
             if (et != null)
             {
-                throw new BusinessException("²Ëµ¥ÏÂÒÑ´æÔÚ¸Ã±àÂëµÄ°´Å¥");
+                throw new BusinessException("ï¿½Ëµï¿½ï¿½ï¿½ï¿½Ñ´ï¿½ï¿½Ú¸Ã±ï¿½ï¿½ï¿½ï¿½Ä°ï¿½Å¥");
             }
             await base.BeforeCreate(entity, dto);
         }

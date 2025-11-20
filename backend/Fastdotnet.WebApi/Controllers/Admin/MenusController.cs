@@ -31,13 +31,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         private readonly IAdminUserService _adminUserService;
 
         public MenusController(
-            IRepository<FdMenu> repository,
+            IBaseService<FdMenu, string> service,
             IMapper mapper,
             IMenuService menuService,
             ICurrentUser currentUser,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
             IAdminUserService adminUserService,
-            IRepository<FdRole> roleRepository) : base(repository, mapper)
+            IRepository<FdRole> roleRepository) : base(service, mapper)
         {
             _menuService = menuService;
             _currentUser = currentUser;
@@ -63,7 +63,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             if (isSuperAdmin)
             {
                 // 超管获取所有菜单
-                var menutemp = await _repository.GetListAsync(m => m.Category == "Admin" && m.IsEnabled);
+                var menutemp = await _service.GetListAsync(m => m.Category == "Admin" && m.IsEnabled);
                 menus = await _menuService.BuildMenuTree(menutemp, null);
             }
             else
@@ -81,7 +81,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public override async Task<List<MenuDto>> GetAll( CancellationToken cancellationToken = default)
         {
             // 获取所有菜单
-            var menus = await _repository.GetListAsync(m => m.Category == "Admin");
+            var menus = await _service.GetListAsync(m => m.Category == "Admin");
             
             // 构建树形结构
             var menuTree = await _menuService.BuildMenuTree(menus, null);

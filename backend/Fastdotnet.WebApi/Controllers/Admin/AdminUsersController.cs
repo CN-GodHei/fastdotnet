@@ -24,16 +24,16 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     {
         private readonly IAdminUserService _adminUserService;
         private readonly ICurrentUser _currentUser;
-        private readonly IRepository<FdAdminUser> _repository;
+        private readonly IBaseService<FdAdminUser, string> _service;
 
         public AdminUsersController(
             IAdminUserService adminUserService,
-            IRepository<FdAdminUser> repository,
+            IBaseService<FdAdminUser, string> service,
             IMapper mapper,
-            ICurrentUser currentUser) : base(repository, mapper)
+            ICurrentUser currentUser) : base(service, mapper)
         {
             _adminUserService = adminUserService;
-            _repository = repository;
+            _service = service;
             _currentUser = currentUser;
         }
 
@@ -118,7 +118,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public async Task<AdminUserDto> getUserInfo()
         {
             // 获取当前用户信息
-            var user = await _repository.GetByIdAsync(_currentUser.Id);
+            var user = await _service.GetByIdAsync(_currentUser.Id);
             if (user == null)
             {
                 throw new UnauthorizedAccessException("用户不存在");
@@ -158,7 +158,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             }
 
             // 获取当前用户信息
-            var user = await _repository.GetFirstAsync(u => u.Id == userId&&u.Password==dto.Password);
+            var user = await _service.GetFirstAsync(u => u.Id == userId&&u.Password==dto.Password);
             if (user == null)
             {
                 return false;

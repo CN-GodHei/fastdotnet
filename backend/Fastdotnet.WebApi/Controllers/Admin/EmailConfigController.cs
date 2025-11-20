@@ -15,7 +15,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     [Authorize]
     public class EmailConfigController : GenericDtoControllerBase<EmailConfig, CreateEmailConfigDto, UpdateEmailConfigDto, EmailConfigDto>
     {
-        public EmailConfigController(IRepository<EmailConfig, string> repository, IMapper mapper) : base(repository, mapper)
+        public EmailConfigController(IBaseService<EmailConfig, string> service, IMapper mapper) : base(service, mapper)
         {
         }
 
@@ -25,7 +25,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         [HttpGet("GetConfig")]
         public async Task<EmailConfigDto> GetConfig()
         {
-            var config = await _repository.GetFirstAsync(e => true);
+            var config = await _service.GetFirstAsync(e => true);
             if (config == null)
             {
                 throw new BusinessException("邮件配置不存在，请检查种子数据是否已正确初始化。");
@@ -36,24 +36,24 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// <summary>
         /// 更新唯一的邮件配置
         /// </summary>
-        [HttpPut("UpdateConfig")]
-        public async Task<bool> UpdateConfig([FromBody] UpdateEmailConfigDto dto)
+        [HttpPost("UpdateConfig")]
+        public async Task<EmailConfigDto> UpdateConfig(UpdateEmailConfigDto dto)
         {
-            var existingConfig = await _repository.GetFirstAsync(e => true);
-            if (existingConfig == null)
+            var existing = await _service.GetFirstAsync(e => true);
+            if (existing == null)
             {
-                throw new BusinessException("邮件配置不存在，无法更新。");
+                throw new BusinessException("邮件配置不存在，请检查种子数据是否已正确初始化。");
             }
 
-            _mapper.Map(dto, existingConfig);
-            await _repository.UpdateAsync(existingConfig);
-            return true;
+            _mapper.Map(dto, existing);
+            var result = await _service.UpdateAsync(existing);
+            return _mapper.Map<EmailConfigDto>(result);
         }
 
         #region === 禁用通用接口 ===
 
         [NonAction]
-        public override Task<List<EmailConfigDto>> GetAll( CancellationToken cancellationToken = default) => throw new BusinessException("此功能对邮件配置无效。");
+        public override Task<List<EmailConfigDto>> GetAll(CancellationToken cancellationToken = default) => throw new BusinessException("此功能对邮件配置无效。");
 
         [NonAction]
         public override Task<EmailConfigDto> GetById(string id, CancellationToken cancellationToken = default) => throw new BusinessException("此功能对邮件配置无效。");

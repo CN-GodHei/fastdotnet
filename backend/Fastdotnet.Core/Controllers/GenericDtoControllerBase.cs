@@ -136,12 +136,12 @@ namespace Fastdotnet.Core.Controllers
         where TCreateDto : class
         where TUpdateDto : class
     {
-        protected readonly IRepository<TEntity, TKey> _repository;
+        protected readonly IBaseService<TEntity, TKey> _service;
         protected readonly IMapper _mapper;
 
-        protected GenericDtoControllerBase(IRepository<TEntity, TKey> repository, IMapper mapper)
+        protected GenericDtoControllerBase(IBaseService<TEntity, TKey> service, IMapper mapper)
         {
-            _repository = repository;
+            _service = service;
             _mapper = mapper;
         }
 
@@ -151,7 +151,7 @@ namespace Fastdotnet.Core.Controllers
         [HttpGet]
         public virtual async Task<List<TDto>> GetAll(CancellationToken cancellationToken=default)
         {
-            var entities = await _repository.GetAllAsync();
+            var entities = await _service.GetAllAsync();
             return _mapper.Map<List<TDto>>(entities);
         }
 
@@ -162,7 +162,7 @@ namespace Fastdotnet.Core.Controllers
         [HttpGet("{id}")]
         public virtual async Task<TDto> GetById(TKey id, CancellationToken cancellationToken = default)
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _service.GetByIdAsync(id);
             return _mapper.Map<TDto>(entity);
         }
 
@@ -174,7 +174,7 @@ namespace Fastdotnet.Core.Controllers
         [HttpGet("page")]
         public virtual async Task<PageResult<TDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default)
         {
-            var pageResult = await _repository.GetPageAsync(pageIndex, pageSize);
+            var pageResult = await _service.GetPageAsync(pageIndex, pageSize);
             return new PageResult<TDto>
             {
                 Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),
@@ -203,7 +203,7 @@ namespace Fastdotnet.Core.Controllers
                     query.QueryParameters ?? new object[0]);
             }
             
-            var pageResult = await _repository.GetPageAsync(
+            var pageResult = await _service.GetPageAsync(
                 whereExpression,
                 query.PageIndex,
                 query.PageSize);
@@ -228,7 +228,7 @@ namespace Fastdotnet.Core.Controllers
             // 可以在子类中重写BeforeCreate方法来添加自定义逻辑
             await BeforeCreate(entity, dto);
             
-            var result = await _repository.InsertAsync(entity);
+            var result = await _service.InsertAsync(entity);
             
             // 可以在子类中重写AfterCreate方法来添加自定义逻辑
             await AfterCreate(result, dto);
@@ -275,7 +275,7 @@ namespace Fastdotnet.Core.Controllers
             // 可以在子类中重写BeforeCreate方法来添加自定义逻辑
             await BeforeCreateMany(entitys, dtos);
 
-            var result = await _repository.InsertRangeAsync(entitys);
+            var result = await _service.InsertRangeAsync(entitys);
 
             // 可以在子类中重写AfterCreate方法来添加自定义逻辑
             await AfterCreateMany(entitys, dtos);
@@ -314,7 +314,7 @@ namespace Fastdotnet.Core.Controllers
         public virtual async Task<TDto> Update(TKey id, TUpdateDto dto)
         {
             dto.IsValid();
-            var existing = await _repository.GetByIdAsync(id);
+            var existing = await _service.GetByIdAsync(id);
             if (existing == null)
             {
                 throw new ArgumentException("未找到指定实体");
@@ -325,7 +325,7 @@ namespace Fastdotnet.Core.Controllers
             // 可以在子类中重写BeforeUpdate方法来添加自定义逻辑
             await BeforeUpdate(existing, existing, dto);
             
-            var result = await _repository.UpdateAsync(existing);
+            var result = await _service.UpdateAsync(existing);
             
             // 可以在子类中重写AfterUpdate方法来添加自定义逻辑
             await AfterUpdate(result, dto);
@@ -388,7 +388,7 @@ namespace Fastdotnet.Core.Controllers
         [HttpDelete("{id}")]
         public virtual async Task<bool> Delete(TKey id)
         {
-            var existing = await _repository.GetByIdAsync(id);
+            var existing = await _service.GetByIdAsync(id);
             if (existing == null)
             {
                 return false;
@@ -397,7 +397,7 @@ namespace Fastdotnet.Core.Controllers
             // 可以在子类中重写BeforeDelete方法来添加自定义逻辑
             await BeforeDelete(existing);
             
-            var result = await _repository.DeleteAsync(id);
+            var result = await _service.DeleteAsync(id);
             
             // 可以在子类中重写AfterDelete方法来添加自定义逻辑
             await AfterDelete(id, result);
@@ -439,7 +439,7 @@ namespace Fastdotnet.Core.Controllers
             // 使用object类型来处理不同类型的ID比较
             var idObjects = ids.Cast<object>().ToList();
             Expression<Func<TEntity, bool>> whereExpression = entity => idObjects.Contains(entity.Id);
-            return await _repository.DeleteAsync(whereExpression);
+            return await _service.DeleteAsync(whereExpression);
         }
 
         /// <summary>
@@ -461,7 +461,7 @@ namespace Fastdotnet.Core.Controllers
             // 可以在子类中重写BeforeUpdateMany方法来添加自定义逻辑
             await BeforeUpdateMany(updatedEntities, dtos);
 
-            var result = await _repository.UpdateRangeAsync(updatedEntities);
+            var result = await _service.UpdateRangeAsync(updatedEntities);
 
             // 可以在子类中重写AfterUpdateMany方法来添加自定义逻辑
             await AfterUpdateMany(updatedEntities, dtos);
@@ -523,7 +523,7 @@ namespace Fastdotnet.Core.Controllers
             await BeforeUpdateMany(new List<TEntity>(), new List<TUpdateDto>());
 
             // 调用 Repository 的批量更新方法
-            var result = await _repository.UpdateRangeAsync(whereExpression ?? (_ => true), updateColumns);
+            var result = await _service.UpdateRangeAsync(whereExpression ?? (_ => true), updateColumns);
 
             // 可以在子类中重写AfterUpdateMany方法来添加自定义逻辑
             await AfterUpdateMany(new List<TEntity>(), new List<TUpdateDto>());
@@ -701,7 +701,7 @@ namespace Fastdotnet.Core.Controllers
         [HttpGet("recyclebin")]
         public virtual async Task<PageResult<TDto>> GetRecycleBin([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
         {
-            var pageResult = await _repository.GetRecycleBinAsync(pageIndex, pageSize);
+            var pageResult = await _service.GetRecycleBinAsync(pageIndex, pageSize);
             return new PageResult<TDto>
             {
                 Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),
@@ -730,7 +730,7 @@ namespace Fastdotnet.Core.Controllers
                     query.QueryParameters ?? new object[0]);
             }
             
-            var pageResult = await _repository.GetRecycleBinAsync(
+            var pageResult = await _service.GetRecycleBinAsync(
                 whereExpression,
                 query.PageIndex,
                 query.PageSize);
@@ -750,7 +750,7 @@ namespace Fastdotnet.Core.Controllers
         [HttpPut("recyclebin/{id}/restore")]
         public virtual async Task<bool> Restore(TKey id)
         {
-            return await _repository.RestoreAsync(id);
+            return await _service.RestoreAsync(id);
         }
 
         /// <summary>
@@ -761,7 +761,7 @@ namespace Fastdotnet.Core.Controllers
         [HttpPost("recyclebin/restore")]
         public virtual async Task<int> RestoreBatch([FromBody] Expression<Func<TEntity, bool>> whereExpression)
         {
-            return await _repository.RestoreAsync(whereExpression);
+            return await _service.RestoreAsync(whereExpression);
         }
 
         /// <summary>
@@ -772,7 +772,7 @@ namespace Fastdotnet.Core.Controllers
         [HttpDelete("recyclebin/{id}/permanent")]
         public virtual async Task<bool> PermanentDelete(TKey id)
         {
-            return await _repository.PermanentDeleteAsync(id);
+            return await _service.PermanentDeleteAsync(id);
         }
 
         /// <summary>
@@ -783,7 +783,7 @@ namespace Fastdotnet.Core.Controllers
         [HttpPost("recyclebin/permanent")]
         public virtual async Task<int> PermanentDeleteBatch([FromBody] Expression<Func<TEntity, bool>> whereExpression)
         {
-            return await _repository.PermanentDeleteAsync(whereExpression);
+            return await _service.PermanentDeleteAsync(whereExpression);
         }
 
         #endregion
@@ -806,7 +806,7 @@ namespace Fastdotnet.Core.Controllers
         where TCreateDto : class
         where TUpdateDto : class
     {
-        protected GenericDtoControllerBase(IRepository<TEntity, string> repository, IMapper mapper) : base(repository, mapper)
+        protected GenericDtoControllerBase(IBaseService<TEntity, string> service, IMapper mapper) : base(service, mapper)
         {
         }
     }

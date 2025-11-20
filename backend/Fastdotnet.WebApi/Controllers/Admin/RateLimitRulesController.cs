@@ -16,16 +16,16 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     [ApiController]
     public class RateLimitRulesController : GenericDtoControllerBase<FdRateLimitRule, CreateFdRateLimitRuleDto, UpdateFdRateLimitRuleDto, FdRateLimitRuleDto>
     {
-        private readonly IRepository<FdRateLimitRule, string> _rateLimitRuleRepository;
+        private readonly IBaseService<FdRateLimitRule, string> _rateLimitRuleService;
         private readonly IRateLimitCacheService _rateLimitCacheService;
 
         public RateLimitRulesController(
-            IRepository<FdRateLimitRule, string> rateLimitRuleRepository, 
+            IBaseService<FdRateLimitRule, string> rateLimitRuleService, 
             IMapper mapper,
             IRateLimitCacheService rateLimitCacheService) 
-            : base(rateLimitRuleRepository, mapper)
+            : base(rateLimitRuleService, mapper)
         {
-            _rateLimitRuleRepository = rateLimitRuleRepository;
+            _rateLimitRuleService = rateLimitRuleService;
             _rateLimitCacheService = rateLimitCacheService;
         }
 
@@ -35,7 +35,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         [HttpGet("by-type-and-key")]
         public async Task<ActionResult<FdRateLimitRuleDto>> GetByTypeAndKey([FromQuery] string type, [FromQuery] string key)
         {
-            var result = await _rateLimitRuleRepository.GetFirstAsync(x => x.Type == type && x.Key == key);
+            var result = await _rateLimitRuleService.GetFirstAsync(x => x.Type == type && x.Key == key);
             if (result == null)
                 return NotFound();
 
@@ -54,7 +54,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         {
             // 由于这是个简单的检查，我们直接在控制器中实现
             // 在实际项目中，如果逻辑复杂，还是建议使用服务层
-            var rule = await _rateLimitRuleRepository.GetFirstAsync(x => x.Type == type && x.Key == key);
+            var rule = await _rateLimitRuleService.GetFirstAsync(x => x.Type == type && x.Key == key);
             if (rule == null)
                 return Ok(false);
 

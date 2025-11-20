@@ -16,16 +16,16 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     [ApiController]
     public class BlacklistsController : GenericDtoControllerBase<FdBlacklist,string, CreateFdBlacklistDto, UpdateFdBlacklistDto, FdBlacklistDto>
     {
-        private readonly IRepository<FdBlacklist, string> _blacklistRepository;
+        private readonly IBaseService<FdBlacklist, string> _blacklistService;
         private readonly IRateLimitCacheService _rateLimitCacheService;
 
         public BlacklistsController(
-            IRepository<FdBlacklist, string> blacklistRepository, 
+            IBaseService<FdBlacklist, string> blacklistService, 
             IMapper mapper,
             IRateLimitCacheService rateLimitCacheService) 
-            : base(blacklistRepository, mapper)
+            : base(blacklistService, mapper)
         {
-            _blacklistRepository = blacklistRepository;
+            _blacklistService = blacklistService;
             _rateLimitCacheService = rateLimitCacheService;
         }
 
@@ -37,7 +37,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         {
             // 由于这是个简单的检查，我们直接在控制器中实现
             // 在实际项目中，如果逻辑复杂，还是建议使用服务层
-            var blacklist = await _blacklistRepository.GetListAsync(x => x.Type == type && x.Value == value);
+            var blacklist = await _blacklistService.GetListAsync(x => x.Type == type && x.Value == value);
             return Ok(blacklist.Any());
         }
 
@@ -56,8 +56,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// </summary>
         protected override async Task AfterUpdate(FdBlacklist entity, UpdateFdBlacklistDto dto)
         {
-            // 由于更新操作可能会改变Type或Value，我们需要更新缓存
-            // 这里简化处理，直接重置整个类型的黑名单缓存
+            // 更新缓存中的黑名单
             await _rateLimitCacheService.RemoveFromBlacklistAsync(entity.Type, entity.Value);
             await _rateLimitCacheService.AddToBlacklistAsync(entity.Type, entity.Value);
             await base.AfterUpdate(entity, dto);
@@ -68,9 +67,15 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// </summary>
         protected override async Task AfterDelete(string id, bool result)
         {
-            // 从缓存中移除
-            // 注意：这里我们无法直接获取到entity的信息，所以只能通过其他方式处理
-            // 在实际项目中，可能需要通过ID查询entity来获取Type和Value
+            if (result)
+            {
+                // 从缓存中移除
+                var entity = await _blacklistService.GetByIdAsync(id);
+                if (entity != null)
+                {
+                    await _rateLimitCacheService.RemoveFromBlacklistAsync(entity.Type, entity.Value);
+                }
+            }
             await base.AfterDelete(id, result);
         }
     }

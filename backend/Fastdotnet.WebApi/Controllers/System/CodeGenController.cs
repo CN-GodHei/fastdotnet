@@ -24,22 +24,22 @@ namespace Fastdotnet.WebApi.Controllers.System
     public class CodeGenController : GenericDtoControllerBase<FdCodeGen, string, CreateCodeGenDto, UpdateCodeGenDto, CodeGenConfigDto>
     {
         private readonly ICodeGenConfigService _codeGenConfigService;
-        private readonly IRepository<FdCodeGen> _repository;
+        private readonly IBaseService<FdCodeGen, string> _service;
         private readonly IRepository<FdCodeGenConfig> _configRepository;
 
         public CodeGenController(
             ICodeGenConfigService codeGenConfigService,
-            IRepository<FdCodeGen> repository,
+            IBaseService<FdCodeGen, string> service,
             IRepository<FdCodeGenConfig> configRepository,
-            IMapper mapper) : base(repository, mapper)
+            IMapper mapper) : base(service, mapper)
         {
             _codeGenConfigService = codeGenConfigService;
-            _repository = repository;
+            _service = service;
             _configRepository = configRepository;
         }
         protected override async Task BeforeCreate(FdCodeGen entity, CreateCodeGenDto dto)
         {
-            var record = await _repository.GetListAsync(w => w.TableName == dto.TableName);
+            var record = await _service.GetListAsync(w => w.TableName == dto.TableName);
             if (record.Count > 0)
             {
                 throw new BusinessException("该表已生成!");
@@ -171,7 +171,7 @@ namespace Fastdotnet.WebApi.Controllers.System
             }
 
             // 获取配置信息
-            var config = await _repository.GetByIdAsync(configId);
+            var config = await _service.GetByIdAsync(configId);
             if (config == null)
             {
                 throw new ArgumentException("配置不存在");

@@ -21,8 +21,8 @@ namespace Fastdotnet.WebApi.Controllers.System
     {
 
         public CodeGenConfigController(
-            IRepository<FdCodeGenConfig> repository,
-            IMapper mapper) : base(repository, mapper)
+            IBaseService<FdCodeGenConfig, string> service,
+            IMapper mapper) : base(service, mapper)
         {
         }
     }
