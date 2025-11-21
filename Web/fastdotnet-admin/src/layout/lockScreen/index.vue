@@ -247,6 +247,12 @@ const initLockScreen = () => {
 	if (isLoginPage()) {
 		return;
 	}
+
+	// 清除之前的定时器，防止重复创建
+	if (state.isShowLockScreenIntervalTime) {
+		clearInterval(state.isShowLockScreenIntervalTime);
+		state.isShowLockScreenIntervalTime = 0;
+	}
 	
 	// 使用后端配置的原始锁屏时间作为当前倒计时
 	let currentCountdown = themeConfig.value.lockScreenTime;
@@ -330,6 +336,8 @@ watch(
 	() => themeConfig.value.lockScreenTime,
 	(newVal) => {
 		originalLockScreenTime.value = newVal;
+		// 配置改变时，重置锁屏定时器
+		resetLockScreenTimer();
 	}
 );
 // 密码输入点击事件
