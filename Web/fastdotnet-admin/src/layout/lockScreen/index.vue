@@ -579,7 +579,7 @@ const getAvatarStyle = () => {
 .layout-lock-screen-img {
 	@extend .layout-lock-screen-fixed;
 	// background-image: url('');
-	background-color: rgb(57, 80, 80);
+	background-color: #2d3a4b;
 	background-size: 100% 100%;
 	z-index: 9999991;
 }
