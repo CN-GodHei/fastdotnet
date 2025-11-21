@@ -95,16 +95,16 @@ namespace Fastdotnet.WebApi.Controllers.System
         /// 执行代码生成
         /// </summary>
         /// <returns></returns>
-        [HttpPost("generate")]
-        [Authorize(Policy = Permissions.System.CodeGen.Create)]
-        public async Task<string> GenerateCode([FromBody] CodeGenInput input)
-        {
-            if (string.IsNullOrEmpty(input.TableName))
-            {
-                throw new ArgumentException("表名不能为空");
-            }
-            return await _codeGenConfigService.GenerateCodeAsync(input,"");
-        }
+        //[HttpPost("generate")]
+        //[Authorize(Policy = Permissions.System.CodeGen.Create)]
+        //public async Task<string> GenerateCode([FromBody] CodeGenInput input)
+        //{
+        //    if (string.IsNullOrEmpty(input.TableName))
+        //    {
+        //        throw new ArgumentException("表名不能为空");
+        //    }
+        //    return await _codeGenConfigService.GenerateCodeAsync(input,"");
+        //}
 
 
         /// <summary>

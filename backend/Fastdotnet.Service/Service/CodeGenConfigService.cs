@@ -105,84 +105,8 @@ namespace Fastdotnet.Service.Service
             return entityName;
         }
 
-        public async Task<string> GenerateCodeAsync(CodeGenInput input, string TableComment)
-        {
-            var tableColumns = await GetTableColumnListAsync(input.TableName ?? string.Empty);
-            var entityName = GetEntityNameByTableName(input.TableName ?? string.Empty);
 
-            // 创建临时目录用于生成代码文件
-            var tempDir = global::System.IO.Path.Combine(global::System.IO.Path.GetTempPath(), $"codegen_{input.TableName}_{DateTime.Now:yyyyMMddHHmmss}");
-            if (!global::System.IO.Directory.Exists(tempDir))
-            {
-                global::System.IO.Directory.CreateDirectory(tempDir);
-            }
 
-            try
-            {
-                // 生成实体类
-                await GenerateEntityFile(tempDir, input.TableName, entityName, tableColumns, input.NameSpace, TableComment);
-
-                // 生成DTO类
-                await GenerateDtoFiles(tempDir, entityName, tableColumns, input.NameSpace, TableComment);
-
-                // 生成服务接口
-                await GenerateServiceInterfaceFile(tempDir, entityName, input.NameSpace, TableComment);
-
-                // 生成服务实现
-                await GenerateServiceImplementationFile(tempDir, entityName, input.NameSpace, TableComment);
-
-                // 生成控制器
-                await GenerateControllerFile(tempDir, entityName, input.NameSpace, "Developer", TableComment); // 使用默认作者名
-
-                // 生成前端页面
-                //await GenerateFrontendFiles(tempDir, entityName, tableColumns, input.TableName, input.PagePath, TableComment); // 使用表名代替业务名
-
-                // 压缩为ZIP文件
-                var zipPath = global::System.IO.Path.Combine(global::System.IO.Path.GetTempPath(), $"codegen_{input.TableName}_{DateTime.Now:yyyyMMddHHmmss}.zip");
-                if (global::System.IO.File.Exists(zipPath))
-                {
-                    global::System.IO.File.Delete(zipPath);
-                }
-                global::System.IO.Compression.ZipFile.CreateFromDirectory(tempDir, zipPath);
-
-                // 返回ZIP文件路径
-                return zipPath;
-            }
-            finally
-            {
-                // 清理临时目录
-                if (global::System.IO.Directory.Exists(tempDir))
-                {
-                    global::System.IO.Directory.Delete(tempDir, true);
-                }
-            }
-        }
-
-        private async Task GenerateEntityFile(string outputDir, string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
-        {
-            var entityDir = global::System.IO.Path.Combine(outputDir, "Entity");
-            if (!global::System.IO.Directory.Exists(entityDir))
-            {
-                global::System.IO.Directory.CreateDirectory(entityDir);
-            }
-
-            var entityContent = $@"using SqlSugar;
-
-namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
-{{
-    /// <summary>
-    /// {TableComment} - {tableName}
-    /// </summary>
-    [SugarTable(""{tableName}"",""{TableComment}"")]
-    public class {entityName} : BaseEntity
-    {{
-{string.Join("\n", columns.Select(col => GeneratePropertyDefinition(col)))}
-    }}
-}}";
-
-            var entityPath = global::System.IO.Path.Combine(entityDir, $"{entityName}.cs");
-            await global::System.IO.File.WriteAllTextAsync(entityPath, entityContent);
-        }
 
         private string GeneratePropertyDefinition(ColumnInfoDto column)
         {
@@ -201,10 +125,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
             }
             return $"        {GenGenerateColumnComment(column.ColumnComment)}\n        {attrStr}\n        public {column.NetType} {column.PropertyName} {{ get; set; }}";
         }
-        private string getIsNullableStr(bool IsNullable)
-        {
-            return IsNullable ? "?" : string.Empty;
-        }
+
 
         private string GetLength(int Length)
         {
@@ -237,61 +158,6 @@ namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
         /// </summary>";
         }
 
-        private async Task GenerateDtoFiles(string outputDir, string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
-        {
-            // 使用反射获取BaseEntity的所有公共属性名称
-            var baseEntityProperties = GetBaseEntityPropertyNames();
-
-            var filteredColumns = columns.Where(col =>
-                !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) &&
-                !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
-
-            var dtoDir = global::System.IO.Path.Combine(outputDir, "Dto");
-            if (!global::System.IO.Directory.Exists(dtoDir))
-            {
-                global::System.IO.Directory.CreateDirectory(dtoDir);
-            }
-
-            // Create DTO
-            var createDtoContent = $@"using System.ComponentModel.DataAnnotations;
-
-namespace {nameSpace ?? "Fastdotnet.Core.Models"}
-{{
-    public class Create{entityName}Dto
-    {{
-{string.Join("\n", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col => GenerateDtoProperty(col, true)))}
-    }}
-}}";
-
-            // Update DTO
-            var updateDtoContent = $@"using System.ComponentModel.DataAnnotations;
-
-namespace {nameSpace ?? "Fastdotnet.Core.Models"}
-{{
-    public class Update{entityName}Dto
-    {{
-{string.Join("\n", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col => GenerateDtoProperty(col, false)))}
-    }}
-}}";
-
-            // Output DTO
-            var outputDtoContent = $@"namespace {nameSpace ?? "Fastdotnet.Core.Models"}
-{{
-    public class {entityName}Dto
-    {{
-{string.Join("\n", filteredColumns.Select(col => GenerateDtoProperty(col, false)))}
-    }}
-}}";
-
-            var dtoPath = global::System.IO.Path.Combine(dtoDir, $"{entityName}Dto.cs");
-            var fullContent = $@"{createDtoContent}
-
-{updateDtoContent}
-
-{outputDtoContent}
-";
-            await global::System.IO.File.WriteAllTextAsync(dtoPath, fullContent);
-        }
 
         private string GenerateDtoProperty(ColumnInfoDto column, bool isCreate = false, bool isOutput = false)
         {
@@ -334,90 +200,6 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
             return result;
         }
 
-        private async Task GenerateServiceInterfaceFile(string outputDir, string entityName, string nameSpace, string TableComment)
-        {
-            var serviceDir = global::System.IO.Path.Combine(outputDir, "ServiceInterface");
-            if (!Directory.Exists(serviceDir))
-            {
-                global::System.IO.Directory.CreateDirectory(serviceDir);
-            }
-
-            var serviceInterfaceContent = $@"using Fastdotnet.Core.Entities;
-
-namespace {nameSpace ?? "Fastdotnet.Core.IService"}
-{{
-    public interface I{entityName}Service : IBaseService<{entityName}>
-    {{
-        // 在这里添加自定义业务方法
-    }}
-}}";
-
-            var serviceInterfacePath = global::System.IO.Path.Combine(serviceDir, $"I{entityName}Service.cs");
-            await global::System.IO.File.WriteAllTextAsync(serviceInterfacePath, serviceInterfaceContent);
-        }
-
-        private async Task GenerateServiceImplementationFile(string outputDir, string entityName, string nameSpace, string TableComment)
-        {
-            var serviceDir = global::System.IO.Path.Combine(outputDir, "ServiceImplementation");
-            if (!Directory.Exists(serviceDir))
-            {
-                global::System.IO.Directory.CreateDirectory(serviceDir);
-            }
-
-            var serviceImplementationContent = $@"using Fastdotnet.Core.Entities;
-using Fastdotnet.Core.IService;
-
-namespace {nameSpace ?? "Fastdotnet.Service.Service"}
-{{
-    public class {entityName}Service : BaseService<{entityName}>, I{entityName}Service
-    {{
-        public {entityName}Service(IRepository<{entityName}> repository) : base(repository)
-        {{
-        }}
-    }}
-}}";
-
-            var serviceImplementationPath = global::System.IO.Path.Combine(serviceDir, $"{entityName}Service.cs");
-            await global::System.IO.File.WriteAllTextAsync(serviceImplementationPath, serviceImplementationContent);
-        }
-
-        private async Task GenerateControllerFile(string outputDir, string entityName, string nameSpace, string authorName, string TableComment)
-        {
-            var controllerDir = global::System.IO.Path.Combine(outputDir, "Controller");
-            if (!Directory.Exists(controllerDir))
-            {
-                global::System.IO.Directory.CreateDirectory(controllerDir);
-            }
-
-            var controllerContent = $@"using Fastdotnet.Core.Controllers;
-using Fastdotnet.Core.Entities;
-using Fastdotnet.Core.IService;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Fastdotnet.Core.Constants;
-
-namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
-{{
-    /// <summary>
-    /// {entityName} 控制器
-    /// </summary>
-    [Route(""api/[controller]"")]
-    public class {entityName}Controller : GenericDtoControllerBase<{entityName}, string, Create{entityName}Dto, Update{entityName}Dto, {entityName}Dto>
-    {{
-        public {entityName}Controller(
-            I{entityName}Service {entityName.ToLower()}Service,
-            IRepository<{entityName}> repository,
-            IMapper mapper) : base(repository, mapper)
-        {{
-        }}
-    }}
-}}";
-
-            var controllerPath = global::System.IO.Path.Combine(controllerDir, $"{entityName}Controller.cs");
-            await global::System.IO.File.WriteAllTextAsync(controllerPath, controllerContent);
-        }
-
 
         private string ToPascalCase(string columnName)
         {
@@ -458,121 +240,8 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
             return netType;
         }
 
-        public async Task<List<PreviewFileItem>> GetGeneratedFileListAsync(CodeGenInput input)
-        {
-            var tableColumns = await GetTableColumnListAsync(input.TableName ?? string.Empty);
-            var entityName = GetEntityNameByTableName(input.TableName ?? string.Empty);
 
-            var fileList = new List<PreviewFileItem>();
-
-            // 实体类
-            fileList.Add(new PreviewFileItem
-            {
-                Name = $"{entityName}.cs",
-                Path = $"src/{input.NameSpace}/Entities/{entityName}.cs",
-                Type = "cs"
-            });
-
-            // DTO类
-            fileList.Add(new PreviewFileItem
-            {
-                Name = $"{entityName}Dto.cs",
-                Path = $"src/{input.NameSpace}/Dtos/{entityName}Dto.cs",
-                Type = "cs"
-            });
-
-            // 服务接口
-            fileList.Add(new PreviewFileItem
-            {
-                Name = $"I{entityName}Service.cs",
-                Path = $"src/{input.NameSpace}/IService/I{entityName}Service.cs",
-                Type = "cs"
-            });
-
-            // 服务实现
-            fileList.Add(new PreviewFileItem
-            {
-                Name = $"{entityName}Service.cs",
-                Path = $"src/{input.NameSpace}/Service/{entityName}Service.cs",
-                Type = "cs"
-            });
-
-            // 控制器
-            fileList.Add(new PreviewFileItem
-            {
-                Name = $"{entityName}Controller.cs",
-                Path = $"src/{input.NameSpace}/Controllers/{entityName}Controller.cs",
-                Type = "cs"
-            });
-
-            // 前端API
-            fileList.Add(new PreviewFileItem
-            {
-                Name = $"{entityName?.ToLower()}-api.ts",
-                Path = $"src/api/{input.TableName}-api.ts",
-                Type = "ts"
-            });
-
-            // 前端页面
-            fileList.Add(new PreviewFileItem
-            {
-                Name = $"{entityName}.vue",
-                Path = $"src/views/{input.PagePath}/{entityName?.ToLower()}/index.vue",
-                Type = "vue"
-            });
-
-            return fileList;
-        }
-
-        public async Task<string> GetGeneratedFileContentAsync(CodeGenInput input, string filePath, string TableComment)
-        {
-            var tableColumns = await GetTableColumnListAsync(input.TableName ?? string.Empty);
-            var entityName = GetEntityNameByTableName(input.TableName ?? string.Empty);
-
-            // 这里我们根据文件路径返回对应的生成内容
-            if (filePath.EndsWith($"{entityName}.cs"))
-            {
-                return await GenerateEntityContent(input.TableName, entityName, tableColumns, input.NameSpace, TableComment);
-            }
-            else if (filePath.EndsWith($"{entityName}Dto.cs"))
-            {
-                return await GenerateDtoContent(entityName, tableColumns, input.NameSpace, TableComment);
-            }
-            else if (filePath.EndsWith($"I{entityName}Service.cs"))
-            {
-                return await GenerateServiceInterfaceContent(entityName, input.NameSpace, TableComment);
-            }
-            else if (filePath.EndsWith($"{entityName}Service.cs"))
-            {
-                return await GenerateServiceImplementationContent(entityName, input.NameSpace, TableComment);
-            }
-            else if (filePath.EndsWith($"{entityName}Controller.cs"))
-            {
-                return await GenerateControllerContent(entityName, input.NameSpace, TableComment); // 使用默认作者名
-            }
-            else if (filePath.EndsWith("-api.ts"))
-            {
-                return await GenerateFrontendApiContent(entityName, input.TableName, TableComment); // 使用表名代替业务名
-            }
-            else if (filePath.EndsWith(".vue"))
-            {
-                //return await GenerateFrontendVueContent(entityName, tableColumns, input.TableName, input.PagePath, TableComment); // 使用表名代替业务名
-            }
-
-            return "// 文件不存在或无法生成预览内容";
-        }
-
-        public async Task<CodeGenPreviewResult> PreviewCodeAsync(CodeGenInput input)
-        {
-            var previewResult = new CodeGenPreviewResult
-            {
-                FileList = await GetGeneratedFileListAsync(input)
-            };
-
-            return previewResult;
-        }
-
-        protected async Task<string> GenerateEntityContent(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
+        public async Task<string>  GenerateEntityContentAsync(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
         {
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
@@ -609,7 +278,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
             return baseEntityProperties;
         }
 
-        protected async Task<string> GenerateDtoContent(string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
+        public async Task<string> GenerateDtoContentAsync(string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
         {
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
@@ -665,7 +334,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.IService"}
 }}";
         }
 
-        protected async Task<string> GenerateServiceImplementationContent(string entityName, string nameSpace, string TableComment)
+        public async Task<string> GenerateServiceImplementationContentAsync(string entityName, string nameSpace, string TableComment)
         {
             return $@"using Fastdotnet.Core.Entities;
 using Fastdotnet.Core.IService;
@@ -683,7 +352,7 @@ namespace {nameSpace ?? "Fastdotnet.Service.Service"}
 }}";
         }
 
-        protected async Task<string> GenerateControllerContent(string entityName, string nameSpace, string TableComment)
+        public async Task<string> GenerateControllerContentAsync(string entityName, string nameSpace, string TableComment)
         {
             return $@"using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.Entities;
@@ -714,125 +383,8 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 }}";
         }
 
-        private async Task<string> GenerateFrontendApiContent(string entityName, string busName, string TableComment)
-        {
-            return $@"// @ts-ignore
-/* eslint-disable */
-import request from '/@/utils/request';
 
-/** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/{entityName} */
-export async function get{entityName}List(options?: {{ [key: string]: any }}) {{
-	return request<{entityName}Dto[]>('/api/{entityName}', {{
-		method: 'GET',
-		...(options || {{}}),
-	}});
-}}
-
-/** 创建新记录 根据提供的数据创建一条新记录。 POST /api/{entityName} */
-export async function post{entityName}(body: Create{entityName}Dto, options?: {{ [key: string]: any }}) {{
-	return request<{entityName}Dto>('/api/{entityName}', {{
-		method: 'POST',
-		headers: {{
-			'Content-Type': 'application/json-patch+json',
-		}},
-		data: body,
-		...(options || {{}}),
-	}});
-}}
-
-/** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/{entityName}/${{param0}} */
-export async function get{entityName}ById(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: get{entityName}ByIdParams,
-	options?: {{ [key: string]: any }}
-) {{
-	const {{ id: param0, ...queryParams }} = params;
-	return request<{entityName}Dto>(`/api/{entityName}/${{param0}}`, {{
-		method: 'GET',
-		params: {{ ...queryParams }},
-		...(options || {{}}),
-	}});
-}}
-
-/** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/{entityName}/${{param0}} */
-export async function put{entityName}ById(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: put{entityName}ByIdParams,
-	body: Update{entityName}Dto,
-	options?: {{ [key: string]: any }}
-) {{
-	const {{ id: param0, ...queryParams }} = params;
-	return request<{entityName}Dto>(`/api/{entityName}/${{param0}}`, {{
-		method: 'PUT',
-		headers: {{
-			'Content-Type': 'application/json-patch+json',
-		}},
-		params: {{ ...queryParams }},
-		data: body,
-		...(options || {{}}),
-	}});
-}}
-
-/** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/{entityName}/${{param0}} */
-export async function delete{entityName}ById(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: delete{entityName}ByIdParams,
-	options?: {{ [key: string]: any }}
-) {{
-	const {{ id: param0, ...queryParams }} = params;
-	return request<boolean>(`/api/{entityName}/${{param0}}`, {{
-		method: 'DELETE',
-		params: {{ ...queryParams }},
-		...(options || {{}}),
-	}});
-}}
-
-/** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/{entityName}/page */
-export async function get{entityName}Page(
-	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: get{entityName}PageParams,
-	options?: {{ [key: string]: any }}
-) {{
-	return request<{entityName}DtoPageResult>('/api/{entityName}/page', {{
-		method: 'GET',
-		params: {{
-			// pageIndex has a default value: 1
-			pageIndex: '1',
-			// pageSize has a default value: 10
-			pageSize: '10',
-			...params,
-		}},
-		...(options || {{}}),
-	}});
-}}";
-        }
-
-        public async Task<string> GenerateEntityContentAsync(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
-        {
-            return await GenerateEntityContent(tableName, entityName, columns, nameSpace, TableComment);
-        }
-
-        public async Task<string> GenerateDtoContentAsync(string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
-        {
-            return await GenerateDtoContent(entityName, columns, nameSpace, TableComment);
-        }
-
-        public async Task<string> GenerateServiceImplementationContentAsync(string entityName, string nameSpace, string TableComment)
-        {
-            return await GenerateServiceImplementationContent(entityName, nameSpace, TableComment);
-        }
-
-        public async Task<string> GenerateControllerContentAsync(string entityName, string nameSpace, string TableComment)
-        {
-            return await GenerateControllerContent(entityName, nameSpace, "Developer"); // 使用默认作者名
-        }
-
-        public async Task<string> GenerateFrontendVueContentAsync(string entityName, List<ColumnInfoDto> columns, string tableName, string pagePath, string TableComment, List<FdCodeGenConfig> configcolumns)
-        {
-            return await GenerateFrontendVueContent(entityName, columns, tableName, pagePath, TableComment, configcolumns);
-        }
-
-        private async Task<string> GenerateFrontendVueContent(string entityName, List<ColumnInfoDto> columns, string busName, string pagePath, string TableComment, List<FdCodeGenConfig> configcolumns)
+        public async Task<string> GenerateFrontendVueContentAsync(string entityName, List<ColumnInfoDto> columns, string busName, string pagePath, string TableComment, List<FdCodeGenConfig> configcolumns)
         {
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
