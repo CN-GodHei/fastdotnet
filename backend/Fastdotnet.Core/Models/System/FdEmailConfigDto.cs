@@ -5,7 +5,7 @@ namespace Fastdotnet.Core.Models.System
     /// <summary>
     /// 邮件配置 - 输出DTO
     /// </summary>
-    public class EmailConfigDto
+    public class FdEmailConfigDto
     {
         public string Id { get; set; }
         public string Host { get; set; }
@@ -20,7 +20,7 @@ namespace Fastdotnet.Core.Models.System
     /// <summary>
     /// 邮件配置 - 创建DTO
     /// </summary>
-    public class CreateEmailConfigDto
+    public class FdCreateEmailConfigDto
     {
         [Required]
         [StringLength(200)]
@@ -51,7 +51,7 @@ namespace Fastdotnet.Core.Models.System
     /// <summary>
     /// 邮件配置 - 更新DTO
     /// </summary>
-    public class UpdateEmailConfigDto
+    public class FdUpdateEmailConfigDto
     {
         [Required]
         [StringLength(200)]

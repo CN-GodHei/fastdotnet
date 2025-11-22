@@ -72,16 +72,6 @@ declare namespace APIModel {
 		TableUniqueList?: TableUniqueConfigDto[];
 	};
 
-	type CreateEmailConfigDto = {
-		Host: string;
-		Port: number;
-		Username: string;
-		Password: string;
-		SenderEmail: string;
-		SenderName: string;
-		EnableSsl?: boolean;
-	};
-
 	type CreateFdAdminUserDto = {
 		Username: string;
 		Password: string;
@@ -272,17 +262,17 @@ declare namespace APIModel {
 		tags?: string[];
 	};
 
-	type deleteAdminEmailConfigRecyclebinIdPermanentParams = {
-		/** 要永久删除的记录的唯一标识符 */
-		id: string;
-	};
-
 	type deleteAdminFdAdminUserIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
 	type deleteAdminFdAdminUserRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminFdEmailConfigRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -376,22 +366,6 @@ declare namespace APIModel {
 		ReturnType?: string;
 		TailCall?: boolean;
 		CanReduce?: boolean;
-	};
-
-	type EmailConfigDto = {
-		Id?: string;
-		Host?: string;
-		Port?: number;
-		Username?: string;
-		Password?: string;
-		SenderEmail?: string;
-		SenderName?: string;
-		EnableSsl?: boolean;
-	};
-
-	type EmailConfigDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: EmailConfigDto[];
 	};
 
 	type Expression = {
@@ -607,6 +581,32 @@ declare namespace APIModel {
 		Items?: FdCodeGenConfigDto[];
 	};
 
+	type FdCreateEmailConfigDto = {
+		Host: string;
+		Port: number;
+		Username: string;
+		Password: string;
+		SenderEmail: string;
+		SenderName: string;
+		EnableSsl?: boolean;
+	};
+
+	type FdEmailConfigDto = {
+		Id?: string;
+		Host?: string;
+		Port?: number;
+		Username?: string;
+		Password?: string;
+		SenderEmail?: string;
+		SenderName?: string;
+		EnableSsl?: boolean;
+	};
+
+	type FdEmailConfigDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdEmailConfigDto[];
+	};
+
 	type FdMenuBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -746,6 +746,21 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
+	type FdUpdateEmailConfigDto = {
+		Host: string;
+		Port: number;
+		Username: string;
+		Password: string;
+		SenderEmail: string;
+		SenderName: string;
+		EnableSsl?: boolean;
+	};
+
+	type FdUpdateEmailConfigDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: FdUpdateEmailConfigDto;
+	};
+
 	type GenerateLicenseRequestDto = {
 		PluginId: string;
 		MachineFingerprint: string;
@@ -794,20 +809,6 @@ declare namespace APIModel {
 		id: number;
 	};
 
-	type getAdminEmailConfigPageParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type getAdminEmailConfigRecyclebinParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
 	type getAdminFdAdminUserIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
@@ -821,6 +822,20 @@ declare namespace APIModel {
 	};
 
 	type getAdminFdAdminUserRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminFdEmailConfigPageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminFdEmailConfigRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
@@ -1320,22 +1335,22 @@ declare namespace APIModel {
 		id: string;
 	};
 
-	type putAdminEmailConfigIdParams = {
-		/** 要更新的记录的唯一标识符 */
-		id: string;
-	};
-
-	type putAdminEmailConfigRecyclebinIdRestoreParams = {
-		/** 要恢复的记录的唯一标识符 */
-		id: string;
-	};
-
 	type putAdminFdAdminUserIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
 	type putAdminFdAdminUserRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdEmailConfigIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdEmailConfigRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
@@ -1516,21 +1531,6 @@ declare namespace APIModel {
 	type UpdateCodeGenDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateCodeGenDto;
-	};
-
-	type UpdateEmailConfigDto = {
-		Host: string;
-		Port: number;
-		Username: string;
-		Password: string;
-		SenderEmail: string;
-		SenderName: string;
-		EnableSsl?: boolean;
-	};
-
-	type UpdateEmailConfigDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateEmailConfigDto;
 	};
 
 	type UpdateFdAdminUserDto = {

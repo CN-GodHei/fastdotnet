@@ -9,13 +9,13 @@ namespace Fastdotnet.Service.Mappings
         public EmailConfigMappingProfile()
         {
             // 用于读取数据（从实体映射到输出DTO）
-            CreateMap<EmailConfig, EmailConfigDto>();
+            CreateMap<EmailConfig, FdEmailConfigDto>();
 
             // 用于创建数据（从创建DTO映射到实体）
-            CreateMap<CreateEmailConfigDto, EmailConfig>();
+            CreateMap<FdCreateEmailConfigDto, EmailConfig>();
 
             // 用于更新数据（从更新DTO映射到实体）
-            CreateMap<UpdateEmailConfigDto, EmailConfig>();
+            CreateMap<FdUpdateEmailConfigDto, EmailConfig>();
         }
     }
 }

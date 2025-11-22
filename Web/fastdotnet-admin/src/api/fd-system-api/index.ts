@@ -9,8 +9,8 @@ import * as CacheTest from './CacheTest';
 import * as Captcha from './Captcha';
 import * as CodeGen from './CodeGen';
 import * as CodeGenConfig from './CodeGenConfig';
-import * as EmailConfig from './EmailConfig';
 import * as FdAdminUser from './FdAdminUser';
+import * as FdEmailConfig from './FdEmailConfig';
 import * as FdMenu from './FdMenu';
 import * as FdMenuButtons from './FdMenuButtons';
 import * as FdPermissions from './FdPermissions';
@@ -27,8 +27,8 @@ export default {
 	Captcha,
 	CodeGen,
 	CodeGenConfig,
-	EmailConfig,
 	FdAdminUser,
+	FdEmailConfig,
 	FdMenu,
 	FdMenuButtons,
 	FdPermissions,
