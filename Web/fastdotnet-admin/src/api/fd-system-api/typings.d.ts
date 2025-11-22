@@ -178,6 +178,14 @@ declare namespace APIModel {
 		Category: string;
 	};
 
+	type CreateFdSystemInfoConfigDto = {
+		Name: string;
+		Code: string;
+		Value?: string;
+		Description?: string;
+		IsSystem: boolean;
+	};
+
 	type CreateGiftRecordDto = {
 		PurchaseId: number;
 		Reason?: string;
@@ -760,14 +768,11 @@ declare namespace APIModel {
 		Id?: string;
 		Name?: string;
 		Code?: string;
-		Value?: any;
+		Value?: string;
 		Description?: string;
 		IsSystem?: boolean;
-	};
-
-	type FdSystemInfoConfigDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: FdSystemInfoConfigDto;
+		CreatedAt?: string;
+		UpdatedAt?: string;
 	};
 
 	type FdSystemInfoConfigDtoPageResult = {
@@ -1646,6 +1651,20 @@ declare namespace APIModel {
 	type UpdateFdRoleDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateFdRoleDto;
+	};
+
+	type UpdateFdSystemInfoConfigDto = {
+		Id?: string;
+		Name?: string;
+		Code?: string;
+		Value?: string;
+		Description?: string;
+		IsSystem?: boolean;
+	};
+
+	type UpdateFdSystemInfoConfigDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdSystemInfoConfigDto;
 	};
 
 	type UpdateGiftRecordDto = {

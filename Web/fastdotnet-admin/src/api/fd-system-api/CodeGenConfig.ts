@@ -126,7 +126,7 @@ export async function getCodeGenConfigPage(
 	params: APIModel.getCodeGenConfigPageParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdCodeGenConfigDtoPageResult>('/api/CodeGenConfig/page', {
+	return request<APIModel.PageInfo>('/api/CodeGenConfig/page', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -141,7 +141,7 @@ export async function getCodeGenConfigPage(
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/CodeGenConfig/page/search */
 export async function postCodeGenConfigPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdCodeGenConfigDtoPageResult>('/api/CodeGenConfig/page/search', {
+	return request<APIModel.PageInfo>('/api/CodeGenConfig/page/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -157,7 +157,7 @@ export async function getCodeGenConfigRecyclebin(
 	params: APIModel.getCodeGenConfigRecyclebinParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdCodeGenConfigDtoPageResult>('/api/CodeGenConfig/recyclebin', {
+	return request<APIModel.PageInfo>('/api/CodeGenConfig/recyclebin', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -224,7 +224,7 @@ export async function postCodeGenConfigRecyclebinRestore(body: APIModel.FdCodeGe
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/CodeGenConfig/recyclebin/search */
 export async function postCodeGenConfigRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdCodeGenConfigDtoPageResult>('/api/CodeGenConfig/recyclebin/search', {
+	return request<APIModel.PageInfo>('/api/CodeGenConfig/recyclebin/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

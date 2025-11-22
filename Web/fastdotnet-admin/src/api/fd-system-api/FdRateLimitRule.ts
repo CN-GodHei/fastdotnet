@@ -157,7 +157,7 @@ export async function getAdminFdRatelimitRulePage(
 	params: APIModel.getAdminFdRatelimitRulePageParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdRateLimitRuleDtoPageResult>('/api/admin/FdRatelimitRule/page', {
+	return request<APIModel.PageInfo>('/api/admin/FdRatelimitRule/page', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -172,7 +172,7 @@ export async function getAdminFdRatelimitRulePage(
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdRatelimitRule/page/search */
 export async function postAdminFdRatelimitRulePageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdRateLimitRuleDtoPageResult>('/api/admin/FdRatelimitRule/page/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdRatelimitRule/page/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ export async function getAdminFdRatelimitRuleRecyclebin(
 	params: APIModel.getAdminFdRatelimitRuleRecyclebinParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdRateLimitRuleDtoPageResult>('/api/admin/FdRatelimitRule/recyclebin', {
+	return request<APIModel.PageInfo>('/api/admin/FdRatelimitRule/recyclebin', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -261,7 +261,7 @@ export async function postAdminFdRatelimitRuleRecyclebinRestore(
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdRatelimitRule/recyclebin/search */
 export async function postAdminFdRatelimitRuleRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdRateLimitRuleDtoPageResult>('/api/admin/FdRatelimitRule/recyclebin/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdRatelimitRule/recyclebin/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

@@ -86,7 +86,7 @@ export async function getAdminFdEmailConfigPage(
 	params: APIModel.getAdminFdEmailConfigPageParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdEmailConfigDtoPageResult>('/api/admin/FdEmailConfig/page', {
+	return request<APIModel.PageInfo>('/api/admin/FdEmailConfig/page', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -101,7 +101,7 @@ export async function getAdminFdEmailConfigPage(
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdEmailConfig/page/search */
 export async function postAdminFdEmailConfigPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdEmailConfigDtoPageResult>('/api/admin/FdEmailConfig/page/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdEmailConfig/page/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ export async function getAdminFdEmailConfigRecyclebin(
 	params: APIModel.getAdminFdEmailConfigRecyclebinParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdEmailConfigDtoPageResult>('/api/admin/FdEmailConfig/recyclebin', {
+	return request<APIModel.PageInfo>('/api/admin/FdEmailConfig/recyclebin', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -184,7 +184,7 @@ export async function postAdminFdEmailConfigRecyclebinRestore(body: APIModel.Ema
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdEmailConfig/recyclebin/search */
 export async function postAdminFdEmailConfigRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdEmailConfigDtoPageResult>('/api/admin/FdEmailConfig/recyclebin/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdEmailConfig/recyclebin/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

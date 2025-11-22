@@ -153,7 +153,7 @@ export async function getAdminFdAdminUserPage(
 	params: APIModel.getAdminFdAdminUserPageParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdAdminUserDtoPageResult>('/api/admin/FdAdminUser/page', {
+	return request<APIModel.PageInfo>('/api/admin/FdAdminUser/page', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -168,7 +168,7 @@ export async function getAdminFdAdminUserPage(
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdAdminUser/page/search */
 export async function postAdminFdAdminUserPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdAdminUserDtoPageResult>('/api/admin/FdAdminUser/page/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdAdminUser/page/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -184,7 +184,7 @@ export async function getAdminFdAdminUserRecyclebin(
 	params: APIModel.getAdminFdAdminUserRecyclebinParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdAdminUserDtoPageResult>('/api/admin/FdAdminUser/recyclebin', {
+	return request<APIModel.PageInfo>('/api/admin/FdAdminUser/recyclebin', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -251,7 +251,7 @@ export async function postAdminFdAdminUserRecyclebinRestore(body: APIModel.FdAdm
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdAdminUser/recyclebin/search */
 export async function postAdminFdAdminUserRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdAdminUserDtoPageResult>('/api/admin/FdAdminUser/recyclebin/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdAdminUser/recyclebin/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

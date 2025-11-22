@@ -9,6 +9,8 @@ namespace Fastdotnet.Service.Mappings
         public SystemConfigMappingProfile()
         {
             CreateMap<SystemInfoConfig, FdSystemInfoConfigDto>().ReverseMap();
+            CreateMap<CreateFdSystemInfoConfigDto, SystemInfoConfig>().ReverseMap();
+            CreateMap<UpdateFdSystemInfoConfigDto, SystemInfoConfig>().ReverseMap();
         }
     }
 }

@@ -11,7 +11,7 @@ export async function getAdminFdSystemInfoConfig(options?: { [key: string]: any 
 }
 
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/admin/FdSystemInfoConfig */
-export async function postAdminFdSystemInfoConfig(body: APIModel.FdSystemInfoConfigDto, options?: { [key: string]: any }) {
+export async function postAdminFdSystemInfoConfig(body: APIModel.CreateFdSystemInfoConfigDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdSystemInfoConfigDto>('/api/admin/FdSystemInfoConfig', {
 		method: 'POST',
 		headers: {
@@ -40,7 +40,7 @@ export async function getAdminFdSystemInfoConfigId(
 export async function putAdminFdSystemInfoConfigId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
 	params: APIModel.putAdminFdSystemInfoConfigIdParams,
-	body: APIModel.FdSystemInfoConfigDto,
+	body: APIModel.UpdateFdSystemInfoConfigDto,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -70,7 +70,7 @@ export async function deleteAdminFdSystemInfoConfigId(
 }
 
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/FdSystemInfoConfig/batch */
-export async function putAdminFdSystemInfoConfigBatch(body: APIModel.FdSystemInfoConfigDto[], options?: { [key: string]: any }) {
+export async function putAdminFdSystemInfoConfigBatch(body: APIModel.UpdateFdSystemInfoConfigDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdSystemInfoConfig/batch', {
 		method: 'PUT',
 		headers: {
@@ -82,7 +82,7 @@ export async function putAdminFdSystemInfoConfigBatch(body: APIModel.FdSystemInf
 }
 
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/FdSystemInfoConfig/batch */
-export async function postAdminFdSystemInfoConfigBatch(body: APIModel.FdSystemInfoConfigDto[], options?: { [key: string]: any }) {
+export async function postAdminFdSystemInfoConfigBatch(body: APIModel.CreateFdSystemInfoConfigDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdSystemInfoConfig/batch', {
 		method: 'POST',
 		headers: {
@@ -107,7 +107,7 @@ export async function deleteAdminFdSystemInfoConfigBatch(body: string[], options
 
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdSystemInfoConfig/batch/updatebycondition */
 export async function putAdminFdSystemInfoConfigBatchUpdatebycondition(
-	body: APIModel.FdSystemInfoConfigDtoBatchUpdateByConditionDto,
+	body: APIModel.UpdateFdSystemInfoConfigDtoBatchUpdateByConditionDto,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdSystemInfoConfig/batch/updatebycondition', {
@@ -126,7 +126,7 @@ export async function getAdminFdSystemInfoConfigPage(
 	params: APIModel.getAdminFdSystemInfoConfigPageParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdSystemInfoConfigDtoPageResult>('/api/admin/FdSystemInfoConfig/page', {
+	return request<APIModel.PageInfo>('/api/admin/FdSystemInfoConfig/page', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -141,7 +141,7 @@ export async function getAdminFdSystemInfoConfigPage(
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdSystemInfoConfig/page/search */
 export async function postAdminFdSystemInfoConfigPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdSystemInfoConfigDtoPageResult>('/api/admin/FdSystemInfoConfig/page/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdSystemInfoConfig/page/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -165,7 +165,7 @@ export async function getAdminFdSystemInfoConfigRecyclebin(
 	params: APIModel.getAdminFdSystemInfoConfigRecyclebinParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdSystemInfoConfigDtoPageResult>('/api/admin/FdSystemInfoConfig/recyclebin', {
+	return request<APIModel.PageInfo>('/api/admin/FdSystemInfoConfig/recyclebin', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -238,7 +238,7 @@ export async function postAdminFdSystemInfoConfigRecyclebinRestore(
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdSystemInfoConfig/recyclebin/search */
 export async function postAdminFdSystemInfoConfigRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdSystemInfoConfigDtoPageResult>('/api/admin/FdSystemInfoConfig/recyclebin/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdSystemInfoConfig/recyclebin/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

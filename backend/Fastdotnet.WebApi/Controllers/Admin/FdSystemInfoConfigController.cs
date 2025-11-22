@@ -15,13 +15,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
     [Route("api/admin/[controller]")]
-    public class FdSystemInfoConfigController : GenericDtoControllerBase<SystemInfoConfig, FdSystemInfoConfigDto, FdSystemInfoConfigDto, FdSystemInfoConfigDto>
+    public class FdSystemInfoConfigController : GenericDtoControllerBase<SystemInfoConfig, CreateFdSystemInfoConfigDto, UpdateFdSystemInfoConfigDto, FdSystemInfoConfigDto>
     {
         public FdSystemInfoConfigController(IBaseService<SystemInfoConfig, string> service, IMapper mapper) : base(service, mapper)
         {
         }
 
-        protected override async Task BeforeCreate(SystemInfoConfig entity, FdSystemInfoConfigDto dto)
+        protected override async Task BeforeCreate(SystemInfoConfig entity, CreateFdSystemInfoConfigDto dto)
         {
             // 如果前端提供了Code，检查是否重复
             if (!string.IsNullOrWhiteSpace(entity.Code))
@@ -40,7 +40,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             await base.BeforeCreate(entity, dto);
         }
 
-        protected override Task BeforeUpdate(SystemInfoConfig existing, SystemInfoConfig updated, FdSystemInfoConfigDto dto)
+        protected override Task BeforeUpdate(SystemInfoConfig existing, SystemInfoConfig updated, UpdateFdSystemInfoConfigDto dto)
         {
             // 不允许修改Code
             updated.Code = existing.Code;

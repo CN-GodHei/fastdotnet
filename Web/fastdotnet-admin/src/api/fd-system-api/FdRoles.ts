@@ -159,7 +159,7 @@ export async function getAdminFdRolesPage(
 	params: APIModel.getAdminFdRolesPageParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdRoleDtoPageResult>('/api/admin/FdRoles/page', {
+	return request<APIModel.PageInfo>('/api/admin/FdRoles/page', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -174,7 +174,7 @@ export async function getAdminFdRolesPage(
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdRoles/page/search */
 export async function postAdminFdRolesPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdRoleDtoPageResult>('/api/admin/FdRoles/page/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdRoles/page/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ export async function getAdminFdRolesRecyclebin(
 	params: APIModel.getAdminFdRolesRecyclebinParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdRoleDtoPageResult>('/api/admin/FdRoles/recyclebin', {
+	return request<APIModel.PageInfo>('/api/admin/FdRoles/recyclebin', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -257,7 +257,7 @@ export async function postAdminFdRolesRecyclebinRestore(body: APIModel.FdRoleBoo
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdRoles/recyclebin/search */
 export async function postAdminFdRolesRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdRoleDtoPageResult>('/api/admin/FdRoles/recyclebin/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdRoles/recyclebin/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

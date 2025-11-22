@@ -126,7 +126,7 @@ export async function getAdminFdMenuButtonsPage(
 	params: APIModel.getAdminFdMenuButtonsPageParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdMenuButtonDtoPageResult>('/api/admin/FdMenuButtons/page', {
+	return request<APIModel.PageInfo>('/api/admin/FdMenuButtons/page', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -141,7 +141,7 @@ export async function getAdminFdMenuButtonsPage(
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdMenuButtons/page/search */
 export async function postAdminFdMenuButtonsPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdMenuButtonDtoPageResult>('/api/admin/FdMenuButtons/page/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdMenuButtons/page/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -157,7 +157,7 @@ export async function getAdminFdMenuButtonsRecyclebin(
 	params: APIModel.getAdminFdMenuButtonsRecyclebinParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdMenuButtonDtoPageResult>('/api/admin/FdMenuButtons/recyclebin', {
+	return request<APIModel.PageInfo>('/api/admin/FdMenuButtons/recyclebin', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -224,7 +224,7 @@ export async function postAdminFdMenuButtonsRecyclebinRestore(body: APIModel.FdM
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdMenuButtons/recyclebin/search */
 export async function postAdminFdMenuButtonsRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdMenuButtonDtoPageResult>('/api/admin/FdMenuButtons/recyclebin/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdMenuButtons/recyclebin/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

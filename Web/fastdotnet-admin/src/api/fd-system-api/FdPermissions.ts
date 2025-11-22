@@ -126,7 +126,7 @@ export async function getAdminFdPermissionsPage(
 	params: APIModel.getAdminFdPermissionsPageParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdPermissionDtoPageResult>('/api/admin/FdPermissions/page', {
+	return request<APIModel.PageInfo>('/api/admin/FdPermissions/page', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -141,7 +141,7 @@ export async function getAdminFdPermissionsPage(
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdPermissions/page/search */
 export async function postAdminFdPermissionsPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdPermissionDtoPageResult>('/api/admin/FdPermissions/page/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdPermissions/page/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -157,7 +157,7 @@ export async function getAdminFdPermissionsRecyclebin(
 	params: APIModel.getAdminFdPermissionsRecyclebinParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdPermissionDtoPageResult>('/api/admin/FdPermissions/recyclebin', {
+	return request<APIModel.PageInfo>('/api/admin/FdPermissions/recyclebin', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -224,7 +224,7 @@ export async function postAdminFdPermissionsRecyclebinRestore(body: APIModel.FdP
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdPermissions/recyclebin/search */
 export async function postAdminFdPermissionsRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdPermissionDtoPageResult>('/api/admin/FdPermissions/recyclebin/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdPermissions/recyclebin/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

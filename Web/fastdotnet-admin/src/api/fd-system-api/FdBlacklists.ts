@@ -141,7 +141,7 @@ export async function getAdminFdBlacklistsPage(
 	params: APIModel.getAdminFdBlacklistsPageParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdBlacklistDtoPageResult>('/api/admin/FdBlacklists/page', {
+	return request<APIModel.PageInfo>('/api/admin/FdBlacklists/page', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -156,7 +156,7 @@ export async function getAdminFdBlacklistsPage(
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdBlacklists/page/search */
 export async function postAdminFdBlacklistsPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdBlacklistDtoPageResult>('/api/admin/FdBlacklists/page/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdBlacklists/page/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -172,7 +172,7 @@ export async function getAdminFdBlacklistsRecyclebin(
 	params: APIModel.getAdminFdBlacklistsRecyclebinParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.FdBlacklistDtoPageResult>('/api/admin/FdBlacklists/recyclebin', {
+	return request<APIModel.PageInfo>('/api/admin/FdBlacklists/recyclebin', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -239,7 +239,7 @@ export async function postAdminFdBlacklistsRecyclebinRestore(body: APIModel.FdBl
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdBlacklists/recyclebin/search */
 export async function postAdminFdBlacklistsRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdBlacklistDtoPageResult>('/api/admin/FdBlacklists/recyclebin/search', {
+	return request<APIModel.PageInfo>('/api/admin/FdBlacklists/recyclebin/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

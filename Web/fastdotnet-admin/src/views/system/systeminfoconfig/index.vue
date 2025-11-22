@@ -50,9 +50,9 @@
 				</el-table-column>
 			</el-table>
 			<el-pagination
-				v-model:currentPage="state.tableParams.page"
-				v-model:page-size="state.tableParams.pageSize"
-				:total="state.tableParams.total"
+				v-model:currentPage="state.pagination.page"
+				v-model:page-size="state.pagination.pageSize"
+				:total="state.pagination.total"
 				:page-sizes="[10, 20, 50, 100]"
 				size="small"
 				background
@@ -111,6 +111,13 @@ import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { buildMixedQuery } from '/@/utils/queryBuilder';
 import type { FdSystemInfoConfig } from '/@/api/fd-system-api/typings';
+import type {
+	CreateFdSystemInfoConfigDto,
+	FdSystemInfoConfigDto,
+	UpdateFdSystemInfoConfigDto,
+	PageQueryByConditionDto,
+} from '/@/api/fd-system-api/typings';
+
 import dayjs from 'dayjs'; // 引入日期处理库
 import * as FdSystemInfoConfigApi from '/@/api/fd-system-api/FdSystemInfoConfig';
 
@@ -121,13 +128,7 @@ const state = reactive({
 	loading: false,
 	searchCollapsed: true,
 	tableData: {
-		data: [],
-		total: 0,
-		loading: false,
-		param: {
-			pageNum: 1,
-			pageSize: 10,
-		},
+		data: [] as FdSystemInfoConfigDto[],
 	},
 	queryParams: {
 		Name: null,
@@ -136,16 +137,14 @@ const state = reactive({
 		Description: null,
 		IsSystem: null,
 	},
-	tableParams: {
-		page: 1,
-		pageSize: 20,
-		total: 0,
-	},
+	pagination: { page: 1, pageSize: 20, total: 0 },
 	dialog: {
 		visible: false,
 		title: '',
+		type: 'create', // 'create' | 'update'
 	},
 	formData: {
+		Id: '',
 		Name: '',
 		Code: '',
 		Value: '',
@@ -171,9 +170,9 @@ const getList = async () => {
 			],
 			ranges: {},
 		};
-		const searchBody: APIModel.PageQueryByConditionDto = {
-			PageIndex: state.tableData.param.pageNum,
-			PageSize: state.tableData.param.pageSize,
+		const searchBody: PageQueryByConditionDto = {
+			PageIndex: state.pagination.page,
+			PageSize: state.pagination.pageSize,
 		};
 		const queryResult = buildMixedQuery(queryConfig);
 		if (queryResult.dynamicQuery) {
@@ -183,8 +182,8 @@ const getList = async () => {
 		// 调试日志
 		//console.log('Search request body:', searchBody);
 		const response = await FdSystemInfoConfigApi.postAdminFdSystemInfoConfigPageSearch(searchBody);
-		state.tableData.data = response.Items || [];
-		state.tableData.total = response.PageInfo?.Total || 0;
+		state.tableData.data = (response.Items as FdSystemInfoConfigDto[]) || ([] as FdSystemInfoConfigDto[]);
+		state.pagination.total = response.PageInfo?.Total || 0;
 	} catch (error) {
 		ElMessage.error('获取数据失败');
 		//console.error(error);
@@ -195,7 +194,7 @@ const getList = async () => {
 
 // 查询
 const handleQuery = () => {
-	state.tableParams.page = 1;
+	state.pagination.page = 1;
 	getList();
 };
 
@@ -207,20 +206,21 @@ const resetQuery = () => {
 
 // 改变页面容量
 const handleSizeChange = (val: number) => {
-	state.tableParams.pageSize = val;
+	state.pagination.pageSize = val;
 	getList();
 };
 
 // 改变页码序号
 const handleCurrentChange = (val: number) => {
-	state.tableParams.page = val;
+	state.pagination.page = val;
 	getList();
 };
 
 // 打开新增对话框
 const openAddDialog = () => {
 	state.dialog.visible = true;
-	state.dialog.title = '新增fd_system_info_config';
+	state.dialog.title = '新增';
+	state.dialog.type = 'create';
 	formRef.value?.resetFields();
 	state.formData = {};
 };
@@ -228,7 +228,8 @@ const openAddDialog = () => {
 // 打开编辑对话框
 const openEditDialog = (row: any) => {
 	state.dialog.visible = true;
-	state.dialog.title = '编辑fd_system_info_config';
+	state.dialog.title = '编辑';
+	state.dialog.type = 'update';
 	state.formData = { ...row };
 };
 
@@ -237,30 +238,39 @@ const submitForm = () => {
 	formRef.value.validate(async (valid: boolean) => {
 		if (!valid) return;
 		try {
-			if (state.formData.Id) {
+			if (state.dialog.type === 'update' && state.formData.Id) {
 				// 更新接口调用
+				const updateData = { ...state.formData } as UpdateFdSystemInfoConfigDto;
+				await FdSystemInfoConfigApi.putAdminFdSystemInfoConfigId({ id: state.formData.Id }, updateData);
 				ElMessage.success('更新成功');
 			} else {
 				// 新增接口调用
-				ElMessage.success('新增成功');
+				const createData = { ...state.formData } as CreateFdSystemInfoConfigDto;
+				await FdSystemInfoConfigApi.postAdminFdSystemInfoConfig(createData);
+				ElMessage.success('添加成功');
 			}
 			state.dialog.visible = false;
 			getList();
 		} catch (error) {
 			console.error(error);
+			ElMessage.error(state.dialog.type === 'update' ? '更新失败' : '添加失败');
 		}
 	});
 };
 
 // 删除
-const handleDelete = (row: any) => {
+const handleDelete = (row: FdSystemInfoConfigDto) => {
 	ElMessageBox.confirm('确定删除吗？')
 		.then(async () => {
 			// 删除接口调用
+			await FdSystemInfoConfigApi.deleteAdminFdSystemInfoConfigId({ id: row.Id });
 			ElMessage.success('删除成功');
 			getList();
 		})
-		.catch(() => {});
+		.catch(() => {
+			ElMessage.error('删除失败');
+			return;
+		});
 };
 
 onMounted(() => {

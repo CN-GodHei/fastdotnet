@@ -7,5 +7,6 @@ export default [
   enumStyle:"enum",//枚举样式	string-literal | enum
   requestImportStatement:"import request from '/@/utils/request'",
   isCamelCase:false,
+  dataFields: ['Data', 'PageInfo', 'Items'], // 添加分页数据字段支持
 }
 ]
