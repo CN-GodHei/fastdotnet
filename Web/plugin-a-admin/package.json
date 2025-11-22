@@ -8,7 +8,9 @@
     "build": "vue-tsc && vite build --mode micro",
     "build:micro": "vite build --mode micro",
     "preview": "vite preview",
-    "openapi2ts": "openapi2ts"
+    "openapi2ts": "openapi2ts",
+    "prepare": "husky",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "element-plus": "^2.7.0",
@@ -24,7 +26,12 @@
     "vite": "^5.0.0",
     "vite-plugin-qiankun": "^1.0.15",
     "vue-tsc": "^1.8.0",
-    "tslib": "^2.8.1"
-
+    "tslib": "^2.8.1",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint-plugin-vue": "^9.0.0"
   }
 }
