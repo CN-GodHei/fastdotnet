@@ -85,7 +85,7 @@ declare namespace APIModel {
     isLink?: boolean;
   };
 
-  type CreateRoleDto = {
+  type CreateFdRoleDto = {
     Name: string;
     Description?: string;
     Category: string;
@@ -486,7 +486,7 @@ declare namespace APIModel {
     NewPassword: string;
   };
 
-  type RoleDto = {
+  type FdRoleDto = {
     Id?: string;
     Name?: string;
     Code?: string;
@@ -496,9 +496,9 @@ declare namespace APIModel {
     CreateTime?: string;
   };
 
-  type RoleDtoPageResult = {
+  type FdRoleDtoPageResult = {
     PageInfo?: PageInfo;
-    Items?: RoleDto[];
+    Items?: FdRoleDto[];
   };
 
   type SendRegistrationCodeDto = {
@@ -597,7 +597,7 @@ declare namespace APIModel {
     isLink?: boolean;
   };
 
-  type UpdateRoleDto = {
+  type UpdateFdRoleDto = {
     Name: string;
     Description?: string;
   };

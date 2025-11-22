@@ -99,7 +99,7 @@ plugin-a-app/
 
 25. qiankun 集成方案，这是一个很重要技术，需要详细说明，包括主应用和插件应用的代码结构，以及插件应用的加载和卸载机制
 26. 这是一个类似php的fastadmin的框架，不过fastdotnet是.net生态的框架，所以fastdotnet的框架和php的框架有区别，但是功能和基本要和php的框架一样
-27. **DTO合并原则**: 对于同一个业务实体相关的多个DTO类（如 `CreateRoleDto`, `UpdateRoleDto`, `RoleDto`），应合并到同一个C#文件中（如 `RoleDto.cs`），以聚合领域模型，减少文件数量。
+27. **DTO合并原则**: 对于同一个业务实体相关的多个DTO类（如 `CreateFdRoleDto`, `UpdateFdRoleDto`, `FdRoleDto`），应合并到同一个C#文件中（如 `FdRoleDto.cs`），以聚合领域模型，减少文件数量。
 28. **AutoMapper Profile位置**: 所有AutoMapper的Profile类都应统一存放在 `src/Fastdotnet.Service/Mappings` 目录下，其命名空间也应与目录结构保持一致（`Fastdotnet.Service.Mappings`）。
 29. **DTO与实体的一致性**: 在定义或修改DTO时，其属性（特别是可空性`?`和数据校验特性如`[Required]`）必须参考 `src/Fastdotnet.Core/Entities` 中对应的数据库实体定义，以确保数据约束在校验层和数据层保持一致。
 30. 前端一律使用pnmp进行管理

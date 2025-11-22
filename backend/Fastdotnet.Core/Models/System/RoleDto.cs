@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Fastdotnet.Core.Models.System
 {
-    public class RoleDto
+    public class FdRoleDto
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -14,7 +14,7 @@ namespace Fastdotnet.Core.Models.System
         public DateTime CreateTime { get; set; }
     }
 
-    public class CreateRoleDto
+    public class CreateFdRoleDto
     {
         [Required(ErrorMessage = "角色名称不能为空")]
         public string Name { get; set; }
@@ -25,7 +25,7 @@ namespace Fastdotnet.Core.Models.System
         public string Category { get; set; } // "Admin" or "User"
     }
 
-    public class UpdateRoleDto
+    public class UpdateFdRoleDto
     {
         [Required(ErrorMessage = "角色名称不能为空")]
         public string Name { get; set; }

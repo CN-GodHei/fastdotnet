@@ -639,7 +639,7 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class CreateRoleDto
+    public partial class CreateFdRoleDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
@@ -1672,7 +1672,7 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class RoleDto
+    public partial class FdRoleDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Id")]
@@ -1699,14 +1699,14 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class RoleDtoPageResult
+    public partial class FdRoleDtoPageResult
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
         public PageInfo PageInfo { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Items")]
-        public System.Collections.Generic.ICollection<RoleDto> Items { get; set; }
+        public System.Collections.Generic.ICollection<FdRoleDto> Items { get; set; }
 
     }
 
@@ -2300,7 +2300,7 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateRoleDto
+    public partial class UpdateFdRoleDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
@@ -2313,14 +2313,14 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateRoleDtoBatchUpdateByConditionDto
+    public partial class UpdateFdRoleDtoBatchUpdateByConditionDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Query")]
         public PageQueryByConditionDto Query { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Dto")]
-        public UpdateRoleDto Dto { get; set; }
+        public UpdateFdRoleDto Dto { get; set; }
 
     }
 

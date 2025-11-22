@@ -4,7 +4,6 @@
 // API 唯一标识：
 import * as Auth from './Auth';
 import * as AppMenus from './AppMenus';
-import * as CacheTest from './CacheTest';
 import * as Captcha from './Captcha';
 import * as CodeGen from './CodeGen';
 import * as CodeGenConfig from './CodeGenConfig';
@@ -15,14 +14,13 @@ import * as FdMenu from './FdMenu';
 import * as FdMenuButtons from './FdMenuButtons';
 import * as FdPermissions from './FdPermissions';
 import * as FdRatelimitRule from './FdRatelimitRule';
+import * as FdRoles from './FdRoles';
 import * as FdSystemInfoConfig from './FdSystemInfoConfig';
 import * as Plugin from './Plugin';
-import * as Roles from './Roles';
 import * as System from './System';
 export default {
 	Auth,
 	AppMenus,
-	CacheTest,
 	Captcha,
 	CodeGen,
 	CodeGenConfig,
@@ -33,8 +31,8 @@ export default {
 	FdMenuButtons,
 	FdPermissions,
 	FdRatelimitRule,
+	FdRoles,
 	FdSystemInfoConfig,
 	Plugin,
-	Roles,
 	System,
 };

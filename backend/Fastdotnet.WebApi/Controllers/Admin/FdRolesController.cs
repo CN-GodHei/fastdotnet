@@ -17,15 +17,15 @@ using System.Threading.Tasks;
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
-    [Route("api/admin/roles")]
+    [Route("api/admin/[Controller]")]
     [Authorize]
-    public class RolesController : GenericDtoControllerBase<FdRole, string, CreateRoleDto, UpdateRoleDto, RoleDto>
+    public class FdRolesController : GenericDtoControllerBase<FdRole, string, CreateFdRoleDto, UpdateFdRoleDto, FdRoleDto>
     {
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
         private readonly IRepository<FdAppUserRole> _appUserRoleRepository;
         private readonly IRepository<FdRolePermission> _rolePermissionRepository;
 
-        public RolesController(
+        public FdRolesController(
             IBaseService<FdRole, string> service,
             IMapper mapper,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
@@ -38,24 +38,24 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         [Authorize(Policy = Permissions.Admin.Roles.View)]
-        public override Task<List<RoleDto>> GetAll( CancellationToken cancellationToken = default) => base.GetAll();
+        public override Task<List<FdRoleDto>> GetAll( CancellationToken cancellationToken = default) => base.GetAll();
 
         [Authorize(Policy = Permissions.Admin.Roles.View)]
-        public override Task<RoleDto> GetById(string id, CancellationToken cancellationToken = default) => base.GetById(id);
+        public override Task<FdRoleDto> GetById(string id, CancellationToken cancellationToken = default) => base.GetById(id);
 
         [Authorize(Policy = Permissions.Admin.Roles.View)]
-        public override Task<Fastdotnet.Core.Models.PageResult<RoleDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
+        public override Task<Fastdotnet.Core.Models.PageResult<FdRoleDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
 
         [Authorize(Policy = Permissions.Admin.Roles.Create)]
-        public override Task<RoleDto> Create(CreateRoleDto dto) => base.Create(dto);
+        public override Task<FdRoleDto> Create(CreateFdRoleDto dto) => base.Create(dto);
 
         [Authorize(Policy = Permissions.Admin.Roles.Edit)]
-        public override Task<RoleDto> Update(string id, UpdateRoleDto dto) => base.Update(id, dto);
+        public override Task<FdRoleDto> Update(string id, UpdateFdRoleDto dto) => base.Update(id, dto);
 
         [Authorize(Policy = Permissions.Admin.Roles.Delete)]
         public override Task<bool> Delete(string id) => base.Delete(id);
 
-        protected override async Task BeforeCreate(FdRole entity, CreateRoleDto dto)
+        protected override async Task BeforeCreate(FdRole entity, CreateFdRoleDto dto)
         {
             var generatedCode = $"ROLE_CODE_{SnowflakeIdGenerator.NextStrId()}";
             entity.Code = generatedCode;

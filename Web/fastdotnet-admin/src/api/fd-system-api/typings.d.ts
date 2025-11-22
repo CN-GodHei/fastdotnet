@@ -172,6 +172,12 @@ declare namespace APIModel {
 		Description?: string;
 	};
 
+	type CreateFdRoleDto = {
+		Name: string;
+		Description?: string;
+		Category: string;
+	};
+
 	type CreateGiftRecordDto = {
 		PurchaseId: number;
 		Reason?: string;
@@ -211,12 +217,6 @@ declare namespace APIModel {
 		RedeemedTime?: string;
 	};
 
-	type CreateRoleDto = {
-		Name: string;
-		Description?: string;
-		Category: string;
-	};
-
 	type CreateUserPluginActivationDto = {
 		PurchaseId: number;
 		PluginId: string;
@@ -246,10 +246,6 @@ declare namespace APIModel {
 		IsLifetime?: boolean;
 		Status?: PurchaseStatusDto;
 		Notes?: string;
-	};
-
-	type deleteAdminCacheTestClearByTagParams = {
-		tags?: string[];
 	};
 
 	type deleteAdminFdAdminUserIdParams = {
@@ -317,22 +313,22 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type deleteAdminFdRolesIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminFdRolesRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
 	type deleteAdminFdSystemInfoConfigIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
 	type deleteAdminFdSystemInfoConfigRecyclebinIdPermanentParams = {
-		/** 要永久删除的记录的唯一标识符 */
-		id: string;
-	};
-
-	type deleteAdminRolesIdParams = {
-		/** 要删除的记录的唯一标识符 */
-		id: string;
-	};
-
-	type deleteAdminRolesRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -745,6 +741,21 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
+	type FdRoleDto = {
+		Id?: string;
+		Name?: string;
+		Code?: string;
+		Description?: string;
+		Category?: string;
+		IsSystem?: boolean;
+		CreateTime?: string;
+	};
+
+	type FdRoleDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdRoleDto[];
+	};
+
 	type FdSystemInfoConfigDto = {
 		Id?: string;
 		Name?: string;
@@ -782,25 +793,6 @@ declare namespace APIModel {
 	type GenerateLicenseRequestDto = {
 		PluginId: string;
 		MachineFingerprint: string;
-	};
-
-	type getAdminCacheTestGetParams = {
-		/** 缓存键 */
-		key?: string;
-	};
-
-	type getAdminCacheTestProductsParams = {
-		/** 分类ID */
-		categoryId?: number;
-		/** 页码 */
-		page?: number;
-		/** 每页大小 */
-		pageSize?: number;
-	};
-
-	type getAdminCacheTestUserIdParams = {
-		/** 用户ID */
-		id: number;
 	};
 
 	type getAdminFdAdminUserIdParams = {
@@ -946,6 +938,29 @@ declare namespace APIModel {
 		pageSize?: number;
 	};
 
+	type getAdminFdRolesIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getAdminFdRolesIdPermissionsParams = {
+		id: string;
+	};
+
+	type getAdminFdRolesPageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminFdRolesRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
 	type getAdminFdSystemInfoConfigIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
@@ -959,29 +974,6 @@ declare namespace APIModel {
 	};
 
 	type getAdminFdSystemInfoConfigRecyclebinParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type getAdminRolesIdParams = {
-		/** 记录的唯一标识符 */
-		id: string;
-	};
-
-	type getAdminRolesIdPermissionsParams = {
-		id: string;
-	};
-
-	type getAdminRolesPageParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type getAdminRolesRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
@@ -1303,18 +1295,11 @@ declare namespace APIModel {
 		Items?: PointRedemptionDto[];
 	};
 
-	type postAdminCacheTestSetParams = {
-		/** 缓存键 */
-		key?: string;
-		/** 缓存值 */
-		value?: string;
-	};
-
 	type postAdminFdAdminUserIdResetPasswordParams = {
 		id: string;
 	};
 
-	type postAdminRolesIdPermissionsParams = {
+	type postAdminFdRolesIdPermissionsParams = {
 		id: string;
 	};
 
@@ -1413,22 +1398,22 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type putAdminFdRolesIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdRolesRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
 	type putAdminFdSystemInfoConfigIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
 	type putAdminFdSystemInfoConfigRecyclebinIdRestoreParams = {
-		/** 要恢复的记录的唯一标识符 */
-		id: string;
-	};
-
-	type putAdminRolesIdParams = {
-		/** 要更新的记录的唯一标识符 */
-		id: string;
-	};
-
-	type putAdminRolesRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
@@ -1455,21 +1440,6 @@ declare namespace APIModel {
 
 	type ResetPasswordDto = {
 		NewPassword: string;
-	};
-
-	type RoleDto = {
-		Id?: string;
-		Name?: string;
-		Code?: string;
-		Description?: string;
-		Category?: string;
-		IsSystem?: boolean;
-		CreateTime?: string;
-	};
-
-	type RoleDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: RoleDto[];
 	};
 
 	type SendMessageRequest = {
@@ -1668,6 +1638,16 @@ declare namespace APIModel {
 		Dto?: UpdateFdRateLimitRuleDto;
 	};
 
+	type UpdateFdRoleDto = {
+		Name: string;
+		Description?: string;
+	};
+
+	type UpdateFdRoleDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdRoleDto;
+	};
+
 	type UpdateGiftRecordDto = {
 		Id?: string;
 		PurchaseId?: number;
@@ -1729,16 +1709,6 @@ declare namespace APIModel {
 	type UpdatePointRedemptionDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdatePointRedemptionDto;
-	};
-
-	type UpdateRoleDto = {
-		Name: string;
-		Description?: string;
-	};
-
-	type UpdateRoleDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateRoleDto;
 	};
 
 	type UpdateUserPluginActivationDto = {

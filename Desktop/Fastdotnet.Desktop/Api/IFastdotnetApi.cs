@@ -3355,7 +3355,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/admin/roles")]
-        Task<IApiResponse<ICollection<RoleDto>>> RolesAll(CancellationToken cancellationToken = default);
+        Task<IApiResponse<ICollection<FdRoleDto>>> RolesAll(CancellationToken cancellationToken = default);
 
         /// <summary>创建新记录</summary>
         /// <remarks>根据提供的数据创建一条新记录。</remarks>
@@ -3375,7 +3375,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/roles")]
-        Task<IApiResponse<RoleDto>> RolesPOST([Body] CreateRoleDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdRoleDto>> RolesPOST([Body] CreateFdRoleDto body, CancellationToken cancellationToken = default);
 
         /// <summary>根据ID获取记录</summary>
         /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
@@ -3395,7 +3395,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/admin/roles/{id}")]
-        Task<IApiResponse<RoleDto>> RolesGET(string id, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdRoleDto>> RolesGET(string id, CancellationToken cancellationToken = default);
 
         /// <summary>更新现有记录</summary>
         /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
@@ -3416,7 +3416,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/admin/roles/{id}")]
-        Task<IApiResponse<RoleDto>> RolesPUT(string id, [Body] UpdateRoleDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdRoleDto>> RolesPUT(string id, [Body] UpdateFdRoleDto body, CancellationToken cancellationToken = default);
 
         /// <summary>删除记录</summary>
         /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
@@ -3457,7 +3457,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/admin/roles/page")]
-        Task<IApiResponse<RoleDtoPageResult>> Page9([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdRoleDtoPageResult>> Page9([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <returns>
         /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
@@ -3510,7 +3510,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/roles/page/search")]
-        Task<IApiResponse<RoleDtoPageResult>> Search17([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdRoleDtoPageResult>> Search17([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>批量创建新记录</summary>
         /// <remarks>根据提供的数据批量创建新记录。</remarks>
@@ -3530,7 +3530,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/roles/batch")]
-        Task<IApiResponse<int>> BatchPOST9([Body] IEnumerable<CreateRoleDto> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchPOST9([Body] IEnumerable<CreateFdRoleDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>批量删除记录</summary>
         /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
@@ -3570,7 +3570,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/admin/roles/batch")]
-        Task<IApiResponse<int>> BatchPUT9([Body] IEnumerable<UpdateRoleDto> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchPUT9([Body] IEnumerable<UpdateFdRoleDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
         /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
@@ -3590,7 +3590,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/admin/roles/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition9([Body] UpdateRoleDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> Updatebycondition9([Body] UpdateFdRoleDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>获取回收站数据</summary>
         /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
@@ -3611,7 +3611,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/admin/roles/recyclebin")]
-        Task<IApiResponse<RoleDtoPageResult>> Recyclebin9([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdRoleDtoPageResult>> Recyclebin9([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件查询回收站数据</summary>
         /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
@@ -3630,7 +3630,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/roles/recyclebin/search")]
-        Task<IApiResponse<RoleDtoPageResult>> Search18([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdRoleDtoPageResult>> Search18([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>恢复回收站中的记录</summary>
         /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>

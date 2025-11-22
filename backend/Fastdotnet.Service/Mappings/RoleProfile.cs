@@ -8,9 +8,9 @@ namespace Fastdotnet.Service.Mappings
     {
         public RoleProfile()
         {
-            CreateMap<FdRole, RoleDto>();
-            CreateMap<CreateRoleDto, FdRole>();
-            CreateMap<UpdateRoleDto, FdRole>();
+            CreateMap<FdRole, FdRoleDto>();
+            CreateMap<CreateFdRoleDto, FdRole>();
+            CreateMap<UpdateFdRoleDto, FdRole>();
         }
     }
 }
