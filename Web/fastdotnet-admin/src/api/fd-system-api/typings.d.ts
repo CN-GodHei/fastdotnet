@@ -165,6 +165,15 @@ declare namespace APIModel {
 		isLink?: boolean;
 	};
 
+	type CreateFdPermissionDto = {
+		Name: string;
+		Code: string;
+		Description?: string;
+		Module?: string;
+		Type: number;
+		Category: string;
+	};
+
 	type CreateFdRateLimitRuleDto = {
 		Type: string;
 		Key: string;
@@ -294,6 +303,16 @@ declare namespace APIModel {
 	};
 
 	type deleteAdminFdMenuRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminFdPermissionsIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminFdPermissionsRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -659,6 +678,34 @@ declare namespace APIModel {
 		Items?: FdMenuDto[];
 	};
 
+	type FdPermissionBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type FdPermissionDto = {
+		Id?: string;
+		Name?: string;
+		Code?: string;
+		Description?: string;
+		Module?: string;
+		Type?: number;
+		Category?: string;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+	};
+
+	type FdPermissionDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdPermissionDto[];
+	};
+
 	type FdRateLimitRuleBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -812,6 +859,25 @@ declare namespace APIModel {
 	};
 
 	type getAdminFdMenuRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminFdPermissionsIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getAdminFdPermissionsPageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminFdPermissionsRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
@@ -1119,16 +1185,6 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
-	type PermissionDto = {
-		Id?: string;
-		Name?: string;
-		Code?: string;
-		Description?: string;
-		Module?: string;
-		Type?: string;
-		Category?: string;
-	};
-
 	type PluginATestBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -1300,6 +1356,16 @@ declare namespace APIModel {
 	};
 
 	type putAdminFdMenuRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdPermissionsIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdPermissionsRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
@@ -1573,6 +1639,21 @@ declare namespace APIModel {
 	type UpdateFdMenuDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateFdMenuDto;
+	};
+
+	type UpdateFdPermissionDto = {
+		Id?: string;
+		Name?: string;
+		Code?: string;
+		Description?: string;
+		Module?: string;
+		Type?: number;
+		Category?: string;
+	};
+
+	type UpdateFdPermissionDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdPermissionDto;
 	};
 
 	type UpdateFdRateLimitRuleDto = {

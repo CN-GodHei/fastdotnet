@@ -8,7 +8,7 @@ namespace Fastdotnet.Service.Mappings
     {
         public PermissionProfile()
         {
-            CreateMap<FdPermission, PermissionDto>();
+            CreateMap<FdPermission, FdPermissionDto>();
         }
     }
 }
