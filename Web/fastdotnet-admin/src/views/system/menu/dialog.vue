@@ -202,7 +202,8 @@ import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoutesList } from '/@/stores/routesList';
 import { i18n } from '/@/i18n/index';
-import * as MenuApi from '/@/api/fd-system-api/Menus';
+import * as MenuApi from '/@/api/fd-system-api/FdMenu';
+
 import { ElMessage } from 'element-plus';
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
 
@@ -242,9 +243,9 @@ const state = reactive({
 		Module: '', // 模块
 		Category: '', // 分类
 		IsFdMicroApp: false, // 是否微应用
-		Children: [] as APIModel.MenuDto[], // 子菜单
+		Children: [] as APIModel.FdMenuDto[], // 子菜单
 	},
-	menuData: [] as APIModel.MenuDto[], // 上级菜单数据
+	menuData: [] as APIModel.FdMenuDto[], // 上级菜单数据
 	dialog: {
 		isShowDialog: false,
 		type: '',
@@ -254,9 +255,9 @@ const state = reactive({
 });
 
 // 获取菜单数据
-// const getMenuData = (routes: APIModel.MenuDto[]) => {
-// 	const arr: APIModel.MenuDto[] = [];
-// 	routes.map((val: APIModel.MenuDto) => {
+// const getMenuData = (routes: APIModel.FdMenuDto[]) => {
+// 	const arr: APIModel.FdMenuDto[] = [];
+// 	routes.map((val: APIModel.FdMenuDto) => {
 // 		// 创建一个新的对象，不修改原始数据
 // 		const newItem = { ...val };
 		
@@ -284,7 +285,7 @@ const state = reactive({
 // 	return arr;
 // };
 // 打开弹窗
-const openDialog = (type: string, row?: APIModel.MenuDto) => {
+const openDialog = (type: string, row?: APIModel.FdMenuDto) => {
 	if (type === 'edit') {
 				// 编辑模式：需要根据MenuType判断是目录、菜单或按钮
 		state.ruleForm = JSON.parse(JSON.stringify(row));
@@ -415,7 +416,7 @@ const onSubmit = async () => {
 				// 编辑菜单/目录
 				if (state.ruleForm.Id) {
 					// 准备更新数据
-					const updateData: APIModel.UpdateMenuDto = {
+					const updateData: APIModel.UpdateFdMenuDto = {
 						...state.ruleForm,
 						Type: state.ruleForm.menuType === 'menu' ? 1 : 0, // 1=Menu, 0=Directory
 						ParentCode: state.ruleForm.menuSuperior && state.ruleForm.menuSuperior.length > 0 
@@ -423,7 +424,7 @@ const onSubmit = async () => {
 							: null
 					};
 					
-					await MenuApi.putAdminMenusId(
+					await MenuApi.putAdminFdMenuId(
 						{ id: state.ruleForm.Id },
 						updateData
 					);
@@ -435,15 +436,17 @@ const onSubmit = async () => {
 			} else {
 				// 新增菜单/目录
 				// 准备创建数据
-				const createData: APIModel.CreateMenuDto = {
+				const createData: APIModel.CreateFdMenuDto = {
 					...state.ruleForm,
 					Type: state.ruleForm.menuType === 'menu' ? 1 : 0, // 1=Menu, 0=Directory
 					ParentCode: state.ruleForm.menuSuperior && state.ruleForm.menuSuperior.length > 0 
 						? state.ruleForm.menuSuperior[state.ruleForm.menuSuperior.length - 1] // 使用最后一级菜单
 						: null,
 				};
+				console.log	(11);
+
 				createData.Category = 'Admin';
-				await MenuApi.postAdminMenus(createData);
+				await MenuApi.postAdminFdMenu(createData);
 				ElMessage.success((state.ruleForm.menuType === 'directory' ? '目录' : '菜单') + '创建成功');
 			}
 			
@@ -457,7 +460,7 @@ const onSubmit = async () => {
 // 页面加载时
 onMounted(async () => {
 		// 从API获取菜单数据而不是使用store中的数据
-		const res = await MenuApi.getAdminMenusTree();
+		const res = await MenuApi.getAdminFdMenuTree();
 		state.menuData = res || [];
 });
 

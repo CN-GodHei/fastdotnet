@@ -63,7 +63,7 @@ declare namespace APIModel {
     IsEnabled?: boolean;
   };
 
-  type CreateMenuDto = {
+  type CreateFdMenuDto = {
     Name?: string;
     Path?: string;
     Icon?: string;
@@ -574,7 +574,7 @@ declare namespace APIModel {
     IsEnabled?: boolean;
   };
 
-  type UpdateMenuDto = {
+  type UpdateFdMenuDto = {
     Name?: string;
     Code?: string;
     Path?: string;

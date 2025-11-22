@@ -21,16 +21,16 @@ using System.Threading.Tasks;
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
-    [Route("api/admin/menus")]
+    [Route("api/admin/[Controller]")]
     [Authorize]
-    public class MenusController : GenericDtoControllerBase<FdMenu, string, CreateMenuDto, UpdateMenuDto, MenuDto>
+    public class FdMenuController : GenericDtoControllerBase<FdMenu, string, CreateFdMenuDto, UpdateFdMenuDto, FdMenuDto>
     {
         private readonly IMenuService _menuService;
         private readonly ICurrentUser _currentUser;
         private readonly IRepository<FdRole> _roleRepository;
         private readonly IAdminUserService _adminUserService;
 
-        public MenusController(
+        public FdMenuController(
             IBaseService<FdMenu, string> service,
             IMapper mapper,
             IMenuService menuService,
@@ -47,7 +47,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         [HttpGet("tree")]
         [Authorize(Policy = Permissions.Admin.Menus.View)]
-        public async Task<List<MenuDto>> GetUserMenuTree()
+        public async Task<List<FdMenuDto>> GetUserMenuTree()
         {
             var userId = _currentUser.Id;
             if (userId == null)
@@ -58,7 +58,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
             // 判断是否为超管角色
             bool isSuperAdmin = await _adminUserService.IsSuperAdminAsync(userId);
-            List<MenuDto> menus;
+            List<FdMenuDto> menus;
 
             if (isSuperAdmin)
             {
@@ -78,7 +78,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         [HttpGet]
         [Authorize(Policy = Permissions.Admin.Menus.View)]
-        public override async Task<List<MenuDto>> GetAll( CancellationToken cancellationToken = default)
+        public override async Task<List<FdMenuDto>> GetAll( CancellationToken cancellationToken = default)
         {
             // 获取所有菜单
             var menus = await _service.GetListAsync(m => m.Category == "Admin");
@@ -87,27 +87,27 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             var menuTree = await _menuService.BuildMenuTree(menus, null);
             
             // 转换为 DTO
-            var menuDtos = _mapper.Map<List<MenuDto>>(menuTree);
+            var menuDtos = _mapper.Map<List<FdMenuDto>>(menuTree);
             
             return menuDtos;
         }
 
         [Authorize(Policy = Permissions.Admin.Menus.View)]
-        public override Task<MenuDto> GetById(string id, CancellationToken cancellationToken = default) => base.GetById(id);
+        public override Task<FdMenuDto> GetById(string id, CancellationToken cancellationToken = default) => base.GetById(id);
 
         [Authorize(Policy = Permissions.Admin.Menus.View)]
-        public override Task<Fastdotnet.Core.Models.PageResult<MenuDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
+        public override Task<Fastdotnet.Core.Models.PageResult<FdMenuDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
 
         //[Authorize(Policy = Permissions.Admin.Menus.Create)]
-        //public override Task<MenuDto> Create(CreateMenuDto dto) => base.Create(dto);
+        //public override Task<FdMenuDto> Create(CreateFdMenuDto dto) => base.Create(dto);
 
         [Authorize(Policy = Permissions.Admin.Menus.Edit)]
-        public override Task<MenuDto> Update(string id, UpdateMenuDto dto) => base.Update(id, dto);
+        public override Task<FdMenuDto> Update(string id, UpdateFdMenuDto dto) => base.Update(id, dto);
 
         [Authorize(Policy = Permissions.Admin.Menus.Delete)]
         public override Task<bool> Delete(string id) => base.Delete(id);
 
-        protected override async Task BeforeCreate(FdMenu entity, CreateMenuDto dto)
+        protected override async Task BeforeCreate(FdMenu entity, CreateFdMenuDto dto)
         {
             var generatedCode = $"MENU_CODE_{SnowflakeIdGenerator.NextStrId()}";
             entity.Code = generatedCode;
@@ -119,7 +119,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             await base.BeforeCreate(entity, dto);
         }
 
-        protected override async Task BeforeUpdate(FdMenu existingEntity, FdMenu updatedEntity, UpdateMenuDto dto)
+        protected override async Task BeforeUpdate(FdMenu existingEntity, FdMenu updatedEntity, UpdateFdMenuDto dto)
         {
             // Code字段由系统自动生成，不允许修改
             updatedEntity.Code = existingEntity.Code;

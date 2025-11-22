@@ -7,8 +7,8 @@ namespace Fastdotnet.Service.IService
 {
     public interface IMenuService
     {
-        Task<List<MenuDto>> GetUserMenusAsync(string userId, string category);
-        Task <List<MenuDto>> BuildMenuTree(List<FdMenu> allMenus, string? parentCode);
+        Task<List<FdMenuDto>> GetUserMenusAsync(string userId, string category);
+        Task <List<FdMenuDto>> BuildMenuTree(List<FdMenu> allMenus, string? parentCode);
 
     }
 }

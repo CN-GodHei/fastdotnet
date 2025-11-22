@@ -2525,7 +2525,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/menus")]
-        Task<IApiResponse<MenuDto>> MenusPOST([Body] CreateMenuDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<MenuDto>> MenusPOST([Body] CreateFdMenuDto body, CancellationToken cancellationToken = default);
 
         /// <summary>根据ID获取记录</summary>
         /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
@@ -2566,7 +2566,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/admin/menus/{id}")]
-        Task<IApiResponse<MenuDto>> MenusPUT(string id, [Body] UpdateMenuDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<MenuDto>> MenusPUT(string id, [Body] UpdateFdMenuDto body, CancellationToken cancellationToken = default);
 
         /// <summary>删除记录</summary>
         /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
@@ -2646,7 +2646,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/menus/batch")]
-        Task<IApiResponse<int>> BatchPOST7([Body] IEnumerable<CreateMenuDto> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchPOST7([Body] IEnumerable<CreateFdMenuDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>批量删除记录</summary>
         /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
@@ -2686,7 +2686,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/admin/menus/batch")]
-        Task<IApiResponse<int>> BatchPUT7([Body] IEnumerable<UpdateMenuDto> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchPUT7([Body] IEnumerable<UpdateFdMenuDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
         /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
@@ -2706,7 +2706,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/admin/menus/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition7([Body] UpdateMenuDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> Updatebycondition7([Body] UpdateFdMenuDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>获取回收站数据</summary>
         /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>

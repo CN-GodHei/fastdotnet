@@ -25,7 +25,7 @@ namespace Fastdotnet.WebApi.Controllers.App
         [HttpGet("tree")]
         // 提醒：您可能需要为 App 用户定义新的权限策略，例如 "app.menus.view"
         // [Authorize(Policy = "app.menus.view")] 
-        public async Task<List<MenuDto>> GetUserMenuTree()
+        public async Task<List<FdMenuDto>> GetUserMenuTree()
         {
             var userId = _currentUser.Id;
             if (userId == null)

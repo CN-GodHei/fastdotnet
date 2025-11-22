@@ -63,8 +63,7 @@
 import { defineAsyncComponent, ref, onMounted, reactive } from 'vue';
 import { RouteRecordRaw } from 'vue-router';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import * as MenuApi from '/@/api/fd-system-api/Menus';
-
+import * as MenuApi from '/@/api/fd-system-api/FdMenu';
 // 引入组件
 const MenuDialog = defineAsyncComponent(() => import('/@/views/system/menu/dialog.vue'));
 
@@ -72,7 +71,7 @@ const MenuDialog = defineAsyncComponent(() => import('/@/views/system/menu/dialo
 const menuDialogRef = ref();
 const state = reactive({
 	tableData: {
-		data: [] as APIModel.MenuDto[],
+		data: [] as APIModel.FdMenuDto[],
 		loading: true,
 	},
 });
@@ -81,7 +80,7 @@ const state = reactive({
 const getTableData = async () => {
 	state.tableData.loading = true;
 	try {
-		const res = await MenuApi.getAdminMenus();
+		const res = await MenuApi.getAdminFdMenu();
 		state.tableData.data = res || [];
 	} catch (error) {
 		ElMessage.error('获取菜单数据失败');
@@ -94,11 +93,11 @@ const onOpenAddMenu = (type: string) => {
 	menuDialogRef.value.openDialog(type);
 };
 // 打开编辑菜单弹窗
-const onOpenEditMenu = (type: string, row: APIModel.MenuDto) => {
+const onOpenEditMenu = (type: string, row: APIModel.FdMenuDto) => {
 	menuDialogRef.value.openDialog(type, row);
 };
 // 删除当前行
-const onTabelRowDel = (row: APIModel.MenuDto) => {
+const onTabelRowDel = (row: APIModel.FdMenuDto) => {
 	ElMessageBox.confirm(`此操作将永久删除路由：${row.Path}, 是否继续?`, '提示', {
 		confirmButtonText: '删除',
 		cancelButtonText: '取消',
@@ -108,7 +107,7 @@ const onTabelRowDel = (row: APIModel.MenuDto) => {
 			try {
 				// 使用row.Id作为菜单的唯一标识符
 				if (row.Id) {
-					await MenuApi.deleteAdminMenusId({ id: row.Id });
+					await MenuApi.deleteAdminFdMenuId({ id: row.Id });
 					ElMessage.success('删除成功');
 					getTableData();
 				} else {

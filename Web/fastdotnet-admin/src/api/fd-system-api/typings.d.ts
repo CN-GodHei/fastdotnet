@@ -143,6 +143,28 @@ declare namespace APIModel {
 		IsEnabled?: boolean;
 	};
 
+	type CreateFdMenuDto = {
+		Name?: string;
+		Path?: string;
+		Icon?: string;
+		ParentCode?: string;
+		Sort?: number;
+		Type?: MenuType;
+		Module?: string;
+		Category?: string;
+		IsExternal?: boolean;
+		ExternalUrl?: string;
+		IsEnabled?: boolean;
+		PermissionCode?: string;
+		Component?: string;
+		IsHide?: boolean;
+		IsKeepAlive?: boolean;
+		IsAffix?: boolean;
+		IsIframe?: boolean;
+		IsFdMicroApp?: boolean;
+		isLink?: boolean;
+	};
+
 	type CreateFdRateLimitRuleDto = {
 		Type: string;
 		Key: string;
@@ -172,28 +194,6 @@ declare namespace APIModel {
 		IsFree?: boolean;
 		DownloadUrl?: string;
 		DocumentationUrl?: string;
-	};
-
-	type CreateMenuDto = {
-		Name?: string;
-		Path?: string;
-		Icon?: string;
-		ParentCode?: string;
-		Sort?: number;
-		Type?: MenuType;
-		Module?: string;
-		Category?: string;
-		IsExternal?: boolean;
-		ExternalUrl?: string;
-		IsEnabled?: boolean;
-		PermissionCode?: string;
-		Component?: string;
-		IsHide?: boolean;
-		IsKeepAlive?: boolean;
-		IsAffix?: boolean;
-		IsIframe?: boolean;
-		IsFdMicroApp?: boolean;
-		isLink?: boolean;
 	};
 
 	type CreateOnlinePaymentDto = {
@@ -288,12 +288,12 @@ declare namespace APIModel {
 		id: string;
 	};
 
-	type deleteAdminMenusIdParams = {
+	type deleteAdminFdMenuIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminMenusRecyclebinIdPermanentParams = {
+	type deleteAdminFdMenuRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -628,6 +628,37 @@ declare namespace APIModel {
 		Items?: FdMenuButtonDto[];
 	};
 
+	type FdMenuDto = {
+		Id?: string;
+		Name?: string;
+		Code?: string;
+		Path?: string;
+		Icon?: string;
+		ParentCode?: string;
+		Sort?: number;
+		Type?: MenuType;
+		Module?: string;
+		Category?: string;
+		IsExternal?: boolean;
+		ExternalUrl?: string;
+		IsEnabled?: boolean;
+		PermissionCode?: string;
+		Component?: string;
+		PluginId?: string;
+		IsHide?: boolean;
+		IsKeepAlive?: boolean;
+		IsAffix?: boolean;
+		IsIframe?: boolean;
+		IsFdMicroApp?: boolean;
+		isLink?: boolean;
+		Children?: FdMenuDto[];
+	};
+
+	type FdMenuDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdMenuDto[];
+	};
+
 	type FdRateLimitRuleBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -768,19 +799,19 @@ declare namespace APIModel {
 		pageSize?: number;
 	};
 
-	type getAdminMenusIdParams = {
+	type getAdminFdMenuIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getAdminMenusPageParams = {
+	type getAdminFdMenuPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminMenusRecyclebinParams = {
+	type getAdminFdMenuRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
@@ -1012,37 +1043,6 @@ declare namespace APIModel {
 	type MarketplacePluginDtoPageResult = {
 		PageInfo?: PageInfo;
 		Items?: MarketplacePluginDto[];
-	};
-
-	type MenuDto = {
-		Id?: string;
-		Name?: string;
-		Code?: string;
-		Path?: string;
-		Icon?: string;
-		ParentCode?: string;
-		Sort?: number;
-		Type?: MenuType;
-		Module?: string;
-		Category?: string;
-		IsExternal?: boolean;
-		ExternalUrl?: string;
-		IsEnabled?: boolean;
-		PermissionCode?: string;
-		Component?: string;
-		PluginId?: string;
-		IsHide?: boolean;
-		IsKeepAlive?: boolean;
-		IsAffix?: boolean;
-		IsIframe?: boolean;
-		IsFdMicroApp?: boolean;
-		isLink?: boolean;
-		Children?: MenuDto[];
-	};
-
-	type MenuDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: MenuDto[];
 	};
 
 	enum MenuType {
@@ -1294,12 +1294,12 @@ declare namespace APIModel {
 		id: string;
 	};
 
-	type putAdminMenusIdParams = {
+	type putAdminFdMenuIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminMenusRecyclebinIdRestoreParams = {
+	type putAdminFdMenuRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
@@ -1547,6 +1547,34 @@ declare namespace APIModel {
 		Dto?: UpdateFdFdMenuButtonDto;
 	};
 
+	type UpdateFdMenuDto = {
+		Name?: string;
+		Code?: string;
+		Path?: string;
+		Icon?: string;
+		ParentCode?: string;
+		Sort?: number;
+		Type?: MenuType;
+		Module?: string;
+		Category?: string;
+		IsExternal?: boolean;
+		ExternalUrl?: string;
+		IsEnabled?: boolean;
+		PermissionCode?: string;
+		Component?: string;
+		IsHide?: boolean;
+		IsKeepAlive?: boolean;
+		IsAffix?: boolean;
+		IsFdMicroApp?: boolean;
+		IsIframe?: boolean;
+		isLink?: boolean;
+	};
+
+	type UpdateFdMenuDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdMenuDto;
+	};
+
 	type UpdateFdRateLimitRuleDto = {
 		Type: string;
 		Key: string;
@@ -1593,34 +1621,6 @@ declare namespace APIModel {
 	type UpdateMarketplacePluginDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateMarketplacePluginDto;
-	};
-
-	type UpdateMenuDto = {
-		Name?: string;
-		Code?: string;
-		Path?: string;
-		Icon?: string;
-		ParentCode?: string;
-		Sort?: number;
-		Type?: MenuType;
-		Module?: string;
-		Category?: string;
-		IsExternal?: boolean;
-		ExternalUrl?: string;
-		IsEnabled?: boolean;
-		PermissionCode?: string;
-		Component?: string;
-		IsHide?: boolean;
-		IsKeepAlive?: boolean;
-		IsAffix?: boolean;
-		IsFdMicroApp?: boolean;
-		IsIframe?: boolean;
-		isLink?: boolean;
-	};
-
-	type UpdateMenuDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMenuDto;
 	};
 
 	type UpdateOnlinePaymentDto = {

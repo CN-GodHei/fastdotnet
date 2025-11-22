@@ -14,9 +14,9 @@ namespace Fastdotnet.Service.Mappings
         public FdMenuProfile()
         {
             // Source -> Target
-            CreateMap<FdMenu, MenuDto>();
-            CreateMap<CreateMenuDto, FdMenu>();
-            CreateMap<UpdateMenuDto, FdMenu>();
+            CreateMap<FdMenu, FdMenuDto>();
+            CreateMap<CreateFdMenuDto, FdMenu>();
+            CreateMap<UpdateFdMenuDto, FdMenu>();
         }
     }
 }

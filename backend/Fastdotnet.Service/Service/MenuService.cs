@@ -35,7 +35,7 @@ namespace Fastdotnet.Service.Service
             _mapper = mapper;
         }
 
-        public async Task<List<MenuDto>> GetUserMenusAsync(string userId, string category)
+        public async Task<List<FdMenuDto>> GetUserMenusAsync(string userId, string category)
         {
             // 1. Get user's roles
             List<string> roleIds;
@@ -52,7 +52,7 @@ namespace Fastdotnet.Service.Service
 
             if (!roleIds.Any())
             {
-                return new List<MenuDto>();
+                return new List<FdMenuDto>();
             }
 
             // 2. Get menu ids from roles
@@ -61,7 +61,7 @@ namespace Fastdotnet.Service.Service
 
             if (!menuIds.Any())
             {
-                return new List<MenuDto>();
+                return new List<FdMenuDto>();
             }
 
             // 3. Get menus
@@ -77,7 +77,7 @@ namespace Fastdotnet.Service.Service
             return await BuildMenuTree(accessibleMenus, null);
         }
 
-        public async Task<List<MenuDto>> BuildMenuTree(List<FdMenu> allMenus, string? parentCode)
+        public async Task<List<FdMenuDto>> BuildMenuTree(List<FdMenu> allMenus, string? parentCode)
         {
             // 预处理：构建父子关系字典，处理 null ParentCode
             var menuDict = allMenus
@@ -85,7 +85,7 @@ namespace Fastdotnet.Service.Service
                 .ToDictionary(g => g.Key, g => g.OrderBy(m => m.Sort).ToList());
 
             // 递归构建树
-            async Task<List<MenuDto>> BuildTreeRecursive(string? currentParentCode)
+            async Task<List<FdMenuDto>> BuildTreeRecursive(string? currentParentCode)
             {
                 // 将 null 转换为 "" 以匹配字典中的键
                 var key = currentParentCode ?? string.Empty;
@@ -93,13 +93,13 @@ namespace Fastdotnet.Service.Service
                 // 快速查找子菜单
                 if (!menuDict.TryGetValue(key, out var childMenus))
                 {
-                    return new List<MenuDto>();
+                    return new List<FdMenuDto>();
                 }
 
                 // 使用 AutoMapper 和异步处理
                 var tasks = childMenus.Select(async m => {
                     // 使用 AutoMapper 映射基本属性
-                    var menuDto = _mapper.Map<MenuDto>(m);
+                    var menuDto = _mapper.Map<FdMenuDto>(m);
                     // 递归构建子菜单
                     menuDto.Children = await BuildTreeRecursive(m.Code);
                     return menuDto;

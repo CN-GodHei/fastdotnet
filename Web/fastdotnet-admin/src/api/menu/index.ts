@@ -9,7 +9,7 @@ export function useMenuApi() {
 		// 获取当前用户菜单树 (Admin端)
 		getUserMenuTree: () => {
 			return request({
-				url: '/api/admin/menus/tree',
+				url: '/api/admin/fdmenu/tree',
 				method: 'get',
 				// get 请求通常不带 data, 参数放在 params 或 url 中
 				// 如果后端需要特定参数，可以在这里添加

@@ -576,7 +576,7 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class CreateMenuDto
+    public partial class CreateFdMenuDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
@@ -2222,7 +2222,7 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateMenuDto
+    public partial class UpdateFdMenuDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
@@ -2288,14 +2288,14 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateMenuDtoBatchUpdateByConditionDto
+    public partial class UpdateFdMenuDtoBatchUpdateByConditionDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Query")]
         public PageQueryByConditionDto Query { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Dto")]
-        public UpdateMenuDto Dto { get; set; }
+        public UpdateFdMenuDto Dto { get; set; }
 
     }
 

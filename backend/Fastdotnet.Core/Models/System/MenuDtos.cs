@@ -10,13 +10,13 @@ namespace Fastdotnet.Core.Models.System
     {
         public MenuProfile()
         {
-            CreateMap<FdMenu, MenuDto>();
-            CreateMap<CreateMenuDto, FdMenu>();
-            CreateMap<UpdateMenuDto, FdMenu>();
+            CreateMap<FdMenu, FdMenuDto>();
+            CreateMap<CreateFdMenuDto, FdMenu>();
+            CreateMap<UpdateFdMenuDto, FdMenu>();
         }
     }
 
-    public class MenuDto
+    public class FdMenuDto
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -43,10 +43,10 @@ namespace Fastdotnet.Core.Models.System
         public bool IsFdMicroApp { get; set; }
         public bool isLink { get; set; }
 
-        public List<MenuDto> Children { get; set; }
+        public List<FdMenuDto> Children { get; set; }
     }
 
-    public class CreateMenuDto
+    public class CreateFdMenuDto
     {
         public string Name { get; set; }
         public string Path { get; set; }
@@ -71,7 +71,7 @@ namespace Fastdotnet.Core.Models.System
         public bool isLink { get; set; }
     }
 
-    public class UpdateMenuDto
+    public class UpdateFdMenuDto
     {
         public string Name { get; set; }
         public string Code { get; set; }

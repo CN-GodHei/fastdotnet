@@ -4,7 +4,7 @@ import request from '/@/utils/request';
 
 /** 此处后端没有提供注释 GET /api/app/menus/tree */
 export async function getAppMenusTree(options?: { [key: string]: any }) {
-	return request<APIModel.MenuDto[]>('/api/app/menus/tree', {
+	return request<APIModel.FdMenuDto[]>('/api/app/menus/tree', {
 		method: 'GET',
 		...(options || {}),
 	});
