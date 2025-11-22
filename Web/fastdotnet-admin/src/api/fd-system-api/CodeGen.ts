@@ -154,18 +154,6 @@ export async function getCodeGenDownload(
 	});
 }
 
-/** 执行代码生成 POST /api/CodeGen/generate */
-export async function postCodeGenGenerate(body: APIModel.CodeGenInput, options?: { [key: string]: any }) {
-	return request<string>('/api/CodeGen/generate', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json-patch+json',
-		},
-		data: body,
-		...(options || {}),
-	});
-}
-
 /** 根据表名获取实体名 GET /api/CodeGen/getentityname */
 export async function getCodeGenGetentityname(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

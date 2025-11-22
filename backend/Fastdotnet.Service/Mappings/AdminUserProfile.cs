@@ -12,9 +12,9 @@ namespace Fastdotnet.Service.Mappings
         public AdminUserProfile()
         {
             // Source -> Target
-            CreateMap<FdAdminUser, AdminUserDto>();
-            CreateMap<CreateAdminUserDto, FdAdminUser>();
-            CreateMap<UpdateAdminUserDto, FdAdminUser>();
+            CreateMap<FdAdminUser, FdAdminUserDto>();
+            CreateMap<CreateFdAdminUserDto, FdAdminUser>();
+            CreateMap<UpdateFdAdminUserDto, FdAdminUser>();
         }
     }
 }

@@ -18,14 +18,14 @@ using System.Threading.Tasks;
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
-    [Route("api/admin/users")]
-    public class AdminUsersController : GenericDtoControllerBase<FdAdminUser, string, CreateAdminUserDto, UpdateAdminUserDto, AdminUserDto>
+    [Route("api/admin/[Controller]")]
+    public class FdAdminUserController : GenericDtoControllerBase<FdAdminUser, string, CreateFdAdminUserDto, UpdateFdAdminUserDto, FdAdminUserDto>
     {
         private readonly IAdminUserService _adminUserService;
         private readonly ICurrentUser _currentUser;
         private readonly IBaseService<FdAdminUser, string> _service;
 
-        public AdminUsersController(
+        public FdAdminUserController(
             IAdminUserService adminUserService,
             IBaseService<FdAdminUser, string> service,
             IMapper mapper,
@@ -41,10 +41,10 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// </summary>
         /// <returns>包含所有管理员用户的列表</returns>
         [Authorize(Policy = Permissions.Admin.Users.View)]
-        public override Task<List<AdminUserDto>> GetAll( CancellationToken cancellationToken = default) => base.GetAll();
+        public override Task<List<FdAdminUserDto>> GetAll( CancellationToken cancellationToken = default) => base.GetAll();
 
         //[Authorize(Policy = Permissions.Admin.Users.View)]
-        //public async Task<AdminUserDto> GetById(string id)
+        //public async Task<FdAdminUserDto> GetById(string id)
         //{
         //    // 超管可以查看所有用户，普通用户只能查看自己
         //    //bool isSuperAdmin = await _adminUserService.IsSuperAdminAsync(_currentUser.Id ?? 0);
@@ -58,10 +58,10 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         //}
 
         [Authorize(Policy = Permissions.Admin.Users.View)]
-        public override Task<Fastdotnet.Core.Models.PageResult<AdminUserDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
+        public override Task<Fastdotnet.Core.Models.PageResult<FdAdminUserDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
 
         [Authorize(Policy = Permissions.Admin.Users.Create)]
-        public override async Task<AdminUserDto> Create(CreateAdminUserDto dto)
+        public override async Task<FdAdminUserDto> Create(CreateFdAdminUserDto dto)
         {
             var userId = await _adminUserService.CreateAsync(dto);
             var user = await _adminUserService.GetAsync(userId);
@@ -69,7 +69,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         //[Authorize(Policy = Permissions.Admin.Users.Edit)]
-        //public async Task<AdminUserDto> Update(string id, UpdateAdminUserDto dto)
+        //public async Task<FdAdminUserDto> Update(string id, UpdateFdAdminUserDto dto)
         //{
         //    // 超管可以更新所有用户，普通用户只能更新自己
         //    //bool isSuperAdmin = await _adminUserService.IsSuperAdminAsync(_currentUser.Id ?? 0);
@@ -114,7 +114,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         [HttpGet("getUserInfo")]
         [Authorize(Policy = Permissions.Admin.Users.View)]
-        public async Task<AdminUserDto> getUserInfo()
+        public async Task<FdAdminUserDto> getUserInfo()
         {
             // 获取当前用户信息
             var user = await _service.GetByIdAsync(_currentUser.Id);
@@ -131,7 +131,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             var buttons = await _adminUserService.GetUserButtonPermissionsAsync(_currentUser.Id);
 
             // 构造返回对象
-            var userDto = _mapper.Map<AdminUserDto>(user);
+            var userDto = _mapper.Map<FdAdminUserDto>(user);
             userDto.RoleIds = roleIds;
             userDto.Buttons = buttons;
 

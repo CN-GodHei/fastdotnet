@@ -38,7 +38,7 @@ namespace Fastdotnet.Service.Service.Admin
             _roleMenuButtonRepository = roleMenuButtonRepository;
         }
 
-        public async Task<string> CreateAsync(CreateAdminUserDto dto)
+        public async Task<string> CreateAsync(CreateFdAdminUserDto dto)
         {
             var existingUser = await _repository.GetFirstAsync(u => u.Username == dto.Username);
             if (existingUser != null)
@@ -64,13 +64,13 @@ namespace Fastdotnet.Service.Service.Admin
             await _repository.DeleteAsync(id);
         }
 
-        public async Task<AdminUserDto?> GetAsync(string id)
+        public async Task<FdAdminUserDto?> GetAsync(string id)
         {
             var user = await _repository.GetByIdAsync(id);
-            return _mapper.Map<AdminUserDto?>(user);
+            return _mapper.Map<FdAdminUserDto?>(user);
         }
 
-        public async Task<PageResult<AdminUserDto>> GetPageAsync(PageQueryDto query)
+        public async Task<PageResult<FdAdminUserDto>> GetPageAsync(PageQueryDto query)
         {
             var pageResult = await _repository.GetPageAsync(
                 u => string.IsNullOrEmpty(query.Keyword) || u.Username.Contains(query.Keyword) || u.Name.Contains(query.Keyword),
@@ -78,9 +78,9 @@ namespace Fastdotnet.Service.Service.Admin
                 query.PageSize
             );
 
-            return new PageResult<AdminUserDto>
+            return new PageResult<FdAdminUserDto>
             {
-                Items = _mapper.Map<IList<AdminUserDto>>(pageResult.Items),
+                Items = _mapper.Map<IList<FdAdminUserDto>>(pageResult.Items),
                 PageInfo = pageResult.PageInfo
             };
         }
@@ -100,7 +100,7 @@ namespace Fastdotnet.Service.Service.Admin
             await _repository.UpdateAsync(user);
         }
 
-        public async Task UpdateAsync(string id, UpdateAdminUserDto dto)
+        public async Task UpdateAsync(string id, UpdateFdAdminUserDto dto)
         {
             var user = await _repository.GetByIdAsync(id);
             if (user == null)

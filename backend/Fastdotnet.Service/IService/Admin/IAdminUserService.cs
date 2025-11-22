@@ -13,23 +13,23 @@ namespace Fastdotnet.Service.IService.Admin
         /// <summary>
         /// 根据ID获取管理员用户
         /// </summary>
-        Task<AdminUserDto?> GetAsync(string id);
+        Task<FdAdminUserDto?> GetAsync(string id);
 
         /// <summary>
         /// 分页获取管理员用户
         /// </summary>
-        Task<PageResult<AdminUserDto>> GetPageAsync(PageQueryDto query);
+        Task<PageResult<FdAdminUserDto>> GetPageAsync(PageQueryDto query);
 
         /// <summary>
         /// 创建新管理员
         /// </summary>
         /// <returns>新用户的ID</returns>
-        Task<string> CreateAsync(CreateAdminUserDto dto);
+        Task<string> CreateAsync(CreateFdAdminUserDto dto);
 
         /// <summary>
         /// 更新管理员信息
         /// </summary>
-        Task UpdateAsync(string id, UpdateAdminUserDto dto);
+        Task UpdateAsync(string id, UpdateFdAdminUserDto dto);
 
         /// <summary>
         /// 删除管理员

@@ -80,7 +80,7 @@ import { Local } from '/@/utils/storage';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { useUserInfo } from '/@/stores/userInfo';
-import { postAdminUsersUnlock } from '/@/api/fd-system-api/AdminUsers';
+import { postAdminFdAdminUserUnlock } from '/@/api/fd-system-api/FdAdminUser';
 import { ElMessage } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 
@@ -352,7 +352,7 @@ const onLockScreenSubmit = async () => {
 	
 	try {
 		// 调用后端解锁接口
-		const response = await postAdminUsersUnlock({
+		const response = await postAdminFdAdminUserUnlock({
 			Password: state.lockScreenPassword
 		});
 		if (response) {

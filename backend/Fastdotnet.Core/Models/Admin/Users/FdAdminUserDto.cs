@@ -6,7 +6,7 @@ namespace Fastdotnet.Core.Models.Admin.Users
     /// <summary>
     /// 用于显示管理员信息的DTO
     /// </summary>
-    public class AdminUserDto
+    public class FdAdminUserDto
     {
         public string Id { get; set; }
 
@@ -41,7 +41,7 @@ namespace Fastdotnet.Core.Models.Admin.Users
     /// <summary>
     /// 用于创建管理员的DTO
     /// </summary>
-    public class CreateAdminUserDto
+    public class CreateFdAdminUserDto
     {
         [Required(ErrorMessage = "用户名不能为空")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "用户名长度必须在3到50个字符之间")]
@@ -66,7 +66,7 @@ namespace Fastdotnet.Core.Models.Admin.Users
     /// <summary>
     /// 用于更新管理员的DTO
     /// </summary>
-    public class UpdateAdminUserDto
+    public class UpdateFdAdminUserDto
     {
         public string? Name { get; set; }
 

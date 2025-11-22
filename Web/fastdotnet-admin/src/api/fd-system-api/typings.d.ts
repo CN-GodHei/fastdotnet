@@ -5,26 +5,6 @@ declare namespace APIModel {
 		2 = '2',
 	}
 
-	type AdminUserDto = {
-		Id?: string;
-		Username?: string;
-		Name?: string;
-		Email?: string;
-		Phone?: string;
-		IsActive?: boolean;
-		LastLoginTime?: string;
-		LastLoginIp?: string;
-		CreateTime?: string;
-		Avatar?: string;
-		RoleIds?: string[];
-		Buttons?: string[];
-	};
-
-	type AdminUserDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: AdminUserDto[];
-	};
-
 	type ApiResult = {
 		Code?: number;
 		Msg?: string;
@@ -62,19 +42,6 @@ declare namespace APIModel {
 		Items?: CodeGenConfigDto[];
 	};
 
-	type CodeGenInput = {
-		ConfigId: string;
-		TableName: string;
-		NameSpace: string;
-		GenerateType: string;
-		GenerateMenu?: boolean;
-		MenuIcon?: string;
-		MenuPid?: string;
-		PagePath?: string;
-		Action?: string;
-		SelectedFile?: string;
-	};
-
 	type ColumnInfoDto = {
 		ColumnName?: string;
 		PropertyName?: string;
@@ -89,16 +56,6 @@ declare namespace APIModel {
 		ColumnComment?: string;
 		IsIgnore?: boolean;
 		ShowColumnName?: string;
-	};
-
-	type CreateAdminUserDto = {
-		Username: string;
-		Password: string;
-		Name?: string;
-		Email?: string;
-		Phone?: string;
-		IsActive?: boolean;
-		Avatar?: string;
 	};
 
 	type CreateCodeGenDto = {
@@ -123,6 +80,16 @@ declare namespace APIModel {
 		SenderEmail: string;
 		SenderName: string;
 		EnableSsl?: boolean;
+	};
+
+	type CreateFdAdminUserDto = {
+		Username: string;
+		Password: string;
+		Name?: string;
+		Email?: string;
+		Phone?: string;
+		IsActive?: boolean;
+		Avatar?: string;
 	};
 
 	type CreateFdBlacklistDto = {
@@ -301,6 +268,16 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type deleteAdminFdAdminUserIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminFdAdminUserRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
 	type deleteAdminMenuButtonsIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
@@ -347,16 +324,6 @@ declare namespace APIModel {
 	};
 
 	type deleteAdminSystemConfigRecyclebinIdPermanentParams = {
-		/** 要永久删除的记录的唯一标识符 */
-		id: string;
-	};
-
-	type deleteAdminUsersIdParams = {
-		/** 要删除的记录的唯一标识符 */
-		id: string;
-	};
-
-	type deleteAdminUsersRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -511,6 +478,26 @@ declare namespace APIModel {
 		ReturnType?: string;
 		TailCall?: boolean;
 		CanReduce?: boolean;
+	};
+
+	type FdAdminUserDto = {
+		Id?: string;
+		Username?: string;
+		Name?: string;
+		Email?: string;
+		Phone?: string;
+		IsActive?: boolean;
+		LastLoginTime?: string;
+		LastLoginIp?: string;
+		CreateTime?: string;
+		Avatar?: string;
+		RoleIds?: string[];
+		Buttons?: string[];
+	};
+
+	type FdAdminUserDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdAdminUserDto[];
 	};
 
 	type FdBlacklistBooleanFuncExpression = {
@@ -725,6 +712,25 @@ declare namespace APIModel {
 		pageSize?: number;
 	};
 
+	type getAdminFdAdminUserIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getAdminFdAdminUserPageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminFdAdminUserRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
 	type getAdminMenuButtonsIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
@@ -828,25 +834,6 @@ declare namespace APIModel {
 	};
 
 	type getAdminSystemConfigRecyclebinParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type getAdminUsersIdParams = {
-		/** 记录的唯一标识符 */
-		id: string;
-	};
-
-	type getAdminUsersPageParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type getAdminUsersRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
@@ -1234,11 +1221,11 @@ declare namespace APIModel {
 		value?: string;
 	};
 
-	type postAdminRolesIdPermissionsParams = {
+	type postAdminFdAdminUserIdResetPasswordParams = {
 		id: string;
 	};
 
-	type postAdminUsersIdResetPasswordParams = {
+	type postAdminRolesIdPermissionsParams = {
 		id: string;
 	};
 
@@ -1283,6 +1270,16 @@ declare namespace APIModel {
 	};
 
 	type putAdminEmailConfigRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdAdminUserIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdAdminUserRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
@@ -1337,16 +1334,6 @@ declare namespace APIModel {
 		id: string;
 	};
 
-	type putAdminUsersIdParams = {
-		/** 要更新的记录的唯一标识符 */
-		id: string;
-	};
-
-	type putAdminUsersRecyclebinIdRestoreParams = {
-		/** 要恢复的记录的唯一标识符 */
-		id: string;
-	};
-
 	type putCodeGenConfigIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
@@ -1384,6 +1371,10 @@ declare namespace APIModel {
 	type RoleDtoPageResult = {
 		PageInfo?: PageInfo;
 		Items?: RoleDto[];
+	};
+
+	type SendMessageRequest = {
+		Message?: string;
 	};
 
 	type SendRegistrationCodeDto = {
@@ -1441,19 +1432,6 @@ declare namespace APIModel {
 		Password: string;
 	};
 
-	type UpdateAdminUserDto = {
-		Name?: string;
-		Email?: string;
-		Phone?: string;
-		IsActive?: boolean;
-		Avatar?: string;
-	};
-
-	type UpdateAdminUserDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateAdminUserDto;
-	};
-
 	type UpdateCodeGenDto = {
 		TableName: string;
 		TableComment?: string;
@@ -1487,6 +1465,19 @@ declare namespace APIModel {
 	type UpdateEmailConfigDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateEmailConfigDto;
+	};
+
+	type UpdateFdAdminUserDto = {
+		Name?: string;
+		Email?: string;
+		Phone?: string;
+		IsActive?: boolean;
+		Avatar?: string;
+	};
+
+	type UpdateFdAdminUserDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdAdminUserDto;
 	};
 
 	type UpdateFdBlacklistDto = {

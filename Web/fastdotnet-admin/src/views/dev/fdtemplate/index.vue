@@ -64,7 +64,6 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import { 
   getCodeGenPage, 
   deleteCodeGenId, 
-  postCodeGenGenerate, 
   getCodeGenApplicationnamespaces 
 } from '/@/api/fd-system-api/CodeGen';
 import APIModel from '/@/api/fd-system-api';
@@ -222,45 +221,45 @@ const syncCodeGen = async (row: any) => {
 };
 
 // 开始生成代码
-const handleGenerate = (row: any) => {
-	ElMessageBox.confirm(`确定要生成吗?`, '提示', {
-		confirmButtonText: '确定',
-		cancelButtonText: '取消',
-		type: 'warning',
-	})
-		.then(async () => {
-			try {
-				const res = await postCodeGenGenerate({
-					configId: row.configId,
-					tableName: row.tableName,
-					busName: row.busName,
-					nameSpace: row.nameSpace,
-					authorName: row.authorName,
-					generateType: row.generateType,
-					generateMenu: row.generateMenu,
-					menuIcon: row.menuIcon,
-					menuPid: row.menuPid,
-					pagePath: row.pagePath
-				});
+// const handleGenerate = (row: any) => {
+// 	ElMessageBox.confirm(`确定要生成吗?`, '提示', {
+// 		confirmButtonText: '确定',
+// 		cancelButtonText: '取消',
+// 		type: 'warning',
+// 	})
+// 		.then(async () => {
+// 			try {
+// 				const res = await postCodeGenGenerate({
+// 					configId: row.configId,
+// 					tableName: row.tableName,
+// 					busName: row.busName,
+// 					nameSpace: row.nameSpace,
+// 					authorName: row.authorName,
+// 					generateType: row.generateType,
+// 					generateMenu: row.generateMenu,
+// 					menuIcon: row.menuIcon,
+// 					menuPid: row.menuPid,
+// 					pagePath: row.pagePath
+// 				});
 				
-				// 生成代码成功，可以下载
-				if (res) {
-					// 通过创建隐藏链接来下载文件
-					const link = document.createElement('a');
-					link.href = `/api/CodeGen/download?filePath=${encodeURIComponent(res)}`;
-					link.target = '_blank';
-					link.click();
-					ElMessage.success('代码生成成功，下载已开始');
-				} else {
-					ElMessage.success('代码生成成功');
-				}
-			} catch (error) {
-				console.error('代码生成失败', error);
-				ElMessage.error('代码生成失败');
-			}
-		})
-		.catch(() => {});
-};
+// 				// 生成代码成功，可以下载
+// 				if (res) {
+// 					// 通过创建隐藏链接来下载文件
+// 					const link = document.createElement('a');
+// 					link.href = `/api/CodeGen/download?filePath=${encodeURIComponent(res)}`;
+// 					link.target = '_blank';
+// 					link.click();
+// 					ElMessage.success('代码生成成功，下载已开始');
+// 				} else {
+// 					ElMessage.success('代码生成成功');
+// 				}
+// 			} catch (error) {
+// 				console.error('代码生成失败', error);
+// 				ElMessage.error('代码生成失败');
+// 			}
+// 		})
+// 		.catch(() => {});
+// };
 
 // 预览代码
 const handlePreview = (row: any) => {
