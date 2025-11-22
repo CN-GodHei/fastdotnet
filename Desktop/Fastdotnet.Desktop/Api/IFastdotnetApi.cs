@@ -95,398 +95,6 @@ namespace Fastdotnet.Desktop.Api
         [Post("/api/auth/app/register")]
         Task<IApiResponse<string>> Register([Body] AppRegisterDto body, CancellationToken cancellationToken = default);
 
-        /// <summary>获取所有管理员用户 (自定义注释)</summary>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/users")]
-        Task<IApiResponse<ICollection<AdminUserDto>>> UsersAll(CancellationToken cancellationToken = default);
-
-        /// <summary>创建新记录</summary>
-        /// <remarks>根据提供的数据创建一条新记录。</remarks>
-        /// <param name="body">创建记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/users")]
-        Task<IApiResponse<AdminUserDto>> UsersPOST([Body] CreateAdminUserDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>分页获取记录</summary>
-        /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
-        /// <param name="pageIndex">页码 (从1开始)</param>
-        /// <param name="pageSize">页面大小</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/users/page")]
-        Task<IApiResponse<AdminUserDtoPageResult>> Page([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
-
-        /// <summary>删除记录</summary>
-        /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
-        /// <param name="id">要删除的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/users/{id}")]
-        Task<IApiResponse<bool>> UsersDELETE(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>根据ID获取记录</summary>
-        /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
-        /// <param name="id">记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/users/{id}")]
-        Task<IApiResponse<AdminUserDto>> UsersGET(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>更新现有记录</summary>
-        /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
-        /// <param name="id">要更新的记录的唯一标识符</param>
-        /// <param name="body">更新记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/users/{id}")]
-        Task<IApiResponse<AdminUserDto>> UsersPUT(string id, [Body] UpdateAdminUserDto body, CancellationToken cancellationToken = default);
-
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/users/{id}/reset-password")]
-        Task<IApiResponse<bool>> ResetPassword(string id, [Body] ResetPasswordDto body, CancellationToken cancellationToken = default);
-
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/users/getUserInfo")]
-        Task<IApiResponse<AdminUserDto>> GetUserInfo(CancellationToken cancellationToken = default);
-
-        /// <summary>解锁屏幕</summary>
-        /// <param name="body">包含密码的解锁信息</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/users/unlock")]
-        Task<IApiResponse<bool>> Unlock([Body] UnlockDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件分页获取记录</summary>
-        /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/users/page/search")]
-        Task<IApiResponse<AdminUserDtoPageResult>> Search([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>批量创建新记录</summary>
-        /// <remarks>根据提供的数据批量创建新记录。</remarks>
-        /// <param name="body">创建记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/users/batch")]
-        Task<IApiResponse<int>> BatchPOST([Body] IEnumerable<CreateAdminUserDto> body, CancellationToken cancellationToken = default);
-
-        /// <summary>批量删除记录</summary>
-        /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
-        /// <param name="body">要删除的记录ID列表</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/users/batch")]
-        Task<IApiResponse<int>> BatchDELETE([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据实体主键批量更新实体信息</summary>
-        /// <remarks>根据实体主键批量更新实体信息</remarks>
-        /// <param name="body">批量更新实体数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/users/batch")]
-        Task<IApiResponse<int>> BatchPUT([Body] IEnumerable<UpdateAdminUserDto> body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
-        /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
-        /// <param name="body">根据条件批量更新实体属性（部分字段更新）</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/users/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition([Body] UpdateAdminUserDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>获取回收站数据</summary>
-        /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
-        /// <param name="pageIndex">页码 (从1开始)</param>
-        /// <param name="pageSize">页面大小</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/users/recyclebin")]
-        Task<IApiResponse<AdminUserDtoPageResult>> Recyclebin([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件查询回收站数据</summary>
-        /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/users/recyclebin/search")]
-        Task<IApiResponse<AdminUserDtoPageResult>> Search2([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>恢复回收站中的记录</summary>
-        /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
-        /// <param name="id">要恢复的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/users/recyclebin/{id}/restore")]
-        Task<IApiResponse<bool>> RestorePUT(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>批量恢复回收站中的记录</summary>
-        /// <remarks>根据提供的条件，批量将回收站中的记录恢复到正常状态。</remarks>
-        /// <param name="body">用于筛选要恢复记录的条件表达式</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/users/recyclebin/restore")]
-        Task<IApiResponse<int>> RestorePOST([Body] FdAdminUserBooleanFuncExpression body, CancellationToken cancellationToken = default);
-
-        /// <summary>永久删除回收站中的记录</summary>
-        /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
-        /// <param name="id">要永久删除的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/users/recyclebin/{id}/permanent")]
-        Task<IApiResponse<bool>> PermanentDELETE(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件永久删除回收站中的记录</summary>
-        /// <remarks>根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。</remarks>
-        /// <param name="body">用于筛选要永久删除记录的条件表达式</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/users/recyclebin/permanent")]
-        Task<IApiResponse<int>> PermanentPOST([Body] FdAdminUserBooleanFuncExpression body, CancellationToken cancellationToken = default);
-
         /// <returns>
         /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
         /// <list type="table">
@@ -502,460 +110,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/app/menus/tree")]
-        Task<IApiResponse<ICollection<MenuDto>>> Tree(CancellationToken cancellationToken = default);
-
-        /// <summary>检查值是否在黑名单中</summary>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/Blacklists/check")]
-        Task<IApiResponse<bool>> Check([Query] string type, [Query] string value, CancellationToken cancellationToken = default);
-
-        /// <summary>获取所有记录</summary>
-        /// <remarks>检索并返回系统中该类型的所有记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/Blacklists")]
-        Task<IApiResponse<ICollection<FdBlacklistDto>>> BlacklistsAll(CancellationToken cancellationToken = default);
-
-        /// <summary>创建新记录</summary>
-        /// <remarks>根据提供的数据创建一条新记录。</remarks>
-        /// <param name="body">创建记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/Blacklists")]
-        Task<IApiResponse<FdBlacklistDto>> BlacklistsPOST([Body] CreateFdBlacklistDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据ID获取记录</summary>
-        /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
-        /// <param name="id">记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/Blacklists/{id}")]
-        Task<IApiResponse<FdBlacklistDto>> BlacklistsGET(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>更新现有记录</summary>
-        /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
-        /// <param name="id">要更新的记录的唯一标识符</param>
-        /// <param name="body">更新记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/Blacklists/{id}")]
-        Task<IApiResponse<FdBlacklistDto>> BlacklistsPUT(string id, [Body] UpdateFdBlacklistDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>删除记录</summary>
-        /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
-        /// <param name="id">要删除的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/Blacklists/{id}")]
-        Task<IApiResponse<bool>> BlacklistsDELETE(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>分页获取记录</summary>
-        /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
-        /// <param name="pageIndex">页码 (从1开始)</param>
-        /// <param name="pageSize">页面大小</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/Blacklists/page")]
-        Task<IApiResponse<FdBlacklistDtoPageResult>> Page2([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件分页获取记录</summary>
-        /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/Blacklists/page/search")]
-        Task<IApiResponse<FdBlacklistDtoPageResult>> Search3([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>批量创建新记录</summary>
-        /// <remarks>根据提供的数据批量创建新记录。</remarks>
-        /// <param name="body">创建记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/Blacklists/batch")]
-        Task<IApiResponse<int>> BatchPOST2([Body] IEnumerable<CreateFdBlacklistDto> body, CancellationToken cancellationToken = default);
-
-        /// <summary>批量删除记录</summary>
-        /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
-        /// <param name="body">要删除的记录ID列表</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/Blacklists/batch")]
-        Task<IApiResponse<int>> BatchDELETE2([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据实体主键批量更新实体信息</summary>
-        /// <remarks>根据实体主键批量更新实体信息</remarks>
-        /// <param name="body">批量更新实体数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/Blacklists/batch")]
-        Task<IApiResponse<int>> BatchPUT2([Body] IEnumerable<UpdateFdBlacklistDto> body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
-        /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
-        /// <param name="body">根据条件批量更新实体属性（部分字段更新）</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/Blacklists/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition2([Body] UpdateFdBlacklistDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>获取回收站数据</summary>
-        /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
-        /// <param name="pageIndex">页码 (从1开始)</param>
-        /// <param name="pageSize">页面大小</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/Blacklists/recyclebin")]
-        Task<IApiResponse<FdBlacklistDtoPageResult>> Recyclebin2([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件查询回收站数据</summary>
-        /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/Blacklists/recyclebin/search")]
-        Task<IApiResponse<FdBlacklistDtoPageResult>> Search4([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>恢复回收站中的记录</summary>
-        /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
-        /// <param name="id">要恢复的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/Blacklists/recyclebin/{id}/restore")]
-        Task<IApiResponse<bool>> RestorePUT2(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>批量恢复回收站中的记录</summary>
-        /// <remarks>根据提供的条件，批量将回收站中的记录恢复到正常状态。</remarks>
-        /// <param name="body">用于筛选要恢复记录的条件表达式</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/Blacklists/recyclebin/restore")]
-        Task<IApiResponse<int>> RestorePOST2([Body] FdBlacklistBooleanFuncExpression body, CancellationToken cancellationToken = default);
-
-        /// <summary>永久删除回收站中的记录</summary>
-        /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
-        /// <param name="id">要永久删除的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/Blacklists/recyclebin/{id}/permanent")]
-        Task<IApiResponse<bool>> PermanentDELETE2(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件永久删除回收站中的记录</summary>
-        /// <remarks>根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。</remarks>
-        /// <param name="body">用于筛选要永久删除记录的条件表达式</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/Blacklists/recyclebin/permanent")]
-        Task<IApiResponse<int>> PermanentPOST2([Body] FdBlacklistBooleanFuncExpression body, CancellationToken cancellationToken = default);
-
-        /// <summary>测试基本缓存功能</summary>
-        /// <param name="id">用户ID</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/cache-test/user/{id}")]
-        Task<IApiResponse<string>> User(int id, CancellationToken cancellationToken = default);
-
-        /// <summary>测试带多个参数的缓存功能</summary>
-        /// <param name="categoryId">分类ID</param>
-        /// <param name="page">页码</param>
-        /// <param name="pageSize">每页大小</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/cache-test/products")]
-        Task<IApiResponse<ICollection<string>>> Products([Query] int? categoryId, [Query] int? page, [Query] int? pageSize, CancellationToken cancellationToken = default);
-
-        /// <summary>手动设置缓存</summary>
-        /// <param name="key">缓存键</param>
-        /// <param name="value">缓存值</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Post("/api/admin/cache-test/set")]
-        Task<IApiResponse> Set([Query] string key, [Query] string value, CancellationToken cancellationToken = default);
-
-        /// <summary>获取缓存值</summary>
-        /// <param name="key">缓存键</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/cache-test/get")]
-        Task<IApiResponse<string>> Get([Query] string key, CancellationToken cancellationToken = default);
-
-        /// <summary>移除特定标签的缓存</summary>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Delete("/api/admin/cache-test/clear-by-tag")]
-        Task<IApiResponse> ClearByTag([Query(CollectionFormat.Multi)] IEnumerable<string> tags, CancellationToken cancellationToken = default);
+        Task<IApiResponse<ICollection<FdMenuDto>>> Tree(CancellationToken cancellationToken = default);
 
         /// <summary>生成验证码图片</summary>
         /// <param name="id">验证码标识符，通常是用户会话ID或GUID</param>
@@ -978,7 +133,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/Captcha/generate")]
-        Task<IApiResponse<FileResponse>> GenerateGET([Query] string id, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FileResponse>> Generate([Query] string id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 验证验证码 (仅供测试使用)
@@ -1061,24 +216,6 @@ namespace Fastdotnet.Desktop.Api
         [Get("/api/CodeGen/getentityname")]
         Task<IApiResponse<string>> Getentityname([Query] string tableName, CancellationToken cancellationToken = default);
 
-        /// <summary>执行代码生成</summary>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/CodeGen/generate")]
-        Task<IApiResponse<string>> GeneratePOST([Body] CodeGenInput body, CancellationToken cancellationToken = default);
-
         /// <summary>根据配置ID获取表列表</summary>
         /// <param name="configId">配置ID</param>
         /// <returns>
@@ -1135,6 +272,26 @@ namespace Fastdotnet.Desktop.Api
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/CodeGen/applicationnamespaces")]
         Task<IApiResponse<ICollection<string>>> Applicationnamespaces(CancellationToken cancellationToken = default);
+
+        /// <summary>预览生成的代码</summary>
+        /// <param name="configId">代码生成配置ID</param>
+        /// <param name="type">代码类型：entity, dto, service, controller, frontend</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/CodeGen/preview/{configId}")]
+        Task<IApiResponse<string>> Preview(string configId, [Query] string type, CancellationToken cancellationToken = default);
 
         /// <summary>下载生成的代码文件</summary>
         /// <param name="filePath">文件路径</param>
@@ -1273,7 +430,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/CodeGen/page")]
-        Task<IApiResponse<CodeGenConfigDtoPageResult>> Page3([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        Task<IApiResponse<CodeGenConfigDtoPageResult>> Page([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件分页获取记录</summary>
         /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
@@ -1292,7 +449,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/CodeGen/page/search")]
-        Task<IApiResponse<CodeGenConfigDtoPageResult>> Search5([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<CodeGenConfigDtoPageResult>> Search([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>批量创建新记录</summary>
         /// <remarks>根据提供的数据批量创建新记录。</remarks>
@@ -1312,7 +469,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/CodeGen/batch")]
-        Task<IApiResponse<int>> BatchPOST3([Body] IEnumerable<CreateCodeGenDto> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchPOST([Body] IEnumerable<CreateCodeGenDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>批量删除记录</summary>
         /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
@@ -1332,7 +489,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Delete("/api/CodeGen/batch")]
-        Task<IApiResponse<int>> BatchDELETE3([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchDELETE([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
 
         /// <summary>根据实体主键批量更新实体信息</summary>
         /// <remarks>根据实体主键批量更新实体信息</remarks>
@@ -1352,7 +509,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/CodeGen/batch")]
-        Task<IApiResponse<int>> BatchPUT3([Body] IEnumerable<UpdateCodeGenDto> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchPUT([Body] IEnumerable<UpdateCodeGenDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
         /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
@@ -1372,7 +529,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/CodeGen/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition3([Body] UpdateCodeGenDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> Updatebycondition([Body] UpdateCodeGenDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>获取回收站数据</summary>
         /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
@@ -1393,7 +550,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/CodeGen/recyclebin")]
-        Task<IApiResponse<CodeGenConfigDtoPageResult>> Recyclebin3([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        Task<IApiResponse<CodeGenConfigDtoPageResult>> Recyclebin([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件查询回收站数据</summary>
         /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
@@ -1412,7 +569,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/CodeGen/recyclebin/search")]
-        Task<IApiResponse<CodeGenConfigDtoPageResult>> Search6([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<CodeGenConfigDtoPageResult>> Search2([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>恢复回收站中的记录</summary>
         /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
@@ -1432,7 +589,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/CodeGen/recyclebin/{id}/restore")]
-        Task<IApiResponse<bool>> RestorePUT3(string id, CancellationToken cancellationToken = default);
+        Task<IApiResponse<bool>> RestorePUT(string id, CancellationToken cancellationToken = default);
 
         /// <summary>批量恢复回收站中的记录</summary>
         /// <remarks>根据提供的条件，批量将回收站中的记录恢复到正常状态。</remarks>
@@ -1452,7 +609,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/CodeGen/recyclebin/restore")]
-        Task<IApiResponse<int>> RestorePOST3([Body] FdCodeGenBooleanFuncExpression body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> RestorePOST([Body] FdCodeGenBooleanFuncExpression body, CancellationToken cancellationToken = default);
 
         /// <summary>永久删除回收站中的记录</summary>
         /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
@@ -1472,7 +629,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Delete("/api/CodeGen/recyclebin/{id}/permanent")]
-        Task<IApiResponse<bool>> PermanentDELETE3(string id, CancellationToken cancellationToken = default);
+        Task<IApiResponse<bool>> PermanentDELETE(string id, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件永久删除回收站中的记录</summary>
         /// <remarks>根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。</remarks>
@@ -1492,7 +649,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/CodeGen/recyclebin/permanent")]
-        Task<IApiResponse<int>> PermanentPOST3([Body] FdCodeGenBooleanFuncExpression body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> PermanentPOST([Body] FdCodeGenBooleanFuncExpression body, CancellationToken cancellationToken = default);
 
         /// <summary>获取所有记录</summary>
         /// <remarks>检索并返回系统中该类型的所有记录。</remarks>
@@ -1613,7 +770,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/CodeGenConfig/page")]
-        Task<IApiResponse<FdCodeGenConfigDtoPageResult>> Page4([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdCodeGenConfigDtoPageResult>> Page2([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件分页获取记录</summary>
         /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
@@ -1632,7 +789,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/CodeGenConfig/page/search")]
-        Task<IApiResponse<FdCodeGenConfigDtoPageResult>> Search7([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdCodeGenConfigDtoPageResult>> Search3([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>批量创建新记录</summary>
         /// <remarks>根据提供的数据批量创建新记录。</remarks>
@@ -1652,7 +809,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/CodeGenConfig/batch")]
-        Task<IApiResponse<int>> BatchPOST4([Body] IEnumerable<CreateFdCodeGenConfigDto> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchPOST2([Body] IEnumerable<CreateFdCodeGenConfigDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>批量删除记录</summary>
         /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
@@ -1672,7 +829,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Delete("/api/CodeGenConfig/batch")]
-        Task<IApiResponse<int>> BatchDELETE4([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchDELETE2([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
 
         /// <summary>根据实体主键批量更新实体信息</summary>
         /// <remarks>根据实体主键批量更新实体信息</remarks>
@@ -1692,7 +849,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/CodeGenConfig/batch")]
-        Task<IApiResponse<int>> BatchPUT4([Body] IEnumerable<UpdateFdCodeGenConfigDto> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchPUT2([Body] IEnumerable<UpdateFdCodeGenConfigDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
         /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
@@ -1712,7 +869,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/CodeGenConfig/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition4([Body] UpdateFdCodeGenConfigDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> Updatebycondition2([Body] UpdateFdCodeGenConfigDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>获取回收站数据</summary>
         /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
@@ -1733,7 +890,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/CodeGenConfig/recyclebin")]
-        Task<IApiResponse<FdCodeGenConfigDtoPageResult>> Recyclebin4([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdCodeGenConfigDtoPageResult>> Recyclebin2([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件查询回收站数据</summary>
         /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
@@ -1752,7 +909,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/CodeGenConfig/recyclebin/search")]
-        Task<IApiResponse<FdCodeGenConfigDtoPageResult>> Search8([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdCodeGenConfigDtoPageResult>> Search4([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>恢复回收站中的记录</summary>
         /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
@@ -1772,7 +929,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/CodeGenConfig/recyclebin/{id}/restore")]
-        Task<IApiResponse<bool>> RestorePUT4(string id, CancellationToken cancellationToken = default);
+        Task<IApiResponse<bool>> RestorePUT2(string id, CancellationToken cancellationToken = default);
 
         /// <summary>批量恢复回收站中的记录</summary>
         /// <remarks>根据提供的条件，批量将回收站中的记录恢复到正常状态。</remarks>
@@ -1792,7 +949,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/CodeGenConfig/recyclebin/restore")]
-        Task<IApiResponse<int>> RestorePOST4([Body] FdCodeGenConfigBooleanFuncExpression body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> RestorePOST2([Body] FdCodeGenConfigBooleanFuncExpression body, CancellationToken cancellationToken = default);
 
         /// <summary>永久删除回收站中的记录</summary>
         /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
@@ -1812,7 +969,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Delete("/api/CodeGenConfig/recyclebin/{id}/permanent")]
-        Task<IApiResponse<bool>> PermanentDELETE4(string id, CancellationToken cancellationToken = default);
+        Task<IApiResponse<bool>> PermanentDELETE2(string id, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件永久删除回收站中的记录</summary>
         /// <remarks>根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。</remarks>
@@ -1832,9 +989,9 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/CodeGenConfig/recyclebin/permanent")]
-        Task<IApiResponse<int>> PermanentPOST4([Body] FdCodeGenConfigBooleanFuncExpression body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> PermanentPOST2([Body] FdCodeGenConfigBooleanFuncExpression body, CancellationToken cancellationToken = default);
 
-        /// <summary>获取唯一的邮件配置</summary>
+        /// <summary>获取所有管理员用户 (自定义注释)</summary>
         /// <returns>
         /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
         /// <list type="table">
@@ -1849,10 +1006,12 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/EmailConfig/GetConfig")]
-        Task<IApiResponse<EmailConfigDto>> GetConfig(CancellationToken cancellationToken = default);
+        [Get("/api/admin/FdAdminUser")]
+        Task<IApiResponse<ICollection<FdAdminUserDto>>> FdAdminUserAll(CancellationToken cancellationToken = default);
 
-        /// <summary>更新唯一的邮件配置</summary>
+        /// <summary>创建新记录</summary>
+        /// <remarks>根据提供的数据创建一条新记录。</remarks>
+        /// <param name="body">创建记录所需的数据</param>
         /// <returns>
         /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
         /// <list type="table">
@@ -1867,8 +1026,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/EmailConfig/UpdateConfig")]
-        Task<IApiResponse<bool>> UpdateConfig([Body] UpdateEmailConfigDto body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdAdminUser")]
+        Task<IApiResponse<FdAdminUserDto>> FdAdminUserPOST([Body] CreateFdAdminUserDto body, CancellationToken cancellationToken = default);
 
         /// <summary>分页获取记录</summary>
         /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
@@ -1888,8 +1047,122 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/EmailConfig/page")]
-        Task<IApiResponse<EmailConfigDtoPageResult>> Page5([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        [Get("/api/admin/FdAdminUser/page")]
+        Task<IApiResponse<FdAdminUserDtoPageResult>> Page3([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+
+        /// <summary>删除记录</summary>
+        /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
+        /// <param name="id">要删除的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdAdminUser/{id}")]
+        Task<IApiResponse<bool>> FdAdminUserDELETE(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>根据ID获取记录</summary>
+        /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
+        /// <param name="id">记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdAdminUser/{id}")]
+        Task<IApiResponse<FdAdminUserDto>> FdAdminUserGET(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>更新现有记录</summary>
+        /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
+        /// <param name="id">要更新的记录的唯一标识符</param>
+        /// <param name="body">更新记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdAdminUser/{id}")]
+        Task<IApiResponse<FdAdminUserDto>> FdAdminUserPUT(string id, [Body] UpdateFdAdminUserDto body, CancellationToken cancellationToken = default);
+
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdAdminUser/{id}/reset-password")]
+        Task<IApiResponse<bool>> ResetPassword(string id, [Body] ResetPasswordDto body, CancellationToken cancellationToken = default);
+
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdAdminUser/getUserInfo")]
+        Task<IApiResponse<FdAdminUserDto>> GetUserInfo(CancellationToken cancellationToken = default);
+
+        /// <summary>解锁屏幕</summary>
+        /// <param name="body">包含密码的解锁信息</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdAdminUser/unlock")]
+        Task<IApiResponse<bool>> Unlock([Body] UnlockDto body, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件分页获取记录</summary>
         /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
@@ -1907,8 +1180,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/EmailConfig/page/search")]
-        Task<IApiResponse<EmailConfigDtoPageResult>> Search9([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdAdminUser/page/search")]
+        Task<IApiResponse<FdAdminUserDtoPageResult>> Search5([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>批量创建新记录</summary>
         /// <remarks>根据提供的数据批量创建新记录。</remarks>
@@ -1927,8 +1200,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/EmailConfig/batch")]
-        Task<IApiResponse<int>> BatchPOST5([Body] IEnumerable<CreateEmailConfigDto> body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdAdminUser/batch")]
+        Task<IApiResponse<int>> BatchPOST3([Body] IEnumerable<CreateFdAdminUserDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>批量删除记录</summary>
         /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
@@ -1947,7 +1220,641 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/EmailConfig/batch")]
+        [Delete("/api/admin/FdAdminUser/batch")]
+        Task<IApiResponse<int>> BatchDELETE3([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据实体主键批量更新实体信息</summary>
+        /// <remarks>根据实体主键批量更新实体信息</remarks>
+        /// <param name="body">批量更新实体数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdAdminUser/batch")]
+        Task<IApiResponse<int>> BatchPUT3([Body] IEnumerable<UpdateFdAdminUserDto> body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
+        /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
+        /// <param name="body">根据条件批量更新实体属性（部分字段更新）</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdAdminUser/batch/updatebycondition")]
+        Task<IApiResponse<int>> Updatebycondition3([Body] UpdateFdAdminUserDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>获取回收站数据</summary>
+        /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
+        /// <param name="pageIndex">页码 (从1开始)</param>
+        /// <param name="pageSize">页面大小</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdAdminUser/recyclebin")]
+        Task<IApiResponse<FdAdminUserDtoPageResult>> Recyclebin3([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件查询回收站数据</summary>
+        /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdAdminUser/recyclebin/search")]
+        Task<IApiResponse<FdAdminUserDtoPageResult>> Search6([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>恢复回收站中的记录</summary>
+        /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
+        /// <param name="id">要恢复的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdAdminUser/recyclebin/{id}/restore")]
+        Task<IApiResponse<bool>> RestorePUT3(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>批量恢复回收站中的记录</summary>
+        /// <remarks>根据提供的条件，批量将回收站中的记录恢复到正常状态。</remarks>
+        /// <param name="body">用于筛选要恢复记录的条件表达式</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdAdminUser/recyclebin/restore")]
+        Task<IApiResponse<int>> RestorePOST3([Body] FdAdminUserBooleanFuncExpression body, CancellationToken cancellationToken = default);
+
+        /// <summary>永久删除回收站中的记录</summary>
+        /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
+        /// <param name="id">要永久删除的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdAdminUser/recyclebin/{id}/permanent")]
+        Task<IApiResponse<bool>> PermanentDELETE3(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件永久删除回收站中的记录</summary>
+        /// <remarks>根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。</remarks>
+        /// <param name="body">用于筛选要永久删除记录的条件表达式</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdAdminUser/recyclebin/permanent")]
+        Task<IApiResponse<int>> PermanentPOST3([Body] FdAdminUserBooleanFuncExpression body, CancellationToken cancellationToken = default);
+
+        /// <summary>检查值是否在黑名单中</summary>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdBlacklists/check")]
+        Task<IApiResponse<bool>> Check([Query] string type, [Query] string value, CancellationToken cancellationToken = default);
+
+        /// <summary>获取所有记录</summary>
+        /// <remarks>检索并返回系统中该类型的所有记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdBlacklists")]
+        Task<IApiResponse<ICollection<FdBlacklistDto>>> FdBlacklistsAll(CancellationToken cancellationToken = default);
+
+        /// <summary>创建新记录</summary>
+        /// <remarks>根据提供的数据创建一条新记录。</remarks>
+        /// <param name="body">创建记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdBlacklists")]
+        Task<IApiResponse<FdBlacklistDto>> FdBlacklistsPOST([Body] CreateFdBlacklistDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据ID获取记录</summary>
+        /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
+        /// <param name="id">记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdBlacklists/{id}")]
+        Task<IApiResponse<FdBlacklistDto>> FdBlacklistsGET(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>更新现有记录</summary>
+        /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
+        /// <param name="id">要更新的记录的唯一标识符</param>
+        /// <param name="body">更新记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdBlacklists/{id}")]
+        Task<IApiResponse<FdBlacklistDto>> FdBlacklistsPUT(string id, [Body] UpdateFdBlacklistDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>删除记录</summary>
+        /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
+        /// <param name="id">要删除的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdBlacklists/{id}")]
+        Task<IApiResponse<bool>> FdBlacklistsDELETE(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>分页获取记录</summary>
+        /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
+        /// <param name="pageIndex">页码 (从1开始)</param>
+        /// <param name="pageSize">页面大小</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdBlacklists/page")]
+        Task<IApiResponse<FdBlacklistDtoPageResult>> Page4([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件分页获取记录</summary>
+        /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdBlacklists/page/search")]
+        Task<IApiResponse<FdBlacklistDtoPageResult>> Search7([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>批量创建新记录</summary>
+        /// <remarks>根据提供的数据批量创建新记录。</remarks>
+        /// <param name="body">创建记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdBlacklists/batch")]
+        Task<IApiResponse<int>> BatchPOST4([Body] IEnumerable<CreateFdBlacklistDto> body, CancellationToken cancellationToken = default);
+
+        /// <summary>批量删除记录</summary>
+        /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
+        /// <param name="body">要删除的记录ID列表</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdBlacklists/batch")]
+        Task<IApiResponse<int>> BatchDELETE4([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据实体主键批量更新实体信息</summary>
+        /// <remarks>根据实体主键批量更新实体信息</remarks>
+        /// <param name="body">批量更新实体数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdBlacklists/batch")]
+        Task<IApiResponse<int>> BatchPUT4([Body] IEnumerable<UpdateFdBlacklistDto> body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
+        /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
+        /// <param name="body">根据条件批量更新实体属性（部分字段更新）</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdBlacklists/batch/updatebycondition")]
+        Task<IApiResponse<int>> Updatebycondition4([Body] UpdateFdBlacklistDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>获取回收站数据</summary>
+        /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
+        /// <param name="pageIndex">页码 (从1开始)</param>
+        /// <param name="pageSize">页面大小</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdBlacklists/recyclebin")]
+        Task<IApiResponse<FdBlacklistDtoPageResult>> Recyclebin4([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件查询回收站数据</summary>
+        /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdBlacklists/recyclebin/search")]
+        Task<IApiResponse<FdBlacklistDtoPageResult>> Search8([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>恢复回收站中的记录</summary>
+        /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
+        /// <param name="id">要恢复的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdBlacklists/recyclebin/{id}/restore")]
+        Task<IApiResponse<bool>> RestorePUT4(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>批量恢复回收站中的记录</summary>
+        /// <remarks>根据提供的条件，批量将回收站中的记录恢复到正常状态。</remarks>
+        /// <param name="body">用于筛选要恢复记录的条件表达式</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdBlacklists/recyclebin/restore")]
+        Task<IApiResponse<int>> RestorePOST4([Body] FdBlacklistBooleanFuncExpression body, CancellationToken cancellationToken = default);
+
+        /// <summary>永久删除回收站中的记录</summary>
+        /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
+        /// <param name="id">要永久删除的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdBlacklists/recyclebin/{id}/permanent")]
+        Task<IApiResponse<bool>> PermanentDELETE4(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件永久删除回收站中的记录</summary>
+        /// <remarks>根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。</remarks>
+        /// <param name="body">用于筛选要永久删除记录的条件表达式</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdBlacklists/recyclebin/permanent")]
+        Task<IApiResponse<int>> PermanentPOST4([Body] FdBlacklistBooleanFuncExpression body, CancellationToken cancellationToken = default);
+
+        /// <summary>获取唯一的邮件配置</summary>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdEmailConfig/GetConfig")]
+        Task<IApiResponse<FdEmailConfigDto>> GetConfig(CancellationToken cancellationToken = default);
+
+        /// <summary>更新唯一的邮件配置</summary>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdEmailConfig/UpdateConfig")]
+        Task<IApiResponse<FdEmailConfigDto>> UpdateConfig([Body] FdUpdateEmailConfigDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>分页获取记录</summary>
+        /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
+        /// <param name="pageIndex">页码 (从1开始)</param>
+        /// <param name="pageSize">页面大小</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdEmailConfig/page")]
+        Task<IApiResponse<FdEmailConfigDtoPageResult>> Page5([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件分页获取记录</summary>
+        /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdEmailConfig/page/search")]
+        Task<IApiResponse<FdEmailConfigDtoPageResult>> Search9([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>批量创建新记录</summary>
+        /// <remarks>根据提供的数据批量创建新记录。</remarks>
+        /// <param name="body">创建记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdEmailConfig/batch")]
+        Task<IApiResponse<int>> BatchPOST5([Body] IEnumerable<FdCreateEmailConfigDto> body, CancellationToken cancellationToken = default);
+
+        /// <summary>批量删除记录</summary>
+        /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
+        /// <param name="body">要删除的记录ID列表</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdEmailConfig/batch")]
         Task<IApiResponse<int>> BatchDELETE5([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
 
         /// <summary>根据实体主键批量更新实体信息</summary>
@@ -1967,8 +1874,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/EmailConfig/batch")]
-        Task<IApiResponse<int>> BatchPUT5([Body] IEnumerable<UpdateEmailConfigDto> body, CancellationToken cancellationToken = default);
+        [Put("/api/admin/FdEmailConfig/batch")]
+        Task<IApiResponse<int>> BatchPUT5([Body] IEnumerable<FdUpdateEmailConfigDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>更新现有记录</summary>
         /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
@@ -1988,8 +1895,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/EmailConfig/{id}")]
-        Task<IApiResponse<EmailConfigDto>> EmailConfig(string id, [Body] UpdateEmailConfigDto body, CancellationToken cancellationToken = default);
+        [Put("/api/admin/FdEmailConfig/{id}")]
+        Task<IApiResponse<FdEmailConfigDto>> FdEmailConfig(string id, [Body] FdUpdateEmailConfigDto body, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
         /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
@@ -2008,8 +1915,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/EmailConfig/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition5([Body] UpdateEmailConfigDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+        [Put("/api/admin/FdEmailConfig/batch/updatebycondition")]
+        Task<IApiResponse<int>> Updatebycondition5([Body] FdUpdateEmailConfigDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>获取回收站数据</summary>
         /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
@@ -2029,8 +1936,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/EmailConfig/recyclebin")]
-        Task<IApiResponse<EmailConfigDtoPageResult>> Recyclebin5([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        [Get("/api/admin/FdEmailConfig/recyclebin")]
+        Task<IApiResponse<FdEmailConfigDtoPageResult>> Recyclebin5([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件查询回收站数据</summary>
         /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
@@ -2048,8 +1955,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/EmailConfig/recyclebin/search")]
-        Task<IApiResponse<EmailConfigDtoPageResult>> Search10([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdEmailConfig/recyclebin/search")]
+        Task<IApiResponse<FdEmailConfigDtoPageResult>> Search10([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>恢复回收站中的记录</summary>
         /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
@@ -2068,7 +1975,7 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/EmailConfig/recyclebin/{id}/restore")]
+        [Put("/api/admin/FdEmailConfig/recyclebin/{id}/restore")]
         Task<IApiResponse<bool>> RestorePUT5(string id, CancellationToken cancellationToken = default);
 
         /// <summary>批量恢复回收站中的记录</summary>
@@ -2088,7 +1995,7 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/EmailConfig/recyclebin/restore")]
+        [Post("/api/admin/FdEmailConfig/recyclebin/restore")]
         Task<IApiResponse<int>> RestorePOST5([Body] EmailConfigBooleanFuncExpression body, CancellationToken cancellationToken = default);
 
         /// <summary>永久删除回收站中的记录</summary>
@@ -2108,7 +2015,7 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/EmailConfig/recyclebin/{id}/permanent")]
+        [Delete("/api/admin/FdEmailConfig/recyclebin/{id}/permanent")]
         Task<IApiResponse<bool>> PermanentDELETE5(string id, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件永久删除回收站中的记录</summary>
@@ -2128,8 +2035,25 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/EmailConfig/recyclebin/permanent")]
+        [Post("/api/admin/FdEmailConfig/recyclebin/permanent")]
         Task<IApiResponse<int>> PermanentPOST5([Body] EmailConfigBooleanFuncExpression body, CancellationToken cancellationToken = default);
+
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdMenu/tree")]
+        Task<IApiResponse<ICollection<FdMenuDto>>> Tree2(CancellationToken cancellationToken = default);
 
         /// <summary>获取所有记录</summary>
         /// <remarks>检索并返回系统中该类型的所有记录。</remarks>
@@ -2147,8 +2071,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/menu-buttons")]
-        Task<IApiResponse<ICollection<FdMenuButtonDto>>> MenuButtonsAll(CancellationToken cancellationToken = default);
+        [Get("/api/admin/FdMenu")]
+        Task<IApiResponse<ICollection<FdMenuDto>>> FdMenuAll(CancellationToken cancellationToken = default);
 
         /// <summary>创建新记录</summary>
         /// <remarks>根据提供的数据创建一条新记录。</remarks>
@@ -2167,8 +2091,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/menu-buttons")]
-        Task<IApiResponse<FdMenuButtonDto>> MenuButtonsPOST([Body] CreateFdFdMenuButtonDto body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdMenu")]
+        Task<IApiResponse<FdMenuDto>> FdMenuPOST([Body] CreateFdMenuDto body, CancellationToken cancellationToken = default);
 
         /// <summary>根据ID获取记录</summary>
         /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
@@ -2187,8 +2111,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/menu-buttons/{id}")]
-        Task<IApiResponse<FdMenuButtonDto>> MenuButtonsGET(string id, CancellationToken cancellationToken = default);
+        [Get("/api/admin/FdMenu/{id}")]
+        Task<IApiResponse<FdMenuDto>> FdMenuGET(string id, CancellationToken cancellationToken = default);
 
         /// <summary>更新现有记录</summary>
         /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
@@ -2208,8 +2132,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/menu-buttons/{id}")]
-        Task<IApiResponse<FdMenuButtonDto>> MenuButtonsPUT(string id, [Body] UpdateFdFdMenuButtonDto body, CancellationToken cancellationToken = default);
+        [Put("/api/admin/FdMenu/{id}")]
+        Task<IApiResponse<FdMenuDto>> FdMenuPUT(string id, [Body] UpdateFdMenuDto body, CancellationToken cancellationToken = default);
 
         /// <summary>删除记录</summary>
         /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
@@ -2228,8 +2152,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/menu-buttons/{id}")]
-        Task<IApiResponse<bool>> MenuButtonsDELETE(string id, CancellationToken cancellationToken = default);
+        [Delete("/api/admin/FdMenu/{id}")]
+        Task<IApiResponse<bool>> FdMenuDELETE(string id, CancellationToken cancellationToken = default);
 
         /// <summary>分页获取记录</summary>
         /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
@@ -2249,8 +2173,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/menu-buttons/page")]
-        Task<IApiResponse<FdMenuButtonDtoPageResult>> Page6([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        [Get("/api/admin/FdMenu/page")]
+        Task<IApiResponse<FdMenuDtoPageResult>> Page6([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件分页获取记录</summary>
         /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
@@ -2268,8 +2192,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/menu-buttons/page/search")]
-        Task<IApiResponse<FdMenuButtonDtoPageResult>> Search11([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdMenu/page/search")]
+        Task<IApiResponse<FdMenuDtoPageResult>> Search11([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>批量创建新记录</summary>
         /// <remarks>根据提供的数据批量创建新记录。</remarks>
@@ -2288,8 +2212,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/menu-buttons/batch")]
-        Task<IApiResponse<int>> BatchPOST6([Body] IEnumerable<CreateFdFdMenuButtonDto> body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdMenu/batch")]
+        Task<IApiResponse<int>> BatchPOST6([Body] IEnumerable<CreateFdMenuDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>批量删除记录</summary>
         /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
@@ -2308,7 +2232,7 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/menu-buttons/batch")]
+        [Delete("/api/admin/FdMenu/batch")]
         Task<IApiResponse<int>> BatchDELETE6([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
 
         /// <summary>根据实体主键批量更新实体信息</summary>
@@ -2328,8 +2252,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/menu-buttons/batch")]
-        Task<IApiResponse<int>> BatchPUT6([Body] IEnumerable<UpdateFdFdMenuButtonDto> body, CancellationToken cancellationToken = default);
+        [Put("/api/admin/FdMenu/batch")]
+        Task<IApiResponse<int>> BatchPUT6([Body] IEnumerable<UpdateFdMenuDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
         /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
@@ -2348,8 +2272,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/menu-buttons/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition6([Body] UpdateFdFdMenuButtonDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+        [Put("/api/admin/FdMenu/batch/updatebycondition")]
+        Task<IApiResponse<int>> Updatebycondition6([Body] UpdateFdMenuDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>获取回收站数据</summary>
         /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
@@ -2369,8 +2293,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/menu-buttons/recyclebin")]
-        Task<IApiResponse<FdMenuButtonDtoPageResult>> Recyclebin6([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        [Get("/api/admin/FdMenu/recyclebin")]
+        Task<IApiResponse<FdMenuDtoPageResult>> Recyclebin6([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件查询回收站数据</summary>
         /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
@@ -2388,8 +2312,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/menu-buttons/recyclebin/search")]
-        Task<IApiResponse<FdMenuButtonDtoPageResult>> Search12([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdMenu/recyclebin/search")]
+        Task<IApiResponse<FdMenuDtoPageResult>> Search12([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>恢复回收站中的记录</summary>
         /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
@@ -2408,7 +2332,7 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/menu-buttons/recyclebin/{id}/restore")]
+        [Put("/api/admin/FdMenu/recyclebin/{id}/restore")]
         Task<IApiResponse<bool>> RestorePUT6(string id, CancellationToken cancellationToken = default);
 
         /// <summary>批量恢复回收站中的记录</summary>
@@ -2428,8 +2352,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/menu-buttons/recyclebin/restore")]
-        Task<IApiResponse<int>> RestorePOST6([Body] FdMenuButtonBooleanFuncExpression body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdMenu/recyclebin/restore")]
+        Task<IApiResponse<int>> RestorePOST6([Body] FdMenuBooleanFuncExpression body, CancellationToken cancellationToken = default);
 
         /// <summary>永久删除回收站中的记录</summary>
         /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
@@ -2448,7 +2372,7 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/menu-buttons/recyclebin/{id}/permanent")]
+        [Delete("/api/admin/FdMenu/recyclebin/{id}/permanent")]
         Task<IApiResponse<bool>> PermanentDELETE6(string id, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件永久删除回收站中的记录</summary>
@@ -2468,25 +2392,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/menu-buttons/recyclebin/permanent")]
-        Task<IApiResponse<int>> PermanentPOST6([Body] FdMenuButtonBooleanFuncExpression body, CancellationToken cancellationToken = default);
-
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/menus/tree")]
-        Task<IApiResponse<ICollection<MenuDto>>> Tree2(CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdMenu/recyclebin/permanent")]
+        Task<IApiResponse<int>> PermanentPOST6([Body] FdMenuBooleanFuncExpression body, CancellationToken cancellationToken = default);
 
         /// <summary>获取所有记录</summary>
         /// <remarks>检索并返回系统中该类型的所有记录。</remarks>
@@ -2504,8 +2411,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/menus")]
-        Task<IApiResponse<ICollection<MenuDto>>> MenusAll(CancellationToken cancellationToken = default);
+        [Get("/api/admin/FdMenuButtons")]
+        Task<IApiResponse<ICollection<FdMenuButtonDto>>> FdMenuButtonsAll(CancellationToken cancellationToken = default);
 
         /// <summary>创建新记录</summary>
         /// <remarks>根据提供的数据创建一条新记录。</remarks>
@@ -2524,8 +2431,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/menus")]
-        Task<IApiResponse<MenuDto>> MenusPOST([Body] CreateFdMenuDto body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdMenuButtons")]
+        Task<IApiResponse<FdMenuButtonDto>> FdMenuButtonsPOST([Body] CreateFdFdMenuButtonDto body, CancellationToken cancellationToken = default);
 
         /// <summary>根据ID获取记录</summary>
         /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
@@ -2544,8 +2451,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/menus/{id}")]
-        Task<IApiResponse<MenuDto>> MenusGET(string id, CancellationToken cancellationToken = default);
+        [Get("/api/admin/FdMenuButtons/{id}")]
+        Task<IApiResponse<FdMenuButtonDto>> FdMenuButtonsGET(string id, CancellationToken cancellationToken = default);
 
         /// <summary>更新现有记录</summary>
         /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
@@ -2565,8 +2472,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/menus/{id}")]
-        Task<IApiResponse<MenuDto>> MenusPUT(string id, [Body] UpdateFdMenuDto body, CancellationToken cancellationToken = default);
+        [Put("/api/admin/FdMenuButtons/{id}")]
+        Task<IApiResponse<FdMenuButtonDto>> FdMenuButtonsPUT(string id, [Body] UpdateFdFdMenuButtonDto body, CancellationToken cancellationToken = default);
 
         /// <summary>删除记录</summary>
         /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
@@ -2585,8 +2492,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/menus/{id}")]
-        Task<IApiResponse<bool>> MenusDELETE(string id, CancellationToken cancellationToken = default);
+        [Delete("/api/admin/FdMenuButtons/{id}")]
+        Task<IApiResponse<bool>> FdMenuButtonsDELETE(string id, CancellationToken cancellationToken = default);
 
         /// <summary>分页获取记录</summary>
         /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
@@ -2606,8 +2513,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/menus/page")]
-        Task<IApiResponse<MenuDtoPageResult>> Page7([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        [Get("/api/admin/FdMenuButtons/page")]
+        Task<IApiResponse<FdMenuButtonDtoPageResult>> Page7([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件分页获取记录</summary>
         /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
@@ -2625,8 +2532,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/menus/page/search")]
-        Task<IApiResponse<MenuDtoPageResult>> Search13([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdMenuButtons/page/search")]
+        Task<IApiResponse<FdMenuButtonDtoPageResult>> Search13([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>批量创建新记录</summary>
         /// <remarks>根据提供的数据批量创建新记录。</remarks>
@@ -2645,8 +2552,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/menus/batch")]
-        Task<IApiResponse<int>> BatchPOST7([Body] IEnumerable<CreateFdMenuDto> body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdMenuButtons/batch")]
+        Task<IApiResponse<int>> BatchPOST7([Body] IEnumerable<CreateFdFdMenuButtonDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>批量删除记录</summary>
         /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
@@ -2665,7 +2572,7 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/menus/batch")]
+        [Delete("/api/admin/FdMenuButtons/batch")]
         Task<IApiResponse<int>> BatchDELETE7([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
 
         /// <summary>根据实体主键批量更新实体信息</summary>
@@ -2685,8 +2592,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/menus/batch")]
-        Task<IApiResponse<int>> BatchPUT7([Body] IEnumerable<UpdateFdMenuDto> body, CancellationToken cancellationToken = default);
+        [Put("/api/admin/FdMenuButtons/batch")]
+        Task<IApiResponse<int>> BatchPUT7([Body] IEnumerable<UpdateFdFdMenuButtonDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
         /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
@@ -2705,8 +2612,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/menus/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition7([Body] UpdateFdMenuDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+        [Put("/api/admin/FdMenuButtons/batch/updatebycondition")]
+        Task<IApiResponse<int>> Updatebycondition7([Body] UpdateFdFdMenuButtonDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>获取回收站数据</summary>
         /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
@@ -2726,8 +2633,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/menus/recyclebin")]
-        Task<IApiResponse<MenuDtoPageResult>> Recyclebin7([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        [Get("/api/admin/FdMenuButtons/recyclebin")]
+        Task<IApiResponse<FdMenuButtonDtoPageResult>> Recyclebin7([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件查询回收站数据</summary>
         /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
@@ -2745,8 +2652,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/menus/recyclebin/search")]
-        Task<IApiResponse<MenuDtoPageResult>> Search14([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdMenuButtons/recyclebin/search")]
+        Task<IApiResponse<FdMenuButtonDtoPageResult>> Search14([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>恢复回收站中的记录</summary>
         /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
@@ -2765,7 +2672,7 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/menus/recyclebin/{id}/restore")]
+        [Put("/api/admin/FdMenuButtons/recyclebin/{id}/restore")]
         Task<IApiResponse<bool>> RestorePUT7(string id, CancellationToken cancellationToken = default);
 
         /// <summary>批量恢复回收站中的记录</summary>
@@ -2785,8 +2692,8 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/menus/recyclebin/restore")]
-        Task<IApiResponse<int>> RestorePOST7([Body] FdMenuBooleanFuncExpression body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdMenuButtons/recyclebin/restore")]
+        Task<IApiResponse<int>> RestorePOST7([Body] FdMenuButtonBooleanFuncExpression body, CancellationToken cancellationToken = default);
 
         /// <summary>永久删除回收站中的记录</summary>
         /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
@@ -2805,7 +2712,7 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/menus/recyclebin/{id}/permanent")]
+        [Delete("/api/admin/FdMenuButtons/recyclebin/{id}/permanent")]
         Task<IApiResponse<bool>> PermanentDELETE7(string id, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件永久删除回收站中的记录</summary>
@@ -2825,15 +2732,1449 @@ namespace Fastdotnet.Desktop.Api
         /// </list>
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/menus/recyclebin/permanent")]
-        Task<IApiResponse<int>> PermanentPOST7([Body] FdMenuBooleanFuncExpression body, CancellationToken cancellationToken = default);
+        [Post("/api/admin/FdMenuButtons/recyclebin/permanent")]
+        Task<IApiResponse<int>> PermanentPOST7([Body] FdMenuButtonBooleanFuncExpression body, CancellationToken cancellationToken = default);
 
-        /// <summary>获取所有权限，按模块分组，方便前端展示</summary>
+        /// <summary>获取所有记录</summary>
+        /// <remarks>检索并返回系统中该类型的所有记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdPermissions")]
+        Task<IApiResponse<ICollection<FdPermissionDto>>> FdPermissionsAll(CancellationToken cancellationToken = default);
+
+        /// <summary>创建新记录</summary>
+        /// <remarks>根据提供的数据创建一条新记录。</remarks>
+        /// <param name="body">创建记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdPermissions")]
+        Task<IApiResponse<FdPermissionDto>> FdPermissionsPOST([Body] CreateFdPermissionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据ID获取记录</summary>
+        /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
+        /// <param name="id">记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdPermissions/{id}")]
+        Task<IApiResponse<FdPermissionDto>> FdPermissionsGET(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>更新现有记录</summary>
+        /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
+        /// <param name="id">要更新的记录的唯一标识符</param>
+        /// <param name="body">更新记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdPermissions/{id}")]
+        Task<IApiResponse<FdPermissionDto>> FdPermissionsPUT(string id, [Body] UpdateFdPermissionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>删除记录</summary>
+        /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
+        /// <param name="id">要删除的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdPermissions/{id}")]
+        Task<IApiResponse<bool>> FdPermissionsDELETE(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>分页获取记录</summary>
+        /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
+        /// <param name="pageIndex">页码 (从1开始)</param>
+        /// <param name="pageSize">页面大小</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdPermissions/page")]
+        Task<IApiResponse<FdPermissionDtoPageResult>> Page8([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件分页获取记录</summary>
+        /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdPermissions/page/search")]
+        Task<IApiResponse<FdPermissionDtoPageResult>> Search15([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>批量创建新记录</summary>
+        /// <remarks>根据提供的数据批量创建新记录。</remarks>
+        /// <param name="body">创建记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdPermissions/batch")]
+        Task<IApiResponse<int>> BatchPOST8([Body] IEnumerable<CreateFdPermissionDto> body, CancellationToken cancellationToken = default);
+
+        /// <summary>批量删除记录</summary>
+        /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
+        /// <param name="body">要删除的记录ID列表</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdPermissions/batch")]
+        Task<IApiResponse<int>> BatchDELETE8([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据实体主键批量更新实体信息</summary>
+        /// <remarks>根据实体主键批量更新实体信息</remarks>
+        /// <param name="body">批量更新实体数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdPermissions/batch")]
+        Task<IApiResponse<int>> BatchPUT8([Body] IEnumerable<UpdateFdPermissionDto> body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
+        /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
+        /// <param name="body">根据条件批量更新实体属性（部分字段更新）</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdPermissions/batch/updatebycondition")]
+        Task<IApiResponse<int>> Updatebycondition8([Body] UpdateFdPermissionDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>获取回收站数据</summary>
+        /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
+        /// <param name="pageIndex">页码 (从1开始)</param>
+        /// <param name="pageSize">页面大小</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdPermissions/recyclebin")]
+        Task<IApiResponse<FdPermissionDtoPageResult>> Recyclebin8([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件查询回收站数据</summary>
+        /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdPermissions/recyclebin/search")]
+        Task<IApiResponse<FdPermissionDtoPageResult>> Search16([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>恢复回收站中的记录</summary>
+        /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
+        /// <param name="id">要恢复的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdPermissions/recyclebin/{id}/restore")]
+        Task<IApiResponse<bool>> RestorePUT8(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>批量恢复回收站中的记录</summary>
+        /// <remarks>根据提供的条件，批量将回收站中的记录恢复到正常状态。</remarks>
+        /// <param name="body">用于筛选要恢复记录的条件表达式</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdPermissions/recyclebin/restore")]
+        Task<IApiResponse<int>> RestorePOST8([Body] FdPermissionBooleanFuncExpression body, CancellationToken cancellationToken = default);
+
+        /// <summary>永久删除回收站中的记录</summary>
+        /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
+        /// <param name="id">要永久删除的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdPermissions/recyclebin/{id}/permanent")]
+        Task<IApiResponse<bool>> PermanentDELETE8(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件永久删除回收站中的记录</summary>
+        /// <remarks>根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。</remarks>
+        /// <param name="body">用于筛选要永久删除记录的条件表达式</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdPermissions/recyclebin/permanent")]
+        Task<IApiResponse<int>> PermanentPOST8([Body] FdPermissionBooleanFuncExpression body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据类型和键获取限流规则</summary>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdRatelimitRule/by-type-and-key")]
+        Task<IApiResponse<FdRateLimitRuleDto>> ByTypeAndKey([Query] string type, [Query] string key, CancellationToken cancellationToken = default);
+
+        /// <summary>检查是否触发限流</summary>
+        /// <remarks>
+        /// 注意：这个方法仅作演示用途。实际的限流检查应该在中间件中完成，
+        /// 而不是通过API调用。这里只是为了展示如何在控制器中使用仓储。
+        /// </remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdRatelimitRule/check")]
+        Task<IApiResponse<bool>> Check2([Query] string type, [Query] string key, CancellationToken cancellationToken = default);
+
+        /// <summary>获取所有记录</summary>
+        /// <remarks>检索并返回系统中该类型的所有记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdRatelimitRule")]
+        Task<IApiResponse<ICollection<FdRateLimitRuleDto>>> FdRatelimitRuleAll(CancellationToken cancellationToken = default);
+
+        /// <summary>创建新记录</summary>
+        /// <remarks>根据提供的数据创建一条新记录。</remarks>
+        /// <param name="body">创建记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdRatelimitRule")]
+        Task<IApiResponse<FdRateLimitRuleDto>> FdRatelimitRulePOST([Body] CreateFdRateLimitRuleDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据ID获取记录</summary>
+        /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
+        /// <param name="id">记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdRatelimitRule/{id}")]
+        Task<IApiResponse<FdRateLimitRuleDto>> FdRatelimitRuleGET(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>更新现有记录</summary>
+        /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
+        /// <param name="id">要更新的记录的唯一标识符</param>
+        /// <param name="body">更新记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdRatelimitRule/{id}")]
+        Task<IApiResponse<FdRateLimitRuleDto>> FdRatelimitRulePUT(string id, [Body] UpdateFdRateLimitRuleDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>删除记录</summary>
+        /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
+        /// <param name="id">要删除的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdRatelimitRule/{id}")]
+        Task<IApiResponse<bool>> FdRatelimitRuleDELETE(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>分页获取记录</summary>
+        /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
+        /// <param name="pageIndex">页码 (从1开始)</param>
+        /// <param name="pageSize">页面大小</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdRatelimitRule/page")]
+        Task<IApiResponse<FdRateLimitRuleDtoPageResult>> Page9([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件分页获取记录</summary>
+        /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdRatelimitRule/page/search")]
+        Task<IApiResponse<FdRateLimitRuleDtoPageResult>> Search17([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>批量创建新记录</summary>
+        /// <remarks>根据提供的数据批量创建新记录。</remarks>
+        /// <param name="body">创建记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdRatelimitRule/batch")]
+        Task<IApiResponse<int>> BatchPOST9([Body] IEnumerable<CreateFdRateLimitRuleDto> body, CancellationToken cancellationToken = default);
+
+        /// <summary>批量删除记录</summary>
+        /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
+        /// <param name="body">要删除的记录ID列表</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdRatelimitRule/batch")]
+        Task<IApiResponse<int>> BatchDELETE9([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据实体主键批量更新实体信息</summary>
+        /// <remarks>根据实体主键批量更新实体信息</remarks>
+        /// <param name="body">批量更新实体数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdRatelimitRule/batch")]
+        Task<IApiResponse<int>> BatchPUT9([Body] IEnumerable<UpdateFdRateLimitRuleDto> body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
+        /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
+        /// <param name="body">根据条件批量更新实体属性（部分字段更新）</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdRatelimitRule/batch/updatebycondition")]
+        Task<IApiResponse<int>> Updatebycondition9([Body] UpdateFdRateLimitRuleDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>获取回收站数据</summary>
+        /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
+        /// <param name="pageIndex">页码 (从1开始)</param>
+        /// <param name="pageSize">页面大小</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdRatelimitRule/recyclebin")]
+        Task<IApiResponse<FdRateLimitRuleDtoPageResult>> Recyclebin9([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件查询回收站数据</summary>
+        /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdRatelimitRule/recyclebin/search")]
+        Task<IApiResponse<FdRateLimitRuleDtoPageResult>> Search18([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>恢复回收站中的记录</summary>
+        /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
+        /// <param name="id">要恢复的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdRatelimitRule/recyclebin/{id}/restore")]
+        Task<IApiResponse<bool>> RestorePUT9(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>批量恢复回收站中的记录</summary>
+        /// <remarks>根据提供的条件，批量将回收站中的记录恢复到正常状态。</remarks>
+        /// <param name="body">用于筛选要恢复记录的条件表达式</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdRatelimitRule/recyclebin/restore")]
+        Task<IApiResponse<int>> RestorePOST9([Body] FdRateLimitRuleBooleanFuncExpression body, CancellationToken cancellationToken = default);
+
+        /// <summary>永久删除回收站中的记录</summary>
+        /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
+        /// <param name="id">要永久删除的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdRatelimitRule/recyclebin/{id}/permanent")]
+        Task<IApiResponse<bool>> PermanentDELETE9(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件永久删除回收站中的记录</summary>
+        /// <remarks>根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。</remarks>
+        /// <param name="body">用于筛选要永久删除记录的条件表达式</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdRatelimitRule/recyclebin/permanent")]
+        Task<IApiResponse<int>> PermanentPOST9([Body] FdRateLimitRuleBooleanFuncExpression body, CancellationToken cancellationToken = default);
+
+        /// <summary>获取所有记录</summary>
+        /// <remarks>检索并返回系统中该类型的所有记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdRoles")]
+        Task<IApiResponse<ICollection<FdRoleDto>>> FdRolesAll(CancellationToken cancellationToken = default);
+
+        /// <summary>创建新记录</summary>
+        /// <remarks>根据提供的数据创建一条新记录。</remarks>
+        /// <param name="body">创建记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdRoles")]
+        Task<IApiResponse<FdRoleDto>> FdRolesPOST([Body] CreateFdRoleDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据ID获取记录</summary>
+        /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
+        /// <param name="id">记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdRoles/{id}")]
+        Task<IApiResponse<FdRoleDto>> FdRolesGET(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>更新现有记录</summary>
+        /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
+        /// <param name="id">要更新的记录的唯一标识符</param>
+        /// <param name="body">更新记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdRoles/{id}")]
+        Task<IApiResponse<FdRoleDto>> FdRolesPUT(string id, [Body] UpdateFdRoleDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>删除记录</summary>
+        /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
+        /// <param name="id">要删除的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdRoles/{id}")]
+        Task<IApiResponse<bool>> FdRolesDELETE(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>分页获取记录</summary>
+        /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
+        /// <param name="pageIndex">页码 (从1开始)</param>
+        /// <param name="pageSize">页面大小</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdRoles/page")]
+        Task<IApiResponse<FdRoleDtoPageResult>> Page10([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdRoles/{id}/permissions")]
+        Task<IApiResponse<ICollection<string>>> PermissionsAll(string id, CancellationToken cancellationToken = default);
+
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdRoles/{id}/permissions")]
+        Task<IApiResponse<bool>> Permissions(string id, [Body] AssignPermissionsDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件分页获取记录</summary>
+        /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdRoles/page/search")]
+        Task<IApiResponse<FdRoleDtoPageResult>> Search19([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>批量创建新记录</summary>
+        /// <remarks>根据提供的数据批量创建新记录。</remarks>
+        /// <param name="body">创建记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdRoles/batch")]
+        Task<IApiResponse<int>> BatchPOST10([Body] IEnumerable<CreateFdRoleDto> body, CancellationToken cancellationToken = default);
+
+        /// <summary>批量删除记录</summary>
+        /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
+        /// <param name="body">要删除的记录ID列表</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdRoles/batch")]
+        Task<IApiResponse<int>> BatchDELETE10([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据实体主键批量更新实体信息</summary>
+        /// <remarks>根据实体主键批量更新实体信息</remarks>
+        /// <param name="body">批量更新实体数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdRoles/batch")]
+        Task<IApiResponse<int>> BatchPUT10([Body] IEnumerable<UpdateFdRoleDto> body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
+        /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
+        /// <param name="body">根据条件批量更新实体属性（部分字段更新）</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdRoles/batch/updatebycondition")]
+        Task<IApiResponse<int>> Updatebycondition10([Body] UpdateFdRoleDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>获取回收站数据</summary>
+        /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
+        /// <param name="pageIndex">页码 (从1开始)</param>
+        /// <param name="pageSize">页面大小</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdRoles/recyclebin")]
+        Task<IApiResponse<FdRoleDtoPageResult>> Recyclebin10([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件查询回收站数据</summary>
+        /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdRoles/recyclebin/search")]
+        Task<IApiResponse<FdRoleDtoPageResult>> Search20([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>恢复回收站中的记录</summary>
+        /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
+        /// <param name="id">要恢复的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdRoles/recyclebin/{id}/restore")]
+        Task<IApiResponse<bool>> RestorePUT10(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>批量恢复回收站中的记录</summary>
+        /// <remarks>根据提供的条件，批量将回收站中的记录恢复到正常状态。</remarks>
+        /// <param name="body">用于筛选要恢复记录的条件表达式</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdRoles/recyclebin/restore")]
+        Task<IApiResponse<int>> RestorePOST10([Body] FdRoleBooleanFuncExpression body, CancellationToken cancellationToken = default);
+
+        /// <summary>永久删除回收站中的记录</summary>
+        /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
+        /// <param name="id">要永久删除的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdRoles/recyclebin/{id}/permanent")]
+        Task<IApiResponse<bool>> PermanentDELETE10(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件永久删除回收站中的记录</summary>
+        /// <remarks>根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。</remarks>
+        /// <param name="body">用于筛选要永久删除记录的条件表达式</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdRoles/recyclebin/permanent")]
+        Task<IApiResponse<int>> PermanentPOST10([Body] FdRoleBooleanFuncExpression body, CancellationToken cancellationToken = default);
+
+        /// <summary>[Public] 获取所有系统配置项（用于客户端初始化）</summary>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/permissions")]
-        Task<IApiResponse<IDictionary<string, ICollection<PermissionDto>>>> PermissionsGET(CancellationToken cancellationToken = default);
+        [Get("/api/admin/FdSystemInfoConfig/public/all")]
+        Task<IApiResponse<IDictionary<string, object>>> All(CancellationToken cancellationToken = default);
+
+        /// <summary>获取所有记录</summary>
+        /// <remarks>检索并返回系统中该类型的所有记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdSystemInfoConfig")]
+        Task<IApiResponse<ICollection<FdSystemInfoConfigDto>>> FdSystemInfoConfigAll(CancellationToken cancellationToken = default);
+
+        /// <summary>创建新记录</summary>
+        /// <remarks>根据提供的数据创建一条新记录。</remarks>
+        /// <param name="body">创建记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdSystemInfoConfig")]
+        Task<IApiResponse<FdSystemInfoConfigDto>> FdSystemInfoConfigPOST([Body] FdSystemInfoConfigDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据ID获取记录</summary>
+        /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
+        /// <param name="id">记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdSystemInfoConfig/{id}")]
+        Task<IApiResponse<FdSystemInfoConfigDto>> FdSystemInfoConfigGET(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>更新现有记录</summary>
+        /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
+        /// <param name="id">要更新的记录的唯一标识符</param>
+        /// <param name="body">更新记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdSystemInfoConfig/{id}")]
+        Task<IApiResponse<FdSystemInfoConfigDto>> FdSystemInfoConfigPUT(string id, [Body] FdSystemInfoConfigDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>删除记录</summary>
+        /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
+        /// <param name="id">要删除的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdSystemInfoConfig/{id}")]
+        Task<IApiResponse<bool>> FdSystemInfoConfigDELETE(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>分页获取记录</summary>
+        /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
+        /// <param name="pageIndex">页码 (从1开始)</param>
+        /// <param name="pageSize">页面大小</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdSystemInfoConfig/page")]
+        Task<IApiResponse<FdSystemInfoConfigDtoPageResult>> Page11([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件分页获取记录</summary>
+        /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdSystemInfoConfig/page/search")]
+        Task<IApiResponse<FdSystemInfoConfigDtoPageResult>> Search21([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>批量创建新记录</summary>
+        /// <remarks>根据提供的数据批量创建新记录。</remarks>
+        /// <param name="body">创建记录所需的数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdSystemInfoConfig/batch")]
+        Task<IApiResponse<int>> BatchPOST11([Body] IEnumerable<FdSystemInfoConfigDto> body, CancellationToken cancellationToken = default);
+
+        /// <summary>批量删除记录</summary>
+        /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
+        /// <param name="body">要删除的记录ID列表</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdSystemInfoConfig/batch")]
+        Task<IApiResponse<int>> BatchDELETE11([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据实体主键批量更新实体信息</summary>
+        /// <remarks>根据实体主键批量更新实体信息</remarks>
+        /// <param name="body">批量更新实体数据</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdSystemInfoConfig/batch")]
+        Task<IApiResponse<int>> BatchPUT11([Body] IEnumerable<FdSystemInfoConfigDto> body, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
+        /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
+        /// <param name="body">根据条件批量更新实体属性（部分字段更新）</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdSystemInfoConfig/batch/updatebycondition")]
+        Task<IApiResponse<int>> Updatebycondition11([Body] FdSystemInfoConfigDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>获取回收站数据</summary>
+        /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
+        /// <param name="pageIndex">页码 (从1开始)</param>
+        /// <param name="pageSize">页面大小</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Get("/api/admin/FdSystemInfoConfig/recyclebin")]
+        Task<IApiResponse<FdSystemInfoConfigDtoPageResult>> Recyclebin11([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件查询回收站数据</summary>
+        /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdSystemInfoConfig/recyclebin/search")]
+        Task<IApiResponse<FdSystemInfoConfigDtoPageResult>> Search22([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+
+        /// <summary>恢复回收站中的记录</summary>
+        /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
+        /// <param name="id">要恢复的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Put("/api/admin/FdSystemInfoConfig/recyclebin/{id}/restore")]
+        Task<IApiResponse<bool>> RestorePUT11(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>批量恢复回收站中的记录</summary>
+        /// <remarks>根据提供的条件，批量将回收站中的记录恢复到正常状态。</remarks>
+        /// <param name="body">用于筛选要恢复记录的条件表达式</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdSystemInfoConfig/recyclebin/restore")]
+        Task<IApiResponse<int>> RestorePOST11([Body] SystemInfoConfigBooleanFuncExpression body, CancellationToken cancellationToken = default);
+
+        /// <summary>永久删除回收站中的记录</summary>
+        /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
+        /// <param name="id">要永久删除的记录的唯一标识符</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Delete("/api/admin/FdSystemInfoConfig/recyclebin/{id}/permanent")]
+        Task<IApiResponse<bool>> PermanentDELETE11(string id, CancellationToken cancellationToken = default);
+
+        /// <summary>根据条件永久删除回收站中的记录</summary>
+        /// <remarks>根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。</remarks>
+        /// <param name="body">用于筛选要永久删除记录的条件表达式</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>200</term>
+        /// <description>OK</description>
+        /// </item>
+        /// </list>
+        /// </returns>
+        [Headers("Accept: text/plain, application/json, text/json")]
+        [Post("/api/admin/FdSystemInfoConfig/recyclebin/permanent")]
+        Task<IApiResponse<int>> PermanentPOST11([Body] SystemInfoConfigBooleanFuncExpression body, CancellationToken cancellationToken = default);
 
         /// <summary>扫描插件目录以发现所有可用插件</summary>
         /// <returns>
@@ -2958,760 +4299,6 @@ namespace Fastdotnet.Desktop.Api
         [Get("/api/Plugin/active/{pluginId}")]
         Task<IApiResponse> Active2(string pluginId, CancellationToken cancellationToken = default);
 
-        /// <summary>根据类型和键获取限流规则</summary>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/RateLimitRules/by-type-and-key")]
-        Task<IApiResponse<FdRateLimitRuleDto>> ByTypeAndKey([Query] string type, [Query] string key, CancellationToken cancellationToken = default);
-
-        /// <summary>检查是否触发限流</summary>
-        /// <remarks>
-        /// 注意：这个方法仅作演示用途。实际的限流检查应该在中间件中完成，
-        /// 而不是通过API调用。这里只是为了展示如何在控制器中使用仓储。
-        /// </remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/RateLimitRules/check")]
-        Task<IApiResponse<bool>> Check2([Query] string type, [Query] string key, CancellationToken cancellationToken = default);
-
-        /// <summary>获取所有记录</summary>
-        /// <remarks>检索并返回系统中该类型的所有记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/RateLimitRules")]
-        Task<IApiResponse<ICollection<FdRateLimitRuleDto>>> RateLimitRulesAll(CancellationToken cancellationToken = default);
-
-        /// <summary>创建新记录</summary>
-        /// <remarks>根据提供的数据创建一条新记录。</remarks>
-        /// <param name="body">创建记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/RateLimitRules")]
-        Task<IApiResponse<FdRateLimitRuleDto>> RateLimitRulesPOST([Body] CreateFdRateLimitRuleDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据ID获取记录</summary>
-        /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
-        /// <param name="id">记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/RateLimitRules/{id}")]
-        Task<IApiResponse<FdRateLimitRuleDto>> RateLimitRulesGET(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>更新现有记录</summary>
-        /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
-        /// <param name="id">要更新的记录的唯一标识符</param>
-        /// <param name="body">更新记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/RateLimitRules/{id}")]
-        Task<IApiResponse<FdRateLimitRuleDto>> RateLimitRulesPUT(string id, [Body] UpdateFdRateLimitRuleDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>删除记录</summary>
-        /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
-        /// <param name="id">要删除的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/RateLimitRules/{id}")]
-        Task<IApiResponse<bool>> RateLimitRulesDELETE(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>分页获取记录</summary>
-        /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
-        /// <param name="pageIndex">页码 (从1开始)</param>
-        /// <param name="pageSize">页面大小</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/RateLimitRules/page")]
-        Task<IApiResponse<FdRateLimitRuleDtoPageResult>> Page8([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件分页获取记录</summary>
-        /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/RateLimitRules/page/search")]
-        Task<IApiResponse<FdRateLimitRuleDtoPageResult>> Search15([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>批量创建新记录</summary>
-        /// <remarks>根据提供的数据批量创建新记录。</remarks>
-        /// <param name="body">创建记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/RateLimitRules/batch")]
-        Task<IApiResponse<int>> BatchPOST8([Body] IEnumerable<CreateFdRateLimitRuleDto> body, CancellationToken cancellationToken = default);
-
-        /// <summary>批量删除记录</summary>
-        /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
-        /// <param name="body">要删除的记录ID列表</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/RateLimitRules/batch")]
-        Task<IApiResponse<int>> BatchDELETE8([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据实体主键批量更新实体信息</summary>
-        /// <remarks>根据实体主键批量更新实体信息</remarks>
-        /// <param name="body">批量更新实体数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/RateLimitRules/batch")]
-        Task<IApiResponse<int>> BatchPUT8([Body] IEnumerable<UpdateFdRateLimitRuleDto> body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
-        /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
-        /// <param name="body">根据条件批量更新实体属性（部分字段更新）</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/RateLimitRules/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition8([Body] UpdateFdRateLimitRuleDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>获取回收站数据</summary>
-        /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
-        /// <param name="pageIndex">页码 (从1开始)</param>
-        /// <param name="pageSize">页面大小</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/RateLimitRules/recyclebin")]
-        Task<IApiResponse<FdRateLimitRuleDtoPageResult>> Recyclebin8([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件查询回收站数据</summary>
-        /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/RateLimitRules/recyclebin/search")]
-        Task<IApiResponse<FdRateLimitRuleDtoPageResult>> Search16([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>恢复回收站中的记录</summary>
-        /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
-        /// <param name="id">要恢复的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/RateLimitRules/recyclebin/{id}/restore")]
-        Task<IApiResponse<bool>> RestorePUT8(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>批量恢复回收站中的记录</summary>
-        /// <remarks>根据提供的条件，批量将回收站中的记录恢复到正常状态。</remarks>
-        /// <param name="body">用于筛选要恢复记录的条件表达式</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/RateLimitRules/recyclebin/restore")]
-        Task<IApiResponse<int>> RestorePOST8([Body] FdRateLimitRuleBooleanFuncExpression body, CancellationToken cancellationToken = default);
-
-        /// <summary>永久删除回收站中的记录</summary>
-        /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
-        /// <param name="id">要永久删除的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/RateLimitRules/recyclebin/{id}/permanent")]
-        Task<IApiResponse<bool>> PermanentDELETE8(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件永久删除回收站中的记录</summary>
-        /// <remarks>根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。</remarks>
-        /// <param name="body">用于筛选要永久删除记录的条件表达式</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/RateLimitRules/recyclebin/permanent")]
-        Task<IApiResponse<int>> PermanentPOST8([Body] FdRateLimitRuleBooleanFuncExpression body, CancellationToken cancellationToken = default);
-
-        /// <summary>获取所有记录</summary>
-        /// <remarks>检索并返回系统中该类型的所有记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/roles")]
-        Task<IApiResponse<ICollection<FdRoleDto>>> RolesAll(CancellationToken cancellationToken = default);
-
-        /// <summary>创建新记录</summary>
-        /// <remarks>根据提供的数据创建一条新记录。</remarks>
-        /// <param name="body">创建记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/roles")]
-        Task<IApiResponse<FdRoleDto>> RolesPOST([Body] CreateFdRoleDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据ID获取记录</summary>
-        /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
-        /// <param name="id">记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/roles/{id}")]
-        Task<IApiResponse<FdRoleDto>> RolesGET(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>更新现有记录</summary>
-        /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
-        /// <param name="id">要更新的记录的唯一标识符</param>
-        /// <param name="body">更新记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/roles/{id}")]
-        Task<IApiResponse<FdRoleDto>> RolesPUT(string id, [Body] UpdateFdRoleDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>删除记录</summary>
-        /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
-        /// <param name="id">要删除的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/roles/{id}")]
-        Task<IApiResponse<bool>> RolesDELETE(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>分页获取记录</summary>
-        /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
-        /// <param name="pageIndex">页码 (从1开始)</param>
-        /// <param name="pageSize">页面大小</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/roles/page")]
-        Task<IApiResponse<FdRoleDtoPageResult>> Page9([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
-
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/roles/{id}/permissions")]
-        Task<IApiResponse<ICollection<string>>> PermissionsAll(string id, CancellationToken cancellationToken = default);
-
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/roles/{id}/permissions")]
-        Task<IApiResponse<bool>> PermissionsPOST(string id, [Body] AssignPermissionsDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件分页获取记录</summary>
-        /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/roles/page/search")]
-        Task<IApiResponse<FdRoleDtoPageResult>> Search17([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>批量创建新记录</summary>
-        /// <remarks>根据提供的数据批量创建新记录。</remarks>
-        /// <param name="body">创建记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/roles/batch")]
-        Task<IApiResponse<int>> BatchPOST9([Body] IEnumerable<CreateFdRoleDto> body, CancellationToken cancellationToken = default);
-
-        /// <summary>批量删除记录</summary>
-        /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
-        /// <param name="body">要删除的记录ID列表</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/roles/batch")]
-        Task<IApiResponse<int>> BatchDELETE9([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据实体主键批量更新实体信息</summary>
-        /// <remarks>根据实体主键批量更新实体信息</remarks>
-        /// <param name="body">批量更新实体数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/roles/batch")]
-        Task<IApiResponse<int>> BatchPUT9([Body] IEnumerable<UpdateFdRoleDto> body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
-        /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
-        /// <param name="body">根据条件批量更新实体属性（部分字段更新）</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/roles/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition9([Body] UpdateFdRoleDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>获取回收站数据</summary>
-        /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
-        /// <param name="pageIndex">页码 (从1开始)</param>
-        /// <param name="pageSize">页面大小</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/roles/recyclebin")]
-        Task<IApiResponse<FdRoleDtoPageResult>> Recyclebin9([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件查询回收站数据</summary>
-        /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/roles/recyclebin/search")]
-        Task<IApiResponse<FdRoleDtoPageResult>> Search18([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>恢复回收站中的记录</summary>
-        /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
-        /// <param name="id">要恢复的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/roles/recyclebin/{id}/restore")]
-        Task<IApiResponse<bool>> RestorePUT9(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>批量恢复回收站中的记录</summary>
-        /// <remarks>根据提供的条件，批量将回收站中的记录恢复到正常状态。</remarks>
-        /// <param name="body">用于筛选要恢复记录的条件表达式</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/roles/recyclebin/restore")]
-        Task<IApiResponse<int>> RestorePOST9([Body] FdRoleBooleanFuncExpression body, CancellationToken cancellationToken = default);
-
-        /// <summary>永久删除回收站中的记录</summary>
-        /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
-        /// <param name="id">要永久删除的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/roles/recyclebin/{id}/permanent")]
-        Task<IApiResponse<bool>> PermanentDELETE9(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件永久删除回收站中的记录</summary>
-        /// <remarks>根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。</remarks>
-        /// <param name="body">用于筛选要永久删除记录的条件表达式</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/roles/recyclebin/permanent")]
-        Task<IApiResponse<int>> PermanentPOST9([Body] FdRoleBooleanFuncExpression body, CancellationToken cancellationToken = default);
-
         /// <summary>获取当前服务器的唯一机器指纹</summary>
         /// <returns>
         /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
@@ -3729,353 +4316,6 @@ namespace Fastdotnet.Desktop.Api
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/System/machine-fingerprint")]
         Task<IApiResponse<string>> MachineFingerprint(CancellationToken cancellationToken = default);
-
-        /// <summary>[Public] 获取所有系统配置项（用于客户端初始化）</summary>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/SystemConfig/public/all")]
-        Task<IApiResponse<IDictionary<string, object>>> All(CancellationToken cancellationToken = default);
-
-        /// <summary>获取所有记录</summary>
-        /// <remarks>检索并返回系统中该类型的所有记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/SystemConfig")]
-        Task<IApiResponse<ICollection<FdSystemInfoConfigDto>>> SystemConfigAll(CancellationToken cancellationToken = default);
-
-        /// <summary>创建新记录</summary>
-        /// <remarks>根据提供的数据创建一条新记录。</remarks>
-        /// <param name="body">创建记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/SystemConfig")]
-        Task<IApiResponse<FdSystemInfoConfigDto>> SystemConfigPOST([Body] FdSystemInfoConfigDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据ID获取记录</summary>
-        /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
-        /// <param name="id">记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/SystemConfig/{id}")]
-        Task<IApiResponse<FdSystemInfoConfigDto>> SystemConfigGET(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>更新现有记录</summary>
-        /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
-        /// <param name="id">要更新的记录的唯一标识符</param>
-        /// <param name="body">更新记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/SystemConfig/{id}")]
-        Task<IApiResponse<FdSystemInfoConfigDto>> SystemConfigPUT(string id, [Body] FdSystemInfoConfigDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>删除记录</summary>
-        /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
-        /// <param name="id">要删除的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/SystemConfig/{id}")]
-        Task<IApiResponse<bool>> SystemConfigDELETE(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>分页获取记录</summary>
-        /// <remarks>根据页码和页面大小，分页检索记录。</remarks>
-        /// <param name="pageIndex">页码 (从1开始)</param>
-        /// <param name="pageSize">页面大小</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/SystemConfig/page")]
-        Task<IApiResponse<FdSystemInfoConfigDtoPageResult>> Page10([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件分页获取记录</summary>
-        /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/SystemConfig/page/search")]
-        Task<IApiResponse<FdSystemInfoConfigDtoPageResult>> Search19([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>批量创建新记录</summary>
-        /// <remarks>根据提供的数据批量创建新记录。</remarks>
-        /// <param name="body">创建记录所需的数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/SystemConfig/batch")]
-        Task<IApiResponse<int>> BatchPOST10([Body] IEnumerable<FdSystemInfoConfigDto> body, CancellationToken cancellationToken = default);
-
-        /// <summary>批量删除记录</summary>
-        /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
-        /// <param name="body">要删除的记录ID列表</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/SystemConfig/batch")]
-        Task<IApiResponse<int>> BatchDELETE10([Body] IEnumerable<string> body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据实体主键批量更新实体信息</summary>
-        /// <remarks>根据实体主键批量更新实体信息</remarks>
-        /// <param name="body">批量更新实体数据</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/SystemConfig/batch")]
-        Task<IApiResponse<int>> BatchPUT10([Body] IEnumerable<FdSystemInfoConfigDto> body, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
-        /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
-        /// <param name="body">根据条件批量更新实体属性（部分字段更新）</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/SystemConfig/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition10([Body] FdSystemInfoConfigDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>获取回收站数据</summary>
-        /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
-        /// <param name="pageIndex">页码 (从1开始)</param>
-        /// <param name="pageSize">页面大小</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Get("/api/admin/SystemConfig/recyclebin")]
-        Task<IApiResponse<FdSystemInfoConfigDtoPageResult>> Recyclebin10([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件查询回收站数据</summary>
-        /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/SystemConfig/recyclebin/search")]
-        Task<IApiResponse<FdSystemInfoConfigDtoPageResult>> Search20([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
-
-        /// <summary>恢复回收站中的记录</summary>
-        /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>
-        /// <param name="id">要恢复的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Put("/api/admin/SystemConfig/recyclebin/{id}/restore")]
-        Task<IApiResponse<bool>> RestorePUT10(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>批量恢复回收站中的记录</summary>
-        /// <remarks>根据提供的条件，批量将回收站中的记录恢复到正常状态。</remarks>
-        /// <param name="body">用于筛选要恢复记录的条件表达式</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/SystemConfig/recyclebin/restore")]
-        Task<IApiResponse<int>> RestorePOST10([Body] SystemConfigBooleanFuncExpression body, CancellationToken cancellationToken = default);
-
-        /// <summary>永久删除回收站中的记录</summary>
-        /// <remarks>根据提供的ID，将已软删除的记录从数据库中永久移除。</remarks>
-        /// <param name="id">要永久删除的记录的唯一标识符</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Delete("/api/admin/SystemConfig/recyclebin/{id}/permanent")]
-        Task<IApiResponse<bool>> PermanentDELETE10(string id, CancellationToken cancellationToken = default);
-
-        /// <summary>根据条件永久删除回收站中的记录</summary>
-        /// <remarks>根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。</remarks>
-        /// <param name="body">用于筛选要永久删除记录的条件表达式</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the <see cref="IApiResponse"/> instance containing the result:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>200</term>
-        /// <description>OK</description>
-        /// </item>
-        /// </list>
-        /// </returns>
-        [Headers("Accept: text/plain, application/json, text/json")]
-        [Post("/api/admin/SystemConfig/recyclebin/permanent")]
-        Task<IApiResponse<int>> PermanentPOST10([Body] SystemConfigBooleanFuncExpression body, CancellationToken cancellationToken = default);
 
 
     }

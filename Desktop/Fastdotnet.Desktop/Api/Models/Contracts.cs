@@ -25,56 +25,14 @@ namespace Fastdotnet.Desktop.Api.Models
     
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class AdminUserDto
+    public enum ActivationStatusDto
     {
 
-        [System.Text.Json.Serialization.JsonPropertyName("Id")]
-        public string Id { get; set; }
+        _0 = 0,
 
-        [System.Text.Json.Serialization.JsonPropertyName("Username")]
-        public string Username { get; set; }
+        _1 = 1,
 
-        [System.Text.Json.Serialization.JsonPropertyName("Name")]
-        public string Name { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Email")]
-        public string Email { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Phone")]
-        public string Phone { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsActive")]
-        public bool IsActive { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("LastLoginTime")]
-        public System.DateTimeOffset? LastLoginTime { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("LastLoginIp")]
-        public string LastLoginIp { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("CreateTime")]
-        public System.DateTimeOffset CreateTime { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Avatar")]
-        public string Avatar { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("RoleIds")]
-        public System.Collections.Generic.ICollection<string> RoleIds { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Buttons")]
-        public System.Collections.Generic.ICollection<string> Buttons { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class AdminUserDtoPageResult
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
-        public PageInfo PageInfo { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Items")]
-        public System.Collections.Generic.ICollection<AdminUserDto> Items { get; set; }
+        _2 = 2,
 
     }
 
@@ -131,14 +89,14 @@ namespace Fastdotnet.Desktop.Api.Models
         [System.Text.Json.Serialization.JsonPropertyName("TableName")]
         public string TableName { get; set; }
 
+        [System.Text.Json.Serialization.JsonPropertyName("TableComment")]
+        public string TableComment { get; set; }
+
         [System.Text.Json.Serialization.JsonPropertyName("EntityName")]
         public string EntityName { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("NameSpace")]
         public string NameSpace { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("AuthorName")]
-        public string AuthorName { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("GenerateType")]
         public string GenerateType { get; set; }
@@ -175,57 +133,6 @@ namespace Fastdotnet.Desktop.Api.Models
 
         [System.Text.Json.Serialization.JsonPropertyName("Items")]
         public System.Collections.Generic.ICollection<CodeGenConfigDto> Items { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class CodeGenInput
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("ConfigId")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(100)]
-        public string ConfigId { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("TableName")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(100)]
-        public string TableName { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("BusName")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(100)]
-        public string BusName { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("NameSpace")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(200)]
-        public string NameSpace { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("AuthorName")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(50)]
-        public string AuthorName { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("GenerateType")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(50)]
-        public string GenerateType { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("GenerateMenu")]
-        public bool GenerateMenu { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("MenuIcon")]
-        [System.ComponentModel.DataAnnotations.StringLength(100)]
-        public string MenuIcon { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("MenuPid")]
-        [System.ComponentModel.DataAnnotations.StringLength(100)]
-        public string MenuPid { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("PagePath")]
-        [System.ComponentModel.DataAnnotations.StringLength(200)]
-        public string PagePath { get; set; }
 
     }
 
@@ -269,36 +176,8 @@ namespace Fastdotnet.Desktop.Api.Models
         [System.Text.Json.Serialization.JsonPropertyName("IsIgnore")]
         public bool IsIgnore { get; set; }
 
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class CreateAdminUserDto
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("Username")]
-        [System.ComponentModel.DataAnnotations.Required]
-        [System.ComponentModel.DataAnnotations.StringLength(50, MinimumLength = 3)]
-        public string Username { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Password")]
-        [System.ComponentModel.DataAnnotations.Required]
-        [System.ComponentModel.DataAnnotations.StringLength(100, MinimumLength = 6)]
-        public string Password { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Name")]
-        public string Name { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Email")]
-        public string Email { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Phone")]
-        public string Phone { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsActive")]
-        public bool IsActive { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Avatar")]
-        public string Avatar { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("ShowColumnName")]
+        public string ShowColumnName { get; set; }
 
     }
 
@@ -310,6 +189,9 @@ namespace Fastdotnet.Desktop.Api.Models
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.StringLength(100)]
         public string TableName { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TableComment")]
+        public string TableComment { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("NameSpace")]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -345,39 +227,33 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class CreateEmailConfigDto
+    public partial class CreateFdAdminUserDto
     {
 
-        [System.Text.Json.Serialization.JsonPropertyName("Host")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(200)]
-        public string Host { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Port")]
-        public int Port { get; set; }
-
         [System.Text.Json.Serialization.JsonPropertyName("Username")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.StringLength(50, MinimumLength = 3)]
         public string Username { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Password")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.StringLength(100, MinimumLength = 6)]
         public string Password { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("SenderEmail")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(200)]
-        public string SenderEmail { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("SenderName")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(200)]
-        public string SenderName { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Email")]
+        public string Email { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("EnableSsl")]
-        public bool EnableSsl { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Phone")]
+        public string Phone { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsActive")]
+        public bool IsActive { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Avatar")]
+        public string Avatar { get; set; }
 
     }
 
@@ -515,30 +391,8 @@ namespace Fastdotnet.Desktop.Api.Models
         [System.Text.Json.Serialization.JsonPropertyName("OrderNo")]
         public int OrderNo { get; set; }
 
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class CreateFdRateLimitRuleDto
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("Type")]
-        [System.ComponentModel.DataAnnotations.Required]
-        public string Type { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Key")]
-        [System.ComponentModel.DataAnnotations.Required]
-        public string Key { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("PermitLimit")]
-        [System.ComponentModel.DataAnnotations.Range(1, 2147483647)]
-        public int PermitLimit { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("WindowSeconds")]
-        [System.ComponentModel.DataAnnotations.Range(1, 2147483647)]
-        public int WindowSeconds { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Description")]
-        public string Description { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("ShowColumnName")]
+        public string ShowColumnName { get; set; }
 
     }
 
@@ -639,6 +493,63 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CreateFdPermissionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(255)]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Code")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(255)]
+        public string Code { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        [System.ComponentModel.DataAnnotations.StringLength(255)]
+        public string Description { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Module")]
+        [System.ComponentModel.DataAnnotations.StringLength(255)]
+        public string Module { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        public long Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Category")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(50)]
+        public string Category { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CreateFdRateLimitRuleDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Key")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Key { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PermitLimit")]
+        [System.ComponentModel.DataAnnotations.Range(1, 2147483647)]
+        public int PermitLimit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("WindowSeconds")]
+        [System.ComponentModel.DataAnnotations.Range(1, 2147483647)]
+        public int WindowSeconds { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        public string Description { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class CreateFdRoleDto
     {
 
@@ -652,6 +563,214 @@ namespace Fastdotnet.Desktop.Api.Models
         [System.Text.Json.Serialization.JsonPropertyName("Category")]
         [System.ComponentModel.DataAnnotations.Required]
         public string Category { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CreateGiftRecordDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseId")]
+        public long PurchaseId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Reason")]
+        public string Reason { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("GivenBy")]
+        public string GivenBy { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("GivenTime")]
+        public System.DateTimeOffset GivenTime { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CreateMarketplacePluginDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PluginId")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string PluginId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        public string Description { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Version")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Version { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Author")]
+        public string Author { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Category")]
+        public string Category { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("SupportedLicenseMode")]
+        public SupportedLicenseModeDto SupportedLicenseMode { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Price_SingleServer")]
+        [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
+        public double Price_SingleServer { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Price_MultiServer")]
+        [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
+        public double Price_MultiServer { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsActive")]
+        public bool IsActive { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsFree")]
+        public bool IsFree { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("DownloadUrl")]
+        public string DownloadUrl { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("DocumentationUrl")]
+        public string DocumentationUrl { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CreateOnlinePaymentDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseId")]
+        public long PurchaseId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Channel")]
+        public OnlinePaymentChannelDto Channel { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TransactionId")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string TransactionId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ThirdPartyData")]
+        public string ThirdPartyData { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CallbackData")]
+        public string CallbackData { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PaidTime")]
+        public System.DateTimeOffset? PaidTime { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CreatePointRedemptionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseId")]
+        public long PurchaseId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PointsUsed")]
+        [System.ComponentModel.DataAnnotations.Range(1, 2147483647)]
+        public int PointsUsed { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UserId")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string UserId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("RedeemedTime")]
+        public System.DateTimeOffset RedeemedTime { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CreateUserPluginActivationDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseId")]
+        public long PurchaseId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PluginId")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string PluginId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UserId")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string UserId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LicenseType")]
+        public LicenseTypeDto LicenseType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ActivationDate")]
+        public System.DateTimeOffset ActivationDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("MachineFingerprint")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string MachineFingerprint { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IpAddress")]
+        public string IpAddress { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Hostname")]
+        public string Hostname { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LicenseFileContent")]
+        public string LicenseFileContent { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Status")]
+        public ActivationStatusDto Status { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("DeactivationDate")]
+        public System.DateTimeOffset? DeactivationDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("RevocationReason")]
+        public string RevocationReason { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Notes")]
+        public string Notes { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CreateUserPluginPurchaseDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("UserId")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string UserId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PluginId")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string PluginId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("OrderId")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string OrderId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LicenseType")]
+        public LicenseTypeDto LicenseType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Quantity")]
+        [System.ComponentModel.DataAnnotations.Range(1, 2147483647)]
+        public int Quantity { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchasePrice")]
+        [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
+        public double PurchasePrice { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Currency")]
+        public string Currency { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseDate")]
+        public System.DateTimeOffset PurchaseDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UpdatesUntil")]
+        public System.DateTimeOffset UpdatesUntil { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsLifetime")]
+        public bool IsLifetime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Status")]
+        public PurchaseStatusDto Status { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Notes")]
+        public string Notes { get; set; }
 
     }
 
@@ -682,48 +801,6 @@ namespace Fastdotnet.Desktop.Api.Models
 
         [System.Text.Json.Serialization.JsonPropertyName("CanReduce")]
         public bool CanReduce { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class EmailConfigDto
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("Id")]
-        public string Id { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Host")]
-        public string Host { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Port")]
-        public int Port { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Username")]
-        public string Username { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Password")]
-        public string Password { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("SenderEmail")]
-        public string SenderEmail { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("SenderName")]
-        public string SenderName { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("EnableSsl")]
-        public bool EnableSsl { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class EmailConfigDtoPageResult
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
-        public PageInfo PageInfo { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Items")]
-        public System.Collections.Generic.ICollection<EmailConfigDto> Items { get; set; }
 
     }
 
@@ -949,6 +1026,60 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdAdminUserDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Username")]
+        public string Username { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Email")]
+        public string Email { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Phone")]
+        public string Phone { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsActive")]
+        public bool IsActive { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LastLoginTime")]
+        public System.DateTimeOffset? LastLoginTime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LastLoginIp")]
+        public string LastLoginIp { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreateTime")]
+        public System.DateTimeOffset CreateTime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Avatar")]
+        public string Avatar { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("RoleIds")]
+        public System.Collections.Generic.ICollection<string> RoleIds { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Buttons")]
+        public System.Collections.Generic.ICollection<string> Buttons { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdAdminUserDtoPageResult
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
+        public PageInfo PageInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<FdAdminUserDto> Items { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class FdBlacklistBooleanFuncExpression
     {
 
@@ -1007,9 +1138,6 @@ namespace Fastdotnet.Desktop.Api.Models
 
         [System.Text.Json.Serialization.JsonPropertyName("UpdateTime")]
         public System.DateTimeOffset? UpdateTime { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsDeleted")]
-        public bool IsDeleted { get; set; }
 
     }
 
@@ -1176,6 +1304,9 @@ namespace Fastdotnet.Desktop.Api.Models
         [System.Text.Json.Serialization.JsonPropertyName("OrderNo")]
         public int OrderNo { get; set; }
 
+        [System.Text.Json.Serialization.JsonPropertyName("ShowColumnName")]
+        public string ShowColumnName { get; set; }
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -1187,6 +1318,85 @@ namespace Fastdotnet.Desktop.Api.Models
 
         [System.Text.Json.Serialization.JsonPropertyName("Items")]
         public System.Collections.Generic.ICollection<FdCodeGenConfigDto> Items { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdCreateEmailConfigDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Host")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string Host { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Port")]
+        public int Port { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Username")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string Username { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Password")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string Password { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("SenderEmail")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string SenderEmail { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("SenderName")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string SenderName { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("EnableSsl")]
+        public bool EnableSsl { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdEmailConfigDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Host")]
+        public string Host { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Port")]
+        public int Port { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Username")]
+        public string Username { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Password")]
+        public string Password { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("SenderEmail")]
+        public string SenderEmail { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("SenderName")]
+        public string SenderName { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("EnableSsl")]
+        public bool EnableSsl { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdEmailConfigDtoPageResult
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
+        public PageInfo PageInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<FdEmailConfigDto> Items { get; set; }
 
     }
 
@@ -1247,6 +1457,216 @@ namespace Fastdotnet.Desktop.Api.Models
 
         [System.Text.Json.Serialization.JsonPropertyName("CanReduce")]
         public bool CanReduce { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdMenuButtonDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Code")]
+        public string Code { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        public string Description { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("MenuCode")]
+        public string MenuCode { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Module")]
+        public string Module { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Category")]
+        public string Category { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Sort")]
+        public int Sort { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PermissionCode")]
+        public string PermissionCode { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsEnabled")]
+        public bool IsEnabled { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdMenuButtonDtoPageResult
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
+        public PageInfo PageInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<FdMenuButtonDto> Items { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdMenuDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Code")]
+        public string Code { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Path")]
+        public string Path { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Icon")]
+        public string Icon { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ParentCode")]
+        public string ParentCode { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Sort")]
+        public int Sort { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        public MenuType Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Module")]
+        public string Module { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Category")]
+        public string Category { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsExternal")]
+        public bool IsExternal { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ExternalUrl")]
+        public string ExternalUrl { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsEnabled")]
+        public bool IsEnabled { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PermissionCode")]
+        public string PermissionCode { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Component")]
+        public string Component { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PluginId")]
+        public string PluginId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsHide")]
+        public bool IsHide { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsKeepAlive")]
+        public bool IsKeepAlive { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsAffix")]
+        public bool IsAffix { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsIframe")]
+        public bool IsIframe { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsFdMicroApp")]
+        public bool IsFdMicroApp { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("isLink")]
+        public bool IsLink { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Children")]
+        public System.Collections.Generic.ICollection<FdMenuDto> Children { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdMenuDtoPageResult
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
+        public PageInfo PageInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<FdMenuDto> Items { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdPermissionBooleanFuncExpression
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        public string Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NodeType")]
+        public ExpressionType NodeType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Parameters")]
+        public System.Collections.Generic.ICollection<ParameterExpression> Parameters { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Body")]
+        public Expression Body { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ReturnType")]
+        public string ReturnType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TailCall")]
+        public bool TailCall { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CanReduce")]
+        public bool CanReduce { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdPermissionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Code")]
+        public string Code { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        public string Description { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Module")]
+        public string Module { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        public long Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Category")]
+        public string Category { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreatedAt")]
+        public System.DateTimeOffset CreatedAt { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UpdatedAt")]
+        public System.DateTimeOffset? UpdatedAt { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdPermissionDtoPageResult
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
+        public PageInfo PageInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<FdPermissionDto> Items { get; set; }
 
     }
 
@@ -1361,6 +1781,235 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdRoleDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Code")]
+        public string Code { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        public string Description { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Category")]
+        public string Category { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsSystem")]
+        public bool IsSystem { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreateTime")]
+        public System.DateTimeOffset CreateTime { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdRoleDtoPageResult
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
+        public PageInfo PageInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<FdRoleDto> Items { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdSystemInfoConfigDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Code")]
+        public string Code { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Value")]
+        public object Value { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        public string Description { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsSystem")]
+        public bool IsSystem { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdSystemInfoConfigDtoBatchUpdateByConditionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Query")]
+        public PageQueryByConditionDto Query { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
+        public FdSystemInfoConfigDto Dto { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdSystemInfoConfigDtoPageResult
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
+        public PageInfo PageInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<FdSystemInfoConfigDto> Items { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdUpdateEmailConfigDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Host")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string Host { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Port")]
+        public int Port { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Username")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string Username { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Password")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string Password { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("SenderEmail")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string SenderEmail { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("SenderName")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(200)]
+        public string SenderName { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("EnableSsl")]
+        public bool EnableSsl { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class FdUpdateEmailConfigDtoBatchUpdateByConditionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Query")]
+        public PageQueryByConditionDto Query { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
+        public FdUpdateEmailConfigDto Dto { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class GenerateLicenseRequestDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PluginId")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string PluginId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("MachineFingerprint")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string MachineFingerprint { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class GiftRecordBooleanFuncExpression
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        public string Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NodeType")]
+        public ExpressionType NodeType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Parameters")]
+        public System.Collections.Generic.ICollection<ParameterExpression> Parameters { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Body")]
+        public Expression Body { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ReturnType")]
+        public string ReturnType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TailCall")]
+        public bool TailCall { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CanReduce")]
+        public bool CanReduce { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class GiftRecordDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseId")]
+        public long PurchaseId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Reason")]
+        public string Reason { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("GivenBy")]
+        public string GivenBy { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("GivenTime")]
+        public System.DateTimeOffset GivenTime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreateTime")]
+        public System.DateTimeOffset CreateTime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UpdateTime")]
+        public System.DateTimeOffset UpdateTime { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class GiftRecordDtoPageResult
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
+        public PageInfo PageInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<GiftRecordDto> Items { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum LicenseTypeDto
+    {
+
+        _0 = 0,
+
+        _1 = 1,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class LoginDto
     {
 
@@ -1390,137 +2039,103 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class FdMenuButtonDto
+    public partial class MarketplacePluginBooleanFuncExpression
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        public string Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NodeType")]
+        public ExpressionType NodeType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Parameters")]
+        public System.Collections.Generic.ICollection<ParameterExpression> Parameters { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Body")]
+        public Expression Body { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ReturnType")]
+        public string ReturnType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TailCall")]
+        public bool TailCall { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CanReduce")]
+        public bool CanReduce { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class MarketplacePluginDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Id")]
         public string Id { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Name")]
-        public string Name { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("PluginId")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string PluginId { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Code")]
-        public string Code { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Name { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Description")]
         public string Description { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("MenuCode")]
-        public string MenuCode { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Version")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Version { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Module")]
-        public string Module { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Author")]
+        public string Author { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Category")]
         public string Category { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Sort")]
-        public int Sort { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("SupportedLicenseMode")]
+        public SupportedLicenseModeDto SupportedLicenseMode { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("PermissionCode")]
-        public string PermissionCode { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Price_SingleServer")]
+        [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
+        public double Price_SingleServer { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("IsEnabled")]
-        public bool IsEnabled { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Price_MultiServer")]
+        [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
+        public double Price_MultiServer { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsActive")]
+        public bool IsActive { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsFree")]
+        public bool IsFree { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("DownloadUrl")]
+        public string DownloadUrl { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("DocumentationUrl")]
+        public string DocumentationUrl { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreateTime")]
+        public System.DateTimeOffset CreateTime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UpdateTime")]
+        public System.DateTimeOffset UpdateTime { get; set; }
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class FdMenuButtonDtoPageResult
+    public partial class MarketplacePluginDtoPageResult
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
         public PageInfo PageInfo { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Items")]
-        public System.Collections.Generic.ICollection<FdMenuButtonDto> Items { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class MenuDto
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("Id")]
-        public string Id { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Name")]
-        public string Name { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Code")]
-        public string Code { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Path")]
-        public string Path { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Icon")]
-        public string Icon { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("ParentCode")]
-        public string ParentCode { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Sort")]
-        public int Sort { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Type")]
-        public MenuType Type { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Module")]
-        public string Module { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Category")]
-        public string Category { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsExternal")]
-        public bool IsExternal { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("ExternalUrl")]
-        public string ExternalUrl { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsEnabled")]
-        public bool IsEnabled { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("PermissionCode")]
-        public string PermissionCode { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Component")]
-        public string Component { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("PluginId")]
-        public string PluginId { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsHide")]
-        public bool IsHide { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsKeepAlive")]
-        public bool IsKeepAlive { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsAffix")]
-        public bool IsAffix { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsIframe")]
-        public bool IsIframe { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsFdMicroApp")]
-        public bool IsFdMicroApp { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("isLink")]
-        public bool IsLink { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Children")]
-        public System.Collections.Generic.ICollection<MenuDto> Children { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class MenuDtoPageResult
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
-        public PageInfo PageInfo { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Items")]
-        public System.Collections.Generic.ICollection<MenuDto> Items { get; set; }
+        public System.Collections.Generic.ICollection<MarketplacePluginDto> Items { get; set; }
 
     }
 
@@ -1531,6 +2146,120 @@ namespace Fastdotnet.Desktop.Api.Models
         _0 = 0,
 
         _1 = 1,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class OfflineActivationRequestDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PluginId")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string PluginId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("MachineFingerprint")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string MachineFingerprint { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("RequestTimestamp")]
+        public System.DateTimeOffset RequestTimestamp { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ClientInfo")]
+        public string ClientInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Nonce")]
+        public string Nonce { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class OnlinePaymentBooleanFuncExpression
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        public string Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NodeType")]
+        public ExpressionType NodeType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Parameters")]
+        public System.Collections.Generic.ICollection<ParameterExpression> Parameters { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Body")]
+        public Expression Body { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ReturnType")]
+        public string ReturnType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TailCall")]
+        public bool TailCall { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CanReduce")]
+        public bool CanReduce { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum OnlinePaymentChannelDto
+    {
+
+        _0 = 0,
+
+        _1 = 1,
+
+        _2 = 2,
+
+        _3 = 3,
+
+        _4 = 4,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class OnlinePaymentDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseId")]
+        public long PurchaseId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Channel")]
+        public OnlinePaymentChannelDto Channel { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TransactionId")]
+        public string TransactionId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ThirdPartyData")]
+        public string ThirdPartyData { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CallbackData")]
+        public string CallbackData { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PaidTime")]
+        public System.DateTimeOffset? PaidTime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreateTime")]
+        public System.DateTimeOffset CreateTime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UpdateTime")]
+        public System.DateTimeOffset UpdateTime { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class OnlinePaymentDtoPageResult
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
+        public PageInfo PageInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<OnlinePaymentDto> Items { get; set; }
 
     }
 
@@ -1601,7 +2330,58 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class PermissionDto
+    public partial class PluginATestBooleanFuncExpression
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        public string Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NodeType")]
+        public ExpressionType NodeType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Parameters")]
+        public System.Collections.Generic.ICollection<ParameterExpression> Parameters { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Body")]
+        public Expression Body { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ReturnType")]
+        public string ReturnType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TailCall")]
+        public bool TailCall { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CanReduce")]
+        public bool CanReduce { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class PluginATestCreateDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        public string Description { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TestValue")]
+        public int TestValue { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsEnabled")]
+        public bool IsEnabled { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Creator")]
+        public string Creator { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class PluginATestDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Id")]
@@ -1610,20 +2390,71 @@ namespace Fastdotnet.Desktop.Api.Models
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
         public string Name { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Code")]
-        public string Code { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        public string Description { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TestValue")]
+        public int TestValue { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsEnabled")]
+        public bool IsEnabled { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Creator")]
+        public string Creator { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreateTime")]
+        public System.DateTimeOffset CreateTime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UpdateTime")]
+        public System.DateTimeOffset? UpdateTime { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class PluginATestDtoPageResult
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
+        public PageInfo PageInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<PluginATestDto> Items { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class PluginATestUpdateDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Description")]
         public string Description { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Module")]
-        public string Module { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("TestValue")]
+        public int TestValue { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Type")]
-        public string Type { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("IsEnabled")]
+        public bool IsEnabled { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Category")]
-        public string Category { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Creator")]
+        public string Creator { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class PluginATestUpdateDtoBatchUpdateByConditionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Query")]
+        public PageQueryByConditionDto Query { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
+        public PluginATestUpdateDto Dto { get; set; }
 
     }
 
@@ -1661,67 +2492,7 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ResetPasswordDto
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("NewPassword")]
-        [System.ComponentModel.DataAnnotations.Required]
-        [System.ComponentModel.DataAnnotations.StringLength(100, MinimumLength = 6)]
-        public string NewPassword { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class FdRoleDto
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("Id")]
-        public string Id { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Name")]
-        public string Name { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Code")]
-        public string Code { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Description")]
-        public string Description { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Category")]
-        public string Category { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsSystem")]
-        public bool IsSystem { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("CreateTime")]
-        public System.DateTimeOffset CreateTime { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class FdRoleDtoPageResult
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
-        public PageInfo PageInfo { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Items")]
-        public System.Collections.Generic.ICollection<FdRoleDto> Items { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class SendRegistrationCodeDto
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("Email")]
-        [System.ComponentModel.DataAnnotations.Required]
-        public string Email { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class SystemConfigBooleanFuncExpression
+    public partial class PointRedemptionBooleanFuncExpression
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Type")]
@@ -1751,50 +2522,119 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class FdSystemInfoConfigDto
+    public partial class PointRedemptionDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Id")]
         public string Id { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Name")]
-        public string Name { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseId")]
+        public long PurchaseId { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Code")]
-        public string Code { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("PointsUsed")]
+        public int PointsUsed { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Value")]
-        public object Value { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("UserId")]
+        public string UserId { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Description")]
-        public string Description { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsSystem")]
-        public bool IsSystem { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("RedeemedTime")]
+        public System.DateTimeOffset RedeemedTime { get; set; }
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class FdSystemInfoConfigDtoBatchUpdateByConditionDto
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("Query")]
-        public PageQueryByConditionDto Query { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
-        public FdSystemInfoConfigDto Dto { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class FdSystemInfoConfigDtoPageResult
+    public partial class PointRedemptionDtoPageResult
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
         public PageInfo PageInfo { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Items")]
-        public System.Collections.Generic.ICollection<FdSystemInfoConfigDto> Items { get; set; }
+        public System.Collections.Generic.ICollection<PointRedemptionDto> Items { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum PurchaseStatusDto
+    {
+
+        _0 = 0,
+
+        _1 = 1,
+
+        _2 = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ResetPasswordDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("NewPassword")]
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.StringLength(100, MinimumLength = 6)]
+        public string NewPassword { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class SendMessageRequest
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Message")]
+        public string Message { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class SendRegistrationCodeDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Email")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Email { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum SupportedLicenseModeDto
+    {
+
+        _0 = 0,
+
+        _1 = 1,
+
+        _2 = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class SystemInfoConfigBooleanFuncExpression
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        public string Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NodeType")]
+        public ExpressionType NodeType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Parameters")]
+        public System.Collections.Generic.ICollection<ParameterExpression> Parameters { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Body")]
+        public Expression Body { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ReturnType")]
+        public string ReturnType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TailCall")]
+        public bool TailCall { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CanReduce")]
+        public bool CanReduce { get; set; }
 
     }
 
@@ -1839,39 +2679,6 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateAdminUserDto
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("Name")]
-        public string Name { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Email")]
-        public string Email { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Phone")]
-        public string Phone { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("IsActive")]
-        public bool? IsActive { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Avatar")]
-        public string Avatar { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateAdminUserDtoBatchUpdateByConditionDto
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("Query")]
-        public PageQueryByConditionDto Query { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
-        public UpdateAdminUserDto Dto { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class UpdateCodeGenDto
     {
 
@@ -1879,6 +2686,9 @@ namespace Fastdotnet.Desktop.Api.Models
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.StringLength(100)]
         public string TableName { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TableComment")]
+        public string TableComment { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("EntityName")]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -1931,51 +2741,35 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateEmailConfigDto
+    public partial class UpdateFdAdminUserDto
     {
 
-        [System.Text.Json.Serialization.JsonPropertyName("Host")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(200)]
-        public string Host { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Port")]
-        public int Port { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Email")]
+        public string Email { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Username")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(200)]
-        public string Username { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Phone")]
+        public string Phone { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("Password")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(200)]
-        public string Password { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("IsActive")]
+        public bool? IsActive { get; set; }
 
-        [System.Text.Json.Serialization.JsonPropertyName("SenderEmail")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(200)]
-        public string SenderEmail { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("SenderName")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [System.ComponentModel.DataAnnotations.StringLength(200)]
-        public string SenderName { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("EnableSsl")]
-        public bool EnableSsl { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("Avatar")]
+        public string Avatar { get; set; }
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateEmailConfigDtoBatchUpdateByConditionDto
+    public partial class UpdateFdAdminUserDtoBatchUpdateByConditionDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Query")]
         public PageQueryByConditionDto Query { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Dto")]
-        public UpdateEmailConfigDto Dto { get; set; }
+        public UpdateFdAdminUserDto Dto { get; set; }
 
     }
 
@@ -2014,6 +2808,9 @@ namespace Fastdotnet.Desktop.Api.Models
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class UpdateFdCodeGenConfigDto
     {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public long Id { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("CodeGenId")]
         public long CodeGenId { get; set; }
@@ -2125,6 +2922,9 @@ namespace Fastdotnet.Desktop.Api.Models
         [System.Text.Json.Serialization.JsonPropertyName("OrderNo")]
         public int OrderNo { get; set; }
 
+        [System.Text.Json.Serialization.JsonPropertyName("ShowColumnName")]
+        public string ShowColumnName { get; set; }
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -2136,43 +2936,6 @@ namespace Fastdotnet.Desktop.Api.Models
 
         [System.Text.Json.Serialization.JsonPropertyName("Dto")]
         public UpdateFdCodeGenConfigDto Dto { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateFdRateLimitRuleDto
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("Type")]
-        [System.ComponentModel.DataAnnotations.Required]
-        public string Type { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Key")]
-        [System.ComponentModel.DataAnnotations.Required]
-        public string Key { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("PermitLimit")]
-        [System.ComponentModel.DataAnnotations.Range(1, 2147483647)]
-        public int PermitLimit { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("WindowSeconds")]
-        [System.ComponentModel.DataAnnotations.Range(1, 2147483647)]
-        public int WindowSeconds { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Description")]
-        public string Description { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateFdRateLimitRuleDtoBatchUpdateByConditionDto
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("Query")]
-        public PageQueryByConditionDto Query { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
-        public UpdateFdRateLimitRuleDto Dto { get; set; }
 
     }
 
@@ -2300,6 +3063,88 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateFdPermissionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        [System.ComponentModel.DataAnnotations.StringLength(255)]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        [System.ComponentModel.DataAnnotations.StringLength(255)]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Code")]
+        [System.ComponentModel.DataAnnotations.StringLength(255)]
+        public string Code { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        [System.ComponentModel.DataAnnotations.StringLength(255)]
+        public string Description { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Module")]
+        [System.ComponentModel.DataAnnotations.StringLength(255)]
+        public string Module { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        public long Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Category")]
+        [System.ComponentModel.DataAnnotations.StringLength(50)]
+        public string Category { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateFdPermissionDtoBatchUpdateByConditionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Query")]
+        public PageQueryByConditionDto Query { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
+        public UpdateFdPermissionDto Dto { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateFdRateLimitRuleDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Key")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Key { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PermitLimit")]
+        [System.ComponentModel.DataAnnotations.Range(1, 2147483647)]
+        public int PermitLimit { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("WindowSeconds")]
+        [System.ComponentModel.DataAnnotations.Range(1, 2147483647)]
+        public int WindowSeconds { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        public string Description { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateFdRateLimitRuleDtoBatchUpdateByConditionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Query")]
+        public PageQueryByConditionDto Query { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
+        public UpdateFdRateLimitRuleDto Dto { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class UpdateFdRoleDto
     {
 
@@ -2321,6 +3166,482 @@ namespace Fastdotnet.Desktop.Api.Models
 
         [System.Text.Json.Serialization.JsonPropertyName("Dto")]
         public UpdateFdRoleDto Dto { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateGiftRecordDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseId")]
+        public long PurchaseId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Reason")]
+        public string Reason { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("GivenBy")]
+        public string GivenBy { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("GivenTime")]
+        public System.DateTimeOffset GivenTime { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateGiftRecordDtoBatchUpdateByConditionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Query")]
+        public PageQueryByConditionDto Query { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
+        public UpdateGiftRecordDto Dto { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateMarketplacePluginDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PluginId")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string PluginId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Description")]
+        public string Description { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Version")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public string Version { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Author")]
+        public string Author { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Category")]
+        public string Category { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("SupportedLicenseMode")]
+        public SupportedLicenseModeDto SupportedLicenseMode { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Price_SingleServer")]
+        [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
+        public double Price_SingleServer { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Price_MultiServer")]
+        [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
+        public double Price_MultiServer { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsActive")]
+        public bool IsActive { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsFree")]
+        public bool IsFree { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("DownloadUrl")]
+        public string DownloadUrl { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("DocumentationUrl")]
+        public string DocumentationUrl { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateMarketplacePluginDtoBatchUpdateByConditionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Query")]
+        public PageQueryByConditionDto Query { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
+        public UpdateMarketplacePluginDto Dto { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateOnlinePaymentDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseId")]
+        public long PurchaseId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Channel")]
+        public OnlinePaymentChannelDto Channel { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TransactionId")]
+        public string TransactionId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ThirdPartyData")]
+        public string ThirdPartyData { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CallbackData")]
+        public string CallbackData { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PaidTime")]
+        public System.DateTimeOffset? PaidTime { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateOnlinePaymentDtoBatchUpdateByConditionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Query")]
+        public PageQueryByConditionDto Query { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
+        public UpdateOnlinePaymentDto Dto { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdatePointRedemptionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseId")]
+        public long PurchaseId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PointsUsed")]
+        public int PointsUsed { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UserId")]
+        public string UserId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("RedeemedTime")]
+        public System.DateTimeOffset RedeemedTime { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdatePointRedemptionDtoBatchUpdateByConditionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Query")]
+        public PageQueryByConditionDto Query { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
+        public UpdatePointRedemptionDto Dto { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateUserPluginActivationDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseId")]
+        public long PurchaseId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PluginId")]
+        public string PluginId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UserId")]
+        public string UserId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LicenseType")]
+        public LicenseTypeDto LicenseType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ActivationDate")]
+        public System.DateTimeOffset ActivationDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("MachineFingerprint")]
+        public string MachineFingerprint { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IpAddress")]
+        public string IpAddress { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Hostname")]
+        public string Hostname { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LicenseFileContent")]
+        public string LicenseFileContent { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Status")]
+        public ActivationStatusDto Status { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("DeactivationDate")]
+        public System.DateTimeOffset? DeactivationDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("RevocationReason")]
+        public string RevocationReason { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Notes")]
+        public string Notes { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateUserPluginActivationDtoBatchUpdateByConditionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Query")]
+        public PageQueryByConditionDto Query { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
+        public UpdateUserPluginActivationDto Dto { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateUserPluginPurchaseDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UserId")]
+        public string UserId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PluginId")]
+        public string PluginId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("OrderId")]
+        public string OrderId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LicenseType")]
+        public LicenseTypeDto LicenseType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Quantity")]
+        public int Quantity { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchasePrice")]
+        public double PurchasePrice { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Currency")]
+        public string Currency { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseDate")]
+        public System.DateTimeOffset PurchaseDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UpdatesUntil")]
+        public System.DateTimeOffset UpdatesUntil { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsLifetime")]
+        public bool IsLifetime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Status")]
+        public PurchaseStatusDto Status { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Notes")]
+        public string Notes { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateUserPluginPurchaseDtoBatchUpdateByConditionDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Query")]
+        public PageQueryByConditionDto Query { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Dto")]
+        public UpdateUserPluginPurchaseDto Dto { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UserPluginActivationBooleanFuncExpression
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        public string Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NodeType")]
+        public ExpressionType NodeType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Parameters")]
+        public System.Collections.Generic.ICollection<ParameterExpression> Parameters { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Body")]
+        public Expression Body { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ReturnType")]
+        public string ReturnType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TailCall")]
+        public bool TailCall { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CanReduce")]
+        public bool CanReduce { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UserPluginActivationDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseId")]
+        public long PurchaseId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PluginId")]
+        public string PluginId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UserId")]
+        public string UserId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LicenseType")]
+        public LicenseTypeDto LicenseType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ActivationDate")]
+        public System.DateTimeOffset ActivationDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("MachineFingerprint")]
+        public string MachineFingerprint { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IpAddress")]
+        public string IpAddress { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Hostname")]
+        public string Hostname { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LicenseFileContent")]
+        public string LicenseFileContent { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Status")]
+        public ActivationStatusDto Status { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("DeactivationDate")]
+        public System.DateTimeOffset? DeactivationDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("RevocationReason")]
+        public string RevocationReason { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Notes")]
+        public string Notes { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreateTime")]
+        public System.DateTimeOffset CreateTime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UpdateTime")]
+        public System.DateTimeOffset UpdateTime { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UserPluginActivationDtoPageResult
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
+        public PageInfo PageInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<UserPluginActivationDto> Items { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UserPluginPurchaseBooleanFuncExpression
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Type")]
+        public string Type { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NodeType")]
+        public ExpressionType NodeType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Parameters")]
+        public System.Collections.Generic.ICollection<ParameterExpression> Parameters { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Name")]
+        public string Name { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Body")]
+        public Expression Body { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ReturnType")]
+        public string ReturnType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("TailCall")]
+        public bool TailCall { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CanReduce")]
+        public bool CanReduce { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UserPluginPurchaseDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public string Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UserId")]
+        public string UserId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PluginId")]
+        public string PluginId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("OrderId")]
+        public string OrderId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("LicenseType")]
+        public LicenseTypeDto LicenseType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Quantity")]
+        public int Quantity { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchasePrice")]
+        public double PurchasePrice { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Currency")]
+        public string Currency { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PurchaseDate")]
+        public System.DateTimeOffset PurchaseDate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UpdatesUntil")]
+        public System.DateTimeOffset UpdatesUntil { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("IsLifetime")]
+        public bool IsLifetime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Status")]
+        public PurchaseStatusDto Status { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Notes")]
+        public string Notes { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CreateTime")]
+        public System.DateTimeOffset CreateTime { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("UpdateTime")]
+        public System.DateTimeOffset UpdateTime { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UserPluginPurchaseDtoPageResult
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
+        public PageInfo PageInfo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("Items")]
+        public System.Collections.Generic.ICollection<UserPluginPurchaseDto> Items { get; set; }
 
     }
 

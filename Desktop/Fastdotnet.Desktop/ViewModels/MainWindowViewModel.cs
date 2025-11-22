@@ -110,7 +110,7 @@ namespace Fastdotnet.Desktop.ViewModels
             }
         }
 
-        private MenuItem ConvertToUIMenuItem(MenuDto apiItem)
+        private MenuItem ConvertToUIMenuItem(FdMenuDto apiItem)
         {
             var uiItem = new Fastdotnet.Desktop.Models.MenuItem
             {
