@@ -185,7 +185,7 @@
 
 <script setup lang="ts" name="personal">
 import { reactive, computed } from 'vue';
-import { formatAxis } from '/@/utils/formatTime';
+import { formatAxis } from '@/utils/formatTime';
 import { newsInfoList, recommendList } from './mock';
 
 // 定义变量内容

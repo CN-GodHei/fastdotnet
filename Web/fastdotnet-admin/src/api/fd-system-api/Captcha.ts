@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request from '/@/utils/request';
+import request from '@/utils/request';
 
 /** 生成验证码图片 GET /api/Captcha/generate */
 export async function getCaptchaGenerate(

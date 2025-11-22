@@ -1,15 +1,15 @@
 import { RouteRecordRaw } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import pinia from '/@/stores/index';
-import { useUserInfo } from '/@/stores/userInfo';
-import { useRequestOldRoutes } from '/@/stores/requestOldRoutes';
-import { Session } from '/@/utils/storage';
-import { NextLoading } from '/@/utils/loading';
-import { dynamicRoutes, notFoundAndNoPower } from '/@/router/route';
-import { formatTwoStageRoutes, formatFlatteningRoutes, router } from '/@/router/index';
-import { useRoutesList } from '/@/stores/routesList';
-import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
-import { useMenuApi } from '/@/api/menu/index';
+import pinia from '@/stores/index';
+import { useUserInfo } from '@/stores/userInfo';
+import { useRequestOldRoutes } from '@/stores/requestOldRoutes';
+import { Session } from '@/utils/storage';
+import { NextLoading } from '@/utils/loading';
+import { dynamicRoutes, notFoundAndNoPower } from '@/router/route';
+import { formatTwoStageRoutes, formatFlatteningRoutes, router } from '@/router/index';
+import { useRoutesList } from '@/stores/routesList';
+import { useTagsViewRoutes } from '@/stores/tagsViewRoutes';
+import { useMenuApi } from '@/api/menu/index';
 
 // 后端控制路由
 
@@ -25,7 +25,7 @@ const layouModules: any = import.meta.glob('../layout/routerView/*.{vue,tsx}');
 const viewsModules: any = import.meta.glob('../views/**/*.{vue,tsx}');
 const dynamicViewsModules: Record<string, Function> = Object.assign({}, { ...layouModules }, { ...viewsModules });
 
-import { startQiankun } from '/@/main';
+import { startQiankun } from '@/main';
 
 /**
  * 后端控制路由：初始化方法，防止刷新时路由丢失
@@ -50,7 +50,7 @@ export async function initBackEndControlRoutes() {
 	if (res.data.length <= 0) return Promise.resolve(true);
 	// 存储接口原始路由（未处理component），根据需求选择使用
 	useRequestOldRoutes().setRequestOldRoutes(JSON.parse(JSON.stringify(res.data)));
-	// 处理路由（component），替换 dynamicRoutes（/@/router/route）第一个顶级 children 的路由
+	// 处理路由（component），替换 dynamicRoutes（@/router/route）第一个顶级 children 的路由
 	dynamicRoutes[0].children = await backEndComponent(res.data);
 	// 添加动态路由
 	await setAddRoute();
@@ -80,7 +80,7 @@ export function setCacheTagsViewRoutes() {
 
 /**
  * 处理路由格式及添加捕获所有路由或 404 Not found 路由
- * @description 替换 dynamicRoutes（/@/router/route）第一个顶级 children 的路由
+ * @description 替换 dynamicRoutes（@/router/route）第一个顶级 children 的路由
  * @returns 返回替换后的路由数组
  */
 export function setFilterRouteEnd() {
@@ -94,7 +94,7 @@ export function setFilterRouteEnd() {
 /**
  * 添加动态路由
  * @method router.addRoute
- * @description 此处循环为 dynamicRoutes（/@/router/route）第一个顶级 children 的路由一维数组，非多级嵌套
+ * @description 此处循环为 dynamicRoutes（@/router/route）第一个顶级 children 的路由一维数组，非多级嵌套
  * @link 参考：https://next.router.vuejs.org/zh/api/#addroute
  */
 export async function setAddRoute() {
@@ -187,7 +187,7 @@ export function backEndComponent(routes: any) {
 			console.log("Setting micro app component for menu:", item.Name, item.Path); // Log when setting micro app component
 			// 为微应用菜单项设置特殊的 component
 			// 这个 component 将负责加载对应的 qiankun 微应用
-			route.component = () => import('/@/layout/routerView/parent.vue');
+			route.component = () => import('@/layout/routerView/parent.vue');
 		} else if (item.Component) {
 			// 如果后端提供了 Component 路径，则生成动态导入
 			// 假设后端 Component 存储的是相对路径，例如 "home/index.vue"
@@ -198,7 +198,7 @@ export function backEndComponent(routes: any) {
 			if (!route.component) {
 				console.warn(`Failed to dynamically import component for path: ${item.Path}, component path: ${item.Component}`);
 				// 可以设置一个默认的错误组件或者空组件
-				// route.component = () => import('/@/views/error/404.vue');
+				// route.component = () => import('@/views/error/404.vue');
 			}
 		} else if (item.component) {
 			// 保留原有逻辑（可能来自递归调用）

@@ -104,8 +104,8 @@ import {
   getCodeGenTablelistConfigId, 
   postCodeGen, 
   putCodeGenId 
-} from '/@/api/fd-system-api/CodeGen';
-import APIModel from '/@/api/fd-system-api';
+} from '@/api/fd-system-api/CodeGen';
+import APIModel from '@/api/fd-system-api';
 import { ElMessage } from 'element-plus';
 
 const props = defineProps({

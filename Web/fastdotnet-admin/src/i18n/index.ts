@@ -1,7 +1,7 @@
 import { createI18n } from 'vue-i18n';
-import pinia from '/@/stores/index';
+import pinia from '@/stores/index';
 import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
+import { useThemeConfig } from '@/stores/themeConfig';
 
 // 定义语言国际化内容
 

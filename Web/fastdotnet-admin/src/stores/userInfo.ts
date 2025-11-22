@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import { getAdminFdAdminUserGetUserInfo } from '/@/api/fd-system-api/FdAdminUser';
-import { Session } from '/@/utils/storage';
+import { getAdminFdAdminUserGetUserInfo } from '@/api/fd-system-api/FdAdminUser';
+import { Session } from '@/utils/storage';
 
 /**
  * 用户信息

@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { Session } from '/@/utils/storage';
+import { Session } from '@/utils/storage';
 import qs from 'qs';
 
 // 配置新建一个 axios 实例

@@ -14,13 +14,13 @@
 import { defineAsyncComponent, watch, onMounted, nextTick, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import { NextLoading } from '/@/utils/loading';
+import { useThemeConfig } from '@/stores/themeConfig';
+import { NextLoading } from '@/utils/loading';
 
 // 引入组件
-const LayoutAside = defineAsyncComponent(() => import('/@/layout/component/aside.vue'));
-const LayoutHeader = defineAsyncComponent(() => import('/@/layout/component/header.vue'));
-const LayoutMain = defineAsyncComponent(() => import('/@/layout/component/main.vue'));
+const LayoutAside = defineAsyncComponent(() => import('@/layout/component/aside.vue'));
+const LayoutHeader = defineAsyncComponent(() => import('@/layout/component/header.vue'));
+const LayoutMain = defineAsyncComponent(() => import('@/layout/component/main.vue'));
 
 // 定义变量内容
 const layoutScrollbarRef = ref<RefType>('');

@@ -11,7 +11,7 @@ const pathResolve = (dir: string) => {
 };
 
 const alias: Record<string, string> = {
-	'/@': pathResolve('./src/'),
+	'@': pathResolve('src'),
 	'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
 };
 

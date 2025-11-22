@@ -206,11 +206,11 @@ import { defineAsyncComponent, reactive, onMounted, watch, nextTick, onActivated
 import * as echarts from 'echarts';
 import 'echarts-wordcloud';
 import { storeToRefs } from 'pinia';
-import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
-import { skyList, dBtnList, chartData4List } from '/@/views/chart/chart';
+import { useTagsViewRoutes } from '@/stores/tagsViewRoutes';
+import { skyList, dBtnList, chartData4List } from '@/views/chart/chart';
 
 // 引入组件
-const ChartHead = defineAsyncComponent(() => import('/@/views/chart/head.vue'));
+const ChartHead = defineAsyncComponent(() => import('@/views/chart/head.vue'));
 
 // 定义变量内容
 const chartsCenterOneRef = ref();

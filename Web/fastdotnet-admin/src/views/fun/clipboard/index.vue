@@ -19,7 +19,7 @@
 
 <script setup lang="ts" name="funClipboard">
 import { reactive } from 'vue';
-import commonFunction from '/@/utils/commonFunction';
+import commonFunction from '@/utils/commonFunction';
 
 // 定义变量内容
 const { copyText } = commonFunction();

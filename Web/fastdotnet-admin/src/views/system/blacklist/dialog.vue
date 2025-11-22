@@ -76,12 +76,12 @@ import {
   postAdminBlacklists,
   putAdminBlacklistsId,
   getAdminBlacklistsId
-} from '/@/api/fd-system-api/Blacklists';
+} from '@/api/fd-system-api/Blacklists';
 import type { 
   FdBlacklistDto, 
   CreateFdBlacklistDto, 
   UpdateFdBlacklistDto 
-} from '/@/api/fd-system-api/typings';
+} from '@/api/fd-system-api/typings';
 import type { FormInstance } from 'element-plus';
 
 // 定义变量内容

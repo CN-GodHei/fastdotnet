@@ -63,9 +63,9 @@
 import { defineAsyncComponent, ref, onMounted, reactive } from 'vue';
 import { RouteRecordRaw } from 'vue-router';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import * as MenuApi from '/@/api/fd-system-api/FdMenu';
+import * as MenuApi from '@/api/fd-system-api/FdMenu';
 // 引入组件
-const MenuDialog = defineAsyncComponent(() => import('/@/views/system/menu/dialog.vue'));
+const MenuDialog = defineAsyncComponent(() => import('@/views/system/menu/dialog.vue'));
 
 // 定义变量内容
 const menuDialogRef = ref();

@@ -26,11 +26,11 @@
 <script setup lang="ts" name="layoutBreadcrumb">
 import { reactive, computed, onMounted, watch } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, RouteRecordRaw } from 'vue-router';
-import { Local } from '/@/utils/storage';
-import other from '/@/utils/other';
+import { Local } from '@/utils/storage';
+import other from '@/utils/other';
 import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import { useRoutesList } from '/@/stores/routesList';
+import { useThemeConfig } from '@/stores/themeConfig';
+import { useRoutesList } from '@/stores/routesList';
 
 // 定义变量内容
 const stores = useRoutesList();

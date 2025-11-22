@@ -75,12 +75,12 @@
 
 <script setup lang="ts" name="layoutLockScreen">
 import { nextTick, onMounted, reactive, ref, onUnmounted, watch } from 'vue';
-import { formatDate } from '/@/utils/formatTime';
-import { Local } from '/@/utils/storage';
+import { formatDate } from '@/utils/formatTime';
+import { Local } from '@/utils/storage';
 import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import { useUserInfo } from '/@/stores/userInfo';
-import { postAdminFdAdminUserUnlock } from '/@/api/fd-system-api/FdAdminUser';
+import { useThemeConfig } from '@/stores/themeConfig';
+import { useUserInfo } from '@/stores/userInfo';
+import { postAdminFdAdminUserUnlock } from '@/api/fd-system-api/FdAdminUser';
 import { ElMessage } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 

@@ -12,7 +12,7 @@
 <script setup lang="ts" name="pagesWorkflowTool">
 import { computed, reactive } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
+import { useThemeConfig } from '@/stores/themeConfig';
 
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['tool']);

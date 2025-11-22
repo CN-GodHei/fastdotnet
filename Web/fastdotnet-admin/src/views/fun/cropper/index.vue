@@ -27,7 +27,7 @@
 import { defineAsyncComponent, ref, reactive } from 'vue';
 
 // 引入组件
-const CropperDialog = defineAsyncComponent(() => import('/@/components/cropper/index.vue'));
+const CropperDialog = defineAsyncComponent(() => import('@/components/cropper/index.vue'));
 
 // 定义变量内容
 const cropperDialogRef = ref();

@@ -471,12 +471,10 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 <script lang=""ts"" setup name=""{entityName}"">
 import {{ ref, reactive, onMounted }} from 'vue';
 import {{ ElMessageBox, ElMessage }} from 'element-plus';
-import {{buildMixedQuery}} from '/@/utils/queryBuilder';
-import type {{{entityName}}} from '/@/api/fd-system-api/typings';
-import type {{ Create{entityName}Dto, {entityName}Dto, Update{entityName}Dto,PageQueryByConditionDto }} from '/@/api/fd-system-api/typings';
+import {{buildMixedQuery}} from '@/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
-import * as {entityName}Api from '/@/api/fd-system-api/{entityName}';
+import * as {entityName}Api from '@/api/fd-system-api/{entityName}';
 
 const queryForm = ref();
 const formRef = ref();
@@ -485,7 +483,7 @@ const state = reactive({{
 	loading: false,
     searchCollapsed: true, 
 	tableData: {{
-		data: [] as {entityName}Dto[]
+		data: [] as APIModel.{entityName}Dto[]
 	}},
 	queryParams: {{
 	{string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == "是").Select((col, idx) => $@"{col.PropertyName}:null,"))}
@@ -498,11 +496,11 @@ const state = reactive({{
 	dialog: {{
 		visible: false,
 		title: '',
-        type: 'create', // 'create' | 'update'
+        type: 'create' as 'create' | 'update',
 	}},
 	formData: {{
     Id:'',
-	{string.Join("\n\t", configcolumns.Where(x => x.WhetherAddUpdate == "是").Select((col, idx) => $@"{col.PropertyName}:'',"))}
+	{string.Join("\n\t", configcolumns.Where(x => x.WhetherAddUpdate == "是").Select((col, idx) => $@"{col.PropertyName}:{getTSDefaultvAalue(col)},"))}
 }}
 }});
 const toggleSearchCollapse = () => {{
@@ -517,7 +515,7 @@ const getList = async () => {{
             {{
     {GetFrontendCondition(configcolumns)}
     }}
-	const searchBody: PageQueryByConditionDto = {{
+	const searchBody: APIModel.PageQueryByConditionDto = {{
 			PageIndex: state.pagination.page,
 			PageSize: state.pagination.pageSize,
 	}};
@@ -529,7 +527,7 @@ const getList = async () => {{
     // 调试日志
     //console.log('Search request body:', searchBody);
 		const response = await {entityName}Api.postAdmin{entityName}PageSearch(searchBody);
-		state.tableData.data = response.Items as {entityName}Dto[] || [] as {entityName}Dto[];
+		state.tableData.data = response.Items as APIModel.{entityName}Dto[] || [] as APIModel.{entityName}Dto[];
 		state.pagination.total = response.PageInfo?.Total || 0;
 	}} catch (error) {{
 		ElMessage.error('获取数据失败');
@@ -569,7 +567,6 @@ const openAddDialog = () => {{
 	state.dialog.title = '新增';
 	state.dialog.type = 'create';
 	formRef.value?.resetFields();
-	state.formData = {{}};
 }};
 
 // 打开编辑对话框
@@ -587,12 +584,12 @@ const submitForm = () => {{
 		try {{
 			if (state.dialog.type === 'update'&&state.formData.{configcolumns.Where(w => w.ColumnKey == true).FirstOrDefault().PropertyName ?? configcolumns.FirstOrDefault().PropertyName}) {{
 				// 更新接口调用
-				const updateData = {{ ...state.formData }} as Update{entityName}Dto;
+				const updateData = {{ ...state.formData }} as APIModel.Update{entityName}Dto;
 				await {entityName}Api.putAdmin{entityName}Id({{ id: state.formData.Id }}, updateData);
 				ElMessage.success('更新成功');
 			}} else {{
 				// 新增接口调用
-                const createData= {{ ...state.formData }} as Create{entityName}Dto;
+                const createData= {{ ...state.formData }} as APIModel.Create{entityName}Dto;
                 await {entityName}Api.postAdmin{entityName}(createData);
 				ElMessage.success('添加成功');
 			}}
@@ -606,11 +603,11 @@ ElMessage.error(state.dialog.type === 'update' ? '更新失败' : '添加失败'
 }};
 
 // 删除
-const handleDelete = (row: {entityName}Dto) => {{
+const handleDelete = (row: APIModel.{entityName}Dto) => {{
 		ElMessageBox.confirm('确定删除吗？')
 		.then(async () => {{
 			// 删除接口调用
-			await {entityName}Api.deleteAdmin{entityName}Id({{ id: row.Id }});
+			await {entityName}Api.deleteAdmin{entityName}Id({{ id: row.Id as string }});
 			ElMessage.success('删除成功');
 			getList();
 		}})
@@ -629,6 +626,7 @@ onMounted(() => {{
 	margin-right: 12px !important; // 稍微紧凑一点
 	margin-bottom: 8px !important;
 }}
+
 .{entityName.ToLower()}-container .el-card:first-child .el-form .el-form-item:last-of-type {{
     margin-bottom: 0 !important;
 }}
@@ -699,6 +697,20 @@ onMounted(() => {{
 				</el-form-item>";
             }
 
+        }
+
+        private string getTSDefaultvAalue(FdCodeGenConfig fdCodeGenConfig)
+        {
+            string a = "''";
+            if (fdCodeGenConfig.NetType== "bool")
+            {
+                a = "false";
+            }
+            if (fdCodeGenConfig.NetType == "long")
+            {
+                a = "0";
+            }
+            return a;
         }
     }
 }

@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import { baseSignalRManager } from '/@/utils/signalr';
+import { baseSignalRManager } from '@/utils/signalr';
 
 // 响应式数据
 const connectionState = ref('Disconnected');

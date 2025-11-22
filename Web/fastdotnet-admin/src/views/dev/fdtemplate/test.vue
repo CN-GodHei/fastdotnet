@@ -118,8 +118,8 @@
 <script lang="ts" setup name="FdAdminUser">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { buildMixedQuery } from '/@/utils/queryBuilder';
-import type { FdAdminUser } from '/@/api/fd-system-api/typings';
+import { buildMixedQuery } from '@/utils/queryBuilder';
+import type { FdAdminUser } from '@/api/fd-system-api/typings';
 import dayjs from 'dayjs'; // 引入日期处理库
 const queryForm = ref();
 const formRef = ref();

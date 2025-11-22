@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request from '/@/utils/request';
+import request from '@/utils/request';
 
 /** 获取所有当前活动的插件 GET /api/Plugin/active */
 export async function getPluginActive(options?: { [key: string]: any }) {

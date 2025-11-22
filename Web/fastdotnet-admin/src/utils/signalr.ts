@@ -1,5 +1,5 @@
 import * as signalR from '@microsoft/signalr';
-import { Session } from '/@/utils/storage';
+import { Session } from '@/utils/storage';
 
 // 主框架SignalR基础管理器（完全通用，不预设任何Hub）
 class BaseSignalRManager {

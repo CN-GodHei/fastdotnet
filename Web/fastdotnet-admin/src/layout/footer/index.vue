@@ -9,7 +9,7 @@
 
 <script setup lang="ts" name="layoutFooter">
 import { ref, onMounted, watch } from 'vue';
-import { useThemeConfig } from '/@/stores/themeConfig';
+import { useThemeConfig } from '@/stores/themeConfig';
 
 // 创建响应式变量来存储版权信息
 const copyrightText = ref('fastdotnet © 2025 ');

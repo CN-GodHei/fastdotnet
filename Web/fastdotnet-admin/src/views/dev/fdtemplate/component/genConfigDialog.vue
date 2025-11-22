@@ -126,9 +126,9 @@ import {
 	postCodeGenConfigBatch,
 	postCodeGenConfigPageSearch,
 	putCodeGenConfigBatch
-} from '/@/api/fd-system-api/CodeGenConfig';
-import { buildMixedQuery } from '/@/utils/queryBuilder';
-import APIModel from '/@/api/fd-system-api';
+} from '@/api/fd-system-api/CodeGenConfig';
+import { buildMixedQuery } from '@/utils/queryBuilder';
+import APIModel from '@/api/fd-system-api';
 import { ElMessage } from 'element-plus';
 
 const emits = defineEmits(['handleQuery']);

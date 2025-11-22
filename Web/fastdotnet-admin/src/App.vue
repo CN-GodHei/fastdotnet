@@ -13,19 +13,19 @@ import { defineAsyncComponent, computed, ref, onBeforeMount, onMounted, onUnmoun
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
-import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import other from '/@/utils/other';
-import { Local, Session } from '/@/utils/storage';
-import mittBus from '/@/utils/mitt';
-import setIntroduction from '/@/utils/setIconfont';
-import { startQiankun } from '/@/main';
+import { useTagsViewRoutes } from '@/stores/tagsViewRoutes';
+import { useThemeConfig } from '@/stores/themeConfig';
+import other from '@/utils/other';
+import { Local, Session } from '@/utils/storage';
+import mittBus from '@/utils/mitt';
+import setIntroduction from '@/utils/setIconfont';
+import { startQiankun } from '@/main';
 
 // 引入组件
-const LockScreen = defineAsyncComponent(() => import('/@/layout/lockScreen/index.vue'));
-const Setings = defineAsyncComponent(() => import('/@/layout/navBars/topBar/setings.vue'));
-const CloseFull = defineAsyncComponent(() => import('/@/layout/navBars/topBar/closeFull.vue'));
-const Upgrade = defineAsyncComponent(() => import('/@/layout/upgrade/index.vue'));
+const LockScreen = defineAsyncComponent(() => import('@/layout/lockScreen/index.vue'));
+const Setings = defineAsyncComponent(() => import('@/layout/navBars/topBar/setings.vue'));
+const CloseFull = defineAsyncComponent(() => import('@/layout/navBars/topBar/closeFull.vue'));
+const Upgrade = defineAsyncComponent(() => import('@/layout/upgrade/index.vue'));
 
 // 定义变量内容
 const { messages, locale } = useI18n();

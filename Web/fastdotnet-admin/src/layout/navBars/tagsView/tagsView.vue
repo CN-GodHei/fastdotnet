@@ -52,17 +52,17 @@ import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 import Sortable from 'sortablejs';
 import { ElMessage } from 'element-plus';
 import { storeToRefs } from 'pinia';
-import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import { useKeepALiveNames } from '/@/stores/keepAliveNames';
-import { useRoutesList } from '/@/stores/routesList';
-import { Session } from '/@/utils/storage';
-import { isObjectValueEqual } from '/@/utils/arrayOperation';
-import other from '/@/utils/other';
-import mittBus from '/@/utils/mitt';
+import { useTagsViewRoutes } from '@/stores/tagsViewRoutes';
+import { useThemeConfig } from '@/stores/themeConfig';
+import { useKeepALiveNames } from '@/stores/keepAliveNames';
+import { useRoutesList } from '@/stores/routesList';
+import { Session } from '@/utils/storage';
+import { isObjectValueEqual } from '@/utils/arrayOperation';
+import other from '@/utils/other';
+import mittBus from '@/utils/mitt';
 
 // 引入组件
-const Contextmenu = defineAsyncComponent(() => import('/@/layout/navBars/tagsView/contextmenu.vue'));
+const Contextmenu = defineAsyncComponent(() => import('@/layout/navBars/tagsView/contextmenu.vue'));
 
 // 定义变量内容
 const tagsRefs = ref<RefType>([]);

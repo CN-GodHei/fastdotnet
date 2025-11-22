@@ -92,8 +92,8 @@
 import { reactive, onMounted, onUnmounted, ref } from 'vue';
 import * as echarts from 'echarts';
 import 'echarts/extension/bmap/bmap';
-import { formatDate } from '/@/utils/formatTime';
-import { NextLoading } from '/@/utils/loading';
+import { formatDate } from '@/utils/formatTime';
+import { NextLoading } from '@/utils/loading';
 import { echartsMapList, echartsMapData, echartsMapImgs } from './mock/demo1';
 
 // 定义变量内容

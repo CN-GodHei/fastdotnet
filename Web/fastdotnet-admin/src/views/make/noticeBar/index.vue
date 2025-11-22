@@ -51,7 +51,7 @@
 import { defineAsyncComponent, reactive } from 'vue';
 
 // 引入组件
-const NoticeBar = defineAsyncComponent(() => import('/@/components/noticeBar/index.vue'));
+const NoticeBar = defineAsyncComponent(() => import('@/components/noticeBar/index.vue'));
 
 // 定义变量内容
 const state = reactive({

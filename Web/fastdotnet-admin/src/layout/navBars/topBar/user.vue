@@ -99,15 +99,15 @@ import { ElMessageBox, ElMessage, ClickOutside as vClickOutside } from 'element-
 import screenfull from 'screenfull';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
-import { useUserInfo } from '/@/stores/userInfo';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import other from '/@/utils/other';
-import mittBus from '/@/utils/mitt';
-import { Session, Local } from '/@/utils/storage';
+import { useUserInfo } from '@/stores/userInfo';
+import { useThemeConfig } from '@/stores/themeConfig';
+import other from '@/utils/other';
+import mittBus from '@/utils/mitt';
+import { Session, Local } from '@/utils/storage';
 
 // 引入组件
-const UserNews = defineAsyncComponent(() => import('/@/layout/navBars/topBar/userNews.vue'));
-const Search = defineAsyncComponent(() => import('/@/layout/navBars/topBar/search.vue'));
+const UserNews = defineAsyncComponent(() => import('@/layout/navBars/topBar/userNews.vue'));
+const Search = defineAsyncComponent(() => import('@/layout/navBars/topBar/search.vue'));
 
 // 定义变量内容
 const userNewsRef = ref();

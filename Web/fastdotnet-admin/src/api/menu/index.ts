@@ -1,4 +1,4 @@
-import request from '/@/utils/request';
+import request from '@/utils/request';
 
 /**
  * 菜单api接口集合 (适配 Fastdotnet 后端)

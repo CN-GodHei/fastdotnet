@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request from '/@/utils/request';
+import request from '@/utils/request';
 
 /** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/admin/FdEmailConfig/${param0} */
 export async function putAdminFdEmailConfigId(

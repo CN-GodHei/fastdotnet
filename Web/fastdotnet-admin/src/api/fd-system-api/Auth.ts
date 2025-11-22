@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request from '/@/utils/request';
+import request from '@/utils/request';
 
 /** 管理员端登录 POST /api/auth/admin/login */
 export async function postAuthAdminLogin(body: APIModel.LoginDto, options?: { [key: string]: any }) {

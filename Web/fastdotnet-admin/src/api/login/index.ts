@@ -1,4 +1,4 @@
-import request from '/@/utils/request';
+import request from '@/utils/request';
 
 /**
  * （不建议写成 request.post(xxx)，因为这样 post 时，无法 params 与 data 同时传参）

@@ -29,7 +29,7 @@
 import { defineAsyncComponent, reactive } from 'vue';
 
 // 引入组件
-const IconSelector = defineAsyncComponent(() => import('/@/components/iconSelector/index.vue'));
+const IconSelector = defineAsyncComponent(() => import('@/components/iconSelector/index.vue'));
 
 // 定义变量内容
 const state = reactive({

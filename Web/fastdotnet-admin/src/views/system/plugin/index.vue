@@ -50,7 +50,7 @@ import {
   postPluginEnablePluginId,
   postPluginDisablePluginId,
   postPluginUninstallPluginId
-} from '/@/api/fd-system-api/Plugin'
+} from '@/api/fd-system-api/Plugin'
 
 // 定义插件数据类型
 interface Plugin {

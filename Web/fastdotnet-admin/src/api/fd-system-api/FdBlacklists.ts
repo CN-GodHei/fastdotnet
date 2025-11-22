@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request from '/@/utils/request';
+import request from '@/utils/request';
 
 /** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/admin/FdBlacklists */
 export async function getAdminFdBlacklists(options?: { [key: string]: any }) {

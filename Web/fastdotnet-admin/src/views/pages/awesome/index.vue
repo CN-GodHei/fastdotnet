@@ -19,7 +19,7 @@
 
 <script setup lang="ts" name="pagesAwesome">
 import { reactive, onMounted } from 'vue';
-import initIconfont from '/@/utils/getStyleSheets';
+import initIconfont from '@/utils/getStyleSheets';
 
 // 定义变量内容
 const state = reactive({

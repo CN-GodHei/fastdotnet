@@ -337,13 +337,13 @@
 <script setup lang="ts" name="limitsFrontEndBtn">
 import { defineAsyncComponent } from 'vue';
 import { ElMessage } from 'element-plus';
-import { auth, auths, authAll } from '/@/utils/authFunction';
+import { auth, auths, authAll } from '@/utils/authFunction';
 
 // 引入组件
-const LimitsFrontEndPage = defineAsyncComponent(() => import('/@/views/limits/frontEnd/page/index.vue'));
-const Auth = defineAsyncComponent(() => import('/@/components/auth/auth.vue'));
-const Auths = defineAsyncComponent(() => import('/@/components/auth/auths.vue'));
-const AuthAll = defineAsyncComponent(() => import('/@/components/auth/authAll.vue'));
+const LimitsFrontEndPage = defineAsyncComponent(() => import('@/views/limits/frontEnd/page/index.vue'));
+const Auth = defineAsyncComponent(() => import('@/components/auth/auth.vue'));
+const Auths = defineAsyncComponent(() => import('@/components/auth/auths.vue'));
+const AuthAll = defineAsyncComponent(() => import('@/components/auth/authAll.vue'));
 
 // 单个权限验证
 const onAuthClick = () => {

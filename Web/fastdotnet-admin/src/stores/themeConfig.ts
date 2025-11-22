@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { getAdminFdSystemInfoConfigPublicAll } from '/@/api/fd-system-api/FdSystemInfoConfig';
+import { getAdminFdSystemInfoConfigPublicAll } from '@/api/fd-system-api/FdSystemInfoConfig';
 
 /**
  * 布局配置
@@ -122,7 +122,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 
 			/**
 			 * 布局切换
-			 * 注意：为了演示，切换布局时，颜色会被还原成默认，代码位置：/@/layout/navBars/topBar/setings.vue
+			 * 注意：为了演示，切换布局时，颜色会被还原成默认，代码位置：@/layout/navBars/topBar/setings.vue
 			 * 中的 `initSetLayoutChange(设置布局切换，重置主题样式)` 方法
 			 */
 			// 布局切换：可选值"<defaults|classic|transverse|columns>"，默认 defaults

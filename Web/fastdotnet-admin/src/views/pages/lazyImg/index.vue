@@ -54,7 +54,7 @@
 <script setup lang="ts" name="pagesLazyImg">
 import { reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import other from '/@/utils/other';
+import other from '@/utils/other';
 import { filterList } from './mock';
 
 // 定义变量内容

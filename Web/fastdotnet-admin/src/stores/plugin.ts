@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getPluginList, type Plugin } from '/@/api/plugin' // 假设你有一个 API 文件来获取插件列表
+import { getPluginList, type Plugin } from '@/api/plugin' // 假设你有一个 API 文件来获取插件列表
 
 export const usePluginStore = defineStore('plugin', {
   state: () => ({

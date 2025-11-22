@@ -61,7 +61,7 @@ import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 
 // 引入组件
-const RoleDialog = defineAsyncComponent(() => import('/@/views/system/role/dialog.vue'));
+const RoleDialog = defineAsyncComponent(() => import('@/views/system/role/dialog.vue'));
 
 // 定义变量内容
 const roleDialogRef = ref();

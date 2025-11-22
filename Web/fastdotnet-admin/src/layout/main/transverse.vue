@@ -9,11 +9,11 @@
 import { defineAsyncComponent, ref, watch, nextTick, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
+import { useThemeConfig } from '@/stores/themeConfig';
 
 // 引入组件
-const LayoutHeader = defineAsyncComponent(() => import('/@/layout/component/header.vue'));
-const LayoutMain = defineAsyncComponent(() => import('/@/layout/component/main.vue'));
+const LayoutHeader = defineAsyncComponent(() => import('@/layout/component/header.vue'));
+const LayoutMain = defineAsyncComponent(() => import('@/layout/component/main.vue'));
 
 // 定义变量内容
 const layoutMainRef = ref<InstanceType<typeof LayoutMain>>();

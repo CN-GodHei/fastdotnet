@@ -4,26 +4,32 @@
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
 				<div v-show="state.searchCollapsed">
 					<el-form-item label="Name" prop="Name">
-						<el-input placeholder="请输入Name" clearable v-model="state.queryParams.Name" style="width: 150px" />
+						<el-input placeholder="请输入Name" clearable v-model="state.queryParams.Name"
+							style="width: 150px" />
 					</el-form-item>
 					<el-form-item label="Code" prop="Code">
-						<el-input placeholder="请输入Code" clearable v-model="state.queryParams.Code" style="width: 150px" />
+						<el-input placeholder="请输入Code" clearable v-model="state.queryParams.Code"
+							style="width: 150px" />
 					</el-form-item>
 					<el-form-item label="Value" prop="Value">
-						<el-input placeholder="请输入Value" clearable v-model="state.queryParams.Value" style="width: 150px" />
+						<el-input placeholder="请输入Value" clearable v-model="state.queryParams.Value"
+							style="width: 150px" />
 					</el-form-item>
 					<el-form-item label="Description" prop="Description">
-						<el-input placeholder="请输入Description" clearable v-model="state.queryParams.Description" style="width: 150px" />
+						<el-input placeholder="请输入Description" clearable v-model="state.queryParams.Description"
+							style="width: 150px" />
 					</el-form-item>
 					<el-form-item label="IsSystem" prop="IsSystem">
-						<el-input placeholder="请输入IsSystem" clearable v-model="state.queryParams.IsSystem" style="width: 150px" />
+						<el-input placeholder="请输入IsSystem" clearable v-model="state.queryParams.IsSystem"
+							style="width: 150px" />
 					</el-form-item>
 				</div>
 				<el-form-item>
 					<el-button-group>
 						<el-button type="primary" icon="ele-Search" @click="handleQuery"> 查询 </el-button>
 						<el-button icon="ele-Refresh" @click="resetQuery"> 重置 </el-button>
-						<el-button @click="toggleSearchCollapse" :icon="state.searchCollapsed ? 'ele-ArrowUp' : 'ele-ArrowDown'">
+						<el-button @click="toggleSearchCollapse"
+							:icon="state.searchCollapsed ? 'ele-ArrowUp' : 'ele-ArrowDown'">
 							{{ state.searchCollapsed ? '收起' : '展开' }}
 						</el-button>
 					</el-button-group>
@@ -32,7 +38,7 @@
 		</el-card>
 
 		<el-card class="full-table" shadow="hover" style="margin-top: 5px">
-			<div class="table-toolbar" style="margin-bottom: 15px">
+			<div class="table-toolbar" style="margin-bottom: 15px;">
 				<el-button type="primary" icon="ele-Plus" @click="openAddDialog"> 新增 </el-button>
 				<el-button icon="ele-Download"> 导出 </el-button>
 			</div>
@@ -44,40 +50,38 @@
 				<el-table-column prop="IsSystem" label="IsSystem" align="center" show-overflow-tooltip />
 				<el-table-column label="操作" width="180" fixed="right" align="center">
 					<template #default="scope">
-						<el-button icon="ele-Edit" size="small" text type="primary" @click="openEditDialog(scope.row)">修改</el-button>
-						<el-button icon="ele-Delete" size="small" text type="danger" @click="handleDelete(scope.row)">删除</el-button>
+						<el-button icon="ele-Edit" size="small" text type="primary"
+							@click="openEditDialog(scope.row)">修改</el-button>
+						<el-button icon="ele-Delete" size="small" text type="danger"
+							@click="handleDelete(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
-			<el-pagination
-				v-model:currentPage="state.pagination.page"
-				v-model:page-size="state.pagination.pageSize"
-				:total="state.pagination.total"
-				:page-sizes="[10, 20, 50, 100]"
-				size="small"
-				background
-				@size-change="handleSizeChange"
-				@current-change="handleCurrentChange"
-				layout="total, sizes, prev, pager, next, jumper"
-			/>
+			<el-pagination v-model:currentPage="state.pagination.page" v-model:page-size="state.pagination.pageSize"
+				:total="state.pagination.total" :page-sizes="[10, 20, 50, 100]" size="small" background
+				@size-change="handleSizeChange" @current-change="handleCurrentChange"
+				layout="total, sizes, prev, pager, next, jumper" />
 		</el-card>
 
 		<el-dialog v-model="state.dialog.visible" draggable :close-on-click-modal="false" width="700px">
 			<template #header>
 				<div style="color: #fff">
-					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Edit /> </el-icon>
+					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Edit />
+					</el-icon>
 					<span> { state.dialog.title } </span>
 				</div>
 			</template>
 			<el-form :model="state.formData" ref="formRef" label-width="auto">
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 					<el-form-item label="Name" prop="Name">
-						<el-input v-model="state.formData.Name" placeholder="请输入Name" maxlength="100" show-word-limit clearable />
+						<el-input v-model="state.formData.Name" placeholder="请输入Name" maxlength="100" show-word-limit
+							clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 					<el-form-item label="Code" prop="Code">
-						<el-input v-model="state.formData.Code" placeholder="请输入Code" maxlength="100" show-word-limit clearable />
+						<el-input v-model="state.formData.Code" placeholder="请输入Code" maxlength="100" show-word-limit
+							clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -87,7 +91,8 @@
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 					<el-form-item label="Description" prop="Description">
-						<el-input v-model="state.formData.Description" placeholder="请输入Description" maxlength="500" show-word-limit clearable />
+						<el-input v-model="state.formData.Description" placeholder="请输入Description" maxlength="500"
+							show-word-limit clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -109,17 +114,10 @@
 <script lang="ts" setup name="FdSystemInfoConfig">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { buildMixedQuery } from '/@/utils/queryBuilder';
-import type { FdSystemInfoConfig } from '/@/api/fd-system-api/typings';
-import type {
-	CreateFdSystemInfoConfigDto,
-	FdSystemInfoConfigDto,
-	UpdateFdSystemInfoConfigDto,
-	PageQueryByConditionDto,
-} from '/@/api/fd-system-api/typings';
+import { buildMixedQuery } from '@/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
-import * as FdSystemInfoConfigApi from '/@/api/fd-system-api/FdSystemInfoConfig';
+import * as FdSystemInfoConfigApi from '@/api/fd-system-api/FdSystemInfoConfig';
 
 const queryForm = ref();
 const formRef = ref();
@@ -128,7 +126,7 @@ const state = reactive({
 	loading: false,
 	searchCollapsed: true,
 	tableData: {
-		data: [] as FdSystemInfoConfigDto[],
+		data: [] as APIModel.FdSystemInfoConfigDto[]
 	},
 	queryParams: {
 		Name: null,
@@ -136,12 +134,17 @@ const state = reactive({
 		Value: null,
 		Description: null,
 		IsSystem: null,
+
 	},
-	pagination: { page: 1, pageSize: 20, total: 0 },
+	pagination: {
+		page: 1,
+		pageSize: 20,
+		total: 0,
+	},
 	dialog: {
 		visible: false,
 		title: '',
-		type: 'create', // 'create' | 'update'
+		type: 'create' as 'create' | 'update',
 	},
 	formData: {
 		Id: '',
@@ -149,8 +152,8 @@ const state = reactive({
 		Code: '',
 		Value: '',
 		Description: '',
-		IsSystem: '',
-	},
+		IsSystem: false,
+	}
 });
 const toggleSearchCollapse = () => {
 	state.searchCollapsed = !state.searchCollapsed;
@@ -160,17 +163,18 @@ const getList = async () => {
 	state.loading = true;
 	try {
 		//构建查询条件
-		const queryConfig = {
+		const queryConfig =
+		{
 			customs: [
-				{ field: 'Name', operator: 'eq', value: state.queryParams.Name },
-				{ field: 'Code', operator: 'eq', value: state.queryParams.Code },
-				{ field: 'Value', operator: 'eq', value: state.queryParams.Value },
-				{ field: 'Description', operator: 'eq', value: state.queryParams.Description },
-				{ field: 'IsSystem', operator: 'eq', value: state.queryParams.IsSystem },
+				{ field: 'Name', operator: 'eq', value: state.queryParams.Name, },
+				{ field: 'Code', operator: 'eq', value: state.queryParams.Code, },
+				{ field: 'Value', operator: 'eq', value: state.queryParams.Value, },
+				{ field: 'Description', operator: 'eq', value: state.queryParams.Description, },
+				{ field: 'IsSystem', operator: 'eq', value: state.queryParams.IsSystem, },
 			],
-			ranges: {},
-		};
-		const searchBody: PageQueryByConditionDto = {
+			ranges: {}
+		}
+		const searchBody: APIModel.PageQueryByConditionDto = {
 			PageIndex: state.pagination.page,
 			PageSize: state.pagination.pageSize,
 		};
@@ -182,7 +186,7 @@ const getList = async () => {
 		// 调试日志
 		//console.log('Search request body:', searchBody);
 		const response = await FdSystemInfoConfigApi.postAdminFdSystemInfoConfigPageSearch(searchBody);
-		state.tableData.data = (response.Items as FdSystemInfoConfigDto[]) || ([] as FdSystemInfoConfigDto[]);
+		state.tableData.data = response.Items as APIModel.FdSystemInfoConfigDto[] || [] as APIModel.FdSystemInfoConfigDto[];
 		state.pagination.total = response.PageInfo?.Total || 0;
 	} catch (error) {
 		ElMessage.error('获取数据失败');
@@ -222,7 +226,6 @@ const openAddDialog = () => {
 	state.dialog.title = '新增';
 	state.dialog.type = 'create';
 	formRef.value?.resetFields();
-	state.formData = {};
 };
 
 // 打开编辑对话框
@@ -240,12 +243,12 @@ const submitForm = () => {
 		try {
 			if (state.dialog.type === 'update' && state.formData.Id) {
 				// 更新接口调用
-				const updateData = { ...state.formData } as UpdateFdSystemInfoConfigDto;
+				const updateData = { ...state.formData } as APIModel.UpdateFdSystemInfoConfigDto;
 				await FdSystemInfoConfigApi.putAdminFdSystemInfoConfigId({ id: state.formData.Id }, updateData);
 				ElMessage.success('更新成功');
 			} else {
 				// 新增接口调用
-				const createData = { ...state.formData } as CreateFdSystemInfoConfigDto;
+				const createData = { ...state.formData } as APIModel.CreateFdSystemInfoConfigDto;
 				await FdSystemInfoConfigApi.postAdminFdSystemInfoConfig(createData);
 				ElMessage.success('添加成功');
 			}
@@ -259,11 +262,11 @@ const submitForm = () => {
 };
 
 // 删除
-const handleDelete = (row: FdSystemInfoConfigDto) => {
+const handleDelete = (row: APIModel.FdSystemInfoConfigDto) => {
 	ElMessageBox.confirm('确定删除吗？')
 		.then(async () => {
 			// 删除接口调用
-			await FdSystemInfoConfigApi.deleteAdminFdSystemInfoConfigId({ id: row.Id });
+			await FdSystemInfoConfigApi.deleteAdminFdSystemInfoConfigId({ id: row.Id as string });
 			ElMessage.success('删除成功');
 			getList();
 		})
@@ -282,9 +285,8 @@ onMounted(() => {
 	margin-right: 12px !important; // 稍微紧凑一点
 	margin-bottom: 8px !important;
 }
+
 .fdsysteminfoconfig-container .el-card:first-child .el-form .el-form-item:last-of-type {
 	margin-bottom: 0 !important;
 }
 </style>
-
-

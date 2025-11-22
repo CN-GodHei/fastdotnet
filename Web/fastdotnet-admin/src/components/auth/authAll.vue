@@ -5,8 +5,8 @@
 <script setup lang="ts" name="authAll">
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useUserInfo } from '/@/stores/userInfo';
-import { judementSameArr } from '/@/utils/arrayOperation';
+import { useUserInfo } from '@/stores/userInfo';
+import { judementSameArr } from '@/utils/arrayOperation';
 
 // 定义父组件传过来的值
 const props = defineProps({

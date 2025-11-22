@@ -1,4 +1,4 @@
-import { baseSignalRManager } from '/@/utils/signalr';
+import { baseSignalRManager } from '@/utils/signalr';
 
 // 插件SignalR工具类（完全由插件控制）
 class PluginSignalRToolkit {
