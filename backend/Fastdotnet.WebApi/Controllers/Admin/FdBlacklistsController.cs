@@ -14,12 +14,12 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     /// </summary>
     [Route("api/admin/[controller]")]
     [ApiController]
-    public class BlacklistsController : GenericDtoControllerBase<FdBlacklist,string, CreateFdBlacklistDto, UpdateFdBlacklistDto, FdBlacklistDto>
+    public class FdBlacklistsController : GenericDtoControllerBase<FdBlacklist,string, CreateFdBlacklistDto, UpdateFdBlacklistDto, FdBlacklistDto>
     {
         private readonly IBaseService<FdBlacklist, string> _blacklistService;
         private readonly IRateLimitCacheService _rateLimitCacheService;
 
-        public BlacklistsController(
+        public FdBlacklistsController(
             IBaseService<FdBlacklist, string> blacklistService, 
             IMapper mapper,
             IRateLimitCacheService rateLimitCacheService) 

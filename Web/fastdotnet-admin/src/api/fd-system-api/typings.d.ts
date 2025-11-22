@@ -248,16 +248,6 @@ declare namespace APIModel {
 		Notes?: string;
 	};
 
-	type deleteAdminBlacklistsIdParams = {
-		/** 要删除的记录的唯一标识符 */
-		id: string;
-	};
-
-	type deleteAdminBlacklistsRecyclebinIdPermanentParams = {
-		/** 要永久删除的记录的唯一标识符 */
-		id: string;
-	};
-
 	type deleteAdminCacheTestClearByTagParams = {
 		tags?: string[];
 	};
@@ -268,6 +258,16 @@ declare namespace APIModel {
 	};
 
 	type deleteAdminFdAdminUserRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminFdBlacklistsIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminFdBlacklistsRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -513,7 +513,6 @@ declare namespace APIModel {
 		IsSystem?: boolean;
 		CreateTime?: string;
 		UpdateTime?: string;
-		IsDeleted?: boolean;
 	};
 
 	type FdBlacklistDtoPageResult = {
@@ -766,30 +765,6 @@ declare namespace APIModel {
 		MachineFingerprint: string;
 	};
 
-	type getAdminBlacklistsCheckParams = {
-		type?: string;
-		value?: string;
-	};
-
-	type getAdminBlacklistsIdParams = {
-		/** 记录的唯一标识符 */
-		id: string;
-	};
-
-	type getAdminBlacklistsPageParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type getAdminBlacklistsRecyclebinParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
 	type getAdminCacheTestGetParams = {
 		/** 缓存键 */
 		key?: string;
@@ -822,6 +797,30 @@ declare namespace APIModel {
 	};
 
 	type getAdminFdAdminUserRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminFdBlacklistsCheckParams = {
+		type?: string;
+		value?: string;
+	};
+
+	type getAdminFdBlacklistsIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getAdminFdBlacklistsPageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminFdBlacklistsRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
@@ -1325,22 +1324,22 @@ declare namespace APIModel {
 		2 = '2',
 	}
 
-	type putAdminBlacklistsIdParams = {
-		/** 要更新的记录的唯一标识符 */
-		id: string;
-	};
-
-	type putAdminBlacklistsRecyclebinIdRestoreParams = {
-		/** 要恢复的记录的唯一标识符 */
-		id: string;
-	};
-
 	type putAdminFdAdminUserIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
 	type putAdminFdAdminUserRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdBlacklistsIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdBlacklistsRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};

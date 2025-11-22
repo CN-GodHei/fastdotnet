@@ -4,12 +4,12 @@
 // API 唯一标识：
 import * as Auth from './Auth';
 import * as AppMenus from './AppMenus';
-import * as Blacklists from './Blacklists';
 import * as CacheTest from './CacheTest';
 import * as Captcha from './Captcha';
 import * as CodeGen from './CodeGen';
 import * as CodeGenConfig from './CodeGenConfig';
 import * as FdAdminUser from './FdAdminUser';
+import * as FdBlacklists from './FdBlacklists';
 import * as FdEmailConfig from './FdEmailConfig';
 import * as FdMenu from './FdMenu';
 import * as FdMenuButtons from './FdMenuButtons';
@@ -22,12 +22,12 @@ import * as SystemConfig from './SystemConfig';
 export default {
 	Auth,
 	AppMenus,
-	Blacklists,
 	CacheTest,
 	Captcha,
 	CodeGen,
 	CodeGenConfig,
 	FdAdminUser,
+	FdBlacklists,
 	FdEmailConfig,
 	FdMenu,
 	FdMenuButtons,
