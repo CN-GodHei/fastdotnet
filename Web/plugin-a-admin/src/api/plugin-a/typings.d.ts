@@ -51,7 +51,7 @@ declare namespace APIModel {
     Description?: string;
   };
 
-  type CreateMenuButtonDto = {
+  type CreateFdFdMenuButtonDto = {
     Name?: string;
     Code?: string;
     Description?: string;
@@ -349,7 +349,7 @@ declare namespace APIModel {
     CaptchaCode?: string;
   };
 
-  type MenuButtonDto = {
+  type FdMenuButtonDto = {
     Id?: string;
     Name?: string;
     Code?: string;
@@ -362,9 +362,9 @@ declare namespace APIModel {
     IsEnabled?: boolean;
   };
 
-  type MenuButtonDtoPageResult = {
+  type FdMenuButtonDtoPageResult = {
     PageInfo?: PageInfo;
-    Items?: MenuButtonDto[];
+    Items?: FdMenuButtonDto[];
   };
 
   type MenuDto = {
@@ -562,7 +562,7 @@ declare namespace APIModel {
     Description?: string;
   };
 
-  type UpdateMenuButtonDto = {
+  type UpdateFdFdMenuButtonDto = {
     Name?: string;
     Code?: string;
     Description?: string;

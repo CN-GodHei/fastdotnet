@@ -2148,7 +2148,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/admin/menu-buttons")]
-        Task<IApiResponse<ICollection<MenuButtonDto>>> MenuButtonsAll(CancellationToken cancellationToken = default);
+        Task<IApiResponse<ICollection<FdMenuButtonDto>>> MenuButtonsAll(CancellationToken cancellationToken = default);
 
         /// <summary>创建新记录</summary>
         /// <remarks>根据提供的数据创建一条新记录。</remarks>
@@ -2168,7 +2168,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/menu-buttons")]
-        Task<IApiResponse<MenuButtonDto>> MenuButtonsPOST([Body] CreateMenuButtonDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdMenuButtonDto>> MenuButtonsPOST([Body] CreateFdFdMenuButtonDto body, CancellationToken cancellationToken = default);
 
         /// <summary>根据ID获取记录</summary>
         /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
@@ -2188,7 +2188,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/admin/menu-buttons/{id}")]
-        Task<IApiResponse<MenuButtonDto>> MenuButtonsGET(string id, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdMenuButtonDto>> MenuButtonsGET(string id, CancellationToken cancellationToken = default);
 
         /// <summary>更新现有记录</summary>
         /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
@@ -2209,7 +2209,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/admin/menu-buttons/{id}")]
-        Task<IApiResponse<MenuButtonDto>> MenuButtonsPUT(string id, [Body] UpdateMenuButtonDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdMenuButtonDto>> MenuButtonsPUT(string id, [Body] UpdateFdFdMenuButtonDto body, CancellationToken cancellationToken = default);
 
         /// <summary>删除记录</summary>
         /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
@@ -2250,7 +2250,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/admin/menu-buttons/page")]
-        Task<IApiResponse<MenuButtonDtoPageResult>> Page6([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdMenuButtonDtoPageResult>> Page6([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件分页获取记录</summary>
         /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
@@ -2269,7 +2269,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/menu-buttons/page/search")]
-        Task<IApiResponse<MenuButtonDtoPageResult>> Search11([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdMenuButtonDtoPageResult>> Search11([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>批量创建新记录</summary>
         /// <remarks>根据提供的数据批量创建新记录。</remarks>
@@ -2289,7 +2289,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/menu-buttons/batch")]
-        Task<IApiResponse<int>> BatchPOST6([Body] IEnumerable<CreateMenuButtonDto> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchPOST6([Body] IEnumerable<CreateFdFdMenuButtonDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>批量删除记录</summary>
         /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
@@ -2329,7 +2329,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/admin/menu-buttons/batch")]
-        Task<IApiResponse<int>> BatchPUT6([Body] IEnumerable<UpdateMenuButtonDto> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchPUT6([Body] IEnumerable<UpdateFdFdMenuButtonDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
         /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
@@ -2349,7 +2349,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/admin/menu-buttons/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition6([Body] UpdateMenuButtonDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> Updatebycondition6([Body] UpdateFdFdMenuButtonDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>获取回收站数据</summary>
         /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
@@ -2370,7 +2370,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/admin/menu-buttons/recyclebin")]
-        Task<IApiResponse<MenuButtonDtoPageResult>> Recyclebin6([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdMenuButtonDtoPageResult>> Recyclebin6([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件查询回收站数据</summary>
         /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
@@ -2389,7 +2389,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/menu-buttons/recyclebin/search")]
-        Task<IApiResponse<MenuButtonDtoPageResult>> Search12([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdMenuButtonDtoPageResult>> Search12([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>恢复回收站中的记录</summary>
         /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>

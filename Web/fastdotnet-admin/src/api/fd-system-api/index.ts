@@ -11,7 +11,7 @@ import * as CodeGen from './CodeGen';
 import * as CodeGenConfig from './CodeGenConfig';
 import * as EmailConfig from './EmailConfig';
 import * as FdAdminUser from './FdAdminUser';
-import * as MenuButtons from './MenuButtons';
+import * as FdMenuButtons from './FdMenuButtons';
 import * as Menus from './Menus';
 import * as Permissions from './Permissions';
 import * as Plugin from './Plugin';
@@ -29,7 +29,7 @@ export default {
 	CodeGenConfig,
 	EmailConfig,
 	FdAdminUser,
-	MenuButtons,
+	FdMenuButtons,
 	Menus,
 	Permissions,
 	Plugin,

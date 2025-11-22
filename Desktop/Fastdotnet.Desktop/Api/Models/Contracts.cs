@@ -543,7 +543,7 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class CreateMenuButtonDto
+    public partial class CreateFdFdMenuButtonDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
@@ -1390,7 +1390,7 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class MenuButtonDto
+    public partial class FdMenuButtonDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Id")]
@@ -1426,14 +1426,14 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class MenuButtonDtoPageResult
+    public partial class FdMenuButtonDtoPageResult
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
         public PageInfo PageInfo { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Items")]
-        public System.Collections.Generic.ICollection<MenuButtonDto> Items { get; set; }
+        public System.Collections.Generic.ICollection<FdMenuButtonDto> Items { get; set; }
 
     }
 
@@ -2177,7 +2177,7 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateMenuButtonDto
+    public partial class UpdateFdFdMenuButtonDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Name")]
@@ -2210,14 +2210,14 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class UpdateMenuButtonDtoBatchUpdateByConditionDto
+    public partial class UpdateFdFdMenuButtonDtoBatchUpdateByConditionDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Query")]
         public PageQueryByConditionDto Query { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Dto")]
-        public UpdateMenuButtonDto Dto { get; set; }
+        public UpdateFdFdMenuButtonDto Dto { get; set; }
 
     }
 

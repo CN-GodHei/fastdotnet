@@ -358,7 +358,7 @@ const onSubmit = async () => {
 				// 编辑按钮
 				if (state.ruleForm.Id) {
 					// 准备更新数据
-					const updateData: APIModel.UpdateMenuButtonDto = {
+					const updateData: APIModel.UpdateFdFdMenuButtonDto = {
 						Name: state.ruleForm.Name,
 						Code: state.ruleForm.Code, // 按钮的权限码作为Code
 						Description: state.ruleForm.Name, // 描述使用名称
@@ -370,8 +370,8 @@ const onSubmit = async () => {
 						PermissionCode: state.ruleForm.PermissionCode // 权限代码
 					};
 					
-					await import('/@/api/fd-system-api/MenuButtons').then(MenuButtonsApi => {
-						MenuButtonsApi.putAdminMenuButtonsId(
+					await import('/@/api/fd-system-api/FdMenuButtons').then(MenuButtonsApi => {
+						MenuButtonsApi.putAdminFdMenuButtonsId(
 							{ id: state.ruleForm.Id },
 							updateData
 						);
@@ -384,7 +384,7 @@ const onSubmit = async () => {
 			} else {
 				// 新增按钮
 				// 准备创建数据
-				const createData: APIModel.CreateMenuButtonDto = {
+				const createData: APIModel.CreateFdFdMenuButtonDto = {
 					Name: state.ruleForm.Name,
 					Code: state.ruleForm.Code, // 按钮的权限码
 					Description: state.ruleForm.Name, // 描述使用名称
@@ -396,8 +396,8 @@ const onSubmit = async () => {
 					PermissionCode: state.ruleForm.PermissionCode // 权限代码
 				};
 				
-				await import('/@/api/fd-system-api/MenuButtons').then(MenuButtonsApi => {
-					MenuButtonsApi.postAdminMenuButtons(createData);
+				await import('/@/api/fd-system-api/FdMenuButtons').then(MenuButtonsApi => {
+					MenuButtonsApi.postAdminFdMenuButtons(createData);
 				});
 				
 				// ElMessage.success('按钮创建成功');

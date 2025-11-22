@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
-    [Route("api/admin/menu-buttons")]
+    [Route("api/admin/[Controller]")]
     [Authorize]
-    public class MenuButtonsController : GenericDtoControllerBase<FdMenuButton, string, CreateMenuButtonDto, UpdateMenuButtonDto, MenuButtonDto>
+    public class FdMenuButtonsController : GenericDtoControllerBase<FdMenuButton, string, CreateFdFdMenuButtonDto, UpdateFdFdMenuButtonDto, FdMenuButtonDto>
     {
         private readonly IBaseService<FdMenuButton, string> _service1;
-        public MenuButtonsController(
+        public FdMenuButtonsController(
             IBaseService<FdMenuButton, string> service,
             IMapper mapper) : base(service, mapper)
         {
@@ -27,17 +27,17 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.View)]
-        public override Task<List<MenuButtonDto>> GetAll(CancellationToken cancellationToken = default) => base.GetAll();
+        public override Task<List<FdMenuButtonDto>> GetAll(CancellationToken cancellationToken = default) => base.GetAll();
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.View)]
-        public override Task<MenuButtonDto> GetById(string id, CancellationToken cancellationToken = default) => base.GetById(id);
+        public override Task<FdMenuButtonDto> GetById(string id, CancellationToken cancellationToken = default) => base.GetById(id);
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.View)]
-        public override Task<Fastdotnet.Core.Models.PageResult<MenuButtonDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
+        public override Task<Fastdotnet.Core.Models.PageResult<FdMenuButtonDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.Create)]
-        public override Task<MenuButtonDto> Create(CreateMenuButtonDto dto) => base.Create(dto);
-        protected override async Task BeforeCreate(FdMenuButton entity, CreateMenuButtonDto dto)
+        public override Task<FdMenuButtonDto> Create(CreateFdFdMenuButtonDto dto) => base.Create(dto);
+        protected override async Task BeforeCreate(FdMenuButton entity, CreateFdFdMenuButtonDto dto)
         {
             if (string.IsNullOrEmpty(entity.Code))
             {
@@ -57,7 +57,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.Edit)]
-        public override Task<MenuButtonDto> Update(string id, UpdateMenuButtonDto dto) => base.Update(id, dto);
+        public override Task<FdMenuButtonDto> Update(string id, UpdateFdFdMenuButtonDto dto) => base.Update(id, dto);
 
         [Authorize(Policy = Permissions.Admin.MenuButtons.Delete)]
         public override Task<bool> Delete(string id) => base.Delete(id);

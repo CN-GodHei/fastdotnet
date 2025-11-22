@@ -7,13 +7,13 @@ namespace Fastdotnet.Core.Models.System
     {
         public MenuButtonProfile()
         {
-            CreateMap<FdMenuButton, MenuButtonDto>();
-            CreateMap<CreateMenuButtonDto, FdMenuButton>();
-            CreateMap<UpdateMenuButtonDto, FdMenuButton>();
+            CreateMap<FdMenuButton, FdMenuButtonDto>();
+            CreateMap<CreateFdFdMenuButtonDto, FdMenuButton>();
+            CreateMap<UpdateFdFdMenuButtonDto, FdMenuButton>();
         }
     }
 
-    public class MenuButtonDto
+    public class FdMenuButtonDto
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -27,7 +27,7 @@ namespace Fastdotnet.Core.Models.System
         public bool IsEnabled { get; set; }
     }
 
-    public class CreateMenuButtonDto
+    public class CreateFdFdMenuButtonDto
     {
         public string Name { get; set; }
         public string Code { get; set; }
@@ -40,7 +40,7 @@ namespace Fastdotnet.Core.Models.System
         public bool IsEnabled { get; set; } = true;
     }
 
-    public class UpdateMenuButtonDto
+    public class UpdateFdFdMenuButtonDto
     {
         public string Name { get; set; }
         public string Code { get; set; }

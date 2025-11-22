@@ -131,6 +131,18 @@ declare namespace APIModel {
 		ShowColumnName?: string;
 	};
 
+	type CreateFdFdMenuButtonDto = {
+		Name?: string;
+		Code?: string;
+		Description?: string;
+		MenuCode?: string;
+		Module?: string;
+		Category?: string;
+		Sort?: number;
+		PermissionCode?: string;
+		IsEnabled?: boolean;
+	};
+
 	type CreateFdRateLimitRuleDto = {
 		Type: string;
 		Key: string;
@@ -160,18 +172,6 @@ declare namespace APIModel {
 		IsFree?: boolean;
 		DownloadUrl?: string;
 		DocumentationUrl?: string;
-	};
-
-	type CreateMenuButtonDto = {
-		Name?: string;
-		Code?: string;
-		Description?: string;
-		MenuCode?: string;
-		Module?: string;
-		Category?: string;
-		Sort?: number;
-		PermissionCode?: string;
-		IsEnabled?: boolean;
 	};
 
 	type CreateMenuDto = {
@@ -278,12 +278,12 @@ declare namespace APIModel {
 		id: string;
 	};
 
-	type deleteAdminMenuButtonsIdParams = {
+	type deleteAdminFdMenuButtonsIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminMenuButtonsRecyclebinIdPermanentParams = {
+	type deleteAdminFdMenuButtonsRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -610,6 +610,24 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
+	type FdMenuButtonDto = {
+		Id?: string;
+		Name?: string;
+		Code?: string;
+		Description?: string;
+		MenuCode?: string;
+		Module?: string;
+		Category?: string;
+		Sort?: number;
+		PermissionCode?: string;
+		IsEnabled?: boolean;
+	};
+
+	type FdMenuButtonDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdMenuButtonDto[];
+	};
+
 	type FdRateLimitRuleBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -731,19 +749,19 @@ declare namespace APIModel {
 		pageSize?: number;
 	};
 
-	type getAdminMenuButtonsIdParams = {
+	type getAdminFdMenuButtonsIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getAdminMenuButtonsPageParams = {
+	type getAdminFdMenuButtonsPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminMenuButtonsRecyclebinParams = {
+	type getAdminFdMenuButtonsRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
@@ -994,24 +1012,6 @@ declare namespace APIModel {
 	type MarketplacePluginDtoPageResult = {
 		PageInfo?: PageInfo;
 		Items?: MarketplacePluginDto[];
-	};
-
-	type MenuButtonDto = {
-		Id?: string;
-		Name?: string;
-		Code?: string;
-		Description?: string;
-		MenuCode?: string;
-		Module?: string;
-		Category?: string;
-		Sort?: number;
-		PermissionCode?: string;
-		IsEnabled?: boolean;
-	};
-
-	type MenuButtonDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: MenuButtonDto[];
 	};
 
 	type MenuDto = {
@@ -1284,12 +1284,12 @@ declare namespace APIModel {
 		id: string;
 	};
 
-	type putAdminMenuButtonsIdParams = {
+	type putAdminFdMenuButtonsIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminMenuButtonsRecyclebinIdRestoreParams = {
+	type putAdminFdMenuButtonsRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
@@ -1530,6 +1530,23 @@ declare namespace APIModel {
 		Dto?: UpdateFdCodeGenConfigDto;
 	};
 
+	type UpdateFdFdMenuButtonDto = {
+		Name?: string;
+		Code?: string;
+		Description?: string;
+		MenuCode?: string;
+		Module?: string;
+		Category?: string;
+		Sort?: number;
+		PermissionCode?: string;
+		IsEnabled?: boolean;
+	};
+
+	type UpdateFdFdMenuButtonDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdFdMenuButtonDto;
+	};
+
 	type UpdateFdRateLimitRuleDto = {
 		Type: string;
 		Key: string;
@@ -1576,23 +1593,6 @@ declare namespace APIModel {
 	type UpdateMarketplacePluginDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateMarketplacePluginDto;
-	};
-
-	type UpdateMenuButtonDto = {
-		Name?: string;
-		Code?: string;
-		Description?: string;
-		MenuCode?: string;
-		Module?: string;
-		Category?: string;
-		Sort?: number;
-		PermissionCode?: string;
-		IsEnabled?: boolean;
-	};
-
-	type UpdateMenuButtonDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMenuButtonDto;
 	};
 
 	type UpdateMenuDto = {
