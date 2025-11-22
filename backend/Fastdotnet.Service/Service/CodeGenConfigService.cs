@@ -396,25 +396,32 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
             var WhetherQuery = configcolumns.Where(x => x.WhetherQuery == "是" && x.QueryType == "BETWEEN");
             return $@"<template>
 	<div class=""{entityName.ToLower()}-container"">
-		<el-card shadow=""hover"" :body-style=""{{ padding: 5 }}"">
+		<el-card shadow=""hover"" :body-style=""{{ padding: 2 }}"">
 			<el-form :model=""state.queryParams"" ref=""queryForm"" :inline=""true"">
+                <div v-show=""state.searchCollapsed"" >
                     {string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == "是").Select((col, idx) =>
                                        $@"{getFrontendQueryTemp(col)}"
 
                     ))}
+                </div>
 				<el-form-item>
 					<el-button-group>
 						<el-button type=""primary"" icon=""ele-Search"" @click=""handleQuery""> 查询 </el-button>
 						<el-button icon=""ele-Refresh"" @click=""resetQuery""> 重置 </el-button>
+						<el-button @click=""toggleSearchCollapse"" 
+							:icon=""state.searchCollapsed ? 'ele-ArrowUp' : 'ele-ArrowDown'"">
+							{{{{ state.searchCollapsed ? '收起' : '展开' }}}}
+						</el-button>
 					</el-button-group>
-				</el-form-item>
-				<el-form-item>
-					<el-button type=""primary"" icon=""ele-Plus"" @click=""openAddDialog""> 新增 </el-button>
 				</el-form-item>
 			</el-form>
 		</el-card>
 
 		<el-card class=""full-table"" shadow=""hover"" style=""margin-top: 5px"">
+			<div class=""table-toolbar"" style=""margin-bottom: 15px;"">
+				<el-button type=""primary"" icon=""ele-Plus"" @click=""openAddDialog""> 新增 </el-button>
+				<el-button icon=""ele-Download""> 导出 </el-button>
+			</div>
 			<el-table :data=""state.tableData.data"" style=""width: 100%"" v-loading=""state.loading"" border>
 				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherTable == "是").Select((col, idx) =>
                     $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ShowColumnName ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
@@ -466,11 +473,13 @@ import {{ ref, reactive, onMounted }} from 'vue';
 import {{ ElMessageBox, ElMessage }} from 'element-plus';
 import {{buildMixedQuery}} from '/@/utils/queryBuilder';
 import type {{{entityName}}} from '/@/api/fd-system-api/typings';
+import dayjs from 'dayjs'; // 引入日期处理库
 const queryForm = ref();
 const formRef = ref();
 
 const state = reactive({{
 	loading: false,
+    searchCollapsed: true, 
 	tableData: {{
 		data: [],
 		total: 0,
@@ -497,7 +506,9 @@ const state = reactive({{
 	{string.Join("\n\t", configcolumns.Where(x => x.WhetherAddUpdate == "是").Select((col, idx) => $@"{col.PropertyName}:'',"))}
 }}
 }});
-
+const toggleSearchCollapse = () => {{
+	state.searchCollapsed = !state.searchCollapsed;
+}};
 // 获取列表
 const getList = async () => {{
 	state.loading = true;
@@ -593,7 +604,22 @@ const handleDelete = (row: any) => {{
 onMounted(() => {{
 	getList();
 }});
-</script>";
+</script>
+<style scoped lang=""scss"">
+.el-form--inline .el-form-item {{
+	margin-right: 12px !important; // 稍微紧凑一点
+	margin-bottom: 8px !important;
+}}
+.{entityName.ToLower()}-container .el-card:first-child .el-form .el-form-item:last-of-type {{
+    margin-bottom: 0 !important;
+}}
+</style>
+
+
+"
+
+
+;
         }
 
         /// <summary>
@@ -650,7 +676,7 @@ onMounted(() => {{
             else
             {
                 return $@"<el-form-item label=""{fdCodeGenConfig.ShowColumnName}"" prop=""{fdCodeGenConfig.PropertyName}"">
-					<el-input placeholder=""请输入{fdCodeGenConfig.ShowColumnName}"" clearable  v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" />
+					<el-input placeholder=""请输入{fdCodeGenConfig.ShowColumnName}"" clearable  v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" style=""width: 150px""/>
 				</el-form-item>";
             }
 
