@@ -14,12 +14,12 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     /// </summary>
     [Route("api/admin/[controller]")]
     [ApiController]
-    public class RateLimitRulesController : GenericDtoControllerBase<FdRateLimitRule, CreateFdRateLimitRuleDto, UpdateFdRateLimitRuleDto, FdRateLimitRuleDto>
+    public class FdRateLimitRulesController : GenericDtoControllerBase<FdRateLimitRule, CreateFdRateLimitRuleDto, UpdateFdRateLimitRuleDto, FdRateLimitRuleDto>
     {
         private readonly IBaseService<FdRateLimitRule, string> _rateLimitRuleService;
         private readonly IRateLimitCacheService _rateLimitCacheService;
 
-        public RateLimitRulesController(
+        public FdRateLimitRulesController(
             IBaseService<FdRateLimitRule, string> rateLimitRuleService, 
             IMapper mapper,
             IRateLimitCacheService rateLimitCacheService) 
