@@ -474,6 +474,8 @@ import {{ ElMessageBox, ElMessage }} from 'element-plus';
 import {{buildMixedQuery}} from '/@/utils/queryBuilder';
 import type {{{entityName}}} from '/@/api/fd-system-api/typings';
 import dayjs from 'dayjs'; // 引入日期处理库
+import * as {entityName}Api from '/@/api/fd-system-api/{entityName}';
+
 const queryForm = ref();
 const formRef = ref();
 
@@ -529,7 +531,7 @@ const getList = async () => {{
 	}}
     // 调试日志
     //console.log('Search request body:', searchBody);
-		//const response = await postAdminFdBlacklistsPageSearch(searchBody);
+		const response = await {entityName}Api.postAdmin{entityName}PageSearch(searchBody);
 		state.tableData.data = response.Items || [];
 		state.tableData.total = response.PageInfo?.Total || 0;
 	}} catch (error) {{

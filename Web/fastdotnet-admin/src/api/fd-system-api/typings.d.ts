@@ -307,12 +307,12 @@ declare namespace APIModel {
 		id: string;
 	};
 
-	type deleteAdminFdRateLimitRulesIdParams = {
+	type deleteAdminFdRatelimitRuleIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdRateLimitRulesRecyclebinIdPermanentParams = {
+	type deleteAdminFdRatelimitRuleRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -898,29 +898,29 @@ declare namespace APIModel {
 		pageSize?: number;
 	};
 
-	type getAdminFdRateLimitRulesByTypeAndKeyParams = {
+	type getAdminFdRatelimitRuleByTypeAndKeyParams = {
 		type?: string;
 		key?: string;
 	};
 
-	type getAdminFdRateLimitRulesCheckParams = {
+	type getAdminFdRatelimitRuleCheckParams = {
 		type?: string;
 		key?: string;
 	};
 
-	type getAdminFdRateLimitRulesIdParams = {
+	type getAdminFdRatelimitRuleIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getAdminFdRateLimitRulesPageParams = {
+	type getAdminFdRatelimitRulePageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdRateLimitRulesRecyclebinParams = {
+	type getAdminFdRatelimitRuleRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
@@ -1384,12 +1384,12 @@ declare namespace APIModel {
 		id: string;
 	};
 
-	type putAdminFdRateLimitRulesIdParams = {
+	type putAdminFdRatelimitRuleIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdRateLimitRulesRecyclebinIdRestoreParams = {
+	type putAdminFdRatelimitRuleRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};

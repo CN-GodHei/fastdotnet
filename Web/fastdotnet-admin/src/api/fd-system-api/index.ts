@@ -14,7 +14,7 @@ import * as FdEmailConfig from './FdEmailConfig';
 import * as FdMenu from './FdMenu';
 import * as FdMenuButtons from './FdMenuButtons';
 import * as FdPermissions from './FdPermissions';
-import * as FdRateLimitRules from './FdRateLimitRules';
+import * as FdRatelimitRule from './FdRatelimitRule';
 import * as Plugin from './Plugin';
 import * as Roles from './Roles';
 import * as System from './System';
@@ -32,7 +32,7 @@ export default {
 	FdMenu,
 	FdMenuButtons,
 	FdPermissions,
-	FdRateLimitRules,
+	FdRatelimitRule,
 	Plugin,
 	Roles,
 	System,

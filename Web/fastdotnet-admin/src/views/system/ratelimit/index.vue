@@ -121,7 +121,8 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import { buildMixedQuery } from '/@/utils/queryBuilder';
 import type { FdRatelimitRule } from '/@/api/fd-system-api/typings';
 import dayjs from 'dayjs'; // 引入日期处理库
-import * as FdRateLimitRulesApi from '/@/api/fd-system-api/FdRateLimitRules';
+import * as FdRatelimitRuleApi from '/@/api/fd-system-api/FdRatelimitRule';
+
 const queryForm = ref();
 const formRef = ref();
 
@@ -193,7 +194,7 @@ const getList = async () => {
 		}
 		// 调试日志
 		//console.log('Search request body:', searchBody);
-		const response = await FdRateLimitRulesApi.postAdminFdRateLimitRulesPageSearch(searchBody);
+		const response = await FdRatelimitRuleApi.postAdminFdRatelimitRulePageSearch(searchBody);
 		state.tableData.data = response.Items || [];
 		state.tableData.total = response.PageInfo?.Total || 0;
 	} catch (error) {
