@@ -1,6 +1,6 @@
 namespace Fastdotnet.Core.Models.System
 {
-    public class SystemConfigDto
+    public class FdSystemInfoConfigDto
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -10,7 +10,7 @@ namespace Fastdotnet.Core.Models.System
         public bool IsSystem { get; set; }
     }
 
-    public class CreateSystemConfigDto
+    public class CreateFdSystemInfoConfigDto
     {
         //public string Id { get; set; }
         public string Name { get; set; }
@@ -20,7 +20,7 @@ namespace Fastdotnet.Core.Models.System
         public bool IsSystem { get; set; }
     }
 
-    public class UpdateSystemConfigDto
+    public class UpdateFdSystemInfoConfigDto
     {
         public string Id { get; set; }
         //public string Code { get; set; }

@@ -3754,7 +3754,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/admin/SystemConfig")]
-        Task<IApiResponse<ICollection<SystemConfigDto>>> SystemConfigAll(CancellationToken cancellationToken = default);
+        Task<IApiResponse<ICollection<FdSystemInfoConfigDto>>> SystemConfigAll(CancellationToken cancellationToken = default);
 
         /// <summary>创建新记录</summary>
         /// <remarks>根据提供的数据创建一条新记录。</remarks>
@@ -3774,7 +3774,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/SystemConfig")]
-        Task<IApiResponse<SystemConfigDto>> SystemConfigPOST([Body] SystemConfigDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdSystemInfoConfigDto>> SystemConfigPOST([Body] FdSystemInfoConfigDto body, CancellationToken cancellationToken = default);
 
         /// <summary>根据ID获取记录</summary>
         /// <remarks>根据提供的唯一标识符(ID)检索特定记录的详细信息。</remarks>
@@ -3794,7 +3794,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/admin/SystemConfig/{id}")]
-        Task<IApiResponse<SystemConfigDto>> SystemConfigGET(string id, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdSystemInfoConfigDto>> SystemConfigGET(string id, CancellationToken cancellationToken = default);
 
         /// <summary>更新现有记录</summary>
         /// <remarks>根据提供的ID和更新数据，修改现有记录的信息。</remarks>
@@ -3815,7 +3815,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/admin/SystemConfig/{id}")]
-        Task<IApiResponse<SystemConfigDto>> SystemConfigPUT(string id, [Body] SystemConfigDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdSystemInfoConfigDto>> SystemConfigPUT(string id, [Body] FdSystemInfoConfigDto body, CancellationToken cancellationToken = default);
 
         /// <summary>删除记录</summary>
         /// <remarks>根据提供的ID，从系统中移除指定的记录。</remarks>
@@ -3856,7 +3856,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/admin/SystemConfig/page")]
-        Task<IApiResponse<SystemConfigDtoPageResult>> Page10([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdSystemInfoConfigDtoPageResult>> Page10([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件分页获取记录</summary>
         /// <remarks>根据提供的查询条件和分页参数，分页检索记录。</remarks>
@@ -3875,7 +3875,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/SystemConfig/page/search")]
-        Task<IApiResponse<SystemConfigDtoPageResult>> Search19([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdSystemInfoConfigDtoPageResult>> Search19([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>批量创建新记录</summary>
         /// <remarks>根据提供的数据批量创建新记录。</remarks>
@@ -3895,7 +3895,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/SystemConfig/batch")]
-        Task<IApiResponse<int>> BatchPOST10([Body] IEnumerable<SystemConfigDto> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchPOST10([Body] IEnumerable<FdSystemInfoConfigDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>批量删除记录</summary>
         /// <remarks>根据提供的ID列表，批量删除多条记录。</remarks>
@@ -3935,7 +3935,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/admin/SystemConfig/batch")]
-        Task<IApiResponse<int>> BatchPUT10([Body] IEnumerable<SystemConfigDto> body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> BatchPUT10([Body] IEnumerable<FdSystemInfoConfigDto> body, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件批量更新实体属性（部分字段更新）</summary>
         /// <remarks>根据条件批量更新实体属性（部分字段更新）</remarks>
@@ -3955,7 +3955,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Put("/api/admin/SystemConfig/batch/updatebycondition")]
-        Task<IApiResponse<int>> Updatebycondition10([Body] SystemConfigDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<int>> Updatebycondition10([Body] FdSystemInfoConfigDtoBatchUpdateByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>获取回收站数据</summary>
         /// <remarks>检索并返回已软删除的记录（回收站数据）。</remarks>
@@ -3976,7 +3976,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Get("/api/admin/SystemConfig/recyclebin")]
-        Task<IApiResponse<SystemConfigDtoPageResult>> Recyclebin10([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdSystemInfoConfigDtoPageResult>> Recyclebin10([Query] int? pageIndex, [Query] int? pageSize, CancellationToken cancellationToken = default);
 
         /// <summary>根据条件查询回收站数据</summary>
         /// <remarks>根据提供的查询条件，检索回收站中的记录。</remarks>
@@ -3995,7 +3995,7 @@ namespace Fastdotnet.Desktop.Api
         /// </returns>
         [Headers("Accept: text/plain, application/json, text/json")]
         [Post("/api/admin/SystemConfig/recyclebin/search")]
-        Task<IApiResponse<SystemConfigDtoPageResult>> Search20([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
+        Task<IApiResponse<FdSystemInfoConfigDtoPageResult>> Search20([Body] PageQueryByConditionDto body, CancellationToken cancellationToken = default);
 
         /// <summary>恢复回收站中的记录</summary>
         /// <remarks>根据提供的ID，将已软删除的记录恢复到正常状态。</remarks>

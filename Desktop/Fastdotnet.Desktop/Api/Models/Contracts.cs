@@ -1751,7 +1751,7 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class SystemConfigDto
+    public partial class FdSystemInfoConfigDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Id")]
@@ -1775,26 +1775,26 @@ namespace Fastdotnet.Desktop.Api.Models
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class SystemConfigDtoBatchUpdateByConditionDto
+    public partial class FdSystemInfoConfigDtoBatchUpdateByConditionDto
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("Query")]
         public PageQueryByConditionDto Query { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Dto")]
-        public SystemConfigDto Dto { get; set; }
+        public FdSystemInfoConfigDto Dto { get; set; }
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class SystemConfigDtoPageResult
+    public partial class FdSystemInfoConfigDtoPageResult
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("PageInfo")]
         public PageInfo PageInfo { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("Items")]
-        public System.Collections.Generic.ICollection<SystemConfigDto> Items { get; set; }
+        public System.Collections.Generic.ICollection<FdSystemInfoConfigDto> Items { get; set; }
 
     }
 

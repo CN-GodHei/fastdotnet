@@ -21,9 +21,9 @@ namespace Fastdotnet.WebApi.Controllers.System
         private readonly IAuthService _authService;
         private readonly IVerificationCodeManager _verificationCodeManager;
         private readonly ICaptcha _captcha;
-        private readonly IRepository<SystemConfig> _systemConfigRepository;
+        private readonly IRepository<SystemInfoConfig> _systemConfigRepository;
 
-        public AuthController(IAuthService authService, IVerificationCodeManager verificationCodeManager, ICaptcha captcha, IRepository<SystemConfig> systemConfigRepository)
+        public AuthController(IAuthService authService, IVerificationCodeManager verificationCodeManager, ICaptcha captcha, IRepository<SystemInfoConfig> systemConfigRepository)
         {
             _authService = authService;
             _verificationCodeManager = verificationCodeManager;

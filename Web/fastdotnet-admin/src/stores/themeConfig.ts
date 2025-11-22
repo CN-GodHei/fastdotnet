@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { getAdminSystemConfigPublicAll } from '/@/api/fd-system-api/SystemConfig';
+import { getAdminFdSystemInfoConfigPublicAll } from '/@/api/fd-system-api/FdSystemInfoConfig';
 
 /**
  * 布局配置
@@ -163,7 +163,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 		// 从后端获取配置并更新主题配置
 		async setThemeConfigFromBackend() {
 			try {
-				const response = await getAdminSystemConfigPublicAll();
+				const response = await getAdminFdSystemInfoConfigPublicAll();
 				const configData = response;
 				
 				if (configData) {

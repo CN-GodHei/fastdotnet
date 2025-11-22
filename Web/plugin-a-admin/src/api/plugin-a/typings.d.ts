@@ -516,7 +516,7 @@ declare namespace APIModel {
     CanReduce?: boolean;
   };
 
-  type SystemConfigDto = {
+  type FdSystemInfoConfigDto = {
     Id?: string;
     Name?: string;
     Code?: string;
@@ -525,9 +525,9 @@ declare namespace APIModel {
     IsSystem?: boolean;
   };
 
-  type SystemConfigDtoPageResult = {
+  type FdSystemInfoConfigDtoPageResult = {
     PageInfo?: PageInfo;
-    Items?: SystemConfigDto[];
+    Items?: FdSystemInfoConfigDto[];
   };
 
   type UpdateAdminUserDto = {

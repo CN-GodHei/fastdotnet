@@ -317,22 +317,22 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type deleteAdminFdSystemInfoConfigIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminFdSystemInfoConfigRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
 	type deleteAdminRolesIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
 	type deleteAdminRolesRecyclebinIdPermanentParams = {
-		/** 要永久删除的记录的唯一标识符 */
-		id: string;
-	};
-
-	type deleteAdminSystemConfigIdParams = {
-		/** 要删除的记录的唯一标识符 */
-		id: string;
-	};
-
-	type deleteAdminSystemConfigRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -745,6 +745,25 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
+	type FdSystemInfoConfigDto = {
+		Id?: string;
+		Name?: string;
+		Code?: string;
+		Value?: any;
+		Description?: string;
+		IsSystem?: boolean;
+	};
+
+	type FdSystemInfoConfigDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: FdSystemInfoConfigDto;
+	};
+
+	type FdSystemInfoConfigDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdSystemInfoConfigDto[];
+	};
+
 	type FdUpdateEmailConfigDto = {
 		Host: string;
 		Port: number;
@@ -927,6 +946,25 @@ declare namespace APIModel {
 		pageSize?: number;
 	};
 
+	type getAdminFdSystemInfoConfigIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getAdminFdSystemInfoConfigPageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminFdSystemInfoConfigRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
 	type getAdminRolesIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
@@ -944,25 +982,6 @@ declare namespace APIModel {
 	};
 
 	type getAdminRolesRecyclebinParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type getAdminSystemConfigIdParams = {
-		/** 记录的唯一标识符 */
-		id: string;
-	};
-
-	type getAdminSystemConfigPageParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type getAdminSystemConfigRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
@@ -1394,22 +1413,22 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type putAdminFdSystemInfoConfigIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdSystemInfoConfigRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
 	type putAdminRolesIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
 	type putAdminRolesRecyclebinIdRestoreParams = {
-		/** 要恢复的记录的唯一标识符 */
-		id: string;
-	};
-
-	type putAdminSystemConfigIdParams = {
-		/** 要更新的记录的唯一标识符 */
-		id: string;
-	};
-
-	type putAdminSystemConfigRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
@@ -1467,7 +1486,7 @@ declare namespace APIModel {
 		2 = '2',
 	}
 
-	type SystemConfigBooleanFuncExpression = {
+	type SystemInfoConfigBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
 		Parameters?: ParameterExpression[];
@@ -1476,25 +1495,6 @@ declare namespace APIModel {
 		ReturnType?: string;
 		TailCall?: boolean;
 		CanReduce?: boolean;
-	};
-
-	type SystemConfigDto = {
-		Id?: string;
-		Name?: string;
-		Code?: string;
-		Value?: any;
-		Description?: string;
-		IsSystem?: boolean;
-	};
-
-	type SystemConfigDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: SystemConfigDto;
-	};
-
-	type SystemConfigDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: SystemConfigDto[];
 	};
 
 	type TableInfoDto = {

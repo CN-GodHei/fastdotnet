@@ -6,9 +6,9 @@ namespace Fastdotnet.Core.Entities.System
     /// <summary>
     /// 系统配置表(键值对)
     /// </summary>
-    [SugarTable("fd_systemconfig", "系统配置表")]
+    [SugarTable("fd_system_info_config", "系统信息配置表")]
     [SugarIndex("idx_config_code", nameof(Code), OrderByType.Asc, IsUnique = true)]
-    public class SystemConfig : BaseEntity
+    public class SystemInfoConfig : BaseEntity
     {
         /// <summary>
         /// 配置名称
