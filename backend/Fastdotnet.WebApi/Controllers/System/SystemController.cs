@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Fastdotnet.Plugin.Core.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace Fastdotnet.WebApi.Controllers.System
 {
@@ -19,8 +20,8 @@ namespace Fastdotnet.WebApi.Controllers.System
         [AllowAnonymous]
         public IActionResult GetMachineFingerprint()
         {
-            //var fingerprint = LicenseValidator.GenerateMachineFingerprint();
-            var fingerprint = string.Empty;
+            var fingerprint = LicenseValidator.GenerateMachineFingerprint();
+            //var fingerprint = string.Empty;
             //if (string.IsNullOrEmpty(fingerprint))
             //{
             //    return Problem("Failed to generate machine fingerprint.");
