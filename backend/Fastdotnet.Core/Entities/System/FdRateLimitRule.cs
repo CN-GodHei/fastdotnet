@@ -7,7 +7,7 @@ namespace Fastdotnet.Core.Entities.System
     /// <summary>
     /// 限流规则表
     /// </summary>
-    [SugarTable("fd_ratelimit_rule", "限流规则表")]
+    [SugarTable("fd_ratelimit_rule", "限流规则")]
     [SugarIndex("idx_ratelimit_type_key", nameof(Type), OrderByType.Asc, nameof(Key), OrderByType.Asc, true)]
     public class FdRateLimitRule : BaseEntity, ISoftDelete
     {

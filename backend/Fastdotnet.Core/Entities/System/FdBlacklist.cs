@@ -7,7 +7,7 @@ namespace Fastdotnet.Core.Entities.System
     /// <summary>
     /// 黑名单表
     /// </summary>
-    [SugarTable("fd_blacklist", "黑名单表")]
+    [SugarTable("fd_blacklist", "黑名单")]
     [SugarIndex("idx_blacklist_type_value", nameof(Type), OrderByType.Asc, nameof(Value), OrderByType.Asc, true)]
     public class FdBlacklist : BaseEntity, ISoftDelete
     {

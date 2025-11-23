@@ -6,7 +6,7 @@ namespace Fastdotnet.Core.Entities.System
     /// <summary>
     /// 角色菜单按钮关联表
     /// </summary>
-    [SugarTable("fd_rolemenubutton", "角色菜单按钮关联表")]
+    [SugarTable("fd_rolemenubutton", "角色菜单按钮关联")]
     public class FdRoleMenuButton : BaseEntity
     {
         /// <summary>

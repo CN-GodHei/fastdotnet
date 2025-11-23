@@ -8,7 +8,7 @@ namespace Fastdotnet.Core.Entities.App
     /// <summary>
     /// 前台应用用户表
     /// </summary>
-    [SugarTable("fd_app_user", "应用用户表")]
+    [SugarTable("fd_app_user", "应用用户")]
     [SugarIndex("idx_app_username", nameof(Username), OrderByType.Asc, IsUnique = true)]
     [SugarIndex("idx_app_email", nameof(Email), OrderByType.Asc, IsUnique = true)]
     [SugarIndex("idx_app_phone", nameof(PhoneNumber), OrderByType.Asc, IsUnique = true)]

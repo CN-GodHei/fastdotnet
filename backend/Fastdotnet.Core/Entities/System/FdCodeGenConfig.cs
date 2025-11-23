@@ -7,7 +7,7 @@ namespace Fastdotnet.Core.Entities.System
     /// <summary>
     /// 代码生成字段配置表
     /// </summary>
-    [SugarTable("fd_code_gen_config", "代码生成字段配置表")]
+    [SugarTable("fd_code_gen_config", "代码生成字段配置")]
     public partial class FdCodeGenConfig : BaseEntity
     {
         /// <summary>

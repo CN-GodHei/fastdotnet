@@ -8,7 +8,7 @@ namespace Fastdotnet.Core.Entities.Admin
     /// <summary>
     /// 后台管理员表
     /// </summary>
-    [SugarTable("fd_admin_user", "后台管理员表")]
+    [SugarTable("fd_admin_user", "后台管理员")]
     [SugarIndex("idx_admin_username", nameof(Username), OrderByType.Asc, IsUnique = true)]
     public class FdAdminUser : BaseEntity, ISoftDelete
     {

@@ -6,7 +6,7 @@ namespace Fastdotnet.Core.Entities.System
     /// <summary>
     /// 角色权限关联表
     /// </summary>
-    [SugarTable("fd_rolepermission", "角色权限关联表")]
+    [SugarTable("fd_rolepermission", "角色权限关联")]
     public class FdRolePermission : BaseEntity
     {
         /// <summary>

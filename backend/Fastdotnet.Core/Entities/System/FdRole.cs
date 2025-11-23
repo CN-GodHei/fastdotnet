@@ -7,7 +7,7 @@ namespace Fastdotnet.Core.Entities.System
     /// <summary>
     /// 角色表
     /// </summary>
-    [SugarTable("fd_role", "角色表")]
+    [SugarTable("fd_role", "角色")]
     [SugarIndex("idx_role_code", nameof(Code), OrderByType.Asc, IsUnique = true)]
     public class FdRole : BaseEntity, ISoftDelete
     {

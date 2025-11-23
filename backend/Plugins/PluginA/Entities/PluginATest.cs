@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PluginA.Entities
 {
-    [SugarTable("plugina_test", "插件A演示测试表")]
+    [SugarTable("plugina_test", "插件A演示测试")]
     public class PluginATest : BaseEntity
     {
         /// <summary>

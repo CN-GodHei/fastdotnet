@@ -8,7 +8,7 @@ namespace Fastdotnet.Core.Entities.System
     /// <summary>
     /// 权限表
     /// </summary>
-    [SugarTable("fd_permission", "权限表")]
+    [SugarTable("fd_permission", "权限")]
     [SugarIndex("idx_perm_code", nameof(Code), OrderByType.Asc, IsUnique = true)]
     public class FdPermission : BaseEntity, ISoftDelete
     {

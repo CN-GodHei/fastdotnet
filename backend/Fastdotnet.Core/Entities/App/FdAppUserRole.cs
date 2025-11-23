@@ -6,7 +6,7 @@ namespace Fastdotnet.Core.Entities.App
     /// <summary>
     /// 前台应用用户角色关联表
     /// </summary>
-    [SugarTable("fd_app_user_role", "前台应用用户角色关联表")]
+    [SugarTable("fd_app_user_role", "前台应用用户角色关联")]
     public class FdAppUserRole : BaseEntity
     {
         /// <summary>
