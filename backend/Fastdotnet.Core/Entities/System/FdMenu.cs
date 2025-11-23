@@ -124,6 +124,9 @@ namespace Fastdotnet.Core.Entities.System
         
         [SugarColumn(ColumnName = "is_link", ColumnDescription = "是否为链接")]
         public bool isLink { get; set; } = false;
+        public bool SupportWeb { get; set; } = false;
+        public bool SupportDesktop { get; set; } = false;
+        public bool SupportMobile { get; set; } = false;
 
         /// <summary>
         /// 子菜单

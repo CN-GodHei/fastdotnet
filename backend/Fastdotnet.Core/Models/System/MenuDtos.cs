@@ -44,6 +44,10 @@ namespace Fastdotnet.Core.Models.System
         public bool isLink { get; set; }
         public string Title { get; set; }
 
+        public bool SupportWeb { get; set; } = false;
+        public bool SupportDesktop { get; set; } = false;
+        public bool SupportMobile { get; set; } = false;
+
         public List<FdMenuDto> Children { get; set; }
     }
 
@@ -71,7 +75,9 @@ namespace Fastdotnet.Core.Models.System
         public bool IsFdMicroApp { get; set; }
         public bool isLink { get; set; }
         public string Title { get; set; }
-
+        public bool SupportWeb { get; set; } = false;
+        public bool SupportDesktop { get; set; } = false;
+        public bool SupportMobile { get; set; } = false;
     }
 
     public class UpdateFdMenuDto
@@ -99,5 +105,9 @@ namespace Fastdotnet.Core.Models.System
         public bool IsIframe { get; set; }
         public bool isLink { get; set; }
         public string Title { get; set; }
+
+        public bool SupportWeb { get; set; } = false;
+        public bool SupportDesktop { get; set; } = false;
+        public bool SupportMobile { get; set; } = false;
     }
 }
