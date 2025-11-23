@@ -7,8 +7,6 @@
 				</keep-alive>
 			</transition>
 		</router-view>
-		<!-- 微应用容器，始终存在 -->
-		<div id="subapp-viewport" class="h100" v-show="isMicroAppPage"></div>
 		<transition :name="setTransitionName" mode="out-in">
 			<Iframes class="w100" v-show="isIframePage" :refreshKey="state.iframeRefreshKey" :name="setTransitionName" :list="state.iframeList" />
 		</transition>
