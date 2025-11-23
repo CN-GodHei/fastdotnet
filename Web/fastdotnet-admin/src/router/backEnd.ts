@@ -248,6 +248,10 @@ export function dynamicImport(dynamicViewsModules: Record<string, Function>, com
 		return dynamicViewsModules[matchKey];
 	}
 	if (matchKeys?.length > 1) {
+		console.warn('Multiple matches found for component:', component, matchKeys);
 		return false;
+	}
+	if (matchKeys?.length === 0) {
+		console.warn('No match found for component:', component);
 	}
 }

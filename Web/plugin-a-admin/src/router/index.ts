@@ -26,6 +26,11 @@ const routes: RouteRecordRaw[] = [
     meta: {
       title: 'Plugin A SignalR Demo'
     }
+  },
+  {
+    path: '/:pathMatch(.*)*', // 匹配所有未定义路由
+    name: 'NotFound',
+    component: { render: () => null }, // 渲染空内容，避免警告
   }
 ];
 
