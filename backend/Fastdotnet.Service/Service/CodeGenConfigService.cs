@@ -1,4 +1,4 @@
-﻿using Fastdotnet.Core.Dtos.System;
+using Fastdotnet.Core.Dtos.System;
 using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models.System;
@@ -389,11 +389,15 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
 
+            // 确保configcolumns不为null
+            if (configcolumns == null)
+                configcolumns = new List<FdCodeGenConfig>();
+                
             //var filteredColumns = columns.Where(col =>
             //    !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) &&
             //    !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
             //var configcolumnsisshow = configcolumns.Where(x=>x.WhetherTable=="是");
-            var WhetherQuery = configcolumns.Where(x => x.WhetherQuery == "是" && x.QueryType == "BETWEEN");
+            var WhetherQuery = configcolumns.Where(x => x.WhetherQuery == "是" && x.QueryType == "BETWEEN")?? new List<FdCodeGenConfig>();
             return $@"<template>
 	<div class=""{entityName.ToLower()}-container"">
 		<el-card shadow=""hover"" :body-style=""{{ padding: 2 }}"">
