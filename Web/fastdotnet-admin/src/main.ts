@@ -5,12 +5,13 @@ import * as Pinia from 'pinia';
 import App from '@/App.vue';
 import router from '@/router';
 import * as VueRouter from 'vue-router';
-import { registerMicroApps, start } from 'qiankun';
 import { useMenuApi } from '@/api/menu';
 import { Session } from '@/utils/storage';
-import request from '@/utils/request'; // 引入主应用的 Axios 实例
-import { buildMixedQuery } from '@/utils/queryBuilder'; // 引入查询构建工具
-import { baseSignalRManager } from '@/utils/signalr'; // 引入主应用的 SignalR 管理器
+import request from '@/utils/request';
+import { buildMixedQuery } from '@/utils/queryBuilder';
+import { baseSignalRManager } from '@/utils/signalr';
+import { useMicroAppsStore } from '@/stores/microApps';
+import * as ElementPlus from 'element-plus';
 
 // --- 共享依赖 ---
 (window as any).Vue = Vue;
@@ -22,7 +23,7 @@ import { baseSignalRManager } from '@/utils/signalr'; // 引入主应用的 Sign
 import { directive } from '@/directive/index';
 import { i18n } from '@/i18n/index';
 import other from '@/utils/other';
-import * as ElementPlus from 'element-plus';
+
 import '@/theme/index.scss';
 import VueGridLayout from 'vue-grid-layout';
 
@@ -52,9 +53,16 @@ export async function startQiankun() {
         return;
     }
 
+    if (qiankunStarted) {
+        return;
+    }
+    qiankunStarted = true;
+
     try {
         const menuApi = useMenuApi();
-        const allMenus = await menuApi.getUserMenuTree();
+        // 修复类型问题，确保传给 extractMicroApps 的是数组
+        const menuResponse = await menuApi.getUserMenuTree();
+        const allMenus = Array.isArray(menuResponse) ? menuResponse : (menuResponse.data || []);
         const microAppConfigs = new Map();
 
         // 临时的调试函数，用于根据插件ID获取本地开发服务器入口
@@ -76,10 +84,10 @@ export async function startQiankun() {
             for (const menu of menus) {
                 if (menu.IsFdMicroApp && menu.PluginId) {
                     if (!microAppConfigs.has(menu.PluginId)) {
-                            let entry = getDebugEntry(menu.PluginId);                                       
+                        let entry = getDebugEntry(menu.PluginId);
                         // 如果还是没有entry，则使用默认的插件地址                                                       
-                        if (!entry) {                                                                                    
-                                entry = import.meta.env.VITE_API_URL+"/plugins/"+menu.PluginId+"/index.html";                
+                        if (!entry) {
+                            entry = import.meta.env.VITE_API_URL + "/plugins/" + menu.PluginId + "/index.html";
                         }
                         const appName = `${menu.PluginId}`;
                         const activeRule = `/micro/${menu.PluginId}`;
@@ -97,6 +105,10 @@ export async function startQiankun() {
                                 // --- 添加SignalR管理器 ---
                                 signalRManager: baseSignalRManager, // 将主应用的 SignalR 管理器通过 props 传递
                                 // --- 添加结束 ---
+                                // 传递菜单信息，用于微应用的 keep-alive 控制
+                                menuInfo: {
+                                    isKeepAlive: menu.IsKeepAlive !== undefined ? menu.IsKeepAlive : true
+                                }
                             },
                         });
                     }
@@ -109,26 +121,10 @@ export async function startQiankun() {
         };
         extractMicroApps(allMenus);
 
-        const apps = Array.from(microAppConfigs.values());
-        if (apps.length > 0) {
-            //console.log('[MainApp] Registering micro-apps with this configuration:', apps);
-            registerMicroApps(apps, {
-                beforeLoad: app => {
-                    //console.log('[MainApp] before load', app.name);
-                    return Promise.resolve();
-                },
-                afterMount: app => {
-                    //console.log('[MainApp] after mount', app.name);
-                    return Promise.resolve();
-                }
-            });
+        // Store configurations in Pinia for manual loading
+        const microAppsStore = useMicroAppsStore();
+        microAppsStore.setMicroApps(microAppConfigs);
 
-            start({
-                prefetch: 'all',
-                sandbox: { experimentalStyleIsolation: true },
-            });
-            //console.log('[MainApp] Qiankun started with apps:', apps);
-        }
     } catch (error) {
         //console.error('[MainApp] Failed to start Qiankun:', error);
     }

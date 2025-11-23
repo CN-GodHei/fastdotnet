@@ -15,6 +15,8 @@ let sharedFdRequest: AxiosInstance | null = null;
 let sharedFdQueryBuilder: any | null = null;
 // --- 添加SignalR管理器变量 ---
 let sharedSignalRManager: any | null = null; // 使用 any 类型，因为 BaseSignalRManager 在主应用中定义
+// --- 添加菜单信息变量 ---
+let menuInfo: any | null = null;
 // --- 添加结束 ---
 
 // --- 导出一个函数，让插件内部可以获取到共享的 FdRequest 实例 ---
@@ -23,17 +25,20 @@ export const getSharedFdRequest = () => sharedFdRequest;
 export const getSharedFdQueryBuilder = () => sharedFdQueryBuilder;
 // --- 导出SignalR管理器 ---
 export const getSharedSignalRManager = () => sharedSignalRManager;
+// --- 导出菜单信息 ---
+export const getMenuInfo = () => menuInfo;
 // --- 导出结束 ---
 
 const init = (props: any = {}) => {
   // --- 从 props 中解构出 FdRequest、FdQueryBuilder 和 SignalRManager ---
-  const { container, FdRequest, FdQueryBuilder, signalRManager } = props
+  const { container, FdRequest, FdQueryBuilder, signalRManager, menuInfo: propsMenuInfo } = props
   // --- 解构结束 ---
 
   // --- 保存接收到的 FdRequest 实例、查询构建器和SignalR管理器 ---
   sharedFdRequest = FdRequest;
   sharedFdQueryBuilder = FdQueryBuilder;
   sharedSignalRManager = signalRManager;
+  menuInfo = propsMenuInfo;
   // --- 保存结束 ---
 
   app = createApp(App)
@@ -64,6 +69,7 @@ const init = (props: any = {}) => {
     FdRequest,
     FdQueryBuilder,
     signalRManager,
+    menuInfo,
     // --- 返回结束 ---
     unmount() {
       if (app) {
@@ -74,6 +80,7 @@ const init = (props: any = {}) => {
       sharedFdRequest = null;
       sharedFdQueryBuilder = null;
       sharedSignalRManager = null;
+      menuInfo = null;
       // --- 清理结束 ---
     }
   }

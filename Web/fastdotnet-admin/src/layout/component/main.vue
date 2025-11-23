@@ -7,7 +7,7 @@
 			view-class="layout-main-scroll"
 		>
 			<LayoutParentView v-if="!isMicroApp" />
-			<div id="subapp-viewport" class="h100"></div>
+			<MicroAppContainer />
 			<LayoutFooter v-if="isFooter" />
 		</el-scrollbar>
 		<el-backtop :target="setBacktopClass" />
@@ -25,6 +25,7 @@ import { NextLoading } from '@/utils/loading';
 // 引入组件
 const LayoutParentView = defineAsyncComponent(() => import('@/layout/routerView/parent.vue'));
 const LayoutFooter = defineAsyncComponent(() => import('@/layout/footer/index.vue'));
+const MicroAppContainer = defineAsyncComponent(() => import('@/layout/component/MicroAppContainer.vue'));
 
 // 定义变量内容
 const layoutMainScrollbarRef = ref();

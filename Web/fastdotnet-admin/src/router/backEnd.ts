@@ -155,7 +155,7 @@ export function backEndComponent(routes: any) {
 		// 1. 创建符合 vue-router 格式的路由对象
 		const route: any = {
 			// 映射属性名
-			name: item.Name || item.Title, // 使用后端返回的 Name 或 Title 作为路由 name
+			name: item.Name || item.Title || `micro-app-${item.PluginId}`, // 使用后端返回的 Name 或 Title 作为路由 name
 			path: item.Path, // 假设后端 Path 对应前端 path
 			// component 处理
 			// item.component 是 vue-next-admin 原有的逻辑，用于处理动态导入
@@ -176,6 +176,11 @@ export function backEndComponent(routes: any) {
                                 // 关键：传递 Code 和 ParentCode 用于面包屑生成
                                 code: item.Code,
                                 parentCode: item.ParentCode,
+				// 传递菜单信息给微应用
+				menuInfo: {
+					isKeepAlive: item.IsKeepAlive !== undefined ? item.IsKeepAlive : true,
+					isFdMicroApp: item.IsFdMicroApp || false,
+				},
 			},
 			// 映射 Children
 			children: item.Children || item.children || [], // 后端可能是 Children, 前端递归可能是 children

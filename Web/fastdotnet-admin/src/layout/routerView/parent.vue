@@ -3,10 +3,12 @@
 		<router-view v-slot="{ Component }">
 			<transition :name="setTransitionName" mode="out-in">
 				<keep-alive :include="getKeepAliveNames">
-					<component :is="Component" :key="state.refreshRouterViewKey" class="w100" v-show="!isIframePage" />
+					<component :is="Component" :key="state.refreshRouterViewKey" class="w100" v-show="!isIframePage && !isMicroAppPage" />
 				</keep-alive>
 			</transition>
 		</router-view>
+		<!-- 微应用容器，始终存在 -->
+		<div id="subapp-viewport" class="h100" v-show="isMicroAppPage"></div>
 		<transition :name="setTransitionName" mode="out-in">
 			<Iframes class="w100" v-show="isIframePage" :refreshKey="state.iframeRefreshKey" :name="setTransitionName" :list="state.iframeList" />
 		</transition>
@@ -32,11 +34,11 @@ const storesKeepAliveNames = useKeepALiveNames();
 const storesThemeConfig = useThemeConfig();
 const { keepAliveNames, cachedViews } = storeToRefs(storesKeepAliveNames);
 const { themeConfig } = storeToRefs(storesThemeConfig);
-const state = reactive<ParentViewState>({
+const state = reactive({
 	refreshRouterViewKey: '', // 非 iframe tagsview 右键菜单刷新时
 	iframeRefreshKey: '', // iframe tagsview 右键菜单刷新时
-	keepAliveNameList: [],
-	iframeList: [],
+	keepAliveNameList: [] as string[],
+	iframeList: [] as RouteItem[],
 });
 
 // 设置主界面切换动画
@@ -51,13 +53,17 @@ const getKeepAliveNames = computed(() => {
 const isIframePage = computed(() => {
 	return route.meta.isIframe;
 });
+// 设置微应用显示/隐藏
+const isMicroAppPage = computed(() => {
+	return route.meta.isFdMicroApp;
+});
 // 获取 iframe 组件列表(未进行渲染)
 const getIframeListRoutes = async () => {
 	router.getRoutes().forEach((v) => {
 		if (v.meta.isIframe) {
 			v.meta.isIframeOpen = false;
 			v.meta.loading = true;
-			state.iframeList.push({ ...v });
+			state.iframeList.push({ ...v } as RouteItem);
 		}
 	});
 };
@@ -99,12 +105,13 @@ onUnmounted(() => {
 // 监听路由变化，防止 tagsView 多标签时，切换动画消失
 // https://toscode.gitee.com/lyt-top/vue-next-admin/pulls/38/files
 watch(
-	() => route.fullPath,
+	route,
 	() => {
-		state.refreshRouterViewKey = decodeURI(route.fullPath);
+		state.refreshRouterViewKey = route.fullPath;
+		state.iframeRefreshKey = route.fullPath;
 	},
 	{
-		immediate: true,
+		deep: true,
 	}
 );
 </script>
