@@ -35,7 +35,7 @@ const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const { isTagsViewCurrenFull } = storeToRefs(storesTagsViewRoutes);
 
-const isMicroApp = computed(() => route.path.startsWith('/micro/'));
+const isMicroApp = computed(() => route.meta.isFdMicroApp);
 
 // 设置 footer 显示/隐藏
 const isFooter = computed(() => {

@@ -63,15 +63,14 @@ const loadApp = async (pluginId: string) => {
 };
 
 const isAppVisible = (id: string) => {
-  // Check if current route belongs to this micro-app
-  // Assuming route path starts with /micro/{pluginId}
-  return route.path.startsWith(`/micro/${id}`);
+  // Check if current route is a micro-app AND matches this pluginId
+  return route.meta.isFdMicroApp && route.meta.pluginId === id;
 };
 
 const handleRouteChange = async () => {
-  if (!route.path.startsWith('/micro/')) return;
+  if (!route.meta.isFdMicroApp) return;
 
-  const pluginId = route.path.split('/')[2];
+  const pluginId = route.meta.pluginId as string;
   if (!pluginId) return;
 
   await loadApp(pluginId);
@@ -83,16 +82,26 @@ watch(() => route.path, handleRouteChange, { immediate: true });
 // Cleanup non-keep-alive apps or on destroy
 // Note: For now we keep all "loaded" apps in the map if they are keep-alive.
 // If we need to destroy non-keep-alive apps when leaving them, we can add logic here.
+// Cleanup non-keep-alive apps or on destroy
+// Note: For now we keep all "loaded" apps in the map if they are keep-alive.
+// If we need to destroy non-keep-alive apps when leaving them, we can add logic here.
 watch(() => route.path, (newPath, oldPath) => {
-    if (oldPath && oldPath.startsWith('/micro/')) {
-        const oldPluginId = oldPath.split('/')[2];
-        const app = loadedApps.value[oldPluginId];
-        if (app && !app.isKeepAlive) {
-             console.log(`[MicroAppContainer] Unmounting non-keep-alive app: ${oldPluginId}`);
-             app.instance.unmount();
-             delete loadedApps.value[oldPluginId];
+    // We can't easily get the old route's meta here directly without storing it or using router.afterEach
+    // But we can check if any loaded app is NOT the current one and needs to be unmounted
+    
+    // Simple approach: Iterate loaded apps, if not current and not keep-alive, unmount
+    const currentPluginId = route.meta.pluginId;
+    
+    Object.keys(loadedApps.value).forEach(pluginId => {
+        if (pluginId !== currentPluginId) {
+            const app = loadedApps.value[pluginId];
+            if (app && !app.isKeepAlive) {
+                 console.log(`[MicroAppContainer] Unmounting non-keep-alive app: ${pluginId}`);
+                 app.instance.unmount();
+                 delete loadedApps.value[pluginId];
+            }
         }
-    }
+    });
 });
 
 onUnmounted(() => {

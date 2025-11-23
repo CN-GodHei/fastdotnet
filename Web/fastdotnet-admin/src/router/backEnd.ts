@@ -114,7 +114,7 @@ export async function getBackEndControlRoutes() {
 			//console.log('无 token，跳过菜单请求');
 			return { data: [] };
 		}
-		
+
 		// 从适配的菜单 API 获取用户菜单树
 		// 由于 request.ts 已修改为直接返回 res.Data，
 		// 这里的 res 就是 res.Data，即菜单数组 [...]
@@ -172,10 +172,11 @@ export function backEndComponent(routes: any) {
 				isIframe: item.IsIframe !== undefined ? item.IsIframe : false,
 				// 传递微应用相关标识
 				isFdMicroApp: item.IsFdMicroApp || false,
+				pluginId: item.PluginId, // 添加 PluginId 到 meta
 				module: item.Module || '', // 传递 Module 字段作为微应用标识
-                                // 关键：传递 Code 和 ParentCode 用于面包屑生成
-                                code: item.Code,
-                                parentCode: item.ParentCode,
+				// 关键：传递 Code 和 ParentCode 用于面包屑生成
+				code: item.Code,
+				parentCode: item.ParentCode,
 				// 传递菜单信息给微应用
 				menuInfo: {
 					isKeepAlive: item.IsKeepAlive !== undefined ? item.IsKeepAlive : true,
