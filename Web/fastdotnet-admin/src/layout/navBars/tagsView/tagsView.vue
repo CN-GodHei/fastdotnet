@@ -134,6 +134,10 @@ const getTagsViewRoutes = async () => {
 const initTagsView = async () => {
 	if (Session.get('tagsViewList') && getThemeConfig.value.isCacheTagsView) {
 		state.tagsViewList = await Session.get('tagsViewList');
+		// 添加缓存视图
+		state.tagsViewList.forEach((tag: RouteItem) => {
+			storesKeepALiveNames.addCachedView(tag);
+		});
 	} else {
 		await state.tagsViewRoutesList.map((v: RouteItem) => {
 			if (v.meta?.isAffix && !v.meta.isHide) {

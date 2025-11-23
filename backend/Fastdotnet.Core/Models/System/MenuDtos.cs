@@ -42,6 +42,7 @@ namespace Fastdotnet.Core.Models.System
         public bool IsIframe { get; set; }
         public bool IsFdMicroApp { get; set; }
         public bool isLink { get; set; }
+        public string Title { get; set; }
 
         public List<FdMenuDto> Children { get; set; }
     }
@@ -69,6 +70,8 @@ namespace Fastdotnet.Core.Models.System
         public bool IsIframe { get; set; } = false;
         public bool IsFdMicroApp { get; set; }
         public bool isLink { get; set; }
+        public string Title { get; set; }
+
     }
 
     public class UpdateFdMenuDto
@@ -95,5 +98,6 @@ namespace Fastdotnet.Core.Models.System
         public bool IsFdMicroApp { get; set; }
         public bool IsIframe { get; set; }
         public bool isLink { get; set; }
+        public string Title { get; set; }
     }
 }

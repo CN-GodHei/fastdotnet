@@ -78,6 +78,7 @@ onBeforeMount(() => {
 // 页面加载时
 onMounted(() => {
 	getIframeListRoutes();
+	console.log("onMounted - route:", route.name, "meta:", route.meta);
 	// https://gitee.com/lyt-top/vue-next-admin/issues/I58U75
 	// https://gitee.com/lyt-top/vue-next-admin/issues/I59RXK
 	// https://gitee.com/lyt-top/vue-next-admin/pulls/40
@@ -86,6 +87,7 @@ onMounted(() => {
 			if (themeConfig.value.isCacheTagsView) {
 				let tagsViewArr: RouteItem[] = Session.get('tagsViewList') || [];
 				cachedViews.value = tagsViewArr.filter((item) => item.meta?.isKeepAlive).map((item) => item.name as string);
+				console.log("Cached views updated:", cachedViews.value);
 			}
 		}, 0);
 	});

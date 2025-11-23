@@ -11,10 +11,13 @@ namespace Fastdotnet.Core.Entities.System
     [SugarTable("fd_menu", "菜单表")]
     public class FdMenu : BaseEntity, ISoftDelete
     {
+        [SugarColumn(ColumnName = "title", IsNullable = false, ColumnDescription = "菜单标题")]
+        public string Title { get; set; }
+
         /// <summary>
         /// 菜单名称
         /// </summary>
-        [SugarColumn(ColumnName = "name", IsNullable = false, ColumnDescription = "菜单名称")]
+        [SugarColumn(ColumnName = "name", IsNullable = false, ColumnDescription = "菜单名称(和前端组件名称对应)")]
         public string Name { get; set; }
 
         /// <summary>

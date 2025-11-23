@@ -90,7 +90,7 @@ namespace Fastdotnet.Service.Initializers
     new SystemInfoConfig { Name = "是否开启 Tagsview", Code = "isTagsview", Value = true, Description = "是否启用顶部标签页导航", IsSystem = true },
     new SystemInfoConfig { Name = "是否开启 Breadcrumb 图标", Code = "isBreadcrumbIcon", Value = false, Description = "面包屑是否显示图标", IsSystem = true },
     new SystemInfoConfig { Name = "是否开启 Tagsview 图标", Code = "isTagsviewIcon", Value = false, Description = "标签页是否显示图标", IsSystem = true },
-    new SystemInfoConfig { Name = "是否开启 TagsView 缓存", Code = "isCacheTagsView", Value = false, Description = "标签页是否缓存已打开页面", IsSystem = true },
+    new SystemInfoConfig { Name = "是否开启 TagsView 缓存", Code = "isCacheTagsView", Value = true, Description = "标签页是否缓存已打开页面", IsSystem = true },
     new SystemInfoConfig { Name = "是否开启 TagsView 拖拽", Code = "isSortableTagsView", Value = true, Description = "标签页是否支持拖拽排序", IsSystem = true },
     new SystemInfoConfig { Name = "是否开启 TagsView 共用", Code = "isShareTagsView", Value = false, Description = "多标签页是否跨路由共享", IsSystem = true },
     new SystemInfoConfig { Name = "是否开启 Footer 底部版权信息", Code = "isFooter", Value = true, Description = "页面底部是否显示版权信息栏", IsSystem = true },

@@ -26,9 +26,10 @@
 				<el-table-column label="菜单名称" show-overflow-tooltip>
 					<template #default="scope">
 						<SvgIcon :name="scope.row.Icon" />
-						<span class="ml10">{{ scope.row.Name }}</span>
+						<span class="ml10">{{ scope.row.Title || scope.row.Name }}</span>
 					</template>
 				</el-table-column>
+				<el-table-column prop="Name" label="组件名称" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="Path" label="路由路径" show-overflow-tooltip></el-table-column>
 				<el-table-column label="组件路径" show-overflow-tooltip>
 					<template #default="scope">
@@ -90,7 +91,7 @@ const getTableData = async () => {
 };
 // 打开新增菜单弹窗
 const onOpenAddMenu = (type: string) => {
-	menuDialogRef.value.openDialog(type);
+	menuDialogRef.value.openDialog('add');
 };
 // 打开编辑菜单弹窗
 const onOpenEditMenu = (type: string, row: APIModel.FdMenuDto) => {

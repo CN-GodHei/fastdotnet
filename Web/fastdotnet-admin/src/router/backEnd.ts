@@ -155,7 +155,7 @@ export function backEndComponent(routes: any) {
 		// 1. 创建符合 vue-router 格式的路由对象
 		const route: any = {
 			// 映射属性名
-			name: item.Name, // 假设后端 Name 对应前端 name
+			name: item.Name || item.Title, // 使用后端返回的 Name 或 Title 作为路由 name
 			path: item.Path, // 假设后端 Path 对应前端 path
 			// component 处理
 			// item.component 是 vue-next-admin 原有的逻辑，用于处理动态导入
@@ -164,7 +164,7 @@ export function backEndComponent(routes: any) {
 			component: item.component, // 保留原有动态导入逻辑的结果
 			// meta 信息 - 这是关键部分，需要从后端字段映射
 			meta: {
-				title: item.Name, // 通常用菜单名称作为标题
+				title: item.Title || item.Name, // 使用后端返回的 Title 或 Name 作为标题
 				icon: item.Icon,  // 图标
 				isHide: item.IsHide !== undefined ? item.IsHide : false,
 				isKeepAlive: item.IsKeepAlive !== undefined ? item.IsKeepAlive : true,
@@ -180,6 +180,13 @@ export function backEndComponent(routes: any) {
 			// 映射 Children
 			children: item.Children || item.children || [], // 后端可能是 Children, 前端递归可能是 children
 		};
+
+		// 确保路由name属性存在
+		if (!route.name) {
+			// 如果没有name，则使用路径生成一个
+			route.name = item.Path.replace(/\//g, '') || 'route-' + Date.now();
+			console.log("Fallback route name:", route.name, "from path:", item.Path);
+		}
 
 		// 2. 处理 component (优先使用后端提供的 Component 字段)
 		// 特殊处理微应用菜单项
