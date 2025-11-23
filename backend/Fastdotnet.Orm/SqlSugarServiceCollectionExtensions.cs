@@ -136,7 +136,7 @@ public static class SqlSugarServiceCollectionExtensions
                         // 自动填充雪花ID（如果ID为0）
                         if (entityInfo.PropertyName == nameof(IBaseEntity.Id) && oldValue == null)
                         {
-                            entityInfo.SetValue(SnowflakeIdGenerator.NextStrId());
+                            //entityInfo.SetValue(SnowflakeIdGenerator.NextStrId());
                             entityInfo.SetValue(YitIdHelper.NextId());
                         }
 
