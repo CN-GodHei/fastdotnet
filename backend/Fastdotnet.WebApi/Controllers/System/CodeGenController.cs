@@ -242,7 +242,7 @@ namespace Fastdotnet.WebApi.Controllers.System
                 {
                     CodeGenId = entity.Id, // 直接使用字符串ID
                     ColumnName = col.ColumnName,
-                    ShowColumnName = col.PropertyName,
+                    ShowColumnName = col.ColumnComment??col.PropertyName,
                     ColumnKey = col.IsPrimarykey, // 主键标识
                     PropertyName = col.PropertyName,
                     ColumnLength = col.Length,
