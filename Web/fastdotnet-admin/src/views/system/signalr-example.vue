@@ -58,7 +58,7 @@ const connect = async () => {
       messages.value.push('登录已确认');
     });
     
-    console.log('[SignalR Example] SignalR连接成功');
+    //console.log('[SignalR Example] SignalR连接成功');
   } catch (error) {
     console.error('[SignalR Example] SignalR连接失败:', error);
   }
@@ -72,7 +72,7 @@ const disconnect = async () => {
     
     // 这里需要实现断开连接的逻辑
     // 由于SignalR库的限制，我们暂时不实现断开连接的功能
-    console.log('[SignalR Example] SignalR断开连接');
+    //console.log('[SignalR Example] SignalR断开连接');
   } catch (error) {
     console.error('[SignalR Example] SignalR断开连接失败:', error);
   }
@@ -83,7 +83,7 @@ const generateQRCode = async () => {
   try {
     const code = await baseSignalRManager.invokeHubMethod('UniversalHub', 'GenerateLoginQRCode');
     qrCode.value = code;
-    console.log('[SignalR Example] 生成二维码:', code);
+    //console.log('[SignalR Example] 生成二维码:', code);
   } catch (error) {
     console.error('[SignalR Example] 生成二维码失败:', error);
   }
@@ -98,7 +98,7 @@ const sendMessage = async () => {
     // await baseSignalRManager.invokeHubMethod('UniversalHub', 'SendMessage', message.value);
     messages.value.push(`发送消息: ${message.value}`);
     message.value = '';
-    console.log('[SignalR Example] 发送消息成功');
+    //console.log('[SignalR Example] 发送消息成功');
   } catch (error) {
     console.error('[SignalR Example] 发送消息失败:', error);
   }
@@ -114,13 +114,13 @@ onMounted(() => {
     clearInterval(interval);
   });
   
-  console.log('[SignalR Example] 组件已挂载');
+  //console.log('[SignalR Example] 组件已挂载');
 });
 
 // 组件卸载时的操作
 onUnmounted(() => {
   // 清理资源
-  console.log('[SignalR Example] 组件已卸载');
+  //console.log('[SignalR Example] 组件已卸载');
 });
 </script>
 

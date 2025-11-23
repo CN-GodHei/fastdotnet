@@ -184,7 +184,7 @@ const getList = async () => {
 			searchBody.QueryParameters = queryResult.queryParameters;
 		}
 		// 调试日志
-		//console.log('Search request body:', searchBody);
+		////console.log('Search request body:', searchBody);
 		const response = await FdSystemInfoConfigApi.postAdminFdSystemInfoConfigPageSearch(searchBody);
 		state.tableData.data = response.Items as APIModel.FdSystemInfoConfigDto[] || [] as APIModel.FdSystemInfoConfigDto[];
 		state.pagination.total = response.PageInfo?.Total || 0;

@@ -4,16 +4,16 @@ import init from './main'
 let appInstance: ReturnType<typeof init> | null = null;
 
 export async function bootstrap() {
-  console.log('[PluginB] bootstraped');
+  //console.log('[PluginB] bootstraped');
 }
 
 export async function mount(props: any) {
-  console.log('[PluginB] mounting with props:', props);
+  //console.log('[PluginB] mounting with props:', props);
   appInstance = init(props);
 }
 
 export async function unmount() {
-  console.log('[PluginB] unmounting');
+  //console.log('[PluginB] unmounting');
   if (appInstance && typeof appInstance.unmount === 'function') {
     appInstance.unmount();
   }
@@ -21,5 +21,5 @@ export async function unmount() {
 }
 
 export async function update(props: any) {
-  console.log('[PluginB] updated with props:', props);
+  //console.log('[PluginB] updated with props:', props);
 }

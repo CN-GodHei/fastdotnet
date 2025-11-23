@@ -12,7 +12,7 @@ class PluginASignalRManager {
     async initialize(): Promise<void> {
         try {
             // 插件可以在这里进行特定的初始化逻辑
-            console.log('[PluginA SignalR] 插件SignalR管理器已初始化');
+            //console.log('[PluginA SignalR] 插件SignalR管理器已初始化');
         } catch (error) {
             console.error('[PluginA SignalR] 插件SignalR管理器初始化失败:', error);
             throw error;
@@ -24,7 +24,7 @@ class PluginASignalRManager {
         try {
             // 通过主应用的SignalR管理器发送消息
             await this.baseSignalRManager.invokeHubMethod("UniversalHub", "SendPluginNotification", "PluginA", message);
-            console.log('[PluginA SignalR] 消息发送成功');
+            //console.log('[PluginA SignalR] 消息发送成功');
         } catch (error) {
             console.error('[PluginA SignalR] 消息发送失败:', error);
             throw error;
@@ -33,7 +33,7 @@ class PluginASignalRManager {
 
     // 清理资源
     cleanup(): void {
-        console.log('[PluginA SignalR] 插件SignalR管理器已清理');
+        //console.log('[PluginA SignalR] 插件SignalR管理器已清理');
     }
 }
 

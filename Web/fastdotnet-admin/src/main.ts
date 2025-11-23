@@ -36,7 +36,7 @@ app.use(pinia).use(router).use(ElementPlus).use(i18n).use(VueGridLayout).mount('
 // 初始化主题配置（获取后端配置）
 import { initializeThemeConfig } from '@/stores/themeConfig';
 initializeThemeConfig().then(() => {
-    // console.log('[MainApp] Theme configuration initialized from backend');
+    // //console.log('[MainApp] Theme configuration initialized from backend');
 }).catch(error => {
     console.error('[MainApp] Failed to initialize theme configuration:', error);
 });
@@ -48,7 +48,7 @@ export async function startQiankun() {
     // 检查是否有 token，如果没有则不启动 qiankun
     const token = Session.get('token');
     if (!token) {
-        console.log('[MainApp] No token found, skipping Qiankun initialization');
+        //console.log('[MainApp] No token found, skipping Qiankun initialization');
         return;
     }
 
@@ -111,14 +111,14 @@ export async function startQiankun() {
 
         const apps = Array.from(microAppConfigs.values());
         if (apps.length > 0) {
-            console.log('[MainApp] Registering micro-apps with this configuration:', apps);
+            //console.log('[MainApp] Registering micro-apps with this configuration:', apps);
             registerMicroApps(apps, {
                 beforeLoad: app => {
-                    console.log('[MainApp] before load', app.name);
+                    //console.log('[MainApp] before load', app.name);
                     return Promise.resolve();
                 },
                 afterMount: app => {
-                    console.log('[MainApp] after mount', app.name);
+                    //console.log('[MainApp] after mount', app.name);
                     return Promise.resolve();
                 }
             });
@@ -127,9 +127,9 @@ export async function startQiankun() {
                 prefetch: 'all',
                 sandbox: { experimentalStyleIsolation: true },
             });
-            console.log('[MainApp] Qiankun started with apps:', apps);
+            //console.log('[MainApp] Qiankun started with apps:', apps);
         }
     } catch (error) {
-        console.error('[MainApp] Failed to start Qiankun:', error);
+        //console.error('[MainApp] Failed to start Qiankun:', error);
     }
 }

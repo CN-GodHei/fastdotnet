@@ -85,7 +85,7 @@ const joinRoom = async () => {
   
   try {
     await signalRManager.baseSignalRManager.invokeHubMethod("UniversalHub", "JoinPluginRoom", "PluginA", roomName.value);
-    console.log(`[PluginA SignalR Demo] 已加入房间: ${roomName.value}`);
+    //console.log(`[PluginA SignalR Demo] 已加入房间: ${roomName.value}`);
   } catch (error) {
     console.error('[PluginA SignalR Demo] 加入房间失败:', error);
   }
@@ -97,7 +97,7 @@ const leaveRoom = async () => {
   
   try {
     await signalRManager.baseSignalRManager.invokeHubMethod("UniversalHub", "LeavePluginRoom", "PluginA", roomName.value);
-    console.log(`[PluginA SignalR Demo] 已离开房间: ${roomName.value}`);
+    //console.log(`[PluginA SignalR Demo] 已离开房间: ${roomName.value}`);
   } catch (error) {
     console.error('[PluginA SignalR Demo] 离开房间失败:', error);
   }
@@ -110,7 +110,7 @@ const sendRoomMessage = async () => {
   try {
     await signalRManager.baseSignalRManager.invokeHubMethod("UniversalHub", "SendToPluginRoom", "PluginA", roomName.value, roomMessage.value);
     roomMessage.value = '';
-    console.log(`[PluginA SignalR Demo] 已发送房间消息到: ${roomName.value}`);
+    //console.log(`[PluginA SignalR Demo] 已发送房间消息到: ${roomName.value}`);
   } catch (error) {
     console.error('[PluginA SignalR Demo] 发送房间消息失败:', error);
   }
@@ -124,7 +124,7 @@ onMounted(async () => {
     await signalRManager.initialize();
     
     isConnected.value = true;
-    console.log('[PluginA SignalR Demo] 插件SignalR已初始化并连接');
+    //console.log('[PluginA SignalR Demo] 插件SignalR已初始化并连接');
   } catch (error) {
     console.error('[PluginA SignalR Demo] 初始化失败:', error);
   }
@@ -139,7 +139,7 @@ onUnmounted(() => {
   }
   
   isConnected.value = false;
-  console.log('[PluginA SignalR Demo] 插件SignalR已清理');
+  //console.log('[PluginA SignalR Demo] 插件SignalR已清理');
 });
 </script>
 

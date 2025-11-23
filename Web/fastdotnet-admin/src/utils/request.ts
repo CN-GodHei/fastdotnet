@@ -26,12 +26,12 @@ service.interceptors.request.use(
 		// 在发送请求之前做些什么 token
 		const token = Session.get('token');
 		// 添加调试日志
-		// console.log('Request Interceptor - Token from Cookie:', token);
+		// //console.log('Request Interceptor - Token from Cookie:', token);
 		if (token) {
 			// 标准 JWT 格式通常是 Bearer <token>
 			config.headers!['Authorization'] = `Bearer ${token}`;
 		} else {
-			// console.log('Request Interceptor - No Token Found');
+			// //console.log('Request Interceptor - No Token Found');
 		}
 		return config;
 	},

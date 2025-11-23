@@ -482,7 +482,7 @@ const onSubmit = async () => {
 							? state.ruleForm.menuSuperior[state.ruleForm.menuSuperior.length - 1] // 使用最后一级菜单
 							: null,
 				};
-				console.log(11);
+				//console.log(11);
 
 				createData.Category = 'Admin';
 				await MenuApi.postAdminFdMenu(createData);

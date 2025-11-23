@@ -79,7 +79,7 @@ const onSelect = () => {
 		ElMessage.warning('请选择元素');
 		return;
 	} else {
-		// console.log(treeTableRef.value.getCheckedNodes());
+		// //console.log(treeTableRef.value.getCheckedNodes());
 	}
 };
 // 初始化树模拟数据

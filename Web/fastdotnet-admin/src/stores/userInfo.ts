@@ -32,7 +32,7 @@ export const useUserInfo = defineStore('userInfo', {
 				// 调用后端API获取用户信息
 				// 由于 request.ts 的响应拦截器已经返回了 res.Data，所以这里直接获取 AdminUserDto 对象
 				const apiUserInfo: APIModel.FdAdminUserDto = await getAdminFdAdminUserGetUserInfo();
-				// console.log('apiUserInfo', apiUserInfo);
+				// //console.log('apiUserInfo', apiUserInfo);
 				
 				
 				
@@ -48,7 +48,7 @@ export const useUserInfo = defineStore('userInfo', {
 					authBtnList: apiUserInfo.Buttons || [], // 使用AdminUserDto中包含的Buttons字段
 				};
 				
-				// console.log('Final userInfos with roles and permissions:', userInfos);
+				// //console.log('Final userInfos with roles and permissions:', userInfos);
 				
 				// 存储到会话存储中
 				Session.set('userInfo', userInfos);

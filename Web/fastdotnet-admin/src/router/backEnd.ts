@@ -111,7 +111,7 @@ export async function getBackEndControlRoutes() {
 	try {
 		// 检查是否有 token，如果没有则不请求菜单
 		if (!Session.get('token')) {
-			console.log('无 token，跳过菜单请求');
+			//console.log('无 token，跳过菜单请求');
 			return { data: [] };
 		}
 		
@@ -119,7 +119,7 @@ export async function getBackEndControlRoutes() {
 		// 由于 request.ts 已修改为直接返回 res.Data，
 		// 这里的 res 就是 res.Data，即菜单数组 [...]
 		const menuTreeData = await useMenuApi().getUserMenuTree();
-		console.log('后端返回的菜单数据 (已处理):', menuTreeData); // 添加日志查看结构
+		//console.log('后端返回的菜单数据 (已处理):', menuTreeData); // 添加日志查看结构
 
 		// 直接返回，包装成 { data: ... } 的格式以匹配 vue-next-admin 的预期
 		// vue-next-admin 的后续逻辑会使用返回对象的 .data 属性
@@ -146,11 +146,11 @@ export async function setBackEndControlRefreshRoutes() {
  * @returns 返回处理成函数后的 component 和符合 vue-router 格式的路由
  */
 export function backEndComponent(routes: any) {
-	console.log("backEndComponent received routes:", routes, "Type:", typeof routes, "Is Array:", Array.isArray(routes)); // Debug log
+	//console.log("backEndComponent received routes:", routes, "Type:", typeof routes, "Is Array:", Array.isArray(routes)); // Debug log
 	if (!routes || !Array.isArray(routes)) return [];
 
 	return routes.map((item: any) => {
-		console.log("Processing menu item:", item.Name, "Path:", item.Path, "IsFdMicroApp:", item.IsFdMicroApp, "Module:", item.Module); // Log each item
+		//console.log("Processing menu item:", item.Name, "Path:", item.Path, "IsFdMicroApp:", item.IsFdMicroApp, "Module:", item.Module); // Log each item
 
 		// 1. 创建符合 vue-router 格式的路由对象
 		const route: any = {
@@ -185,13 +185,13 @@ export function backEndComponent(routes: any) {
 		if (!route.name) {
 			// 如果没有name，则使用路径生成一个
 			route.name = item.Path.replace(/\//g, '') || 'route-' + Date.now();
-			console.log("Fallback route name:", route.name, "from path:", item.Path);
+			//console.log("Fallback route name:", route.name, "from path:", item.Path);
 		}
 
 		// 2. 处理 component (优先使用后端提供的 Component 字段)
 		// 特殊处理微应用菜单项
 		if (item.IsFdMicroApp) {
-			console.log("Setting micro app component for menu:", item.Name, item.Path); // Log when setting micro app component
+			//console.log("Setting micro app component for menu:", item.Name, item.Path); // Log when setting micro app component
 			// 为微应用菜单项设置特殊的 component
 			// 这个 component 将负责加载对应的 qiankun 微应用
 			route.component = () => import('@/layout/routerView/parent.vue');

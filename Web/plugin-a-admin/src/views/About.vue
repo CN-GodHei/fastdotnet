@@ -122,7 +122,7 @@ const testQueryBuilder = () => {
     
     // 使用查询构建器构建查询条件
     const result = queryBuilder.buildMixedQuery(queryConfig);
-    console.log('查询构建结果:', result);
+    //console.log('查询构建结果:', result);
     queryResult.value = result;
   } catch (err) {
     console.error('查询构建器测试错误:', err);
@@ -136,7 +136,7 @@ const testGetApi = async () => {
   try {
     // 调用 API 函数
     const data = await getApiPluginsPinyin_11375910391972869PluginATestDto();
-    console.log('API Response:', data);
+    //console.log('API Response:', data);
     responseData.value = data;
   } catch (err) {
     console.error('API Call Error:', err);

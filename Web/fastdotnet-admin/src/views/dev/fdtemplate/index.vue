@@ -172,7 +172,7 @@ const openAddDialog = () => {
 
 // 打开表编辑页面
 const openEditDialog = (row: any) => {
-	console.log('编辑行数据:', row);
+	//console.log('编辑行数据:', row);
 	state.editTitle = '编辑';
 	EditCodeGenRef.value?.openDialog(row);
 };

@@ -427,7 +427,7 @@ const onToolDownload = () => {
 };
 // 顶部工具栏-提交
 const onToolSubmit = () => {
-	// console.log(state.jsplumbData);
+	// //console.log(state.jsplumbData);
 	ElMessage.success('数据提交成功');
 };
 // 顶部工具栏-复制

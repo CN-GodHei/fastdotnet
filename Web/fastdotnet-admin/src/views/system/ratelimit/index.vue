@@ -193,7 +193,7 @@ const getList = async () => {
 			searchBody.QueryParameters = queryResult.queryParameters;
 		}
 		// 调试日志
-		//console.log('Search request body:', searchBody);
+		////console.log('Search request body:', searchBody);
 		const response = await FdRatelimitRuleApi.postAdminFdRatelimitRulePageSearch(searchBody);
 		state.tableData.data = response.Items || [];
 		state.tableData.total = response.PageInfo?.Total || 0;

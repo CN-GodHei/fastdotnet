@@ -22,7 +22,7 @@ class BaseSignalRManager {
         await this.connection.start();
         this.isInitialized = true;
 
-        console.log('[BaseSignalR] 基础SignalR连接已建立');
+        //console.log('[BaseSignalR] 基础SignalR连接已建立');
     }
 
     // 动态创建Hub代理（插件可以创建任意Hub的代理）
@@ -34,7 +34,7 @@ class BaseSignalRManager {
             
             const proxy = this.connection; // 在这个实现中，我们复用主连接
             this.hubProxies.set(hubName, proxy);
-            console.log(`[BaseSignalR] 创建Hub代理: ${hubName}`);
+            //console.log(`[BaseSignalR] 创建Hub代理: ${hubName}`);
         }
         return this.hubProxies.get(hubName)!;
     }
@@ -66,7 +66,7 @@ class BaseSignalRManager {
                     .build();
                 
                 this.connection.start().then(() => {
-                    console.log('[BaseSignalR] 访问令牌已更新');
+                    //console.log('[BaseSignalR] 访问令牌已更新');
                 });
             });
         }

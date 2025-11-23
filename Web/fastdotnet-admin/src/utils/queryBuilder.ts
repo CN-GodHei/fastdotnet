@@ -158,7 +158,7 @@ export function buildMixedQuery(config: {
 
 			return true;
 		});
-		console.log(validCustoms);
+		//console.log(validCustoms);
 		// conditions.push(...config.customs);
 		conditions.push(...validCustoms);
 	}

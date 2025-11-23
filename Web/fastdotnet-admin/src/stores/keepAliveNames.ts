@@ -15,11 +15,11 @@ export const useKeepALiveNames = defineStore('keepALiveNames', {
 	}),
 	actions: {
 		async setCacheKeepAlive(data: Array<string>) {
-			console.log("Setting cache keep alive names:", data);
+			//console.log("Setting cache keep alive names:", data);
 			this.keepAliveNames = data;
 		},
 		async addCachedView(view: any) {
-			console.log("Adding cached view:", view.name, "meta:", view.meta);
+			//console.log("Adding cached view:", view.name, "meta:", view.meta);
 			// 使用view.name而不是view.meta.title
 			const componentName = view.name;
 			const isKeepAlive = view.meta.isKeepAlive || 
@@ -33,13 +33,13 @@ export const useKeepALiveNames = defineStore('keepALiveNames', {
 			}
 		},
 		async delCachedView(view: any) {
-			console.log("Deleting cached view:", view.name);
+			//console.log("Deleting cached view:", view.name);
 			const componentName = view.name;
 			const index = this.cachedViews.indexOf(componentName);
 			index > -1 && this.cachedViews.splice(index, 1);
 		},
 		async delOthersCachedViews(view: any) {
-			console.log("Deleting other cached views, keeping:", view.name);
+			//console.log("Deleting other cached views, keeping:", view.name);
 			const componentName = view.name;
 			const isKeepAlive = view.meta.isKeepAlive || 
 				(view.meta.isFdMicroApp && view.meta.menuInfo?.isKeepAlive !== false);
@@ -48,7 +48,7 @@ export const useKeepALiveNames = defineStore('keepALiveNames', {
 			else this.cachedViews = [];
 		},
 		async delAllCachedViews() {
-			console.log("Deleting all cached views");
+			//console.log("Deleting all cached views");
 			this.cachedViews = [];
 		},
 	},

@@ -68,7 +68,7 @@ class PluginHubClient {
             // 通过主框架的通用Hub调用方法
             // 我们将插件ID作为第一个参数传递，以便主框架知道是哪个插件在调用
             const result = await this.baseSignalRManager.invokeHubMethod("UniversalHub", methodName, this.pluginId, ...args);
-            console.log(`[PluginHub] 调用${this.pluginId}.${methodName}成功`);
+            //console.log(`[PluginHub] 调用${this.pluginId}.${methodName}成功`);
             return result;
         } catch (error) {
             console.error(`[PluginHub] 调用${this.pluginId}.${methodName}失败:`, error);
@@ -91,7 +91,7 @@ class PluginHubClient {
 
         // 注册到基础管理器
         this.baseSignalRManager.on(pluginEventName, handler);
-        console.log(`[PluginHub] 注册${this.pluginId}事件处理器: ${pluginEventName}`);
+        //console.log(`[PluginHub] 注册${this.pluginId}事件处理器: ${pluginEventName}`);
     }
 
     // 移除事件处理器
@@ -101,7 +101,7 @@ class PluginHubClient {
         if (handlers) {
             handlers.delete(handler);
             this.baseSignalRManager.off(pluginEventName, handler);
-            console.log(`[PluginHub] 移除${this.pluginId}事件处理器: ${pluginEventName}`);
+            //console.log(`[PluginHub] 移除${this.pluginId}事件处理器: ${pluginEventName}`);
         }
     }
 
@@ -113,7 +113,7 @@ class PluginHubClient {
             });
         });
         this.eventHandlers.clear();
-        console.log(`[PluginHub] 移除${this.pluginId}所有事件处理器`);
+        //console.log(`[PluginHub] 移除${this.pluginId}所有事件处理器`);
     }
 
     // 清理资源

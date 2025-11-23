@@ -109,10 +109,10 @@ const state = reactive({
 });
 // 获取当前点击的 icon 图标
 const onGetIcon = (icon: string) => {
-	console.log(icon);
+	//console.log(icon);
 };
 // 清空当前点击的 icon 图标
 const onClearIcon = (icon: string) => {
-	console.log(icon);
+	//console.log(icon);
 };
 </script>

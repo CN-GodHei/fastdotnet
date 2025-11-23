@@ -80,7 +80,7 @@ const init = (props: any = {}) => {
 }
 
 if (!(window as any).__POWERED_BY_QIANKUN__) {
-  console.log('[PluginA] not 我进来了');
+  //console.log('[PluginA] not 我进来了');
   init()
 }
 

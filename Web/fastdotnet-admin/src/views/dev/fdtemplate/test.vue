@@ -190,7 +190,7 @@ const getList = async () => {
 		searchBody.QueryParameters = queryResult.queryParameters;
 	}
 	// 调试日志
-	console.log('Search request body:', searchBody);
+	//console.log('Search request body:', searchBody);
 	state.loading = false;
 };
 
