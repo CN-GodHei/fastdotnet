@@ -79,6 +79,13 @@ const handleRouteChange = async () => {
 // Watch for route changes
 watch(() => route.path, handleRouteChange, { immediate: true });
 
+// Watch for store changes to handle initial load race condition (when refreshing page)
+watch(() => microAppsStore.microAppConfigs, (newConfigs) => {
+  if (newConfigs.size > 0 && route.meta.isFdMicroApp) {
+    handleRouteChange();
+  }
+});
+
 // Cleanup non-keep-alive apps or on destroy
 // Note: For now we keep all "loaded" apps in the map if they are keep-alive.
 // If we need to destroy non-keep-alive apps when leaving them, we can add logic here.
