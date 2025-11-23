@@ -14,7 +14,7 @@ namespace Fastdotnet.Core.Entities.System
         /// <summary>
         /// 黑名单类型 (IP, User, ApiKey)
         /// </summary>
-        [SugarColumn(ColumnName = "type", IsNullable = false, Length = 150, ColumnDescription = "黑名单类型 (IP, User, ApiKey)")]
+        [SugarColumn(ColumnName = "type", IsNullable = false, Length = 50, ColumnDescription = "黑名单类型 (IP, User, ApiKey)")]
         public string Type { get; set; }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Fastdotnet.Core.Entities.System
         /// <summary>
         /// 加入黑名单的原因
         /// </summary>
-        [SugarColumn(ColumnName = "reason", IsNullable = true, Length = 500, ColumnDescription = "加入黑名单的原因")]
+        [SugarColumn(ColumnName = "reason", IsNullable = true, Length = 255, ColumnDescription = "加入黑名单的原因")]
         public string Reason { get; set; }
 
         /// <summary>
