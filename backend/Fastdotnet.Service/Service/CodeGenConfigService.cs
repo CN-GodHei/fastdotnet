@@ -163,7 +163,7 @@ namespace Fastdotnet.Service.Service
         private string GenerateDtoProperty(FdCodeGenConfig column, bool isCreate = false, bool isOutput = false)
         {
             var validations = new List<string>();
-            if (!column.WhetherRequired && !column.ColumnKey && isCreate&&column.NetType!="bool")
+            if (!column.WhetherRequired && !column.ColumnKey && isCreate && column.NetType != "bool")
             {
                 validations.Add("[Required(ErrorMessage = \"" + column.ColumnComment + "不能为空\")]");
             }
@@ -394,7 +394,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
     /// </summary>
     public class Create{entityName}Dto
     {{
-{string.Join("\n", filteredColumns.Where(col => !col.ColumnKey).Select(col => GenerateDtoProperty(col, true)))}
+{string.Join("\n", filteredColumns.Where(col => !col.ColumnKey && col.WhetherAddUpdate == true).Select(col => GenerateDtoProperty(col, true)))}
     }}
 
     /// <summary>
@@ -402,7 +402,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
     /// </summary>
     public class Update{entityName}Dto
     {{
-{string.Join("\n", primaryKeyColumns.Where(x => x.EnableMask == false).Select(col => GenerateDtoProperty(col, false)))}
+{string.Join("\n", primaryKeyColumns.Where(x => x.EnableMask == false && x.WhetherAddUpdate == true).Select(col => GenerateDtoProperty(col, false)))}
     }}
 
     /// <summary>
@@ -410,7 +410,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
     /// </summary>
     public class {entityName}Dto
     {{
-{string.Join("\n", columns.Where(x => x.ColumnName != "is_deleted" && x.ColumnName != "deleted_at").Select(col => GenerateDtoProperty(col, false, true)))}
+{string.Join("\n", columns.Where(x => x.WhetherTable == true).Select(col => GenerateDtoProperty(col, false, true)))}
     }}
 }}";
 
