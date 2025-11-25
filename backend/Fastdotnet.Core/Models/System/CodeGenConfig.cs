@@ -18,7 +18,7 @@ namespace Fastdotnet.Core.Models.System
         /// <summary>
         /// 代码生成主表Id
         /// </summary>
-        public long CodeGenId { get; set; }
+        public string CodeGenId { get; set; }
 
         /// <summary>
         /// 数据库字段名
@@ -178,7 +178,7 @@ namespace Fastdotnet.Core.Models.System
         /// 代码生成主表Id
         /// </summary>
         [Required(ErrorMessage = "代码生成主表Id不能为空")]
-        public long CodeGenId { get; set; }
+        public string CodeGenId { get; set; }
 
         /// <summary>
         /// 数据库字段名
@@ -365,13 +365,13 @@ namespace Fastdotnet.Core.Models.System
         /// 主键Id不能为空
         /// </summary>
         [Required(ErrorMessage = "主键Id不能为空")]
-        public long Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// 代码生成主表Id
         /// </summary>
         [Required(ErrorMessage = "代码生成主表Id不能为空")]
-        public long CodeGenId { get; set; }
+        public string CodeGenId { get; set; }
 
         /// <summary>
         /// 数据库字段名

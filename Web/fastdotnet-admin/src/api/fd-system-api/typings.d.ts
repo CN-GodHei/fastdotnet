@@ -84,7 +84,7 @@ declare namespace APIModel {
 	};
 
 	type CreateFdCodeGenConfigDto = {
-		CodeGenId: number;
+		CodeGenId: string;
 		ColumnName: string;
 		ColumnKey?: string;
 		PropertyName: string;
@@ -478,7 +478,7 @@ declare namespace APIModel {
 
 	type FdCodeGenConfigDto = {
 		Id?: string;
-		CodeGenId?: number;
+		CodeGenId?: string;
 		ColumnName?: string;
 		ColumnKey?: string;
 		PropertyName?: string;
@@ -1275,8 +1275,8 @@ declare namespace APIModel {
 	};
 
 	type UpdateFdCodeGenConfigDto = {
-		Id: number;
-		CodeGenId: number;
+		Id: string;
+		CodeGenId: string;
 		ColumnName: string;
 		ColumnKey?: string;
 		PropertyName: string;
