@@ -1,4 +1,4 @@
-﻿using SqlSugar;
+using SqlSugar;
 using Fastdotnet.Core.Models.Base;
 using System.ComponentModel.DataAnnotations;
 
@@ -97,6 +97,20 @@ namespace Fastdotnet.Core.Entities.System
         [SugarColumn(ColumnDescription = "外键实体名称", IsNullable = true, Length = 64)]
         [MaxLength(64)]
         public string? FkEntityName { get; set; }
+
+        /// <summary>
+        /// 脱敏配置
+        /// 存储脱敏类型和相关参数的JSON配置
+        /// </summary>
+        [SugarColumn(ColumnDescription = "脱敏配置", IsNullable = true, Length = 512)]
+        [MaxLength(512)]
+        public string? MaskConfig { get; set; }
+
+        /// <summary>
+        /// 是否启用脱敏处理
+        /// </summary>
+        [SugarColumn(ColumnDescription = "是否启用脱敏处理", IsNullable = true)]
+        public bool? EnableMask { get; set; }
 
         /// <summary>
         /// 外键表名称

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -153,9 +153,19 @@ namespace Fastdotnet.Core.Models.System
         /// <summary>
         /// 排序
         /// </summary>
-        public int OrderNo { get; set; }
+        public int OrderNo { get; set; } = 100;
 
         public virtual string ShowColumnName { get; set; }
+        
+        /// <summary>
+        /// 脱敏配置
+        /// </summary>
+        public MaskConfigModel? MaskConfig { get; set; }
+        
+        /// <summary>
+        /// 是否启用脱敏处理
+        /// </summary>
+        public bool? EnableMask { get; set; }
 
     }
 
@@ -332,6 +342,17 @@ namespace Fastdotnet.Core.Models.System
         public int OrderNo { get; set; } = 100;
 
         public virtual string ShowColumnName { get; set; }
+
+
+        /// <summary>
+        /// 脱敏配置
+        /// </summary>
+        public MaskConfigModel? MaskConfig { get; set; }
+
+        /// <summary>
+        /// 是否启用脱敏处理
+        /// </summary>
+        public bool? EnableMask { get; set; }
 
     }
 
@@ -515,5 +536,55 @@ namespace Fastdotnet.Core.Models.System
 
         public virtual string ShowColumnName { get; set; }
 
+        /// <summary>
+        /// 脱敏配置
+        /// </summary>
+        public MaskConfigModel? MaskConfig { get; set; }
+
+        /// <summary>
+        /// 是否启用脱敏处理
+        /// </summary>
+        public bool? EnableMask { get; set; }
+    }
+
+    /// <summary>
+    /// 脱敏配置模型
+    /// </summary>
+    public class MaskConfigModel
+    {
+        /// <summary>
+        /// 脱敏类型
+        /// </summary>
+        public string? Type { get; set; }
+
+        /// <summary>
+        /// 保留前缀字符数
+        /// </summary>
+        public int? PrefixKeep { get; set; }
+
+        /// <summary>
+        /// 保留后缀字符数
+        /// </summary>
+        public int? SuffixKeep { get; set; }
+
+        /// <summary>
+        /// 脱敏字符
+        /// </summary>
+        public char? MaskChar { get; set; }
+
+        /// <summary>
+        /// 脱敏字符长度
+        /// </summary>
+        public int? MaskLength { get; set; }
+
+        /// <summary>
+        /// 自定义正则表达式
+        /// </summary>
+        public string? CustomPattern { get; set; }
+
+        /// <summary>
+        /// 自定义替换字符串
+        /// </summary>
+        public string? CustomReplacement { get; set; }
     }
 }
