@@ -1227,7 +1227,7 @@ namespace Fastdotnet.Desktop.Api.Models
         public string ColumnName { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("ColumnKey")]
-        public string ColumnKey { get; set; }
+        public bool ColumnKey { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("PropertyName")]
         public string PropertyName { get; set; }
@@ -1278,28 +1278,28 @@ namespace Fastdotnet.Desktop.Api.Models
         public string QueryType { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("WhetherQuery")]
-        public string WhetherQuery { get; set; }
+        public bool WhetherQuery { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("WhetherRetract")]
-        public string WhetherRetract { get; set; }
+        public bool WhetherRetract { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("WhetherRequired")]
-        public string WhetherRequired { get; set; }
+        public bool WhetherRequired { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("WhetherSortable")]
-        public string WhetherSortable { get; set; }
+        public bool WhetherSortable { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("WhetherTable")]
-        public string WhetherTable { get; set; }
+        public bool WhetherTable { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("WhetherAddUpdate")]
-        public string WhetherAddUpdate { get; set; }
+        public bool WhetherAddUpdate { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("WhetherImport")]
-        public string WhetherImport { get; set; }
+        public bool WhetherImport { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("WhetherCommon")]
-        public string WhetherCommon { get; set; }
+        public bool WhetherCommon { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("OrderNo")]
         public int OrderNo { get; set; }
@@ -1329,6 +1329,121 @@ namespace Fastdotnet.Desktop.Api.Models
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.StringLength(200)]
         public string Host { get; set; }
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateFdCodeGenConfigDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("Id")]
+        public long Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("CodeGenId")]
+        public long CodeGenId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ColumnName")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(128)]
+        public string ColumnName { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ColumnKey")]
+        public bool ColumnKey { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PropertyName")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(128)]
+        public string PropertyName { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ColumnLength")]
+        public int ColumnLength { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ColumnComment")]
+        [System.ComponentModel.DataAnnotations.StringLength(128)]
+        public string ColumnComment { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("DataType")]
+        [System.ComponentModel.DataAnnotations.StringLength(64)]
+        public string DataType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("NetType")]
+        [System.ComponentModel.DataAnnotations.StringLength(64)]
+        public string NetType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("DefaultValue")]
+        public string DefaultValue { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("EffectType")]
+        [System.ComponentModel.DataAnnotations.StringLength(64)]
+        public string EffectType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("FkConfigId")]
+        [System.ComponentModel.DataAnnotations.StringLength(20)]
+        public string FkConfigId { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("FkEntityName")]
+        [System.ComponentModel.DataAnnotations.StringLength(64)]
+        public string FkEntityName { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("FkTableName")]
+        [System.ComponentModel.DataAnnotations.StringLength(128)]
+        public string FkTableName { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("FkDisplayColumns")]
+        [System.ComponentModel.DataAnnotations.StringLength(64)]
+        public string FkDisplayColumns { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("FkLinkColumnName")]
+        [System.ComponentModel.DataAnnotations.StringLength(64)]
+        public string FkLinkColumnName { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("FkColumnNetType")]
+        [System.ComponentModel.DataAnnotations.StringLength(64)]
+        public string FkColumnNetType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("PidColumn")]
+        [System.ComponentModel.DataAnnotations.StringLength(128)]
+        public string PidColumn { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("DictTypeCode")]
+        [System.ComponentModel.DataAnnotations.StringLength(64)]
+        public string DictTypeCode { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("QueryType")]
+        [System.ComponentModel.DataAnnotations.StringLength(16)]
+        public string QueryType { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("WhetherQuery")]
+        public bool WhetherQuery { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("WhetherRetract")]
+        public bool WhetherRetract { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("WhetherRequired")]
+        public bool WhetherRequired { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("WhetherSortable")]
+        public bool WhetherSortable { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("WhetherTable")]
+        public bool WhetherTable { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("WhetherAddUpdate")]
+        public bool WhetherAddUpdate { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("WhetherImport")]
+        public bool WhetherImport { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("WhetherCommon")]
+        public bool WhetherCommon { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("OrderNo")]
+        public int OrderNo { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("ShowColumnName")]
+        public string ShowColumnName { get; set; }
+
+    }
+
 
         [System.Text.Json.Serialization.JsonPropertyName("Port")]
         public int Port { get; set; }
