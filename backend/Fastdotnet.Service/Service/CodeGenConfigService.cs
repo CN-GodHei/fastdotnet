@@ -163,7 +163,7 @@ namespace Fastdotnet.Service.Service
         private string GenerateDtoProperty(FdCodeGenConfig column, bool isCreate = false, bool isOutput = false)
         {
             var validations = new List<string>();
-            if (!column.WhetherRequired && !column.ColumnKey && isCreate)
+            if (!column.WhetherRequired && !column.ColumnKey && isCreate&&column.NetType!="bool")
             {
                 validations.Add("[Required(ErrorMessage = \"" + column.ColumnComment + "不能为空\")]");
             }
@@ -171,7 +171,7 @@ namespace Fastdotnet.Service.Service
             var lengthValidation = "";
             if (column.ColumnLength > 0 && (column.DataType?.Contains("char") == true || column.DataType?.Contains("text") == true))
             {
-                if (!isOutput)
+                if (!isOutput && column.NetType != "bool")
                 {
                     lengthValidation = $"[StringLength({column.ColumnLength},ErrorMessage = \"{column.ColumnComment}最多{column.ColumnLength}个字符\")]";
                 }
