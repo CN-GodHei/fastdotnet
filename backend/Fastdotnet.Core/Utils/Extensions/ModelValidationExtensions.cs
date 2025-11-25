@@ -126,6 +126,12 @@ namespace Fastdotnet.Core.Utils.Extensions
 
                 foreach (var attr in validationAttributes)
                 {
+                    // Skip MaxLength and StringLength validation for bool type
+                    if ((attr is MaxLengthAttribute || attr is StringLengthAttribute) && prop.PropertyType == typeof(bool))
+                    {
+                        continue;
+                    }
+
                     if (!attr.IsValid(value))
                     {
                         hasErrorOnProperty = true;

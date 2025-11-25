@@ -190,7 +190,6 @@ namespace Fastdotnet.Core.Models.System
         /// <summary>
         /// 主键
         /// </summary>
-        [StringLength(8, ErrorMessage = "主键长度不能超过8个字符")]
         public bool ColumnKey { get; set; }
 
         /// <summary>
@@ -291,49 +290,41 @@ namespace Fastdotnet.Core.Models.System
         /// <summary>
         /// 是否是查询条件
         /// </summary>
-        [StringLength(8, ErrorMessage = "查询条件字段长度不能超过8个字符")]
         public bool WhetherQuery { get; set; }
 
         /// <summary>
         /// 列表是否缩进（字典）
         /// </summary>
-        [StringLength(8, ErrorMessage = "列表缩进字段长度不能超过8个字符")]
         public bool WhetherRetract { get; set; }
 
         /// <summary>
         /// 是否必填（字典）
         /// </summary>
-        [StringLength(8, ErrorMessage = "必填字段长度不能超过8个字符")]
         public bool WhetherRequired { get; set; }
 
         /// <summary>
         /// 是否可排序（字典）
         /// </summary>
-        [StringLength(8, ErrorMessage = "可排序字段长度不能超过8个字符")]
         public bool WhetherSortable { get; set; }
 
         /// <summary>
         /// 列表显示
         /// </summary>
-        [StringLength(8, ErrorMessage = "列表显示字段长度不能超过8个字符")]
         public bool WhetherTable { get; set; }
 
         /// <summary>
         /// 增改
         /// </summary>
-        [StringLength(8, ErrorMessage = "增改字段长度不能超过8个字符")]
         public bool WhetherAddUpdate { get; set; }
 
         /// <summary>
         /// 导入
         /// </summary>
-        [StringLength(8, ErrorMessage = "导入字段长度不能超过8个字符")]
         public bool WhetherImport { get; set; }
 
         /// <summary>
         /// 是否通用字段
         /// </summary>
-        [StringLength(8, ErrorMessage = "通用字段长度不能超过8个字符")]
         public bool WhetherCommon { get; set; }
 
         /// <summary>
@@ -383,7 +374,6 @@ namespace Fastdotnet.Core.Models.System
         /// <summary>
         /// 主键
         /// </summary>
-        [StringLength(8, ErrorMessage = "主键长度不能超过8个字符")]
         public bool ColumnKey { get; set; }
 
         /// <summary>
@@ -484,49 +474,41 @@ namespace Fastdotnet.Core.Models.System
         /// <summary>
         /// 是否是查询条件
         /// </summary>
-        [StringLength(8, ErrorMessage = "查询条件字段长度不能超过8个字符")]
         public bool WhetherQuery { get; set; }
 
         /// <summary>
         /// 列表是否缩进（字典）
         /// </summary>
-        [StringLength(8, ErrorMessage = "列表缩进字段长度不能超过8个字符")]
         public bool WhetherRetract { get; set; }
 
         /// <summary>
         /// 是否必填（字典）
         /// </summary>
-        [StringLength(8, ErrorMessage = "必填字段长度不能超过8个字符")]
         public bool WhetherRequired { get; set; }
 
         /// <summary>
         /// 是否可排序（字典）
         /// </summary>
-        [StringLength(8, ErrorMessage = "可排序字段长度不能超过8个字符")]
         public bool WhetherSortable { get; set; }
 
         /// <summary>
         /// 列表显示
         /// </summary>
-        [StringLength(8, ErrorMessage = "列表显示字段长度不能超过8个字符")]
         public bool WhetherTable { get; set; }
 
         /// <summary>
         /// 增改
         /// </summary>
-        [StringLength(8, ErrorMessage = "增改字段长度不能超过8个字符")]
         public bool WhetherAddUpdate { get; set; }
 
         /// <summary>
         /// 导入
         /// </summary>
-        [StringLength(8, ErrorMessage = "导入字段长度不能超过8个字符")]
         public bool WhetherImport { get; set; }
 
         /// <summary>
         /// 是否通用字段
         /// </summary>
-        [StringLength(8, ErrorMessage = "通用字段长度不能超过8个字符")]
         public bool WhetherCommon { get; set; }
 
         /// <summary>
