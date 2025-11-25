@@ -1,5 +1,6 @@
 using AutoMapper;
 using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Extensions;
 using Fastdotnet.Core.Models.System;
 
 namespace Fastdotnet.Service.Mappings
@@ -8,7 +9,7 @@ namespace Fastdotnet.Service.Mappings
     {
         public PermissionProfile()
         {
-            CreateMap<FdPermission, FdPermissionDto>();
+            CreateMap<FdPermission, FdPermissionDto>().MaskSensitiveData();
         }
     }
 }

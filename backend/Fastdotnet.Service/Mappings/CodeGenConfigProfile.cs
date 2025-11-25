@@ -1,11 +1,12 @@
-﻿using System;
+﻿using AutoMapper;
+using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Extensions;
+using Fastdotnet.Core.Models.System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.Models.System;
 
 namespace Fastdotnet.Service.Mappings
 {
@@ -13,7 +14,7 @@ namespace Fastdotnet.Service.Mappings
     {
         public CodeGenConfigProfile()
         {
-            CreateMap<FdCodeGenConfig, FdCodeGenConfigDto>();
+            CreateMap<FdCodeGenConfig, FdCodeGenConfigDto>().MaskSensitiveData();
             CreateMap<CreateFdCodeGenConfigDto, FdCodeGenConfig>();
             CreateMap<UpdateFdCodeGenConfigDto, FdCodeGenConfig>();
             CreateMap<FdCodeGenConfig, UpdateFdCodeGenConfigDto>();

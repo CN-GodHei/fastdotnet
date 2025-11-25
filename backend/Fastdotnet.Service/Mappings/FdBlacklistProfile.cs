@@ -1,6 +1,7 @@
 using AutoMapper;
 using Fastdotnet.Core.Dtos.System;
 using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Extensions;
 
 namespace Fastdotnet.Service.Mappings
 {
@@ -11,7 +12,7 @@ namespace Fastdotnet.Service.Mappings
     {
         public FdBlacklistProfile()
         {
-            CreateMap<FdBlacklist, FdBlacklistDto>();
+            CreateMap<FdBlacklist, FdBlacklistDto>().MaskSensitiveData();
             CreateMap<CreateFdBlacklistDto, FdBlacklist>();
             CreateMap<UpdateFdBlacklistDto, FdBlacklist>();
         }

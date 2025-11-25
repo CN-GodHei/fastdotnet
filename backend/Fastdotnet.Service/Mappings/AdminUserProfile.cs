@@ -1,5 +1,6 @@
 using AutoMapper;
 using Fastdotnet.Core.Entities.Admin;
+using Fastdotnet.Core.Extensions;
 using Fastdotnet.Core.Models.Admin.Users;
 
 namespace Fastdotnet.Service.Mappings
@@ -12,7 +13,7 @@ namespace Fastdotnet.Service.Mappings
         public AdminUserProfile()
         {
             // Source -> Target
-            CreateMap<FdAdminUser, FdAdminUserDto>();
+            CreateMap<FdAdminUser, FdAdminUserDto>().MaskSensitiveData();
             CreateMap<CreateFdAdminUserDto, FdAdminUser>();
             CreateMap<UpdateFdAdminUserDto, FdAdminUser>();
         }

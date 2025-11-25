@@ -1,6 +1,7 @@
 using AutoMapper;
 using Fastdotnet.Core.Dtos.System;
 using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Extensions;
 
 namespace Fastdotnet.Service.Mappings
 {
@@ -11,7 +12,7 @@ namespace Fastdotnet.Service.Mappings
     {
         public FdRateLimitRuleProfile()
         {
-            CreateMap<FdRateLimitRule, FdRateLimitRuleDto>();
+            CreateMap<FdRateLimitRule, FdRateLimitRuleDto>().MaskSensitiveData();
             CreateMap<CreateFdRateLimitRuleDto, FdRateLimitRule>();
             CreateMap<UpdateFdRateLimitRuleDto, FdRateLimitRule>();
         }

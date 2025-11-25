@@ -1,5 +1,6 @@
 using AutoMapper;
 using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Extensions;
 using Fastdotnet.Core.Models.System;
 
 namespace Fastdotnet.Service.Mappings
@@ -9,7 +10,7 @@ namespace Fastdotnet.Service.Mappings
         public EmailConfigMappingProfile()
         {
             // 用于读取数据（从实体映射到输出DTO）
-            CreateMap<EmailConfig, FdEmailConfigDto>();
+            CreateMap<EmailConfig, FdEmailConfigDto>().MaskSensitiveData();
 
             // 用于创建数据（从创建DTO映射到实体）
             CreateMap<FdCreateEmailConfigDto, EmailConfig>();

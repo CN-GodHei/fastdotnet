@@ -1,5 +1,6 @@
 using AutoMapper;
 using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Extensions;
 using Fastdotnet.Core.Models.System;
 using Newtonsoft.Json;
 
@@ -10,7 +11,7 @@ namespace Fastdotnet.Service.Mappings
         public CodeGenProfile()
         {
             CreateMap<FdCodeGen, CodeGenConfigDto>()
-                .ForMember(dest => dest.TableUniqueList, opt => opt.MapFrom(src => string.IsNullOrWhiteSpace(src.TableUniqueConfig) ? null : JsonConvert.DeserializeObject<List<TableUniqueConfigDto>>(src.TableUniqueConfig)));
+                .ForMember(dest => dest.TableUniqueList, opt => opt.MapFrom(src => string.IsNullOrWhiteSpace(src.TableUniqueConfig) ? null : JsonConvert.DeserializeObject<List<TableUniqueConfigDto>>(src.TableUniqueConfig))).MaskSensitiveData();
             
             CreateMap<CreateCodeGenDto, FdCodeGen>()
                 .ForMember(dest => dest.TableUniqueConfig, opt => opt.MapFrom(src => src.TableUniqueList != null ? JsonConvert.SerializeObject(src.TableUniqueList) : null));
