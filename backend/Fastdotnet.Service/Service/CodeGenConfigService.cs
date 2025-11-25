@@ -1,3 +1,4 @@
+using Dm.util;
 using Fastdotnet.Core.Dtos.System;
 using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.IService;
@@ -176,9 +177,18 @@ namespace Fastdotnet.Service.Service
                 }
                 else
                 {
-                    if ((bool)column.EnableMask)
+                    if (column.EnableMask)
                     {
-
+                        // 生成脱敏特性
+                        var maskAttribute = GenerateMaskAttribute(column);
+                        if (!string.IsNullOrEmpty(maskAttribute))
+                        {
+                            lengthValidation = maskAttribute;
+                        }
+                        else
+                        {
+                            lengthValidation = "        ";
+                        }
                     }
                     else
                     {
@@ -207,6 +217,85 @@ namespace Fastdotnet.Service.Service
             return result;
         }
 
+        private string GenerateMaskAttribute(FdCodeGenConfig column)
+        {
+            // 检查是否启用脱敏以及是否有脱敏配置
+            if (!column.EnableMask || column.MaskConfig == null)
+                return string.Empty;
+
+            try
+            {
+                // 反序列化脱敏配置
+                var maskConfig = JsonConvert.DeserializeObject<MaskConfigModel>(column.MaskConfig);
+                if (maskConfig?.Type == null)
+                    return string.Empty;
+
+                var attributeParams = new List<string>();
+
+                // 根据脱敏类型添加参数
+                switch (maskConfig.Type)
+                {
+                    case "Phone":
+                        attributeParams.Add("SensitiveDataType.Phone");
+                        break;
+                    case "Email":
+                        attributeParams.Add("SensitiveDataType.Email");
+                        break;
+                    case "IdCard":
+                        attributeParams.Add("SensitiveDataType.IdCard");
+                        break;
+                    case "BankCard":
+                        attributeParams.Add("SensitiveDataType.BankCard");
+                        break;
+                    case "Name":
+                        attributeParams.Add("SensitiveDataType.Name");
+                        break;
+                    case "Custom":
+                        attributeParams.Add("SensitiveDataType.Custom");
+                        break;
+                    default:
+                        return string.Empty;
+                }
+
+                // 添加自定义参数
+                var customParams = new List<string>();
+
+                if (maskConfig.PrefixKeep.HasValue)
+                    customParams.Add($"PrefixKeep = {maskConfig.PrefixKeep.Value}");
+
+                if (maskConfig.SuffixKeep.HasValue)
+                    customParams.Add($"SuffixKeep = {maskConfig.SuffixKeep.Value}");
+
+                if (!string.IsNullOrEmpty(maskConfig.MaskChar.toString()) && maskConfig.MaskChar.toString() != "*")
+                    customParams.Add($"MaskChar = '{maskConfig.MaskChar}'");
+
+                if (maskConfig.MaskLength.HasValue)
+                    customParams.Add($"MaskLength = {maskConfig.MaskLength.Value}");
+
+                if (maskConfig.Type == "Custom")
+                {
+                    if (!string.IsNullOrEmpty(maskConfig.CustomPattern))
+                        customParams.Add($"CustomPattern = \"{maskConfig.CustomPattern}\"");
+
+                    if (!string.IsNullOrEmpty(maskConfig.CustomReplacement))
+                        customParams.Add($"CustomReplacement = \"{maskConfig.CustomReplacement}\"");
+                }
+
+                // 组合所有参数
+                if (customParams.Any())
+                {
+                    attributeParams.AddRange(customParams);
+                }
+
+                var paramsStr = string.Join(", ", attributeParams);
+                return $"[SensitiveData({paramsStr})]";
+            }
+            catch
+            {
+                // 如果解析失败，返回空字符串
+                return string.Empty;
+            }
+        }
 
         private string ToPascalCase(string columnName)
         {

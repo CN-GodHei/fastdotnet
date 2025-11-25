@@ -18,8 +18,7 @@ namespace Fastdotnet.Service.Mappings
             CreateMap<FdCodeGenConfig, FdCodeGenConfigDto>()
                 .MaskSensitiveData()
                 .ForMember(dest => dest.MaskConfig, opt => opt.MapFrom(src =>
-                    DeserializeMaskConfig(src.MaskConfig)))
-                .ForMember(dest => dest.EnableMask, opt => opt.MapFrom(src => src.EnableMask));
+                    DeserializeMaskConfig(src.MaskConfig)));
 
             CreateMap<CreateFdCodeGenConfigDto, FdCodeGenConfig>()
                 .ForMember(dest => dest.MaskConfig, opt => opt.MapFrom(src =>

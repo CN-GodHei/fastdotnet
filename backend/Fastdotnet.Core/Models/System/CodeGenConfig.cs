@@ -28,7 +28,7 @@ namespace Fastdotnet.Core.Models.System
         /// <summary>
         /// 主键
         /// </summary>
-        public string? ColumnKey { get; set; }
+        public bool ColumnKey { get; set; }
 
         /// <summary>
         /// 实体属性名
@@ -191,7 +191,7 @@ namespace Fastdotnet.Core.Models.System
         /// 主键
         /// </summary>
         [StringLength(8, ErrorMessage = "主键长度不能超过8个字符")]
-        public string? ColumnKey { get; set; }
+        public bool ColumnKey { get; set; }
 
         /// <summary>
         /// 实体属性名
@@ -384,7 +384,7 @@ namespace Fastdotnet.Core.Models.System
         /// 主键
         /// </summary>
         [StringLength(8, ErrorMessage = "主键长度不能超过8个字符")]
-        public string? ColumnKey { get; set; }
+        public bool ColumnKey { get; set; }
 
         /// <summary>
         /// 实体属性名
