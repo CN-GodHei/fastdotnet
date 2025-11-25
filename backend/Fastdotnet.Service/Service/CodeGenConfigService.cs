@@ -466,14 +466,12 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
     [Route(""api/[controller]"")]
     public class {entityName}Controller : GenericDtoControllerBase<{entityName}, string, Create{entityName}Dto, Update{entityName}Dto, {entityName}Dto>
     {{
-        private readonly IBaseService<{entityName}, string> _baseservice;
-
         public {entityName}Controller(
             //I{entityName}Service {entityName.ToLower()}Service,
             IBaseService<{entityName}, string> service,
             IMapper mapper) : base(service, mapper)
         {{
-            _baseservice = service;
+
         }}
     }}
 }}";
