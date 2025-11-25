@@ -3,8 +3,7 @@
 		<el-dialog v-model="state.isShowDialog" draggable :close-on-click-modal="false" width="1500px">
 			<template #header>
 				<div style="color: #fff">
-					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Edit />
-					</el-icon>
+					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Edit /> </el-icon>
 					<span> 生成配置 </span>
 				</div>
 			</template>
@@ -25,9 +24,13 @@
 				<el-table-column prop="EffectType" label="作用类型" width="150" show-overflow-tooltip>
 					<template #default="scope">
 						<div class="effect-type-container">
-							<el-select v-model="scope.row.EffectType"
-								@change="effectTypeChange(scope.row, scope.$index)" :disabled="judgeColumns(scope.row)"
-								class="m-2" placeholder="请选择作用类型">
+							<el-select
+								v-model="scope.row.EffectType"
+								@change="effectTypeChange(scope.row, scope.$index)"
+								:disabled="judgeColumns(scope.row)"
+								class="m-2"
+								placeholder="请选择作用类型"
+							>
 								<el-option label="文本框" value="Input" />
 								<el-option label="文本域" value="Textarea" />
 								<el-option label="数字输入框" value="NumberInput" />
@@ -46,11 +49,14 @@
 				</el-table-column>
 				<el-table-column prop="DictTypeCode" label="字典编码" width="150" show-overflow-tooltip>
 					<template #default="scope">
-						<el-select v-model="scope.row.DictTypeCode" :disabled="effectTypeEnable(scope.row)" class="m-2"
-							placeholder="请选择字典">
-							<el-option v-for="item in state.dictList" :key="item.code" :label="item.name"
-								:value="item.code" />
+						<el-select v-model="scope.row.DictTypeCode" :disabled="effectTypeEnable(scope.row)" class="m-2" placeholder="请选择字典">
+							<el-option v-for="item in state.dictList" :key="item.code" :label="item.name" :value="item.code" />
 						</el-select>
+					</template>
+				</el-table-column>
+				<el-table-column prop="EnableMask" label="脱敏" width="70" align="center" show-overflow-tooltip>
+					<template #default="scope">
+						<el-checkbox v-model="scope.row.EnableMask"/>
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherTable" label="列表显示" width="70" align="center" show-overflow-tooltip>
@@ -70,8 +76,7 @@
 				</el-table-column>
 				<el-table-column prop="WhetherRequired" label="必填" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-checkbox v-model="scope.row.WhetherRequired" true-value="是" false-value="否"
-							:disabled="true" />
+						<el-checkbox v-model="scope.row.WhetherRequired" true-value="是" false-value="否" :disabled="true" />
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherSortable" label="可排序" width="70" align="center" show-overflow-tooltip>
@@ -86,8 +91,7 @@
 				</el-table-column>
 				<el-table-column prop="QueryType" label="查询方式" width="110" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-select v-model="scope.row.QueryType" class="m-2" placeholder="Select"
-							:disabled="!scope.row.WhetherQuery">
+						<el-select v-model="scope.row.QueryType" class="m-2" placeholder="Select" :disabled="!scope.row.WhetherQuery">
 							<el-option label="=" value="eq" />
 							<el-option label="!=" value="ne" />
 							<el-option label=">" value="gt" />
@@ -125,7 +129,7 @@ import {
 	postCodeGenConfig,
 	postCodeGenConfigBatch,
 	postCodeGenConfigPageSearch,
-	putCodeGenConfigBatch
+	putCodeGenConfigBatch,
 } from '@/api/fd-system-api/CodeGenConfig';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 import APIModel from '@/api/fd-system-api';
@@ -138,7 +142,7 @@ const state = reactive({
 	dictList: [] as { code: string; name: string }[], // 字典列表
 	tableData: [] as APIModel.FdCodeGenConfigDto[],
 	originalData: [] as APIModel.FdCodeGenConfigDto[], // 原始数据备份
-	configId: '' // 用于关联的CodeGenId
+	configId: '', // 用于关联的CodeGenId
 });
 
 // 初始化时加载字典数据
@@ -147,7 +151,7 @@ onMounted(async () => {
 	state.dictList = [
 		{ code: 'sex', name: '性别' },
 		{ code: 'status', name: '状态' },
-		{ code: 'type', name: '类型' }
+		{ code: 'type', name: '类型' },
 	];
 });
 
@@ -162,8 +166,8 @@ const handleQuery = async (row: any) => {
 		// 使用混合查询构建器构建查询条件
 		const queryConfig = {
 			equals: {
-				CodeGenId: row.Id // 使用字符串类型的ID
-			}
+				CodeGenId: row.Id, // 使用字符串类型的ID
+			},
 		};
 
 		const queryResult = buildMixedQuery(queryConfig);
@@ -173,7 +177,7 @@ const handleQuery = async (row: any) => {
 			PageIndex: 1,
 			PageSize: 1000, // 获取所有字段配置
 			DynamicQuery: queryResult.dynamicQuery,
-			QueryParameters: queryResult.queryParameters
+			QueryParameters: queryResult.queryParameters,
 		} as APIModel.PageQueryByConditionDto;
 
 		const configRes = await postCodeGenConfigPageSearch(searchParams);
@@ -194,15 +198,15 @@ function getDefaultEffectType(netType: string | undefined): string {
 	if (!netType) return 'Input';
 
 	const typeMap: { [key: string]: string } = {
-		'string': 'Input',
-		'int': 'NumberInput',
-		'long': 'NumberInput',
-		'decimal': 'NumberInput',
-		'double': 'NumberInput',
-		'date': 'DatePicker',
-		'datetime': 'DatePicker',
-		'bool': 'Switch',
-		'boolean': 'Switch'
+		string: 'Input',
+		int: 'NumberInput',
+		long: 'NumberInput',
+		decimal: 'NumberInput',
+		double: 'NumberInput',
+		date: 'DatePicker',
+		datetime: 'DatePicker',
+		bool: 'Switch',
+		boolean: 'Switch',
 	};
 
 	return typeMap[netType.toLowerCase()] || 'Input';
@@ -211,7 +215,7 @@ function getDefaultEffectType(netType: string | undefined): string {
 // 控件类型改变
 const effectTypeChange = (data: APIModel.FdCodeGenConfigDto, index: number) => {
 	// 如果是特定类型，需要选择对应字典
-	if (['Radio', 'Checkbox', 'DictSelector', 'ConstSelector', 'EnumSelector'].some(type => data.EffectType === type)) {
+	if (['Radio', 'Checkbox', 'DictSelector', 'ConstSelector', 'EnumSelector'].some((type) => data.EffectType === type)) {
 		data.DictTypeCode = ''; // 需要重新选择字典
 	}
 };
@@ -222,7 +226,7 @@ function judgeColumns(data: APIModel.FdCodeGenConfigDto) {
 }
 
 function effectTypeEnable(data: APIModel.FdCodeGenConfigDto) {
-	return !['Radio', 'Checkbox', 'DictSelector', 'ConstSelector', 'EnumSelector'].some((e: any) => e === data.EffectType)
+	return !['Radio', 'Checkbox', 'DictSelector', 'ConstSelector', 'EnumSelector'].some((e: any) => e === data.EffectType);
 }
 
 // 打开弹窗
