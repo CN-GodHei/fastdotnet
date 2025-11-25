@@ -306,7 +306,7 @@ const effectTypeChange = (data: APIModel.FdCodeGenConfigDto, index: number) => {
 
 // 判断是否（用于是否能选择或输入等）
 function judgeColumns(data: APIModel.FdCodeGenConfigDto) {
-	return data.WhetherCommon === '是' || data.ColumnKey === 'True';
+	return Boolean(data.WhetherCommon) || Boolean(data.ColumnKey);
 }
 
 function effectTypeEnable(data: APIModel.FdCodeGenConfigDto) {
