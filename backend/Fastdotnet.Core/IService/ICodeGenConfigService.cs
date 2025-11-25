@@ -43,7 +43,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="columns">列信息列表</param>
         /// <param name="nameSpace">命名空间</param>
         /// <returns></returns>
-        Task<string> GenerateDtoContentAsync(string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment);
+        Task<string> GenerateDtoContentAsync(string entityName, List<FdCodeGenConfig> columns, string nameSpace, string TableComment);
         
         /// <summary>
         /// 生成服务实现代码

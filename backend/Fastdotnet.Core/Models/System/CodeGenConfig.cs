@@ -113,42 +113,42 @@ namespace Fastdotnet.Core.Models.System
         /// <summary>
         /// 是否是查询条件
         /// </summary>
-        public string? WhetherQuery { get; set; }
+        public bool WhetherQuery { get; set; }
 
         /// <summary>
         /// 列表是否缩进（字典）
         /// </summary>
-        public string? WhetherRetract { get; set; }
+        public bool WhetherRetract { get; set; }
 
         /// <summary>
         /// 是否必填（字典）
         /// </summary>
-        public string? WhetherRequired { get; set; }
+        public bool WhetherRequired { get; set; }
 
         /// <summary>
         /// 是否可排序（字典）
         /// </summary>
-        public string? WhetherSortable { get; set; }
+        public bool WhetherSortable { get; set; }
 
         /// <summary>
         /// 列表显示
         /// </summary>
-        public string? WhetherTable { get; set; }
+        public bool WhetherTable { get; set; }
 
         /// <summary>
         /// 增改
         /// </summary>
-        public string? WhetherAddUpdate { get; set; }
+        public bool WhetherAddUpdate { get; set; }
 
         /// <summary>
         /// 导入
         /// </summary>
-        public string? WhetherImport { get; set; }
+        public bool WhetherImport { get; set; }
 
         /// <summary>
         /// 是否通用字段
         /// </summary>
-        public string? WhetherCommon { get; set; }
+        public bool WhetherCommon { get; set; }
 
         /// <summary>
         /// 排序
@@ -165,7 +165,7 @@ namespace Fastdotnet.Core.Models.System
         /// <summary>
         /// 是否启用脱敏处理
         /// </summary>
-        public bool? EnableMask { get; set; }
+        public bool EnableMask { get; set; }
 
     }
 
@@ -292,49 +292,49 @@ namespace Fastdotnet.Core.Models.System
         /// 是否是查询条件
         /// </summary>
         [StringLength(8, ErrorMessage = "查询条件字段长度不能超过8个字符")]
-        public string? WhetherQuery { get; set; }
+        public bool WhetherQuery { get; set; }
 
         /// <summary>
         /// 列表是否缩进（字典）
         /// </summary>
         [StringLength(8, ErrorMessage = "列表缩进字段长度不能超过8个字符")]
-        public string? WhetherRetract { get; set; }
+        public bool WhetherRetract { get; set; }
 
         /// <summary>
         /// 是否必填（字典）
         /// </summary>
         [StringLength(8, ErrorMessage = "必填字段长度不能超过8个字符")]
-        public string? WhetherRequired { get; set; }
+        public bool WhetherRequired { get; set; }
 
         /// <summary>
         /// 是否可排序（字典）
         /// </summary>
         [StringLength(8, ErrorMessage = "可排序字段长度不能超过8个字符")]
-        public string? WhetherSortable { get; set; }
+        public bool WhetherSortable { get; set; }
 
         /// <summary>
         /// 列表显示
         /// </summary>
         [StringLength(8, ErrorMessage = "列表显示字段长度不能超过8个字符")]
-        public string? WhetherTable { get; set; }
+        public bool WhetherTable { get; set; }
 
         /// <summary>
         /// 增改
         /// </summary>
         [StringLength(8, ErrorMessage = "增改字段长度不能超过8个字符")]
-        public string? WhetherAddUpdate { get; set; }
+        public bool WhetherAddUpdate { get; set; }
 
         /// <summary>
         /// 导入
         /// </summary>
         [StringLength(8, ErrorMessage = "导入字段长度不能超过8个字符")]
-        public string? WhetherImport { get; set; }
+        public bool WhetherImport { get; set; }
 
         /// <summary>
         /// 是否通用字段
         /// </summary>
         [StringLength(8, ErrorMessage = "通用字段长度不能超过8个字符")]
-        public string? WhetherCommon { get; set; }
+        public bool WhetherCommon { get; set; }
 
         /// <summary>
         /// 排序
@@ -352,7 +352,7 @@ namespace Fastdotnet.Core.Models.System
         /// <summary>
         /// 是否启用脱敏处理
         /// </summary>
-        public bool? EnableMask { get; set; }
+        public bool EnableMask { get; set; }
 
     }
 
@@ -485,49 +485,49 @@ namespace Fastdotnet.Core.Models.System
         /// 是否是查询条件
         /// </summary>
         [StringLength(8, ErrorMessage = "查询条件字段长度不能超过8个字符")]
-        public string? WhetherQuery { get; set; }
+        public bool WhetherQuery { get; set; }
 
         /// <summary>
         /// 列表是否缩进（字典）
         /// </summary>
         [StringLength(8, ErrorMessage = "列表缩进字段长度不能超过8个字符")]
-        public string? WhetherRetract { get; set; }
+        public bool WhetherRetract { get; set; }
 
         /// <summary>
         /// 是否必填（字典）
         /// </summary>
         [StringLength(8, ErrorMessage = "必填字段长度不能超过8个字符")]
-        public string? WhetherRequired { get; set; }
+        public bool WhetherRequired { get; set; }
 
         /// <summary>
         /// 是否可排序（字典）
         /// </summary>
         [StringLength(8, ErrorMessage = "可排序字段长度不能超过8个字符")]
-        public string? WhetherSortable { get; set; }
+        public bool WhetherSortable { get; set; }
 
         /// <summary>
         /// 列表显示
         /// </summary>
         [StringLength(8, ErrorMessage = "列表显示字段长度不能超过8个字符")]
-        public string? WhetherTable { get; set; }
+        public bool WhetherTable { get; set; }
 
         /// <summary>
         /// 增改
         /// </summary>
         [StringLength(8, ErrorMessage = "增改字段长度不能超过8个字符")]
-        public string? WhetherAddUpdate { get; set; }
+        public bool WhetherAddUpdate { get; set; }
 
         /// <summary>
         /// 导入
         /// </summary>
         [StringLength(8, ErrorMessage = "导入字段长度不能超过8个字符")]
-        public string? WhetherImport { get; set; }
+        public bool WhetherImport { get; set; }
 
         /// <summary>
         /// 是否通用字段
         /// </summary>
         [StringLength(8, ErrorMessage = "通用字段长度不能超过8个字符")]
-        public string? WhetherCommon { get; set; }
+        public bool WhetherCommon { get; set; }
 
         /// <summary>
         /// 排序
@@ -544,7 +544,7 @@ namespace Fastdotnet.Core.Models.System
         /// <summary>
         /// 是否启用脱敏处理
         /// </summary>
-        public bool? EnableMask { get; set; }
+        public bool EnableMask { get; set; }
     }
 
     /// <summary>

@@ -110,7 +110,7 @@ namespace Fastdotnet.Core.Entities.System
         /// 是否启用脱敏处理
         /// </summary>
         [SugarColumn(ColumnDescription = "是否启用脱敏处理", IsNullable = true)]
-        public bool? EnableMask { get; set; }
+        public bool EnableMask { get; set; }
 
         /// <summary>
         /// 外键表名称
@@ -166,56 +166,56 @@ namespace Fastdotnet.Core.Entities.System
         /// </summary>
         [SugarColumn(ColumnDescription = "是否是查询条件", IsNullable = true, Length = 8)]
         [MaxLength(8)]
-        public string? WhetherQuery { get; set; }
+        public bool WhetherQuery { get; set; }
 
         /// <summary>
         /// 列表是否缩进（字典）
         /// </summary>
         [SugarColumn(ColumnDescription = "列表是否缩进", IsNullable = true, Length = 8)]
         [MaxLength(8)]
-        public string? WhetherRetract { get; set; }
+        public bool WhetherRetract { get; set; }
 
         /// <summary>
         /// 是否必填（字典）
         /// </summary>
         [SugarColumn(ColumnDescription = "是否必填", IsNullable = true, Length = 8)]
         [MaxLength(8)]
-        public string? WhetherRequired { get; set; }
+        public bool WhetherRequired { get; set; }
 
         /// <summary>
         /// 是否可排序（字典）
         /// </summary>
         [SugarColumn(ColumnDescription = "是否可排序", IsNullable = true, Length = 8)]
         [MaxLength(8)]
-        public string? WhetherSortable { get; set; }
+        public bool WhetherSortable { get; set; }
 
         /// <summary>
         /// 列表显示
         /// </summary>
         [SugarColumn(ColumnDescription = "列表显示", IsNullable = true, Length = 8)]
         [MaxLength(8)]
-        public string? WhetherTable { get; set; }
+        public bool WhetherTable { get; set; }
 
         /// <summary>
         /// 增改
         /// </summary>
         [SugarColumn(ColumnDescription = "增改", IsNullable = true, Length = 8)]
         [MaxLength(8)]
-        public string? WhetherAddUpdate { get; set; }
+        public bool WhetherAddUpdate { get; set; }
 
         /// <summary>
         /// 导入
         /// </summary>
         [SugarColumn(ColumnDescription = "导入", IsNullable = true, Length = 8)]
         [MaxLength(8)]
-        public string? WhetherImport { get; set; }
+        public bool WhetherImport { get; set; }
 
         /// <summary>
         /// 是否通用字段
         /// </summary>
         [SugarColumn(ColumnDescription = "是否通用字段", IsNullable = true, Length = 8)]
         [MaxLength(8)]
-        public string? WhetherCommon { get; set; }
+        public bool WhetherCommon { get; set; }
 
         /// <summary>
         /// 排序

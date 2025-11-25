@@ -56,37 +56,37 @@
 				</el-table-column>
 				<el-table-column prop="EnableMask" label="脱敏" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-checkbox v-model="scope.row.EnableMask" @change="handleMaskChange(scope.row)"/>
+						<el-checkbox v-model="scope.row.EnableMask" @change="handleMaskChange(scope.row)" />
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherTable" label="列表显示" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-checkbox v-model="scope.row.WhetherTable" true-value="是" false-value="否" />
+						<el-checkbox v-model="scope.row.WhetherTable" />
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherAddUpdate" label="增改显示" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-checkbox v-model="scope.row.WhetherAddUpdate" true-value="是" false-value="否" />
+						<el-checkbox v-model="scope.row.WhetherAddUpdate" />
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherImport" label="导入" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-checkbox v-model="scope.row.WhetherImport" true-value="是" false-value="否" />
+						<el-checkbox v-model="scope.row.WhetherImport" />
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherRequired" label="必填" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-checkbox v-model="scope.row.WhetherRequired" true-value="是" false-value="否" :disabled="true" />
+						<el-checkbox v-model="scope.row.WhetherRequired" :disabled="true" />
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherSortable" label="可排序" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-checkbox v-model="scope.row.WhetherSortable" true-value="是" false-value="否" />
+						<el-checkbox v-model="scope.row.WhetherSortable" />
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherQuery" label="查询" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-switch v-model="scope.row.WhetherQuery" active-value="是" inactive-value="否" />
+						<el-switch v-model="scope.row.WhetherQuery" />
 					</template>
 				</el-table-column>
 				<el-table-column prop="QueryType" label="查询方式" width="110" align="center" show-overflow-tooltip>
@@ -118,7 +118,7 @@
 				</span>
 			</template>
 		</el-dialog>
-		
+
 		<!-- 脱敏配置弹窗 -->
 		<el-dialog v-model="state.maskConfigDialogVisible" title="脱敏配置" width="600px" append-to-body>
 			<el-form :model="state.currentMaskConfig" label-width="120px">
@@ -132,7 +132,7 @@
 						<el-option label="自定义" value="Custom" />
 					</el-select>
 				</el-form-item>
-				
+
 				<template v-if="state.currentMaskConfig.Type && state.currentMaskConfig.Type !== 'Custom'">
 					<el-form-item label="保留前缀字符数">
 						<el-input-number v-model="state.currentMaskConfig.PrefixKeep" :min="0" controls-position="right" />
@@ -147,12 +147,12 @@
 						<el-input-number v-model="state.currentMaskConfig.MaskLength" :min="0" controls-position="right" />
 					</el-form-item>
 				</template>
-				
+
 				<template v-if="state.currentMaskConfig.Type === 'Custom'">
 					<el-form-item label="自定义正则表达式">
-						<el-input 
-							v-model="state.currentMaskConfig.CustomPattern" 
-							type="textarea" 
+						<el-input
+							v-model="state.currentMaskConfig.CustomPattern"
+							type="textarea"
 							@blur="validateRegex(state.currentMaskConfig.CustomPattern)"
 							placeholder="(\d{6})\d+(\d{4})"
 						/>
@@ -195,7 +195,7 @@ const state = reactive({
 	tableData: [] as APIModel.FdCodeGenConfigDto[],
 	originalData: [] as APIModel.FdCodeGenConfigDto[], // 原始数据备份
 	configId: '', // 用于关联的CodeGenId
-	
+
 	// 脱敏配置相关
 	maskConfigDialogVisible: false, // 脱敏配置弹窗显示状态
 	currentEditingRow: null as APIModel.FdCodeGenConfigDto | null, // 当前正在编辑的行
@@ -206,9 +206,9 @@ const state = reactive({
 		MaskChar: '*',
 		MaskLength: undefined as number | undefined,
 		CustomPattern: '',
-		CustomReplacement: ''
+		CustomReplacement: '',
 	}, // 当前脱敏配置
-	customPatternError: '' // 自定义正则表达式错误信息
+	customPatternError: '', // 自定义正则表达式错误信息
 });
 
 // 初始化时加载字典数据
@@ -259,7 +259,7 @@ const handleQuery = async (row: any) => {
 					MaskChar: '*',
 					MaskLength: undefined,
 					CustomPattern: '',
-					CustomReplacement: ''
+					CustomReplacement: '',
 				};
 			}
 			if (item.EnableMask === undefined || item.EnableMask === null) {
@@ -316,7 +316,7 @@ function effectTypeEnable(data: APIModel.FdCodeGenConfigDto) {
 // 验证正则表达式是否有效
 function validateRegex(pattern: string): boolean {
 	if (!pattern) return true; // 空字符串认为是有效的
-	
+
 	try {
 		new RegExp(pattern);
 		state.customPatternError = '';
@@ -331,7 +331,7 @@ function validateRegex(pattern: string): boolean {
 const handleMaskChange = (row: APIModel.FdCodeGenConfigDto) => {
 	if (row.EnableMask) {
 		state.currentEditingRow = row;
-		
+
 		// 初始化脱敏配置
 		if (row.MaskConfig) {
 			state.currentMaskConfig = {
@@ -341,7 +341,7 @@ const handleMaskChange = (row: APIModel.FdCodeGenConfigDto) => {
 				MaskChar: row.MaskConfig.MaskChar || '*',
 				MaskLength: row.MaskConfig.MaskLength,
 				CustomPattern: row.MaskConfig.CustomPattern || '',
-				CustomReplacement: row.MaskConfig.CustomReplacement || ''
+				CustomReplacement: row.MaskConfig.CustomReplacement || '',
 			};
 		} else {
 			state.currentMaskConfig = {
@@ -351,13 +351,13 @@ const handleMaskChange = (row: APIModel.FdCodeGenConfigDto) => {
 				MaskChar: '*',
 				MaskLength: undefined,
 				CustomPattern: '',
-				CustomReplacement: '*'
+				CustomReplacement: '*',
 			};
 		}
-		
+
 		// 清除之前的错误信息
 		state.customPatternError = '';
-		
+
 		state.maskConfigDialogVisible = true;
 	}
 };
@@ -371,13 +371,13 @@ const saveMaskConfig = () => {
 				ElMessage.error('正则表达式格式不正确: ' + state.customPatternError);
 				return;
 			}
-			
+
 			// 如果自定义替换字符串为空，默认使用"*"
 			// if (!state.currentMaskConfig.CustomReplacement) {
 			// 	state.currentMaskConfig.CustomReplacement = '*';
 			// }
 		}
-		
+
 		// 如果没有选择脱敏类型，则不保存配置
 		if (!state.currentMaskConfig.Type) {
 			state.currentEditingRow.MaskConfig = undefined;

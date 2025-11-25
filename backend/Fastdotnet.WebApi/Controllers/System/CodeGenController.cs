@@ -188,7 +188,7 @@ namespace Fastdotnet.WebApi.Controllers.System
             return type?.ToLower() switch
             {
                 "entity" => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumns, config.NameSpace, config.TableComment),
-                "dto" => await _codeGenConfigService.GenerateDtoContentAsync(entityName, tableColumns, config.NameSpace, config.TableComment),
+                "dto" => await _codeGenConfigService.GenerateDtoContentAsync(entityName, tableColumnsconfig, config.NameSpace, config.TableComment),
                 "service" => await _codeGenConfigService.GenerateServiceImplementationContentAsync(entityName, config.NameSpace, config.TableComment),
                 "controller" => await _codeGenConfigService.GenerateControllerContentAsync(entityName, config.NameSpace, config.TableComment),
                 "frontend" => await _codeGenConfigService.GenerateFrontendVueContentAsync(entityName, tableColumns, config.TableName, config.PagePath, config.TableComment, tableColumnsconfig),
@@ -252,13 +252,14 @@ namespace Fastdotnet.WebApi.Controllers.System
                     DefaultValue = col.DefaultValue,
                     EffectType = GetEffectTypeByColumnName(col.ColumnName, col.DataType), // 根据字段名和数据类型推断作用类型
                     OrderNo = index + 100, // 默认排序
-                    WhetherTable = baseEntityProperties.Contains(col.PropertyName) ? "否" : "是",
-                    WhetherAddUpdate = baseEntityProperties.Contains(col.PropertyName) ? "否" : "是",
-                    WhetherImport = baseEntityProperties.Contains(col.PropertyName) ? "否" : "是",
-                    WhetherSortable = baseEntityProperties.Contains(col.PropertyName) ? "否" : "是",
-                    WhetherQuery = baseEntityProperties.Contains(col.PropertyName) ? "否" : "是",
+                    WhetherTable = baseEntityProperties.Contains(col.PropertyName) ? false : true,
+                    WhetherAddUpdate = baseEntityProperties.Contains(col.PropertyName) ? false : true,
+                    WhetherImport = baseEntityProperties.Contains(col.PropertyName) ? false : true,
+                    WhetherSortable = baseEntityProperties.Contains(col.PropertyName) ? false : true,
+                    WhetherQuery = baseEntityProperties.Contains(col.PropertyName) ? false : true,
                     QueryType = baseEntityProperties.Contains(col.PropertyName) ? "" : "eq",//一般来说检索是Like合适但是，这个是批量生成的，避免所有查询都like影响性能，直接按等于生成，可以自己在页面上调整
-                    WhetherRequired= col.IsNullable? "否" : "是",
+                    WhetherRequired= col.IsNullable? false : true,
+                    EnableMask = false,
                 }).ToList();
 
                 await _configRepository.InsertRangeAsync(configList);

@@ -159,24 +159,31 @@ namespace Fastdotnet.Service.Service
         }
 
 
-        private string GenerateDtoProperty(ColumnInfoDto column, bool isCreate = false, bool isOutput = false)
+        private string GenerateDtoProperty(FdCodeGenConfig column, bool isCreate = false, bool isOutput = false)
         {
             var validations = new List<string>();
-            if (!column.IsNullable && !column.IsPrimarykey && !column.IsIdentity && isCreate)
+            if (!column.WhetherRequired && !column.ColumnKey && isCreate)
             {
                 validations.Add("[Required(ErrorMessage = \"" + column.ColumnComment + "不能为空\")]");
             }
 
             var lengthValidation = "";
-            if (column.Length > 0 && (column.DataType?.Contains("char") == true || column.DataType?.Contains("text") == true))
+            if (column.ColumnLength > 0 && (column.DataType?.Contains("char") == true || column.DataType?.Contains("text") == true))
             {
                 if (!isOutput)
                 {
-                    lengthValidation = $"[StringLength({column.Length},ErrorMessage = \"{column.ColumnComment}最多{column.Length}个字符\")]";
+                    lengthValidation = $"[StringLength({column.ColumnLength},ErrorMessage = \"{column.ColumnComment}最多{column.ColumnLength}个字符\")]";
                 }
                 else
                 {
-                    lengthValidation = "        ";
+                    if ((bool)column.EnableMask)
+                    {
+
+                    }
+                    else
+                    {
+                        lengthValidation = "        ";
+                    }
                 }
             }
 
@@ -241,7 +248,7 @@ namespace Fastdotnet.Service.Service
         }
 
 
-        public async Task<string>  GenerateEntityContentAsync(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
+        public async Task<string> GenerateEntityContentAsync(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
         {
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
@@ -278,7 +285,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
             return baseEntityProperties;
         }
 
-        public async Task<string> GenerateDtoContentAsync(string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
+        public async Task<string> GenerateDtoContentAsync(string entityName, List<FdCodeGenConfig> columns, string nameSpace, string TableComment)
         {
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
@@ -286,7 +293,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
             var filteredColumns = columns.Where(col =>
                 !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) &&
                 !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
-            var primaryKeyColumns = columns.Where(x => x.IsPrimarykey).ToList();
+            var primaryKeyColumns = columns.Where(x => x.ColumnKey).ToList();
             primaryKeyColumns.AddRange(filteredColumns);
 
             var createDtoContent = $@"using System.ComponentModel.DataAnnotations;
@@ -298,7 +305,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
     /// </summary>
     public class Create{entityName}Dto
     {{
-{string.Join("\n", filteredColumns.Where(col => !col.IsPrimarykey && !col.IsIdentity).Select(col => GenerateDtoProperty(col, true)))}
+{string.Join("\n", filteredColumns.Where(col => !col.ColumnKey).Select(col => GenerateDtoProperty(col, true)))}
     }}
 
     /// <summary>
@@ -306,7 +313,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
     /// </summary>
     public class Update{entityName}Dto
     {{
-{string.Join("\n", primaryKeyColumns.Select(col => GenerateDtoProperty(col, false)))}
+{string.Join("\n", primaryKeyColumns.Where(x => x.EnableMask == false).Select(col => GenerateDtoProperty(col, false)))}
     }}
 
     /// <summary>
@@ -392,18 +399,18 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
             // 确保configcolumns不为null
             if (configcolumns == null)
                 configcolumns = new List<FdCodeGenConfig>();
-                
+
             //var filteredColumns = columns.Where(col =>
             //    !baseEntityProperties.Contains(col.ColumnName, StringComparer.OrdinalIgnoreCase) &&
             //    !baseEntityProperties.Contains(col.PropertyName, StringComparer.OrdinalIgnoreCase)).ToList();
-            //var configcolumnsisshow = configcolumns.Where(x=>x.WhetherTable=="是");
-            var WhetherQuery = configcolumns.Where(x => x.WhetherQuery == "是" && x.QueryType == "BETWEEN")?? new List<FdCodeGenConfig>();
+            //var configcolumnsisshow = configcolumns.Where(x=>x.WhetherTable==true);
+            var WhetherQuery = configcolumns.Where(x => x.WhetherQuery == true && x.QueryType == "BETWEEN") ?? new List<FdCodeGenConfig>();
             return $@"<template>
 	<div class=""{entityName.ToLower()}-container"">
 		<el-card shadow=""hover"" :body-style=""{{ padding: 2 }}"">
 			<el-form :model=""state.queryParams"" ref=""queryForm"" :inline=""true"">
                 <div v-show=""state.searchCollapsed"" >
-                    {string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == "是").Select((col, idx) =>
+                    {string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == true).Select((col, idx) =>
                                        $@"{getFrontendQueryTemp(col)}"
 
                     ))}
@@ -427,7 +434,7 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 				<el-button icon=""ele-Download""> 导出 </el-button>
 			</div>
 			<el-table :data=""state.tableData.data"" style=""width: 100%"" v-loading=""state.loading"" border>
-				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherTable == "是").Select((col, idx) =>
+				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherTable == true).Select((col, idx) =>
                     $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ShowColumnName ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
                 ))}
 				<el-table-column label=""操作"" width=""180"" fixed=""right"" align=""center"">
@@ -458,7 +465,7 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 				</div>
 			</template>
 			<el-form :model=""state.formData"" ref=""formRef"" label-width=""auto"">
-				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherAddUpdate == "是").Select(col =>
+				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherAddUpdate == true).Select(col =>
                     $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ShowColumnName ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"state.formData.{col.PropertyName}\" placeholder=\"请输入{col.ShowColumnName ?? col.PropertyName}\" {getFrontendmMaxLenghtTemp(col, columns)} clearable />\n					</el-form-item>\n				</el-col>"
                 ))}
 			</el-form>
@@ -490,8 +497,8 @@ const state = reactive({{
 		data: [] as APIModel.{entityName}Dto[]
 	}},
 	queryParams: {{
-	{string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == "是").Select((col, idx) => $@"{col.PropertyName}:null,"))}
-	{string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == "是"&&x.QueryType == "BETWEEN").Select((col, idx) => $@"{col.PropertyName}_1:null,"))}
+	{string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == true).Select((col, idx) => $@"{col.PropertyName}:null,"))}
+	{string.Join("\n\t", configcolumns.Where(x => x.WhetherQuery == true && x.QueryType == "BETWEEN").Select((col, idx) => $@"{col.PropertyName}_1:null,"))}
 }},
 	pagination: {{page: 1,
 		pageSize: 20,
@@ -504,7 +511,7 @@ const state = reactive({{
 	}},
 	formData: {{
     Id:'',
-	{string.Join("\n\t", configcolumns.Where(x => x.WhetherAddUpdate == "是").Select((col, idx) => $@"{col.PropertyName}:{getTSDefaultvAalue(col)},"))}
+	{string.Join("\n\t", configcolumns.Where(x => x.WhetherAddUpdate == true).Select((col, idx) => $@"{col.PropertyName}:{getTSDefaultvAalue(col)},"))}
 }}
 }});
 const toggleSearchCollapse = () => {{
@@ -664,7 +671,7 @@ onMounted(() => {{
             var jsObject = new global::System.Text.StringBuilder();
             jsObject.Append("ranges:{");
 
-            foreach (var item in fdCodeGenConfig.Where(x => x.WhetherQuery == "是" && x.QueryType == "BETWEEN"))
+            foreach (var item in fdCodeGenConfig.Where(x => x.WhetherQuery == true && x.QueryType == "BETWEEN"))
             {
                 jsObject.Append("\n" + $@"{item.PropertyName}:" + "{\n\tfrom:" + $@"state.queryParams.{item.PropertyName}," + "\n\tto:" + $@"state.queryParams.{item.PropertyName}_1" + "},\n");
 
@@ -672,7 +679,7 @@ onMounted(() => {{
             jsObject.Append("}");
             var sb = new global::System.Text.StringBuilder();
             sb.Append("customs:[\n");
-            foreach (var item in fdCodeGenConfig.Where(x => x.WhetherQuery == "是" && x.QueryType != "BETWEEN"))
+            foreach (var item in fdCodeGenConfig.Where(x => x.WhetherQuery == true && x.QueryType != "BETWEEN"))
             {
                 sb.Append($@"{{field:'{item.PropertyName}',operator:'{item.QueryType}',value:state.queryParams.{item.PropertyName},}}," + "\n");
             }
@@ -682,7 +689,7 @@ onMounted(() => {{
 
         private string getFrontendQueryTemp(FdCodeGenConfig fdCodeGenConfig)
         {
-            if (fdCodeGenConfig.WhetherQuery == "是" && fdCodeGenConfig.QueryType == "BETWEEN")
+            if (fdCodeGenConfig.WhetherQuery == true && fdCodeGenConfig.QueryType == "BETWEEN")
             {
                 return $@"<el-form-item label=""{fdCodeGenConfig.ShowColumnName}"" prop=""{fdCodeGenConfig.PropertyName}"">
                 <div style=""display: flex; gap: 8px;"">
@@ -706,7 +713,7 @@ onMounted(() => {{
         private string getTSDefaultvAalue(FdCodeGenConfig fdCodeGenConfig)
         {
             string a = "''";
-            if (fdCodeGenConfig.NetType== "bool")
+            if (fdCodeGenConfig.NetType == "bool")
             {
                 a = "false";
             }
