@@ -69,7 +69,7 @@ public class GlobalExceptionMiddleware
                 StackTrace = exception.StackTrace ?? string.Empty,
                 Path = path,
                 Method = method,
-                CreateTime = DateTime.Now
+                CreatedAt = DateTime.Now
             };
 
             try

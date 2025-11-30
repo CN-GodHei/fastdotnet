@@ -1,4 +1,5 @@
 using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Plugin.Contracts;
 using Microsoft.Extensions.Logging;
@@ -51,7 +52,7 @@ namespace Fastdotnet.Core.Services.System
                     Code = p.Code,
                     Name = p.Name,
                     Category = p.Category,
-                    Type = Enum.Parse<PermissionType>(p.Type, true),
+                    Type = global::System.Enum.Parse<PermissionType>(p.Type, true),
                     Description = $"由 {p.Module} 模块自动注册"
                 }).ToList();
 

@@ -457,6 +457,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Fastdotnet.Core.Constants;
+using Microsoft.AspNetCore.Mvc;
 
 namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 {{

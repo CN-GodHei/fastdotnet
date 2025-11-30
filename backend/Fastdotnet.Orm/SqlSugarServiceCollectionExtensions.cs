@@ -140,7 +140,7 @@ public static class SqlSugarServiceCollectionExtensions
                             entityInfo.SetValue(YitIdHelper.NextId());
                         }
 
-                        // 自动填充创建时间（如果CreateTime为默认值）
+                        // 自动填充创建时间（如果CreatedAt为默认值）
                         else if (entityInfo.PropertyName == nameof(IBaseEntity.CreatedAt) && (DateTime)oldValue == default)
                         {
                             // 使用本地时间，确保所见即所得
@@ -205,7 +205,7 @@ public static class SqlSugarServiceCollectionExtensions
                 HasError = exception != null,
                 ErrorMessage = exception?.Message,
                 StackTrace = exception?.StackTrace,
-                CreateTime = DateTime.Now
+                CreatedAt = DateTime.Now
             };
 
             // 同步记录日志到数据库，避免异步任务可能的问题

@@ -31,9 +31,9 @@ namespace Fastdotnet.Service.Service
             }
             
             // 确保有创建时间
-            if (log.CreateTime == default)
+            if (log.CreatedAt == default)
             {
-                log.CreateTime = DateTime.Now;
+                log.CreatedAt = DateTime.Now;
             }
             
             await GetLogDb().Insertable(log).ExecuteCommandAsync();
@@ -48,9 +48,9 @@ namespace Fastdotnet.Service.Service
             }
             
             // 确保有创建时间
-            if (log.CreateTime == default)
+            if (log.CreatedAt == default)
             {
-                log.CreateTime = DateTime.Now;
+                log.CreatedAt = DateTime.Now;
             }
             
             await GetLogDb().Insertable(log).ExecuteCommandAsync();
@@ -65,9 +65,9 @@ namespace Fastdotnet.Service.Service
             }
             
             // 确保有创建时间
-            if (log.CreateTime == default)
+            if (log.CreatedAt == default)
             {
-                log.CreateTime = DateTime.Now;
+                log.CreatedAt = DateTime.Now;
             }
             
             await GetLogDb().Insertable(log).ExecuteCommandAsync();
@@ -83,9 +83,9 @@ namespace Fastdotnet.Service.Service
             }
             
             // 确保有创建时间
-            if (log.CreateTime == default)
+            if (log.CreatedAt == default)
             {
-                log.CreateTime = DateTime.Now;
+                log.CreatedAt = DateTime.Now;
             }
             
             GetLogDb().Insertable(log).ExecuteCommand();
@@ -100,9 +100,9 @@ namespace Fastdotnet.Service.Service
             }
             
             // 确保有创建时间
-            if (log.CreateTime == default)
+            if (log.CreatedAt == default)
             {
-                log.CreateTime = DateTime.Now;
+                log.CreatedAt = DateTime.Now;
             }
             
             GetLogDb().Insertable(log).ExecuteCommand();
@@ -117,9 +117,9 @@ namespace Fastdotnet.Service.Service
             }
             
             // 确保有创建时间
-            if (log.CreateTime == default)
+            if (log.CreatedAt == default)
             {
-                log.CreateTime = DateTime.Now;
+                log.CreatedAt = DateTime.Now;
             }
             
             GetLogDb().Insertable(log).ExecuteCommand();

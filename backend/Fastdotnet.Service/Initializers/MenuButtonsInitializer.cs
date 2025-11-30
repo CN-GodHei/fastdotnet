@@ -1,4 +1,5 @@
 ﻿using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;
 using System;
@@ -24,7 +25,7 @@ namespace Fastdotnet.Service.Initializers
         public async Task ExecuteAsync()
         {
             // 查询所有菜单
-            var menus = await _Menurepository.GetListAsync(x => x.Type == Core.MenuType.Menu);
+            var menus = await _Menurepository.GetListAsync(x => x.Type == MenuType.Menu);
 
             // 为每个菜单生成默认的按钮按钮
             foreach (var menu in menus)

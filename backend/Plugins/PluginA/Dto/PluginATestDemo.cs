@@ -137,7 +137,7 @@ namespace PluginA.Dto
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime CreateTime { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         /// <summary>
         /// 更新时间

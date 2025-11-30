@@ -11,7 +11,7 @@ namespace Fastdotnet.Core.Models.System
         public string? Description { get; set; }
         public string Category { get; set; }
         public bool IsSystem { get; set; }
-        public DateTime CreateTime { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 
     public class CreateFdRoleDto

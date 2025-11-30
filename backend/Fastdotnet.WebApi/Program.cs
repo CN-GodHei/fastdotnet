@@ -532,7 +532,7 @@ lifetime.ApplicationStarted.Register(() =>
                             StackTrace = ex.StackTrace ?? string.Empty,
                             Path = "/startup-task",
                             Method = taskType,
-                            CreateTime = DateTime.Now
+                            CreatedAt = DateTime.Now
                         };
 
                         try

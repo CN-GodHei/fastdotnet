@@ -42,7 +42,7 @@ namespace PluginA.Dto
         public int TestValue { get; set; }
         public bool IsEnabled { get; set; }
         public string Creator { get; set; }
-        public DateTime CreateTime { get; set; }
+        public DateTime CreatedAt { get; set; }
         public DateTime? UpdateTime { get; set; }
     }
 }

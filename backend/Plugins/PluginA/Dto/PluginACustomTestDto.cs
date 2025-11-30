@@ -34,6 +34,6 @@ namespace PluginA.Dto
                       CustomReplacement = "$1*****$2")]
         public string SSN { get; set; }
         
-        public DateTime CreateTime { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

@@ -1,5 +1,5 @@
-using Fastdotnet.Core;
 using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;
 using Microsoft.Extensions.Logging;

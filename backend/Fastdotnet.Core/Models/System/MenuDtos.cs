@@ -3,6 +3,7 @@ using Fastdotnet.Core.Entities.System;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Fastdotnet.Core.Enum;
 
 namespace Fastdotnet.Core.Models.System
 {

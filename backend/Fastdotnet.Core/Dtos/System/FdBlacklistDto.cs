@@ -36,7 +36,7 @@ namespace Fastdotnet.Core.Dtos.System
         /// </summary>
         public bool IsSystem { get; set; }
 
-        public DateTime CreateTime { get; set; }
+        public DateTime CreatedAt { get; set; }
         public DateTime? UpdateTime { get; set; }
         //public bool IsDeleted { get; set; }
     }

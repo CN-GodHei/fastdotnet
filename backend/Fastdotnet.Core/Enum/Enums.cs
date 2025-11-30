@@ -1,4 +1,4 @@
-namespace Fastdotnet.Core
+namespace Fastdotnet.Core.Enum
 {
     public enum PermissionType
     {

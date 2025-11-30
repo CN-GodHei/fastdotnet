@@ -24,7 +24,7 @@ namespace Fastdotnet.Core.Models.Admin.Users
 
         public string? LastLoginIp { get; set; }
 
-        public DateTime CreateTime { get; set; }
+        public DateTime CreatedAt { get; set; }
         public string Avatar { get; set; }
         
         /// <summary>

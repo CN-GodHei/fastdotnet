@@ -1,7 +1,7 @@
 using Fastdotnet.Core.Models.Base;
 using Fastdotnet.Core.Models.Interfaces;
 using SqlSugar;
-using Fastdotnet.Core;
+using Fastdotnet.Core.Enum;
 
 namespace Fastdotnet.Core.Entities.System
 {

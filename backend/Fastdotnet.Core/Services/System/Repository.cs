@@ -160,18 +160,18 @@ namespace Fastdotnet.Core.Services.System
         {
             // 在批量插入前，为所有实体生成ID和设置创建时间
             // 这样可以确保每个实体都有唯一ID，避免AOP事件在批量操作中可能的问题
-            foreach (var entity in entities)
-            {
-                if (string.IsNullOrEmpty(entity.Id))
-                {
-                    entity.Id = SnowflakeIdGenerator.NextStrId();
-                }
+            //foreach (var entity in entities)
+            //{
+            //    if (string.IsNullOrEmpty(entity.Id))
+            //    {
+            //        entity.Id = SnowflakeIdGenerator.NextStrId();
+            //    }
                 
-                if (entity.CreatedAt == default(DateTime))
-                {
-                    entity.CreatedAt = DateTime.Now;
-                }
-            }
+            //    if (entity.CreatedAt == default(DateTime))
+            //    {
+            //        entity.CreatedAt = DateTime.Now;
+            //    }
+            //}
             
             var insertable = _db.Insertable(entities);
             

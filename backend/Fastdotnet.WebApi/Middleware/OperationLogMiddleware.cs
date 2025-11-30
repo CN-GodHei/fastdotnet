@@ -97,7 +97,7 @@ public class OperationLogMiddleware
                 Body = body,
                 StatusCode = context.Response.StatusCode,
                 ElapsedMilliseconds = stopwatch.ElapsedMilliseconds.ToString(),
-                CreateTime = DateTime.Now,
+                CreatedAt = DateTime.Now,
                 // ✅ 关键增强：操作人信息
                 OperatorId = _currentUser.Id,        // 来自 Claims: NameIdentifier
                 OperatorName = _currentUser.UserName, // 来自 Claims: Name
