@@ -553,7 +553,7 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 			</template>
 			<el-form :model=""state.formData"" ref=""formRef"" label-width=""auto"">
 				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherAddUpdate == true).Select(col =>
-                    $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ShowColumnName ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						<el-input v-model=\"state.formData.{col.PropertyName}\" placeholder=\"请输入{col.ShowColumnName ?? col.PropertyName}\" {getFrontendmMaxLenghtTemp(col, columns)} clearable />\n					</el-form-item>\n				</el-col>"
+                    $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ShowColumnName ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						{GetFormComponentByEffectType(col, columns)}\n					</el-form-item>\n				</el-col>"
                 ))}
 			</el-form>
 			<template #footer>
@@ -720,14 +720,14 @@ onMounted(() => {{
 }});
 </script>
 <style scoped lang=""scss"">
-.el-form--inline .el-form-item {{
-	margin-right: 12px !important; // 稍微紧凑一点
-	margin-bottom: 8px !important;
-}}
+// .el-form--inline .el-form-item {{
+// 	margin-right: 12px !important; // 稍微紧凑一点
+// 	margin-bottom: 8px !important;
+// }}
 
-.{entityName.ToLower()}-container .el-card:first-child .el-form .el-form-item:last-of-type {{
-    margin-bottom: 0 !important;
-}}
+// .fdadminuser-container .el-card:first-child .el-form .el-form-item:last-of-type {{
+// 	margin-bottom: 5 !important;
+// }}
 </style>
 
 
@@ -778,11 +778,27 @@ onMounted(() => {{
         {
             if (fdCodeGenConfig.WhetherQuery == true && fdCodeGenConfig.QueryType == "BETWEEN")
             {
+                // 对于BETWEEN查询，目前主要支持数值和日期类型的范围查询
+                string componentStart, componentEnd;
+                
+                // 对于范围查询，我们假设是数值或日期类型
+                if (fdCodeGenConfig.EffectType?.ToLower() == "datetime" || fdCodeGenConfig.EffectType?.ToLower() == "date" || fdCodeGenConfig.EffectType?.ToLower() == "datepicker" || fdCodeGenConfig.EffectType?.ToLower() == "time" || fdCodeGenConfig.EffectType?.ToLower() == "timepicker")
+                {
+                    componentStart = $@"<el-date-picker v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" type=""datetime"" placeholder=""请选择起始{fdCodeGenConfig.ShowColumnName}"" clearable style=""width: 150px"" />";
+                    componentEnd = $@"<el-date-picker v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}_1"" type=""datetime"" placeholder=""请选择结束{fdCodeGenConfig.ShowColumnName}"" clearable style=""width: 150px"" />";
+                }
+                else
+                {
+                    // 默认为数值类型的范围查询
+                    componentStart = $@"<el-input-number v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" placeholder=""请输入起始{fdCodeGenConfig.ShowColumnName}"" style=""width: 150px"" />";
+                    componentEnd = $@"<el-input-number v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}_1"" placeholder=""请输入结束{fdCodeGenConfig.ShowColumnName}"" style=""width: 150px"" />";
+                }
+                
                 return $@"<el-form-item label=""{fdCodeGenConfig.ShowColumnName}"" prop=""{fdCodeGenConfig.PropertyName}"">
                 <div style=""display: flex; gap: 8px;"">
-                    <el-input placeholder=""请输入起始{fdCodeGenConfig.ShowColumnName}"" clearable v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" style=""flex: 1;"" />
+                    {componentStart}
                     <span style=""align-self: center;"">-</span>
-                    <el-input placeholder=""请输入结束{fdCodeGenConfig.ShowColumnName}"" clearable v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}_1"" style=""flex: 1;"" />
+                    {componentEnd}
                 </div>
             </el-form-item>
             <el-form-item prop=""{fdCodeGenConfig.PropertyName}_1"" style=""display:none;""></el-form-item>";
@@ -790,25 +806,124 @@ onMounted(() => {{
 
             else
             {
+                // 根据EffectType生成查询组件
+                var componentTemplate = GetQueryComponentByEffectType(fdCodeGenConfig);
                 return $@"<el-form-item label=""{fdCodeGenConfig.ShowColumnName}"" prop=""{fdCodeGenConfig.PropertyName}"">
-					<el-input placeholder=""请输入{fdCodeGenConfig.ShowColumnName}"" clearable  v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" style=""width: 150px""/>
+					{componentTemplate}
 				</el-form-item>";
             }
 
         }
 
+        /// <summary>
+        /// 根据EffectType生成对应的查询组件模板
+        /// </summary>
+        /// <param name="fdCodeGenConfig">代码生成配置</param>
+        /// <returns>组件模板字符串</returns>
+        private string GetQueryComponentByEffectType(FdCodeGenConfig fdCodeGenConfig)
+        {
+            var effectType = fdCodeGenConfig.EffectType?.ToLower() ?? "input";
+            var showColumnName = fdCodeGenConfig.ShowColumnName ?? fdCodeGenConfig.PropertyName;
+            var isBoolType = fdCodeGenConfig.NetType?.ToLower() == "bool" || fdCodeGenConfig.NetType?.ToLower() == "bool?";
+
+            return effectType switch
+            {
+                "input" or "text" => $@"<el-input v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" placeholder=""请输入{showColumnName}"" clearable style=""width: 150px"" />",
+                "select" or "dictselector" => $@"<el-select v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" placeholder=""请选择{showColumnName}"" clearable style=""width: 150px"">
+                    <el-option label=""选项1"" value=""1"" />
+                    <el-option label=""选项2"" value=""2"" />
+                </el-select>",
+                "datetime" or "date" or "time" or "datepicker" or "timepicker" => $@"<el-date-picker v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" type=""datetime"" placeholder=""请选择{showColumnName}"" clearable style=""width: 150px"" />",
+                "numberinput" or "input-number" => $@"<el-input-number v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" placeholder=""请输入{showColumnName}"" style=""width: 150px"" />",
+                "switch" => $@"<el-select v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" placeholder=""请选择{showColumnName}"" clearable style=""width: 150px"">
+                    <el-option label=""是"" :value=""{GetBoolValue(fdCodeGenConfig, true)}"" />
+                    <el-option label=""否"" :value=""{GetBoolValue(fdCodeGenConfig, false)}"" />
+                </el-select>",
+                "radio" => $@"<el-radio-group v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" placeholder=""请选择{showColumnName}"" clearable style=""width: 150px"">
+                    <el-radio :label=""{GetBoolValue(fdCodeGenConfig, true)}"">是</el-radio>
+                    <el-radio :label=""{GetBoolValue(fdCodeGenConfig, false)}"">否</el-radio>
+                </el-radio-group>",
+                "checkbox" => $@"<el-checkbox-group v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" placeholder=""请选择{showColumnName}"" clearable style=""width: 150px"">
+                    <el-checkbox :label=""{GetBoolValue(fdCodeGenConfig, true)}"">是</el-checkbox>
+                    <el-checkbox :label=""{GetBoolValue(fdCodeGenConfig, false)}"">否</el-checkbox>
+                </el-checkbox-group>",
+                "textarea" => $@"<el-input v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" placeholder=""请输入{showColumnName}"" clearable style=""width: 150px"" type=""textarea"" />",
+                _ => $@"<el-input v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" placeholder=""请输入{showColumnName}"" clearable style=""width: 150px"" />"
+            };
+        }
+
         private string getTSDefaultvAalue(FdCodeGenConfig fdCodeGenConfig)
         {
             string a = "''";
-            if (fdCodeGenConfig.NetType == "bool")
+            if (fdCodeGenConfig.NetType?.ToLower() == "bool" || fdCodeGenConfig.NetType?.ToLower() == "bool?")
             {
                 a = "false";
             }
-            if (fdCodeGenConfig.NetType == "long")
+            else if (fdCodeGenConfig.NetType == "long")
             {
                 a = "0";
             }
             return a;
+        }
+
+        /// <summary>
+        /// 根据EffectType生成对应的表单组件模板
+        /// </summary>
+        /// <param name="fdCodeGenConfig">代码生成配置</param>
+        /// <param name="columns">列信息</param>
+        /// <returns>组件模板字符串</returns>
+        private string GetFormComponentByEffectType(FdCodeGenConfig fdCodeGenConfig, List<ColumnInfoDto> columns)
+        {
+            var effectType = fdCodeGenConfig.EffectType?.ToLower() ?? "input";
+            var showColumnName = fdCodeGenConfig.ShowColumnName ?? fdCodeGenConfig.PropertyName;
+            var maxLengthAttr = getFrontendmMaxLenghtTemp(fdCodeGenConfig, columns);
+            var isBoolType = fdCodeGenConfig.NetType?.ToLower() == "bool" || fdCodeGenConfig.NetType?.ToLower() == "bool?";
+
+            return effectType switch
+            {
+                "input" or "text" => $@"<el-input v-model=""state.formData.{fdCodeGenConfig.PropertyName}"" placeholder=""请输入{showColumnName}"" {maxLengthAttr} clearable />",
+                "select" or "dictselector" => $@"<el-select v-model=""state.formData.{fdCodeGenConfig.PropertyName}"" placeholder=""请选择{showColumnName}"" {maxLengthAttr} clearable style=""width: 100%"">
+                    <el-option label=""选项1"" value=""1"" />
+                    <el-option label=""选项2"" value=""2"" />
+                </el-select>",
+                "datetime" or "date" or "time" or "datepicker" or "timepicker" => $@"<el-date-picker v-model=""state.formData.{fdCodeGenConfig.PropertyName}"" type=""datetime"" placeholder=""请选择{showColumnName}"" {maxLengthAttr} style=""width: 100%"" value-format=""YYYY-MM-DD HH:mm:ss"" />",
+                "numberinput" or "input-number" => $@"<el-input-number v-model=""state.formData.{fdCodeGenConfig.PropertyName}"" placeholder=""请输入{showColumnName}"" {maxLengthAttr} style=""width: 100%"" />",
+                "switch" => $@"<el-switch v-model=""state.formData.{fdCodeGenConfig.PropertyName}"" :active-value=""{GetBoolValue(fdCodeGenConfig, true)}"" :inactive-value=""{GetBoolValue(fdCodeGenConfig, false)}"" />",
+                "radio" => $@"<el-radio-group v-model=""state.formData.{fdCodeGenConfig.PropertyName}"">
+                    <el-radio :label=""{GetBoolValue(fdCodeGenConfig, true)}"">是</el-radio>
+                    <el-radio :label=""{GetBoolValue(fdCodeGenConfig, false)}"">否</el-radio>
+                </el-radio-group>",
+                "checkbox" => $@"<el-checkbox-group v-model=""state.formData.{fdCodeGenConfig.PropertyName}"">
+                    <el-checkbox :label=""{GetBoolValue(fdCodeGenConfig, true)}"">是</el-checkbox>
+                    <el-checkbox :label=""{GetBoolValue(fdCodeGenConfig, false)}"">否</el-checkbox>
+                </el-checkbox-group>",
+                "textarea" => $@"<el-input v-model=""state.formData.{fdCodeGenConfig.PropertyName}"" placeholder=""请输入{showColumnName}"" {maxLengthAttr} type=""textarea"" rows=""4"" />",
+                "password" => $@"<el-input v-model=""state.formData.{fdCodeGenConfig.PropertyName}"" placeholder=""请输入{showColumnName}"" {maxLengthAttr} type=""password"" show-password />",
+                "upload" => $@"<el-upload
+                    v-model:file-list=""state.formData.{fdCodeGenConfig.PropertyName}""
+                    class=""upload-demo""
+                    action=""/api/upload""
+                    multiple
+                    :limit=""3"">
+                    <el-button size=""small"" type=""primary"">点击上传</el-button>
+                    <template #tip>
+                        <div class=""el-upload__tip"">支持多文件上传，最多3个文件</div>
+                    </template>
+                </el-upload>",
+                _ => $@"<el-input v-model=""state.formData.{fdCodeGenConfig.PropertyName}"" placeholder=""请输入{showColumnName}"" {maxLengthAttr} clearable />"
+            };
+        }
+        
+        /// <summary>
+        /// 根据字段类型获取布尔值的表示形式
+        /// </summary>
+        /// <param name="fdCodeGenConfig">代码生成配置</param>
+        /// <param name="boolValue">布尔值</param>
+        /// <returns>布尔值的字符串表示</returns>
+        private string GetBoolValue(FdCodeGenConfig fdCodeGenConfig, bool boolValue)
+        {
+            var isBoolType = fdCodeGenConfig.NetType?.ToLower() == "bool" || fdCodeGenConfig.NetType?.ToLower() == "bool?";
+            return isBoolType ? (boolValue ? "true" : "false") : (boolValue ? "1" : "0");
         }
     }
 }

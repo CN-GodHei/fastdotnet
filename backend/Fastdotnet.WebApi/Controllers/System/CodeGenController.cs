@@ -298,22 +298,22 @@ namespace Fastdotnet.WebApi.Controllers.System
             columnName = columnName.ToLower();
 
             // 根据字段名推断
-            if (columnName.Contains("status")) return "select";
-            if (columnName.Contains("type")) return "select";
-            if (columnName.Contains("time") || columnName.Contains("date") || 
+            if (columnName.Contains("status")) return "Select";
+            if (columnName.Contains("type")) return "Select";
+            if (columnName.Contains("time") || columnName.Contains("Date") || 
                 columnName.Contains("create") || columnName.Contains("update") || 
-                columnName.Contains("modify") || columnName.Contains("gmt_")) return "datetime";
-            if (columnName.Contains("image") || columnName.Contains("img")) return "upload";
-            if (columnName.Contains("file")) return "upload";
+                columnName.Contains("modify") || columnName.Contains("gmt_")|| columnName.Contains("_at")) return "DatePicker";
+            if (columnName.Contains("image") || columnName.Contains("img")) return "Upload";
+            if (columnName.Contains("file")) return "Upload";
             if (columnName.Contains("desc") || columnName.Contains("detail") || 
                 columnName.Contains("content") || columnName.Contains("memo") || 
                 columnName.Contains("note")) return "textarea";
-            if (columnName.Contains("url") || columnName.Contains("link")) return "url";
-            if (columnName.Contains("email")) return "email";
-            if (columnName.Contains("phone") || columnName.Contains("tel") || 
-                columnName.Contains("mobile")) return "phone";
-            if (columnName.Contains("password")) return "password";
-            if (columnName.Contains("gender") || columnName.Contains("sex")) return "radio";
+            if (columnName.Contains("url") || columnName.Contains("link")) return "Input";
+            if (columnName.Contains("email")) return "Input";
+            if (columnName.Contains("phone") || columnName.Contains("Input") || 
+                columnName.Contains("mobile")) return "Input";
+            if (columnName.Contains("password")) return "Input";
+            if (columnName.Contains("gender") || columnName.Contains("sex")) return "Radio";
             if (columnName.Contains("tags") || columnName.Contains("category") || 
                 columnName.Contains("role")) return "checkbox";
             if (columnName.Contains("dict")) return "dict";
@@ -330,7 +330,7 @@ namespace Fastdotnet.WebApi.Controllers.System
         private static string GetEffectTypeByDataType(string dataType)
         {
             if (string.IsNullOrEmpty(dataType))
-                return "input";
+                return "Input";
 
             dataType = dataType.ToLower();
 
@@ -339,23 +339,23 @@ namespace Fastdotnet.WebApi.Controllers.System
                 dataType.Contains("double") || dataType.Contains("float") || 
                 dataType.Contains("tiny") || dataType.Contains("small") || 
                 dataType.Contains("big") || dataType.Contains("number"))
-                return "input-number";
+                return "NumberInput";
 
             // 日期时间类型
             if (dataType.Contains("date") || dataType.Contains("time") || 
                 dataType.Contains("timestamp"))
-                return "datetime";
+                return "DatePicker";
 
             // 布尔类型
             if (dataType.Contains("bool") || dataType.Contains("bit"))
-                return "switch";
+                return "Switch";
 
             // 文本类型（长度较长）
             if (dataType.Contains("text") || dataType.Contains("memo"))
-                return "textarea";
+                return "Textarea";
 
             // 默认为普通输入框
-            return "input";
+            return "Input";
         }
 
         protected override async Task AfterDelete(string id, bool result)
