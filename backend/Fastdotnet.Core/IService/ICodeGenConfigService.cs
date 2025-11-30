@@ -70,5 +70,8 @@ namespace Fastdotnet.Core.IService
         /// <param name="pagePath">页面路径</param>
         /// <returns></returns>
         Task<string> GenerateFrontendVueContentAsync(string entityName, List<ColumnInfoDto> columns, string tableName, string pagePath, string TableComment, List<FdCodeGenConfig> configcolumns);
+
+        string GetEffectTypeByColumnName(string columnName, string dataType);
+
     }
 }

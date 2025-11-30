@@ -926,5 +926,96 @@ onMounted(() => {{
             var isBoolType = fdCodeGenConfig.NetType?.ToLower() == "bool" || fdCodeGenConfig.NetType?.ToLower() == "bool?";
             return isBoolType ? (boolValue ? "true" : "false") : (boolValue ? "1" : "0");
         }
+
+        /// <summary>
+        /// 根据字段名和数据类型推断EffectType
+        /// 规范：
+        /// - 包含 'status' 字眼 → 'select' (下拉框)
+        /// - 包含 'type' 字眼 → 'select' (下拉框) 
+        /// - 包含 'time'/'date'/'create'/'update' 字眼 → 'datetime' (日期时间选择器)
+        /// - 包含 'image'/'img' 字眼 → 'upload' (上传组件)
+        /// - 包含 'file' 字眼 → 'upload' (上传组件)
+        /// - 包含 'desc'/'detail'/'content' 字眼 → 'textarea' (文本域)
+        /// - 包含 'url'/'link' 字眼 → 'url' (链接输入框)
+        /// - 包含 'email' 字眼 → 'email' (邮箱输入框)
+        /// - 包含 'phone'/'tel'/'mobile' 字眼 → 'phone' (电话输入框)
+        /// - 包含 'password' 字眼 → 'password' (密码框)
+        /// - 包含 'gender'/'sex' 字眼 → 'radio' (单选框)
+        /// - 包含 'tags'/'category' 字眼 → 'checkbox' (多选框)
+        /// - 包含 'dict' 字眼 → 'dict' (字典选择)
+        /// - 长度 > 200 的字符串 → 'textarea' (文本域)
+        /// - 其他情况 → 根据数据类型决定
+        /// </summary>
+        /// <param name="columnName">字段名</param>
+        /// <param name="dataType">数据类型</param>
+        /// <returns>推断的作用类型</returns>
+        public string GetEffectTypeByColumnName(string columnName, string dataType)
+        {
+            if (string.IsNullOrEmpty(columnName))
+                return GetEffectTypeByDataType(dataType);
+
+            columnName = columnName.ToLower();
+
+            // 根据字段名推断
+            if (columnName.Contains("status")) return "Select";
+            if (columnName.Contains("type")) return "Select";
+            if (columnName.Contains("time") || columnName.Contains("Date") ||
+                columnName.Contains("create") || columnName.Contains("update") ||
+                columnName.Contains("modify") || columnName.Contains("gmt_") || columnName.Contains("_at")) return "DatePicker";
+            if (columnName.Contains("image") || columnName.Contains("img")) return "Upload";
+            if (columnName.Contains("file")) return "Upload";
+            if (columnName.Contains("desc") || columnName.Contains("detail") ||
+                columnName.Contains("content") || columnName.Contains("memo") ||
+                columnName.Contains("note")) return "textarea";
+            if (columnName.Contains("url") || columnName.Contains("link")) return "Input";
+            if (columnName.Contains("email")) return "Input";
+            if (columnName.Contains("phone") || columnName.Contains("Input") ||
+                columnName.Contains("mobile")) return "Input";
+            if (columnName.Contains("password")) return "Input";
+            if (columnName.Contains("gender") || columnName.Contains("sex")) return "Radio";
+            if (columnName.Contains("tags") || columnName.Contains("category") ||
+                columnName.Contains("role")) return "checkbox";
+            if (columnName.Contains("dict")) return "dict";
+
+            // 根据数据类型推断（如果字段名没有明确含义）
+            return GetEffectTypeByDataType(dataType);
+        }
+
+
+        /// <summary>
+        /// 根据数据类型推断EffectType
+        /// </summary>
+        /// <param name="dataType">数据类型</param>
+        /// <returns>作用类型</returns>
+        private static string GetEffectTypeByDataType(string dataType)
+        {
+            if (string.IsNullOrEmpty(dataType))
+                return "Input";
+
+            dataType = dataType.ToLower();
+
+            // 数值类型
+            if (dataType.Contains("int") || dataType.Contains("decimal") ||
+                dataType.Contains("double") || dataType.Contains("float") ||
+                dataType.Contains("tiny") || dataType.Contains("small") ||
+                dataType.Contains("big") || dataType.Contains("number"))
+                return "NumberInput";
+
+            // 日期时间类型
+            if (dataType.Contains("date") || dataType.Contains("time") ||
+                dataType.Contains("timestamp"))
+                return "DatePicker";
+
+            // 布尔类型
+            if (dataType.Contains("bool") || dataType.Contains("bit"))
+                return "Switch";
+
+            // 文本类型（长度较长）
+            if (dataType.Contains("text") || dataType.Contains("memo"))
+                return "Textarea";
+
+            // 默认为普通输入框
+            return "Input";
+        }
     }
 }

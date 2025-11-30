@@ -44,6 +44,12 @@
 								<el-option label="外键关联" value="ForeignKey" />
 								<el-option label="树形选择器" value="ApiTreeSelector" />
 							</el-select>
+              <el-button
+                  v-if="['ApiTreeSelector','ForeignKey'].some(x => scope.row.EffectType == x)"
+                  @click="openJoinTableDialog(scope.row, scope.$index)"
+                  type="warning"
+                  :icon="Edit"
+                  link />
 						</div>
 					</template>
 				</el-table-column>
@@ -119,6 +125,41 @@
 			</template>
 		</el-dialog>
 
+		<!-- 外键和树形选择器配置弹窗 -->
+		<el-dialog v-model="state.joinTableDialogVisible" :title="state.dialogTitle" width="700px" append-to-body>
+			<el-form :model="state.currentJoinConfig" label-width="auto" ref="joinTableFormRef">
+				<el-form-item label="数据库表" prop="FkTableName" :rules="[{ required: true, message: '数据表不能为空', trigger: 'blur' }]">
+					<el-select v-model="state.currentJoinConfig.FkTableName" class="w100" filterable clearable @change="tableChanged()">
+						<el-option v-for="item in state.tableDataList" :key="item.EntityName" :label="item.TableName + ' [' + item.TableComment + ']'" :value="item.TableName" />
+					</el-select>
+				</el-form-item>
+				
+				<el-form-item label="显示字段" prop="FkDisplayColumnList" :rules="[{ required: true, message: '显示字段不能为空', trigger: 'blur' }]">
+					<el-select v-model="state.currentJoinConfig.FkDisplayColumnList" multiple filterable clearable class="w100">
+						<el-option v-for="item in state.columnDataList" :key="item.PropertyName" :label="item.PropertyName + ' [' + item.ColumnComment + ']'" :value="item.PropertyName" />
+					</el-select>
+				</el-form-item>
+				
+				<el-form-item label="值字段" prop="FkLinkColumnName" :rules="[{ required: true, message: '值字段不能为空', trigger: 'blur' }]">
+					<el-select v-model="state.currentJoinConfig.FkLinkColumnName" filterable clearable class="w100">
+						<el-option v-for="item in state.columnDataList" :key="item.PropertyName" :label="item.PropertyName + ' [' + item.ColumnComment + ']'" :value="item.PropertyName" />
+					</el-select>
+				</el-form-item>
+				
+				<el-form-item label="父级字段" prop="PidColumn" v-if="state.currentJoinConfig.EffectType == 'ApiTreeSelector'" :rules="[{ required: true, message: '父级字段不能为空', trigger: 'blur' }]">
+					<el-select v-model="state.currentJoinConfig.PidColumn" filterable clearable class="w100">
+						<el-option v-for="item in state.columnDataList" :key="item.PropertyName" :label="item.PropertyName + ' [' + item.ColumnComment + ']'" :value="item.PropertyName" />
+					</el-select>
+				</el-form-item>
+			</el-form>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="state.joinTableDialogVisible = false">取 消</el-button>
+					<el-button type="primary" @click="saveJoinConfig">确 定</el-button>
+				</span>
+			</template>
+		</el-dialog>
+
 		<!-- 脱敏配置弹窗 -->
 		<el-dialog v-model="state.maskConfigDialogVisible" title="脱敏配置" width="600px" append-to-body>
 			<el-form :model="state.currentMaskConfig" label-width="120px">
@@ -175,19 +216,27 @@
 
 <script lang="ts" setup name="sysCodeGenConfig">
 import { onMounted, reactive, ref } from 'vue';
+import { Edit } from '@element-plus/icons-vue';
 import {
 	getCodeGenConfigPage,
 	putCodeGenConfigId,
 	postCodeGenConfig,
 	postCodeGenConfigBatch,
 	postCodeGenConfigPageSearch,
-	putCodeGenConfigBatch,
+	putCodeGenConfigBatch
 } from '@/api/fd-system-api/CodeGenConfig';
+import { 
+	getCodeGenGettablelist,
+	getCodeGenTablelistConfigId,
+	getCodeGenGettablecolumnlist
+} from '@/api/fd-system-api/CodeGen';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 import APIModel from '@/api/fd-system-api';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 const emits = defineEmits(['handleQuery']);
+const joinTableFormRef = ref();
+
 const state = reactive({
 	isShowDialog: false,
 	loading: false,
@@ -195,6 +244,14 @@ const state = reactive({
 	tableData: [] as APIModel.FdCodeGenConfigDto[],
 	originalData: [] as APIModel.FdCodeGenConfigDto[], // 原始数据备份
 	configId: '', // 用于关联的CodeGenId
+
+	// 外键和树形选择器相关
+	joinTableDialogVisible: false, // 外键配置弹窗显示状态
+	dialogTitle: '', // 弹窗标题
+	currentEditingIndex: -1, // 当前正在编辑的行索引
+	currentJoinConfig: {} as any, // 当前外键配置
+	tableDataList: [] as any[], // 表列表
+	columnDataList: [] as any[], // 字段列表
 
 	// 脱敏配置相关
 	maskConfigDialogVisible: false, // 脱敏配置弹窗显示状态
@@ -219,6 +276,9 @@ onMounted(async () => {
 		{ code: 'status', name: '状态' },
 		{ code: 'type', name: '类型' },
 	];
+
+	// 页面初始化时加载表列表，供外键和树形选择器使用
+	await loadTableList();
 });
 
 // 查询操作
@@ -294,7 +354,7 @@ function getDefaultEffectType(netType: string | undefined): string {
 	};
 
 	return typeMap[netType.toLowerCase()] || 'Input';
-}
+};
 
 // 控件类型改变
 const effectTypeChange = (data: APIModel.FdCodeGenConfigDto, index: number) => {
@@ -307,11 +367,11 @@ const effectTypeChange = (data: APIModel.FdCodeGenConfigDto, index: number) => {
 // 判断是否（用于是否能选择或输入等）
 function judgeColumns(data: APIModel.FdCodeGenConfigDto) {
 	return Boolean(data.WhetherCommon) || Boolean(data.ColumnKey);
-}
+};
 
 function effectTypeEnable(data: APIModel.FdCodeGenConfigDto) {
 	return !['Radio', 'Checkbox', 'DictSelector', 'ConstSelector', 'EnumSelector'].some((e: any) => e === data.EffectType);
-}
+};
 
 // 验证正则表达式是否有效
 function validateRegex(pattern: string): boolean {
@@ -325,7 +385,7 @@ function validateRegex(pattern: string): boolean {
 		state.customPatternError = e.message || '无效的正则表达式';
 		return false;
 	}
-}
+};
 
 // 打开脱敏配置弹窗
 const handleMaskChange = (row: APIModel.FdCodeGenConfigDto) => {
@@ -387,6 +447,72 @@ const saveMaskConfig = () => {
 		}
 	}
 	state.maskConfigDialogVisible = false;
+};
+
+// 加载表列表
+const loadTableList = async () => {
+	try {
+		const res = await getCodeGenTablelistConfigId({ configId: "default" });
+		state.tableDataList = res || [];
+	} catch (error) {
+		console.error('加载表列表失败', error);
+		ElMessage.error('加载表列表失败');
+	}
+};
+
+// 打开外键/树形选择器配置弹窗
+const openJoinTableDialog = async (row: APIModel.FdCodeGenConfigDto, index: number) => {
+	state.currentEditingIndex = index;
+	state.currentJoinConfig = JSON.parse(JSON.stringify(row));
+	state.dialogTitle = row.EffectType === 'ForeignKey' ? '外键配置' : '树选择器配置';
+	
+	// 如果已有配置，加载对应的字段
+	if (row.FkTableName) {
+		await tableChanged();
+	}
+	
+	state.joinTableDialogVisible = true;
+};
+
+// 表改变事件
+const tableChanged = async () => {
+	state.columnDataList = [];
+	state.currentJoinConfig.FkDisplayColumnList = undefined;
+	state.currentJoinConfig.FkLinkColumnName = undefined;
+	state.currentJoinConfig.PidColumn = undefined;
+	
+	if (!state.currentJoinConfig.FkTableName) return;
+	
+	try {
+		const res = await getCodeGenGettablecolumnlist({ 
+			tableName: state.currentJoinConfig.FkTableName 
+		});
+		state.columnDataList = res || [];
+		
+		// 设置默认值字段为主键
+		const primaryKey = state.columnDataList.find((x: any) => x.ColumnKey === "True");
+		if (primaryKey) {
+			state.currentJoinConfig.FkLinkColumnName = primaryKey.PropertyName;
+		}
+	} catch (error) {
+		console.error('加载字段列表失败', error);
+		ElMessage.error('加载字段列表失败');
+	}
+};
+
+// 保存外键/树形选择器配置
+const saveJoinConfig = async () => {
+	const valid = await joinTableFormRef.value.validate().catch(() => false);
+	if (!valid) return;
+	
+	// 更新表格数据
+	state.tableData[state.currentEditingIndex] = {
+		...state.tableData[state.currentEditingIndex],
+		...state.currentJoinConfig
+	};
+	
+	state.joinTableDialogVisible = false;
+	ElMessage.success('配置保存成功');
 };
 
 // 打开弹窗
