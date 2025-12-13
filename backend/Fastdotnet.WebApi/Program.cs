@@ -52,6 +52,8 @@ using System.Threading.Tasks;
 using Yitter.IdGenerator;
 
 var builder = WebApplication.CreateBuilder(args);
+// 可选：延长停机超时时间
+builder.Host.ConfigureHostOptions(o => o.ShutdownTimeout = TimeSpan.FromMinutes(2));
 var options = new IdGeneratorOptions(0001);
 // options.WorkerIdBitLength = 10; // 默认值6，限定 WorkerId 最大值为2^6-1，即默认最多支持64个节点。
 options.SeqBitLength = 10; // 默认值6，限制每毫秒生成的ID个数。若生成速度超过5万个/秒，建议加大 SeqBitLength 到 10。
@@ -491,7 +493,8 @@ app.UseMiddleware<DynamicMiddlewareDispatcher>();
 app.UseRouting(); // 添加路由中间件
 app.UseAuthentication();
 app.UseAuthorization();
-
+// 👇 启用优雅停机
+app.UseGracefulShutdown();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
