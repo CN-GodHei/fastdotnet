@@ -173,7 +173,7 @@ namespace Fastdotnet.Core.Services.System
             //    }
             //}
             
-            var insertable = _db.Insertable(entities).SplitTable();
+            var insertable = _db.Insertable(entities);
             
             // 使用SqlSugar的批量插入方法
             var result = await insertable.ExecuteCommandAsync();
