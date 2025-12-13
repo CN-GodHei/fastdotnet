@@ -129,26 +129,24 @@
 		<el-dialog v-model="state.joinTableDialogVisible" :title="state.dialogTitle" width="700px" append-to-body>
 			<el-form :model="state.currentJoinConfig" label-width="auto" ref="joinTableFormRef">
 				<el-form-item label="数据库表" prop="FkTableName" :rules="[{ required: true, message: '数据表不能为空', trigger: 'blur' }]">
-					<el-select v-model="state.currentJoinConfig.FkTableName" class="w100" filterable clearable @change="tableChanged()">
+					<el-select v-model="state.currentJoinConfig.FkTableName" class="w100" filterable clearable @change="(val) => tableChanged(val, state.tableDataList.find(x => x.TableName === val))">
 						<el-option v-for="item in state.tableDataList" :key="item.EntityName" :label="item.TableName + ' [' + item.TableComment + ']'" :value="item.TableName" />
 					</el-select>
-				</el-form-item>
-				
+				</el-form-item>			
+				<el-form-item label="关联字段" prop="FkLinkColumnName" :rules="[{ required: true, message: '值字段不能为空', trigger: 'blur' }]">
+					<el-select v-model="state.currentJoinConfig.FkLinkColumnName" filterable clearable class="w100">
+						<el-option v-for="item in state.columnDataList" :key="item.PropertyName" :label="item.PropertyName + ' [' + item.ShowColumnName + ']'" :value="item.PropertyName" />
+					</el-select>
+				</el-form-item>		
 				<el-form-item label="显示字段" prop="FkDisplayColumnList" :rules="[{ required: true, message: '显示字段不能为空', trigger: 'blur' }]">
 					<el-select v-model="state.currentJoinConfig.FkDisplayColumnList" multiple filterable clearable class="w100">
-						<el-option v-for="item in state.columnDataList" :key="item.PropertyName" :label="item.PropertyName + ' [' + item.ColumnComment + ']'" :value="item.PropertyName" />
-					</el-select>
-				</el-form-item>
-				
-				<el-form-item label="值字段" prop="FkLinkColumnName" :rules="[{ required: true, message: '值字段不能为空', trigger: 'blur' }]">
-					<el-select v-model="state.currentJoinConfig.FkLinkColumnName" filterable clearable class="w100">
-						<el-option v-for="item in state.columnDataList" :key="item.PropertyName" :label="item.PropertyName + ' [' + item.ColumnComment + ']'" :value="item.PropertyName" />
+						<el-option v-for="item in state.columnDataList" :key="item.PropertyName" :label="item.PropertyName + ' [' + item.ShowColumnName + ']'" :value="item.PropertyName" />
 					</el-select>
 				</el-form-item>
 				
 				<el-form-item label="父级字段" prop="PidColumn" v-if="state.currentJoinConfig.EffectType == 'ApiTreeSelector'" :rules="[{ required: true, message: '父级字段不能为空', trigger: 'blur' }]">
 					<el-select v-model="state.currentJoinConfig.PidColumn" filterable clearable class="w100">
-						<el-option v-for="item in state.columnDataList" :key="item.PropertyName" :label="item.PropertyName + ' [' + item.ColumnComment + ']'" :value="item.PropertyName" />
+						<el-option v-for="item in state.columnDataList" :key="item.PropertyName" :label="item.PropertyName + ' [' + item.ShowColumnName + ']'" :value="item.PropertyName" />
 					</el-select>
 				</el-form-item>
 			</el-form>
@@ -228,7 +226,8 @@ import {
 import { 
 	getCodeGenGettablelist,
 	getCodeGenTablelistConfigId,
-	getCodeGenGettablecolumnlist
+	getCodeGenGettablecolumnlist,
+	getCodeGen
 } from '@/api/fd-system-api/CodeGen';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 import APIModel from '@/api/fd-system-api';
@@ -452,8 +451,9 @@ const saveMaskConfig = () => {
 // 加载表列表
 const loadTableList = async () => {
 	try {
-		const res = await getCodeGenTablelistConfigId({ configId: "default" });
+		const res = await getCodeGen();
 		state.tableDataList = res || [];
+		console.log('表列表加载成功', state.tableDataList);
 	} catch (error) {
 		console.error('加载表列表失败', error);
 		ElMessage.error('加载表列表失败');
@@ -475,22 +475,39 @@ const openJoinTableDialog = async (row: APIModel.FdCodeGenConfigDto, index: numb
 };
 
 // 表改变事件
-const tableChanged = async () => {
+const tableChanged = async (val: any, item: any) => {
+	console.log('表改变', val, item);
 	state.columnDataList = [];
 	state.currentJoinConfig.FkDisplayColumnList = undefined;
 	state.currentJoinConfig.FkLinkColumnName = undefined;
+	state.currentJoinConfig.FkRelationColumn = undefined;
 	state.currentJoinConfig.PidColumn = undefined;
 	
 	if (!state.currentJoinConfig.FkTableName) return;
 	
 	try {
-		const res = await getCodeGenGettablecolumnlist({ 
-			tableName: state.currentJoinConfig.FkTableName 
-		});
-		state.columnDataList = res || [];
+				// 使用混合查询构建器构建查询条件
+		const queryConfig = {
+			equals: {
+				CodeGenId: item.Id, // 使用字符串类型的ID
+			},
+		};
+
+		const queryResult = buildMixedQuery(queryConfig);
+
+		// 使用搜索接口获取字段配置信息，按CodeGenId筛选
+		const searchParams = {
+			PageIndex: 1,
+			PageSize: 1000, // 获取所有字段配置
+			DynamicQuery: queryResult.dynamicQuery,
+			QueryParameters: queryResult.queryParameters,
+		} as APIModel.PageQueryByConditionDto;
+
+		const res = await postCodeGenConfigPageSearch(searchParams);
+		state.columnDataList = res?.Items || [];
 		
 		// 设置默认值字段为主键
-		const primaryKey = state.columnDataList.find((x: any) => x.ColumnKey === "True");
+		const primaryKey = state.columnDataList.find((x: any) => x.ColumnKey === true);
 		if (primaryKey) {
 			state.currentJoinConfig.FkLinkColumnName = primaryKey.PropertyName;
 		}
