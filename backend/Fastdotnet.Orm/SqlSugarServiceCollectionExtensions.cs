@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SqlSugar;
+using SqlSugar.SplitTableExtensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -227,7 +228,7 @@ public static class SqlSugarServiceCollectionExtensions
                 var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
                 //logger?.LogInformation("准备记录SQL执行日志到数据库: {Sql}", formattedSql);
 
-                var result = logDb.Insertable(sqlExecutionLog).ExecuteCommand();
+                var result = logDb.Insertable(sqlExecutionLog).SplitTable().ExecuteCommand();
                 //logger?.LogInformation("SQL执行日志记录结果: {Result}", result);
             }
             catch (Exception ex)
@@ -330,7 +331,7 @@ public static class SqlSugarServiceCollectionExtensions
 
         if (entityTypes.Any())
         {
-            sqlClient.CodeFirst.InitTables(entityTypes);
+            sqlClient.CodeFirst.SplitTables().InitTables(entityTypes);
         }
     }
 

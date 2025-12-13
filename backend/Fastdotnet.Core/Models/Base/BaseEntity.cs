@@ -39,6 +39,7 @@ namespace Fastdotnet.Core.Models.Base
         /// <summary>
         /// 创建时间
         /// </summary>
+        [SplitField]
         [SugarColumn(ColumnName = "created_at", ColumnDescription = "创建时间", ColumnDataType = "datetime")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

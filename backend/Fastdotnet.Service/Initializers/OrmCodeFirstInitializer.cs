@@ -45,13 +45,13 @@ public class OrmCodeFirstInitializer : IApplicationInitializer
         // 为主业务库初始化表
         if (mainEntityTypes.Any())
         {
-            mainDb.CodeFirst.InitTables(mainEntityTypes);
+            mainDb.CodeFirst.SplitTables().InitTables(mainEntityTypes);
         }
 
         // 为日志库初始化表
         if (logEntityTypes.Any())
         {
-            logDb.CodeFirst.InitTables(logEntityTypes);
+            logDb.CodeFirst.SplitTables().InitTables(logEntityTypes);
         }
 
         await Task.CompletedTask;

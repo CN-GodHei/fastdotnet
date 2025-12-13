@@ -36,7 +36,7 @@ namespace Fastdotnet.Service.Service
                 log.CreatedAt = DateTime.Now;
             }
             
-            await GetLogDb().Insertable(log).ExecuteCommandAsync();
+            await GetLogDb().Insertable(log).SplitTable().ExecuteCommandAsync();
         }
 
         public async Task AddExceptionLogAsync(ExceptionLog log)
@@ -53,7 +53,7 @@ namespace Fastdotnet.Service.Service
                 log.CreatedAt = DateTime.Now;
             }
             
-            await GetLogDb().Insertable(log).ExecuteCommandAsync();
+            await GetLogDb().Insertable(log).SplitTable().ExecuteCommandAsync();
         }
 
         public async Task AddDebugLogAsync(DebugLog log)
@@ -70,7 +70,7 @@ namespace Fastdotnet.Service.Service
                 log.CreatedAt = DateTime.Now;
             }
             
-            await GetLogDb().Insertable(log).ExecuteCommandAsync();
+            await GetLogDb().Insertable(log).SplitTable().ExecuteCommandAsync();
         }
 
         // 添加同步方法以支持某些场景
@@ -88,7 +88,7 @@ namespace Fastdotnet.Service.Service
                 log.CreatedAt = DateTime.Now;
             }
             
-            GetLogDb().Insertable(log).ExecuteCommand();
+            GetLogDb().Insertable(log).SplitTable().ExecuteCommand();
         }
 
         public void AddExceptionLog(ExceptionLog log)
@@ -105,7 +105,7 @@ namespace Fastdotnet.Service.Service
                 log.CreatedAt = DateTime.Now;
             }
             
-            GetLogDb().Insertable(log).ExecuteCommand();
+            GetLogDb().Insertable(log).SplitTable().ExecuteCommand();
         }
 
         public void AddDebugLog(DebugLog log)
@@ -122,7 +122,7 @@ namespace Fastdotnet.Service.Service
                 log.CreatedAt = DateTime.Now;
             }
             
-            GetLogDb().Insertable(log).ExecuteCommand();
+            GetLogDb().Insertable(log).SplitTable().ExecuteCommand();
         }
     }
 }

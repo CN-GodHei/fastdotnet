@@ -7,7 +7,8 @@ namespace Fastdotnet.Core.Models.LogModels;
 /// <summary>
 /// 操作日志
 /// </summary>
-[SugarTable("log_operation")]
+[SplitTable(SplitType.Year)]
+[SugarTable("log_operation_{year}_{month}_{day}")]
 public class OperationLog
 {
     [SugarColumn(IsPrimaryKey = true, ColumnDescription = "")]
