@@ -276,65 +276,7 @@ app.UseEndpoints(endpoints =>
 });
 
 // 5. 应用程序启动后执行启动任务
-var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-lifetime.ApplicationStarted.Register(() =>
-{
-    _ = Task.Run(async () =>
-    {
-        Console.WriteLine("Application has started. Executing startup tasks in background...");
-        try
-        {
-            using (var scope = app.Services.CreateScope())
-            {
-                var startupTasks = scope.ServiceProvider.GetServices<IStartupTask>();
-                var _logService = scope.ServiceProvider.GetRequiredService<ILogService>(); // ✅ 提前获取日志服务
-
-                foreach (var task in startupTasks)
-                {
-                    var taskId = $"StartupTask-{Guid.NewGuid():N}";
-                    var taskType = task.GetType().Name;
-                    try
-                    {
-                        await task.ExecuteAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        // ❗ 统一记录异常到日志系统
-                        var exceptionLog = new ExceptionLog
-                        {
-                            RequestId = taskId,
-                            ExceptionType = ex.GetType().FullName,
-                            Message = ex.Message,
-                            StackTrace = ex.StackTrace ?? string.Empty,
-                            Path = "/startup-task",
-                            Method = taskType,
-                            CreatedAt = DateTime.Now
-                        };
-
-                        try
-                        {
-                            await _logService.AddExceptionLogAsync(exceptionLog);
-                        }
-                        catch (Exception logEx)
-                        {
-                            // 如果写日志也失败，至少输出到控制台
-                            Console.WriteLine($"Failed to log exception for {taskType}: {logEx.Message}");
-                        }
-                    }
-                }
-            }
-            Console.WriteLine("All startup tasks executed.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error during startup tasks execution: {ex.Message}");
-        }
-
-        // 初始化DebugLogger
-        var logService = app.Services.GetRequiredService<ILogService>();
-        DebugLogger.Initialize(logService);
-    });
-});
+app.RunStartupTasks();
 
 // 6. 运行应用
 app.Run("http://*:18889");
