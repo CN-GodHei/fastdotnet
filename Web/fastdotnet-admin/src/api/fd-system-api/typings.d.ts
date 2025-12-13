@@ -909,6 +909,7 @@ declare namespace APIModel {
 		FkDisplayColumnList?: string[];
 		FkLinkColumnName?: string;
 		FkColumnNetType?: string;
+		CodeGenId?: string;
 	};
 
 	type GenerateLicenseRequestDto = {

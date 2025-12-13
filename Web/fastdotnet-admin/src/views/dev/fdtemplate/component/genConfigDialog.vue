@@ -128,9 +128,9 @@
 		<!-- 外键和树形选择器配置弹窗 -->
 		<el-dialog v-model="state.joinTableDialogVisible" :title="state.dialogTitle" width="700px" append-to-body>
 			<el-form :model="state.currentJoinConfig" label-width="auto" ref="joinTableFormRef">
-				<el-form-item label="数据库表" prop="FkTableName" :rules="[{ required: true, message: '数据表不能为空', trigger: 'blur' }]">
-					<el-select v-model="state.currentJoinConfig.FkTableName" class="w100" filterable clearable @change="(val) => tableChanged(val, state.tableDataList.find(x => x.TableName === val))">
-						<el-option v-for="item in state.tableDataList" :key="item.EntityName" :label="item.TableName + ' [' + item.TableComment + ']'" :value="item.TableName" />
+				<el-form-item label="配置信息" prop="CodeGenId" :rules="[{ required: true, message: '数据表不能为空', trigger: 'blur' }]">
+					<el-select v-model="state.currentJoinConfig.CodeGenId" class="w100" filterable clearable @change="val => tableChanged(val, state.tableDataList.find(x => x.Id === val))">
+						<el-option v-for="item in state.tableDataList" :key="item.CodeGenId" :label="item.TableName + ' [' + item.TableComment + ']'" :value="item.Id" />
 					</el-select>
 				</el-form-item>			
 				<el-form-item label="关联字段" prop="FkLinkColumnName" :rules="[{ required: true, message: '值字段不能为空', trigger: 'blur' }]">
@@ -452,8 +452,7 @@ const saveMaskConfig = () => {
 const loadTableList = async () => {
 	try {
 		const res = await getCodeGen();
-		state.tableDataList = res || [];
-		console.log('表列表加载成功', state.tableDataList);
+		state.tableDataList = res;
 	} catch (error) {
 		console.error('加载表列表失败', error);
 		ElMessage.error('加载表列表失败');
@@ -463,33 +462,48 @@ const loadTableList = async () => {
 // 打开外键/树形选择器配置弹窗
 const openJoinTableDialog = async (row: APIModel.FdCodeGenConfigDto, index: number) => {
 	state.currentEditingIndex = index;
-	state.currentJoinConfig = JSON.parse(JSON.stringify(row));
+	state.currentJoinConfig = {
+		...JSON.parse(JSON.stringify(row)),
+		// 将ForeignKeyConfig中的属性展开到currentJoinConfig的第一层，方便表单绑定
+		FkTableName: row.ForeignKeyConfig?.FkTableName,
+		FkDisplayColumnList: row.ForeignKeyConfig?.FkDisplayColumnList,
+		FkLinkColumnName: row.ForeignKeyConfig?.FkLinkColumnName,
+		FkEntityName: row.ForeignKeyConfig?.FkEntityName,
+		CodeGenId: row.ForeignKeyConfig?.CodeGenId,
+		// 树形选择器专用字段
+		PidColumn: row.EffectType === 'ApiTreeSelector' ? row.ForeignKeyConfig?.PidColumn : undefined
+	} as any;
 	state.dialogTitle = row.EffectType === 'ForeignKey' ? '外键配置' : '树选择器配置';
 	
 	// 如果已有配置，加载对应的字段
-	if (row.FkTableName) {
-		await tableChanged();
+	if (state.currentJoinConfig.FkTableName) {
+		await tableChanged(state.currentJoinConfig.FkTableName, null);
 	}
 	
 	state.joinTableDialogVisible = true;
 };
 
 // 表改变事件
-const tableChanged = async (val: any, item: any) => {
-	console.log('表改变', val, item);
+const tableChanged = async (val: string | undefined, item: any) => {
 	state.columnDataList = [];
 	state.currentJoinConfig.FkDisplayColumnList = undefined;
 	state.currentJoinConfig.FkLinkColumnName = undefined;
 	state.currentJoinConfig.FkRelationColumn = undefined;
 	state.currentJoinConfig.PidColumn = undefined;
+	state.currentJoinConfig.FkTableName = undefined;
 	
-	if (!state.currentJoinConfig.FkTableName) return;
+	// 设置实体相关信息
+	if (item) {
+		state.currentJoinConfig.FkEntityName = item.EntityName;
+		state.currentJoinConfig.FkTableName = item.FkTableName;
+		state.currentJoinConfig.CodeGenId = item.Id;
+	}
 	
 	try {
 				// 使用混合查询构建器构建查询条件
 		const queryConfig = {
 			equals: {
-				CodeGenId: item.Id, // 使用字符串类型的ID
+				CodeGenId: val, // 使用字符串类型的ID
 			},
 		};
 
@@ -522,18 +536,43 @@ const saveJoinConfig = async () => {
 	const valid = await joinTableFormRef.value.validate().catch(() => false);
 	if (!valid) return;
 	
-	// 更新表格数据
-	state.tableData[state.currentEditingIndex] = {
-		...state.tableData[state.currentEditingIndex],
-		...state.currentJoinConfig
+	// 构造ForeignKeyConfig对象
+	const foreignKeyConfig: any = {
+		FkTableName: state.currentJoinConfig.FkTableName,
+		FkDisplayColumnList: state.currentJoinConfig.FkDisplayColumnList,
+		FkLinkColumnName: state.currentJoinConfig.FkLinkColumnName,
+		FkEntityName: state.currentJoinConfig.FkEntityName,
+		CodeGenId: state.currentJoinConfig.CodeGenId
 	};
 	
+	// 仅在树形选择器情况下包含PidColumn
+	if (state.currentJoinConfig.EffectType === 'ApiTreeSelector') {
+		foreignKeyConfig.PidColumn = state.currentJoinConfig.PidColumn;
+	}
+	
+	// 更新表格数据
+	const updatedRow = {
+		...state.tableData[state.currentEditingIndex],
+		...state.currentJoinConfig,
+		ForeignKeyConfig: foreignKeyConfig
+	};
+	
+	// 移除展开的第一层属性，避免数据重复
+	delete (updatedRow as any).FkTableName;
+	delete (updatedRow as any).FkDisplayColumnList;
+	delete (updatedRow as any).FkLinkColumnName;
+	delete (updatedRow as any).FkEntityName;
+	delete (updatedRow as any).FkConfigId;
+	delete (updatedRow as any).PidColumn;
+	state.tableData[state.currentEditingIndex] = updatedRow;
+	
 	state.joinTableDialogVisible = false;
-	ElMessage.success('配置保存成功');
+	// ElMessage.success('配置保存成功');
 };
 
 // 打开弹窗
 const openDialog = (row: any) => {
+	loadTableList();
 	handleQuery(row);
 	state.isShowDialog = true;
 };

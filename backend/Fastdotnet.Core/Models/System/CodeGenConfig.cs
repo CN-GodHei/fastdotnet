@@ -617,5 +617,10 @@ namespace Fastdotnet.Core.Models.System
         /// 外键显示字段.NET类型
         /// </summary>
         public string? FkColumnNetType { get; set; }
+
+        /// <summary>
+        /// 代码生成主表Id
+        /// </summary>
+        public string? CodeGenId { get; set; }
     }
 }
