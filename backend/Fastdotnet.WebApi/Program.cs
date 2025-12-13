@@ -27,10 +27,7 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<GlobalResultFilter>(); // 添加全局结果过滤器
 })
     .AddControllersAsServices()
-    .AddNewtonsoftJson(options =>
-    {
-        SetNewtonsoftJsonSetting(options.SerializerSettings);
-    });
+.AddNewtonsoftJsonWithCustomSettings();
 //模型验证失败，也会正常进入 Controller
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -191,14 +188,3 @@ app.RunStartupTasks();
 
 // 6. 运行应用
 app.Run("http://*:18889");
-
-static void SetNewtonsoftJsonSetting(JsonSerializerSettings setting)
-{
-    setting.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-    setting.DateTimeZoneHandling = DateTimeZoneHandling.Local;
-    setting.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-    setting.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-    //不改变字段大小写：还是注释吧，总有人分不清大小写，但程序不会，通吃就行
-    setting.ContractResolver = new DefaultContractResolver();
-
-}
