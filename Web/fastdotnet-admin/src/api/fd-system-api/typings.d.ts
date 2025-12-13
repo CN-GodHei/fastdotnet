@@ -100,13 +100,8 @@ declare namespace APIModel {
 		NetType?: string;
 		DefaultValue?: string;
 		EffectType?: string;
-		FkConfigId?: string;
-		FkEntityName?: string;
-		FkTableName?: string;
-		FkDisplayColumns?: string;
-		FkLinkColumnName?: string;
-		FkColumnNetType?: string;
 		PidColumn?: string;
+		ForeignKeyConfig?: ForeignKeyConfigModel;
 		DictTypeCode?: string;
 		QueryType?: string;
 		WhetherQuery?: boolean;
@@ -121,6 +116,32 @@ declare namespace APIModel {
 		ShowColumnName?: string;
 		MaskConfig?: MaskConfigModel;
 		EnableMask?: boolean;
+	};
+
+	type CreateFdDictDataDto = {
+		DictTypeId?: string;
+		Label?: string;
+		Value?: string;
+		Code?: string;
+		Name: string;
+		TagType: string;
+		StyleSetting: string;
+		ClassSetting: string;
+		OrderNo?: number;
+		Remark: string;
+		ExtData: string;
+		Status?: number;
+	};
+
+	type CreateFdDictTypeDto = {
+		Name?: string;
+		Code?: string;
+		OrderNo?: number;
+		Remark?: string;
+		Status?: number;
+		SysFlag?: number;
+		PluginSysFlag?: number;
+		PluginId: string;
 	};
 
 	type CreateFdFdMenuButtonDto = {
@@ -367,6 +388,26 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type deleteFdDictDataIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteFdDictDataRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteFdDictTypeIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteFdDictTypeRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
 	type EmailConfigBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -566,11 +607,6 @@ declare namespace APIModel {
 		EffectType?: string;
 		FkConfigId?: string;
 		FkEntityName?: string;
-		FkTableName?: string;
-		FkDisplayColumns?: string;
-		FkLinkColumnName?: string;
-		FkColumnNetType?: string;
-		PidColumn?: string;
 		DictTypeCode?: string;
 		QueryType?: string;
 		WhetherQuery?: boolean;
@@ -585,6 +621,7 @@ declare namespace APIModel {
 		ShowColumnName?: string;
 		MaskConfig?: MaskConfigModel;
 		EnableMask?: boolean;
+		ForeignKeyConfig?: ForeignKeyConfigModel;
 	};
 
 	type FdCodeGenConfigDtoPageResult = {
@@ -600,6 +637,64 @@ declare namespace APIModel {
 		SenderEmail: string;
 		SenderName: string;
 		EnableSsl?: boolean;
+	};
+
+	type FdDictDataBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type FdDictDataDto = {
+		DictTypeId?: string;
+		Label?: string;
+		Value?: string;
+		Code?: string;
+		Name?: string;
+		TagType?: string;
+		StyleSetting?: string;
+		ClassSetting?: string;
+		OrderNo?: number;
+		Remark?: string;
+		ExtData?: string;
+		Status?: number;
+	};
+
+	type FdDictDataDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdDictDataDto[];
+	};
+
+	type FdDictTypeBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type FdDictTypeDto = {
+		Name?: string;
+		Code?: string;
+		OrderNo?: number;
+		Remark?: string;
+		Status?: number;
+		SysFlag?: number;
+		PluginSysFlag?: number;
+		PluginId?: string;
+	};
+
+	type FdDictTypeDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdDictTypeDto[];
 	};
 
 	type FdEmailConfigDto = {
@@ -805,6 +900,15 @@ declare namespace APIModel {
 	type FdUpdateEmailConfigDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: FdUpdateEmailConfigDto;
+	};
+
+	type ForeignKeyConfigModel = {
+		FkConfigId?: string;
+		FkEntityName?: string;
+		FkTableName?: string;
+		FkDisplayColumnList?: string[];
+		FkLinkColumnName?: string;
+		FkColumnNetType?: string;
 	};
 
 	type GenerateLicenseRequestDto = {
@@ -1070,6 +1174,44 @@ declare namespace APIModel {
 	type getCodeGenTablelistConfigIdParams = {
 		/** 配置ID */
 		configId: string;
+	};
+
+	type getFdDictDataIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getFdDictDataPageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getFdDictDataRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getFdDictTypeIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getFdDictTypePageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getFdDictTypeRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
 	};
 
 	type getPluginActivePluginIdParams = {
@@ -1465,6 +1607,26 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type putFdDictDataIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putFdDictDataRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putFdDictTypeIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putFdDictTypeRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
 	type ResetPasswordDto = {
 		NewPassword: string;
 	};
@@ -1566,13 +1728,8 @@ declare namespace APIModel {
 		NetType?: string;
 		DefaultValue?: string;
 		EffectType?: string;
-		FkConfigId?: string;
-		FkEntityName?: string;
-		FkTableName?: string;
-		FkDisplayColumns?: string;
-		FkLinkColumnName?: string;
-		FkColumnNetType?: string;
 		PidColumn?: string;
+		ForeignKeyConfig?: ForeignKeyConfigModel;
 		DictTypeCode?: string;
 		QueryType?: string;
 		WhetherQuery?: boolean;
@@ -1592,6 +1749,42 @@ declare namespace APIModel {
 	type UpdateFdCodeGenConfigDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateFdCodeGenConfigDto;
+	};
+
+	type UpdateFdDictDataDto = {
+		DictTypeId?: string;
+		Label?: string;
+		Value?: string;
+		Code?: string;
+		Name?: string;
+		TagType?: string;
+		StyleSetting?: string;
+		ClassSetting?: string;
+		OrderNo?: number;
+		Remark?: string;
+		ExtData?: string;
+		Status?: number;
+	};
+
+	type UpdateFdDictDataDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdDictDataDto;
+	};
+
+	type UpdateFdDictTypeDto = {
+		Name?: string;
+		Code?: string;
+		OrderNo?: number;
+		Remark?: string;
+		Status?: number;
+		SysFlag?: number;
+		PluginSysFlag?: number;
+		PluginId?: string;
+	};
+
+	type UpdateFdDictTypeDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdDictTypeDto;
 	};
 
 	type UpdateFdFdMenuButtonDto = {

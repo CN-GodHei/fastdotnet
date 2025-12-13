@@ -113,6 +113,15 @@ namespace Fastdotnet.Core.Entities.System
         public bool EnableMask { get; set; }
 
         /// <summary>
+        /// 外键配置
+        /// 存储外键配置的JSON配置
+        /// </summary>
+        [SugarColumn(ColumnDescription = "外键配置", IsNullable = true, Length = 1024)]
+        [MaxLength(1024)]
+        public string? ForeignKeyConfig { get; set; }
+
+        /*
+        /// <summary>
         /// 外键表名称
         /// </summary>
         [SugarColumn(ColumnDescription = "外键表名称", IsNullable = true, Length = 128)]
@@ -139,6 +148,9 @@ namespace Fastdotnet.Core.Entities.System
         [SugarColumn(ColumnDescription = "外键显示字段.NET类型", IsNullable = true, Length = 64)]
         [MaxLength(64)]
         public string? FkColumnNetType { get; set; }
+
+
+        */
 
         /// <summary>
         /// 父级字段

@@ -78,27 +78,27 @@ namespace Fastdotnet.Core.Models.System
         /// <summary>
         /// 外键表名称
         /// </summary>
-        public string? FkTableName { get; set; }
+        // public string? FkTableName { get; set; }
 
         /// <summary>
         /// 外键显示字段
         /// </summary>
-        public string? FkDisplayColumns { get; set; }
+        // public string? FkDisplayColumns { get; set; }
 
         /// <summary>
         /// 外键链接字段
         /// </summary>
-        public string? FkLinkColumnName { get; set; }
+        // public string? FkLinkColumnName { get; set; }
 
         /// <summary>
         /// 外键显示字段.NET类型
         /// </summary>
-        public string? FkColumnNetType { get; set; }
+        // public string? FkColumnNetType { get; set; }
 
         /// <summary>
         /// 父级字段
         /// </summary>
-        public string? PidColumn { get; set; }
+        // public string? PidColumn { get; set; }
 
         /// <summary>
         /// 字典编码
@@ -161,12 +161,16 @@ namespace Fastdotnet.Core.Models.System
         /// 脱敏配置
         /// </summary>
         public MaskConfigModel? MaskConfig { get; set; }
-        
+
         /// <summary>
         /// 是否启用脱敏处理
         /// </summary>
         public bool EnableMask { get; set; }
-
+        
+        /// <summary>
+        /// 外键配置
+        /// </summary>
+        public ForeignKeyConfigModel? ForeignKeyConfig { get; set; }
     }
 
     /// <summary>
@@ -233,41 +237,41 @@ namespace Fastdotnet.Core.Models.System
         [StringLength(64, ErrorMessage = "作用类型长度不能超过64个字符")]
         public string? EffectType { get; set; }
 
-        /// <summary>
-        /// 外键库标识
-        /// </summary>
-        [StringLength(20, ErrorMessage = "外键库标识长度不能超过20个字符")]
-        public string? FkConfigId { get; set; }
+        ///// <summary>
+        ///// 外键库标识
+        ///// </summary>
+        //[StringLength(20, ErrorMessage = "外键库标识长度不能超过20个字符")]
+        //public string? FkConfigId { get; set; }
 
-        /// <summary>
-        /// 外键实体名称
-        /// </summary>
-        [StringLength(64, ErrorMessage = "外键实体名称长度不能超过64个字符")]
-        public string? FkEntityName { get; set; }
+        ///// <summary>
+        ///// 外键实体名称
+        ///// </summary>
+        //[StringLength(64, ErrorMessage = "外键实体名称长度不能超过64个字符")]
+        //public string? FkEntityName { get; set; }
 
-        /// <summary>
-        /// 外键表名称
-        /// </summary>
-        [StringLength(128, ErrorMessage = "外键表名称长度不能超过128个字符")]
-        public string? FkTableName { get; set; }
+        ///// <summary>
+        ///// 外键表名称
+        ///// </summary>
+        //[StringLength(128, ErrorMessage = "外键表名称长度不能超过128个字符")]
+        //public string? FkTableName { get; set; }
 
-        /// <summary>
-        /// 外键显示字段
-        /// </summary>
-        [StringLength(64, ErrorMessage = "外键显示字段长度不能超过64个字符")]
-        public string? FkDisplayColumns { get; set; }
+        ///// <summary>
+        ///// 外键显示字段
+        ///// </summary>
+        //[StringLength(64, ErrorMessage = "外键显示字段长度不能超过64个字符")]
+        //public string? FkDisplayColumns { get; set; }
 
-        /// <summary>
-        /// 外键链接字段
-        /// </summary>
-        [StringLength(64, ErrorMessage = "外键链接字段长度不能超过64个字符")]
-        public string? FkLinkColumnName { get; set; }
+        ///// <summary>
+        ///// 外键链接字段
+        ///// </summary>
+        //[StringLength(64, ErrorMessage = "外键链接字段长度不能超过64个字符")]
+        //public string? FkLinkColumnName { get; set; }
 
-        /// <summary>
-        /// 外键显示字段.NET类型
-        /// </summary>
-        [StringLength(64, ErrorMessage = "外键显示字段.NET类型长度不能超过64个字符")]
-        public string? FkColumnNetType { get; set; }
+        ///// <summary>
+        ///// 外键显示字段.NET类型
+        ///// </summary>
+        //[StringLength(64, ErrorMessage = "外键显示字段.NET类型长度不能超过64个字符")]
+        //public string? FkColumnNetType { get; set; }
 
         /// <summary>
         /// 父级字段
@@ -275,6 +279,10 @@ namespace Fastdotnet.Core.Models.System
         [StringLength(128, ErrorMessage = "父级字段长度不能超过128个字符")]
         public string? PidColumn { get; set; }
 
+        /// <summary>
+        /// 外键配置
+        /// </summary>
+        public ForeignKeyConfigModel? ForeignKeyConfig { get; set; }
         /// <summary>
         /// 字典编码
         /// </summary>
@@ -420,44 +428,49 @@ namespace Fastdotnet.Core.Models.System
         /// <summary>
         /// 外键库标识
         /// </summary>
-        [StringLength(20, ErrorMessage = "外键库标识长度不能超过20个字符")]
-        public string? FkConfigId { get; set; }
+        //[StringLength(20, ErrorMessage = "外键库标识长度不能超过20个字符")]
+        //public string? FkConfigId { get; set; }
 
-        /// <summary>
-        /// 外键实体名称
-        /// </summary>
-        [StringLength(64, ErrorMessage = "外键实体名称长度不能超过64个字符")]
-        public string? FkEntityName { get; set; }
+        ///// <summary>
+        ///// 外键实体名称
+        ///// </summary>
+        //[StringLength(64, ErrorMessage = "外键实体名称长度不能超过64个字符")]
+        //public string? FkEntityName { get; set; }
 
-        /// <summary>
-        /// 外键表名称
-        /// </summary>
-        [StringLength(128, ErrorMessage = "外键表名称长度不能超过128个字符")]
-        public string? FkTableName { get; set; }
+        ///// <summary>
+        ///// 外键表名称
+        ///// </summary>
+        //[StringLength(128, ErrorMessage = "外键表名称长度不能超过128个字符")]
+        //public string? FkTableName { get; set; }
 
-        /// <summary>
-        /// 外键显示字段
-        /// </summary>
-        [StringLength(64, ErrorMessage = "外键显示字段长度不能超过64个字符")]
-        public string? FkDisplayColumns { get; set; }
+        ///// <summary>
+        ///// 外键显示字段
+        ///// </summary>
+        //[StringLength(64, ErrorMessage = "外键显示字段长度不能超过64个字符")]
+        //public string? FkDisplayColumns { get; set; }
 
-        /// <summary>
-        /// 外键链接字段
-        /// </summary>
-        [StringLength(64, ErrorMessage = "外键链接字段长度不能超过64个字符")]
-        public string? FkLinkColumnName { get; set; }
+        ///// <summary>
+        ///// 外键链接字段
+        ///// </summary>
+        //[StringLength(64, ErrorMessage = "外键链接字段长度不能超过64个字符")]
+        //public string? FkLinkColumnName { get; set; }
 
-        /// <summary>
-        /// 外键显示字段.NET类型
-        /// </summary>
-        [StringLength(64, ErrorMessage = "外键显示字段.NET类型长度不能超过64个字符")]
-        public string? FkColumnNetType { get; set; }
+        ///// <summary>
+        ///// 外键显示字段.NET类型
+        ///// </summary>
+        //[StringLength(64, ErrorMessage = "外键显示字段.NET类型长度不能超过64个字符")]
+        //public string? FkColumnNetType { get; set; }
 
         /// <summary>
         /// 父级字段
         /// </summary>
         [StringLength(128, ErrorMessage = "父级字段长度不能超过128个字符")]
         public string? PidColumn { get; set; }
+
+        /// <summary>
+        /// 外键配置
+        /// </summary>
+        public ForeignKeyConfigModel? ForeignKeyConfig { get; set; }
 
         /// <summary>
         /// 字典编码
@@ -568,5 +581,41 @@ namespace Fastdotnet.Core.Models.System
         /// 自定义替换字符串
         /// </summary>
         public string? CustomReplacement { get; set; }
+    }
+
+    /// <summary>
+    /// 外键配置模型
+    /// </summary>
+    public class ForeignKeyConfigModel
+    {
+        /// <summary>
+        /// 外键库标识
+        /// </summary>
+        public string? FkConfigId { get; set; }
+
+        /// <summary>
+        /// 外键实体名称
+        /// </summary>
+        public string? FkEntityName { get; set; }
+
+        /// <summary>
+        /// 外键表名称
+        /// </summary>
+        public string? FkTableName { get; set; }
+
+        /// <summary>
+        /// 外键显示字段列表
+        /// </summary>
+        public List<string>? FkDisplayColumnList { get; set; }
+
+        /// <summary>
+        /// 外键链接字段
+        /// </summary>
+        public string? FkLinkColumnName { get; set; }
+
+        /// <summary>
+        /// 外键显示字段.NET类型
+        /// </summary>
+        public string? FkColumnNetType { get; set; }
     }
 }

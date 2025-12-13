@@ -9,6 +9,8 @@ import * as CodeGen from './CodeGen';
 import * as CodeGenConfig from './CodeGenConfig';
 import * as FdAdminUser from './FdAdminUser';
 import * as FdBlacklists from './FdBlacklists';
+import * as FdDictData from './FdDictData';
+import * as FdDictType from './FdDictType';
 import * as FdEmailConfig from './FdEmailConfig';
 import * as FdMenu from './FdMenu';
 import * as FdMenuButtons from './FdMenuButtons';
@@ -26,6 +28,8 @@ export default {
 	CodeGenConfig,
 	FdAdminUser,
 	FdBlacklists,
+	FdDictData,
+	FdDictType,
 	FdEmailConfig,
 	FdMenu,
 	FdMenuButtons,
