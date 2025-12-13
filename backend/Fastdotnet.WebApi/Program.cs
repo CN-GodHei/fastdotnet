@@ -195,44 +195,8 @@ builder.Services.AddScoped<IRateLimitCacheService, RateLimitCacheService>();
 builder.Services.AddSignalR();
 
 // 2. 配置 Autofac 容器
-builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
-{
-    containerBuilder.RegisterType<PluginManager>().AsSelf().SingleInstance();
-    containerBuilder.RegisterType<PluginStaticFileProviderRegistry>().AsSelf().SingleInstance();
-
-    containerBuilder.Register(c => new PluginLoadService(
-        c.Resolve<PluginManager>(),
-        c.Resolve<ILifetimeScope>(),
-        c.Resolve<ILogger<PluginLoadService>>(),
-        c.Resolve<ILoggerFactory>(),
-        c.Resolve<PluginStaticFileProviderRegistry>(),
-        c.Resolve<IConfiguration>()
-    )).As<IPluginLoadService>().SingleInstance();
-
-    containerBuilder.RegisterType<PluginActionDescriptorProvider>().As<IActionDescriptorProvider>().SingleInstance();
-
-    // 在Autofac中注册AutoMapper
-    containerBuilder.Register(c =>
-    {
-        var context = c.Resolve<IComponentContext>();
-        var loggerFactory = context.Resolve<ILoggerFactory>(); // 1. 解析 ILoggerFactory
-
-        // 2. 创建和配置 MapperConfigurationExpression
-        var expression = new AutoMapper.MapperConfigurationExpression();
-        expression.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
-        expression.ConstructServicesUsing(context.Resolve);
-
-        // 3. 使用你提供的特定构造函数创建 MapperConfiguration
-        var config = new MapperConfiguration(expression, loggerFactory);
-
-        return config.CreateMapper();
-    }).As<IMapper>().InstancePerLifetimeScope();
-
-    // 如果需要在Autofac中进行更精细的缓存服务控制，可以在这里添加
-    //containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().InstancePerLifetimeScope();
-    //containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().OwnedByLifetimeScope();
-});
+// 👇 一行启用 Autofac + 自定义注册
+builder.Host.UseAutofacWithCustomModules();
 
 // 3. 构建并运行应用
 var app = builder.Build();
