@@ -1,10 +1,4 @@
-﻿using Fastdotnet.WebApi.Filters;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
-using System.Text.Json;
-
-namespace Fastdotnet.WebApi.Extensions;
+﻿namespace Fastdotnet.WebApi.Extensions;
 
 public static class SwaggerExtensions
 {

@@ -1,11 +1,4 @@
-﻿using Autofac;
-using AutoMapper;
-using Fastdotnet.Core.Middleware;
-using Fastdotnet.Plugin.Core.Infrastructure;
-using Fastdotnet.Plugin.Shared.AdapterAOT;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Module = Autofac.Module;
 
 namespace Fastdotnet.WebApi.Modules;
 

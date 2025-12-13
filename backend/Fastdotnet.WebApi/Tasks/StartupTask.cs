@@ -1,10 +1,4 @@
-﻿using Fastdotnet.Core.Initializers;
-using Fastdotnet.Plugin.Shared.AdapterAOT;
-using Fastdotnet.WebApi.Controllers;
-using System;
-using System.Threading.Tasks;
-
-namespace Fastdotnet.WebApi.Tasks
+﻿namespace Fastdotnet.WebApi.Tasks
 {
     public class StartupTask : IStartupTask
     {

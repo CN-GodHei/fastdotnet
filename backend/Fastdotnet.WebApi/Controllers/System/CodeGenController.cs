@@ -1,19 +1,3 @@
-using AutoMapper;
-using Fastdotnet.Core.Constants;
-using Fastdotnet.Core.Controllers;
-using Fastdotnet.Core.Dtos.System;
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.Exceptions;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.System;
-using Fastdotnet.Service.Service;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using SqlSugar;
-using System;
-using static Fastdotnet.Core.Constants.Permissions.System;
-
 namespace Fastdotnet.WebApi.Controllers.System
 {
     /// <summary>

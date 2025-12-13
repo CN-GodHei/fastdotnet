@@ -1,7 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Options;
-using System.Threading.Tasks;
-
 namespace Fastdotnet.WebApi.Middleware.Authorization
 {
     public class PermissionPolicyProvider : DefaultAuthorizationPolicyProvider

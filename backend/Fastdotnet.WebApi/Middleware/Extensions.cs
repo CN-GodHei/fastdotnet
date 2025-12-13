@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Fastdotnet.WebApi.Middleware;
+﻿namespace Fastdotnet.WebApi.Middleware;
 
 /// <summary>
 /// 优雅停机中间件：拒绝新请求、跟踪活跃请求数、放行管理端点

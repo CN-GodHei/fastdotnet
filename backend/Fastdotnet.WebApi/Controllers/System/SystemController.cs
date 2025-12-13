@@ -1,7 +1,4 @@
-﻿using Fastdotnet.Plugin.Core.Security;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-namespace Fastdotnet.WebApi.Controllers.System
+﻿namespace Fastdotnet.WebApi.Controllers.System
 {
     /// <summary>
     /// 系统信息控制器

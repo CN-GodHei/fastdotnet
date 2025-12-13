@@ -1,10 +1,3 @@
-using Fastdotnet.Core.Attributes;
-using Fastdotnet.Core.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Linq;
-
 namespace Fastdotnet.WebApi.Filters
 {
     /// <summary>

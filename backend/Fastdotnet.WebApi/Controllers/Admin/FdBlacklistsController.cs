@@ -1,12 +1,3 @@
-using AutoMapper;
-using Fastdotnet.Core.Controllers;
-using Fastdotnet.Core.Dtos.System;
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Services.System;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     /// <summary>

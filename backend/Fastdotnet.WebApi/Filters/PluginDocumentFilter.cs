@@ -1,11 +1,3 @@
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Linq;
-using System.Collections.Generic;
-using System;
-using System.IO;
-using System.Text.Json;
-
 namespace Fastdotnet.WebApi.Filters
 {
     /// <summary>

@@ -1,13 +1,3 @@
-using System.Threading.Tasks;
-using AutoMapper;
-using Fastdotnet.Core.Controllers;
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.Exceptions;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.System;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]

@@ -1,11 +1,3 @@
-using Fastdotnet.Core.Exceptions;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.System;
-using Fastdotnet.Service.IService;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-
 namespace Fastdotnet.WebApi.Controllers.App
 {
     [ApiController]

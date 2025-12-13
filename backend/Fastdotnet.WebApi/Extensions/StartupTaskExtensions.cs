@@ -1,12 +1,4 @@
-﻿using Fastdotnet.Core.Initializers;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.LogModels;
-using Fastdotnet.Core.Utils;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System;
-
-namespace Fastdotnet.WebApi.Extensions;
+﻿namespace Fastdotnet.WebApi.Extensions;
 
 public static class StartupTaskExtensions
 {

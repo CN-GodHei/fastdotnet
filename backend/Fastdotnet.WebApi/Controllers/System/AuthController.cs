@@ -1,13 +1,3 @@
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.Exceptions;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.Auth;
-using Fastdotnet.Service.IService;
-using Lazy.Captcha.Core;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-
 namespace Fastdotnet.WebApi.Controllers.System
 {
     /// <summary>

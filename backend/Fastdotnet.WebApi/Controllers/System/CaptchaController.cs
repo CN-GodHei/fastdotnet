@@ -1,8 +1,3 @@
-using Lazy.Captcha.Core;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-
 namespace Fastdotnet.WebApi.Controllers
 {
     /// <summary>

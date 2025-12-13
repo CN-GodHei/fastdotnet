@@ -1,15 +1,3 @@
-using Fastdotnet.Core.Attributes;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.LogModels;
-using Fastdotnet.Core.Utils;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Diagnostics;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Fastdotnet.WebApi.Middleware;
 
 /// <summary>

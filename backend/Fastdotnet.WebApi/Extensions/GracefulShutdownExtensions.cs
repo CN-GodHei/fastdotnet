@@ -1,12 +1,4 @@
-﻿using Fastdotnet.WebApi.Middleware;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
-
-namespace Fastdotnet.WebApi.Extensions;
+﻿namespace Fastdotnet.WebApi.Extensions;
 
 public static class GracefulShutdownExtensions
 {

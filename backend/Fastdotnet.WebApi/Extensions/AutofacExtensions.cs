@@ -1,8 +1,4 @@
-﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Fastdotnet.WebApi.Modules;
-
-namespace Fastdotnet.WebApi.Extensions;
+﻿namespace Fastdotnet.WebApi.Extensions;
 
 public static class AutofacExtensions
 {

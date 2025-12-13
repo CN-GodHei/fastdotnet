@@ -1,23 +1,3 @@
-using AutoMapper;
-using Fastdotnet.Core.Constants;
-using Fastdotnet.Core.Controllers;
-using Fastdotnet.Core.Entities.Admin;
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.Exceptions;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.System;
-using Fastdotnet.Core.Utils;
-using Fastdotnet.Service.IService;
-using Fastdotnet.Service.IService.Admin;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]

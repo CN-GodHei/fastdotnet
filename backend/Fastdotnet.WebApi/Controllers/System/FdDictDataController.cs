@@ -1,11 +1,4 @@
-﻿using AutoMapper;
-using Fastdotnet.Core.Controllers;
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.System;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Fastdotnet.WebApi.Controllers.System
+﻿namespace Fastdotnet.WebApi.Controllers.System
 {
     /// <summary>
     /// FdDictData 控制器

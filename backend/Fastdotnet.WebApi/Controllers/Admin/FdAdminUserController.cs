@@ -1,19 +1,3 @@
-using AutoMapper;
-using Fastdotnet.Core.Constants;
-using Fastdotnet.Core.Controllers;
-using Fastdotnet.Core.Entities.Admin;
-using Fastdotnet.Core.Exceptions;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.Admin.Users;
-using Fastdotnet.Core.Utils.Extensions;
-using Fastdotnet.Service.IService.Admin;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
 {

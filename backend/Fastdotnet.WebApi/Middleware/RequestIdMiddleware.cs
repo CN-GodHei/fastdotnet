@@ -1,8 +1,3 @@
-// Fastdotnet.WebApi/Middleware/RequestIdMiddleware.cs
-using Fastdotnet.Core.Utils;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-
 namespace Fastdotnet.WebApi.Middleware;
 
 public class RequestIdMiddleware

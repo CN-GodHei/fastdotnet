@@ -1,15 +1,4 @@
-﻿using Fastdotnet.Core.Exceptions;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models;
-using Fastdotnet.Core.Models.LogModels;
-using Fastdotnet.Core.Utils;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
-
-namespace Fastdotnet.WebApi.Middleware;
+﻿namespace Fastdotnet.WebApi.Middleware;
 
 /// <summary>
 /// 全局异常处理中间件

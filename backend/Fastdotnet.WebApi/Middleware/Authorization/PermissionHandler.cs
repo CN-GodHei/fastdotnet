@@ -1,9 +1,3 @@
-using Fastdotnet.Service.IService;
-using Microsoft.AspNetCore.Authorization;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
 namespace Fastdotnet.WebApi.Middleware.Authorization
 {
     public class PermissionHandler : AuthorizationHandler<PermissionRequirement>

@@ -1,8 +1,3 @@
-using System.Threading.Tasks;
-using Fastdotnet.Core.Initializers;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Fastdotnet.WebApi.Extensions
 {
     /// <summary>

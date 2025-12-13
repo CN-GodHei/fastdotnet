@@ -1,13 +1,3 @@
-using AutoMapper;
-using Fastdotnet.Core.Controllers;
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.System;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
