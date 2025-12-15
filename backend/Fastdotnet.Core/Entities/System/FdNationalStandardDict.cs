@@ -68,7 +68,7 @@ namespace Fastdotnet.Core.Entities.System
         /// 状态：1=启用，0=废止
         /// </summary>
         [SugarColumn(ColumnName = "status", IsNullable = false, DefaultValue = "1")]
-        public byte Status { get; set; } = 1;
+        public bool Status { get; set; }
 
         /// <summary>
         /// 排序值，数值越小越靠前。默认可设为 9999（表示按原始顺序）
