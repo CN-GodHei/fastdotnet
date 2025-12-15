@@ -61,7 +61,7 @@ public class ApplicationModule : Module
         containerBuilder.Register(c =>
         {
             var context = c.Resolve<IComponentContext>();
-            var loggerFactory = context.Resolve<ILoggerFactory>(); // 1. 解析 ILoggerFactory
+            //var loggerFactory = context.Resolve<ILoggerFactory>(); // 1. 解析 ILoggerFactory
 
             // 2. 创建和配置 MapperConfigurationExpression
             var expression = new AutoMapper.MapperConfigurationExpression();
@@ -69,7 +69,7 @@ public class ApplicationModule : Module
             expression.ConstructServicesUsing(context.Resolve);
 
             // 3. 使用你提供的特定构造函数创建 MapperConfiguration
-            var config = new MapperConfiguration(expression, loggerFactory);
+            var config = new MapperConfiguration(expression);
 
             return config.CreateMapper();
         }).As<IMapper>().InstancePerLifetimeScope();
