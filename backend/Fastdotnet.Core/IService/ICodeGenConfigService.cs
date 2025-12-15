@@ -34,7 +34,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="columns">列信息列表</param>
         /// <param name="nameSpace">命名空间</param>
         /// <returns></returns>
-        Task<string> GenerateEntityContentAsync(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace,string TableComment);
+        Task<string> GenerateEntityContentAsync(string tableName, string entityName, List<FdCodeGenConfig> columns, string nameSpace,string TableComment);
         
         /// <summary>
         /// 生成DTO代码
@@ -69,7 +69,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="tableName">表名</param>
         /// <param name="pagePath">页面路径</param>
         /// <returns></returns>
-        Task<string> GenerateFrontendVueContentAsync(string entityName, List<ColumnInfoDto> columns, string tableName, string pagePath, string TableComment, List<FdCodeGenConfig> configcolumns);
+        Task<string> GenerateFrontendVueContentAsync(string entityName, string tableName, string pagePath, string TableComment, List<FdCodeGenConfig> configcolumns);
 
         string GetEffectTypeByColumnName(string columnName, string dataType);
 

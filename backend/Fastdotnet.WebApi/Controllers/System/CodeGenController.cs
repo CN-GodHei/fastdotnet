@@ -161,22 +161,22 @@ namespace Fastdotnet.WebApi.Controllers.System
             }
 
             var entityName = _codeGenConfigService.GetEntityNameByTableName(config.TableName);
-            List<ColumnInfoDto>? tableColumns = await _codeGenConfigService.GetTableColumnListAsync(config.TableName);
+            //List<ColumnInfoDto>? tableColumns = await _codeGenConfigService.GetTableColumnListAsync(config.TableName);
             List<FdCodeGenConfig>? tableColumnsconfig = await _configRepository.GetListAsync(w=>w.CodeGenId== configId);
-            tableColumns.ForEach(x =>
-            {
-                x.ShowColumnName = tableColumnsconfig.FirstOrDefault(s => s.ColumnName == x.ColumnName)?.ShowColumnName ?? x.PropertyName;
-            });
+            //tableColumns.ForEach(x =>
+            //{
+            //    x.ShowColumnName = tableColumnsconfig.FirstOrDefault(s => s.ColumnName == x.ColumnName)?.ShowColumnName ?? x.PropertyName;
+            //});
 
             // 根据类型生成不同的代码
             return type?.ToLower() switch
             {
-                "entity" => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumns, config.NameSpace, config.TableComment),
+                "entity" => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumnsconfig, config.NameSpace, config.TableComment),
                 "dto" => await _codeGenConfigService.GenerateDtoContentAsync(entityName, tableColumnsconfig, config.NameSpace, config.TableComment),
                 "service" => await _codeGenConfigService.GenerateServiceImplementationContentAsync(entityName, config.NameSpace, config.TableComment),
                 "controller" => await _codeGenConfigService.GenerateControllerContentAsync(entityName, config.NameSpace, config.TableComment),
-                "frontend" => await _codeGenConfigService.GenerateFrontendVueContentAsync(entityName, tableColumns, config.TableName, config.PagePath, config.TableComment, tableColumnsconfig),
-                _ => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumns, config.NameSpace, config.TableComment) // 默认返回实体代码
+                "frontend" => await _codeGenConfigService.GenerateFrontendVueContentAsync(entityName,  config.TableName, config.PagePath, config.TableComment, tableColumnsconfig),
+                _ => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumnsconfig, config.NameSpace, config.TableComment) // 默认返回实体代码
             };
         }
 

@@ -109,20 +109,20 @@ namespace Fastdotnet.Service.Service
 
 
 
-        private string GeneratePropertyDefinition(ColumnInfoDto column)
+        private string GeneratePropertyDefinition(FdCodeGenConfig column)
         {
             var attrStr = "";
-            if (column.IsPrimarykey)
+            if (column.ColumnKey)
             {
-                attrStr = $"[SugarColumn(IsPrimaryKey = true,ColumnName = \"{column.ColumnName.ToLower()}\", {GetLength(column.Length)} IsNullable = {column.IsNullable.ToString().ToLower()}, ColumnDescription = \"{column.ColumnComment}\" {GetDefaultValue(column.DefaultValue)})]";
+                attrStr = $"[SugarColumn(IsPrimaryKey = true,ColumnName = \"{column.ColumnName.ToLower()}\", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = \"{column.ColumnComment}\" {GetDefaultValue(column.DefaultValue)})]";
             }
-            else if (column.IsIdentity)
+            else if (column.ColumnKey)
             {
-                attrStr = $@"[SugarColumn(IsIdentity = true,ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.Length)} IsNullable = {column.IsNullable.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}""{GetDefaultValue(column.DefaultValue)})]";
+                attrStr = $@"[SugarColumn(IsIdentity = true,ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}""{GetDefaultValue(column.DefaultValue)})]";
             }
             if (string.IsNullOrEmpty(attrStr))
             {
-                attrStr += $@"[SugarColumn(ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.Length)} IsNullable = {column.IsNullable.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}"" {GetDefaultValue(column.DefaultValue)})]";
+                attrStr += $@"[SugarColumn(ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}"" {GetDefaultValue(column.DefaultValue)})]";
             }
             return $"        {GenGenerateColumnComment(column.ColumnComment)}\n        {attrStr}\n        public {column.NetType} {column.PropertyName} {{ get; set; }}";
         }
@@ -165,7 +165,7 @@ namespace Fastdotnet.Service.Service
             var validations = new List<string>();
             if (!column.WhetherRequired && !column.ColumnKey && isCreate && column.NetType != "bool")
             {
-                validations.Add("[Required(ErrorMessage = \"" + column.ColumnComment + "不能为空\")]");
+                validations.Add("[Required(ErrorMessage = \"" + column.ShowColumnName + "不能为空\")]");
             }
 
             var lengthValidation = "";
@@ -173,7 +173,7 @@ namespace Fastdotnet.Service.Service
             {
                 if (!isOutput && column.NetType != "bool")
                 {
-                    lengthValidation = $"[StringLength({column.ColumnLength},ErrorMessage = \"{column.ColumnComment}最多{column.ColumnLength}个字符\")]";
+                    lengthValidation = $"[StringLength({column.ColumnLength},ErrorMessage = \"{column.ShowColumnName}最多{column.ColumnLength}个字符\")]";
                 }
                 else
                 {
@@ -203,7 +203,7 @@ namespace Fastdotnet.Service.Service
                 validationStr = string.IsNullOrEmpty(validationStr) ? lengthValidation : $"{validationStr}\n        {lengthValidation}";
             }
 
-            var result = $"{GenGenerateColumnComment(column.ColumnName)}\n";
+            var result = $"{GenGenerateColumnComment(column.ShowColumnName)}\n";
             if (!string.IsNullOrEmpty(validationStr))
             {
                 result += $"        {validationStr}\n        ";
@@ -337,7 +337,7 @@ namespace Fastdotnet.Service.Service
         }
 
 
-        public async Task<string> GenerateEntityContentAsync(string tableName, string entityName, List<ColumnInfoDto> columns, string nameSpace, string TableComment)
+        public async Task<string> GenerateEntityContentAsync(string tableName, string entityName, List<FdCodeGenConfig> columns, string nameSpace, string TableComment)
         {
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
@@ -479,7 +479,7 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
         }
 
 
-        public async Task<string> GenerateFrontendVueContentAsync(string entityName, List<ColumnInfoDto> columns, string busName, string pagePath, string TableComment, List<FdCodeGenConfig> configcolumns)
+        public async Task<string> GenerateFrontendVueContentAsync(string entityName,  string busName, string pagePath, string TableComment, List<FdCodeGenConfig> configcolumns)
         {
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
@@ -554,7 +554,7 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 			</template>
 			<el-form :model=""state.formData"" ref=""formRef"" label-width=""auto"">
 				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherAddUpdate == true).Select(col =>
-                    $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ShowColumnName ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						{GetFormComponentByEffectType(col, columns)}\n					</el-form-item>\n				</el-col>"
+                    $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ShowColumnName ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						{GetFormComponentByEffectType(col)}\n					</el-form-item>\n				</el-col>"
                 ))}
 			</el-form>
 			<template #footer>
@@ -742,13 +742,13 @@ onMounted(() => {{
         /// 获取前端最大输入值模板
         /// </summary>
         /// <returns></returns>
-        private string getFrontendmMaxLenghtTemp(FdCodeGenConfig fdCodeGenConfig, List<ColumnInfoDto> columns)
+        private string getFrontendmMaxLenghtTemp(FdCodeGenConfig fdCodeGenConfig)
         {
-            var columnInfoDto = columns.FirstOrDefault(w => w.ColumnName == fdCodeGenConfig.ColumnName);
-            if (columnInfoDto.Length > 0)
+            if (fdCodeGenConfig.ColumnLength > 0)
             {
-                return $@"maxlength=""{columnInfoDto.Length}"" show-word-limit";
+                return $@"maxlength=""{fdCodeGenConfig.ColumnLength}"" show-word-limit";
             }
+            
             return string.Empty;
         }
 
@@ -873,11 +873,11 @@ onMounted(() => {{
         /// <param name="fdCodeGenConfig">代码生成配置</param>
         /// <param name="columns">列信息</param>
         /// <returns>组件模板字符串</returns>
-        private string GetFormComponentByEffectType(FdCodeGenConfig fdCodeGenConfig, List<ColumnInfoDto> columns)
+        private string GetFormComponentByEffectType(FdCodeGenConfig fdCodeGenConfig)
         {
             var effectType = fdCodeGenConfig.EffectType?.ToLower() ?? "input";
             var showColumnName = fdCodeGenConfig.ShowColumnName ?? fdCodeGenConfig.PropertyName;
-            var maxLengthAttr = getFrontendmMaxLenghtTemp(fdCodeGenConfig, columns);
+            var maxLengthAttr = getFrontendmMaxLenghtTemp(fdCodeGenConfig);
             var isBoolType = fdCodeGenConfig.NetType?.ToLower() == "bool" || fdCodeGenConfig.NetType?.ToLower() == "bool?";
 
             return effectType switch
