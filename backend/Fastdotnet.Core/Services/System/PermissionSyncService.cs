@@ -15,14 +15,14 @@ namespace Fastdotnet.Core.Services.System
     public class PermissionSyncService : IPermissionSyncService
     {
         private readonly IRepository<FdPermission> _permissionRepository;
-        private readonly ILogger<PermissionSyncService> _logger;
+        //private readonly ILogger<PermissionSyncService> _logger;
 
         public PermissionSyncService(
             IRepository<FdPermission> permissionRepository,
             ILogger<PermissionSyncService> logger)
         {
             _permissionRepository = permissionRepository;
-            _logger = logger;
+            //_logger = logger;
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Fastdotnet.Core.Services.System
         /// <returns></returns>
         public async Task SyncPluginPermissionsAsync(IPermissionProvider provider, string module)
         {
-            _logger.LogInformation($"开始同步模块 {module} 的权限...");
+            //_logger.LogInformation($"开始同步模块 {module} 的权限...");
 
             // 1. 从提供者获取代码中定义的权限
             var codePermissions = provider.GetPermissions().ToList();
@@ -48,7 +48,7 @@ namespace Fastdotnet.Core.Services.System
                 .Where(p => !dbPermissionCodes.Contains(p.Code))
                 .Select(p => new FdPermission
                 {
-                    Module = p.Module,
+                    Module = module,
                     Code = p.Code,
                     Name = p.Name,
                     Category = p.Category,
@@ -59,7 +59,7 @@ namespace Fastdotnet.Core.Services.System
             if (permissionsToAdd.Any())
             {
                 await _permissionRepository.InsertRangeAsync(permissionsToAdd);
-                _logger.LogInformation($"为模块 {module} 新增 {permissionsToAdd.Count} 条权限到数据库。");
+                //_logger.LogInformation($"为模块 {module} 新增 {permissionsToAdd.Count} 条权限到数据库。");
             }
 
             // 4. 找出需要删除的权限（该模块在代码中不存在但在数据库中存在的权限）
@@ -71,10 +71,10 @@ namespace Fastdotnet.Core.Services.System
             {
                 var idsToDelete = permissionsToDelete.Select(p => p.Id).ToList();
                 await _permissionRepository.DeleteAsync(p => idsToDelete.Contains(p.Id));
-                _logger.LogInformation($"从数据库中删除模块 {module} 的 {permissionsToDelete.Count} 条过时的权限。");
+                //_logger.LogInformation($"从数据库中删除模块 {module} 的 {permissionsToDelete.Count} 条过时的权限。");
             }
 
-            _logger.LogInformation($"模块 {module} 的权限同步完成。");
+            //_logger.LogInformation($"模块 {module} 的权限同步完成。");
         }
     }
 }
