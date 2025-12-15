@@ -6,9 +6,9 @@ using System.Reflection;
 namespace Fastdotnet.Plugin.Shared.AdapterAOT
 {
     /// <summary>
-    /// Dynamically provides controllers from currently loaded plugins.
-    /// This provider does not scan parts itself, but relies on PluginManager
-    /// to get the active list of plugin assemblies.
+    ///从当前加载的插件动态提供控制器。
+    ///此提供程序本身不扫描零件，而是依赖于PluginManager
+    ///获取插件程序集的活动列表。
     /// </summary>
     public class DynamicControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
     {
@@ -21,7 +21,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
 
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {
-            // We don't care about the 'parts' argument because PluginManager is our source of truth.
+            // 我们不关心“parts”的论点，因为PluginManager是我们的事实来源。
 
             var pluginAssemblies = _pluginManager.GetPluginAssemblies();
 
@@ -43,7 +43,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
                 }
                 catch
                 {
-                    // Ignore assemblies that fail to load types.
+                    // 忽略无法加载类型的程序集。
                 }
             }
         }
