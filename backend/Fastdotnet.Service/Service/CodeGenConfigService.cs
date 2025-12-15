@@ -523,7 +523,7 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 			</div>
 			<el-table :data=""state.tableData.data"" style=""width: 100%"" v-loading=""state.loading"" border>
 				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherTable == true).Select((col, idx) =>
-                    $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ShowColumnName ?? col.PropertyName}\" align=\"center\" show-overflow-tooltip />"
+                    $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ShowColumnName ?? col.PropertyName}\" show-overflow-tooltip />"
                 ))}
 				<el-table-column label=""操作"" width=""180"" fixed=""right"" align=""center"">
 					<template #default=""scope"">
