@@ -13,7 +13,7 @@ namespace Fastdotnet.Core.Middleware
             {
                 var fileProvider = new PhysicalFileProvider(physicalPath);
                 _providers[requestPath] = fileProvider;
-                Console.WriteLine($"Plugin static files registered. Request path: {requestPath}, Physical path: {physicalPath}");
+                //Console.WriteLine($"Plugin static files registered. Request path: {requestPath}, Physical path: {physicalPath}");
             }
         }
 
@@ -21,7 +21,7 @@ namespace Fastdotnet.Core.Middleware
         {
             if (_providers.TryRemove(requestPath, out _))
             {
-                Console.WriteLine($"Plugin static files unregistered. Request path: {requestPath}");
+                //Console.WriteLine($"Plugin static files unregistered. Request path: {requestPath}");
             }
         }
 

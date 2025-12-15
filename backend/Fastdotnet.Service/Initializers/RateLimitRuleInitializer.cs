@@ -26,11 +26,11 @@ namespace Fastdotnet.Service.Initializers
 
         public async Task InitializeAsync()
         {
-            _logger.LogInformation("Start: Initializing Rate Limit Rule data...");
+            //_logger.LogInformation("Start: Initializing Rate Limit Rule data...");
 
             if (await _rateLimitRuleRepository.ExistsAsync(r => r.Id != null))
             {
-                _logger.LogInformation("Rate limit rule data already seeded. Skipping initialization.");
+                //_logger.LogInformation("Rate limit rule data already seeded. Skipping initialization.");
                 return;
             }
 
@@ -124,7 +124,7 @@ namespace Fastdotnet.Service.Initializers
 
             await _rateLimitRuleRepository.InsertRangeAsync(rateLimitRules);
 
-            _logger.LogInformation("Finish: Rate Limit Rule data initialization complete.");
+            //_logger.LogInformation("Finish: Rate Limit Rule data initialization complete.");
         }
     }
 }

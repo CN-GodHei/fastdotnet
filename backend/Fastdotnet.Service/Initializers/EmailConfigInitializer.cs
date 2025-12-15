@@ -19,11 +19,11 @@ namespace Fastdotnet.Service.Initializers
 
         public async Task InitializeAsync()
         {
-            _logger.LogInformation("Start: Initializing Email Config...");
+            //_logger.LogInformation("Start: Initializing Email Config...");
 
             if (await _emailConfigRepository.ExistsAsync(a => a.Id != null))
             {
-                _logger.LogInformation("Email config already exists. Skipping initialization.");
+                //_logger.LogInformation("Email config already exists. Skipping initialization.");
                 return;
             }
 
@@ -40,7 +40,7 @@ namespace Fastdotnet.Service.Initializers
 
             await _emailConfigRepository.InsertAsync(defaultConfig);
 
-            _logger.LogInformation("Finish: Default Email Config initialization complete.");
+            //_logger.LogInformation("Finish: Default Email Config initialization complete.");
         }
     }
 }

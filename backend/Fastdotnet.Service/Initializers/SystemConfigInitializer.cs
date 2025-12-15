@@ -20,11 +20,11 @@ namespace Fastdotnet.Service.Initializers
 
         public async Task InitializeAsync()
         {
-            _logger.LogInformation("Start: Initializing System Config...");
+            //_logger.LogInformation("Start: Initializing System Config...");
 
             if (await _systemConfigRepository.ExistsAsync(a => a.Id != null))
             {
-                _logger.LogInformation("System config already seeded. Skipping initialization.");
+                //_logger.LogInformation("System config already seeded. Skipping initialization.");
                 return;
             }
 
@@ -120,7 +120,7 @@ namespace Fastdotnet.Service.Initializers
 };
             await _systemConfigRepository.InsertRangeAsync(configs);
 
-            _logger.LogInformation("Finish: System Config initialization complete.");
+            //_logger.LogInformation("Finish: System Config initialization complete.");
         }
     }
 }

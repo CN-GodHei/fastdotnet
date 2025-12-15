@@ -27,11 +27,11 @@ namespace Fastdotnet.Service.Initializers
 
         public async Task InitializeAsync()
         {
-            _logger.LogInformation("Start: Initializing Blacklist data...");
+            //_logger.LogInformation("Start: Initializing Blacklist data...");
 
             if (await _blacklistRepository.ExistsAsync(b => b.Id != null))
             {
-                _logger.LogInformation("Blacklist data already seeded. Skipping initialization.");
+                //_logger.LogInformation("Blacklist data already seeded. Skipping initialization.");
                 return;
             }
 
@@ -95,7 +95,7 @@ namespace Fastdotnet.Service.Initializers
 
             await _blacklistRepository.InsertRangeAsync(blacklistEntries);
 
-            _logger.LogInformation("Finish: Blacklist data initialization complete.");
+            //_logger.LogInformation("Finish: Blacklist data initialization complete.");
         }
     }
 }
