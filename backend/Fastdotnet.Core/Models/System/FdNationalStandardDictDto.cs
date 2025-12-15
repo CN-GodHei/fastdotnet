@@ -75,11 +75,9 @@ namespace Fastdotnet.Core.Models.System
         public int Sort { get; set; }
 
         /// <summary>
-        /// 扩展属性
+        /// 属性扩展
         /// </summary>
-        [Required(ErrorMessage = "扩展属性不能为空")]
-        [StringLength(255, ErrorMessage = "扩展属性最多255个字符")]
-        public string? Extra { get; set; }
+        public Dictionary<string, object>? ExtraObject { get; set; }
     }
 
     /// <summary>
@@ -150,10 +148,9 @@ namespace Fastdotnet.Core.Models.System
         public int Sort { get; set; }
 
         /// <summary>
-        /// 扩展属性
+        /// 属性扩展
         /// </summary>
-        [StringLength(255, ErrorMessage = "扩展属性最多255个字符")]
-        public string? Extra { get; set; }
+        public Dictionary<string, object>? ExtraObject { get; set; }
     }
 
     /// <summary>
@@ -224,9 +221,8 @@ namespace Fastdotnet.Core.Models.System
         public int Sort { get; set; }
 
         /// <summary>
-        /// 扩展属性
+        /// 属性扩展
         /// </summary>
-
-        public string? Extra { get; set; }
+        public Dictionary<string, object>? ExtraObject { get; set; }
     }
 }

@@ -83,14 +83,14 @@ namespace Fastdotnet.Core.Entities.System
         public string? Extra { get; set; }
 
         // 非映射属性：方便操作 JSON
-        [SugarColumn(IsIgnore = true)]
-        public Dictionary<string, object>? ExtraObject
-        {
-            get => string.IsNullOrEmpty(Extra) ? null :
-                   Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(Extra);
-            set => Extra = value == null ? null :
-                   Newtonsoft.Json.JsonConvert.SerializeObject(value);
-        }
+        //[SugarColumn(IsIgnore = true)]
+        //public Dictionary<string, object>? ExtraObject
+        //{
+        //    get => string.IsNullOrEmpty(Extra) ? null :
+        //           Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(Extra);
+        //    set => Extra = value == null ? null :
+        //           Newtonsoft.Json.JsonConvert.SerializeObject(value);
+        //}
 
     }
 }
