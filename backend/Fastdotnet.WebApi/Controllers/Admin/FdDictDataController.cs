@@ -1,9 +1,9 @@
-﻿namespace Fastdotnet.WebApi.Controllers.System
+﻿namespace Fastdotnet.WebApi.Controllers.Admin
 {
     /// <summary>
     /// FdDictData 控制器
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/admin/[controller]")]
     public class FdDictDataController : GenericDtoControllerBase<FdDictData, string, CreateFdDictDataDto, UpdateFdDictDataDto, FdDictDataDto>
     {
         public FdDictDataController(

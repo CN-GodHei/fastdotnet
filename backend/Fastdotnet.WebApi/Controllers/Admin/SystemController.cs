@@ -1,4 +1,4 @@
-﻿namespace Fastdotnet.WebApi.Controllers.System
+﻿namespace Fastdotnet.WebApi.Controllers.Admin
 {
     /// <summary>
     /// 系统信息控制器
