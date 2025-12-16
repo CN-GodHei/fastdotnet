@@ -53,12 +53,12 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="systemDic">
+<script setup lang="ts" name="systemDict">
 import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 
 // 引入组件
-const DicDialog = defineAsyncComponent(() => import('@/views/system/dic/dialog.vue'));
+const DicDialog = defineAsyncComponent(() => import('@/views/system/dict/dialog.vue'));
 
 // 定义变量内容
 const dicDialogRef = ref();

@@ -139,9 +139,9 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 						},
 					},
 					{
-							path: '/system/dic',
+							path: '/system/dict',
 							name: 'systemDic',
-							component: () => import('@/views/system/dic/index.vue'),
+							component: () => import('@/views/system/dict/index.vue'),
 							meta: {
 								title: 'message.router.systemDic',
 								isLink: '',

@@ -2,17 +2,17 @@
 /* eslint-disable */
 import request from '@/utils/request';
 
-/** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/FdDictType */
-export async function getFdDictType(options?: { [key: string]: any }) {
-	return request<APIModel.FdDictTypeDto[]>('/api/FdDictType', {
+/** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/admin/FdDictType */
+export async function getAdminFdDictType(options?: { [key: string]: any }) {
+	return request<APIModel.FdDictTypeDto[]>('/api/admin/FdDictType', {
 		method: 'GET',
 		...(options || {}),
 	});
 }
 
-/** 创建新记录 根据提供的数据创建一条新记录。 POST /api/FdDictType */
-export async function postFdDictType(body: APIModel.CreateFdDictTypeDto, options?: { [key: string]: any }) {
-	return request<APIModel.FdDictTypeDto>('/api/FdDictType', {
+/** 创建新记录 根据提供的数据创建一条新记录。 POST /api/admin/FdDictType */
+export async function postAdminFdDictType(body: APIModel.CreateFdDictTypeDto, options?: { [key: string]: any }) {
+	return request<APIModel.FdDictTypeDto>('/api/admin/FdDictType', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
@@ -22,29 +22,29 @@ export async function postFdDictType(body: APIModel.CreateFdDictTypeDto, options
 	});
 }
 
-/** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/FdDictType/${param0} */
-export async function getFdDictTypeId(
+/** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/admin/FdDictType/${param0} */
+export async function getAdminFdDictTypeId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getFdDictTypeIdParams,
+	params: APIModel.getAdminFdDictTypeIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
-	return request<APIModel.FdDictTypeDto>(`/api/FdDictType/${param0}`, {
+	return request<APIModel.FdDictTypeDto>(`/api/admin/FdDictType/${param0}`, {
 		method: 'GET',
 		params: { ...queryParams },
 		...(options || {}),
 	});
 }
 
-/** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/FdDictType/${param0} */
-export async function putFdDictTypeId(
+/** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/admin/FdDictType/${param0} */
+export async function putAdminFdDictTypeId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putFdDictTypeIdParams,
+	params: APIModel.putAdminFdDictTypeIdParams,
 	body: APIModel.UpdateFdDictTypeDto,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
-	return request<APIModel.FdDictTypeDto>(`/api/FdDictType/${param0}`, {
+	return request<APIModel.FdDictTypeDto>(`/api/admin/FdDictType/${param0}`, {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
@@ -55,23 +55,23 @@ export async function putFdDictTypeId(
 	});
 }
 
-/** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/FdDictType/${param0} */
-export async function deleteFdDictTypeId(
+/** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/admin/FdDictType/${param0} */
+export async function deleteAdminFdDictTypeId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteFdDictTypeIdParams,
+	params: APIModel.deleteAdminFdDictTypeIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
-	return request<boolean>(`/api/FdDictType/${param0}`, {
+	return request<boolean>(`/api/admin/FdDictType/${param0}`, {
 		method: 'DELETE',
 		params: { ...queryParams },
 		...(options || {}),
 	});
 }
 
-/** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/FdDictType/batch */
-export async function putFdDictTypeBatch(body: APIModel.UpdateFdDictTypeDto[], options?: { [key: string]: any }) {
-	return request<number>('/api/FdDictType/batch', {
+/** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/FdDictType/batch */
+export async function putAdminFdDictTypeBatch(body: APIModel.UpdateFdDictTypeDto[], options?: { [key: string]: any }) {
+	return request<number>('/api/admin/FdDictType/batch', {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
@@ -81,9 +81,9 @@ export async function putFdDictTypeBatch(body: APIModel.UpdateFdDictTypeDto[], o
 	});
 }
 
-/** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/FdDictType/batch */
-export async function postFdDictTypeBatch(body: APIModel.CreateFdDictTypeDto[], options?: { [key: string]: any }) {
-	return request<number>('/api/FdDictType/batch', {
+/** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/FdDictType/batch */
+export async function postAdminFdDictTypeBatch(body: APIModel.CreateFdDictTypeDto[], options?: { [key: string]: any }) {
+	return request<number>('/api/admin/FdDictType/batch', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
@@ -93,9 +93,9 @@ export async function postFdDictTypeBatch(body: APIModel.CreateFdDictTypeDto[], 
 	});
 }
 
-/** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/FdDictType/batch */
-export async function deleteFdDictTypeBatch(body: string[], options?: { [key: string]: any }) {
-	return request<number>('/api/FdDictType/batch', {
+/** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/admin/FdDictType/batch */
+export async function deleteAdminFdDictTypeBatch(body: string[], options?: { [key: string]: any }) {
+	return request<number>('/api/admin/FdDictType/batch', {
 		method: 'DELETE',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
@@ -105,12 +105,12 @@ export async function deleteFdDictTypeBatch(body: string[], options?: { [key: st
 	});
 }
 
-/** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/FdDictType/batch/updatebycondition */
-export async function putFdDictTypeBatchUpdatebycondition(
+/** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdDictType/batch/updatebycondition */
+export async function putAdminFdDictTypeBatchUpdatebycondition(
 	body: APIModel.UpdateFdDictTypeDtoBatchUpdateByConditionDto,
 	options?: { [key: string]: any }
 ) {
-	return request<number>('/api/FdDictType/batch/updatebycondition', {
+	return request<number>('/api/admin/FdDictType/batch/updatebycondition', {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
@@ -120,13 +120,13 @@ export async function putFdDictTypeBatchUpdatebycondition(
 	});
 }
 
-/** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/FdDictType/page */
-export async function getFdDictTypePage(
+/** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/admin/FdDictType/page */
+export async function getAdminFdDictTypePage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getFdDictTypePageParams,
+	params: APIModel.getAdminFdDictTypePageParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.PageInfo>('/api/FdDictType/page', {
+	return request<APIModel.PageInfo>('/api/admin/FdDictType/page', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -139,9 +139,9 @@ export async function getFdDictTypePage(
 	});
 }
 
-/** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/FdDictType/page/search */
-export async function postFdDictTypePageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.PageInfo>('/api/FdDictType/page/search', {
+/** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdDictType/page/search */
+export async function postAdminFdDictTypePageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+	return request<APIModel.PageInfo>('/api/admin/FdDictType/page/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -151,13 +151,13 @@ export async function postFdDictTypePageSearch(body: APIModel.PageQueryByConditi
 	});
 }
 
-/** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/FdDictType/recyclebin */
-export async function getFdDictTypeRecyclebin(
+/** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/admin/FdDictType/recyclebin */
+export async function getAdminFdDictTypeRecyclebin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getFdDictTypeRecyclebinParams,
+	params: APIModel.getAdminFdDictTypeRecyclebinParams,
 	options?: { [key: string]: any }
 ) {
-	return request<APIModel.PageInfo>('/api/FdDictType/recyclebin', {
+	return request<APIModel.PageInfo>('/api/admin/FdDictType/recyclebin', {
 		method: 'GET',
 		params: {
 			// pageIndex has a default value: 1
@@ -170,37 +170,37 @@ export async function getFdDictTypeRecyclebin(
 	});
 }
 
-/** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/FdDictType/recyclebin/${param0}/permanent */
-export async function deleteFdDictTypeRecyclebinIdPermanent(
+/** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/admin/FdDictType/recyclebin/${param0}/permanent */
+export async function deleteAdminFdDictTypeRecyclebinIdPermanent(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteFdDictTypeRecyclebinIdPermanentParams,
+	params: APIModel.deleteAdminFdDictTypeRecyclebinIdPermanentParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
-	return request<boolean>(`/api/FdDictType/recyclebin/${param0}/permanent`, {
+	return request<boolean>(`/api/admin/FdDictType/recyclebin/${param0}/permanent`, {
 		method: 'DELETE',
 		params: { ...queryParams },
 		...(options || {}),
 	});
 }
 
-/** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/FdDictType/recyclebin/${param0}/restore */
-export async function putFdDictTypeRecyclebinIdRestore(
+/** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/admin/FdDictType/recyclebin/${param0}/restore */
+export async function putAdminFdDictTypeRecyclebinIdRestore(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putFdDictTypeRecyclebinIdRestoreParams,
+	params: APIModel.putAdminFdDictTypeRecyclebinIdRestoreParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
-	return request<boolean>(`/api/FdDictType/recyclebin/${param0}/restore`, {
+	return request<boolean>(`/api/admin/FdDictType/recyclebin/${param0}/restore`, {
 		method: 'PUT',
 		params: { ...queryParams },
 		...(options || {}),
 	});
 }
 
-/** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/FdDictType/recyclebin/permanent */
-export async function postFdDictTypeRecyclebinPermanent(body: APIModel.FdDictTypeBooleanFuncExpression, options?: { [key: string]: any }) {
-	return request<number>('/api/FdDictType/recyclebin/permanent', {
+/** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdDictType/recyclebin/permanent */
+export async function postAdminFdDictTypeRecyclebinPermanent(body: APIModel.FdDictTypeBooleanFuncExpression, options?: { [key: string]: any }) {
+	return request<number>('/api/admin/FdDictType/recyclebin/permanent', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
@@ -210,9 +210,9 @@ export async function postFdDictTypeRecyclebinPermanent(body: APIModel.FdDictTyp
 	});
 }
 
-/** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/FdDictType/recyclebin/restore */
-export async function postFdDictTypeRecyclebinRestore(body: APIModel.FdDictTypeBooleanFuncExpression, options?: { [key: string]: any }) {
-	return request<number>('/api/FdDictType/recyclebin/restore', {
+/** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdDictType/recyclebin/restore */
+export async function postAdminFdDictTypeRecyclebinRestore(body: APIModel.FdDictTypeBooleanFuncExpression, options?: { [key: string]: any }) {
+	return request<number>('/api/admin/FdDictType/recyclebin/restore', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
@@ -222,9 +222,9 @@ export async function postFdDictTypeRecyclebinRestore(body: APIModel.FdDictTypeB
 	});
 }
 
-/** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/FdDictType/recyclebin/search */
-export async function postFdDictTypeRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
-	return request<APIModel.PageInfo>('/api/FdDictType/recyclebin/search', {
+/** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdDictType/recyclebin/search */
+export async function postAdminFdDictTypeRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+	return request<APIModel.PageInfo>('/api/admin/FdDictType/recyclebin/search', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

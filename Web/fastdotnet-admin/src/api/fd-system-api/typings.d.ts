@@ -1,10 +1,4 @@
 declare namespace APIModel {
-	enum ActivationStatusDto {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-	}
-
 	type ApiResult = {
 		Code?: number;
 		Msg?: string;
@@ -213,76 +207,6 @@ declare namespace APIModel {
 		IsSystem: boolean;
 	};
 
-	type CreateGiftRecordDto = {
-		PurchaseId: number;
-		Reason?: string;
-		GivenBy?: string;
-		GivenTime?: string;
-	};
-
-	type CreateMarketplacePluginDto = {
-		PluginId: string;
-		Name: string;
-		Description?: string;
-		Version: string;
-		Author?: string;
-		Category?: string;
-		SupportedLicenseMode?: SupportedLicenseModeDto;
-		Price_SingleServer?: number;
-		Price_MultiServer?: number;
-		IsActive?: boolean;
-		IsFree?: boolean;
-		DownloadUrl?: string;
-		DocumentationUrl?: string;
-	};
-
-	type CreateOnlinePaymentDto = {
-		PurchaseId: number;
-		Channel?: OnlinePaymentChannelDto;
-		TransactionId: string;
-		ThirdPartyData?: string;
-		CallbackData?: string;
-		PaidTime?: string;
-	};
-
-	type CreatePointRedemptionDto = {
-		PurchaseId: number;
-		PointsUsed?: number;
-		UserId: string;
-		RedeemedTime?: string;
-	};
-
-	type CreateUserPluginActivationDto = {
-		PurchaseId: number;
-		PluginId: string;
-		UserId: string;
-		LicenseType: LicenseTypeDto;
-		ActivationDate?: string;
-		MachineFingerprint: string;
-		IpAddress?: string;
-		Hostname?: string;
-		LicenseFileContent?: string;
-		Status?: ActivationStatusDto;
-		DeactivationDate?: string;
-		RevocationReason?: string;
-		Notes?: string;
-	};
-
-	type CreateUserPluginPurchaseDto = {
-		UserId: string;
-		PluginId: string;
-		OrderId: string;
-		LicenseType: LicenseTypeDto;
-		Quantity?: number;
-		PurchasePrice?: number;
-		Currency?: string;
-		PurchaseDate?: string;
-		UpdatesUntil?: string;
-		IsLifetime?: boolean;
-		Status?: PurchaseStatusDto;
-		Notes?: string;
-	};
-
 	type deleteAdminFdAdminUserIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
@@ -299,6 +223,26 @@ declare namespace APIModel {
 	};
 
 	type deleteAdminFdBlacklistsRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminFdDictDataIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminFdDictDataRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminFdDictTypeIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteAdminFdDictTypeRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -384,26 +328,6 @@ declare namespace APIModel {
 	};
 
 	type deleteCodeGenRecyclebinIdPermanentParams = {
-		/** 要永久删除的记录的唯一标识符 */
-		id: string;
-	};
-
-	type deleteFdDictDataIdParams = {
-		/** 要删除的记录的唯一标识符 */
-		id: string;
-	};
-
-	type deleteFdDictDataRecyclebinIdPermanentParams = {
-		/** 要永久删除的记录的唯一标识符 */
-		id: string;
-	};
-
-	type deleteFdDictTypeIdParams = {
-		/** 要删除的记录的唯一标识符 */
-		id: string;
-	};
-
-	type deleteFdDictTypeRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -912,11 +836,6 @@ declare namespace APIModel {
 		CodeGenId?: string;
 	};
 
-	type GenerateLicenseRequestDto = {
-		PluginId: string;
-		MachineFingerprint: string;
-	};
-
 	type getAdminFdAdminUserIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
@@ -954,6 +873,44 @@ declare namespace APIModel {
 	};
 
 	type getAdminFdBlacklistsRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminFdDictDataIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getAdminFdDictDataPageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminFdDictDataRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminFdDictTypeIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getAdminFdDictTypePageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getAdminFdDictTypeRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
@@ -1177,78 +1134,9 @@ declare namespace APIModel {
 		configId: string;
 	};
 
-	type getFdDictDataIdParams = {
-		/** 记录的唯一标识符 */
-		id: string;
-	};
-
-	type getFdDictDataPageParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type getFdDictDataRecyclebinParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type getFdDictTypeIdParams = {
-		/** 记录的唯一标识符 */
-		id: string;
-	};
-
-	type getFdDictTypePageParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
-	type getFdDictTypeRecyclebinParams = {
-		/** 页码 (从1开始) */
-		pageIndex?: number;
-		/** 页面大小 */
-		pageSize?: number;
-	};
-
 	type getPluginActivePluginIdParams = {
 		pluginId: string;
 	};
-
-	type GiftRecordBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type GiftRecordDto = {
-		Id?: string;
-		PurchaseId?: number;
-		Reason?: string;
-		GivenBy?: string;
-		GivenTime?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-	};
-
-	type GiftRecordDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: GiftRecordDto[];
-	};
-
-	enum LicenseTypeDto {
-		0 = '0',
-		1 = '1',
-	}
 
 	type LoginDto = {
 		Username: string;
@@ -1259,41 +1147,6 @@ declare namespace APIModel {
 
 	type LoginResultDto = {
 		Token?: string;
-	};
-
-	type MarketplacePluginBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type MarketplacePluginDto = {
-		Id?: string;
-		PluginId: string;
-		Name: string;
-		Description?: string;
-		Version: string;
-		Author?: string;
-		Category?: string;
-		SupportedLicenseMode?: SupportedLicenseModeDto;
-		Price_SingleServer?: number;
-		Price_MultiServer?: number;
-		IsActive?: boolean;
-		IsFree?: boolean;
-		DownloadUrl?: string;
-		DocumentationUrl?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-	};
-
-	type MarketplacePluginDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: MarketplacePluginDto[];
 	};
 
 	type MaskConfigModel = {
@@ -1310,50 +1163,6 @@ declare namespace APIModel {
 		0 = '0',
 		1 = '1',
 	}
-
-	type OfflineActivationRequestDto = {
-		PluginId: string;
-		MachineFingerprint: string;
-		RequestTimestamp?: string;
-		ClientInfo?: string;
-		Nonce?: string;
-	};
-
-	type OnlinePaymentBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	enum OnlinePaymentChannelDto {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-		3 = '3',
-		4 = '4',
-	}
-
-	type OnlinePaymentDto = {
-		Id?: string;
-		PurchaseId?: number;
-		Channel?: OnlinePaymentChannelDto;
-		TransactionId?: string;
-		ThirdPartyData?: string;
-		CallbackData?: string;
-		PaidTime?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-	};
-
-	type OnlinePaymentDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: OnlinePaymentDto[];
-	};
 
 	type PageInfo = {
 		Total?: number;
@@ -1380,55 +1189,6 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
-	type PluginATestBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type PluginATestCreateDto = {
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-	};
-
-	type PluginATestDto = {
-		Id?: string;
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-	};
-
-	type PluginATestDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: PluginATestDto[];
-	};
-
-	type PluginATestUpdateDto = {
-		Id?: string;
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-	};
-
-	type PluginATestUpdateDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: PluginATestUpdateDto;
-	};
-
 	type PluginConfig = {
 		id?: string;
 		name?: string;
@@ -1439,30 +1199,6 @@ declare namespace APIModel {
 		dependencies?: string[];
 		tags?: string[];
 		entryPoint?: string;
-	};
-
-	type PointRedemptionBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type PointRedemptionDto = {
-		Id?: string;
-		PurchaseId?: number;
-		PointsUsed?: number;
-		UserId?: string;
-		RedeemedTime?: string;
-	};
-
-	type PointRedemptionDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: PointRedemptionDto[];
 	};
 
 	type postAdminFdAdminUserIdResetPasswordParams = {
@@ -1492,12 +1228,6 @@ declare namespace APIModel {
 		pluginId: string;
 	};
 
-	enum PurchaseStatusDto {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-	}
-
 	type putAdminFdAdminUserIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
@@ -1514,6 +1244,26 @@ declare namespace APIModel {
 	};
 
 	type putAdminFdBlacklistsRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdDictDataIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdDictDataRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdDictTypeIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putAdminFdDictTypeRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
@@ -1608,43 +1358,13 @@ declare namespace APIModel {
 		id: string;
 	};
 
-	type putFdDictDataIdParams = {
-		/** 要更新的记录的唯一标识符 */
-		id: string;
-	};
-
-	type putFdDictDataRecyclebinIdRestoreParams = {
-		/** 要恢复的记录的唯一标识符 */
-		id: string;
-	};
-
-	type putFdDictTypeIdParams = {
-		/** 要更新的记录的唯一标识符 */
-		id: string;
-	};
-
-	type putFdDictTypeRecyclebinIdRestoreParams = {
-		/** 要恢复的记录的唯一标识符 */
-		id: string;
-	};
-
 	type ResetPasswordDto = {
 		NewPassword: string;
-	};
-
-	type SendMessageRequest = {
-		Message?: string;
 	};
 
 	type SendRegistrationCodeDto = {
 		Email: string;
 	};
-
-	enum SupportedLicenseModeDto {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-	}
 
 	type SystemInfoConfigBooleanFuncExpression = {
 		Type?: string;
@@ -1887,180 +1607,5 @@ declare namespace APIModel {
 	type UpdateFdSystemInfoConfigDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateFdSystemInfoConfigDto;
-	};
-
-	type UpdateGiftRecordDto = {
-		Id?: string;
-		PurchaseId?: number;
-		Reason?: string;
-		GivenBy?: string;
-		GivenTime?: string;
-	};
-
-	type UpdateGiftRecordDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateGiftRecordDto;
-	};
-
-	type UpdateMarketplacePluginDto = {
-		Id?: string;
-		PluginId: string;
-		Name: string;
-		Description?: string;
-		Version: string;
-		Author?: string;
-		Category?: string;
-		SupportedLicenseMode?: SupportedLicenseModeDto;
-		Price_SingleServer?: number;
-		Price_MultiServer?: number;
-		IsActive?: boolean;
-		IsFree?: boolean;
-		DownloadUrl?: string;
-		DocumentationUrl?: string;
-	};
-
-	type UpdateMarketplacePluginDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMarketplacePluginDto;
-	};
-
-	type UpdateOnlinePaymentDto = {
-		Id?: string;
-		PurchaseId?: number;
-		Channel?: OnlinePaymentChannelDto;
-		TransactionId?: string;
-		ThirdPartyData?: string;
-		CallbackData?: string;
-		PaidTime?: string;
-	};
-
-	type UpdateOnlinePaymentDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateOnlinePaymentDto;
-	};
-
-	type UpdatePointRedemptionDto = {
-		Id?: string;
-		PurchaseId?: number;
-		PointsUsed?: number;
-		UserId?: string;
-		RedeemedTime?: string;
-	};
-
-	type UpdatePointRedemptionDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdatePointRedemptionDto;
-	};
-
-	type UpdateUserPluginActivationDto = {
-		Id?: string;
-		PurchaseId?: number;
-		PluginId?: string;
-		UserId?: string;
-		LicenseType?: LicenseTypeDto;
-		ActivationDate?: string;
-		MachineFingerprint?: string;
-		IpAddress?: string;
-		Hostname?: string;
-		LicenseFileContent?: string;
-		Status?: ActivationStatusDto;
-		DeactivationDate?: string;
-		RevocationReason?: string;
-		Notes?: string;
-	};
-
-	type UpdateUserPluginActivationDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateUserPluginActivationDto;
-	};
-
-	type UpdateUserPluginPurchaseDto = {
-		Id?: string;
-		UserId?: string;
-		PluginId?: string;
-		OrderId?: string;
-		LicenseType?: LicenseTypeDto;
-		Quantity?: number;
-		PurchasePrice?: number;
-		Currency?: string;
-		PurchaseDate?: string;
-		UpdatesUntil?: string;
-		IsLifetime?: boolean;
-		Status?: PurchaseStatusDto;
-		Notes?: string;
-	};
-
-	type UpdateUserPluginPurchaseDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateUserPluginPurchaseDto;
-	};
-
-	type UserPluginActivationBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type UserPluginActivationDto = {
-		Id?: string;
-		PurchaseId?: number;
-		PluginId?: string;
-		UserId?: string;
-		LicenseType?: LicenseTypeDto;
-		ActivationDate?: string;
-		MachineFingerprint?: string;
-		IpAddress?: string;
-		Hostname?: string;
-		LicenseFileContent?: string;
-		Status?: ActivationStatusDto;
-		DeactivationDate?: string;
-		RevocationReason?: string;
-		Notes?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-	};
-
-	type UserPluginActivationDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: UserPluginActivationDto[];
-	};
-
-	type UserPluginPurchaseBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type UserPluginPurchaseDto = {
-		Id?: string;
-		UserId?: string;
-		PluginId?: string;
-		OrderId?: string;
-		LicenseType?: LicenseTypeDto;
-		Quantity?: number;
-		PurchasePrice?: number;
-		Currency?: string;
-		PurchaseDate?: string;
-		UpdatesUntil?: string;
-		IsLifetime?: boolean;
-		Status?: PurchaseStatusDto;
-		Notes?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-	};
-
-	type UserPluginPurchaseDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: UserPluginPurchaseDto[];
 	};
 }
