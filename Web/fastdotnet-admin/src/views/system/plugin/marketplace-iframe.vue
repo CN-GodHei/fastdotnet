@@ -201,25 +201,30 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 .marketplace-iframe-container {
+  height: 100%; // 确保容器高度为100%
+
   :deep(.el-card__body) {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 200px);
+    height: 100%; // 确保卡片内容区域高度为100%
   }
-  
+
   .toolbar {
     display: flex;
     gap: 10px;
   }
-  
+
   .iframe-container {
-    flex: 1;
+    flex: 1; // 使用Flexbox填充剩余空间
     overflow: hidden;
     margin-top: 15px;
-    
+    height: calc(100% - 50px); // 调整高度以适应工具栏
+
     iframe {
       border-radius: 4px;
       box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+      height: 100%; // 确保iframe高度为100%
+      width: 100%;
     }
   }
 }

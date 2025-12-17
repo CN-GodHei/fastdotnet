@@ -1,5 +1,5 @@
 <template>
-  <div class="system-plugin-container layout-padding">
+  <div class="system-plugin-container layout-pd">
     <el-card shadow="hover" header="插件管理">
       <el-tabs v-model="activeTab" class="system-plugin-tabs" @tab-change="handleTabChange">
         <el-tab-pane label="已安装插件" name="installed">
@@ -41,9 +41,9 @@
           </el-table>
         </el-tab-pane>
         
-        <el-tab-pane label="插件市场(qiankun)" name="marketplace">
+        <!-- <el-tab-pane label="插件市场(qiankun)" name="marketplace">
           <plugin-marketplace ref="marketplaceRef" />
-        </el-tab-pane>
+        </el-tab-pane> -->
         
         <el-tab-pane label="插件市场(iframe)" name="marketplace-iframe">
           <plugin-marketplace-iframe ref="marketplaceIframeRef" @plugin-action="handlePluginAction" />
@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts" name="systemPlugin">
-import { ref, onMounted, defineAsyncComponent } from 'vue'
+import { ref, onMounted, defineAsyncComponent, onUnmounted } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 // 导入插件相关的API
 import {
@@ -67,7 +67,7 @@ import { MicroAppEvents, receiveFromMicroApp, removeMicroAppEventListener } from
 
 // 异步加载插件市场组件
 // const PluginMarketplace = defineAsyncComponent(() => import('./marketplace.vue'))
-const PluginMarketplaceIframe = defineAsyncComponent(() => import('./marketplaceiframe.vue'))
+const PluginMarketplaceIframe = defineAsyncComponent(() => import('./marketplace-iframe.vue'))
 
 // 定义插件数据类型
 interface Plugin {
@@ -274,7 +274,7 @@ onUnmounted(() => {
   window.removeEventListener('refresh-plugin-list', getPluginList)
   
   // 移除微应用事件监听
-  removeMicroAppEventListener(MicroAppEvents.REFRESH_PLUGIN_LIST_REQUEST, getPluginList)
+  // removeMicroAppEventListener(MicroAppEvents.REFRESH_PLUGIN_LIST_REQUEST, getPluginList)
 })
 </script>
 
@@ -294,10 +294,12 @@ onUnmounted(() => {
     .el-tabs__content {
       flex: 1;
       overflow: auto;
+      height: 100%;
     }
     
     .el-tab-pane {
       height: 100%;
+      min-height: 400px;
     }
   }
 }
