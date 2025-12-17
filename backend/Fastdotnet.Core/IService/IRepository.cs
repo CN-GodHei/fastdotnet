@@ -167,7 +167,7 @@ namespace Fastdotnet.Core.IService
             int pageIndex,
             int pageSize,
             Expression<Func<T, object>> orderByExpression = null,
-            OrderByType orderByType = OrderByType.Desc);
+            OrderByType orderByType = OrderByType.Desc, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 根据条件查询回收站数据
@@ -183,7 +183,7 @@ namespace Fastdotnet.Core.IService
             int pageIndex,
             int pageSize,
             Expression<Func<T, object>> orderByExpression = null,
-            OrderByType orderByType = OrderByType.Desc);
+            OrderByType orderByType = OrderByType.Desc, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 恢复回收站中的实体

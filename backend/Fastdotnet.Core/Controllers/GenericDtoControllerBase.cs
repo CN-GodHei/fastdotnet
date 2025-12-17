@@ -151,7 +151,7 @@ namespace Fastdotnet.Core.Controllers
         [HttpGet]
         public virtual async Task<List<TDto>> GetAll(CancellationToken cancellationToken=default)
         {
-            var entities = await _service.GetAllAsync();
+            var entities = await _service.GetAllAsync(cancellationToken);
             return _mapper.Map<List<TDto>>(entities);
         }
 
@@ -699,9 +699,9 @@ namespace Fastdotnet.Core.Controllers
         /// <param name="pageIndex">页码（从1开始）</param>
         /// <param name="pageSize">页大小</param>
         [HttpGet("recyclebin")]
-        public virtual async Task<PageResult<TDto>> GetRecycleBin([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
+        public virtual async Task<PageResult<TDto>> GetRecycleBin([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default)
         {
-            var pageResult = await _service.GetRecycleBinAsync(pageIndex, pageSize);
+            var pageResult = await _service.GetRecycleBinAsync(pageIndex, pageSize,null, SqlSugar.OrderByType.Desc, cancellationToken);
             return new PageResult<TDto>
             {
                 Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),
@@ -715,7 +715,7 @@ namespace Fastdotnet.Core.Controllers
         /// <param name="query">分页和查询条件</param>
         [HttpPost("recyclebin/search")]
         [Consumes("application/json")]
-        public virtual async Task<PageResult<TDto>> SearchRecycleBin([FromBody] PageQueryByConditionDto query)
+        public virtual async Task<PageResult<TDto>> SearchRecycleBin([FromBody] PageQueryByConditionDto query, CancellationToken cancellationToken = default)
         {
             // 构建动态表达式
             Expression<Func<TEntity, bool>>? whereExpression = null;
@@ -733,7 +733,7 @@ namespace Fastdotnet.Core.Controllers
             var pageResult = await _service.GetRecycleBinAsync(
                 whereExpression,
                 query.PageIndex,
-                query.PageSize);
+                query.PageSize,null, SqlSugar.OrderByType.Desc, cancellationToken);
                 
             return new PageResult<TDto>
             {

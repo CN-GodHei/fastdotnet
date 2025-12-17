@@ -48,7 +48,7 @@ namespace Fastdotnet.Core.Services.System
         /// <returns>实体列表</returns>
         public virtual async Task<List<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await _db.Queryable<T>().ToListAsync();
+            return await _db.Queryable<T>().ToListAsync(cancellationToken);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Fastdotnet.Core.Services.System
         /// <returns>实体列表</returns>
         public virtual async Task<List<T>> GetListAsync(Expression<Func<T, bool>> whereExpression, CancellationToken cancellationToken = default)
         {
-            return await _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression).ToListAsync();
+            return await _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression).ToListAsync(cancellationToken);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Fastdotnet.Core.Services.System
         /// <returns>实体对象</returns>
         public virtual async Task<T> GetFirstAsync(Expression<Func<T, bool>> whereExpression, CancellationToken cancellationToken = default)
         {
-            return await _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression).FirstAsync();
+            return await _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression).FirstAsync(cancellationToken);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Fastdotnet.Core.Services.System
             Expression<Func<T, object>> orderByExpression = null,
             OrderByType orderByType = OrderByType.Asc, CancellationToken cancellationToken = default)
         {
-            return await GetPageAsync(null, pageIndex, pageSize, orderByExpression, orderByType);
+            return await GetPageAsync(null, pageIndex, pageSize, orderByExpression, orderByType, cancellationToken);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Fastdotnet.Core.Services.System
             {
                 query = query.OrderBy(orderByExpression, orderByType);
             }
-            var list = await query.ToPageListAsync(pageIndex, pageSize, totalCount);
+            var list = await query.ToPageListAsync(pageIndex, pageSize, totalCount, cancellationToken);
             return new PageResult<T>
             {
                 Items = list,
@@ -322,7 +322,7 @@ namespace Fastdotnet.Core.Services.System
             int pageIndex,
             int pageSize,
             Expression<Func<T, object>> orderByExpression = null,
-            OrderByType orderByType = OrderByType.Desc)
+            OrderByType orderByType = OrderByType.Desc, CancellationToken cancellationToken = default)
         {
             // 查询已删除的数据
             Expression<Func<T, bool>> whereExpression = entity => entity.IsDeleted;
@@ -340,7 +340,7 @@ namespace Fastdotnet.Core.Services.System
                 query = query.OrderBy(entity => entity.DeletedAt, OrderByType.Desc);
             }
             
-            var list = await query.ToPageListAsync(pageIndex, pageSize, totalCount);
+            var list = await query.ToPageListAsync(pageIndex, pageSize, totalCount, cancellationToken);
             return new PageResult<T>
             {
                 Items = list,
@@ -367,7 +367,7 @@ namespace Fastdotnet.Core.Services.System
             int pageIndex,
             int pageSize,
             Expression<Func<T, object>> orderByExpression = null,
-            OrderByType orderByType = OrderByType.Desc)
+            OrderByType orderByType = OrderByType.Desc, CancellationToken cancellationToken = default)
         {
             // 合并条件：必须是已删除的数据，并且满足传入的条件
             Expression<Func<T, bool>> deletedExpression = entity => entity.IsDeleted;
@@ -386,7 +386,7 @@ namespace Fastdotnet.Core.Services.System
                 query = query.OrderBy(entity => entity.DeletedAt, OrderByType.Desc);
             }
             
-            var list = await query.ToPageListAsync(pageIndex, pageSize, totalCount);
+            var list = await query.ToPageListAsync(pageIndex, pageSize, totalCount, cancellationToken);
             return new PageResult<T>
             {
                 Items = list,

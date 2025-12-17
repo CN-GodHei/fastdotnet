@@ -3,6 +3,7 @@ using Fastdotnet.Core.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Fastdotnet.Core.IService
@@ -21,27 +22,27 @@ namespace Fastdotnet.Core.IService
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns>实体对象</returns>
-        Task<TEntity> GetByIdAsync(TKey id);
+        Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 获取所有实体
         /// </summary>
         /// <returns>实体列表</returns>
-        Task<List<TEntity>> GetAllAsync();
+        Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 根据条件查询实体列表
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体列表</returns>
-        Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> whereExpression);
+        Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 根据条件查询第一个实体
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体对象</returns>
-        Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> whereExpression);
+        Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 分页查询
@@ -55,7 +56,7 @@ namespace Fastdotnet.Core.IService
             int pageIndex,
             int pageSize,
             Expression<Func<TEntity, object>> orderByExpression = null,
-            SqlSugar.OrderByType orderByType = SqlSugar.OrderByType.Asc);
+            SqlSugar.OrderByType orderByType = SqlSugar.OrderByType.Asc, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 分页查询
@@ -71,14 +72,14 @@ namespace Fastdotnet.Core.IService
             int pageIndex,
             int pageSize,
             Expression<Func<TEntity, object>> orderByExpression = null,
-            SqlSugar.OrderByType orderByType = SqlSugar.OrderByType.Asc);
+            SqlSugar.OrderByType orderByType = SqlSugar.OrderByType.Asc, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 判断是否存在满足条件的实体
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>是否存在</returns>
-        Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> whereExpression);
+        Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default);
 
         #endregion
 
@@ -166,7 +167,7 @@ namespace Fastdotnet.Core.IService
             int pageIndex,
             int pageSize,
             Expression<Func<TEntity, object>> orderByExpression = null,
-            SqlSugar.OrderByType orderByType = SqlSugar.OrderByType.Desc);
+            SqlSugar.OrderByType orderByType = SqlSugar.OrderByType.Desc, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 根据条件查询回收站数据
@@ -182,7 +183,7 @@ namespace Fastdotnet.Core.IService
             int pageIndex,
             int pageSize,
             Expression<Func<TEntity, object>> orderByExpression = null,
-            SqlSugar.OrderByType orderByType = SqlSugar.OrderByType.Desc);
+            SqlSugar.OrderByType orderByType = SqlSugar.OrderByType.Desc, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 恢复回收站中的实体

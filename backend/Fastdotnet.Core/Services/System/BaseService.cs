@@ -30,18 +30,18 @@ namespace Fastdotnet.Core.Services.System
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns>实体对象</returns>
-        public virtual async Task<TEntity> GetByIdAsync(TKey id)
+        public virtual async Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            return await _repository.GetByIdAsync(id);
+            return await _repository.GetByIdAsync(id, cancellationToken);
         }
 
         /// <summary>
         /// 获取所有实体
         /// </summary>
         /// <returns>实体列表</returns>
-        public virtual async Task<List<TEntity>> GetAllAsync()
+        public virtual async Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await _repository.GetAllAsync();
+            return await _repository.GetAllAsync(cancellationToken);
         }
 
         /// <summary>
@@ -49,9 +49,9 @@ namespace Fastdotnet.Core.Services.System
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体列表</returns>
-        public virtual async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> whereExpression)
+        public virtual async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default)
         {
-            return await _repository.GetListAsync(whereExpression);
+            return await _repository.GetListAsync(whereExpression, cancellationToken);
         }
 
         /// <summary>
@@ -59,9 +59,9 @@ namespace Fastdotnet.Core.Services.System
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体对象</returns>
-        public virtual async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> whereExpression)
+        public virtual async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default)
         {
-            return await _repository.GetFirstAsync(whereExpression);
+            return await _repository.GetFirstAsync(whereExpression, cancellationToken);
         }
 
         /// <summary>
@@ -76,9 +76,9 @@ namespace Fastdotnet.Core.Services.System
             int pageIndex,
             int pageSize,
             Expression<Func<TEntity, object>> orderByExpression = null,
-            OrderByType orderByType = OrderByType.Asc)
+            OrderByType orderByType = OrderByType.Asc, CancellationToken cancellationToken = default)
         {
-            return await _repository.GetPageAsync(pageIndex, pageSize, orderByExpression, orderByType);
+            return await _repository.GetPageAsync(pageIndex, pageSize, orderByExpression, orderByType, cancellationToken);
         }
 
         /// <summary>
@@ -95,9 +95,9 @@ namespace Fastdotnet.Core.Services.System
             int pageIndex,
             int pageSize,
             Expression<Func<TEntity, object>> orderByExpression = null,
-            OrderByType orderByType = OrderByType.Asc)
+            OrderByType orderByType = OrderByType.Asc, CancellationToken cancellationToken = default)
         {
-            return await _repository.GetPageAsync(whereExpression, pageIndex, pageSize, orderByExpression, orderByType);
+            return await _repository.GetPageAsync(whereExpression, pageIndex, pageSize, orderByExpression, orderByType, cancellationToken);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Fastdotnet.Core.Services.System
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>是否存在</returns>
-        public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> whereExpression)
+        public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default)
         {
             return await _repository.ExistsAsync(whereExpression);
         }
@@ -220,9 +220,9 @@ namespace Fastdotnet.Core.Services.System
             int pageIndex,
             int pageSize,
             Expression<Func<TEntity, object>> orderByExpression = null,
-            OrderByType orderByType = OrderByType.Desc)
+            OrderByType orderByType = OrderByType.Desc, CancellationToken cancellationToken = default)
         {
-            return await _repository.GetRecycleBinAsync(pageIndex, pageSize, orderByExpression, orderByType);
+            return await _repository.GetRecycleBinAsync(pageIndex, pageSize, orderByExpression, orderByType, cancellationToken);
         }
 
         /// <summary>
@@ -239,9 +239,9 @@ namespace Fastdotnet.Core.Services.System
             int pageIndex,
             int pageSize,
             Expression<Func<TEntity, object>> orderByExpression = null,
-            OrderByType orderByType = OrderByType.Desc)
+            OrderByType orderByType = OrderByType.Desc, CancellationToken cancellationToken = default)
         {
-            return await _repository.GetRecycleBinAsync(whereExpression, pageIndex, pageSize, orderByExpression, orderByType);
+            return await _repository.GetRecycleBinAsync(whereExpression, pageIndex, pageSize, orderByExpression, orderByType, cancellationToken);
         }
 
         /// <summary>
