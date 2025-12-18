@@ -53,6 +53,8 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\Admin\CacheTestController.cs" />
+    <Compile Remove="Controllers\System\CombinedAuthController.cs" />
+    <Compile Remove="Controllers\System\TestScopeController.cs" />
     <Compile Remove="Filters\CustomOperationFilter.cs" />
     <Compile Remove="Filters\GlobalExceptionFilter.cs" />
     <Compile Remove="Middleware\Authentication\JwtMiddleware.cs" />

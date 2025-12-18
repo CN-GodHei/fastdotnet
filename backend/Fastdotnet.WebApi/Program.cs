@@ -14,12 +14,22 @@ builder.Services.AddCors(cors => cors.AddDefaultPolicy(policy =>
          .AllowAnyOrigin()
          .WithExposedHeaders("*")));
 
+// 配置授权策略
+builder.Services.AddAuthorization(options =>
+{
+    // 添加API作用域策略
+    options.AddPolicy("ApiScope", policy =>
+    {
+        policy.Requirements.Add(new ApiScopeRequirement());
+    });
+});
 
 // 1. 注册 ASP.NET Core 的核心服务
 builder.Services.AddControllers(options =>
 {
     var policy = new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
+        .AddRequirements(new ApiScopeRequirement()) // 添加API作用域检查作为默认要求
         .Build();
     options.Filters.Add(new AuthorizeFilter(policy));
 
@@ -118,6 +128,7 @@ builder.Services.AddScoped<IPermissionSyncService, PermissionSyncService>();
 
 // 注册授权处理器和策略提供者
 builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, ApiScopeHandler>();
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
