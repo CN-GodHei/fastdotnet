@@ -1,4 +1,6 @@
 using AutoMapper;
+using Fastdotnet.Core.Attributes;
+using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Models;
@@ -130,6 +132,7 @@ namespace Fastdotnet.Core.Controllers
     /// <typeparam name="TUpdateDto">更新 DTO 类型</typeparam>
     /// <typeparam name="TDto">输出 DTO 类型</typeparam>
     [ApiController]
+    [ApiUsageScope(ApiUsageScopeEnum.AdminOnly)]
     public abstract class GenericDtoControllerBase<TEntity, TKey, TCreateDto, TUpdateDto, TDto> : ControllerBase
         where TEntity : BaseEntity, new()
         where TKey : IEquatable<TKey>

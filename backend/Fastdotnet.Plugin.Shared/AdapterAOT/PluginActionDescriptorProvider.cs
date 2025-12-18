@@ -1,4 +1,4 @@
-﻿using Fastdotnet.Plugin.Contracts;
+using Fastdotnet.Plugin.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Fastdotnet.Plugin.Shared.AdapterAOT
 {
@@ -69,14 +71,23 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
                                 ? originalTemplate.Substring("api/".Length)
                                 : originalTemplate;
 
-                            newTemplate = $"api/plugins/{pluginId}/{pathSegment.TrimStart('/')}";
+                            // 根据方法或控制器上的ApiUsageScope特性决定路由前缀
+                            var apiScope = GetApiUsageScope(controllerActionDescriptor.MethodInfo, controllerType);
+                            var scopePrefix = GetScopePrefix(apiScope);
+
+                            newTemplate = $"api/plugins/{scopePrefix}{pluginId}/{pathSegment.TrimStart('/')}";
                             controllerActionDescriptor.AttributeRouteInfo.Template = newTemplate;
                         }
                         else
                         {
                             var controllerName = controllerActionDescriptor.ControllerName;
                             var actionName = controllerActionDescriptor.ActionName;
-                            newTemplate = $"api/plugins/{pluginId}/{controllerName}/{actionName}";
+                            
+                            // 根据方法或控制器上的ApiUsageScope特性决定路由前缀
+                            var apiScope = GetApiUsageScope(controllerActionDescriptor.MethodInfo, controllerType);
+                            var scopePrefix = GetScopePrefix(apiScope);
+                            
+                            newTemplate = $"api/plugins/{scopePrefix}{pluginId}/{controllerName}/{actionName}";
 
                             controllerActionDescriptor.AttributeRouteInfo = new AttributeRouteInfo
                             {
@@ -86,6 +97,73 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
                     }
                 }
             }
+        }
+        
+        /// <summary>
+        /// 获取API的使用范围（方法级别优先于控制器级别）
+        /// </summary>
+        private Core.Enum.ApiUsageScopeEnum GetApiUsageScope(MethodInfo methodInfo, Type controllerType)
+        {
+            // 首先检查方法上的ApiUsageScope特性
+            var methodAttributes = methodInfo.GetCustomAttributes(true);
+            foreach (var attr in methodAttributes)
+            {
+                if (attr.GetType().Name == "ApiUsageScopeAttribute")
+                {
+                    var scopeProperty = attr.GetType().GetProperty("Scope");
+                    if (scopeProperty != null)
+                    {
+                        return (Core.Enum.ApiUsageScopeEnum)scopeProperty.GetValue(attr);
+                    }
+                }
+            }
+            
+            // 如果方法上没有，则检查控制器上的ApiUsageScope特性（包括继承自基类的特性）
+            var controllerTypeInfo = IntrospectionExtensions.GetTypeInfo(controllerType);
+            
+            // 遍历控制器类型及其基类查找ApiUsageScope特性
+            while (controllerTypeInfo != null)
+            {
+                var controllerAttributes = controllerTypeInfo.GetCustomAttributes(true);
+                foreach (var attr in controllerAttributes)
+                {
+                    if (attr.GetType().Name == "ApiUsageScopeAttribute")
+                    {
+                        var scopeProperty = attr.GetType().GetProperty("Scope");
+                        if (scopeProperty != null)
+                        {
+                            return (Core.Enum.ApiUsageScopeEnum)scopeProperty.GetValue(attr);
+                        }
+                    }
+                }
+                
+                // 继续检查基类，确保不传递null给GetTypeInfo方法
+                if (controllerTypeInfo.BaseType != null)
+                {
+                    controllerTypeInfo = IntrospectionExtensions.GetTypeInfo(controllerTypeInfo.BaseType);
+                }
+                else
+                {
+                    controllerTypeInfo = null;
+                }
+            }
+            
+            // 默认返回Both，表示两端通用
+            return Core.Enum.ApiUsageScopeEnum.Both;
+        }
+        
+        /// <summary>
+        /// 根据API使用范围获取路由前缀
+        /// </summary>
+        private string GetScopePrefix(Core.Enum.ApiUsageScopeEnum apiScope)
+        {
+            return apiScope switch
+            {
+                Core.Enum.ApiUsageScopeEnum.AdminOnly => "admin/",
+                Core.Enum.ApiUsageScopeEnum.AppOnly => "app/",
+                Core.Enum.ApiUsageScopeEnum.Both => "shared/",
+                _ => ""
+            };
         }
     }
 }

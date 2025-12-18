@@ -1,4 +1,4 @@
-﻿namespace Fastdotnet.WebApi.Extensions;
+namespace Fastdotnet.WebApi.Extensions;
 
 public static class SwaggerExtensions
 {
@@ -19,7 +19,7 @@ public static class SwaggerExtensions
                 Description = "Fastdotnet 主系统 API 文档"
             });
 
-            // 为插件动态添加API文档定义
+            // 为插件动态添加API文档定义 - admin 和 app 版本
             var pluginDirs = Directory.GetDirectories(Path.Combine(AppContext.BaseDirectory, "Plugins"));
             foreach (var pluginDir in pluginDirs)
             {
@@ -36,11 +36,20 @@ public static class SwaggerExtensions
 
                         if (!string.IsNullOrEmpty(pluginId))
                         {
-                            c.SwaggerDoc($"plugin-{pluginId.ToLower()}", new OpenApiInfo
+                            // 添加 admin 版本文档
+                            c.SwaggerDoc($"plugin-{pluginId.ToLower()}-admin", new OpenApiInfo
                             {
-                                Title = $"{pluginName} 插件 API",
+                                Title = $"{pluginName} 插件 API (Admin)",
                                 Version = "v1",
-                                Description = $"Fastdotnet {pluginDescription}"
+                                Description = $"Fastdotnet {pluginDescription} - Admin端"
+                            });
+                            
+                            // 添加 app 版本文档
+                            c.SwaggerDoc($"plugin-{pluginId.ToLower()}-app", new OpenApiInfo
+                            {
+                                Title = $"{pluginName} 插件 API (App)",
+                                Version = "v1",
+                                Description = $"Fastdotnet {pluginDescription} - App端"
                             });
                         }
                     }
@@ -190,9 +199,16 @@ public static class SwaggerExtensions
 
                         if (!string.IsNullOrEmpty(pluginId))
                         {
+                            // 添加 admin 版本端点
                             c.SwaggerEndpoint(
-                                $"/swagger/plugin-{pluginId.ToLower()}/swagger.json",
-                                $"{pluginName} 插件 API v1"
+                                $"/swagger/plugin-{pluginId.ToLower()}-admin/swagger.json",
+                                $"{pluginName} 插件 API (Admin) v1"
+                            );
+                            
+                            // 添加 app 版本端点
+                            c.SwaggerEndpoint(
+                                $"/swagger/plugin-{pluginId.ToLower()}-app/swagger.json",
+                                $"{pluginName} 插件 API (App) v1"
                             );
                         }
                     }

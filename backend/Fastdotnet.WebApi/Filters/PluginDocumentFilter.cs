@@ -8,11 +8,11 @@ namespace Fastdotnet.WebApi.Filters
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             var pathsToRemove = new List<string>();
-            
+
             // 从文档名称判断是主系统文档还是插件文档
             // 文档名称格式: "main" 或 "plugin-插件名"
             var docName = context.DocumentName;
-            
+
             if (docName == "main")
             {
                 // 主系统文档 - 移除所有插件API
@@ -23,7 +23,7 @@ namespace Fastdotnet.WebApi.Filters
                     if (apiDesc != null)
                     {
                         // 检查路径是否包含插件路由前缀
-                        if (apiDesc.RelativePath != null && 
+                        if (apiDesc.RelativePath != null &&
                             apiDesc.RelativePath.StartsWith("api/plugins/", StringComparison.OrdinalIgnoreCase))
                         {
                             pathsToRemove.Add(path.Key);
@@ -33,9 +33,13 @@ namespace Fastdotnet.WebApi.Filters
             }
             else if (docName.StartsWith("plugin-"))
             {
-                // 提取插件名称
-                var currentPluginId = docName.Substring("plugin-".Length);
-                
+                // 提取插件名称和作用域
+                var nameParts = docName.Split('-');
+                var scope = nameParts[nameParts.Length - 1]; // "admin" 或 "app"
+                var currentPluginId = string.Join("-", nameParts.Skip(1).Take(nameParts.Length - 2)); // 插件ID
+                                                                                                      // 提取插件名称
+                                                                                                      //var currentPluginId = docName.Substring("plugin-".Length);
+
                 // 插件文档 - 只保留当前插件的API
                 foreach (var path in swaggerDoc.Paths)
                 {
@@ -43,15 +47,20 @@ namespace Fastdotnet.WebApi.Filters
                     if (apiDesc != null)
                     {
                         // 检查是否为插件API
-                        if (apiDesc.RelativePath != null && 
+                        if (apiDesc.RelativePath != null &&
                             apiDesc.RelativePath.StartsWith("api/plugins/", StringComparison.OrdinalIgnoreCase))
                         {
                             // 提取路径中的插件ID: api/plugins/{pluginId}/...
                             var pathSegments = apiDesc.RelativePath.Split('/');
                             if (pathSegments.Length > 2 && pathSegments[1] == "plugins")
                             {
-                                var pathPluginId = pathSegments[2].ToLower();
+                                var pathPluginId = pathSegments[3].ToLower();
                                 if (pathPluginId != currentPluginId)
+                                {
+                                    pathsToRemove.Add(path.Key);
+                                }
+                                string routerscope = pathSegments[2].ToLower();
+                                if (routerscope != scope && routerscope != "shared")
                                 {
                                     pathsToRemove.Add(path.Key);
                                 }
@@ -59,13 +68,21 @@ namespace Fastdotnet.WebApi.Filters
                         }
                         else
                         {
-                            // 非插件API也移除
-                            pathsToRemove.Add(path.Key);
+                            if (apiDesc.RelativePath != null &&
+                            apiDesc.RelativePath.StartsWith("api/auth/", StringComparison.OrdinalIgnoreCase))
+                            {
+
+                            }
+                            else
+                            {
+                                // 非插件API也移除
+                                pathsToRemove.Add(path.Key);
+                            }
                         }
                     }
                 }
             }
-            
+
             // 执行移除操作
             foreach (var path in pathsToRemove)
             {
