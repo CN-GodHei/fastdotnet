@@ -17,114 +17,7 @@ using System.Threading.Tasks;
 namespace Fastdotnet.Core.Controllers
 {
     /// <summary>
-    /// 批量更新ID列表的 DTO
-    /// </summary>
-    public class BatchUpdateByIdsDto<TUpdateDto>
-    {
-        /// <summary>
-        /// ID 列表
-        /// </summary>
-        public List<object> Ids { get; set; }
-
-        /// <summary>
-        /// 更新 DTO
-        /// </summary>
-        public TUpdateDto Dto { get; set; }
-    }
-    
-    /// <summary>
-    /// 根据条件批量更新的 DTO
-    /// </summary>
-    public class BatchUpdateByConditionDto<TUpdateDto>
-    {
-        /// <summary>
-        /// 查询条件
-        /// </summary>
-        public PageQueryByConditionDto? Query { get; set; }
-
-        /// <summary>
-        /// 更新 DTO
-        /// </summary>
-        public TUpdateDto Dto { get; set; }
-    }
-    
-    /// <summary>
-    /// 查询操作符枚举
-    /// </summary>
-    public enum QueryOperator
-    {
-        Equal = 0,
-        NotEqual = 1,
-        GreaterThan = 2,
-        GreaterThanOrEqual = 3,
-        LessThan = 4,
-        LessThanOrEqual = 5,
-        Contains = 6,
-        StartsWith = 7,
-        EndsWith = 8,
-        In = 9,
-        NotIn = 10,
-        Between = 11
-    }
-
-    /// <summary>
-    /// 查询条件项
-    /// </summary>
-    public class QueryConditionItem
-    {
-        /// <summary>
-        /// 属性名
-        /// </summary>
-        public string PropertyName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 操作符
-        /// </summary>
-        public QueryOperator Operator { get; set; }
-
-        /// <summary>
-        /// 值
-        /// </summary>
-        public object? Value { get; set; }
-
-        /// <summary>
-        /// 第二个值（用于BETWEEN等操作符）
-        /// </summary>
-        public object? Value2 { get; set; }
-    }
-
-    /// <summary>
-    /// 强类型分页查询 DTO
-    /// </summary>
-    public class TypedPageQueryDto<TConditionDto>
-    {
-        /// <summary>
-        /// 强类型查询条件
-        /// </summary>
-        public TConditionDto? TypedCondition { get; set; }
-
-        /// <summary>
-        /// 查询条件列表
-        /// </summary>
-        public List<QueryConditionItem>? Conditions { get; set; }
-
-        /// <summary>
-        /// 条件连接方式（AND/OR）
-        /// </summary>
-        public string Logic { get; set; } = "And"; // "And" or "Or"
-
-        /// <summary>
-        /// 页码（从1开始）
-        /// </summary>
-        public int PageIndex { get; set; } = 1;
-
-        /// <summary>
-        /// 页大小
-        /// </summary>
-        public int PageSize { get; set; } = 10;
-    }
-    /// <summary>
-    /// 支持 DTO 的通用Admin端控制器基类
+    /// 支持 DTO 的App端通用控制器基类
     /// </summary>
     /// <typeparam name="TEntity">实体类型</typeparam>
     /// <typeparam name="TKey">主键类型</typeparam>
@@ -132,8 +25,8 @@ namespace Fastdotnet.Core.Controllers
     /// <typeparam name="TUpdateDto">更新 DTO 类型</typeparam>
     /// <typeparam name="TDto">输出 DTO 类型</typeparam>
     [ApiController]
-    [ApiUsageScope(ApiUsageScopeEnum.AdminOnly)]
-    public abstract class GenericDtoControllerBase<TEntity, TKey, TCreateDto, TUpdateDto, TDto> : ControllerBase
+    [ApiUsageScope(ApiUsageScopeEnum.AppOnly)]
+    public abstract class AppGenericDtoControllerBase<TEntity, TKey, TCreateDto, TUpdateDto, TDto> : ControllerBase
         where TEntity : BaseEntity, new()
         where TKey : IEquatable<TKey>
         where TCreateDto : class
@@ -142,7 +35,7 @@ namespace Fastdotnet.Core.Controllers
         protected readonly IBaseService<TEntity, TKey> _service;
         protected readonly IMapper _mapper;
 
-        protected GenericDtoControllerBase(IBaseService<TEntity, TKey> service, IMapper mapper)
+        protected AppGenericDtoControllerBase(IBaseService<TEntity, TKey> service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;
@@ -694,103 +587,6 @@ namespace Fastdotnet.Core.Controllers
             return Expression.AndAlso(lowerBound, upperBound);
         }
 
-        #region 回收站相关接口
-
-        /// <summary>
-        /// 获取回收站数据（已软删除的数据）
-        /// </summary>
-        /// <param name="pageIndex">页码（从1开始）</param>
-        /// <param name="pageSize">页大小</param>
-        [HttpGet("recyclebin")]
-        public virtual async Task<PageResult<TDto>> GetRecycleBin([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default)
-        {
-            var pageResult = await _service.GetRecycleBinAsync(pageIndex, pageSize,null, SqlSugar.OrderByType.Desc, cancellationToken);
-            return new PageResult<TDto>
-            {
-                Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),
-                PageInfo = pageResult.PageInfo,
-            };
-        }
-
-        /// <summary>
-        /// 根据条件查询回收站数据 (使用 PageQueryByConditionDto)
-        /// </summary>
-        /// <param name="query">分页和查询条件</param>
-        [HttpPost("recyclebin/search")]
-        [Consumes("application/json")]
-        public virtual async Task<PageResult<TDto>> SearchRecycleBin([FromBody] PageQueryByConditionDto query, CancellationToken cancellationToken = default)
-        {
-            // 构建动态表达式
-            Expression<Func<TEntity, bool>>? whereExpression = null;
-            
-            // 如果有动态查询条件，则构建表达式
-            if (!string.IsNullOrEmpty(query.DynamicQuery))
-            {
-                whereExpression = DynamicExpressionParser.ParseLambda<TEntity, bool>(
-                    ParsingConfig.Default, 
-                    false, 
-                    query.DynamicQuery, 
-                    query.QueryParameters ?? new object[0]);
-            }
-            
-            var pageResult = await _service.GetRecycleBinAsync(
-                whereExpression,
-                query.PageIndex,
-                query.PageSize,null, SqlSugar.OrderByType.Desc, cancellationToken);
-                
-            return new PageResult<TDto>
-            {
-                Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),
-                PageInfo = pageResult.PageInfo,
-            };
-        }
-
-        /// <summary>
-        /// 恢复回收站中的实体
-        /// </summary>
-        /// <param name="id">实体ID</param>
-        /// <returns>是否恢复成功</returns>
-        [HttpPut("recyclebin/{id}/restore")]
-        public virtual async Task<bool> Restore(TKey id)
-        {
-            return await _service.RestoreAsync(id);
-        }
-
-        /// <summary>
-        /// 批量恢复回收站中的实体
-        /// </summary>
-        /// <param name="whereExpression">条件表达式</param>
-        /// <returns>恢复成功的数量</returns>
-        [HttpPost("recyclebin/restore")]
-        public virtual async Task<int> RestoreBatch([FromBody] Expression<Func<TEntity, bool>> whereExpression)
-        {
-            return await _service.RestoreAsync(whereExpression);
-        }
-
-        /// <summary>
-        /// 永久删除回收站中的实体
-        /// </summary>
-        /// <param name="id">实体ID</param>
-        /// <returns>是否删除成功</returns>
-        [HttpDelete("recyclebin/{id}/permanent")]
-        public virtual async Task<bool> PermanentDelete(TKey id)
-        {
-            return await _service.PermanentDeleteAsync(id);
-        }
-
-        /// <summary>
-        /// 根据条件永久删除回收站中的实体
-        /// </summary>
-        /// <param name="whereExpression">条件表达式</param>
-        /// <returns>删除成功的数量</returns>
-        [HttpPost("recyclebin/permanent")]
-        public virtual async Task<int> PermanentDeleteBatch([FromBody] Expression<Func<TEntity, bool>> whereExpression)
-        {
-            return await _service.PermanentDeleteAsync(whereExpression);
-        }
-
-        #endregion
-
         #region 映射方法
 
 
@@ -804,12 +600,12 @@ namespace Fastdotnet.Core.Controllers
     /// <typeparam name="TCreateDto">创建 DTO 类型</typeparam>
     /// <typeparam name="TUpdateDto">更新 DTO 类型</typeparam>
     /// <typeparam name="TDto">输出 DTO 类型</typeparam>
-    public abstract class GenericDtoControllerBase<TEntity, TCreateDto, TUpdateDto, TDto> : GenericDtoControllerBase<TEntity, string, TCreateDto, TUpdateDto, TDto>
+    public abstract class AppGenericDtoControllerBase<TEntity, TCreateDto, TUpdateDto, TDto> : GenericDtoControllerBase<TEntity, string, TCreateDto, TUpdateDto, TDto>
         where TEntity : BaseEntity, new()
         where TCreateDto : class
         where TUpdateDto : class
     {
-        protected GenericDtoControllerBase(IBaseService<TEntity, string> service, IMapper mapper) : base(service, mapper)
+        protected AppGenericDtoControllerBase(IBaseService<TEntity, string> service, IMapper mapper) : base(service, mapper)
         {
         }
     }

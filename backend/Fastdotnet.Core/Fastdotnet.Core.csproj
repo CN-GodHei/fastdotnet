@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\GenericControllerBase.cs" />
     <Compile Remove="Initializers\PermissionSyncInitializer.cs" />
     <Compile Remove="Plugin\IPlugin.cs" />
     <Compile Remove="Plugin\PluginConfig.cs" />
