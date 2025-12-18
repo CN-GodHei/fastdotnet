@@ -146,7 +146,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// <returns></returns>
         [HttpGet("preview/{configId}")]
         [Authorize(Policy = Permissions.System.CodeGen.View)]
-        public async Task<string> PreviewCode(string configId, [FromQuery] string type = "entity")
+        public async Task<string> PreviewCode(string configId, [FromQuery] string type = "entity",string apiscop="Admin")
         {
             if (string.IsNullOrEmpty(configId))
             {
@@ -174,8 +174,8 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 "entity" => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumnsconfig, config.NameSpace, config.TableComment),
                 "dto" => await _codeGenConfigService.GenerateDtoContentAsync(entityName, tableColumnsconfig, config.NameSpace, config.TableComment),
                 "service" => await _codeGenConfigService.GenerateServiceImplementationContentAsync(entityName, config.NameSpace, config.TableComment),
-                "controller" => await _codeGenConfigService.GenerateControllerContentAsync(entityName, config.NameSpace, config.TableComment),
-                "frontend" => await _codeGenConfigService.GenerateFrontendVueContentAsync(entityName,  config.TableName, config.PagePath, config.TableComment, tableColumnsconfig),
+                "controller" => await _codeGenConfigService.GenerateControllerContentAsync(entityName, config.NameSpace, config.TableComment, apiscop),
+                "frontend" => await _codeGenConfigService.GenerateFrontendVueContentAsync(entityName,  config.TableName, config.PagePath, config.TableComment, tableColumnsconfig, apiscop),
                 _ => await _codeGenConfigService.GenerateEntityContentAsync(config.TableName, entityName, tableColumnsconfig, config.NameSpace, config.TableComment) // 默认返回实体代码
             };
         }

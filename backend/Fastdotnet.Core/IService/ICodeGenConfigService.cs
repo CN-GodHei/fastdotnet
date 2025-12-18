@@ -59,7 +59,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="entityName">实体名</param>
         /// <param name="nameSpace">命名空间</param>
         /// <returns></returns>
-        Task<string> GenerateControllerContentAsync(string entityName, string nameSpace, string TableComment);
+        Task<string> GenerateControllerContentAsync(string entityName, string nameSpace, string TableComment, string apiscop);
         
         /// <summary>
         /// 生成前端页面代码
@@ -69,7 +69,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="tableName">表名</param>
         /// <param name="pagePath">页面路径</param>
         /// <returns></returns>
-        Task<string> GenerateFrontendVueContentAsync(string entityName, string tableName, string pagePath, string TableComment, List<FdCodeGenConfig> configcolumns);
+        Task<string> GenerateFrontendVueContentAsync(string entityName, string tableName, string pagePath, string TableComment, List<FdCodeGenConfig> configcolumns, string apiscop);
 
         string GetEffectTypeByColumnName(string columnName, string dataType);
 

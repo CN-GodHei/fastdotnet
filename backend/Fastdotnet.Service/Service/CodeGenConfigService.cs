@@ -448,7 +448,7 @@ namespace {nameSpace ?? "Fastdotnet.Service.Service"}
 }}";
         }
 
-        public async Task<string> GenerateControllerContentAsync(string entityName, string nameSpace, string TableComment)
+        public async Task<string> GenerateControllerContentAsync(string entityName, string nameSpace, string TableComment,string apiscop)
         {
             return $@"using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.Entities;
@@ -465,7 +465,7 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
     /// {entityName} 控制器
     /// </summary>
     [Route(""api/[controller]"")]
-    public class {entityName}Controller : GenericDtoControllerBase<{entityName}, string, Create{entityName}Dto, Update{entityName}Dto, {entityName}Dto>
+    public class {entityName}Controller : {getbasecontroller(apiscop)}<{entityName}, string, Create{entityName}Dto, Update{entityName}Dto, {entityName}Dto>
     {{
         public {entityName}Controller(
             //I{entityName}Service {entityName.ToLower()}Service,
@@ -477,9 +477,18 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
     }}
 }}";
         }
+        private string getbasecontroller(string apiscop)
+        {
+            string baseControlelr = "GenericDtoControllerBase";
+            if (apiscop=="App")
+            {
+                baseControlelr = "AppGenericDtoControllerBase";
+            }
+            return baseControlelr;
+        }
 
-
-        public async Task<string> GenerateFrontendVueContentAsync(string entityName,  string busName, string pagePath, string TableComment, List<FdCodeGenConfig> configcolumns)
+        public async Task<string> GenerateFrontendVueContentAsync(string entityName,  string busName, string pagePath, string TableComment, 
+            List<FdCodeGenConfig> configcolumns, string apiscop)
         {
             // 使用反射获取BaseEntity的所有公共属性名称
             var baseEntityProperties = GetBaseEntityPropertyNames();
@@ -625,7 +634,7 @@ const getList = async () => {{
 	}}
     // 调试日志
     //console.log('Search request body:', searchBody);
-		const response = await {entityName}Api.postAdmin{entityName}PageSearch(searchBody);
+		const response = await {entityName}Api.post{apiscop}{entityName}PageSearch(searchBody);
 		state.tableData.data = response.Items as APIModel.{entityName}Dto[] || [] as APIModel.{entityName}Dto[];
 		state.pagination.total = response.PageInfo?.Total || 0;
 	}} catch (error) {{
@@ -684,12 +693,12 @@ const submitForm = () => {{
 			if (state.dialog.type === 'update'&&state.formData.{configcolumns.Where(w => w.ColumnKey == true).FirstOrDefault().PropertyName ?? configcolumns.FirstOrDefault().PropertyName}) {{
 				// 更新接口调用
 				const updateData = {{ ...state.formData }} as APIModel.Update{entityName}Dto;
-				await {entityName}Api.putAdmin{entityName}Id({{ id: state.formData.Id }}, updateData);
+				await {entityName}Api.put{apiscop}{entityName}Id({{ id: state.formData.Id }}, updateData);
 				ElMessage.success('更新成功');
 			}} else {{
 				// 新增接口调用
                 const createData= {{ ...state.formData }} as APIModel.Create{entityName}Dto;
-                await {entityName}Api.postAdmin{entityName}(createData);
+                await {entityName}Api.post{apiscop}{entityName}(createData);
 				ElMessage.success('添加成功');
 			}}
 			state.dialog.visible = false;
@@ -706,7 +715,7 @@ const handleDelete = (row: APIModel.{entityName}Dto) => {{
 		ElMessageBox.confirm('确定删除吗？')
 		.then(async () => {{
 			// 删除接口调用
-			await {entityName}Api.deleteAdmin{entityName}Id({{ id: row.Id as string }});
+			await {entityName}Api.delete{apiscop}{entityName}Id({{ id: row.Id as string }});
 			ElMessage.success('删除成功');
 			getList();
 		}})
