@@ -82,6 +82,16 @@ declare namespace APIModel {
 		Avatar?: string;
 	};
 
+	type CreateFdAppUserDto = {
+		Username: string;
+		Email: string;
+		PhoneNumber: string;
+		Nickname?: string;
+		AvatarUrl: string;
+		Status?: number;
+		RegistrationDate?: string;
+	};
+
 	type CreateFdBlacklistDto = {
 		Type: string;
 		Value: string;
@@ -542,6 +552,21 @@ declare namespace APIModel {
 	type FdAdminUserDtoPageResult = {
 		PageInfo?: PageInfo;
 		Items?: FdAdminUserDto[];
+	};
+
+	type FdAppUserDto = {
+		Username?: string;
+		Email?: string;
+		PhoneNumber?: string;
+		Nickname?: string;
+		AvatarUrl?: string;
+		Status?: number;
+		RegistrationDate?: string;
+	};
+
+	type FdAppUserDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdAppUserDto[];
 	};
 
 	type FdBlacklistBooleanFuncExpression = {
@@ -1651,6 +1676,21 @@ declare namespace APIModel {
 	type UpdateFdAdminUserDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateFdAdminUserDto;
+	};
+
+	type UpdateFdAppUserDto = {
+		Username?: string;
+		Email?: string;
+		PhoneNumber?: string;
+		Nickname?: string;
+		AvatarUrl?: string;
+		Status?: number;
+		RegistrationDate?: string;
+	};
+
+	type UpdateFdAppUserDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdAppUserDto;
 	};
 
 	type UpdateFdBlacklistDto = {

@@ -1,4 +1,5 @@
 using Fastdotnet.Core.Enum;
+using Fastdotnet.Core.Services.System;
 
 namespace Fastdotnet.WebApi.Controllers.System
 {
@@ -14,14 +15,17 @@ namespace Fastdotnet.WebApi.Controllers.System
         private readonly IAuthService _authService;
         private readonly IVerificationCodeManager _verificationCodeManager;
         private readonly ICaptcha _captcha;
+        private readonly ICurrentUser _currentUser;
         private readonly IRepository<SystemInfoConfig> _systemConfigRepository;
 
-        public AuthController(IAuthService authService, IVerificationCodeManager verificationCodeManager, ICaptcha captcha, IRepository<SystemInfoConfig> systemConfigRepository)
+        public AuthController(IAuthService authService, IVerificationCodeManager verificationCodeManager, ICaptcha captcha,
+            IRepository<SystemInfoConfig> systemConfigRepository,ICurrentUser currentUser)
         {
             _authService = authService;
             _verificationCodeManager = verificationCodeManager;
             _captcha = captcha;
             _systemConfigRepository = systemConfigRepository;
+            _currentUser = currentUser;
         }
 
         /// <summary>
@@ -33,7 +37,8 @@ namespace Fastdotnet.WebApi.Controllers.System
         public async Task<LoginResultDto> AdminLogin([FromBody] LoginDto dto)
         {
             // 1. 检查系统配置是否启用验证码
-            var enableCaptchaConfig = await _systemConfigRepository.GetFirstAsync(c => c.Code == "EnableCaptcha");
+            //var enableCaptchaConfig = await _systemConfigRepository.GetFirstAsync(c => c.Code == "EnableCaptcha");
+            var enableCaptchaConfig = await _systemConfigRepository.GetFirstAsync(c => c.Code == "EnableCaptcha" && c.Belong == EnumHelper.ParseEnum<SystemCategory>(_currentUser.UserName));
             var enableCaptcha = enableCaptchaConfig?.Value?.ToString()?.ToLower() == "true";
 
             // 2. 如果启用了验证码，则进行验证
@@ -77,7 +82,7 @@ namespace Fastdotnet.WebApi.Controllers.System
         public async Task<LoginResultDto> AppLogin([FromBody] LoginDto dto)
         {
             // 1. 检查系统配置是否启用验证码
-            var enableCaptchaConfig = await _systemConfigRepository.GetFirstAsync(c => c.Code == "EnableCaptcha");
+            var enableCaptchaConfig = await _systemConfigRepository.GetFirstAsync(c => c.Code == "EnableCaptcha"&&c.Belong==EnumHelper.ParseEnum<SystemCategory>(_currentUser.UserName));
             var enableCaptcha = enableCaptchaConfig?.Value?.ToString()?.ToLower() == "true";
 
             // 2. 如果启用了验证码，则进行验证

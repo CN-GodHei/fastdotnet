@@ -1,5 +1,7 @@
+using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Models.Base;
 using Fastdotnet.Core.Models.Interfaces;
+using Newtonsoft.Json.Linq;
 using SqlSugar;
 
 namespace Fastdotnet.Core.Entities.System
@@ -9,6 +11,7 @@ namespace Fastdotnet.Core.Entities.System
     /// </summary>
     [SugarTable("fd_role", "角色")]
     [SugarIndex("idx_role_code", nameof(Code), OrderByType.Asc, IsUnique = true)]
+    [SugarIndex("idx_role_code_belong", nameof(Code), OrderByType.Asc, nameof(Belong), OrderByType.Asc, true)]
     public class FdRole : BaseEntity, ISoftDelete
     {
         /// <summary>
@@ -46,5 +49,17 @@ namespace Fastdotnet.Core.Entities.System
         /// </summary>
         [SugarColumn(ColumnName = "is_system", ColumnDescription = "是否为系统内置角色")]
         public bool IsSystem { get; set; } = false;
+
+        /// <summary>
+        /// 是否为默认角色
+        /// </summary>
+        [SugarColumn(ColumnName = "is_default", ColumnDescription = "是否为默认角色")]
+        public bool IsDefault { get; set; } = false;
+
+        /// <summary>
+        /// 属于
+        /// </summary>
+        [SugarColumn(ColumnName = "belong", IsNullable = false, ColumnDescription = "属于管理端还是应用端")]
+        public SystemCategory Belong { get; set; }
     }
 }

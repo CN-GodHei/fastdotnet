@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace Fastdotnet.Service.Initializers
 {
@@ -22,15 +23,26 @@ namespace Fastdotnet.Service.Initializers
 
         public async Task InitializeAsync()
         {
-            if (await _Repository.ExistsAsync(a => a.Id != null))
+            //if (await _Repository.ExistsAsync(a => a.Id != null))
+            //{
+            //    return;
+            //}
+            var entitys = new List<FdAppUser>
             {
-                return;
+                new FdAppUser { Id = "12055423131517957", Username = "admintest", Nickname = "AdminTest", Email = "fastdotnet@test.com", Password = "123456", PhoneNumber = "159****7417" }
+            };
+
+            // 直接使用条件查询已存在的项
+            var existing = await _Repository.GetListAsync(m => entitys.Select(c => c.Id).Contains(m.Id));
+            var existingIds = existing.Select(m => m.Id).ToHashSet();
+
+            // 只插入不存在的项
+            var ToInsert = entitys.Where(c => !existingIds.Contains(c.Id)).ToList();
+
+            if (ToInsert.Any())
+            {
+                await _Repository.InsertRangeAsync(ToInsert);
             }
-            var entity = new FdAppUser {Username="admintest", Nickname="AdminTest",Email="fastdotnet@test.com",Password="123456",PhoneNumber="159****7417"};
-
-            await _Repository.InsertAsync(entity);
-
-            //_logger.LogInformation("Finish: Default Email Config initialization complete.");
         }
     }
 }
