@@ -6,8 +6,10 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     [Route("api/admin/[controller]")]
     public class FdSystemInfoConfigController : GenericDtoControllerBase<SystemInfoConfig, CreateFdSystemInfoConfigDto, UpdateFdSystemInfoConfigDto, FdSystemInfoConfigDto>
     {
-        public FdSystemInfoConfigController(IBaseService<SystemInfoConfig, string> service, IMapper mapper) : base(service, mapper)
+        private readonly ICurrentUser _currentUser;
+        public FdSystemInfoConfigController(IBaseService<SystemInfoConfig, string> service, IMapper mapper, ICurrentUser currentUser) : base(service, mapper)
         {
+            _currentUser = currentUser;
         }
 
         protected override async Task BeforeCreate(SystemInfoConfig entity, CreateFdSystemInfoConfigDto dto)
@@ -65,7 +67,11 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         [ApiUsageScope(ApiUsageScopeEnum.Both)]
         public async Task<Dictionary<string, object>> GetPublicConfigs()
         {
-            var configs = await _service.GetAllAsync();
+            if (string.IsNullOrEmpty(_currentUser.UserType))
+            {
+                return null;
+            }
+            var configs = await _service.GetListAsync(x=>x.Belong==EnumHelper.ParseEnum<SystemCategory>(_currentUser.UserType));
             return configs.ToDictionary(c => c.Code, c => c.Value);
         }
     }
