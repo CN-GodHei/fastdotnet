@@ -1,3 +1,4 @@
+using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Models.Base;
 using SqlSugar;
 
@@ -7,7 +8,7 @@ namespace Fastdotnet.Core.Entities.System
     /// 系统配置表(键值对)
     /// </summary>
     [SugarTable("fd_system_info_config", "系统信息配置")]
-    [SugarIndex("idx_config_code", nameof(Code), OrderByType.Asc, IsUnique = true)]
+    [SugarIndex("idx_config_code", nameof(Code), OrderByType.Asc, nameof(Belong), OrderByType.Asc, true)]
     public class SystemInfoConfig : BaseEntity
     {
         /// <summary>
@@ -39,5 +40,11 @@ namespace Fastdotnet.Core.Entities.System
         /// </summary>
         [SugarColumn(ColumnName = "is_system", ColumnDescription = "是否为系统内置")]
         public bool IsSystem { get; set; } = false;
+
+        /// <summary>
+        /// 属于
+        /// </summary>
+        [SugarColumn(ColumnName = "belong", IsNullable = false, ColumnDescription = "属于管理端还是应用端")]
+        public SystemCategory Belong { get; set; } 
     }
 }
