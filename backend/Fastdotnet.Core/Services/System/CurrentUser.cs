@@ -39,8 +39,17 @@ namespace Fastdotnet.Core.Services.System
         {
             get
             {
-                // 这里的 "category" 需要与您在生成 Token 时使用的 Claim Key 一致
-                return User?.Claims.FirstOrDefault(c => c.Type == "category")?.Value;
+                // 首先尝试从token中获取category
+                var userType = User?.Claims.FirstOrDefault(c => c.Type == "category")?.Value;
+                
+                // 如果token中没有category，则从请求头中获取System-Category
+                if (string.IsNullOrEmpty(userType))
+                {
+                    userType = _httpContextAccessor.HttpContext?.Request.Headers["System-Category"].FirstOrDefault();
+                }
+                
+                // 如果都没有获取到，返回默认值"Admin"
+                return string.IsNullOrEmpty(userType) ? "Admin" : userType;
             }
         }
     }
