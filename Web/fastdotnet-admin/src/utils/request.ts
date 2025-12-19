@@ -33,6 +33,11 @@ service.interceptors.request.use(
 		} else {
 			// //console.log('Request Interceptor - No Token Found');
 		}
+		// 添加系统类别到请求头
+		const systemCategory = import.meta.env.VITE_SYSTEM_CATEGORY;
+		if (systemCategory) {
+			config.headers!['System-Category'] = systemCategory;
+		}
 		return config;
 	},
 	(error) => {
