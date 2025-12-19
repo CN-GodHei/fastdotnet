@@ -3,7 +3,6 @@
 // API 更新时间：
 // API 唯一标识：
 import * as Auth from './Auth';
-import * as AppMenus from './AppMenus';
 import * as Captcha from './Captcha';
 import * as CodeGen from './CodeGen';
 import * as CodeGenConfig from './CodeGenConfig';
@@ -22,7 +21,6 @@ import * as Plugin from './Plugin';
 import * as System from './System';
 export default {
 	Auth,
-	AppMenus,
 	Captcha,
 	CodeGen,
 	CodeGenConfig,

@@ -235,6 +235,8 @@ export async function getCodeGenPreviewConfigId(
 		params: {
 			// type has a default value: entity
 			type: 'entity',
+			// apiscop has a default value: Admin
+			apiscop: 'Admin',
 			...queryParams,
 		},
 		...(options || {}),

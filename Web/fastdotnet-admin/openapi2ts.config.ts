@@ -1,6 +1,6 @@
 export default [
     {
-  schemaPath: 'http://localhost:18889/swagger/main/swagger.json',
+  schemaPath: 'http://localhost:18889/swagger/main-admin/swagger.json',
   serversPath: './src/api',
   projectName:'fd-system-api',//项目名称
   namespace:"APIModel",//默认API
