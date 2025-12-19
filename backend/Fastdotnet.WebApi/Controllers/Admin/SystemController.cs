@@ -1,4 +1,6 @@
-﻿namespace Fastdotnet.WebApi.Controllers.Admin
+﻿using Fastdotnet.Core.Enum;
+
+namespace Fastdotnet.WebApi.Controllers.Admin
 {
     /// <summary>
     /// 系统信息控制器
@@ -15,6 +17,7 @@
         [HttpGet("machine-fingerprint")]
         [ProducesResponseType(typeof(string), 200)]
         [AllowAnonymous]
+        [ApiUsageScope(ApiUsageScopeEnum.Both)]
         public IActionResult GetMachineFingerprint()
         {
             var fingerprint = LicenseValidator.GenerateMachineFingerprint();

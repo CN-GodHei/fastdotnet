@@ -1,8 +1,11 @@
+using Fastdotnet.Core.Enum;
+
 namespace Fastdotnet.WebApi.Controllers.App
 {
     [ApiController]
     [Route("api/app/menus")]
     [Authorize]
+    [ApiUsageScope(ApiUsageScopeEnum.AppOnly)]
     public class AppMenusController : ControllerBase
     {
         private readonly IMenuService _menuService;

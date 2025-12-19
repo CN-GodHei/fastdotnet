@@ -1,3 +1,5 @@
+using Fastdotnet.Core.Enum;
+
 namespace Fastdotnet.WebApi.Controllers.System
 {
     /// <summary>
@@ -6,6 +8,7 @@ namespace Fastdotnet.WebApi.Controllers.System
     [ApiController]
     [Route("api/auth")]
     [AllowAnonymous] // 将此控制器标记为允许匿名访问
+    [ApiUsageScope(ApiUsageScopeEnum.Both)]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;

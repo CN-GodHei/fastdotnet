@@ -1,3 +1,5 @@
+using Fastdotnet.Core.Enum;
+
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
@@ -60,6 +62,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// <returns>返回一个包含所有配置的字典</returns>
         [HttpGet("public/all")]
         [AllowAnonymous] // 此接口允许匿名访问
+        [ApiUsageScope(ApiUsageScopeEnum.Both)]
         public async Task<Dictionary<string, object>> GetPublicConfigs()
         {
             var configs = await _service.GetAllAsync();

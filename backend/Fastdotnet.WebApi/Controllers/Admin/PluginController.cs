@@ -1,7 +1,10 @@
+using Fastdotnet.Core.Enum;
+
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ApiUsageScope(ApiUsageScopeEnum.AdminOnly)]
     public class PluginController : ControllerBase
     {
         private readonly IPluginLoadService _pluginLoadService;

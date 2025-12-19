@@ -1,3 +1,5 @@
+using Fastdotnet.Core.Enum;
+
 namespace Fastdotnet.WebApi.Controllers
 {
     /// <summary>
@@ -6,6 +8,7 @@ namespace Fastdotnet.WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous] // 允许匿名访问
+    [ApiUsageScope(ApiUsageScopeEnum.Both)]
     public class CaptchaController : ControllerBase
     {
         private readonly ICaptcha _captcha;
