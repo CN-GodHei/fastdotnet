@@ -11,8 +11,7 @@ namespace Fastdotnet.WebApi.Controllers.App
         }
 
         [HttpGet("getUserInfo")]
-        [Authorize(Policy = Permissions.Admin.Users.View)]
-        public async Task<FdAdminUserDto> getUserInfo()
+        public async Task<FdAppUserDto> getUserInfo()
         {
             // 获取当前用户信息
             var user = await _service.GetByIdAsync(_currentUser.Id);
@@ -29,7 +28,7 @@ namespace Fastdotnet.WebApi.Controllers.App
             //var buttons = await _adminUserService.GetUserButtonPermissionsAsync(_currentUser.Id);
 
             // 构造返回对象
-            var userDto = _mapper.Map<FdAdminUserDto>(user);
+            var userDto = _mapper.Map<FdAppUserDto>(user);
             //userDto.RoleIds = roleIds;
             //userDto.Buttons = buttons;
 
