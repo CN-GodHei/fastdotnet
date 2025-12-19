@@ -34,11 +34,13 @@ namespace Fastdotnet.Core.Controllers
     {
         protected readonly IBaseService<TEntity, TKey> _service;
         protected readonly IMapper _mapper;
+        protected readonly ICurrentUser _currentUser;
 
-        protected AppGenericDtoControllerBase(IBaseService<TEntity, TKey> service, IMapper mapper)
+        protected AppGenericDtoControllerBase(IBaseService<TEntity, TKey> service, IMapper mapper, ICurrentUser currentUser)
         {
             _service = service;
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         /// <summary>
@@ -600,12 +602,12 @@ namespace Fastdotnet.Core.Controllers
     /// <typeparam name="TCreateDto">创建 DTO 类型</typeparam>
     /// <typeparam name="TUpdateDto">更新 DTO 类型</typeparam>
     /// <typeparam name="TDto">输出 DTO 类型</typeparam>
-    public abstract class AppGenericDtoControllerBase<TEntity, TCreateDto, TUpdateDto, TDto> : GenericDtoControllerBase<TEntity, string, TCreateDto, TUpdateDto, TDto>
+    public abstract class AppGenericDtoControllerBase<TEntity, TCreateDto, TUpdateDto, TDto> : AppGenericDtoControllerBase<TEntity, string, TCreateDto, TUpdateDto, TDto>
         where TEntity : BaseEntity, new()
         where TCreateDto : class
         where TUpdateDto : class
     {
-        protected AppGenericDtoControllerBase(IBaseService<TEntity, string> service, IMapper mapper) : base(service, mapper)
+        protected AppGenericDtoControllerBase(IBaseService<TEntity, string> service, IMapper mapper, ICurrentUser currentUser) : base(service, mapper, currentUser)
         {
         }
     }

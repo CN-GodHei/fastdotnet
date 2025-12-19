@@ -141,11 +141,13 @@ namespace Fastdotnet.Core.Controllers
     {
         protected readonly IBaseService<TEntity, TKey> _service;
         protected readonly IMapper _mapper;
+        protected readonly ICurrentUser _currentUser;
 
-        protected GenericDtoControllerBase(IBaseService<TEntity, TKey> service, IMapper mapper)
+        protected GenericDtoControllerBase(IBaseService<TEntity, TKey> service, IMapper mapper, ICurrentUser currentUser)
         {
             _service = service;
             _mapper = mapper;
+            _currentUser = currentUser;
         }
 
         /// <summary>
@@ -809,7 +811,7 @@ namespace Fastdotnet.Core.Controllers
         where TCreateDto : class
         where TUpdateDto : class
     {
-        protected GenericDtoControllerBase(IBaseService<TEntity, string> service, IMapper mapper) : base(service, mapper)
+        protected GenericDtoControllerBase(IBaseService<TEntity, string> service, IMapper mapper, ICurrentUser currentUser) : base(service, mapper, currentUser)
         {
         }
     }
