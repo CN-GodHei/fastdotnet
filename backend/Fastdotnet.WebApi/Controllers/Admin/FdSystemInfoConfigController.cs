@@ -6,10 +6,8 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     [Route("api/admin/[controller]")]
     public class FdSystemInfoConfigController : GenericDtoControllerBase<SystemInfoConfig, CreateFdSystemInfoConfigDto, UpdateFdSystemInfoConfigDto, FdSystemInfoConfigDto>
     {
-        private readonly ICurrentUser _currentUser;
-        public FdSystemInfoConfigController(IBaseService<SystemInfoConfig, string> service, IMapper mapper, ICurrentUser currentUser) : base(service, mapper)
+        public FdSystemInfoConfigController(IBaseService<SystemInfoConfig, string> service, IMapper mapper, ICurrentUser currentUser) : base(service, mapper, currentUser)
         {
-            _currentUser = currentUser;
         }
 
         protected override async Task BeforeCreate(SystemInfoConfig entity, CreateFdSystemInfoConfigDto dto)
