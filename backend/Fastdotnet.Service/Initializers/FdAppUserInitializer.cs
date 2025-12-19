@@ -1,5 +1,6 @@
 ﻿using Fastdotnet.Core.Entities.App;
 using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;
 using Microsoft.Extensions.Logging;
@@ -15,10 +16,14 @@ namespace Fastdotnet.Service.Initializers
     public class FdAppUserInitializer : IApplicationInitializer
     {
         private readonly IRepository<FdAppUser> _Repository;
+        private readonly IRepository<FdAppUserRole> _UserRoleRepository;
+        private readonly IRepository<FdRole> _fdroleRepository;
 
-        public FdAppUserInitializer(IRepository<FdAppUser> Repository)
+        public FdAppUserInitializer(IRepository<FdAppUser> Repository, IRepository<FdAppUserRole> userRoleRepository, IRepository<FdRole> fdroleRepository)
         {
             _Repository = Repository;
+            _UserRoleRepository = userRoleRepository;
+            _fdroleRepository = fdroleRepository;
         }
 
         public async Task InitializeAsync()
@@ -42,6 +47,31 @@ namespace Fastdotnet.Service.Initializers
             if (ToInsert.Any())
             {
                 await _Repository.InsertRangeAsync(ToInsert);
+            }
+            const string superAdminRoleCode = "SUPER_ADMIN";
+            const string APP_NOMAL_ROLECODE = "APP_ROLE_001";
+            var _entitys = new List<FdRole>
+            {
+                //new FdRole{Name = "超级角色",Code = superAdminRoleCode, Category = "Admin",IsSystem = true,Description = "拥有系统所有权限", Belong= SystemCategory.Admin},
+                new FdRole{Name = "普通角色",Code = APP_NOMAL_ROLECODE, Category = "APP",IsSystem = true,Description = "APP端普通角色", Belong= SystemCategory.App},
+            };
+
+            // 直接使用条件查询已存在的项
+            var existingrole = await _fdroleRepository.GetListAsync(m => _entitys.Select(c => c.Code).Contains(m.Code));
+            var existingRoleIds = existingrole.Select(m => m.Code).ToHashSet();
+
+            // 只插入不存在的项
+            var RoleToInsert = _entitys.Where(c => !existingIds.Contains(c.Code)).ToList();
+
+            if (ToInsert.Any())
+            {
+                await _fdroleRepository.InsertRangeAsync(RoleToInsert);
+            }
+            var userrole = await _UserRoleRepository.GetFirstAsync(x => x.AppUserId == entitys.FirstOrDefault().Id);
+            if (userrole == null)
+            {
+                var temp = _fdroleRepository.GetFirstAsync(x => x.Code == APP_NOMAL_ROLECODE).GetAwaiter().GetResult();
+                await _UserRoleRepository.InsertAsync(new FdAppUserRole { RoleId = temp.Id, AppUserId = entitys.FirstOrDefault().Id });
             }
         }
     }
