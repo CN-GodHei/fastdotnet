@@ -11,12 +11,20 @@ public static class SwaggerExtensions
     {
         services.AddSwaggerGen(c =>
         {
-            // 添加主API文档
-            c.SwaggerDoc("main", new OpenApiInfo
+            // 添加主API文档 - admin 版本
+            c.SwaggerDoc("main-admin", new OpenApiInfo
             {
                 Title = "主系统 API",
                 Version = "v1",
-                Description = "Fastdotnet 主系统 API 文档"
+                Description = "Fastdotnet 主系统 API 文档（Admin端）"
+            });
+            
+            // 添加主API文档 - app 版本
+            c.SwaggerDoc("main-app", new OpenApiInfo
+            {
+                Title = "主系统 API",
+                Version = "v1",
+                Description = "Fastdotnet 主系统 API 文档（App端）"
             });
 
             // 为插件动态添加API文档定义 - admin 和 app 版本
@@ -173,8 +181,11 @@ public static class SwaggerExtensions
 
         app.UseSwaggerUI(c =>
         {
-            // 主文档
-            c.SwaggerEndpoint("/swagger/main/swagger.json", "主系统 API v1");
+            // 主文档 - admin 版本
+            c.SwaggerEndpoint("/swagger/main-admin/swagger.json", "主系统 API (Admin) v1");
+            
+            // 主文档 - app 版本
+            c.SwaggerEndpoint("/swagger/main-app/swagger.json", "主系统 API (App) v1");
 
             // 插件文档
             var pluginsPath = Path.Combine(AppContext.BaseDirectory, PluginsFolderName);
