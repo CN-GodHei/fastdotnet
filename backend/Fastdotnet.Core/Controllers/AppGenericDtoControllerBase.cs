@@ -42,12 +42,16 @@ namespace Fastdotnet.Core.Controllers
             _mapper = mapper;
             _currentUser = currentUser;
         }
-
+        protected AppGenericDtoControllerBase(IBaseService<TEntity, TKey> service, IMapper mapper)
+        {
+            _service = service;
+            _mapper = mapper;
+        }
         /// <summary>
         /// 获取所有实体
         /// </summary>
         [HttpGet]
-        public virtual async Task<List<TDto>> GetAll(CancellationToken cancellationToken=default)
+        public virtual async Task<List<TDto>> GetAll(CancellationToken cancellationToken = default)
         {
             var entities = await _service.GetAllAsync(cancellationToken);
             return _mapper.Map<List<TDto>>(entities);
@@ -90,22 +94,22 @@ namespace Fastdotnet.Core.Controllers
         {
             // 构建动态表达式
             Expression<Func<TEntity, bool>>? whereExpression = null;
-            
+
             // 如果有动态查询条件，则构建表达式
             if (!string.IsNullOrEmpty(query.DynamicQuery))
             {
                 whereExpression = DynamicExpressionParser.ParseLambda<TEntity, bool>(
-                    ParsingConfig.Default, 
-                    false, 
-                    query.DynamicQuery, 
+                    ParsingConfig.Default,
+                    false,
+                    query.DynamicQuery,
                     query.QueryParameters ?? new object[0]);
             }
-            
+
             var pageResult = await _service.GetPageAsync(
                 whereExpression,
                 query.PageIndex,
                 query.PageSize);
-                
+
             return new PageResult<TDto>
             {
                 Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),
@@ -122,15 +126,15 @@ namespace Fastdotnet.Core.Controllers
         {
             dto.IsValid();
             var entity = _mapper.Map<TEntity>(dto);
-            
+
             // 可以在子类中重写BeforeCreate方法来添加自定义逻辑
             await BeforeCreate(entity, dto);
-            
+
             var result = await _service.InsertAsync(entity);
-            
+
             // 可以在子类中重写AfterCreate方法来添加自定义逻辑
             await AfterCreate(result, dto);
-            
+
             return _mapper.Map<TDto>(result);
         }
 
@@ -163,7 +167,7 @@ namespace Fastdotnet.Core.Controllers
         [HttpPost("batch")]
         public virtual async Task<int> CreateMany([FromBody] List<TCreateDto> dtos)
         {
-            if (dtos==null)
+            if (dtos == null)
             {
                 throw new BusinessException("参数不能为空!");
             }
@@ -222,12 +226,12 @@ namespace Fastdotnet.Core.Controllers
 
             // 可以在子类中重写BeforeUpdate方法来添加自定义逻辑
             await BeforeUpdate(existing, existing, dto);
-            
+
             var result = await _service.UpdateAsync(existing);
-            
+
             // 可以在子类中重写AfterUpdate方法来添加自定义逻辑
             await AfterUpdate(result, dto);
-            
+
             return _mapper.Map<TDto>(result);
         }
 
@@ -294,12 +298,12 @@ namespace Fastdotnet.Core.Controllers
 
             // 可以在子类中重写BeforeDelete方法来添加自定义逻辑
             await BeforeDelete(existing);
-            
+
             var result = await _service.DeleteAsync(id);
-            
+
             // 可以在子类中重写AfterDelete方法来添加自定义逻辑
             await AfterDelete(id, result);
-            
+
             return result;
         }
 
@@ -352,7 +356,7 @@ namespace Fastdotnet.Core.Controllers
             {
                 throw new BusinessException("参数不能为空!");
             }
-            
+
             dtos.IsValid();
             var updatedEntities = _mapper.Map<List<TEntity>>(dtos);
 
@@ -382,7 +386,7 @@ namespace Fastdotnet.Core.Controllers
 
             // 使用 AutoMapper 将 DTO 映射为实体，以便提取要更新的字段
             var updateEntity = _mapper.Map<TEntity>(updateInfo.Dto);
-            
+
             // 获取要更新的字段和值
             var updateColumns = new Dictionary<string, object>();
             var updateEntityProps = typeof(TEntity).GetProperties()
@@ -405,14 +409,14 @@ namespace Fastdotnet.Core.Controllers
 
             // 使用动态查询条件
             Expression<Func<TEntity, bool>>? whereExpression = null;
-            
+
             // 如果提供了动态查询条件，则构建表达式
             if (!string.IsNullOrEmpty(updateInfo.Query?.DynamicQuery))
             {
                 whereExpression = DynamicExpressionParser.ParseLambda<TEntity, bool>(
-                    ParsingConfig.Default, 
-                    false, 
-                    updateInfo.Query.DynamicQuery, 
+                    ParsingConfig.Default,
+                    false,
+                    updateInfo.Query.DynamicQuery,
                     updateInfo.Query.QueryParameters ?? new object[0]);
             }
 
@@ -454,21 +458,21 @@ namespace Fastdotnet.Core.Controllers
         //public virtual async Task<PageResult<TDto>> GetPageByTypedCondition1([FromBody] TypedPageQueryDto<TUpdateDto> query)
         //{
         //    Expression<Func<TEntity, bool>>? whereExpression = null;
-            
+
         //    var expressions = new List<Expression>();
-            
+
         //    // 使用DTO属性作为条件（传统的相等查询）
         //    if (query.TypedCondition != null)
         //    {
         //        expressions.AddRange(BuildTypedExpressions(query.TypedCondition));
         //    }
-            
+
         //    // 使用明确的查询条件列表
         //    if (query.Conditions != null && query.Conditions.Any())
         //    {
         //        expressions.AddRange(BuildConditionExpressions(query.Conditions));
         //    }
-            
+
         //    if (expressions.Any())
         //    {
         //        // 根据逻辑连接符合并表达式
@@ -476,7 +480,7 @@ namespace Fastdotnet.Core.Controllers
         //            query.Logic.ToLower() == "or" 
         //                ? Expression.OrElse(expr1, expr2) 
         //                : Expression.AndAlso(expr1, expr2));
-                
+
         //        var parameter = Expression.Parameter(typeof(TEntity), "x");
         //        whereExpression = Expression.Lambda<Func<TEntity, bool>>(combinedExpression, parameter);
         //    }
@@ -485,12 +489,12 @@ namespace Fastdotnet.Core.Controllers
         //        // 没有条件时返回所有记录
         //        whereExpression = _ => true;
         //    }
-            
+
         //    var pageResult = await _repository.GetPageAsync(
         //        whereExpression,
         //        query.PageIndex,
         //        query.PageSize);
-                
+
         //    return new PageResult<TDto>
         //    {
         //        Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),
@@ -525,7 +529,7 @@ namespace Fastdotnet.Core.Controllers
 
             return expressions;
         }
-        
+
         /// <summary>
         /// 基于条件列表构建表达式
         /// </summary>
@@ -553,14 +557,14 @@ namespace Fastdotnet.Core.Controllers
                     QueryOperator.GreaterThanOrEqual => Expression.GreaterThanOrEqual(propertyExpression, Expression.Constant(condition.Value)),
                     QueryOperator.LessThan => Expression.LessThan(propertyExpression, Expression.Constant(condition.Value)),
                     QueryOperator.LessThanOrEqual => Expression.LessThanOrEqual(propertyExpression, Expression.Constant(condition.Value)),
-                    QueryOperator.Contains when entityProperty.PropertyType == typeof(string) => 
-                        Expression.Call(propertyExpression, typeof(string).GetMethod("Contains", new[] { typeof(string) })!, 
+                    QueryOperator.Contains when entityProperty.PropertyType == typeof(string) =>
+                        Expression.Call(propertyExpression, typeof(string).GetMethod("Contains", new[] { typeof(string) })!,
                             Expression.Constant(condition.Value)),
-                    QueryOperator.StartsWith when entityProperty.PropertyType == typeof(string) => 
-                        Expression.Call(propertyExpression, typeof(string).GetMethod("StartsWith", new[] { typeof(string) })!, 
+                    QueryOperator.StartsWith when entityProperty.PropertyType == typeof(string) =>
+                        Expression.Call(propertyExpression, typeof(string).GetMethod("StartsWith", new[] { typeof(string) })!,
                             Expression.Constant(condition.Value)),
-                    QueryOperator.EndsWith when entityProperty.PropertyType == typeof(string) => 
-                        Expression.Call(propertyExpression, typeof(string).GetMethod("EndsWith", new[] { typeof(string) })!, 
+                    QueryOperator.EndsWith when entityProperty.PropertyType == typeof(string) =>
+                        Expression.Call(propertyExpression, typeof(string).GetMethod("EndsWith", new[] { typeof(string) })!,
                             Expression.Constant(condition.Value)),
                     QueryOperator.Between => BuildBetweenExpression(propertyExpression, condition.Value, condition.Value2),
                     _ => Expression.Equal(propertyExpression, Expression.Constant(condition.Value))
@@ -571,7 +575,7 @@ namespace Fastdotnet.Core.Controllers
 
             return expressions;
         }
-        
+
         /// <summary>
         /// 构建 BETWEEN 表达式
         /// </summary>
@@ -582,10 +586,10 @@ namespace Fastdotnet.Core.Controllers
         private Expression BuildBetweenExpression(Expression propertyExpression, object? value1, object? value2)
         {
             if (value1 == null || value2 == null) return Expression.Constant(true);
-            
+
             var lowerBound = Expression.GreaterThanOrEqual(propertyExpression, Expression.Constant(value1));
             var upperBound = Expression.LessThanOrEqual(propertyExpression, Expression.Constant(value2));
-            
+
             return Expression.AndAlso(lowerBound, upperBound);
         }
 
@@ -608,6 +612,9 @@ namespace Fastdotnet.Core.Controllers
         where TUpdateDto : class
     {
         protected AppGenericDtoControllerBase(IBaseService<TEntity, string> service, IMapper mapper, ICurrentUser currentUser) : base(service, mapper, currentUser)
+        {
+        }
+        protected AppGenericDtoControllerBase(IBaseService<TEntity, string> service, IMapper mapper) : base(service, mapper)
         {
         }
     }

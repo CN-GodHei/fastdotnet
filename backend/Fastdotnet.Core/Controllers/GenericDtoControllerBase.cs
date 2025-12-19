@@ -149,7 +149,11 @@ namespace Fastdotnet.Core.Controllers
             _mapper = mapper;
             _currentUser = currentUser;
         }
-
+        protected GenericDtoControllerBase(IBaseService<TEntity, TKey> service, IMapper mapper)
+        {
+            _service = service;
+            _mapper = mapper;
+        }
         /// <summary>
         /// 获取所有实体
         /// </summary>
@@ -812,6 +816,10 @@ namespace Fastdotnet.Core.Controllers
         where TUpdateDto : class
     {
         protected GenericDtoControllerBase(IBaseService<TEntity, string> service, IMapper mapper, ICurrentUser currentUser) : base(service, mapper, currentUser)
+        {
+        }
+
+        protected GenericDtoControllerBase(IBaseService<TEntity, string> service, IMapper mapper) : base(service, mapper)
         {
         }
     }
