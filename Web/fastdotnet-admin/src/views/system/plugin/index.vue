@@ -62,7 +62,7 @@ import {
   postPluginEnablePluginId,
   postPluginDisablePluginId,
   postPluginUninstallPluginId
-} from '@/api/fd-system-api/Plugin'
+} from '@/api/fd-system-api-admin/Plugin'
 import { MicroAppEvents, receiveFromMicroApp, removeMicroAppEventListener } from '@/utils/microAppCommunication'
 
 // 异步加载插件市场组件

@@ -117,7 +117,7 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
-import * as FdSystemInfoConfigApi from '@/api/fd-system-api/FdSystemInfoConfig';
+import * as FdSystemInfoConfigApi from '@/api/fd-system-api-admin/FdSystemInfoConfig';
 
 const queryForm = ref();
 const formRef = ref();

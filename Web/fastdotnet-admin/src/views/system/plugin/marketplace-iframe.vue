@@ -44,7 +44,7 @@
 
 <script setup lang="ts" name="pluginMarketplaceIframe">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { getPluginScan } from '@/api/fd-system-api/Plugin'
+import { getPluginScan } from '@/api/fd-system-api-admin/Plugin'
 
 // 定义事件发射器
 const emit = defineEmits<{

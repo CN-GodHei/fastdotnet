@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { getAdminFdAdminUserGetUserInfo } from '@/api/fd-system-api/FdAdminUser';
+import { getAdminFdAdminUserGetUserInfo } from '@/api/fd-system-api-admin/FdAdminUser';
 import { Session } from '@/utils/storage';
 
 /**

@@ -154,7 +154,7 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
-import * as FdAdminUserApi from '@/api/fd-system-api/FdAdminUser';
+import * as FdAdminUserApi from '@/api/fd-system-api-admin/FdAdminUser';
 
 const queryForm = ref();
 const formRef = ref();

@@ -11,7 +11,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { loadMicroApp } from 'qiankun'
 import { useMicroAppsStore } from '@/stores/microApps'
-import { getPluginScan } from '@/api/fd-system-api/Plugin'
+import { getPluginScan } from '@/api/fd-system-api-admin/Plugin'
 
 // 定义微应用实例
 let microAppInstance: any = null

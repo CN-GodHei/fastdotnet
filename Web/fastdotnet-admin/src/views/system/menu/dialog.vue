@@ -215,7 +215,7 @@ import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoutesList } from '@/stores/routesList';
 import { i18n } from '@/i18n/index';
-import * as MenuApi from '@/api/fd-system-api/FdMenu';
+import * as MenuApi from '@/api/fd-system-api-admin/FdMenu';
 
 import { ElMessage } from 'element-plus';
 // import { setBackEndControlRefreshRoutes } from "@/router/backEnd";
@@ -409,7 +409,7 @@ const onSubmit = async () => {
 						PermissionCode: state.ruleForm.PermissionCode, // 权限代码
 					};
 
-					await import('@/api/fd-system-api/FdMenuButtons').then((MenuButtonsApi) => {
+					await import('@/api/fd-system-api-admin/FdMenuButtons').then((MenuButtonsApi) => {
 						MenuButtonsApi.putAdminFdMenuButtonsId({ id: state.ruleForm.Id }, updateData);
 					});
 
@@ -432,7 +432,7 @@ const onSubmit = async () => {
 					PermissionCode: state.ruleForm.PermissionCode, // 权限代码
 				};
 
-				await import('@/api/fd-system-api/FdMenuButtons').then((MenuButtonsApi) => {
+				await import('@/api/fd-system-api-admin/FdMenuButtons').then((MenuButtonsApi) => {
 					MenuButtonsApi.postAdminFdMenuButtons(createData);
 				});
 

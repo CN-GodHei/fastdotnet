@@ -110,9 +110,9 @@
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { buildMixedQuery } from '@/utils/queryBuilder';
-import type { FdBlacklist } from '@/api/fd-system-api/typings';
+import type { FdBlacklist } from '@/api/fd-system-api-admin/typings';
 import dayjs from 'dayjs'; // 引入日期处理库
-import { postAdminFdBlacklistsPageSearch, deleteAdminFdBlacklistsId } from '@/api/fd-system-api/FdBlacklists';
+import { postAdminFdBlacklistsPageSearch, deleteAdminFdBlacklistsId } from '@/api/fd-system-api-admin/FdBlacklists';
 const queryForm = ref();
 const formRef = ref();
 

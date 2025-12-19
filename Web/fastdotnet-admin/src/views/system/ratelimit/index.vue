@@ -119,9 +119,9 @@
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { buildMixedQuery } from '@/utils/queryBuilder';
-import type { FdRatelimitRule } from '@/api/fd-system-api/typings';
+import type { FdRatelimitRule } from '@/api/fd-system-api-admin/typings';
 import dayjs from 'dayjs'; // 引入日期处理库
-import * as FdRatelimitRuleApi from '@/api/fd-system-api/FdRatelimitRule';
+import * as FdRatelimitRuleApi from '@/api/fd-system-api-admin/FdRatelimitRule';
 
 const queryForm = ref();
 const formRef = ref();

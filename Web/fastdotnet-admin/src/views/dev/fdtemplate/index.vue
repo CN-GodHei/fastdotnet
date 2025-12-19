@@ -65,8 +65,8 @@ import {
   getCodeGenPage, 
   deleteCodeGenId, 
   getCodeGenApplicationnamespaces 
-} from '@/api/fd-system-api/CodeGen';
-import APIModel from '@/api/fd-system-api';
+} from '@/api/fd-system-api-admin/CodeGen';
+import APIModel from '@/api/fd-system-api-admin';
 
 const EditCodeGenDialog = defineAsyncComponent(() => import('./component/editCodeGenDialog.vue'));
 const CodeConfigDialog = defineAsyncComponent(() => import('./component/genConfigDialog.vue'));

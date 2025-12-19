@@ -80,7 +80,7 @@ import { Local } from '@/utils/storage';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '@/stores/themeConfig';
 import { useUserInfo } from '@/stores/userInfo';
-import { postAdminFdAdminUserUnlock } from '@/api/fd-system-api/FdAdminUser';
+import { postAdminFdAdminUserUnlock } from '@/api/fd-system-api-admin/FdAdminUser';
 import { ElMessage } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 

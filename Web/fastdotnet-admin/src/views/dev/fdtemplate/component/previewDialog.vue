@@ -40,8 +40,8 @@ import { reactive, ref, nextTick } from 'vue';
 import { ElMessage, ElIcon } from 'element-plus';
 import * as monaco from 'monaco-editor';
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-import { getCodeGenPreviewConfigId } from '@/api/fd-system-api/CodeGen';
-import APIModel from '@/api/fd-system-api';
+import { getCodeGenPreviewConfigId } from '@/api/fd-system-api-admin/CodeGen';
+import APIModel from '@/api/fd-system-api-admin';
 
 const monacoEditorRef = ref();
 const state = reactive({

@@ -77,7 +77,7 @@ import { Session } from '@/utils/storage';
 import { formatAxis } from '@/utils/formatTime';
 import { NextLoading } from '@/utils/loading';
 // 引入适配的登录 API
-import { postAuthAdminLogin } from '@/api/fd-system-api/auth';
+import { postAuthAdminLogin } from '@/api/fd-system-api-admin/auth';
 import { startQiankun } from '@/main';
 
 // 定义变量内容

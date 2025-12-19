@@ -222,15 +222,15 @@ import {
 	postCodeGenConfigBatch,
 	postCodeGenConfigPageSearch,
 	putCodeGenConfigBatch
-} from '@/api/fd-system-api/CodeGenConfig';
+} from '@/api/fd-system-api-admin/CodeGenConfig';
 import { 
 	getCodeGenGettablelist,
 	getCodeGenTablelistConfigId,
 	getCodeGenGettablecolumnlist,
 	getCodeGen
-} from '@/api/fd-system-api/CodeGen';
+} from '@/api/fd-system-api-admin/CodeGen';
 import { buildMixedQuery } from '@/utils/queryBuilder';
-import APIModel from '@/api/fd-system-api';
+import APIModel from '@/api/fd-system-api-admin';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 const emits = defineEmits(['handleQuery']);
