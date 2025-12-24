@@ -134,7 +134,7 @@ namespace Fastdotnet.WebApi.Controllers.System
                 throw new BusinessException("该邮箱已注册!");
             }
             // 调用通用验证码服务，不指定业务码，使用默认策略
-            await _verificationCodeManager.SendCodeAsync(dto.Email, "AppRegistration");
+            await _verificationCodeManager.SendCodeAsync(dto.Email, "UserRegister");
             return "验证码已发送至您的邮箱，请注意查收。";
         }
 
