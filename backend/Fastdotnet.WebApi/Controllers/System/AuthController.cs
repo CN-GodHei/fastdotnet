@@ -9,7 +9,6 @@ namespace Fastdotnet.WebApi.Controllers.System
     [ApiController]
     [Route("api/auth")]
     [AllowAnonymous] // 将此控制器标记为允许匿名访问
-    [ApiUsageScope(ApiUsageScopeEnum.Both)]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -17,15 +16,17 @@ namespace Fastdotnet.WebApi.Controllers.System
         private readonly ICaptcha _captcha;
         private readonly ICurrentUser _currentUser;
         private readonly IRepository<SystemInfoConfig> _systemConfigRepository;
+        private readonly IRepository<FdAppUser> _appuserRepository;
 
         public AuthController(IAuthService authService, IVerificationCodeManager verificationCodeManager, ICaptcha captcha,
-            IRepository<SystemInfoConfig> systemConfigRepository,ICurrentUser currentUser)
+            IRepository<SystemInfoConfig> systemConfigRepository, ICurrentUser currentUser, IRepository<FdAppUser> appuserRepository)
         {
             _authService = authService;
             _verificationCodeManager = verificationCodeManager;
             _captcha = captcha;
             _systemConfigRepository = systemConfigRepository;
             _currentUser = currentUser;
+            _appuserRepository = appuserRepository;
         }
 
         /// <summary>
@@ -34,6 +35,7 @@ namespace Fastdotnet.WebApi.Controllers.System
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost("admin/login")]
+        [ApiUsageScope(ApiUsageScopeEnum.AdminOnly)]
         public async Task<LoginResultDto> AdminLogin([FromBody] LoginDto dto)
         {
             // 1. 检查系统配置是否启用验证码
@@ -79,10 +81,11 @@ namespace Fastdotnet.WebApi.Controllers.System
         /// <param name="dto"></param>
         /// <returns></returns>
         [HttpPost("app/login")]
+        [ApiUsageScope(ApiUsageScopeEnum.AppOnly)]
         public async Task<LoginResultDto> AppLogin([FromBody] LoginDto dto)
         {
             // 1. 检查系统配置是否启用验证码
-            var enableCaptchaConfig = await _systemConfigRepository.GetFirstAsync(c => c.Code == "EnableCaptcha"&&c.Belong==EnumHelper.ParseEnum<SystemCategory>(_currentUser.UserName));
+            var enableCaptchaConfig = await _systemConfigRepository.GetFirstAsync(c => c.Code == "EnableCaptcha" && c.Belong == EnumHelper.ParseEnum<SystemCategory>(_currentUser.UserName));
             var enableCaptcha = enableCaptchaConfig?.Value?.ToString()?.ToLower() == "true";
 
             // 2. 如果启用了验证码，则进行验证
@@ -121,19 +124,41 @@ namespace Fastdotnet.WebApi.Controllers.System
         /// 发送App注册验证码
         /// </summary>
         [HttpPost("app/send-registration-code")]
+        [ApiUsageScope(ApiUsageScopeEnum.AppOnly)]
         public async Task<string> SendRegistrationCode([FromBody] SendRegistrationCodeDto dto)
         {
+            dto.IsValid();
+            var userex = await _appuserRepository.GetFirstAsync(w => w.Email == dto.Email);
+            if (userex != null)
+            {
+                throw new BusinessException("该邮箱已注册!");
+            }
             // 调用通用验证码服务，不指定业务码，使用默认策略
-            await _verificationCodeManager.SendCodeAsync(dto.Email, null);
+            await _verificationCodeManager.SendCodeAsync(dto.Email, "AppRegistration");
             return "验证码已发送至您的邮箱，请注意查收。";
+        }
+
+        [HttpPost("app/checkregistrusername")]
+        [ApiUsageScope(ApiUsageScopeEnum.AppOnly)]
+        public async Task<bool> CheckRegistrUserName([FromBody] CheckRegistrUserNameDto dto)
+        {
+            dto.IsValid();
+            var userex = await _appuserRepository.GetFirstAsync(w => w.Username == dto.Username);
+            if (userex != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
         /// App端用户注册
         /// </summary>
         [HttpPost("app/register")]
+        [ApiUsageScope(ApiUsageScopeEnum.AppOnly)]
         public async Task<string> AppRegister([FromBody] AppRegisterDto dto)
         {
+            dto.IsValid();
             await _authService.AppRegisterAsync(dto);
             return "注册成功";
         }

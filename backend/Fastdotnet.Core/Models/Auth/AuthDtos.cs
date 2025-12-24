@@ -24,4 +24,10 @@ namespace Fastdotnet.Core.Models.Auth
         [Required]
         public string VerificationCode { get; set; }
     }
+    public class CheckRegistrUserNameDto
+    {
+        [Required]
+        public string Username { get; set; }
+    }
+
 }
