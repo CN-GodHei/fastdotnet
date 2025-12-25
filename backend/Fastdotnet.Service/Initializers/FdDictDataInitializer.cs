@@ -94,6 +94,8 @@ namespace Fastdotnet.Service.Initializers
                 new FdDictData{ Id="11921994044146652", DictTypeId="11921994044146607",Code="CODE_07_03", Label="部门", Value="301", OrderNo=102, Remark="部门", Status=StatusEnum.Enable },
                 new FdDictData{ Id="11921994044146653", DictTypeId="11921994044146607",Code="CODE_07_04", Label="区域", Value="401", OrderNo=103, Remark="区域", Status=StatusEnum.Enable },
                 new FdDictData{ Id="11921994044146654", DictTypeId="11921994044146607",Code="CODE_07_05", Label="组", Value="501", OrderNo=104, Remark="组", Status=StatusEnum.Enable },
+
+                new FdDictData{ Id="11921994044146655", DictTypeId="11921994044146608",Code="CODE_08_01", Label="用户注册", Value="UserRegister", OrderNo=105, Remark="用户注册", Status=StatusEnum.Enable },
             };
             foreach (var item in fdDictDataEntries)
             {

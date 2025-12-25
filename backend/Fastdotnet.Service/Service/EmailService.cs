@@ -27,7 +27,7 @@ namespace Fastdotnet.Service.Service
             var config = await _emailConfigRepository.GetFirstAsync(e => true);
             if (config == null || string.IsNullOrWhiteSpace(config.Host))
             {
-                _logger.LogError("邮件服务未配置，无法发送邮件。");
+                //_logger.LogError("邮件服务未配置，无法发送邮件。");
                 throw new BusinessException("邮件服务未配置，请联系管理员。");
             }
 
@@ -46,7 +46,7 @@ namespace Fastdotnet.Service.Service
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
 
-                _logger.LogInformation($"邮件已成功发送至 {toEmail}");
+                //_logger.LogInformation($"邮件已成功发送至 {toEmail}");
             }
             catch (Exception ex)
             {

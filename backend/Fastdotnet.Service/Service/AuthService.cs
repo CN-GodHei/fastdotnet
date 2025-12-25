@@ -49,7 +49,7 @@ namespace Fastdotnet.Service.Service
         public async Task AppRegisterAsync(AppRegisterDto dto)
         {
             // 1. 校验验证码
-            var isCodeValid = await _verificationCodeManager.VerifyCodeAsync(dto.Email, dto.VerificationCode, null);
+            var isCodeValid = await _verificationCodeManager.VerifyCodeAsync(dto.Email, dto.VerificationCode, "UserRegister");
             if (!isCodeValid)
             {
                 throw new BusinessException("验证码错误或已失效");

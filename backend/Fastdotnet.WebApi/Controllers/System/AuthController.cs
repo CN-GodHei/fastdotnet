@@ -125,30 +125,41 @@ namespace Fastdotnet.WebApi.Controllers.System
         /// </summary>
         [HttpPost("app/send-registration-code")]
         [ApiUsageScope(ApiUsageScopeEnum.AppOnly)]
-        public async Task<string> SendRegistrationCode([FromBody] SendRegistrationCodeDto dto)
+        public async Task<ApiResult<bool>> SendRegistrationCode([FromBody] SendRegistrationCodeDto dto)
         {
             dto.IsValid();
+            ApiResult<bool> result = new ApiResult<bool>();
+
             var userex = await _appuserRepository.GetFirstAsync(w => w.Email == dto.Email);
             if (userex != null)
             {
-                throw new BusinessException("该邮箱已注册!");
+                result.Msg = "该邮箱已注册!";
+                result.Data = false;
+                return result;
             }
             // 调用通用验证码服务，不指定业务码，使用默认策略
             await _verificationCodeManager.SendCodeAsync(dto.Email, "UserRegister");
-            return "验证码已发送至您的邮箱，请注意查收。";
+            result.Msg = "验证码已发送至您的邮箱，请注意查收。";
+            result.Data = true;
+            return result;
         }
 
         [HttpPost("app/checkregistrusername")]
         [ApiUsageScope(ApiUsageScopeEnum.AppOnly)]
-        public async Task<bool> CheckRegistrUserName([FromBody] CheckRegistrUserNameDto dto)
+        public async Task<ApiResult<bool>> CheckRegistrUserName([FromBody] CheckRegistrUserNameDto dto)
         {
             dto.IsValid();
+            ApiResult<bool> result = new ApiResult<bool>();
             var userex = await _appuserRepository.GetFirstAsync(w => w.Username == dto.Username);
             if (userex != null)
             {
-                return true;
+                result.Msg = "未存在";
+                result.Data = true;
+                return result;
             }
-            return false;
+            result.Msg = "已存在";
+            result.Data = false;
+            return result;
         }
 
         /// <summary>
@@ -156,11 +167,16 @@ namespace Fastdotnet.WebApi.Controllers.System
         /// </summary>
         [HttpPost("app/register")]
         [ApiUsageScope(ApiUsageScopeEnum.AppOnly)]
-        public async Task<string> AppRegister([FromBody] AppRegisterDto dto)
+        public async Task<ApiResult<bool>> AppRegister([FromBody] AppRegisterDto dto)
         {
+            ApiResult<bool> result = new ApiResult<bool>();
+            result.Msg = "注册成功";
+            result.Data = true;
             dto.IsValid();
             await _authService.AppRegisterAsync(dto);
-            return "注册成功";
+            result.Msg = "注册成功";
+            result.Data = true;
+            return result;
         }
     }
 }

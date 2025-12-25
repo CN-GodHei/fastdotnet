@@ -1,3 +1,5 @@
+using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.IService;
 using Fastdotnet.Service.IService;
 using Fastdotnet.Service.Service;
 using Microsoft.Extensions.Caching.Memory;
@@ -12,8 +14,9 @@ namespace Fastdotnet.Service.Service
     {
         public override string BusinessCode => "UserRegister";
 
-        public UserRegisterVerificationStrategy(IEmailService emailService, IMemoryCache memoryCache, ILogger<EmailVerificationStrategyBase> logger)
-            : base(emailService, memoryCache, logger)
+        public UserRegisterVerificationStrategy(IEmailService emailService, IMemoryCache memoryCache, IBaseService<FdDictData, string> FdDictDataservice,
+            IBaseService<SystemInfoConfig, string> SystemInfoConfigservice)
+            : base(emailService, memoryCache, FdDictDataservice, SystemInfoConfigservice)
         {
         }
     }
@@ -25,22 +28,24 @@ namespace Fastdotnet.Service.Service
     {
         public override string BusinessCode => "ResetPassword";
 
-        public ResetPasswordVerificationStrategy(IEmailService emailService, IMemoryCache memoryCache, ILogger<EmailVerificationStrategyBase> logger)
-            : base(emailService, memoryCache, logger)
+        public ResetPasswordVerificationStrategy(IEmailService emailService, IMemoryCache memoryCache, IBaseService<FdDictData, string> FdDictDataservice,
+            IBaseService<SystemInfoConfig, string> SystemInfoConfigservice)
+            : base(emailService, memoryCache, FdDictDataservice, SystemInfoConfigservice)
         {
         }
     }
 }
 
-    /// <summary>
-    /// 处理“默认”场景的验证码策略
-    /// </summary>
-    public class DefaultVerificationStrategy : EmailVerificationStrategyBase
-    {
-        public override string BusinessCode => "Default";
+/// <summary>
+/// 处理“默认”场景的验证码策略
+/// </summary>
+public class DefaultVerificationStrategy : EmailVerificationStrategyBase
+{
+    public override string BusinessCode => "Default";
 
-        public DefaultVerificationStrategy(IEmailService emailService, IMemoryCache memoryCache, ILogger<EmailVerificationStrategyBase> logger)
-            : base(emailService, memoryCache, logger)
-        {
-        }
+    public DefaultVerificationStrategy(IEmailService emailService, IMemoryCache memoryCache, IBaseService<FdDictData, string> FdDictDataservice,
+        IBaseService<SystemInfoConfig, string> SystemInfoConfigservice)
+        : base(emailService, memoryCache, FdDictDataservice, SystemInfoConfigservice)
+    {
     }
+}
