@@ -12,7 +12,7 @@ namespace Fastdotnet.Core.Models
         /// <summary>
         /// 关键词，用于模糊搜索
         /// </summary>
-        public string? Keyword { get; set; }
+        //public string? Keyword { get; set; }
 
         /// <summary>
         /// 动态查询条件，使用 System.Linq.Dynamic.Core 语法
