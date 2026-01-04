@@ -100,20 +100,6 @@ namespace PluginA.Controllers
         {
             try
             {
-                //var userId = await _appUserService.CreateFdAppUserWithExtensionAsync(
-                //    u => 
-                //    {
-                //        u.Username = request.Username;
-                //        u.Password = request.Password;
-                //        u.Email = request.Email;
-                //        u.PhoneNumber = request.PhoneNumber;
-                //        u.Nickname = request.Nickname;
-                //        u.AvatarUrl = request.AvatarUrl;
-                //        u.Status = request.Status;
-                //        u.RegistrationDate = System.DateTime.Now;
-                //    },
-                //    _mpper.Map<PluginAUserExtension>(request.ExtensionData)
-                //);
                 var userId = await _appUserService.CreateFdAppUserWithExtensionAsync(
                     u =>
                     {
@@ -126,8 +112,22 @@ namespace PluginA.Controllers
                         u.Status = request.Status;
                         u.RegistrationDate = System.DateTime.Now;
                     },
-                  new PluginAUserExtension() { Points = request.ExtensionData.Points, Preferences = request.ExtensionData.Preferences }
+                    _mpper.Map<PluginAUserExtension>(request.ExtensionData)
                 );
+                //var userId = await _appUserService.CreateFdAppUserWithExtensionAsync(
+                //    u =>
+                //    {
+                //        u.Username = request.Username;
+                //        u.Password = request.Password;
+                //        u.Email = request.Email;
+                //        u.PhoneNumber = request.PhoneNumber;
+                //        u.Nickname = request.Nickname;
+                //        u.AvatarUrl = request.AvatarUrl;
+                //        u.Status = request.Status;
+                //        u.RegistrationDate = System.DateTime.Now;
+                //    },
+                //  new PluginAUserExtension() { Points = request.ExtensionData.Points, Preferences = request.ExtensionData.Preferences }
+                //);
                 return Ok(new { UserId = userId, Message = "User created with extension successfully." });
             }
             catch (Exception ex)

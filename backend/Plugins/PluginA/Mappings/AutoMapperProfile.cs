@@ -3,7 +3,7 @@ using Fastdotnet.Core.Extensions;
 using PluginA.Dto;
 using PluginA.Entities;
 
-namespace PluginA.Controllers
+namespace PluginA.Mappings
 {
     /// <summary>
     /// PluginATest实体和DTO之间的映射配置
