@@ -1,4 +1,6 @@
 using Fastdotnet.Core.IService.Sys;
+using Fastdotnet.Core.Service.Sys;
+using Fastdotnet.Plugin.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 // 可选：延长停机超时时间
@@ -153,6 +155,19 @@ builder.Services.AddSignalR();
 
 // 注册IStorageContext服务
 builder.Services.AddScoped<IStorageContext, StorageContext>();
+
+// 配置存储选项
+builder.Services.Configure<StorageOptions>(options =>
+{
+    options.LocalStoragePath = builder.Configuration["Storage:LocalStoragePath"] ?? "wwwroot/uploads";
+    options.BaseUrl = builder.Configuration["Storage:BaseUrl"] ?? "/uploads";
+    options.DefaultBucket = builder.Configuration["Storage:DefaultBucket"] ?? "default";
+});
+
+// 注册存储服务代理作为 IStorageService 的实现
+builder.Services.AddSingleton<StorageServiceProxy>();
+builder.Services.AddScoped<IStorageService>(provider => 
+    provider.GetRequiredService<StorageServiceProxy>());
 
 // 2. 配置 Autofac 容器
 // 👇 一行启用 Autofac + 自定义注册
