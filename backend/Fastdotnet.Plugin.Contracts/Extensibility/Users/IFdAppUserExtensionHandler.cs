@@ -1,0 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Fastdotnet.Plugin.Contracts.Extensibility.Users
+{
+    public interface IFdAppUserExtensionHandler<TData> where TData : class
+    {
+        Task SaveAsync(string userId, TData data, IStorageContext context, CancellationToken ct = default);
+        Task<TData?> LoadAsync(string userId, IStorageContext context, CancellationToken ct = default);
+    }
+}

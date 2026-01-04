@@ -1,3 +1,5 @@
+using Fastdotnet.Service.IService.Sys;
+
 var builder = WebApplication.CreateBuilder(args);
 // 可选：延长停机超时时间
 builder.Host.ConfigureHostOptions(o => o.ShutdownTimeout = TimeSpan.FromMinutes(2));
@@ -148,6 +150,9 @@ builder.Services.AddScoped<IRateLimitCacheService, RateLimitCacheService>();
 
 // 添加SignalR服务
 builder.Services.AddSignalR();
+
+// 注册IStorageContext服务
+builder.Services.AddScoped<IStorageContext, StorageContext>();
 
 // 2. 配置 Autofac 容器
 // 👇 一行启用 Autofac + 自定义注册
