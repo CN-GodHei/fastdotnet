@@ -8,10 +8,13 @@ using PluginA.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 using Fastdotnet.Plugin.Contracts;
 using PluginA.IService;
+using PluginA.Initializers;
 //using PluginA.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Fastdotnet.Plugin.Contracts.Extensibility.Users;
+using Fastdotnet.Core.Initializers;
 
 // The namespace for the WebApi project must be included to find the DynamicMiddlewareRegistry.
 
@@ -94,6 +97,12 @@ namespace PluginA
             
             // 注册插件的服务，用于向客户端发送消息
             builder.RegisterType<Services.PluginAMessageService>().As<IPluginAMessageService>().InstancePerLifetimeScope();
+            
+            // 注册用户扩展处理器，用于处理PluginA的用户扩展数据
+            builder.RegisterType<PluginAUserExtensionHandler>().As<IFdAppUserExtensionHandler<Entities.PluginAUserExtension>>().InstancePerLifetimeScope();
+            
+            // 注册初始化器，用于创建插件需要的数据库表
+            //builder.RegisterType<PluginAUserExtensionInitializer>().As<IStartupTask>().InstancePerLifetimeScope();
         }
 
         /// <summary>
