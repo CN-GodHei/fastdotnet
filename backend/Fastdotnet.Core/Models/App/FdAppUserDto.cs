@@ -20,6 +20,10 @@ namespace Fastdotnet.Core.Models.App
         [StringLength(255, ErrorMessage = "用户名最多255个字符")]
         public string? Username { get; set; }
 
+        [Required(ErrorMessage = "用户名不能为空")]
+        [StringLength(255, ErrorMessage = "用户名最多255个字符")]
+        public string? Password { get; set; }
+
         /// <summary>
         /// 邮箱
         /// </summary>
@@ -55,7 +59,7 @@ namespace Fastdotnet.Core.Models.App
         /// <summary>
         /// 注册时间
         /// </summary>
-        public DateTime RegistrationDate { get; set; }
+        //public DateTime RegistrationDate { get; set; }
     }
 
     /// <summary>
@@ -102,7 +106,7 @@ namespace Fastdotnet.Core.Models.App
         /// <summary>
         /// 注册时间
         /// </summary>
-        public DateTime RegistrationDate { get; set; }
+        //public DateTime RegistrationDate { get; set; }
     }
 
     /// <summary>
@@ -149,6 +153,6 @@ namespace Fastdotnet.Core.Models.App
         /// <summary>
         /// 注册时间
         /// </summary>
-        public DateTime RegistrationDate { get; set; }
+        //public DateTime RegistrationDate { get; set; }
     }
 }
