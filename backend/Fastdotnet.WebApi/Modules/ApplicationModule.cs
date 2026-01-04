@@ -1,4 +1,14 @@
-﻿using Module = Autofac.Module;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Fastdotnet.Core.IService;
+using Fastdotnet.Core.IService.Sys;
+using Fastdotnet.Core.Services.App;
+using Fastdotnet.Core.Services.System;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using SqlSugar;
+using System.Reflection;
+using Module = Autofac.Module;
 
 namespace Fastdotnet.WebApi.Modules;
 
@@ -56,6 +66,12 @@ public class ApplicationModule : Module
         )).As<IPluginLoadService>().SingleInstance();
 
         containerBuilder.RegisterType<PluginActionDescriptorProvider>().As<IActionDescriptorProvider>().SingleInstance();
+
+        // 注册应用服务
+        containerBuilder.RegisterType<FdAppUserService>().As<Core.IService.App.IFdAppUserService>().InstancePerLifetimeScope();
+
+        // 注册仓储和工作单元服务
+        containerBuilder.RegisterType<SqlSugarUnitOfWork>().As<IUnitOfWork>().As<IStorageContext>().InstancePerLifetimeScope();
 
         // 在Autofac中注册AutoMapper
         containerBuilder.Register(c =>
