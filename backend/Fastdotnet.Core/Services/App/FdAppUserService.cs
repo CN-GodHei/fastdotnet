@@ -1,14 +1,14 @@
 using Fastdotnet.Core.Entities.App;
 using Fastdotnet.Core.IService;
+using Fastdotnet.Core.IService.App;
 using Fastdotnet.Plugin.Contracts;
 using Fastdotnet.Plugin.Contracts.Extensibility.Users; // 修改引用的命名空间
-using Fastdotnet.Service.IService.App;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Fastdotnet.Service.Service.App;
+namespace Fastdotnet.Core.Services.App;
 
 public class FdAppUserService : IFdAppUserService
 {

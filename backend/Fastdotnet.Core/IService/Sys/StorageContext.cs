@@ -2,28 +2,19 @@ using Fastdotnet.Core.IService;
 using Fastdotnet.Plugin.Contracts;
 using SqlSugar;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Fastdotnet.Service.IService.Sys
+namespace Fastdotnet.Core.IService.Sys
 {
-    // 2. SqlSugar 实现
-    public class SqlSugarUnitOfWork : IUnitOfWork, IStorageContext
+    public class StorageContext : IStorageContext
     {
         private readonly ISqlSugarClient _db;
 
-        public SqlSugarUnitOfWork(ISqlSugarClient db) => _db = db;
-
-        public Task BeginTransactionAsync(CancellationToken ct = default)
-            => _db.Ado.BeginTranAsync();
-
-        public Task CommitAsync(CancellationToken ct = default)
-            => _db.Ado.CommitTranAsync();
-
-        public Task RollbackAsync(CancellationToken ct = default)
-            => _db.Ado.RollbackTranAsync();
+        public StorageContext(ISqlSugarClient db)
+        {
+            _db = db;
+        }
 
         public async Task<T?> QuerySingleOrDefaultAsync<T>(
             string sql,

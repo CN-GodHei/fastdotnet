@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Fastdotnet.Core.Constants.Permissions.Admin;
 
-namespace Fastdotnet.Service.IService.App
+namespace Fastdotnet.Core.IService.App
 {
     public interface IFdAppUserService
     {
