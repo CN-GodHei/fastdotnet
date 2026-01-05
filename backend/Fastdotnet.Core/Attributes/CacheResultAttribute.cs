@@ -1,6 +1,6 @@
 using Fastdotnet.Core.Attributes;
+using Fastdotnet.Core.Dtos;
 using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Caching.Hybrid;

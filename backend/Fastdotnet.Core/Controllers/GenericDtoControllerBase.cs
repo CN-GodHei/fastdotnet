@@ -1,10 +1,10 @@
 using AutoMapper;
 using Fastdotnet.Core.Attributes;
+using Fastdotnet.Core.Dtos;
+using Fastdotnet.Core.Dtos.Base;
 using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models;
-using Fastdotnet.Core.Models.Base;
 using Fastdotnet.Core.Utils.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using SqlSugar;

@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Models.Base;
+using Fastdotnet.Core.Dtos.Base;
 using SqlSugar;
 
 namespace PluginA.Entities

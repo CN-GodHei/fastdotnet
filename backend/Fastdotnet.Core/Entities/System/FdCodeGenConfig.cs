@@ -1,6 +1,6 @@
 using SqlSugar;
-using Fastdotnet.Core.Models.Base;
 using System.ComponentModel.DataAnnotations;
+using Fastdotnet.Core.Dtos.Base;
 
 namespace Fastdotnet.Core.Entities.System
 {

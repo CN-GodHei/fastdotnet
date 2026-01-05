@@ -1,4 +1,4 @@
-﻿using Fastdotnet.Core.Models.Base;
+﻿using Fastdotnet.Core.Dtos.Base;
 using SqlSugar;
 using System;
 namespace Fastdotnet.Core.Entities.System

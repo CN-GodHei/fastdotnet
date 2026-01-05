@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Fastdotnet.Core.Models;
+using Fastdotnet.Core.Dtos;
 using Fastdotnet.Plugin.Contracts;
 using System;
 using System.Collections.Generic;

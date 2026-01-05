@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Models.LogModels;
+using Fastdotnet.Core.Dtos.LogModels;
 using Fastdotnet.Core.IService;
 using System;
 using System.Threading.Tasks;

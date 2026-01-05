@@ -1,7 +1,7 @@
 using Azure.Core;
-using Fastdotnet.Core.Models.Base;
-using Fastdotnet.Core.Models.Interfaces;
-using Fastdotnet.Core.Models.LogModels;
+using Fastdotnet.Core.Dtos.Base;
+using Fastdotnet.Core.Dtos.Interfaces;
+using Fastdotnet.Core.Dtos.LogModels;
 using Fastdotnet.Core.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

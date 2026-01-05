@@ -1,5 +1,5 @@
+using Fastdotnet.Core.Dtos;
 using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Options;

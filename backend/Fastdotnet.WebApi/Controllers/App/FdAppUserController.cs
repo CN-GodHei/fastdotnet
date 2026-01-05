@@ -1,4 +1,5 @@
-﻿using Fastdotnet.Core.Models.App;
+﻿using Fastdotnet.Core.Dtos.Admin.Users;
+using Fastdotnet.Core.Dtos.App;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 namespace Fastdotnet.WebApi.Controllers.App

@@ -1,5 +1,5 @@
+using Fastdotnet.Core.Dtos.System;
 using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.Models.System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

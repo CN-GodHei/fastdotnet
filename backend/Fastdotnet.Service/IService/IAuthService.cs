@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Models.Auth;
+using Fastdotnet.Core.Dtos.Auth;
 using System.Threading.Tasks;
 
 namespace Fastdotnet.Service.IService

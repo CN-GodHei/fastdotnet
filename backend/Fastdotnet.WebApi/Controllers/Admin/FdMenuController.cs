@@ -1,3 +1,5 @@
+using Fastdotnet.Core.Dtos;
+
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
@@ -76,7 +78,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public override Task<FdMenuDto> GetById(string id, CancellationToken cancellationToken = default) => base.GetById(id);
 
         [Authorize(Policy = Permissions.Admin.Menus.View)]
-        public override Task<Fastdotnet.Core.Models.PageResult<FdMenuDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
+        public override Task<PageResult<FdMenuDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
 
         //[Authorize(Policy = Permissions.Admin.Menus.Create)]
         //public override Task<FdMenuDto> Create(CreateFdMenuDto dto) => base.Create(dto);

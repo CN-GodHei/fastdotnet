@@ -1,3 +1,5 @@
+using Fastdotnet.Core.Dtos;
+
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
@@ -28,7 +30,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public override Task<FdRoleDto> GetById(string id, CancellationToken cancellationToken = default) => base.GetById(id);
 
         [Authorize(Policy = Permissions.Admin.Roles.View)]
-        public override Task<Fastdotnet.Core.Models.PageResult<FdRoleDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
+        public override Task<PageResult<FdRoleDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
 
         [Authorize(Policy = Permissions.Admin.Roles.Create)]
         public override Task<FdRoleDto> Create(CreateFdRoleDto dto) => base.Create(dto);

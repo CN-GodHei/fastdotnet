@@ -1,4 +1,6 @@
-﻿namespace Fastdotnet.WebApi.Middleware;
+﻿using Fastdotnet.Core.Dtos;
+
+namespace Fastdotnet.WebApi.Middleware;
 
 /// <summary>
 /// 全局异常处理中间件

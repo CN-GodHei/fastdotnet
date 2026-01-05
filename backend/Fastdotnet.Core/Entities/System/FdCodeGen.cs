@@ -1,7 +1,7 @@
-using Fastdotnet.Core.Models.Base;
 using SqlSugar;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using Fastdotnet.Core.Dtos.Base;
 namespace Fastdotnet.Core.Entities.System
 {
     /// <summary>

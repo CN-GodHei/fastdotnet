@@ -1,5 +1,5 @@
+using Fastdotnet.Core.Dtos.Base;
 using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.Base;
 using SqlSugar;
 using System;
 using System.Collections.Generic;

@@ -1,7 +1,7 @@
+using Fastdotnet.Core.Dtos;
+using Fastdotnet.Core.Dtos.Base;
+using Fastdotnet.Core.Dtos.Interfaces;
 using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models;
-using Fastdotnet.Core.Models.Base;
-using Fastdotnet.Core.Models.Interfaces;
 using Fastdotnet.Core.Utils;
 using SqlSugar;
 using System;

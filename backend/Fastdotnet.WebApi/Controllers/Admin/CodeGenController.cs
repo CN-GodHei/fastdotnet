@@ -1,3 +1,5 @@
+using Fastdotnet.Core.Dtos.Base;
+
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     /// <summary>
@@ -265,7 +267,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         {
             var baseEntityProperties = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            var properties = typeof(Core.Models.Base.BaseEntity).GetProperties();
+            var properties = typeof(BaseEntity).GetProperties();
             foreach (var property in properties)
             {
                 baseEntityProperties.Add(property.Name);

@@ -1,7 +1,7 @@
 using AutoMapper;
+using Fastdotnet.Core.Dtos.Admin.Users;
 using Fastdotnet.Core.Entities.Admin;
 using Fastdotnet.Core.Extensions;
-using Fastdotnet.Core.Models.Admin.Users;
 
 namespace Fastdotnet.Service.Mappings
 {

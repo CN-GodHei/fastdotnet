@@ -1,5 +1,5 @@
+using Fastdotnet.Core.Dtos.Base;
 using Fastdotnet.Core.Enum;
-using Fastdotnet.Core.Models.Base;
 using SqlSugar;
 
 namespace Fastdotnet.Core.Entities.System

@@ -1,11 +1,11 @@
 using AutoMapper;
 using Fastdotnet.Core.Constants;
+using Fastdotnet.Core.Dtos;
+using Fastdotnet.Core.Dtos.Admin.Users;
 using Fastdotnet.Core.Entities.Admin;
 using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models;
-using Fastdotnet.Core.Models.Admin.Users;
 using Fastdotnet.Service.IService.Admin;
 using System.Linq;
 using System.Threading.Tasks;

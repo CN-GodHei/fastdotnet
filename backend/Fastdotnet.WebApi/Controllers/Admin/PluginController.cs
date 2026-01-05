@@ -1,3 +1,4 @@
+using Fastdotnet.Core.Dtos;
 using Fastdotnet.Core.Enum;
 
 namespace Fastdotnet.WebApi.Controllers.Admin

@@ -1,9 +1,9 @@
 using AutoMapper;
+using Fastdotnet.Core.Dtos.System;
 using Fastdotnet.Core.Entities.Admin;
 using Fastdotnet.Core.Entities.App;
 using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.System;
 using Fastdotnet.Service.IService;
 using System.Collections.Generic;
 using System.Linq;

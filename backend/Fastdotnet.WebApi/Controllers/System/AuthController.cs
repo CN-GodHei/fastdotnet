@@ -1,3 +1,5 @@
+using Fastdotnet.Core.Dtos;
+using Fastdotnet.Core.Dtos.Auth;
 using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Services.System;
 

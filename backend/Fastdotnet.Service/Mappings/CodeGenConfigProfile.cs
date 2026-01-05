@@ -1,13 +1,13 @@
 using AutoMapper;
 using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.Extensions;
-using Fastdotnet.Core.Models.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Fastdotnet.Core.Dtos.System;
 
 namespace Fastdotnet.Service.Mappings
 {

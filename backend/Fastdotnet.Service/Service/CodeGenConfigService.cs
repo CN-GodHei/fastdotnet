@@ -1,8 +1,8 @@
 using Dm.util;
+using Fastdotnet.Core.Dtos.Base;
 using Fastdotnet.Core.Dtos.System;
 using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.System;
 using global::System.IO;
 using global::System.IO.Compression;
 using MailKit.Search;
@@ -365,7 +365,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
         {
             var baseEntityProperties = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            var properties = typeof(Core.Models.Base.BaseEntity).GetProperties();
+            var properties = typeof(BaseEntity).GetProperties();
             foreach (var property in properties)
             {
                 baseEntityProperties.Add(property.Name);

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using Fastdotnet.Core.Dtos.Base;
+using Fastdotnet.Core.Dtos.Interfaces;
 using Fastdotnet.Core.Enum;
-using Fastdotnet.Core.Models.Base;
-using Fastdotnet.Core.Models.Interfaces;
 using SqlSugar;
 
 namespace Fastdotnet.Core.Entities.System

@@ -1,9 +1,9 @@
+using Fastdotnet.Core.Dtos.Auth;
 using Fastdotnet.Core.Entities.Admin;
 using Fastdotnet.Core.Entities.App;
 using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.Exceptions;
 using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Models.Auth;
 using Fastdotnet.Core.Settings;
 using Fastdotnet.Service.IService;
 using Microsoft.Extensions.Options;

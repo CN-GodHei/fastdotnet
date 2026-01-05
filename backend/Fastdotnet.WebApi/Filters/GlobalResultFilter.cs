@@ -1,3 +1,5 @@
+using Fastdotnet.Core.Dtos;
+
 namespace Fastdotnet.WebApi.Filters
 {
     /// <summary>
@@ -100,7 +102,7 @@ namespace Fastdotnet.WebApi.Filters
             if (value == null) return false;
 
             var type = value.GetType();
-            // 检查是否是 Fastdotnet.Core.Models.ApiResult.PageResult<T>
+            // 检查是否是 Fastdotnet.Core.Dtos.ApiResult.PageResult<T>
             if (!type.IsGenericType || type.DeclaringType?.Name != "ApiResult" || type.Name != "PageResult")
                 return false;
 

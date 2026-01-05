@@ -1,6 +1,6 @@
+using Fastdotnet.Core.Dtos;
+using Fastdotnet.Core.Dtos.Admin.Users;
 using Fastdotnet.Core.Entities.Admin;
-using Fastdotnet.Core.Models;
-using Fastdotnet.Core.Models.Admin.Users;
 using System.Threading.Tasks;
 
 namespace Fastdotnet.Service.IService.Admin

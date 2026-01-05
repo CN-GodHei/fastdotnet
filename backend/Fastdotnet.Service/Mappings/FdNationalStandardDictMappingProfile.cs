@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Fastdotnet.Core.Dtos.System;
 using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.Models.System;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

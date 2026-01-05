@@ -1,5 +1,5 @@
 using Fastdotnet.Core.Initializers;
-using Fastdotnet.Core.Models.LogModels;
+using Fastdotnet.Core.Dtos.LogModels;
 using SqlSugar;
 using System;
 using System.Linq;

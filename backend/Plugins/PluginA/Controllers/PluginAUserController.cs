@@ -1,10 +1,10 @@
 using AutoMapper;
 using Fastdotnet.Core.Attributes;
 using Fastdotnet.Core.Controllers;
+using Fastdotnet.Core.Dtos.App;
 using Fastdotnet.Core.Entities.App;
 using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.IService.App;
-using Fastdotnet.Core.Models.App;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PluginA.Dto;

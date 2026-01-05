@@ -1,7 +1,7 @@
 using AutoMapper;
+using Fastdotnet.Core.Dtos.System;
 using Fastdotnet.Core.Entities.System;
 using Fastdotnet.Core.Extensions;
-using Fastdotnet.Core.Models.System;
 using Newtonsoft.Json;
 
 namespace Fastdotnet.Service.Mappings

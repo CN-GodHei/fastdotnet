@@ -1,5 +1,5 @@
-﻿using Fastdotnet.Core.Enum;
-using Fastdotnet.Core.Models.Base;
+﻿using Fastdotnet.Core.Dtos.Base;
+using Fastdotnet.Core.Enum;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
