@@ -37,6 +37,11 @@ namespace Fastdotnet.Core.IService
         /// <returns>实体列表</returns>
         Task<List<T>> GetListAsync(Expression<Func<T, bool>> whereExpression, CancellationToken cancellationToken = default);
 
+        // 👇 新增：支持 Select 投影
+        Task<List<TResult>> GetListAsync<TResult>(
+            Expression<Func<T, bool>> whereExpression,
+            Expression<Func<T, TResult>> selectExpression,
+            CancellationToken ct = default);
         /// <summary>
         /// 根据条件查询第一个实体
         /// </summary>

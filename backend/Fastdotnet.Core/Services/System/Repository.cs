@@ -502,6 +502,17 @@ namespace Fastdotnet.Core.Services.System
             return Expression.Lambda<Func<T, bool>>(body, parameter);
         }
 
+        public async Task<List<TResult>> GetListAsync<TResult>(
+            Expression<Func<T, bool>> whereExpression,
+            Expression<Func<T, TResult>> selectExpression,
+            CancellationToken ct = default)
+        {
+            return await _db.Queryable<T>()
+                .Where(whereExpression)
+                .Select(selectExpression)
+                .ToListAsync(ct);
+        }
+
         #endregion
     }
 
