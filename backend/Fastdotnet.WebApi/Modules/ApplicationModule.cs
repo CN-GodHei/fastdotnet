@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.IService.Sys;
+using Fastdotnet.Core.Service.Sys;
 using Fastdotnet.Core.Services.App;
 using Fastdotnet.Core.Services.System;
 using Microsoft.Extensions.Configuration;
@@ -72,6 +73,9 @@ public class ApplicationModule : Module
 
         // 注册仓储和工作单元服务
         containerBuilder.RegisterType<SqlSugarUnitOfWork>().As<IUnitOfWork>().As<IStorageContext>().InstancePerLifetimeScope();
+
+        //用户操作信息
+        containerBuilder.RegisterType<UserRefFiller>().As<IUserRefFiller>().As<IUserRefFiller>().InstancePerLifetimeScope();
 
         // 在Autofac中注册AutoMapper
         containerBuilder.Register(c =>

@@ -1,3 +1,4 @@
+using Autofac.Core;
 using Fastdotnet.Core.IService.Sys;
 using Fastdotnet.Core.Service.Sys;
 using Fastdotnet.Plugin.Contracts;
@@ -86,6 +87,7 @@ builder.Services.AddAuthentication(options =>
 // 注册日志服务
 builder.Services.AddScoped<ILogService, LogService>();
 //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IUserRefFiller, UserRefFiller>();
 
 // 注册应用服务和初始化器
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
