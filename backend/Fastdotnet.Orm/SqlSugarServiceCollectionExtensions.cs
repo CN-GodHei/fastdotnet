@@ -156,7 +156,7 @@ public static class SqlSugarServiceCollectionExtensions
                                  string.IsNullOrEmpty((string?)oldValue))
                         {
                             var currentUser = serviceProvider.GetService<ICurrentUser>();
-                            var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "system";
+                            var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "anonymous";
                             entityInfo.SetValue(userId ?? "anonymous");
                         }
                     }
@@ -173,7 +173,7 @@ public static class SqlSugarServiceCollectionExtensions
                                  entityInfo.PropertyName == nameof(IAuditableEntity.UpdatedBy))
                         {
                             var currentUser = serviceProvider.GetService<ICurrentUser>();
-                            var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "system";
+                            var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "anonymous";
                             entityInfo.SetValue(userId ?? "anonymous");
                         }
 
@@ -202,7 +202,7 @@ public static class SqlSugarServiceCollectionExtensions
                                 if (deletedByProp != null && deletedByProp.GetValue(entity) == null)
                                 {
                                     var currentUser = serviceProvider.GetService<ICurrentUser>();
-                                    var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "system";
+                                    var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "anonymous";
                                     deletedByProp.SetValue(entity, userId ?? "anonymous");
                                 }
                             }
