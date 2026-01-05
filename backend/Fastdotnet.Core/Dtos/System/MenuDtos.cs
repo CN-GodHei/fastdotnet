@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using Fastdotnet.Core.Enum;
+using Fastdotnet.Core.Dtos.Common;
 
 namespace Fastdotnet.Core.Dtos.System
 {
@@ -50,6 +51,10 @@ namespace Fastdotnet.Core.Dtos.System
         public bool SupportMobile { get; set; } = false;
 
         public List<FdMenuDto> Children { get; set; }
+
+        public UserRefDto Creator { get; set; }
+        public UserRefDto Updater { get; set; }
+        public UserRefDto Deleter { get; set; }
     }
 
     public class CreateFdMenuDto

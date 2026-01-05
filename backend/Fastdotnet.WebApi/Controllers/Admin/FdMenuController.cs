@@ -1,4 +1,5 @@
 using Fastdotnet.Core.Dtos;
+using Fastdotnet.Core.IService.Sys;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
@@ -11,7 +12,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         private readonly ICurrentUser _currentUser;
         private readonly IRepository<FdRole> _roleRepository;
         private readonly IAdminUserService _adminUserService;
-
+        private readonly IUserRefFiller _userRefFiller;
         public FdMenuController(
             IBaseService<FdMenu, string> service,
             IMapper mapper,
@@ -19,12 +20,14 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             ICurrentUser currentUser,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
             IAdminUserService adminUserService,
-            IRepository<FdRole> roleRepository) : base(service, mapper)
+            IRepository<FdRole> roleRepository, 
+            IUserRefFiller userRefFiller) : base(service, mapper)
         {
             _menuService = menuService;
             _currentUser = currentUser;
             _adminUserService = adminUserService;
             _roleRepository = roleRepository;
+            _userRefFiller = userRefFiller;
         }
 
         [HttpGet("tree")]

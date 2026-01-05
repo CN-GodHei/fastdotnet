@@ -15,7 +15,10 @@ namespace Fastdotnet.Service.Mappings
         public FdMenuProfile()
         {
             // Source -> Target
-            CreateMap<FdMenu, FdMenuDto>().MaskSensitiveData();
+            CreateMap<FdMenu, FdMenuDto>().MaskSensitiveData()
+            .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.CreatedBy))
+            .ForMember(dest => dest.Updater, opt => opt.MapFrom(src => src.UpdatedBy))
+            .ForMember(dest => dest.Deleter, opt => opt.MapFrom(src => src.DeletedBy));
             CreateMap<CreateFdMenuDto, FdMenu>();
             CreateMap<UpdateFdMenuDto, FdMenu>();
         }
