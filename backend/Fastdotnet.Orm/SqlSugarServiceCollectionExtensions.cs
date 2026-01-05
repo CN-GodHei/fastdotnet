@@ -2,6 +2,7 @@ using Azure.Core;
 using Fastdotnet.Core.Dtos.Base;
 using Fastdotnet.Core.Dtos.Interfaces;
 using Fastdotnet.Core.Dtos.LogModels;
+using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -132,20 +133,31 @@ public static class SqlSugarServiceCollectionExtensions
                 // 插入前自动填充雪花ID和创建时间
                 db.Aop.DataExecuting = (oldValue, entityInfo) =>
                 {
+                    var entity = entityInfo.EntityValue;
+
                     if (entityInfo.OperationType == DataFilterType.InsertByObject)
                     {
-                        // 自动填充雪花ID（如果ID为0）
+                        // 1. 自动填充主键 ID 自动填充雪花ID（如果ID为0）
                         if (entityInfo.PropertyName == nameof(IBaseEntity.Id) && oldValue == null)
                         {
                             //entityInfo.SetValue(SnowflakeIdGenerator.NextStrId());
                             entityInfo.SetValue(YitIdHelper.NextId());
                         }
 
-                        // 自动填充创建时间（如果CreatedAt为默认值）
+                        // 2. 自动填充 CreatedAt（如果未设置） 自动填充创建时间（如果CreatedAt为默认值）
                         else if (entityInfo.PropertyName == nameof(IBaseEntity.CreatedAt) && (DateTime)oldValue == default)
                         {
                             // 使用本地时间，确保所见即所得
                             entityInfo.SetValue(DateTime.Now);
+                        }
+                        // 3. 自动填充 CreatedBy（仅当字段为空时）
+                        else if (entity is IAuditableEntity auditableInsert &&
+                                 entityInfo.PropertyName == nameof(IAuditableEntity.CreatedBy) &&
+                                 string.IsNullOrEmpty((string?)oldValue))
+                        {
+                            var currentUser = serviceProvider.GetService<ICurrentUser>();
+                            var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "system";
+                            entityInfo.SetValue(userId ?? "anonymous");
                         }
                     }
                     else if (entityInfo.OperationType == DataFilterType.UpdateByObject)
@@ -155,6 +167,45 @@ public static class SqlSugarServiceCollectionExtensions
                         {
                             // 使用本地时间，确保所见即所得
                             entityInfo.SetValue(DateTime.Now);
+                        }
+                        // 2. 自动填充 UpdatedBy（覆盖写入，或仅当为空？建议覆盖）
+                        else if (entity is IAuditableEntity auditableUpdate &&
+                                 entityInfo.PropertyName == nameof(IAuditableEntity.UpdatedBy))
+                        {
+                            var currentUser = serviceProvider.GetService<ICurrentUser>();
+                            var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "system";
+                            entityInfo.SetValue(userId ?? "anonymous");
+                        }
+
+                        // 3. 【关键】处理软删除：当 IsDeleted 从 false 变为 true 时，填充 DeletedAt 和 DeletedBy
+                        else if (entity is IAuditableEntity auditableDelete &&
+                                 entity is ISoftDelete softDelete &&
+                                 entityInfo.PropertyName == nameof(ISoftDelete.IsDeleted))
+                        {
+                            bool oldIsDeleted = (bool)(oldValue ?? false);
+                            var property = entityInfo.GetType().GetProperty(entityInfo.PropertyName);
+                            if (property == null) return;
+                            object currentValueObj = property.GetValue(entityInfo);
+                            bool newIsDeleted = currentValueObj is bool b ? b : false;
+
+                            if (!oldIsDeleted && newIsDeleted)
+                            {
+                                // 设置 DeletedAt（如果还没设）
+                                var deletedAtProp = entity.GetType().GetProperty(nameof(auditableDelete.DeletedAt));
+                                if (deletedAtProp != null && deletedAtProp.GetValue(entity) == null)
+                                {
+                                    deletedAtProp.SetValue(entity, DateTime.Now);
+                                }
+
+                                // 设置 DeletedBy（如果还没设）
+                                var deletedByProp = entity.GetType().GetProperty(nameof(auditableDelete.DeletedBy));
+                                if (deletedByProp != null && deletedByProp.GetValue(entity) == null)
+                                {
+                                    var currentUser = serviceProvider.GetService<ICurrentUser>();
+                                    var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "system";
+                                    deletedByProp.SetValue(entity, userId ?? "anonymous");
+                                }
+                            }
                         }
                     }
                 };
