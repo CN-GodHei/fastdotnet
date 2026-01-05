@@ -23,6 +23,11 @@ namespace Fastdotnet.Core.Dtos.Base
         /// 更新时间
         /// </summary>
         DateTime? UpdatedAt { get; set; }
+
+        /// <summary>
+        /// 删除时间
+        /// </summary>
+        DateTime? DeletedAt { get; set; }
     }
     
     /// <summary>
