@@ -75,7 +75,16 @@ public class ApplicationModule : Module
         containerBuilder.RegisterType<SqlSugarUnitOfWork>().As<IUnitOfWork>().As<IStorageContext>().InstancePerLifetimeScope();
 
         //用户操作信息
-        containerBuilder.RegisterType<UserRefFiller>().As<IUserRefFiller>().As<IUserRefFiller>().InstancePerLifetimeScope();
+        containerBuilder.RegisterType<UserRefFiller>().As<IUserRefFiller>().InstancePerLifetimeScope();
+        
+        // 注册用户显示名称服务
+        containerBuilder.RegisterType<UserDisplayNameService>().As<IUserDisplayNameService>().InstancePerLifetimeScope();
+
+        // 注册通用服务以支持泛型依赖注入，类似 Program.cs 中的注册
+        containerBuilder.RegisterGeneric(typeof(BaseService<,>)).As(typeof(IBaseService<,>)).InstancePerLifetimeScope();
+        containerBuilder.RegisterGeneric(typeof(BaseService<>)).As(typeof(IBaseService<>)).InstancePerLifetimeScope();
+        containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+        containerBuilder.RegisterGeneric(typeof(Repository<,>)).As(typeof(IRepository<,>)).InstancePerLifetimeScope();
 
         // 在Autofac中注册AutoMapper
         containerBuilder.Register(c =>

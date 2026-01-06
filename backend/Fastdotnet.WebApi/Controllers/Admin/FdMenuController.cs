@@ -1,4 +1,5 @@
 using Fastdotnet.Core.Dtos;
+using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.IService.Sys;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
@@ -73,7 +74,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             
             // 转换为 DTO
             var menuDtos = _mapper.Map<List<FdMenuDto>>(menuTree);
-            
+            await _userRefFiller.FillNamesAsync(menuDtos, SystemCategory.Admin, x => x.Creator,x=>x.Updater);
             return menuDtos;
         }
 

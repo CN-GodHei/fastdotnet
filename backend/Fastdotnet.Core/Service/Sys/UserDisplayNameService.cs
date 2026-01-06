@@ -16,21 +16,27 @@ namespace Fastdotnet.Core.Service.Sys
 {
     public class UserDisplayNameService : IUserDisplayNameService
     {
-        private readonly IBaseRepository<FdAdminUser> _adminUserRepository;
-        private readonly IBaseRepository<FdAppUser> _appUserRepository;
+        //private readonly IBaseRepository<FdAdminUser> _adminUserRepository;
+        //private readonly IBaseRepository<FdAppUser> _appUserRepository;
+        private readonly IBaseService<FdAdminUser> _adminUserService;
+        private readonly IBaseService<FdAppUser> _appUserService;
         private readonly IHybridCacheService _cache;
 
         // ⚠️ 最大单次查询用户数（防 DoS）
         private const int MaxBatchSize = 100;
 
         public UserDisplayNameService(
-            IBaseRepository<FdAdminUser> adminUserRepository,
-            IBaseRepository<FdAppUser> appUserRepository,
+            //IBaseRepository<FdAdminUser> adminUserRepository,
+            //IBaseRepository<FdAppUser> appUserRepository,
+            IBaseService<FdAdminUser> adminUserService,
+            IBaseService<FdAppUser> appUserService,
             IHybridCacheService cache)
         {
-            _adminUserRepository = adminUserRepository;
-            _appUserRepository = appUserRepository;
+            //_adminUserRepository = adminUserRepository;
+            //_appUserRepository = appUserRepository;
             _cache = cache;
+            _adminUserService = adminUserService;
+            _appUserService = appUserService;
         }
 
         public async Task<Dictionary<string, string>> GetDisplayNamesAsync(
@@ -66,7 +72,8 @@ namespace Fastdotnet.Core.Service.Sys
                     switch (systemCategory)
                     {
                         case SystemCategory.Admin:
-                            var adminUsers = await _adminUserRepository.GetListAsync(
+                            //var adminUsers = await _adminUserRepository.GetListAsync(
+                            var adminUsers = await _adminUserService.GetListAsync(
                                 u => uniqueIds.Contains(u.Id),
                                 u => new { u.Id, u.Name }
                             );
@@ -74,7 +81,8 @@ namespace Fastdotnet.Core.Service.Sys
                             break;
 
                         case SystemCategory.App:
-                            var appUsers = await _appUserRepository.GetListAsync(
+                            //var appUsers = await _appUserRepository.GetListAsync(
+                            var appUsers = await _appUserService.GetListAsync(
                                 u => uniqueIds.Contains(u.Id),
                                 u => new { u.Id, u.Nickname }
                             );

@@ -38,6 +38,19 @@ namespace Fastdotnet.Core.IService
         Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// 根据条件查询实体列表 新增方法：支持投影
+        /// </summary>
+        /// <typeparam name="TProjection"></typeparam>
+        /// <param name="whereExpression"></param>
+        /// <param name="selector"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        Task<List<TProjection>> GetListAsync<TProjection>(
+            Expression<Func<TEntity, bool>> whereExpression,
+            Expression<Func<TEntity, TProjection>> selector,
+            CancellationToken ct = default);
+
+        /// <summary>
         /// 根据条件查询第一个实体
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>

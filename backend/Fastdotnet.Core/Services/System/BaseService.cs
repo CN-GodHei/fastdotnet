@@ -284,6 +284,11 @@ namespace Fastdotnet.Core.Services.System
             return await _repository.PermanentDeleteAsync(whereExpression);
         }
 
+        public async Task<List<TProjection>> GetListAsync<TProjection>(Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, TProjection>> selector, CancellationToken ct = default)
+        {
+            return await _repository.GetListAsync(whereExpression, selector,ct);
+        }
+
         #endregion
     }
 
