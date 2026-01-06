@@ -8,6 +8,7 @@ namespace Fastdotnet.WebApi.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [ApiUsageScope(Core.Enum.ApiUsageScopeEnum.AdminOnly)]
     public class StorageController : ControllerBase
     {
         private readonly IStorageService _storageService;
@@ -24,6 +25,7 @@ namespace Fastdotnet.WebApi.Controllers
         /// <param name="bucketName">存储桶名称（可选）</param>
         /// <returns>上传结果</returns>
         [HttpPost("upload")]
+        [AllowAnonymous]
         public async Task<ActionResult<string>> UploadAsync(IFormFile file, string? bucketName = null)
         {
             if (file == null || file.Length == 0)
