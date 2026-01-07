@@ -189,11 +189,11 @@ if (app.Environment.IsDevelopment())
     app.UseCors();
 }
 // 只在生产环境中使用HTTPS重定向
-if (!app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
-app.UseHttpsRedirection();
+//if (!app.Environment.IsDevelopment())
+//{
+//    app.UseHttpsRedirection();
+//}
+//app.UseHttpsRedirection();
 app.UseMiddleware<RequestIdMiddleware>();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<OperationLogMiddleware>();
