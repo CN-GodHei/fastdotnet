@@ -15,75 +15,81 @@ namespace Fastdotnet.Core.Service.Sys
         private readonly IServiceProvider _serviceProvider;
         private IStorageService _currentStorageService;
         private readonly object _lock = new object();
-        private bool _initialized = false;
 
         public StorageServiceProxy(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            // 延迟初始化，避免在构造函数中产生循环依赖
         }
 
-        private void EnsureInitialized()
+        private IStorageService GetCurrentStorageService()
         {
-            if (!_initialized)
+            // 检查当前服务是否为StorageServiceProxy自身（即未初始化或需要更新的情况）
+            // 如果是，则获取当前注册的默认实现
+            if (_currentStorageService == null || _currentStorageService is StorageServiceProxy)
             {
                 lock (_lock)
                 {
-                    if (!_initialized)
+                    // 双重检查锁定
+                    if (_currentStorageService == null || _currentStorageService is StorageServiceProxy)
                     {
-                        // 使用IServiceScopeFactory创建一个临时作用域来获取默认实现
-                        // 这样可以避免直接从根ServiceProvider获取IStorageService导致的循环依赖
                         var scopeFactory = _serviceProvider.GetService<IServiceScopeFactory>();
                         using var scope = scopeFactory.CreateScope();
                         
                         // 尝试获取默认的本地存储服务实现（LocalStorageService）
-                        // 在依赖注入配置中，LocalStorageService应该是IStorageService的默认实现
-                        _currentStorageService = scope.ServiceProvider.GetService<LocalStorageService>();
+                        var localStorageService = scope.ServiceProvider.GetService<LocalStorageService>();
                         
-                        // 如果获取不到LocalStorageService，说明可能有插件替换了默认实现
-                        if (_currentStorageService == null)
+                        if (localStorageService != null)
                         {
-                            // 在临时作用域内获取当前注册的IStorageService实现
-                            // 这样即使有插件激活，也能获取到正确的实现
-                            _currentStorageService = scope.ServiceProvider.GetService<IStorageService>();
+                            // 如果存在LocalStorageService实例，使用它
+                            _currentStorageService = localStorageService;
+                        }
+                        else
+                        {
+                            // 否则获取当前注册的IStorageService实现（可能是插件提供的）
+                            var service = scope.ServiceProvider.GetService<IStorageService>();
                             
-                            // 如果获取到的仍然是StorageServiceProxy，说明还没有任何其他实现注册
-                            // 这种情况不应该发生，但为了安全起见，创建一个LocalStorageService实例
-                            if (_currentStorageService is StorageServiceProxy)
+                            // 确保获取到的不是StorageServiceProxy自身
+                            if (service != null && !(service is StorageServiceProxy))
                             {
+                                _currentStorageService = service;
+                            }
+                            else
+                            {
+                                // 如果还是获取不到合适的实现，创建默认的LocalStorageService
                                 var options = scope.ServiceProvider.GetService<IOptions<StorageOptions>>();
                                 _currentStorageService = new LocalStorageService(options);
                             }
                         }
-                        
-                        _initialized = true;
                     }
                 }
             }
+            
+            return _currentStorageService;
         }
 
         public async Task<string> UploadAsync(Stream fileStream, string fileName, string? bucketName = null)
         {
-            EnsureInitialized();
-            return await _currentStorageService.UploadAsync(fileStream, fileName, bucketName);
+            var service = GetCurrentStorageService();
+            Console.WriteLine($"Current storage service implementation: {service.GetType().FullName}");
+            return await service.UploadAsync(fileStream, fileName, bucketName);
         }
 
         public async Task<byte[]> DownloadAsync(string fileName, string? bucketName = null)
         {
-            EnsureInitialized();
-            return await _currentStorageService.DownloadAsync(fileName, bucketName);
+            var service = GetCurrentStorageService();
+            return await service.DownloadAsync(fileName, bucketName);
         }
 
         public async Task<bool> DeleteAsync(string fileName, string? bucketName = null)
         {
-            EnsureInitialized();
-            return await _currentStorageService.DeleteAsync(fileName, bucketName);
+            var service = GetCurrentStorageService();
+            return await service.DeleteAsync(fileName, bucketName);
         }
 
         public async Task<string> GetFileUrlAsync(string fileName, string? bucketName = null)
         {
-            EnsureInitialized();
-            return await _currentStorageService.GetFileUrlAsync(fileName, bucketName);
+            var service = GetCurrentStorageService();
+            return await service.GetFileUrlAsync(fileName, bucketName);
         }
 
         /// <summary>
@@ -95,7 +101,6 @@ namespace Fastdotnet.Core.Service.Sys
             lock (_lock)
             {
                 _currentStorageService = newStorageService;
-                _initialized = true; // 标记为已初始化，因为我们已经设置了服务
             }
         }
 
@@ -112,30 +117,27 @@ namespace Fastdotnet.Core.Service.Sys
                 // 尝试获取默认的本地存储服务实现
                 var defaultStorageService = scope.ServiceProvider.GetService<LocalStorageService>();
                 
-                // 如果获取不到LocalStorageService，说明可能有插件替换了默认实现
-                if (defaultStorageService == null)
+                if (defaultStorageService != null)
                 {
-                    // 在临时作用域内获取当前注册的IStorageService实现
+                    _currentStorageService = defaultStorageService;
+                }
+                else
+                {
+                    // 获取当前注册的IStorageService实现（可能是插件提供的）
                     var service = scope.ServiceProvider.GetService<IStorageService>();
                     
-                    // 如果获取到的仍然是StorageServiceProxy，说明还没有任何其他实现注册
-                    if (!(service is StorageServiceProxy))
+                    // 确保获取到的不是StorageServiceProxy自身
+                    if (service != null && !(service is StorageServiceProxy))
                     {
                         _currentStorageService = service;
                     }
                     else
                     {
-                        // 创建默认的LocalStorageService实例
+                        // 如果还是获取不到合适的实现，创建默认的LocalStorageService
                         var options = scope.ServiceProvider.GetService<IOptions<StorageOptions>>();
                         _currentStorageService = new LocalStorageService(options);
                     }
                 }
-                else
-                {
-                    _currentStorageService = defaultStorageService;
-                }
-                
-                _initialized = true; // 标记为已初始化
             }
         }
     }
