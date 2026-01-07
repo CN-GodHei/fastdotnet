@@ -174,8 +174,8 @@ public static class SwaggerExtensions
     /// </summary>
     public static WebApplication UseCustomSwagger(this WebApplication app)
     {
-        if (!app.Environment.IsDevelopment())
-            return app;
+        //if (!app.Environment.IsDevelopment())
+        //    return app;
 
         app.UseSwagger();
 
