@@ -12,12 +12,12 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
 {
     public interface IPluginLoadService
     {
-        Task<List<PluginConfig>> ScanPluginsAsync();
+        Task<List<PluginInfo>> ScanPluginsAsync();
         Task<ApiResult> EnablePluginAsync(string pluginId);
         Task<ApiResult> DisablePluginAsync(string pluginId);
         Task<ApiResult> UninstallPluginAsync(string pluginId);
         bool IsPluginActive(string pluginId);
-        IEnumerable<PluginConfig> GetLoadedPlugins();
+        IEnumerable<PluginInfo> GetLoadedPlugins();
         IEnumerable<string> GetActivePlugins();
         void StartInstalledPlugins();
         bool TryGetPluginScope(string pluginId, [MaybeNullWhen(false)] out ILifetimeScope scope);

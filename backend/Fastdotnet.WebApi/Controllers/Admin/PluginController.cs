@@ -21,7 +21,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// 扫描插件目录以发现所有可用插件
         /// </summary>
         [HttpGet("scan")]
-        public async Task<List<PluginConfig>> ScanPlugins()
+        public async Task<List<PluginInfo>> ScanPlugins()
         {
             var result = await _pluginLoadService.ScanPluginsAsync();
             return result;

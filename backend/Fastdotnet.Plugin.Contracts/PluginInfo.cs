@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Fastdotnet.Plugin.Contracts
 {
-    public class PluginConfig
+    public class PluginInfo
     {
         /// <summary>
         /// 插件ID

@@ -14,7 +14,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
 {
     public class PluginManager
     {
-        private readonly ConcurrentDictionary<string, (AssemblyLoadContext Context, Assembly Assembly, PluginConfig Config, ApplicationPart Part)> _loadedPlugins = new();
+        private readonly ConcurrentDictionary<string, (AssemblyLoadContext Context, Assembly Assembly, PluginInfo Config, ApplicationPart Part)> _loadedPlugins = new();
 
         private readonly ConcurrentDictionary<string, List<Type>> _pluginServiceTypes = new();
 
@@ -39,12 +39,12 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
             return _loadedPlugins.ContainsKey(pluginId);
         }
 
-        public PluginConfig GetPluginConfig(string pluginId)
+        public PluginInfo GetPluginConfig(string pluginId)
         {
             return _loadedPlugins.TryGetValue(pluginId, out var pluginInfo) ? pluginInfo.Config : null;
         }
 
-        public IEnumerable<PluginConfig> GetLoadedPluginConfigs()
+        public IEnumerable<PluginInfo> GetLoadedPluginConfigs()
         {
             return _loadedPlugins.Values.Select(v => v.Config);
         }
@@ -66,7 +66,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
             return false;
         }
 
-        public (Assembly Assembly, AssemblyLoadContext Context)? LoadPlugin(PluginConfig config, string pluginPath)
+        public (Assembly Assembly, AssemblyLoadContext Context)? LoadPlugin(PluginInfo config, string pluginPath)
         {
             var alc = new PluginAssemblyLoadContext(pluginPath);
 

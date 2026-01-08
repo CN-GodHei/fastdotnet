@@ -42,7 +42,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
 
                 if (_pluginManager.IsTypeFromPluginAssembly(controllerType))
                 {
-                    PluginConfig pluginConfig = null;
+                    PluginInfo pluginConfig = null;
                     foreach (var config in _pluginManager.GetLoadedPluginConfigs())
                     {
                         var assembly = _pluginManager.GetPluginAssembly(config.id);
