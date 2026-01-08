@@ -5,6 +5,7 @@ using Fastdotnet.Core.IService;
 using Fastdotnet.Core.IService.Sys;
 using Fastdotnet.Core.Services.System;
 using Fastdotnet.Core.Utils;
+using Fastdotnet.Plugin.Contracts;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PluginA.Dto;
@@ -27,7 +28,10 @@ namespace PluginA.Initializers
 
         public async Task InitializeAsync()
         {
-
+            // 动态获取当前插件的ID，而不是使用硬编码的ID
+            var pluginInfo = PluginContext.GetCurrentPluginInfo();
+            var pluginId = pluginInfo?.id;
+            Console.WriteLine("获取到插件信息:" + pluginInfo.id);
             var defaultConfig = new MyPluginConfiguration()
             {
                 AliOssInfo = new AliOss() { AK = "1", SK = "2" },
