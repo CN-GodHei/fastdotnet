@@ -219,6 +219,8 @@ namespace Fastdotnet.Core.IService
         Task<int> PermanentDeleteAsync(Expression<Func<T, bool>> whereExpression);
 
         #endregion
+        Task<T> InsertOrUpdateAsync(T entity);
+        Task<T> AddAndUpdateItByPrimaryKeysAsync(T entity);
     }
 
     /// <summary>

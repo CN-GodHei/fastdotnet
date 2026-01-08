@@ -248,6 +248,33 @@ namespace Fastdotnet.Core.Services.System
 
         #endregion
 
+        #region Upsert操作
+
+        /// <summary>
+        /// 插入或更新实体（Upsert操作）
+        /// </summary>
+        /// <param name="entity">实体对象</param>
+        /// <returns>操作后的实体</returns>
+        public virtual async Task<T> InsertOrUpdateAsync(T entity)
+        {
+            var result = await _db.Storageable(entity).ExecuteCommandAsync();
+            return entity;
+        }
+
+        /// <summary>
+        /// 通过主键进行Upsert操作
+        /// </summary>
+        /// <param name="entity">实体对象</param>
+        /// <returns>操作后的实体</returns>
+        public virtual async Task<T> AddAndUpdateItByPrimaryKeysAsync(T entity)
+        {
+            // SqlSugar的Storageable方法可以实现upsert功能，基于主键判断
+            var result = await _db.Storageable(entity).ExecuteCommandAsync();
+            return entity;
+        }
+
+        #endregion
+
         #region 删除操作
 
         /// <summary>
