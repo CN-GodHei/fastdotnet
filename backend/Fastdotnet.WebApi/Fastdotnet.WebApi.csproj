@@ -30,6 +30,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" />
     <PackageReference Include="Yitter.IdGenerator" />
+	<PackageReference Include="System.Management" />
   </ItemGroup>
 
   <ItemGroup>
