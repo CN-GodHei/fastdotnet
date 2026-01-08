@@ -80,12 +80,17 @@ public class ApplicationModule : Module
         // 注册用户显示名称服务
         containerBuilder.RegisterType<UserDisplayNameService>().As<IUserDisplayNameService>().InstancePerLifetimeScope();
 
+        //插件配置
+        containerBuilder.RegisterType<PluginConfigurationService>().As<IPluginConfigurationService>().InstancePerLifetimeScope();
+
         // 注册通用服务以支持泛型依赖注入，类似 Program.cs 中的注册
         containerBuilder.RegisterGeneric(typeof(BaseService<,>)).As(typeof(IBaseService<,>)).InstancePerLifetimeScope();
         containerBuilder.RegisterGeneric(typeof(BaseService<>)).As(typeof(IBaseService<>)).InstancePerLifetimeScope();
         containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
         containerBuilder.RegisterGeneric(typeof(Repository<,>)).As(typeof(IRepository<,>)).InstancePerLifetimeScope();
 
+        containerBuilder.RegisterGeneric(typeof(RawRepository<>)).As(typeof(IRawRepository<>)).InstancePerLifetimeScope();
+        containerBuilder.RegisterGeneric(typeof(RawRepository<,>)).As(typeof(IRawRepository<,>)).InstancePerLifetimeScope();
         // 在Autofac中注册AutoMapper
         containerBuilder.Register(c =>
         {
