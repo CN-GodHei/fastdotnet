@@ -39,12 +39,12 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
             return _loadedPlugins.ContainsKey(pluginId);
         }
 
-        public PluginInfo GetPluginConfig(string pluginId)
+        public PluginInfo GetPluginInfo(string pluginId)
         {
             return _loadedPlugins.TryGetValue(pluginId, out var pluginInfo) ? pluginInfo.Config : null;
         }
 
-        public IEnumerable<PluginInfo> GetLoadedPluginConfigs()
+        public IEnumerable<PluginInfo> GetLoadedPluginInfos()
         {
             return _loadedPlugins.Values.Select(v => v.Config);
         }
