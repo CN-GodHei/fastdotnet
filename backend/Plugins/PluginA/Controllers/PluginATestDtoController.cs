@@ -1,6 +1,9 @@
 using AutoMapper;
+using Fastdotnet.Core.Attributes;
 using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.IService;
+using Fastdotnet.Core.IService.Sys;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NetTaste;
 using PluginA.Dto;
@@ -20,9 +23,11 @@ namespace PluginA.Controllers
     [Route("api/[controller]")]
     public class PluginATestDtoController : GenericDtoControllerBase<PluginATest, string, PluginATestCreateDto, PluginATestUpdateDto, PluginATestDto>
     {
-        public PluginATestDtoController(IBaseService<PluginATest, string> pluginATestService, IMapper mapper) 
+        private readonly IPluginConfigurationService _pluginConfigurationService;
+        public PluginATestDtoController(IBaseService<PluginATest, string> pluginATestService, IMapper mapper, IPluginConfigurationService pluginConfigurationService)
             : base(pluginATestService, mapper)
         {
+            _pluginConfigurationService = pluginConfigurationService;
         }
 
         // 继承自GenericDtoControllerBase的通用CRUD操作:
@@ -50,8 +55,11 @@ namespace PluginA.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("test")]
+        [AllowAnonymous]
+        [ApiUsageScope(Fastdotnet.Core.Enum.ApiUsageScopeEnum.AdminOnly)]
         public async Task<string> Test()
         {
+            var a = _pluginConfigurationService.GetSettingsAsync<MyPluginConfiguration>("11375910391972869");
             return "这是一个测试方法";
         }
     }
