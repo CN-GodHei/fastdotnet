@@ -11,6 +11,7 @@ namespace PluginA.Dto
     {
         public AliPay AliPayInfo { get; set; }
         public AliOss AliOssInfo { get; set; }
+        public string testinfo { get; set; }
     }
 
     public class AliPay
