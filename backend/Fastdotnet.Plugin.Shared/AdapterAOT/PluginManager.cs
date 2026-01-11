@@ -1,4 +1,4 @@
-﻿using Fastdotnet.Plugin.Contracts;
+using Fastdotnet.Plugin.Contracts;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using System;
 using System.Collections.Concurrent;
@@ -99,6 +99,46 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
             }
 
             alc.Unload();
+            return null;
+        }
+        
+        /// <summary>
+        /// 使用指定的AssemblyLoadContext加载插件
+        /// </summary>
+        /// <param name="config">插件配置</param>
+        /// <param name="pluginPath">插件路径</param>
+        /// <param name="customLoadContext">自定义加载上下文</param>
+        /// <returns>加载的程序集和上下文</returns>
+        public (Assembly Assembly, AssemblyLoadContext Context)? LoadPluginWithContext(PluginInfo config, string pluginPath, AssemblyLoadContext customLoadContext)
+        {
+            // Load the assembly into a byte array and then from a memory stream
+            // to avoid locking the original DLL file on disk.
+            var assemblyBytes = File.ReadAllBytes(pluginPath);
+            using var memoryStream = new MemoryStream(assemblyBytes);
+            var loadedAssembly = customLoadContext.LoadFromStream(memoryStream);
+            var part = new AssemblyPart(loadedAssembly);
+
+            if (_loadedPlugins.TryAdd(config.id, (customLoadContext, loadedAssembly, config, part)))
+            {
+                var serviceTypes = new List<Type>();
+                var types = loadedAssembly.GetExportedTypes().Where(t => t.IsClass && !t.IsAbstract);
+                foreach (var type in types)
+                {
+                    foreach (var interfaceType in type.GetInterfaces())
+                    {
+                        _pluginTypes.TryAdd(interfaceType, type);
+                        serviceTypes.Add(interfaceType);
+                    }
+                }
+                _pluginServiceTypes.TryAdd(config.id, serviceTypes);
+
+                _applicationPartManager.ApplicationParts.Add(part);
+
+                ActionDescriptorChangeProvider.Instance.NotifyChanges();
+
+                return (loadedAssembly, customLoadContext);
+            }
+
             return null;
         }
 
