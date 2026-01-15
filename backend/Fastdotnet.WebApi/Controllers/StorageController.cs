@@ -1,6 +1,8 @@
+using Fastdotnet.Core.Dto.Storage;
 using Fastdotnet.Core.IService.Sys;
 using Fastdotnet.Core.Service.Sys;
 using Microsoft.AspNetCore.StaticFiles;
+
 
 namespace Fastdotnet.WebApi.Controllers
 {
@@ -139,6 +141,107 @@ namespace Fastdotnet.WebApi.Controllers
                 return BadRequest($"访问文件时发生错误: {ex.Message}");
             }
         }
+
+        /// <summary>
+        /// 获取当前存储配置
+        /// </summary>
+        /// <returns>存储配置信息</returns>
+        [HttpGet("config")]
+        [AllowAnonymous]
+        public async Task<ActionResult<StorageConfigResponse>> GetCurrentConfig()
+        {
+            // 根据当前激活的存储服务类型返回配置
+            var config = new StorageConfigResponse
+            {
+                StorageType = GetStorageType(), // 获取当前存储类型
+                DefaultBucket = _storageOptions.DefaultBucket,
+                Domain = _storageOptions.BaseUrl,
+                SupportDirectUpload = IsDirectUploadSupported(), // 判断是否支持前端直传
+                ConfigParams = new Dictionary<string, object>()
+            };
+
+            return Ok(config);
+        }
+
+        /// <summary>
+        /// 获取上传凭证
+        /// </summary>
+        /// <param name="request">上传凭证请求参数</param>
+        /// <returns>上传凭证信息</returns>
+        [HttpPost("get-upload-credential")]
+        [AllowAnonymous]
+        public async Task<ActionResult<UploadCredentialResponse>> GetUploadCredential([FromBody] UploadCredentialRequest request)
+        {
+            // 检查当前存储服务是否支持生成上传凭证
+            if (_storageService is IStorageService extendedStorageService)
+            {
+                try
+                {
+                    var credential = await extendedStorageService.GenerateUploadCredentialAsync(request);
+                    return Ok(credential);
+                }
+                catch (NotImplementedException)
+                {
+                    // 如果当前存储服务不支持生成上传凭证（如本地存储），返回后端上传地址
+                    var credential = new UploadCredentialResponse
+                    {
+                        CredentialType = GetStorageType(),
+                        UploadUrl = "/api/storage/upload",
+                        ExpiresAt = DateTime.UtcNow.AddHours(1),
+                        FileUrlTemplate = "",
+                        UploadHeaders = new Dictionary<string, string>(),
+                        UploadParams = new Dictionary<string, object>(),
+                        SupportDirectUpload = false
+                    };
+                    
+                    return Ok(credential);
+                }
+            }
+            else
+            {
+                // 默认返回后端上传地址
+                var credential = new UploadCredentialResponse
+                {
+                    CredentialType = GetStorageType(),
+                    UploadUrl = "/api/storage/upload",
+                    ExpiresAt = DateTime.UtcNow.AddHours(1),
+                    FileUrlTemplate = "",
+                    UploadHeaders = new Dictionary<string, string>(),
+                    UploadParams = new Dictionary<string, object>(),
+                    SupportDirectUpload = false
+                };
+                
+                return Ok(credential);
+            }
+        }
+
+        /// <summary>
+        /// 获取当前存储类型
+        /// </summary>
+        /// <returns>存储类型标识</returns>
+        private string GetStorageType()
+        {
+            // 如果当前存储服务实现了扩展接口，直接获取存储类型
+            if (_storageService is IStorageService extendedStorageService)
+            {
+                return extendedStorageService.StorageType;
+            }
+            
+            // 否则返回默认值
+            return "unknown";
+        }
+
+        /// <summary>
+        /// 判断当前存储是否支持前端直传
+        /// </summary>
+        /// <returns>是否支持直传</returns>
+        private bool IsDirectUploadSupported()
+        {
+            var storageType = GetStorageType();
+            return storageType != "local" && storageType != "unknown"; // 除了本地存储外，其他都支持直传
+        }
+
+
 
         /// <summary>
         /// 检查是否为图片文件

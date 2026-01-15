@@ -1,3 +1,4 @@
+using Fastdotnet.Core.Dto.Storage;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -41,5 +42,17 @@ namespace Fastdotnet.Core.IService.Sys
         /// <param name="bucketName">存储桶名称（可选）</param>
         /// <returns>文件访问URL</returns>
         Task<string> GetFileUrlAsync(string fileName, string? bucketName = null);
+
+        /// <summary>
+        /// 获取存储类型标识
+        /// </summary>
+        string StorageType { get; }
+
+        /// <summary>
+        /// 生成上传凭证（用于前端直传）
+        /// </summary>
+        /// <param name="request">上传凭证请求参数</param>
+        /// <returns>上传凭证信息</returns>
+        Task<UploadCredentialResponse> GenerateUploadCredentialAsync(UploadCredentialRequest request);
     }
 }

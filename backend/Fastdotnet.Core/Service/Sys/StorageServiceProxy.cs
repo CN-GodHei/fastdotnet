@@ -1,3 +1,4 @@
+using Fastdotnet.Core.Dto.Storage;
 using Fastdotnet.Core.IService.Sys;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -90,6 +91,33 @@ namespace Fastdotnet.Core.Service.Sys
         {
             var service = GetCurrentStorageService();
             return await service.GetFileUrlAsync(fileName, bucketName);
+        }
+
+        public string StorageType
+        {
+            get
+            {
+                var service = GetCurrentStorageService();
+                // 如果当前服务实现了IStorageService接口的StorageType属性，则返回其值
+                if (service is IStorageService storageService)
+                {
+                    return storageService.StorageType;
+                }
+                // 否则返回默认值
+                return "unknown";
+            }
+        }
+
+        public async Task<UploadCredentialResponse> GenerateUploadCredentialAsync(UploadCredentialRequest request)
+        {
+            var service = GetCurrentStorageService();
+            // 如果当前服务实现了IStorageService接口的GenerateUploadCredentialAsync方法，则调用它
+            if (service is IStorageService storageService)
+            {
+                return await storageService.GenerateUploadCredentialAsync(request);
+            }
+            // 否则抛出异常
+            throw new NotImplementedException("当前存储服务不支持生成上传凭证");
         }
 
         /// <summary>

@@ -1,3 +1,4 @@
+using Fastdotnet.Core.Dto.Storage;
 using Fastdotnet.Core.IService.Sys;
 using Fastdotnet.Plugin.Contracts;
 using Microsoft.Extensions.Options;
@@ -74,6 +75,14 @@ namespace Fastdotnet.Core.Service.Sys
         {
             var relativePath = Path.Combine(bucketName ?? _options.DefaultBucket, fileName).Replace('\\', '/');
             return $"{_options.BaseUrl}/{relativePath}";
+        }
+
+        public string StorageType => "local";
+
+        public async Task<UploadCredentialResponse> GenerateUploadCredentialAsync(UploadCredentialRequest request)
+        {
+            // 本地存储不支持前端直传，抛出异常表示不支持
+            throw new NotImplementedException("本地存储不支持前端直传，应使用后端代理上传");
         }
     }
 
