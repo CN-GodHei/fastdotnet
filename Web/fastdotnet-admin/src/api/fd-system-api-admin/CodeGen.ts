@@ -3,7 +3,7 @@
 import request from '@/utils/request';
 
 /** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/CodeGen */
-export async function getCodeGen(options?: { [key: string]: any }) {
+export async function getApiCodeGen(options?: { [key: string]: any }) {
 	return request<APIModel.CodeGenConfigDto[]>('/api/CodeGen', {
 		method: 'GET',
 		...(options || {}),
@@ -11,7 +11,7 @@ export async function getCodeGen(options?: { [key: string]: any }) {
 }
 
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/CodeGen */
-export async function postCodeGen(body: APIModel.CreateCodeGenDto, options?: { [key: string]: any }) {
+export async function postApiCodeGen(body: APIModel.CreateCodeGenDto, options?: { [key: string]: any }) {
 	return request<APIModel.CodeGenConfigDto>('/api/CodeGen', {
 		method: 'POST',
 		headers: {
@@ -23,9 +23,9 @@ export async function postCodeGen(body: APIModel.CreateCodeGenDto, options?: { [
 }
 
 /** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/CodeGen/${param0} */
-export async function getCodeGenId(
+export async function getApiCodeGenId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getCodeGenIdParams,
+	params: APIModel.getApiCodeGenIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -37,9 +37,9 @@ export async function getCodeGenId(
 }
 
 /** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/CodeGen/${param0} */
-export async function putCodeGenId(
+export async function putApiCodeGenId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putCodeGenIdParams,
+	params: APIModel.putApiCodeGenIdParams,
 	body: APIModel.UpdateCodeGenDto,
 	options?: { [key: string]: any }
 ) {
@@ -56,9 +56,9 @@ export async function putCodeGenId(
 }
 
 /** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/CodeGen/${param0} */
-export async function deleteCodeGenId(
+export async function deleteApiCodeGenId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteCodeGenIdParams,
+	params: APIModel.deleteApiCodeGenIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -70,7 +70,7 @@ export async function deleteCodeGenId(
 }
 
 /** 获取应用命名空间列表 GET /api/CodeGen/applicationnamespaces */
-export async function getCodeGenApplicationnamespaces(options?: { [key: string]: any }) {
+export async function getApiCodeGenApplicationnamespaces(options?: { [key: string]: any }) {
 	return request<string[]>('/api/CodeGen/applicationnamespaces', {
 		method: 'GET',
 		...(options || {}),
@@ -78,7 +78,7 @@ export async function getCodeGenApplicationnamespaces(options?: { [key: string]:
 }
 
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/CodeGen/batch */
-export async function putCodeGenBatch(body: APIModel.UpdateCodeGenDto[], options?: { [key: string]: any }) {
+export async function putApiCodeGenBatch(body: APIModel.UpdateCodeGenDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGen/batch', {
 		method: 'PUT',
 		headers: {
@@ -90,7 +90,7 @@ export async function putCodeGenBatch(body: APIModel.UpdateCodeGenDto[], options
 }
 
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/CodeGen/batch */
-export async function postCodeGenBatch(body: APIModel.CreateCodeGenDto[], options?: { [key: string]: any }) {
+export async function postApiCodeGenBatch(body: APIModel.CreateCodeGenDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGen/batch', {
 		method: 'POST',
 		headers: {
@@ -102,7 +102,7 @@ export async function postCodeGenBatch(body: APIModel.CreateCodeGenDto[], option
 }
 
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/CodeGen/batch */
-export async function deleteCodeGenBatch(body: string[], options?: { [key: string]: any }) {
+export async function deleteApiCodeGenBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGen/batch', {
 		method: 'DELETE',
 		headers: {
@@ -114,7 +114,10 @@ export async function deleteCodeGenBatch(body: string[], options?: { [key: strin
 }
 
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/CodeGen/batch/updatebycondition */
-export async function putCodeGenBatchUpdatebycondition(body: APIModel.UpdateCodeGenDtoBatchUpdateByConditionDto, options?: { [key: string]: any }) {
+export async function putApiCodeGenBatchUpdatebycondition(
+	body: APIModel.UpdateCodeGenDtoBatchUpdateByConditionDto,
+	options?: { [key: string]: any }
+) {
 	return request<number>('/api/CodeGen/batch/updatebycondition', {
 		method: 'PUT',
 		headers: {
@@ -126,9 +129,9 @@ export async function putCodeGenBatchUpdatebycondition(body: APIModel.UpdateCode
 }
 
 /** 根据表名和配置ID获取列信息 GET /api/CodeGen/columnlist/${param0}/${param1} */
-export async function getCodeGenColumnlistTableNameConfigId(
+export async function getApiCodeGenColumnlistTableNameConfigId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getCodeGenColumnlistTableNameConfigIdParams,
+	params: APIModel.getApiCodeGenColumnlistTableNameConfigIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { tableName: param0, configId: param1, ...queryParams } = params;
@@ -140,9 +143,9 @@ export async function getCodeGenColumnlistTableNameConfigId(
 }
 
 /** 下载生成的代码文件 GET /api/CodeGen/download */
-export async function getCodeGenDownload(
+export async function getApiCodeGenDownload(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getCodeGenDownloadParams,
+	params: APIModel.getApiCodeGenDownloadParams,
 	options?: { [key: string]: any }
 ) {
 	return request<any>('/api/CodeGen/download', {
@@ -155,9 +158,9 @@ export async function getCodeGenDownload(
 }
 
 /** 根据表名获取实体名 GET /api/CodeGen/getentityname */
-export async function getCodeGenGetentityname(
+export async function getApiCodeGenGetentityname(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getCodeGenGetentitynameParams,
+	params: APIModel.getApiCodeGenGetentitynameParams,
 	options?: { [key: string]: any }
 ) {
 	return request<string>('/api/CodeGen/getentityname', {
@@ -170,9 +173,9 @@ export async function getCodeGenGetentityname(
 }
 
 /** 获取表的列数据 GET /api/CodeGen/gettablecolumnlist */
-export async function getCodeGenGettablecolumnlist(
+export async function getApiCodeGenGettablecolumnlist(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getCodeGenGettablecolumnlistParams,
+	params: APIModel.getApiCodeGenGettablecolumnlistParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.ColumnInfoDto[]>('/api/CodeGen/gettablecolumnlist', {
@@ -185,7 +188,7 @@ export async function getCodeGenGettablecolumnlist(
 }
 
 /** 获取库表数据 GET /api/CodeGen/gettablelist */
-export async function getCodeGenGettablelist(options?: { [key: string]: any }) {
+export async function getApiCodeGenGettablelist(options?: { [key: string]: any }) {
 	return request<APIModel.TableInfoDto[]>('/api/CodeGen/gettablelist', {
 		method: 'GET',
 		...(options || {}),
@@ -193,9 +196,9 @@ export async function getCodeGenGettablelist(options?: { [key: string]: any }) {
 }
 
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/CodeGen/page */
-export async function getCodeGenPage(
+export async function getApiCodeGenPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getCodeGenPageParams,
+	params: APIModel.getApiCodeGenPageParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/CodeGen/page', {
@@ -212,7 +215,7 @@ export async function getCodeGenPage(
 }
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/CodeGen/page/search */
-export async function postCodeGenPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+export async function postApiCodeGenPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/CodeGen/page/search', {
 		method: 'POST',
 		headers: {
@@ -224,9 +227,9 @@ export async function postCodeGenPageSearch(body: APIModel.PageQueryByConditionD
 }
 
 /** 预览生成的代码 GET /api/CodeGen/preview/${param0} */
-export async function getCodeGenPreviewConfigId(
+export async function getApiCodeGenPreviewConfigId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getCodeGenPreviewConfigIdParams,
+	params: APIModel.getApiCodeGenPreviewConfigIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { configId: param0, ...queryParams } = params;
@@ -244,9 +247,9 @@ export async function getCodeGenPreviewConfigId(
 }
 
 /** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/CodeGen/recyclebin */
-export async function getCodeGenRecyclebin(
+export async function getApiCodeGenRecyclebin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getCodeGenRecyclebinParams,
+	params: APIModel.getApiCodeGenRecyclebinParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/CodeGen/recyclebin', {
@@ -263,9 +266,9 @@ export async function getCodeGenRecyclebin(
 }
 
 /** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/CodeGen/recyclebin/${param0}/permanent */
-export async function deleteCodeGenRecyclebinIdPermanent(
+export async function deleteApiCodeGenRecyclebinIdPermanent(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteCodeGenRecyclebinIdPermanentParams,
+	params: APIModel.deleteApiCodeGenRecyclebinIdPermanentParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -277,9 +280,9 @@ export async function deleteCodeGenRecyclebinIdPermanent(
 }
 
 /** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/CodeGen/recyclebin/${param0}/restore */
-export async function putCodeGenRecyclebinIdRestore(
+export async function putApiCodeGenRecyclebinIdRestore(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putCodeGenRecyclebinIdRestoreParams,
+	params: APIModel.putApiCodeGenRecyclebinIdRestoreParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -291,7 +294,7 @@ export async function putCodeGenRecyclebinIdRestore(
 }
 
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/CodeGen/recyclebin/permanent */
-export async function postCodeGenRecyclebinPermanent(body: APIModel.FdCodeGenBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiCodeGenRecyclebinPermanent(body: APIModel.FdCodeGenBooleanFuncExpression, options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGen/recyclebin/permanent', {
 		method: 'POST',
 		headers: {
@@ -303,7 +306,7 @@ export async function postCodeGenRecyclebinPermanent(body: APIModel.FdCodeGenBoo
 }
 
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/CodeGen/recyclebin/restore */
-export async function postCodeGenRecyclebinRestore(body: APIModel.FdCodeGenBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiCodeGenRecyclebinRestore(body: APIModel.FdCodeGenBooleanFuncExpression, options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGen/recyclebin/restore', {
 		method: 'POST',
 		headers: {
@@ -315,7 +318,7 @@ export async function postCodeGenRecyclebinRestore(body: APIModel.FdCodeGenBoole
 }
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/CodeGen/recyclebin/search */
-export async function postCodeGenRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+export async function postApiCodeGenRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/CodeGen/recyclebin/search', {
 		method: 'POST',
 		headers: {
@@ -327,9 +330,9 @@ export async function postCodeGenRecyclebinSearch(body: APIModel.PageQueryByCond
 }
 
 /** 根据配置ID获取表列表 GET /api/CodeGen/tablelist/${param0} */
-export async function getCodeGenTablelistConfigId(
+export async function getApiCodeGenTablelistConfigId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getCodeGenTablelistConfigIdParams,
+	params: APIModel.getApiCodeGenTablelistConfigIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { configId: param0, ...queryParams } = params;

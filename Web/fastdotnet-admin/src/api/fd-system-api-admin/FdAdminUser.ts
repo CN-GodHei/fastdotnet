@@ -3,7 +3,7 @@
 import request from '@/utils/request';
 
 /** 获取所有管理员用户 (自定义注释) GET /api/admin/FdAdminUser */
-export async function getAdminFdAdminUser(options?: { [key: string]: any }) {
+export async function getApiAdminFdAdminUser(options?: { [key: string]: any }) {
 	return request<APIModel.FdAdminUserDto[]>('/api/admin/FdAdminUser', {
 		method: 'GET',
 		...(options || {}),
@@ -11,7 +11,7 @@ export async function getAdminFdAdminUser(options?: { [key: string]: any }) {
 }
 
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/admin/FdAdminUser */
-export async function postAdminFdAdminUser(body: APIModel.CreateFdAdminUserDto, options?: { [key: string]: any }) {
+export async function postApiAdminFdAdminUser(body: APIModel.CreateFdAdminUserDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdAdminUserDto>('/api/admin/FdAdminUser', {
 		method: 'POST',
 		headers: {
@@ -23,9 +23,9 @@ export async function postAdminFdAdminUser(body: APIModel.CreateFdAdminUserDto, 
 }
 
 /** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/admin/FdAdminUser/${param0} */
-export async function getAdminFdAdminUserId(
+export async function getApiAdminFdAdminUserId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getAdminFdAdminUserIdParams,
+	params: APIModel.getApiAdminFdAdminUserIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -37,9 +37,9 @@ export async function getAdminFdAdminUserId(
 }
 
 /** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/admin/FdAdminUser/${param0} */
-export async function putAdminFdAdminUserId(
+export async function putApiAdminFdAdminUserId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putAdminFdAdminUserIdParams,
+	params: APIModel.putApiAdminFdAdminUserIdParams,
 	body: APIModel.UpdateFdAdminUserDto,
 	options?: { [key: string]: any }
 ) {
@@ -56,9 +56,9 @@ export async function putAdminFdAdminUserId(
 }
 
 /** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/admin/FdAdminUser/${param0} */
-export async function deleteAdminFdAdminUserId(
+export async function deleteApiAdminFdAdminUserId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteAdminFdAdminUserIdParams,
+	params: APIModel.deleteApiAdminFdAdminUserIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -70,9 +70,9 @@ export async function deleteAdminFdAdminUserId(
 }
 
 /** 此处后端没有提供注释 POST /api/admin/FdAdminUser/${param0}/reset-password */
-export async function postAdminFdAdminUserIdResetPassword(
+export async function postApiAdminFdAdminUserIdResetPassword(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postAdminFdAdminUserIdResetPasswordParams,
+	params: APIModel.postApiAdminFdAdminUserIdResetPasswordParams,
 	body: APIModel.ResetPasswordDto,
 	options?: { [key: string]: any }
 ) {
@@ -89,7 +89,7 @@ export async function postAdminFdAdminUserIdResetPassword(
 }
 
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/FdAdminUser/batch */
-export async function putAdminFdAdminUserBatch(body: APIModel.UpdateFdAdminUserDto[], options?: { [key: string]: any }) {
+export async function putApiAdminFdAdminUserBatch(body: APIModel.UpdateFdAdminUserDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdAdminUser/batch', {
 		method: 'PUT',
 		headers: {
@@ -101,7 +101,7 @@ export async function putAdminFdAdminUserBatch(body: APIModel.UpdateFdAdminUserD
 }
 
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/FdAdminUser/batch */
-export async function postAdminFdAdminUserBatch(body: APIModel.CreateFdAdminUserDto[], options?: { [key: string]: any }) {
+export async function postApiAdminFdAdminUserBatch(body: APIModel.CreateFdAdminUserDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdAdminUser/batch', {
 		method: 'POST',
 		headers: {
@@ -113,7 +113,7 @@ export async function postAdminFdAdminUserBatch(body: APIModel.CreateFdAdminUser
 }
 
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/admin/FdAdminUser/batch */
-export async function deleteAdminFdAdminUserBatch(body: string[], options?: { [key: string]: any }) {
+export async function deleteApiAdminFdAdminUserBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdAdminUser/batch', {
 		method: 'DELETE',
 		headers: {
@@ -125,7 +125,7 @@ export async function deleteAdminFdAdminUserBatch(body: string[], options?: { [k
 }
 
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdAdminUser/batch/updatebycondition */
-export async function putAdminFdAdminUserBatchUpdatebycondition(
+export async function putApiAdminFdAdminUserBatchUpdatebycondition(
 	body: APIModel.UpdateFdAdminUserDtoBatchUpdateByConditionDto,
 	options?: { [key: string]: any }
 ) {
@@ -140,7 +140,7 @@ export async function putAdminFdAdminUserBatchUpdatebycondition(
 }
 
 /** 此处后端没有提供注释 GET /api/admin/FdAdminUser/getUserInfo */
-export async function getAdminFdAdminUserGetUserInfo(options?: { [key: string]: any }) {
+export async function getApiAdminFdAdminUserGetUserInfo(options?: { [key: string]: any }) {
 	return request<APIModel.FdAdminUserDto>('/api/admin/FdAdminUser/getUserInfo', {
 		method: 'GET',
 		...(options || {}),
@@ -148,9 +148,9 @@ export async function getAdminFdAdminUserGetUserInfo(options?: { [key: string]: 
 }
 
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/admin/FdAdminUser/page */
-export async function getAdminFdAdminUserPage(
+export async function getApiAdminFdAdminUserPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getAdminFdAdminUserPageParams,
+	params: APIModel.getApiAdminFdAdminUserPageParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/admin/FdAdminUser/page', {
@@ -167,7 +167,7 @@ export async function getAdminFdAdminUserPage(
 }
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdAdminUser/page/search */
-export async function postAdminFdAdminUserPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+export async function postApiAdminFdAdminUserPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdAdminUser/page/search', {
 		method: 'POST',
 		headers: {
@@ -179,9 +179,9 @@ export async function postAdminFdAdminUserPageSearch(body: APIModel.PageQueryByC
 }
 
 /** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/admin/FdAdminUser/recyclebin */
-export async function getAdminFdAdminUserRecyclebin(
+export async function getApiAdminFdAdminUserRecyclebin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getAdminFdAdminUserRecyclebinParams,
+	params: APIModel.getApiAdminFdAdminUserRecyclebinParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/admin/FdAdminUser/recyclebin', {
@@ -198,9 +198,9 @@ export async function getAdminFdAdminUserRecyclebin(
 }
 
 /** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/admin/FdAdminUser/recyclebin/${param0}/permanent */
-export async function deleteAdminFdAdminUserRecyclebinIdPermanent(
+export async function deleteApiAdminFdAdminUserRecyclebinIdPermanent(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteAdminFdAdminUserRecyclebinIdPermanentParams,
+	params: APIModel.deleteApiAdminFdAdminUserRecyclebinIdPermanentParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -212,9 +212,9 @@ export async function deleteAdminFdAdminUserRecyclebinIdPermanent(
 }
 
 /** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/admin/FdAdminUser/recyclebin/${param0}/restore */
-export async function putAdminFdAdminUserRecyclebinIdRestore(
+export async function putApiAdminFdAdminUserRecyclebinIdRestore(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putAdminFdAdminUserRecyclebinIdRestoreParams,
+	params: APIModel.putApiAdminFdAdminUserRecyclebinIdRestoreParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -226,7 +226,7 @@ export async function putAdminFdAdminUserRecyclebinIdRestore(
 }
 
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdAdminUser/recyclebin/permanent */
-export async function postAdminFdAdminUserRecyclebinPermanent(body: APIModel.FdAdminUserBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiAdminFdAdminUserRecyclebinPermanent(body: APIModel.FdAdminUserBooleanFuncExpression, options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdAdminUser/recyclebin/permanent', {
 		method: 'POST',
 		headers: {
@@ -238,7 +238,7 @@ export async function postAdminFdAdminUserRecyclebinPermanent(body: APIModel.FdA
 }
 
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdAdminUser/recyclebin/restore */
-export async function postAdminFdAdminUserRecyclebinRestore(body: APIModel.FdAdminUserBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiAdminFdAdminUserRecyclebinRestore(body: APIModel.FdAdminUserBooleanFuncExpression, options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdAdminUser/recyclebin/restore', {
 		method: 'POST',
 		headers: {
@@ -250,7 +250,7 @@ export async function postAdminFdAdminUserRecyclebinRestore(body: APIModel.FdAdm
 }
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdAdminUser/recyclebin/search */
-export async function postAdminFdAdminUserRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+export async function postApiAdminFdAdminUserRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdAdminUser/recyclebin/search', {
 		method: 'POST',
 		headers: {
@@ -262,7 +262,7 @@ export async function postAdminFdAdminUserRecyclebinSearch(body: APIModel.PageQu
 }
 
 /** 解锁屏幕 POST /api/admin/FdAdminUser/unlock */
-export async function postAdminFdAdminUserUnlock(body: APIModel.UnlockDto, options?: { [key: string]: any }) {
+export async function postApiAdminFdAdminUserUnlock(body: APIModel.UnlockDto, options?: { [key: string]: any }) {
 	return request<boolean>('/api/admin/FdAdminUser/unlock', {
 		method: 'POST',
 		headers: {

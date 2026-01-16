@@ -7,6 +7,7 @@ import * as Captcha from './Captcha';
 import * as CodeGen from './CodeGen';
 import * as CodeGenConfig from './CodeGenConfig';
 import * as FdAdminUser from './FdAdminUser';
+import * as FdAppUser from './FdAppUser';
 import * as FdBlacklists from './FdBlacklists';
 import * as FdDictData from './FdDictData';
 import * as FdDictType from './FdDictType';
@@ -18,6 +19,7 @@ import * as FdRatelimitRule from './FdRatelimitRule';
 import * as FdRoles from './FdRoles';
 import * as FdSystemInfoConfig from './FdSystemInfoConfig';
 import * as Plugin from './Plugin';
+import * as Storage from './Storage';
 import * as System from './System';
 export default {
 	Auth,
@@ -25,6 +27,7 @@ export default {
 	CodeGen,
 	CodeGenConfig,
 	FdAdminUser,
+	FdAppUser,
 	FdBlacklists,
 	FdDictData,
 	FdDictType,
@@ -36,5 +39,6 @@ export default {
 	FdRoles,
 	FdSystemInfoConfig,
 	Plugin,
+	Storage,
 	System,
 };

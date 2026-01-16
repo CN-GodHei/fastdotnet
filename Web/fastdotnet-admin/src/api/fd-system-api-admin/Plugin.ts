@@ -3,7 +3,7 @@
 import request from '@/utils/request';
 
 /** 获取所有当前活动的插件 GET /api/Plugin/active */
-export async function getPluginActive(options?: { [key: string]: any }) {
+export async function getApiPluginActive(options?: { [key: string]: any }) {
 	return request<any>('/api/Plugin/active', {
 		method: 'GET',
 		...(options || {}),
@@ -11,9 +11,9 @@ export async function getPluginActive(options?: { [key: string]: any }) {
 }
 
 /** 检查一个插件当前是否处于活动状态 GET /api/Plugin/active/${param0} */
-export async function getPluginActivePluginId(
+export async function getApiPluginActivePluginId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getPluginActivePluginIdParams,
+	params: APIModel.getApiPluginActivePluginIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { pluginId: param0, ...queryParams } = params;
@@ -25,9 +25,9 @@ export async function getPluginActivePluginId(
 }
 
 /** 停用一个插件（停止业务并卸载其代码） POST /api/Plugin/disable/${param0} */
-export async function postPluginDisablePluginId(
+export async function postApiPluginDisablePluginId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postPluginDisablePluginIdParams,
+	params: APIModel.postApiPluginDisablePluginIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { pluginId: param0, ...queryParams } = params;
@@ -39,9 +39,9 @@ export async function postPluginDisablePluginId(
 }
 
 /** 启用一个插件（如果未加载，则先加载） POST /api/Plugin/enable/${param0} */
-export async function postPluginEnablePluginId(
+export async function postApiPluginEnablePluginId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postPluginEnablePluginIdParams,
+	params: APIModel.postApiPluginEnablePluginIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { pluginId: param0, ...queryParams } = params;
@@ -53,7 +53,7 @@ export async function postPluginEnablePluginId(
 }
 
 /** 获取所有已加载的插件（无论是否激活） GET /api/Plugin/loaded */
-export async function getPluginLoaded(options?: { [key: string]: any }) {
+export async function getApiPluginLoaded(options?: { [key: string]: any }) {
 	return request<any>('/api/Plugin/loaded', {
 		method: 'GET',
 		...(options || {}),
@@ -61,17 +61,17 @@ export async function getPluginLoaded(options?: { [key: string]: any }) {
 }
 
 /** 扫描插件目录以发现所有可用插件 GET /api/Plugin/scan */
-export async function getPluginScan(options?: { [key: string]: any }) {
-	return request<APIModel.PluginConfig[]>('/api/Plugin/scan', {
+export async function getApiPluginScan(options?: { [key: string]: any }) {
+	return request<APIModel.PluginInfo[]>('/api/Plugin/scan', {
 		method: 'GET',
 		...(options || {}),
 	});
 }
 
 /** 从磁盘物理删除一个已停用的插件 POST /api/Plugin/uninstall/${param0} */
-export async function postPluginUninstallPluginId(
+export async function postApiPluginUninstallPluginId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postPluginUninstallPluginIdParams,
+	params: APIModel.postApiPluginUninstallPluginIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { pluginId: param0, ...queryParams } = params;

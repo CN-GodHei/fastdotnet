@@ -3,7 +3,7 @@
 import request from '@/utils/request';
 
 /** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/admin/FdRatelimitRule */
-export async function getAdminFdRatelimitRule(options?: { [key: string]: any }) {
+export async function getApiAdminFdRatelimitRule(options?: { [key: string]: any }) {
 	return request<APIModel.FdRateLimitRuleDto[]>('/api/admin/FdRatelimitRule', {
 		method: 'GET',
 		...(options || {}),
@@ -11,7 +11,7 @@ export async function getAdminFdRatelimitRule(options?: { [key: string]: any }) 
 }
 
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/admin/FdRatelimitRule */
-export async function postAdminFdRatelimitRule(body: APIModel.CreateFdRateLimitRuleDto, options?: { [key: string]: any }) {
+export async function postApiAdminFdRatelimitRule(body: APIModel.CreateFdRateLimitRuleDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdRateLimitRuleDto>('/api/admin/FdRatelimitRule', {
 		method: 'POST',
 		headers: {
@@ -23,9 +23,9 @@ export async function postAdminFdRatelimitRule(body: APIModel.CreateFdRateLimitR
 }
 
 /** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/admin/FdRatelimitRule/${param0} */
-export async function getAdminFdRatelimitRuleId(
+export async function getApiAdminFdRatelimitRuleId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getAdminFdRatelimitRuleIdParams,
+	params: APIModel.getApiAdminFdRatelimitRuleIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -37,9 +37,9 @@ export async function getAdminFdRatelimitRuleId(
 }
 
 /** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/admin/FdRatelimitRule/${param0} */
-export async function putAdminFdRatelimitRuleId(
+export async function putApiAdminFdRatelimitRuleId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putAdminFdRatelimitRuleIdParams,
+	params: APIModel.putApiAdminFdRatelimitRuleIdParams,
 	body: APIModel.UpdateFdRateLimitRuleDto,
 	options?: { [key: string]: any }
 ) {
@@ -56,9 +56,9 @@ export async function putAdminFdRatelimitRuleId(
 }
 
 /** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/admin/FdRatelimitRule/${param0} */
-export async function deleteAdminFdRatelimitRuleId(
+export async function deleteApiAdminFdRatelimitRuleId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteAdminFdRatelimitRuleIdParams,
+	params: APIModel.deleteApiAdminFdRatelimitRuleIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -70,7 +70,7 @@ export async function deleteAdminFdRatelimitRuleId(
 }
 
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/FdRatelimitRule/batch */
-export async function putAdminFdRatelimitRuleBatch(body: APIModel.UpdateFdRateLimitRuleDto[], options?: { [key: string]: any }) {
+export async function putApiAdminFdRatelimitRuleBatch(body: APIModel.UpdateFdRateLimitRuleDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdRatelimitRule/batch', {
 		method: 'PUT',
 		headers: {
@@ -82,7 +82,7 @@ export async function putAdminFdRatelimitRuleBatch(body: APIModel.UpdateFdRateLi
 }
 
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/FdRatelimitRule/batch */
-export async function postAdminFdRatelimitRuleBatch(body: APIModel.CreateFdRateLimitRuleDto[], options?: { [key: string]: any }) {
+export async function postApiAdminFdRatelimitRuleBatch(body: APIModel.CreateFdRateLimitRuleDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdRatelimitRule/batch', {
 		method: 'POST',
 		headers: {
@@ -94,7 +94,7 @@ export async function postAdminFdRatelimitRuleBatch(body: APIModel.CreateFdRateL
 }
 
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/admin/FdRatelimitRule/batch */
-export async function deleteAdminFdRatelimitRuleBatch(body: string[], options?: { [key: string]: any }) {
+export async function deleteApiAdminFdRatelimitRuleBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdRatelimitRule/batch', {
 		method: 'DELETE',
 		headers: {
@@ -106,7 +106,7 @@ export async function deleteAdminFdRatelimitRuleBatch(body: string[], options?: 
 }
 
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdRatelimitRule/batch/updatebycondition */
-export async function putAdminFdRatelimitRuleBatchUpdatebycondition(
+export async function putApiAdminFdRatelimitRuleBatchUpdatebycondition(
 	body: APIModel.UpdateFdRateLimitRuleDtoBatchUpdateByConditionDto,
 	options?: { [key: string]: any }
 ) {
@@ -121,9 +121,9 @@ export async function putAdminFdRatelimitRuleBatchUpdatebycondition(
 }
 
 /** 根据类型和键获取限流规则 GET /api/admin/FdRatelimitRule/by-type-and-key */
-export async function getAdminFdRatelimitRuleByTypeAndKey(
+export async function getApiAdminFdRatelimitRuleByTypeAndKey(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getAdminFdRatelimitRuleByTypeAndKeyParams,
+	params: APIModel.getApiAdminFdRatelimitRuleByTypeAndKeyParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.FdRateLimitRuleDto>('/api/admin/FdRatelimitRule/by-type-and-key', {
@@ -137,9 +137,9 @@ export async function getAdminFdRatelimitRuleByTypeAndKey(
 
 /** 检查是否触发限流 注意：这个方法仅作演示用途。实际的限流检查应该在中间件中完成，
 而不是通过API调用。这里只是为了展示如何在控制器中使用仓储。 GET /api/admin/FdRatelimitRule/check */
-export async function getAdminFdRatelimitRuleCheck(
+export async function getApiAdminFdRatelimitRuleCheck(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getAdminFdRatelimitRuleCheckParams,
+	params: APIModel.getApiAdminFdRatelimitRuleCheckParams,
 	options?: { [key: string]: any }
 ) {
 	return request<boolean>('/api/admin/FdRatelimitRule/check', {
@@ -152,9 +152,9 @@ export async function getAdminFdRatelimitRuleCheck(
 }
 
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/admin/FdRatelimitRule/page */
-export async function getAdminFdRatelimitRulePage(
+export async function getApiAdminFdRatelimitRulePage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getAdminFdRatelimitRulePageParams,
+	params: APIModel.getApiAdminFdRatelimitRulePageParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/admin/FdRatelimitRule/page', {
@@ -171,7 +171,7 @@ export async function getAdminFdRatelimitRulePage(
 }
 
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdRatelimitRule/page/search */
-export async function postAdminFdRatelimitRulePageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+export async function postApiAdminFdRatelimitRulePageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdRatelimitRule/page/search', {
 		method: 'POST',
 		headers: {
@@ -183,9 +183,9 @@ export async function postAdminFdRatelimitRulePageSearch(body: APIModel.PageQuer
 }
 
 /** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/admin/FdRatelimitRule/recyclebin */
-export async function getAdminFdRatelimitRuleRecyclebin(
+export async function getApiAdminFdRatelimitRuleRecyclebin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getAdminFdRatelimitRuleRecyclebinParams,
+	params: APIModel.getApiAdminFdRatelimitRuleRecyclebinParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/admin/FdRatelimitRule/recyclebin', {
@@ -202,9 +202,9 @@ export async function getAdminFdRatelimitRuleRecyclebin(
 }
 
 /** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/admin/FdRatelimitRule/recyclebin/${param0}/permanent */
-export async function deleteAdminFdRatelimitRuleRecyclebinIdPermanent(
+export async function deleteApiAdminFdRatelimitRuleRecyclebinIdPermanent(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteAdminFdRatelimitRuleRecyclebinIdPermanentParams,
+	params: APIModel.deleteApiAdminFdRatelimitRuleRecyclebinIdPermanentParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -216,9 +216,9 @@ export async function deleteAdminFdRatelimitRuleRecyclebinIdPermanent(
 }
 
 /** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/admin/FdRatelimitRule/recyclebin/${param0}/restore */
-export async function putAdminFdRatelimitRuleRecyclebinIdRestore(
+export async function putApiAdminFdRatelimitRuleRecyclebinIdRestore(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putAdminFdRatelimitRuleRecyclebinIdRestoreParams,
+	params: APIModel.putApiAdminFdRatelimitRuleRecyclebinIdRestoreParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -230,7 +230,7 @@ export async function putAdminFdRatelimitRuleRecyclebinIdRestore(
 }
 
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdRatelimitRule/recyclebin/permanent */
-export async function postAdminFdRatelimitRuleRecyclebinPermanent(
+export async function postApiAdminFdRatelimitRuleRecyclebinPermanent(
 	body: APIModel.FdRateLimitRuleBooleanFuncExpression,
 	options?: { [key: string]: any }
 ) {
@@ -245,7 +245,7 @@ export async function postAdminFdRatelimitRuleRecyclebinPermanent(
 }
 
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdRatelimitRule/recyclebin/restore */
-export async function postAdminFdRatelimitRuleRecyclebinRestore(
+export async function postApiAdminFdRatelimitRuleRecyclebinRestore(
 	body: APIModel.FdRateLimitRuleBooleanFuncExpression,
 	options?: { [key: string]: any }
 ) {
@@ -260,7 +260,7 @@ export async function postAdminFdRatelimitRuleRecyclebinRestore(
 }
 
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdRatelimitRule/recyclebin/search */
-export async function postAdminFdRatelimitRuleRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+export async function postApiAdminFdRatelimitRuleRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdRatelimitRule/recyclebin/search', {
 		method: 'POST',
 		headers: {

@@ -10,6 +10,26 @@ declare namespace APIModel {
 		Msg?: string;
 	};
 
+	type AppMarketplacePluginDto = {
+		Id?: string;
+		Name?: string;
+		Description?: string;
+		Author?: string;
+		Category?: string;
+		SupportedLicenseMode?: SupportedLicenseModeDto;
+		Price_SingleServer?: number;
+		Price_MultiServer?: number;
+		IsFree?: boolean;
+		DocumentationUrl?: string;
+		PurchaseStatus?: string;
+		SubTitle?: string;
+	};
+
+	type AppMarketplacePluginDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: AppMarketplacePluginDto[];
+	};
+
 	type AppRegisterDto = {
 		Username: string;
 		Password: string;
@@ -19,6 +39,16 @@ declare namespace APIModel {
 
 	type AssignPermissionsDto = {
 		PermissionIds?: string[];
+	};
+
+	type BooleanApiResult = {
+		Data?: boolean;
+		Code?: number;
+		Msg?: string;
+	};
+
+	type CheckRegistrUserNameDto = {
+		Username: string;
 	};
 
 	type CodeGenConfigDto = {
@@ -80,16 +110,6 @@ declare namespace APIModel {
 		Phone?: string;
 		IsActive?: boolean;
 		Avatar?: string;
-	};
-
-	type CreateFdAppUserDto = {
-		Username: string;
-		Email: string;
-		PhoneNumber: string;
-		Nickname?: string;
-		AvatarUrl: string;
-		Status?: number;
-		RegistrationDate?: string;
 	};
 
 	type CreateFdBlacklistDto = {
@@ -244,6 +264,7 @@ declare namespace APIModel {
 		IsFree?: boolean;
 		DownloadUrl?: string;
 		DocumentationUrl?: string;
+		SubTitle?: string;
 	};
 
 	type CreateOnlinePaymentDto = {
@@ -253,6 +274,26 @@ declare namespace APIModel {
 		ThirdPartyData?: string;
 		CallbackData?: string;
 		PaidTime?: string;
+	};
+
+	type CreateOrderRequest = {
+		OrderId?: string;
+		Amount?: number;
+		Description?: string;
+		NotifyUrl?: string;
+	};
+
+	type CreatePaymentRequest = {
+		OrderId?: string;
+		Amount?: number;
+		Subject?: string;
+		NotifyUrl?: string;
+		PaymentMethod?: PaymentMethod;
+	};
+
+	type CreatePluginAUserExtensionDto = {
+		Preferences?: string;
+		Points?: number;
 	};
 
 	type CreatePointRedemptionDto = {
@@ -293,129 +334,147 @@ declare namespace APIModel {
 		Notes?: string;
 	};
 
-	type deleteAdminFdAdminUserIdParams = {
+	type CreateUserWithExtensionRequest = {
+		ExtensionData?: CreatePluginAUserExtensionDto;
+		Username: string;
+		Password: string;
+		Email: string;
+		PhoneNumber: string;
+		Nickname?: string;
+		AvatarUrl: string;
+		Status?: number;
+	};
+
+	type deleteApiAdminFdAdminUserIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdAdminUserRecyclebinIdPermanentParams = {
+	type deleteApiAdminFdAdminUserRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdBlacklistsIdParams = {
+	type deleteApiAdminFdBlacklistsIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdBlacklistsRecyclebinIdPermanentParams = {
+	type deleteApiAdminFdBlacklistsRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdDictDataIdParams = {
+	type deleteApiAdminFdDictDataIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdDictDataRecyclebinIdPermanentParams = {
+	type deleteApiAdminFdDictDataRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdDictTypeIdParams = {
+	type deleteApiAdminFdDictTypeIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdDictTypeRecyclebinIdPermanentParams = {
+	type deleteApiAdminFdDictTypeRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdEmailConfigRecyclebinIdPermanentParams = {
+	type deleteApiAdminFdEmailConfigRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdMenuButtonsIdParams = {
+	type deleteApiAdminFdMenuButtonsIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdMenuButtonsRecyclebinIdPermanentParams = {
+	type deleteApiAdminFdMenuButtonsRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdMenuIdParams = {
+	type deleteApiAdminFdMenuIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdMenuRecyclebinIdPermanentParams = {
+	type deleteApiAdminFdMenuRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdPermissionsIdParams = {
+	type deleteApiAdminFdPermissionsIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdPermissionsRecyclebinIdPermanentParams = {
+	type deleteApiAdminFdPermissionsRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdRatelimitRuleIdParams = {
+	type deleteApiAdminFdRatelimitRuleIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdRatelimitRuleRecyclebinIdPermanentParams = {
+	type deleteApiAdminFdRatelimitRuleRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdRolesIdParams = {
+	type deleteApiAdminFdRolesIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdRolesRecyclebinIdPermanentParams = {
+	type deleteApiAdminFdRolesRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdSystemInfoConfigIdParams = {
+	type deleteApiAdminFdSystemInfoConfigIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteAdminFdSystemInfoConfigRecyclebinIdPermanentParams = {
+	type deleteApiAdminFdSystemInfoConfigRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteCodeGenConfigIdParams = {
+	type deleteApiCodeGenConfigIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteCodeGenConfigRecyclebinIdPermanentParams = {
+	type deleteApiCodeGenConfigRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteCodeGenIdParams = {
+	type deleteApiCodeGenIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteCodeGenRecyclebinIdPermanentParams = {
+	type deleteApiCodeGenRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
+	};
+
+	type deleteApiStorage_openAPI_deleteFileNameParams = {
+		/** 文件名 */
+		fileName: string;
+		/** 存储桶名称（可选） */
+		bucketName?: string;
 	};
 
 	type EmailConfigBooleanFuncExpression = {
@@ -561,12 +620,6 @@ declare namespace APIModel {
 		Nickname?: string;
 		AvatarUrl?: string;
 		Status?: number;
-		RegistrationDate?: string;
-	};
-
-	type FdAppUserDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdAppUserDto[];
 	};
 
 	type FdBlacklistBooleanFuncExpression = {
@@ -806,6 +859,9 @@ declare namespace APIModel {
 		SupportDesktop?: boolean;
 		SupportMobile?: boolean;
 		Children?: FdMenuDto[];
+		Creator?: UserRefDto;
+		Updater?: UserRefDto;
+		Deleter?: UserRefDto;
 	};
 
 	type FdMenuDtoPageResult = {
@@ -942,286 +998,286 @@ declare namespace APIModel {
 		MachineFingerprint: string;
 	};
 
-	type getAdminFdAdminUserIdParams = {
+	type getApiAdminFdAdminUserIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getAdminFdAdminUserPageParams = {
+	type getApiAdminFdAdminUserPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdAdminUserRecyclebinParams = {
+	type getApiAdminFdAdminUserRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdBlacklistsCheckParams = {
+	type getApiAdminFdBlacklistsCheckParams = {
 		type?: string;
 		value?: string;
 	};
 
-	type getAdminFdBlacklistsIdParams = {
+	type getApiAdminFdBlacklistsIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getAdminFdBlacklistsPageParams = {
+	type getApiAdminFdBlacklistsPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdBlacklistsRecyclebinParams = {
+	type getApiAdminFdBlacklistsRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdDictDataIdParams = {
+	type getApiAdminFdDictDataIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getAdminFdDictDataPageParams = {
+	type getApiAdminFdDictDataPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdDictDataRecyclebinParams = {
+	type getApiAdminFdDictDataRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdDictTypeIdParams = {
+	type getApiAdminFdDictTypeIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getAdminFdDictTypePageParams = {
+	type getApiAdminFdDictTypePageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdDictTypeRecyclebinParams = {
+	type getApiAdminFdDictTypeRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdEmailConfigPageParams = {
+	type getApiAdminFdEmailConfigPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdEmailConfigRecyclebinParams = {
+	type getApiAdminFdEmailConfigRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdMenuButtonsIdParams = {
+	type getApiAdminFdMenuButtonsIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getAdminFdMenuButtonsPageParams = {
+	type getApiAdminFdMenuButtonsPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdMenuButtonsRecyclebinParams = {
+	type getApiAdminFdMenuButtonsRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdMenuIdParams = {
+	type getApiAdminFdMenuIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getAdminFdMenuPageParams = {
+	type getApiAdminFdMenuPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdMenuRecyclebinParams = {
+	type getApiAdminFdMenuRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdPermissionsIdParams = {
+	type getApiAdminFdPermissionsIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getAdminFdPermissionsPageParams = {
+	type getApiAdminFdPermissionsPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdPermissionsRecyclebinParams = {
+	type getApiAdminFdPermissionsRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdRatelimitRuleByTypeAndKeyParams = {
+	type getApiAdminFdRatelimitRuleByTypeAndKeyParams = {
 		type?: string;
 		key?: string;
 	};
 
-	type getAdminFdRatelimitRuleCheckParams = {
+	type getApiAdminFdRatelimitRuleCheckParams = {
 		type?: string;
 		key?: string;
 	};
 
-	type getAdminFdRatelimitRuleIdParams = {
+	type getApiAdminFdRatelimitRuleIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getAdminFdRatelimitRulePageParams = {
+	type getApiAdminFdRatelimitRulePageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdRatelimitRuleRecyclebinParams = {
+	type getApiAdminFdRatelimitRuleRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdRolesIdParams = {
+	type getApiAdminFdRolesIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getAdminFdRolesIdPermissionsParams = {
+	type getApiAdminFdRolesIdPermissionsParams = {
 		id: string;
 	};
 
-	type getAdminFdRolesPageParams = {
+	type getApiAdminFdRolesPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdRolesRecyclebinParams = {
+	type getApiAdminFdRolesRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdSystemInfoConfigIdParams = {
+	type getApiAdminFdSystemInfoConfigIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getAdminFdSystemInfoConfigPageParams = {
+	type getApiAdminFdSystemInfoConfigPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getAdminFdSystemInfoConfigRecyclebinParams = {
+	type getApiAdminFdSystemInfoConfigRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getCaptchaGenerateParams = {
+	type getApiCaptchaGenerateParams = {
 		/** 验证码标识符，通常是用户会话ID或GUID */
 		id?: string;
 	};
 
-	type getCodeGenColumnlistTableNameConfigIdParams = {
+	type getApiCodeGenColumnlistTableNameConfigIdParams = {
 		/** 表名 */
 		tableName: string;
 		/** 配置ID */
 		configId: string;
 	};
 
-	type getCodeGenConfigIdParams = {
+	type getApiCodeGenConfigIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getCodeGenConfigPageParams = {
+	type getApiCodeGenConfigPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getCodeGenConfigRecyclebinParams = {
+	type getApiCodeGenConfigRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getCodeGenDownloadParams = {
+	type getApiCodeGenDownloadParams = {
 		/** 文件路径 */
 		filePath?: string;
 	};
 
-	type getCodeGenGetentitynameParams = {
+	type getApiCodeGenGetentitynameParams = {
 		tableName?: string;
 	};
 
-	type getCodeGenGettablecolumnlistParams = {
+	type getApiCodeGenGettablecolumnlistParams = {
 		TableName?: string;
 	};
 
-	type getCodeGenIdParams = {
+	type getApiCodeGenIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getCodeGenPageParams = {
+	type getApiCodeGenPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getCodeGenPreviewConfigIdParams = {
+	type getApiCodeGenPreviewConfigIdParams = {
 		/** 代码生成配置ID */
 		configId: string;
 		/** 代码类型：entity, dto, service, controller, frontend */
@@ -1229,20 +1285,39 @@ declare namespace APIModel {
 		apiscop?: string;
 	};
 
-	type getCodeGenRecyclebinParams = {
+	type getApiCodeGenRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getCodeGenTablelistConfigIdParams = {
+	type getApiCodeGenTablelistConfigIdParams = {
 		/** 配置ID */
 		configId: string;
 	};
 
-	type getPluginActivePluginIdParams = {
+	type getApiPluginActivePluginIdParams = {
 		pluginId: string;
+	};
+
+	type getApiStorageDownloadFileNameParams = {
+		/** 文件名 */
+		fileName: string;
+		/** 存储桶名称（可选） */
+		bucketName?: string;
+	};
+
+	type getApiStorageUrlFileNameParams = {
+		/** 文件名 */
+		fileName: string;
+		/** 存储桶名称（可选） */
+		bucketName?: string;
+	};
+
+	type getUploadsRelativePathParams = {
+		/** 文件相对路径 */
+		relativePath: string;
 	};
 
 	type GiftRecordBooleanFuncExpression = {
@@ -1315,6 +1390,7 @@ declare namespace APIModel {
 		DocumentationUrl?: string;
 		CreateTime?: string;
 		UpdateTime?: string;
+		SubTitle?: string;
 	};
 
 	type MarketplacePluginDtoPageResult = {
@@ -1393,7 +1469,6 @@ declare namespace APIModel {
 	type PageQueryByConditionDto = {
 		PageIndex?: number;
 		PageSize?: number;
-		Keyword?: string;
 		DynamicQuery?: string;
 		QueryParameters?: any[];
 	};
@@ -1406,7 +1481,72 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
-	type PluginConfig = {
+	enum PaymentMethod {
+		0 = '0',
+		1 = '1',
+	}
+
+	type PluginATestBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type PluginATestCreateDto = {
+		Name?: string;
+		Description?: string;
+		TestValue?: number;
+		IsEnabled?: boolean;
+		Creator?: string;
+	};
+
+	type PluginATestDto = {
+		Id?: string;
+		Name?: string;
+		Description?: string;
+		TestValue?: number;
+		IsEnabled?: boolean;
+		Creator?: string;
+		CreatedAt?: string;
+		UpdateTime?: string;
+	};
+
+	type PluginATestDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: PluginATestDto[];
+	};
+
+	type PluginATestUpdateDto = {
+		Id?: string;
+		Name?: string;
+		Description?: string;
+		TestValue?: number;
+		IsEnabled?: boolean;
+		Creator?: string;
+	};
+
+	type PluginATestUpdateDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: PluginATestUpdateDto;
+	};
+
+	type PluginAUserExtension = {
+		FdAppUserId?: string;
+		Preferences?: string;
+		Points?: number;
+		Id?: string;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+		DeletedAt?: string;
+	};
+
+	type PluginInfo = {
 		id?: string;
 		name?: string;
 		description?: string;
@@ -1442,31 +1582,43 @@ declare namespace APIModel {
 		Items?: PointRedemptionDto[];
 	};
 
-	type postAdminFdAdminUserIdResetPasswordParams = {
+	type postApiAdminFdAdminUserIdResetPasswordParams = {
 		id: string;
 	};
 
-	type postAdminFdRolesIdPermissionsParams = {
+	type postApiAdminFdRolesIdPermissionsParams = {
 		id: string;
 	};
 
-	type postCaptchaValidateParams = {
+	type postApiCaptchaValidateParams = {
 		/** 验证码标识符 */
 		id?: string;
 		/** 用户输入的验证码 */
 		code?: string;
 	};
 
-	type postPluginDisablePluginIdParams = {
+	type postApiPluginDisablePluginIdParams = {
 		pluginId: string;
 	};
 
-	type postPluginEnablePluginIdParams = {
+	type postApiPluginEnablePluginIdParams = {
 		pluginId: string;
 	};
 
-	type postPluginUninstallPluginIdParams = {
+	type postApiPluginUninstallPluginIdParams = {
 		pluginId: string;
+	};
+
+	type postApiStorageUploadParams = {
+		/** 存储桶名称（可选） */
+		bucketName?: string;
+	};
+
+	type PreCreateRequest = {
+		OrderId?: string;
+		Amount?: number;
+		Subject?: string;
+		NotifyUrl?: string;
 	};
 
 	enum PurchaseStatusDto {
@@ -1475,132 +1627,132 @@ declare namespace APIModel {
 		2 = '2',
 	}
 
-	type putAdminFdAdminUserIdParams = {
+	type putApiAdminFdAdminUserIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdAdminUserRecyclebinIdRestoreParams = {
+	type putApiAdminFdAdminUserRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdBlacklistsIdParams = {
+	type putApiAdminFdBlacklistsIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdBlacklistsRecyclebinIdRestoreParams = {
+	type putApiAdminFdBlacklistsRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdDictDataIdParams = {
+	type putApiAdminFdDictDataIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdDictDataRecyclebinIdRestoreParams = {
+	type putApiAdminFdDictDataRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdDictTypeIdParams = {
+	type putApiAdminFdDictTypeIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdDictTypeRecyclebinIdRestoreParams = {
+	type putApiAdminFdDictTypeRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdEmailConfigIdParams = {
+	type putApiAdminFdEmailConfigIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdEmailConfigRecyclebinIdRestoreParams = {
+	type putApiAdminFdEmailConfigRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdMenuButtonsIdParams = {
+	type putApiAdminFdMenuButtonsIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdMenuButtonsRecyclebinIdRestoreParams = {
+	type putApiAdminFdMenuButtonsRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdMenuIdParams = {
+	type putApiAdminFdMenuIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdMenuRecyclebinIdRestoreParams = {
+	type putApiAdminFdMenuRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdPermissionsIdParams = {
+	type putApiAdminFdPermissionsIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdPermissionsRecyclebinIdRestoreParams = {
+	type putApiAdminFdPermissionsRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdRatelimitRuleIdParams = {
+	type putApiAdminFdRatelimitRuleIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdRatelimitRuleRecyclebinIdRestoreParams = {
+	type putApiAdminFdRatelimitRuleRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdRolesIdParams = {
+	type putApiAdminFdRolesIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdRolesRecyclebinIdRestoreParams = {
+	type putApiAdminFdRolesRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdSystemInfoConfigIdParams = {
+	type putApiAdminFdSystemInfoConfigIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putAdminFdSystemInfoConfigRecyclebinIdRestoreParams = {
+	type putApiAdminFdSystemInfoConfigRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putCodeGenConfigIdParams = {
+	type putApiCodeGenConfigIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putCodeGenConfigRecyclebinIdRestoreParams = {
+	type putApiCodeGenConfigRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putCodeGenIdParams = {
+	type putApiCodeGenIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putCodeGenRecyclebinIdRestoreParams = {
+	type putApiCodeGenRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
@@ -1609,8 +1761,20 @@ declare namespace APIModel {
 		NewPassword: string;
 	};
 
+	type SendMessageRequest = {
+		Message?: string;
+	};
+
 	type SendRegistrationCodeDto = {
 		Email: string;
+	};
+
+	type StorageConfigResponse = {
+		StorageType?: string;
+		DefaultBucket?: string;
+		Domain?: string;
+		SupportDirectUpload?: boolean;
+		ConfigParams?: Record<string, any>;
 	};
 
 	enum SupportedLicenseModeDto {
@@ -1676,21 +1840,6 @@ declare namespace APIModel {
 	type UpdateFdAdminUserDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateFdAdminUserDto;
-	};
-
-	type UpdateFdAppUserDto = {
-		Username?: string;
-		Email?: string;
-		PhoneNumber?: string;
-		Nickname?: string;
-		AvatarUrl?: string;
-		Status?: number;
-		RegistrationDate?: string;
-	};
-
-	type UpdateFdAppUserDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdAppUserDto;
 	};
 
 	type UpdateFdBlacklistDto = {
@@ -1905,6 +2054,7 @@ declare namespace APIModel {
 		IsFree?: boolean;
 		DownloadUrl?: string;
 		DocumentationUrl?: string;
+		SubTitle?: string;
 	};
 
 	type UpdateMarketplacePluginDtoBatchUpdateByConditionDto = {
@@ -1983,6 +2133,24 @@ declare namespace APIModel {
 		Dto?: UpdateUserPluginPurchaseDto;
 	};
 
+	type UploadCredentialRequest = {
+		FileName: string;
+		FileSize?: number;
+		ContentType?: string;
+		BucketName?: string;
+		OssType?: string;
+	};
+
+	type UploadCredentialResponse = {
+		CredentialType?: string;
+		UploadUrl?: string;
+		UploadParams?: Record<string, any>;
+		UploadHeaders?: Record<string, any>;
+		ExpiresAt?: string;
+		FileUrlTemplate?: string;
+		SupportDirectUpload?: boolean;
+	};
+
 	type UserPluginActivationBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -2050,5 +2218,10 @@ declare namespace APIModel {
 	type UserPluginPurchaseDtoPageResult = {
 		PageInfo?: PageInfo;
 		Items?: UserPluginPurchaseDto[];
+	};
+
+	type UserRefDto = {
+		Id?: string;
+		Name?: string;
 	};
 }
