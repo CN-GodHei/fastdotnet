@@ -81,7 +81,7 @@ const state = reactive({
 const getTableData = async () => {
 	state.tableData.loading = true;
 	try {
-		const res = await MenuApi.getAdminFdMenu();
+		const res = await MenuApi.getApiAdminFdMenu();
 		state.tableData.data = res || [];
 	} catch (error) {
 		ElMessage.error('获取菜单数据失败');
@@ -108,7 +108,7 @@ const onTabelRowDel = (row: APIModel.FdMenuDto) => {
 			try {
 				// 使用row.Id作为菜单的唯一标识符
 				if (row.Id) {
-					await MenuApi.deleteAdminFdMenuId({ id: row.Id });
+					await MenuApi.deleteApiAdminFdMenuId({ id: row.Id });
 					ElMessage.success('删除成功');
 					getTableData();
 				} else {

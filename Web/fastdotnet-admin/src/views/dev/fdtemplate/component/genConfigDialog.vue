@@ -218,16 +218,16 @@ import { Edit } from '@element-plus/icons-vue';
 import {
 	getCodeGenConfigPage,
 	putCodeGenConfigId,
-	postCodeGenConfig,
-	postCodeGenConfigBatch,
-	postCodeGenConfigPageSearch,
-	putCodeGenConfigBatch
+	postApiCodeGenConfig,
+	postApiCodeGenConfigBatch,
+	postApiCodeGenConfigPageSearch,
+	putApiCodeGenConfigBatch
 } from '@/api/fd-system-api-admin/CodeGenConfig';
 import { 
-	getCodeGenGettablelist,
+	getApiCodeGenGettablelist,
 	getCodeGenTablelistConfigId,
-	getCodeGenGettablecolumnlist,
-	getCodeGen
+	getApiCodeGenGettablecolumnlist,
+	getApiCodeGen
 } from '@/api/fd-system-api-admin/CodeGen';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 import APIModel from '@/api/fd-system-api-admin';
@@ -305,7 +305,7 @@ const handleQuery = async (row: any) => {
 			QueryParameters: queryResult.queryParameters,
 		} as APIModel.PageQueryByConditionDto;
 
-		const configRes = await postCodeGenConfigPageSearch(searchParams);
+		const configRes = await postApiCodeGenConfigPageSearch(searchParams);
 		const existingConfigs = configRes?.Items || [];
 
 		// 确保每行数据都有MaskConfig和EnableMask字段
@@ -451,7 +451,7 @@ const saveMaskConfig = () => {
 // 加载表列表
 const loadTableList = async () => {
 	try {
-		const res = await getCodeGen();
+		const res = await getApiCodeGen();
 		state.tableDataList = res;
 	} catch (error) {
 		console.error('加载表列表失败', error);
@@ -517,7 +517,7 @@ const tableChanged = async (val: string | undefined, item: any) => {
 			QueryParameters: queryResult.queryParameters,
 		} as APIModel.PageQueryByConditionDto;
 
-		const res = await postCodeGenConfigPageSearch(searchParams);
+		const res = await postApiCodeGenConfigPageSearch(searchParams);
 		state.columnDataList = res?.Items || [];
 		
 		// 设置默认值字段为主键
@@ -593,7 +593,7 @@ const submit = async () => {
 	state.loading = true;
 	try {
 		// 由于查询出来的都是数据库已有的记录，直接使用批量更新接口
-		await putCodeGenConfigBatch(state.tableData as APIModel.UpdateFdCodeGenConfigDto[]);
+		await putApiCodeGenConfigBatch(state.tableData as APIModel.UpdateFdCodeGenConfigDto[]);
 
 		ElMessage.success('字段配置保存成功');
 		closeDialog();

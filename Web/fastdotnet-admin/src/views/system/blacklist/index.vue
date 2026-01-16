@@ -112,7 +112,7 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 import type { FdBlacklist } from '@/api/fd-system-api-admin/typings';
 import dayjs from 'dayjs'; // 引入日期处理库
-import { postAdminFdBlacklistsPageSearch, deleteAdminFdBlacklistsId } from '@/api/fd-system-api-admin/FdBlacklists';
+import { postApiAdminFdBlacklistsPageSearch, deleteApiAdminFdBlacklistsId } from '@/api/fd-system-api-admin/FdBlacklists';
 const queryForm = ref();
 const formRef = ref();
 
@@ -181,7 +181,7 @@ const getList = async () => {
 		}
 		// 调试日志
 		// //console.log('Search request body:', searchBody);
-		const response = await postAdminFdBlacklistsPageSearch(searchBody);
+		const response = await postApiAdminFdBlacklistsPageSearch(searchBody);
 		state.tableData.data = response.Items || [];
 		state.tableData.total = response.PageInfo?.Total || 0;
 	} catch (error) {

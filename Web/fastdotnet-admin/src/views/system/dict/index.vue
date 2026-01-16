@@ -180,7 +180,7 @@ const getList = async () => {
 		}
 		// 调试日志
 		//console.log('Search request body:', searchBody);
-		const response = await FdDictTypeApi.postAdminFdDictTypePageSearch(searchBody);
+		const response = await FdDictTypeApi.postApiAdminFdDictTypePageSearch(searchBody);
 		state.tableData.data = response.Items as APIModel.FdDictTypeDto[] || [] as APIModel.FdDictTypeDto[];
 		state.pagination.total = response.PageInfo?.Total || 0;
 	} catch (error) {
@@ -239,12 +239,12 @@ const submitForm = () => {
 			if (state.dialog.type === 'update' && state.formData.Id) {
 				// 更新接口调用
 				const updateData = { ...state.formData } as APIModel.UpdateFdDictTypeDto;
-				await FdDictTypeApi.putAdminFdDictTypeId({ id: state.formData.Id }, updateData);
+				await FdDictTypeApi.putApiAdminFdDictTypeId({ id: state.formData.Id }, updateData);
 				ElMessage.success('更新成功');
 			} else {
 				// 新增接口调用
 				const createData = { ...state.formData } as APIModel.CreateFdDictTypeDto;
-				await FdDictTypeApi.postAdminFdDictType(createData);
+				await FdDictTypeApi.postApiAdminFdDictType(createData);
 				ElMessage.success('添加成功');
 			}
 			state.dialog.visible = false;
@@ -261,7 +261,7 @@ const handleDelete = (row: APIModel.FdDictTypeDto) => {
 	ElMessageBox.confirm('确定删除吗？')
 		.then(async () => {
 			// 删除接口调用
-			await FdDictTypeApi.deleteAdminFdDictTypeId({ id: row.Id as string });
+			await FdDictTypeApi.deleteApiAdminFdDictTypeId({ id: row.Id as string });
 			ElMessage.success('删除成功');
 			getList();
 		})

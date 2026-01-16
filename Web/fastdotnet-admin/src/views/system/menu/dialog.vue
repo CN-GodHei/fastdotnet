@@ -465,7 +465,7 @@ const onSubmit = async () => {
 								: null,
 					};
 
-					await MenuApi.putAdminFdMenuId({ id: state.ruleForm.Id }, updateData);
+					await MenuApi.putApiAdminFdMenuId({ id: state.ruleForm.Id }, updateData);
 
 					ElMessage.success((state.ruleForm.menuType === 'directory' ? '目录' : '菜单') + '更新成功');
 				} else {
@@ -485,7 +485,7 @@ const onSubmit = async () => {
 				//console.log(11);
 
 				createData.Category = 'Admin';
-				await MenuApi.postAdminFdMenu(createData);
+				await MenuApi.postApiAdminFdMenu(createData);
 				ElMessage.success((state.ruleForm.menuType === 'directory' ? '目录' : '菜单') + '创建成功');
 			}
 
@@ -503,7 +503,7 @@ const onSubmit = async () => {
 // 页面加载时
 onMounted(async () => {
 	// 从API获取菜单数据而不是使用store中的数据
-	const res = await MenuApi.getAdminFdMenuTree();
+	const res = await MenuApi.getApiAdminFdMenuTree();
 	state.menuData = res || [];
 });
 

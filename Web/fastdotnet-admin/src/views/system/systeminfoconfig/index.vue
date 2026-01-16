@@ -185,7 +185,7 @@ const getList = async () => {
 		}
 		// 调试日志
 		////console.log('Search request body:', searchBody);
-		const response = await FdSystemInfoConfigApi.postAdminFdSystemInfoConfigPageSearch(searchBody);
+		const response = await FdSystemInfoConfigApi.postApiAdminFdSystemInfoConfigPageSearch(searchBody);
 		state.tableData.data = response.Items as APIModel.FdSystemInfoConfigDto[] || [] as APIModel.FdSystemInfoConfigDto[];
 		state.pagination.total = response.PageInfo?.Total || 0;
 	} catch (error) {
@@ -244,12 +244,12 @@ const submitForm = () => {
 			if (state.dialog.type === 'update' && state.formData.Id) {
 				// 更新接口调用
 				const updateData = { ...state.formData } as APIModel.UpdateFdSystemInfoConfigDto;
-				await FdSystemInfoConfigApi.putAdminFdSystemInfoConfigId({ id: state.formData.Id }, updateData);
+				await FdSystemInfoConfigApi.putApiAdminFdSystemInfoConfigId({ id: state.formData.Id }, updateData);
 				ElMessage.success('更新成功');
 			} else {
 				// 新增接口调用
 				const createData = { ...state.formData } as APIModel.CreateFdSystemInfoConfigDto;
-				await FdSystemInfoConfigApi.postAdminFdSystemInfoConfig(createData);
+				await FdSystemInfoConfigApi.postApiAdminFdSystemInfoConfig(createData);
 				ElMessage.success('添加成功');
 			}
 			state.dialog.visible = false;
@@ -266,7 +266,7 @@ const handleDelete = (row: APIModel.FdSystemInfoConfigDto) => {
 	ElMessageBox.confirm('确定删除吗？')
 		.then(async () => {
 			// 删除接口调用
-			await FdSystemInfoConfigApi.deleteAdminFdSystemInfoConfigId({ id: row.Id as string });
+			await FdSystemInfoConfigApi.deleteApiAdminFdSystemInfoConfigId({ id: row.Id as string });
 			ElMessage.success('删除成功');
 			getList();
 		})

@@ -77,7 +77,7 @@ import { Session } from '@/utils/storage';
 import { formatAxis } from '@/utils/formatTime';
 import { NextLoading } from '@/utils/loading';
 // 引入适配的登录 API
-import { postAuthAdminLogin } from '@/api/fd-system-api-admin/auth';
+import { postApiAuthAdminLogin } from '@/api/fd-system-api-admin/auth';
 import { startQiankun } from '@/main';
 
 // 定义变量内容
@@ -172,7 +172,7 @@ const onSignIn = async () => {
 			loginData.CaptchaCode = state.ruleForm.code;
 		}
 		
-		const res = await postAuthAdminLogin(loginData);
+		const res = await postApiAuthAdminLogin(loginData);
 
 		// 2. 检查响应并存储 token
 		// 由于 request.ts 响应拦截器已修改为直接返回 res.Data,

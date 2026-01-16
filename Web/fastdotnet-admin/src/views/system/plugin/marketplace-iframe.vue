@@ -44,7 +44,7 @@
 
 <script setup lang="ts" name="pluginMarketplaceIframe">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { getPluginScan } from '@/api/fd-system-api-admin/Plugin'
+import { getApiPluginScan } from '@/api/fd-system-api-admin/Plugin'
 
 // 定义事件发射器
 const emit = defineEmits<{
@@ -112,7 +112,7 @@ const sendInitialData = () => {
     // 使用postMessage发送数据到iframe
     if (marketplaceIframe.value?.contentWindow) {
       // 先获取已安装插件列表
-      getPluginScan().then((res: any) => {
+      getApiPluginScan().then((res: any) => {
         const installedPlugins = res || []
         
         // 发送到iframe
@@ -172,7 +172,7 @@ const handlePluginAction = (data: any) => {
 
 // 发送已安装插件列表到iframe
 const sendInstalledPlugins = () => {
-  getPluginScan().then((res: any) => {
+  getApiPluginScan().then((res: any) => {
     const installedPlugins = res || []
     
     if (marketplaceIframe.value?.contentWindow) {

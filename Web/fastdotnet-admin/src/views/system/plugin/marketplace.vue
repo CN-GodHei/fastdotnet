@@ -11,7 +11,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { loadMicroApp } from 'qiankun'
 import { useMicroAppsStore } from '@/stores/microApps'
-import { getPluginScan } from '@/api/fd-system-api-admin/Plugin'
+import { getApiPluginScan } from '@/api/fd-system-api-admin/Plugin'
 
 // 定义微应用实例
 let microAppInstance: any = null
@@ -19,7 +19,7 @@ let microAppInstance: any = null
 // 获取已安装插件列表
 const getInstalledPlugins = async () => {
   try {
-    const res: any = await getPluginScan()
+    const res: any = await getApiPluginScan()
     return res || []
   } catch (error) {
     console.error('获取已安装插件列表失败:', error)

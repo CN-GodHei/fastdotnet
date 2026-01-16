@@ -194,7 +194,7 @@ const getList = async () => {
 		}
 		// 调试日志
 		////console.log('Search request body:', searchBody);
-		const response = await FdRatelimitRuleApi.postAdminFdRatelimitRulePageSearch(searchBody);
+		const response = await FdRatelimitRuleApi.postApiAdminFdRatelimitRulePageSearch(searchBody);
 		state.tableData.data = response.Items || [];
 		state.tableData.total = response.PageInfo?.Total || 0;
 	} catch (error) {

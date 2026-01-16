@@ -58,10 +58,10 @@ import { ref, onMounted, defineAsyncComponent, onUnmounted } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 // 导入插件相关的API
 import {
-  getPluginScan,
-  postPluginEnablePluginId,
-  postPluginDisablePluginId,
-  postPluginUninstallPluginId
+  getApiPluginScan,
+  postApiPluginEnablePluginId,
+  postApiPluginDisablePluginId,
+  postApiPluginUninstallPluginId
 } from '@/api/fd-system-api-admin/Plugin'
 import { MicroAppEvents, receiveFromMicroApp, removeMicroAppEventListener } from '@/utils/microAppCommunication'
 
@@ -95,7 +95,7 @@ const searchName = ref('')
 // 获取插件列表
 const getPluginList = () => {
   // 扫描插件
-  getPluginScan().then((res: any) => {
+  getApiPluginScan().then((res: any) => {
     pluginList.value = res
     
     // 如果在插件市场页面，通知它更新插件列表
@@ -128,7 +128,7 @@ const handleEnable = (row: Plugin) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    postPluginEnablePluginId({ pluginId: row.id }).then(() => {
+    postApiPluginEnablePluginId({ pluginId: row.id }).then(() => {
       ElMessage.success('启用成功')
       getPluginList() // 重新获取插件列表
       
@@ -150,7 +150,7 @@ const handleDisable = (row: Plugin) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    postPluginDisablePluginId({ pluginId: row.id }).then(() => {
+    postApiPluginDisablePluginId({ pluginId: row.id }).then(() => {
       ElMessage.success('停用成功')
       getPluginList() // 重新获取插件列表
       
@@ -172,7 +172,7 @@ const handleUninstall = (row: Plugin) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    postPluginUninstallPluginId({ pluginId: row.id }).then(() => {
+    postApiPluginUninstallPluginId({ pluginId: row.id }).then(() => {
       ElMessage.success('卸载成功')
       getPluginList() // 重新获取插件列表
       

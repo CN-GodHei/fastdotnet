@@ -40,7 +40,7 @@ import { reactive, ref, nextTick } from 'vue';
 import { ElMessage, ElIcon } from 'element-plus';
 import * as monaco from 'monaco-editor';
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-import { getCodeGenPreviewConfigId } from '@/api/fd-system-api-admin/CodeGen';
+import { getApiCodeGenPreviewConfigId } from '@/api/fd-system-api-admin/CodeGen';
 import APIModel from '@/api/fd-system-api-admin';
 
 const monacoEditorRef = ref();
@@ -155,7 +155,7 @@ const openDialog = async (row: APIModel.CodeGenConfigDto) => {
 		
 		for (const type of types) {
 			try {
-				const content = await getCodeGenPreviewConfigId({
+				const content = await getApiCodeGenPreviewConfigId({
 					configId: row.Id!,
 					type: type
 				});

@@ -62,9 +62,9 @@
 import { onMounted, reactive, ref, defineAsyncComponent } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { 
-  getCodeGenPage, 
-  deleteCodeGenId, 
-  getCodeGenApplicationnamespaces 
+  getApiCodeGenPage, 
+  deleteApiCodeGenId, 
+  getApiCodeGenApplicationnamespaces 
 } from '@/api/fd-system-api-admin/CodeGen';
 import APIModel from '@/api/fd-system-api-admin';
 
@@ -105,7 +105,7 @@ const state = reactive({
 
 onMounted(async () => {
 	await handleQuery();
-	const res = await getCodeGenApplicationnamespaces();
+	const res = await getApiCodeGenApplicationnamespaces();
 	state.applicationNamespaces = res;
 });
 
@@ -118,7 +118,7 @@ const handleQuery = async () => {
 			pageSize: state.tableParams.pageSize,
 			...state.queryParams
 		};
-		const res = await getCodeGenPage(params);
+		const res = await getApiCodeGenPage(params);
 		if (res) {
 			state.tableData = res.Items|| [];
 			state.tableParams.total = res.PageInfo || 0;
@@ -196,7 +196,7 @@ const deleConfig = (row: any) => {
 		type: 'warning',
 	}).then(async () => {
 		try {
-			const res = await deleteCodeGenId({ id: row.Id });
+			const res = await deleteApiCodeGenId({ id: row.Id });
 			if (res) {
 				ElMessage.success('删除成功');
 				await handleQuery();
@@ -229,7 +229,7 @@ const syncCodeGen = async (row: any) => {
 // 	})
 // 		.then(async () => {
 // 			try {
-// 				const res = await postCodeGenGenerate({
+// 				const res = await postApiCodeGenGenerate({
 // 					configId: row.configId,
 // 					tableName: row.tableName,
 // 					busName: row.busName,
