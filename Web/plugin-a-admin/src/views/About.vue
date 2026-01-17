@@ -4,7 +4,7 @@
     <h1 style="font-size: 48px; color: #faad14;">Plugin A - ABOUT PAGE</h1>
     <p style="font-size: 24px;">这里是插件A的 **关于** 页面。</p>
     <p>This page provides more information about Plugin A.</p>
-    <p>Current Route: {{ $route.path }}</p>
+    <p>Current Route: /plugin-a/about</p>
     
     <!-- --- 添加查询构建器测试UI --- -->
     <div style="margin-top: 20px; padding: 20px; border: 1px solid #ccc;">
@@ -54,6 +54,60 @@
       </div>
     </div>
     <!-- --- 添加结束 --- -->
+    
+    <!-- --- 添加上传组件测试UI --- -->
+    <div style="margin-top: 20px; padding: 20px; border: 1px solid #ccc;">
+      <h2>全局上传组件测试</h2>
+      <p>使用主应用提供的统一上传服务，支持多种存储后端</p>
+      
+      <div style="margin-bottom: 20px;">
+        <h3>基本上传</h3>
+        <GlobalFileUploader
+          :max-size="5"
+          accept=".jpg,.png,.pdf"
+          :on-success="onBasicUploadSuccess"
+          :on-error="onBasicUploadError"
+        >
+          <button>点击上传</button>
+        </GlobalFileUploader>
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <h3>图片上传</h3>
+        <GlobalFileUploader
+          :max-size="2"
+          accept="image/*"
+          list-type="picture-card"
+          :on-success="onImageUploadSuccess"
+          :on-error="onBasicUploadError"
+        >
+          <span>+</span>
+        </GlobalFileUploader>
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <h3>带存储类型标签</h3>
+        <GlobalFileUploader
+          :show-storage-type-label="true"
+          :max-size="3"
+          accept="image/*,.pdf"
+          :on-success="onAdvancedUploadSuccess"
+          :on-error="onBasicUploadError"
+        >
+          <button>上传带标签</button>
+        </GlobalFileUploader>
+      </div>
+      
+      <div style="margin-top: 20px;">
+        <h3>上传结果</h3>
+        <ul>
+          <li v-for="result in uploadResults" :key="result.id">
+            {{ result.fileName }} - {{ result.url }} ({{ result.time }})
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- --- 添加结束 --- -->
   </div>
 </template>
 
@@ -65,10 +119,15 @@ import { ref } from 'vue';
 import { getApiPluginsPinyin_11375910391972869PluginATestDto } from '@/api/plugin-a/PluginATestDto';
 // 导入共享的查询构建器
 import { getSharedFdQueryBuilder } from '@/main';
+// 导入全局上传组件
+import GlobalFileUploader from '../../../../fastdotnet-admin/src/components/upload/GlobalFileUploader.vue';
 
 const loading = ref(false);
 const responseData = ref<any>(null); // 使用更具体的类型代替 any
 const error = ref<string | null>(null);
+
+// 上传结果
+const uploadResults = ref<any[]>([]);
 
 // 查询表单
 const searchForm = ref({
@@ -147,6 +206,43 @@ const testGetApi = async () => {
   }
 };
 // --- 添加结束 ---
+
+// 上传成功回调
+const onBasicUploadSuccess = (response: any, file: any, fileList: any) => {
+  console.log('基本上传成功:', response);
+  addUploadResult(response, 'basic');
+};
+
+const onImageUploadSuccess = (response: any, file: any, fileList: any) => {
+  console.log('图片上传成功:', response);
+  addUploadResult(response, 'image');
+};
+
+const onAdvancedUploadSuccess = (response: any, file: any, fileList: any) => {
+  console.log('高级上传成功:', response);
+  addUploadResult(response, 'advanced');
+};
+
+const onBasicUploadError = (error: any, file: any, fileList: any) => {
+  console.error('上传失败:', error);
+};
+
+// 添加上传结果
+const addUploadResult = (response: any, type: string) => {
+  const result = {
+    id: Date.now(),
+    fileName: response.data?.fileName || 'Unknown',
+    url: response.data?.url || 'No URL',
+    type,
+    time: new Date().toLocaleTimeString()
+  };
+  uploadResults.value.unshift(result);
+  // 限制结果列表长度
+  if (uploadResults.value.length > 10) {
+    uploadResults.value.pop();
+  }
+};
+
 </script>
 
 <style scoped>

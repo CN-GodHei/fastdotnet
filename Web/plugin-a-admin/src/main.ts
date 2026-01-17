@@ -15,6 +15,8 @@ let sharedFdRequest: AxiosInstance | null = null;
 let sharedFdQueryBuilder: any | null = null;
 // --- 添加SignalR管理器变量 ---
 let sharedSignalRManager: any | null = null; // 使用 any 类型，因为 BaseSignalRManager 在主应用中定义
+// --- 添加上传服务变量 ---
+let sharedUploadService: any | null = null;
 // --- 添加菜单信息变量 ---
 let menuInfo: any | null = null;
 // --- 添加结束 ---
@@ -25,6 +27,8 @@ export const getSharedFdRequest = () => sharedFdRequest;
 export const getSharedFdQueryBuilder = () => sharedFdQueryBuilder;
 // --- 导出SignalR管理器 ---
 export const getSharedSignalRManager = () => sharedSignalRManager;
+// --- 导出上传服务 ---
+export const getSharedUploadService = () => sharedUploadService;
 // --- 导出菜单信息 ---
 export const getMenuInfo = () => menuInfo;
 // --- 导出结束 ---
@@ -38,6 +42,9 @@ const init = (props: any = {}) => {
   sharedFdRequest = FdRequest;
   sharedFdQueryBuilder = FdQueryBuilder;
   sharedSignalRManager = signalRManager;
+  // --- 保存上传服务 ---
+  sharedUploadService = props.uploadService;
+  // --- 保存菜单信息 ---
   menuInfo = propsMenuInfo;
   // --- 保存结束 ---
 
@@ -80,6 +87,9 @@ const init = (props: any = {}) => {
       sharedFdRequest = null;
       sharedFdQueryBuilder = null;
       sharedSignalRManager = null;
+      // --- 清理上传服务 ---
+      sharedUploadService = null;
+      // --- 清理菜单信息 ---
       menuInfo = null;
       // --- 清理结束 ---
     }

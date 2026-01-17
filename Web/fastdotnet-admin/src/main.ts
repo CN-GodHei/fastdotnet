@@ -18,6 +18,10 @@ import * as ElementPlus from 'element-plus';
 (window as any).VueRouter = VueRouter;
 (window as any).Pinia = Pinia;
 (window as any).ElementPlus = ElementPlus;
+
+// 导入并添加上传服务到共享依赖
+import uploadService from '@/services/uploadService';
+(window as any).__UPLOAD_SERVICE__ = uploadService;
 // --- 共享依赖结束 ---
 
 import { directive } from '@/directive/index';
@@ -104,6 +108,8 @@ export async function startQiankun() {
                                 FdQueryBuilder: { buildMixedQuery }, // 将查询构建工具通过 props 传递
                                 // --- 添加SignalR管理器 ---
                                 signalRManager: baseSignalRManager, // 将主应用的 SignalR 管理器通过 props 传递
+                                // --- 添加上传服务 ---
+                                uploadService: uploadService, // 将主应用的上传服务通过 props 传递
                                 // --- 添加结束 ---
                                 // 传递菜单信息，用于微应用的 keep-alive 控制
                                 menuInfo: {

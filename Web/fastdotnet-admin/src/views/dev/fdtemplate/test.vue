@@ -127,6 +127,24 @@
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+					<el-form-item label="头像上传" prop="AvatarUpload">
+						<GlobalFileUploader
+							bucket-name="user-avatars"
+							:max-size="2"
+							accept="image/*"
+							:showStorageTypeLabel=false
+							list-type="picture-card"
+							@success="onAvatarUploadSuccess"
+							@error="onAvatarUploadError"
+						>
+							<el-icon class="avatar-uploader-icon"></el-icon>
+						</GlobalFileUploader>
+						<div class="el-upload__tip" v-if="state.avatarUrl">
+							当前头像：<el-link :href="state.avatarUrl" target="_blank" type="primary">预览</el-link>
+						</div>
+					</el-form-item>
+				</el-col>
+				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 					<el-form-item label="is_active" prop="IsActive">
 						<el-switch v-model="state.formData.IsActive" :active-value="true" :inactive-value="false" />
 					</el-form-item>
@@ -155,6 +173,7 @@ import { buildMixedQuery } from '@/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
 import * as FdAdminUserApi from '@/api/fd-system-api-admin/FdAdminUser';
+import GlobalFileUploader from '@/components/upload/GlobalFileUploader.vue';
 
 const queryForm = ref();
 const formRef = ref();
@@ -186,6 +205,7 @@ const state = reactive({
 		title: '',
 		type: 'create' as 'create' | 'update',
 	},
+	avatarUrl: '',
 	formData: {
 		Id: '',
 		Username: '',
@@ -231,7 +251,7 @@ const getList = async () => {
 		}
 		// 调试日志
 		//console.log('Search request body:', searchBody);
-		const response = await FdAdminUserApi.postAdminFdAdminUserPageSearch(searchBody);
+		const response = await FdAdminUserApi.postApiAdminFdAdminUserPageSearch(searchBody);
 		state.tableData.data = response.Items as APIModel.FdAdminUserDto[] || [] as APIModel.FdAdminUserDto[];
 		state.pagination.total = response.PageInfo?.Total || 0;
 	} catch (error) {
@@ -290,12 +310,12 @@ const submitForm = () => {
 			if (state.dialog.type === 'update' && state.formData.Id) {
 				// 更新接口调用
 				const updateData = { ...state.formData } as APIModel.UpdateFdAdminUserDto;
-				await FdAdminUserApi.putAdminFdAdminUserId({ id: state.formData.Id }, updateData);
+				await FdAdminUserApi.putApiAdminFdAdminUserId({ id: state.formData.Id }, updateData);
 				ElMessage.success('更新成功');
 			} else {
 				// 新增接口调用
 				const createData = { ...state.formData } as APIModel.CreateFdAdminUserDto;
-				await FdAdminUserApi.postAdminFdAdminUser(createData);
+				await FdAdminUserApi.postApiAdminFdAdminUser(createData);
 				ElMessage.success('添加成功');
 			}
 			state.dialog.visible = false;
@@ -312,7 +332,7 @@ const handleDelete = (row: APIModel.FdAdminUserDto) => {
 	ElMessageBox.confirm('确定删除吗？')
 		.then(async () => {
 			// 删除接口调用
-			await FdAdminUserApi.deleteAdminFdAdminUserId({ id: row.Id as string });
+			await FdAdminUserApi.deleteApiAdminFdAdminUserId({ id: row.Id as string });
 			ElMessage.success('删除成功');
 			getList();
 		})
@@ -320,6 +340,41 @@ const handleDelete = (row: APIModel.FdAdminUserDto) => {
 			ElMessage.error('删除失败');
 			return;
 		});
+};
+
+// 头像上传成功回调
+const onAvatarUploadSuccess = (response: any, file: any, fileList: any) => {
+	console.log('头像上传成功:', response);
+	// 根据API响应格式处理
+	if (response && typeof response === 'object') {
+		// 如果是标准响应格式
+		if (response.data && response.data.url) {
+			state.formData.Avatar = response.data.url;
+			state.avatarUrl = response.data.url;
+			ElMessage.success(`头像上传成功: ${response.data.fileName || '文件'}`);
+		} else if (response.url) {
+			// 如果直接返回URL
+			state.formData.Avatar = response.url;
+			state.avatarUrl = response.url;
+			ElMessage.success('头像上传成功');
+		} else {
+			// 如果是字符串URL
+			state.formData.Avatar = response;
+			state.avatarUrl = response;
+			ElMessage.success('头像上传成功');
+		}
+	} else {
+		// 如果是字符串URL
+		state.formData.Avatar = response;
+		state.avatarUrl = response;
+		ElMessage.success('头像上传成功');
+	}
+};
+
+// 头像上传失败回调
+const onAvatarUploadError = (error: any, file: any, fileList: any) => {
+	console.error('头像上传失败:', error);
+	ElMessage.error('头像上传失败');
 };
 
 onMounted(() => {
@@ -334,4 +389,19 @@ onMounted(() => {
 
 // .fdadminuser-container .el-card:first-child .el-form .el-form-item:last-of-type {
 // 	margin-bottom: 5 !important;
-// }</style>
+// }
+
+.avatar-uploader-icon {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.el-upload__tip {
+  font-size: 12px;
+  color: #909399;
+  margin-top: 5px;
+}
+</style>
