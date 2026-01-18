@@ -75,7 +75,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
                             var apiScope = GetApiUsageScope(controllerActionDescriptor.MethodInfo, controllerType);
                             var scopePrefix = GetScopePrefix(apiScope);
 
-                            newTemplate = $"api/plugins/{scopePrefix}{pluginId}/{pathSegment.TrimStart('/')}";
+                            newTemplate = $"api/plugins/{scopePrefix}{"p"}{pluginId}/{pathSegment.TrimStart('/')}";
                             controllerActionDescriptor.AttributeRouteInfo.Template = newTemplate;
                         }
                         else
@@ -87,7 +87,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
                             var apiScope = GetApiUsageScope(controllerActionDescriptor.MethodInfo, controllerType);
                             var scopePrefix = GetScopePrefix(apiScope);
                             
-                            newTemplate = $"api/plugins/{scopePrefix}{pluginId}/{controllerName}/{actionName}";
+                            newTemplate = $"api/plugins/{scopePrefix}{"p"}{pluginId}/{controllerName}/{actionName}";
 
                             controllerActionDescriptor.AttributeRouteInfo = new AttributeRouteInfo
                             {

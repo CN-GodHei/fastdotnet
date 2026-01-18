@@ -68,7 +68,7 @@ namespace Fastdotnet.WebApi.Filters
                             var pathSegments = apiDesc.RelativePath.Split('/');
                             if (pathSegments.Length > 2 && pathSegments[1] == "plugins")
                             {
-                                var pathPluginId = pathSegments[3].ToLower();
+                                var pathPluginId = pathSegments[3].ToLower().Substring(1);
                                 if (pathPluginId != currentPluginId)
                                 {
                                     pathsToRemove.Add(path.Key);
