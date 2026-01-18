@@ -62,40 +62,39 @@
       
       <div style="margin-bottom: 20px;">
         <h3>基本上传</h3>
-        <GlobalFileUploader
+        <MicroAppFileUploader
           :max-size="5"
           accept=".jpg,.png,.pdf"
-          :on-success="onBasicUploadSuccess"
-          :on-error="onBasicUploadError"
+          @success="onBasicUploadSuccess"
+          @error="onBasicUploadError"
         >
           <button>点击上传</button>
-        </GlobalFileUploader>
+        </MicroAppFileUploader>
       </div>
       
       <div style="margin-bottom: 20px;">
         <h3>图片上传</h3>
-        <GlobalFileUploader
+        <MicroAppFileUploader
           :max-size="2"
           accept="image/*"
           list-type="picture-card"
-          :on-success="onImageUploadSuccess"
-          :on-error="onBasicUploadError"
+          @success="onImageUploadSuccess"
+          @error="onBasicUploadError"
         >
           <span>+</span>
-        </GlobalFileUploader>
+        </MicroAppFileUploader>
       </div>
       
       <div style="margin-bottom: 20px;">
         <h3>带存储类型标签</h3>
-        <GlobalFileUploader
-          :show-storage-type-label="true"
+        <MicroAppFileUploader
           :max-size="3"
           accept="image/*,.pdf"
-          :on-success="onAdvancedUploadSuccess"
-          :on-error="onBasicUploadError"
+          @success="onAdvancedUploadSuccess"
+          @error="onBasicUploadError"
         >
           <button>上传带标签</button>
-        </GlobalFileUploader>
+        </MicroAppFileUploader>
       </div>
       
       <div style="margin-top: 20px;">
@@ -115,12 +114,14 @@
 // Plugin A About View
 // --- 添加导入和逻辑 ---
 import { ref } from 'vue';
+import { ElMessage } from 'element-plus';
 // 导入你想要测试的 API 函数
 import { getApiPluginsPinyin_11375910391972869PluginATestDto } from '@/api/plugin-a/PluginATestDto';
 // 导入共享的查询构建器
 import { getSharedFdQueryBuilder } from '@/main';
 // 导入全局上传组件
-import GlobalFileUploader from '../../../../fastdotnet-admin/src/components/upload/GlobalFileUploader.vue';
+import MicroAppFileUploader from '@/components/upload/MicroAppFileUploader.vue';
+import { UploadFilled } from '@element-plus/icons-vue';
 
 const loading = ref(false);
 const responseData = ref<any>(null); // 使用更具体的类型代替 any
@@ -206,6 +207,8 @@ const testGetApi = async () => {
   }
 };
 // --- 添加结束 ---
+
+// 上传前处理和自定义上传函数已经在 MicroAppFileUploader 组件内部实现
 
 // 上传成功回调
 const onBasicUploadSuccess = (response: any, file: any, fileList: any) => {
