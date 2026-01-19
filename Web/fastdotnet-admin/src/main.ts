@@ -46,10 +46,15 @@ initializeThemeConfig().then(() => {
     console.error('[MainApp] Failed to initialize theme configuration:', error);
 });
 
+// 导入富文本编辑器处理器
+import { initPluginRichTextHandler } from '@/utils/pluginRichTextHandler';
+
 // --- Qiankun 启动逻辑 ---
 // 定义一个变量，防止 qiankun 被重复启动
 let qiankunStarted = false;
 export async function startQiankun() {
+  // 初始化富文本编辑器处理器
+  initPluginRichTextHandler();
     // 检查是否有 token，如果没有则不启动 qiankun
     const token = Session.get('token');
     if (!token) {
@@ -78,6 +83,10 @@ export async function startQiankun() {
                 // 在开发环境中，可以为特定插件ID指定本地开发服务器入口
                 if (pluginId === '这是你开发时的插件Id，为了避免重复编译才能测试，你可以在这里指定本地开发服务器入口') {
                     return '//localhost:8082';
+                }
+                // 添加富文本编辑器插件的本地开发服务器入口
+                if (pluginId === 'RichTextEditor') {
+                    return '//localhost:8090';
                 }
                 // 可以为更多插件添加调试入口
             }

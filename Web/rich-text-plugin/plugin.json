@@ -1,0 +1,15 @@
+{
+  "id": "RichTextEditor",
+  "name": "富文本编辑器",
+  "description": "一个基于qiankun的富文本编辑器微应用插件",
+  "version": "1.0.0",
+  "author": "Fastdotnet Team",
+  "enabled": true,
+  "entryPoint": "index.html",
+  "microAppConfig": {
+    "name": "RichTextEditor",
+    "entry": "/api/plugins/RichTextEditor/index.html",
+    "container": "#subapp-viewport",
+    "activeRule": "/micro/RichTextEditor"
+  }
+}
