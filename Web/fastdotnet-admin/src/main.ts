@@ -13,15 +13,21 @@ import { baseSignalRManager } from '@/utils/signalr';
 import { useMicroAppsStore } from '@/stores/microApps';
 import * as ElementPlus from 'element-plus';
 
+// 导入上传服务
+import uploadService from '@/services/uploadService';
+
 // --- 共享依赖 ---
+// 将Vue实例作为全局对象暴露，确保子应用可以访问所有必要的API
 (window as any).Vue = Vue;
 (window as any).VueRouter = VueRouter;
 (window as any).Pinia = Pinia;
 (window as any).ElementPlus = ElementPlus;
 
 // 导入并添加上传服务到共享依赖
-import uploadService from '@/services/uploadService';
 (window as any).__UPLOAD_SERVICE__ = uploadService;
+
+// 导入并添加插件API到共享依赖
+(window as any).__PLUGIN_API__ = pluginAPI;
 // --- 共享依赖结束 ---
 
 import { directive } from '@/directive/index';
@@ -46,16 +52,40 @@ initializeThemeConfig().then(() => {
     console.error('[MainApp] Failed to initialize theme configuration:', error);
 });
 
-// 导入富文本编辑器处理器
-import { initPluginRichTextHandler } from '@/utils/pluginRichTextHandler';
+// 导入插件系统
+import { pluginRegistry } from '@/plugins/PluginRegistry';
+import { pluginManager } from '@/plugins/PluginManager';
+import { pluginAPI } from '@/plugins/PluginAPI';
+
+// 初始化插件系统
+import { initializePlugins } from '@/plugins/PluginLoader';
+
+async function initializePluginSystem() {
+  try {
+    // 初始化插件注册中心，可以从后端API加载插件配置
+    console.log('[MainApp] Initializing plugin system...');
+    
+    // 从后端API加载插件配置
+    await initializePlugins();
+    
+    console.log('[MainApp] Plugin system initialized');
+  } catch (error) {
+    console.error('[MainApp] Failed to initialize plugin system:', error);
+  }
+  
+  // 输出当前激活的插件信息
+  setTimeout(() => {
+    pluginRegistry.logActivePlugins();
+  }, 1000); // 延迟1秒确保所有插件都已加载
+}
 
 // --- Qiankun 启动逻辑 ---
 // 定义一个变量，防止 qiankun 被重复启动
 let qiankunStarted = false;
 export async function startQiankun() {
-  // 初始化富文本编辑器处理器
-  initPluginRichTextHandler();
-    // 检查是否有 token，如果没有则不启动 qiankun
+  // 初始化插件系统
+  initializePluginSystem();
+  // 检查是否有 token，如果没有则不启动 qiankun
     const token = Session.get('token');
     if (!token) {
         //console.log('[MainApp] No token found, skipping Qiankun initialization');
