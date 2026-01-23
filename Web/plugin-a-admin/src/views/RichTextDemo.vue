@@ -97,6 +97,11 @@ const loadRichTextMicroApp = async () => {
   }
   
   try {
+    // 从当前插件获取上传服务
+    const { getSharedUploadService } = await import('@/main');
+    const uploadService = getSharedUploadService();
+    console.log("演示插件拿到的上传服务",uploadService)
+    
     // 使用loadMicroApp加载富文本编辑器微应用
     microAppInstance = await loadMicroApp({
       name: 'FastdotnetRichText',
@@ -105,6 +110,7 @@ const loadRichTextMicroApp = async () => {
       props: {
         initialContent: richTextContent.value || '<p>请输入内容...</p>',
         showToolbar: true,
+        uploadService: uploadService, // 传递上传服务
         onChange: (content: string) => {
           richTextContent.value = content;
           console.log('富文本内容已更新:', content);
