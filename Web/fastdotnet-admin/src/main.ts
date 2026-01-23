@@ -12,7 +12,6 @@ import { buildMixedQuery } from '@/utils/queryBuilder';
 import { baseSignalRManager } from '@/utils/signalr';
 import { useMicroAppsStore } from '@/stores/microApps';
 import * as ElementPlus from 'element-plus';
-
 // 导入上传服务
 import uploadService from '@/services/uploadService';
 
@@ -22,6 +21,24 @@ import uploadService from '@/services/uploadService';
 (window as any).VueRouter = VueRouter;
 (window as any).Pinia = Pinia;
 (window as any).ElementPlus = ElementPlus;
+
+// VueDemi 用于兼容 Vue 2/3，某些库（如 Pinia）依赖它
+(window as any).VueDemi = {
+  Vue,
+  isVue2: false,
+  isVue3: true,
+  version: Vue.version,
+  reactive: Vue.reactive,
+  ref: Vue.ref,
+  computed: Vue.computed,
+  watch: Vue.watch,
+  onMounted: Vue.onMounted,
+  onUnmounted: Vue.onUnmounted,
+  getCurrentInstance: Vue.getCurrentInstance,
+  defineComponent: Vue.defineComponent,
+  h: Vue.h,
+  effectScope: Vue.EffectScope || Vue.effectScope,
+};
 
 // 导入并添加上传服务到共享依赖
 (window as any).__UPLOAD_SERVICE__ = uploadService;
