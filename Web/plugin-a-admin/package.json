@@ -17,7 +17,8 @@
     "@element-plus/icons-vue": "^2.3.1",
     "pinia": "^2.1.0",
     "vue": "^3.4.0",
-    "vue-router": "^4.2.0"
+    "vue-router": "^4.2.0",
+		"qiankun": "^2.10.16"
   },
   "devDependencies": {
     "@types/node": "^20.9.0",
