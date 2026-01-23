@@ -278,6 +278,7 @@ try {
 1. **消息类型定义**：
    - `setContent`: 设置iframe内内容
    - `contentChanged`: iframe内容变更通知
+   - `getContent`: iframe主动发送内容
    - `setVisibility`: 控制iframe可见性
 
 2. **安全注意事项**：

@@ -35,6 +35,7 @@
       <div style="margin-top: 10px;">
         <el-button @click="toggleFrameVisibility">{{ frameVisible ? '隐藏' : '显示' }}编辑器</el-button>
         <el-button @click="syncContentToFrame">同步内容到编辑器</el-button>
+        <el-button @click="getContentFromFrame">从编辑器获取内容</el-button>
       </div>
     </div>
 
@@ -87,7 +88,6 @@ if (pluginAPI) {
   const plugins = pluginAPI.getActivePlugins();
   // 使用实际的插件ID
   let richTextPlugin = plugins.find((p: any) => p.id === '11365281228129299');
-  console.log("日志",richTextPlugin);
   if (richTextPlugin) {
     richTextPluginUrl.value = richTextPlugin.entry || `/plugins/FastdotnetRichText/index.html`;
   } else {
@@ -98,7 +98,7 @@ if (pluginAPI) {
   // 如果插件API不可用，则使用默认URL
   richTextPluginUrl.value = '/plugins/FastdotnetRichText/index.html';
 }
-console.log(richTextPluginUrl.value);
+
 // 插件属性
 const pluginProps = ref({
   initialContent: richTextContent.value || '<p>初始内容</p>',
@@ -125,7 +125,7 @@ const openRichTextEditor = async () => {
     
     // 检查富文本插件是否可用
     const plugins = pluginAPI.getActivePlugins();
-    const richTextPlugin = plugins.find((p: any) => p.id === 'FastdotnetRichText');
+    const richTextPlugin = plugins.find((p: any) => p.id === '11365281228129299');
     
     if (!richTextPlugin) {
       ElMessage.error('富文本插件未找到或未启用');
@@ -213,10 +213,26 @@ const syncContentToFrame = () => {
     richTextFrameRef.value.contentWindow.postMessage(
       { 
         type: 'setContent', 
-        content: richTextContent.value || '<p>请输入内容...</p>' 
+        content: '<p>请输入内容...</p>' 
       }, 
       '*'  // 生产环境中应使用具体域名
     );
+  }
+};
+
+// 从iframe获取内容
+const getContentFromFrame = () => {
+  if (richTextFrameRef.value && richTextFrameRef.value.contentWindow) {
+    // 通过postMessage请求iframe返回内容
+    richTextFrameRef.value.contentWindow.postMessage(
+      { 
+        type: 'getContentRequest',
+        requestId: 'get_content_' + Date.now()
+      }, 
+      '*'  // 生产环境中应使用具体域名
+    );
+    ElMessage.info('已请求富文本编辑器发送内容');
+    console.log('已发送getContentRequest消息');
   }
 };
 
@@ -225,12 +241,23 @@ const handleIframeMessage = (event: MessageEvent) => {
   // 验证消息来源（在生产环境中应该使用具体的域名）
   // if (event.origin !== window.location.origin) return;
   
-  const { type, content } = event.data || {};
+  const { type, content, timestamp, requestId } = event.data || {};
+  
+  console.log('收到iframe消息:', { type, content, timestamp, requestId });
   
   if (type === 'contentChanged' && content !== undefined) {
     // 更新本地的富文本内容
     richTextContent.value = content;
     console.log('收到富文本编辑器内容更新:', content);
+  } else if (type === 'getContent' && content !== undefined) {
+    // 收到富文本编辑器主动发送的内容或响应请求发送的内容
+    richTextContent.value = content;
+    ElMessage.success(`从富文本编辑器获取内容成功 (时间: ${new Date(timestamp).toLocaleTimeString()})`);
+    console.log('收到富文本编辑器发送的内容:', content);
+  } else if (type === 'getContentError') {
+    // 收到错误消息
+    console.error('收到富文本编辑器错误:', event.data.error);
+    ElMessage.error(`获取内容失败: ${event.data.error}`);
   }
 };
 
@@ -250,22 +277,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('message', handleIframeMessage);
   
-  // 取消订阅
-  if (unsubscribe) {
-    unsubscribe();
-  }
-});
-
-onMounted(() => {
-  if (pluginAPI) {
-    // 订阅来自其他插件的消息
-    unsubscribe = pluginAPI.subscribeToMessages('PluginA', handleMessageEvent);
-  } else {
-    console.warn('插件API不可用，无法订阅消息');
-  }
-});
-
-onUnmounted(() => {
   // 取消订阅
   if (unsubscribe) {
     unsubscribe();

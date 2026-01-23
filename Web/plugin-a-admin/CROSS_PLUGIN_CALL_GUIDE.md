@@ -173,30 +173,77 @@ if (richTextFrameRef.value && richTextFrameRef.value.contentWindow) {
 
 2. **iframe向父页面发送消息**：
 ```typescript
-// 在富文本插件中监听内容变化
-editorInstance.config.onchange = function (newHtml: string) {
-  // 通知父窗口内容已更改
-  if (window.parent && window.parent !== window) {
-    window.parent.postMessage({
-      type: 'contentChanged',
-      content: newHtml
-    }, '*');
+// 在富文本插件中主动发送内容
+const sendContentToParent = () => {
+  if (editor.value) {
+    const content = editor.value.txt.html();
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: 'getContent',
+        content: content,
+        timestamp: Date.now()
+      }, '*');
+    }
+    console.log('已发送内容到父窗口:', content);
   }
 };
+
+// 在main.ts中处理来自父页面的请求
+// 监听来自父窗口的消息（用于iframe通信）
+window.addEventListener('message', (event) => {
+  const { type, content, visible, requestId } = event.data || {};
+  
+  if (type === 'getContentRequest') {
+    // 处理获取内容的请求
+    console.log('收到获取内容请求:', requestId);
+    if ((window as any).editorInstance) {
+      const currentContent = (window as any).editorInstance.txt.html();
+      // 发送内容回父窗口
+      window.parent.postMessage({
+        type: 'getContent',
+        content: currentContent,
+        requestId: requestId,
+        timestamp: Date.now()
+      }, '*');
+    }
+  }
+});
 ```
 
 3. **父页面接收iframe消息**：
 ```typescript
 // 监听来自富文本编辑器的消息
 const handleIframeMessage = (event: MessageEvent) => {
-  const { type, content } = event.data || {};
+  const { type, content, timestamp } = event.data || {};
   
   if (type === 'contentChanged' && content !== undefined) {
     // 更新本地的富文本内容
     richTextContent.value = content;
     console.log('收到富文本编辑器内容更新:', content);
+  } else if (type === 'getContent' && content !== undefined) {
+    // 收到富文本编辑器主动发送的内容或响应请求发送的内容
+    richTextContent.value = content;
+    ElMessage.success(`从富文本编辑器获取内容成功 (时间: ${new Date(timestamp).toLocaleTimeString()})`);
+    console.log('收到富文本编辑器发送的内容:', content);
   }
 };
+
+// 从iframe获取内容
+const getContentFromFrame = () => {
+  if (richTextFrameRef.value && richTextFrameRef.value.contentWindow) {
+    // 通过postMessage请求iframe返回内容
+    richTextFrameRef.value.contentWindow.postMessage(
+      { 
+        type: 'getContentRequest',
+        requestId: 'get_content_' + Date.now()
+      }, 
+      '*'  // 生产环境中应使用具体域名
+    );
+    ElMessage.info('已请求富文本编辑器发送内容');
+    console.log('已发送getContentRequest消息');
+  }
+};
+```
 
 // 添加和移除事件监听器
 onMounted(() => {
