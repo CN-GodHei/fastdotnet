@@ -28,6 +28,14 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/rich-text-demo', // 富文本编辑器演示页面
+    name: 'RichTextDemo',
+    component: () => import('../views/RichTextDemo.vue'),
+    meta: {
+      title: 'Plugin A Rich Text Editor Demo'
+    }
+  },
+  {
     path: '/:pathMatch(.*)*', // 匹配所有未定义路由
     name: 'NotFound',
     component: { render: () => null }, // 渲染空内容，避免警告

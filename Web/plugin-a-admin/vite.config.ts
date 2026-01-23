@@ -5,6 +5,12 @@ import qiankun from 'vite-plugin-qiankun'
 
 export default defineConfig(({ mode }) => {
   return {
+    define: {
+      global: 'globalThis',
+      process: {
+        env: {}
+      }
+    },
     plugins: [
       vue(),
       // 关键：为微应用启用 qiankun 插件
