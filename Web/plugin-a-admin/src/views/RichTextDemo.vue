@@ -85,8 +85,9 @@ const richTextFrameRef = ref<HTMLIFrameElement | null>(null);
 // 从主应用获取富文本插件URL
 if (pluginAPI) {
   const plugins = pluginAPI.getActivePlugins();
-  const richTextPlugin = plugins.find((p: any) => p.id === '11365281228129299');
-  console.log("日志",richTextPlugin)
+  // 使用实际的插件ID
+  let richTextPlugin = plugins.find((p: any) => p.id === '11365281228129299');
+  console.log("日志",richTextPlugin);
   if (richTextPlugin) {
     richTextPluginUrl.value = richTextPlugin.entry || `/plugins/FastdotnetRichText/index.html`;
   } else {
@@ -97,7 +98,7 @@ if (pluginAPI) {
   // 如果插件API不可用，则使用默认URL
   richTextPluginUrl.value = '/plugins/FastdotnetRichText/index.html';
 }
-console.log(richTextPluginUrl)
+console.log(richTextPluginUrl.value);
 // 插件属性
 const pluginProps = ref({
   initialContent: richTextContent.value || '<p>初始内容</p>',
@@ -218,6 +219,42 @@ const syncContentToFrame = () => {
     );
   }
 };
+
+// 监听来自富文本编辑器的消息
+const handleIframeMessage = (event: MessageEvent) => {
+  // 验证消息来源（在生产环境中应该使用具体的域名）
+  // if (event.origin !== window.location.origin) return;
+  
+  const { type, content } = event.data || {};
+  
+  if (type === 'contentChanged' && content !== undefined) {
+    // 更新本地的富文本内容
+    richTextContent.value = content;
+    console.log('收到富文本编辑器内容更新:', content);
+  }
+};
+
+// 在组件挂载时添加事件监听器
+onMounted(() => {
+  window.addEventListener('message', handleIframeMessage);
+  
+  if (pluginAPI) {
+    // 订阅来自其他插件的消息
+    unsubscribe = pluginAPI.subscribeToMessages('PluginA', handleMessageEvent);
+  } else {
+    console.warn('插件API不可用，无法订阅消息');
+  }
+});
+
+// 在组件卸载时移除事件监听器
+onUnmounted(() => {
+  window.removeEventListener('message', handleIframeMessage);
+  
+  // 取消订阅
+  if (unsubscribe) {
+    unsubscribe();
+  }
+});
 
 onMounted(() => {
   if (pluginAPI) {

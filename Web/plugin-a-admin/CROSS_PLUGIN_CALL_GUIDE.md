@@ -139,7 +139,8 @@ interface PluginMessage {
 // 从主应用获取富文本插件URL
 if (pluginAPI) {
   const plugins = pluginAPI.getActivePlugins();
-  const richTextPlugin = plugins.find((p: any) => p.id === 'FastdotnetRichText');
+  // 使用实际的插件ID
+  let richTextPlugin = plugins.find((p: any) => p.id === '11365281228129299');
   if (richTextPlugin) {
     richTextPluginUrl.value = richTextPlugin.entry || `/plugins/FastdotnetRichText/index.html`;
   } else {
@@ -152,7 +153,61 @@ if (pluginAPI) {
 }
 ```
 
-这种方式可以让用户在当前页面直接使用富文本编辑器，无需跳转到主应用页面，同时确保了URL的准确性和一致性。
+## iframe通信机制
+
+我们实现了双向通信机制：
+
+1. **父页面向iframe发送消息**：
+```typescript
+// 同步内容到iframe
+if (richTextFrameRef.value && richTextFrameRef.value.contentWindow) {
+  richTextFrameRef.value.contentWindow.postMessage(
+    { 
+      type: 'setContent', 
+      content: richTextContent.value || '<p>请输入内容...</p>' 
+    }, 
+    '*'  // 生产环境中应使用具体域名
+  );
+}
+```
+
+2. **iframe向父页面发送消息**：
+```typescript
+// 在富文本插件中监听内容变化
+editorInstance.config.onchange = function (newHtml: string) {
+  // 通知父窗口内容已更改
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({
+      type: 'contentChanged',
+      content: newHtml
+    }, '*');
+  }
+};
+```
+
+3. **父页面接收iframe消息**：
+```typescript
+// 监听来自富文本编辑器的消息
+const handleIframeMessage = (event: MessageEvent) => {
+  const { type, content } = event.data || {};
+  
+  if (type === 'contentChanged' && content !== undefined) {
+    // 更新本地的富文本内容
+    richTextContent.value = content;
+    console.log('收到富文本编辑器内容更新:', content);
+  }
+};
+
+// 添加和移除事件监听器
+onMounted(() => {
+  window.addEventListener('message', handleIframeMessage);
+});
+onUnmounted(() => {
+  window.removeEventListener('message', handleIframeMessage);
+});
+```
+
+这种方式可以让用户在当前页面直接使用富文本编辑器，无需跳转到主应用页面，同时确保了URL的准确性和一致性，并实现了内容的双向同步。
 
 ## 注意事项
 

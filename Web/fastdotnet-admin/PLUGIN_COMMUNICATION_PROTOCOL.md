@@ -269,5 +269,22 @@ try {
 1. **iframe嵌入**：通过iframe标签嵌入其他插件
 2. **postMessage通信**：使用window.postMessage进行跨窗口通信
 3. **URL配置**：通过主应用的插件注册表获取正确的插件URL
+4. **双向数据同步**：实现父页面与iframe之间的数据同步
 
 这种方式允许在一个页面中集成多个插件的功能，提升用户体验。
+
+### iframe通信实现要点
+
+1. **消息类型定义**：
+   - `setContent`: 设置iframe内内容
+   - `contentChanged`: iframe内容变更通知
+   - `setVisibility`: 控制iframe可见性
+
+2. **安全注意事项**：
+   - 在生产环境中应验证消息来源（origin）
+   - 避免使用通配符`'*'`作为目标origin
+   - 对消息内容进行验证和过滤
+
+3. **生命周期管理**：
+   - 在组件挂载时添加message监听器
+   - 在组件卸载时移除message监听器
