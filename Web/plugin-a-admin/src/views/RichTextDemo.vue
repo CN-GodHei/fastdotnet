@@ -9,7 +9,7 @@
         打开富文本编辑器
       </el-button>
       <el-button @click="loadRichTextPluginViaPortal" style="margin-left: 10px;">
-        通过Portal加载富文本插件
+        通过iframe加载富文本插件
       </el-button>
     </div>
 
@@ -19,11 +19,22 @@
       <div v-html="richTextContent" style="border-top: 1px solid #eee; padding-top: 15px;"></div>
     </div>
 
-    <!-- 通过PluginPortal嵌入富文本插件 -->
+    <!-- 通过iframe嵌入富文本插件 -->
     <div v-if="showPluginPortal" style="margin-top: 30px; border: 1px solid #ddd; padding: 20px; border-radius: 4px;">
-      <h3>通过PluginPortal加载的富文本编辑器：</h3>
-      <div id="richtext-container" style="height: 400px;">
-        <p>请在主应用中使用 PluginPortal 组件来加载富文本插件</p>
+      <h3>通过iframe嵌入的富文本编辑器：</h3>
+      <div id="richtext-container" style="height: 500px;">
+        <iframe 
+          :src="richTextPluginUrl" 
+          width="100%" 
+          height="100%" 
+          frameborder="0" 
+          ref="richTextFrameRef"
+          @load="onRichTextFrameLoad"
+        ></iframe>
+      </div>
+      <div style="margin-top: 10px;">
+        <el-button @click="toggleFrameVisibility">{{ frameVisible ? '隐藏' : '显示' }}编辑器</el-button>
+        <el-button @click="syncContentToFrame">同步内容到编辑器</el-button>
       </div>
     </div>
 
@@ -38,7 +49,7 @@
       <el-button @click="sendMessageToRichTextPlugin">发送消息给富文本插件</el-button>
       
       <div v-if="receivedMessages.length > 0" style="margin-top: 20px;">
-        <h4>来自富文本插件的消息：</h4>
+        <h4>来自其他插件的消息：</h4>
         <div v-for="(msg, index) in receivedMessages" :key="index" 
              style="padding: 10px; margin: 5px 0; background-color: #f0f0f0; border-radius: 4px;">
           {{ msg }}
@@ -52,12 +63,41 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { ElButton, ElInput, ElMessage } from 'element-plus';
 
+// 获取主应用提供的插件API
+const pluginAPI = (window as any).__PLUGIN_API__;
+
+// 检查插件API是否可用
+if (!pluginAPI) {
+  console.error('主应用未提供插件API，请确保在微前端环境中运行');
+}
+
 // 富文本内容
 const richTextContent = ref('');
 const showPluginPortal = ref(false);
 const messageToSend = ref('');
 const receivedMessages = ref<string[]>([]);
 
+// iframe相关
+const richTextPluginUrl = ref(''); // 富文本插件URL，从主应用获取
+const frameVisible = ref(true);
+const richTextFrameRef = ref<HTMLIFrameElement | null>(null);
+
+// 从主应用获取富文本插件URL
+if (pluginAPI) {
+  const plugins = pluginAPI.getActivePlugins();
+  const richTextPlugin = plugins.find((p: any) => p.id === '11365281228129299');
+  console.log("日志",richTextPlugin)
+  if (richTextPlugin) {
+    richTextPluginUrl.value = richTextPlugin.entry || `/plugins/FastdotnetRichText/index.html`;
+  } else {
+    // 如果未找到插件配置，则使用默认URL
+    richTextPluginUrl.value = '/plugins/FastdotnetRichText/index.html';
+  }
+} else {
+  // 如果插件API不可用，则使用默认URL
+  richTextPluginUrl.value = '/plugins/FastdotnetRichText/index.html';
+}
+console.log(richTextPluginUrl)
 // 插件属性
 const pluginProps = ref({
   initialContent: richTextContent.value || '<p>初始内容</p>',
@@ -66,34 +106,24 @@ const pluginProps = ref({
   }
 });
 
-// 为了演示目的，创建一个模拟的插件通信对象
-const pluginComm = {
-  sendMessage: (toPlugin: string, action: string, payload: any) => {
-    // 模拟发送消息
-    console.log(`发送消息到 ${toPlugin}: ${action}`, payload);
-    receivedMessages.value.push(`已发送消息给 ${toPlugin}: ${action}`);
-    
-    // 模拟一个响应
-    setTimeout(() => {
-      receivedMessages.value.push(`收到来自 ${toPlugin} 的响应: 消息已接收`);
-    }, 1000);
-  },
-  getActivePlugins: () => [
-    { id: 'FastdotnetRichText', name: '富文本编辑器', description: 'WangEditor富文本编辑器插件', version: '1.0.0', entry: '/plugins/FastdotnetRichText/index.html' },
-    { id: 'PluginA', name: '演示插件A', description: '插件系统演示插件', version: '1.0.0', entry: '/micro/PluginA' }
-  ]
-};
-
 // 用于插件间通信的事件监听器
 const handleMessageEvent = (message: any) => {
   receivedMessages.value.push(`收到来自${message.fromPlugin}插件的消息: ${message.action} - ${JSON.stringify(message.payload)}`);
 };
 
-// 打开富文本编辑器 - 通过插件API调用富文本插件
+// 订阅来自其他插件的消息
+let unsubscribe: (() => void) | null = null;
+
+// 打开富文本编辑器 - 通过主应用API调用富文本插件
 const openRichTextEditor = async () => {
   try {
+    if (!pluginAPI) {
+      ElMessage.error('插件API不可用');
+      return;
+    }
+    
     // 检查富文本插件是否可用
-    const plugins = pluginComm.getActivePlugins();
+    const plugins = pluginAPI.getActivePlugins();
     const richTextPlugin = plugins.find((p: any) => p.id === 'FastdotnetRichText');
     
     if (!richTextPlugin) {
@@ -102,9 +132,15 @@ const openRichTextEditor = async () => {
     }
     
     // 发送消息给富文本插件，请求打开编辑器
-    pluginComm.sendMessage('FastdotnetRichText', 'openEditor', {
-      content: richTextContent.value || '<p>请输入内容...</p>',
-      callbackId: 'editor_callback_' + Date.now()
+    pluginAPI.sendMessage({
+      fromPlugin: 'PluginA',
+      toPlugin: 'FastdotnetRichText',
+      action: 'openEditor',
+      payload: {
+        content: richTextContent.value || '<p>请输入内容...</p>',
+        callbackId: 'editor_callback_' + Date.now()
+      },
+      timestamp: Date.now()
     });
     
     ElMessage.success('已发送请求给富文本插件');
@@ -114,9 +150,10 @@ const openRichTextEditor = async () => {
   }
 };
 
-// 通过PluginPortal加载富文本插件
+// 通过iframe加载富文本插件
 const loadRichTextPluginViaPortal = () => {
   showPluginPortal.value = true;
+  ElMessage.success('富文本编辑器已嵌入到当前页面');
 };
 
 // 发送消息给富文本插件
@@ -125,11 +162,22 @@ const sendMessageToRichTextPlugin = () => {
     ElMessage.warning('请输入要发送的消息');
     return;
   }
+  
+  if (!pluginAPI) {
+    ElMessage.error('插件API不可用');
+    return;
+  }
 
   // 通过插件API发送消息
-  pluginComm.sendMessage('FastdotnetRichText', 'customMessage', {
-    content: messageToSend.value,
-    sender: 'PluginA',
+  pluginAPI.sendMessage({
+    fromPlugin: 'PluginA',
+    toPlugin: 'FastdotnetRichText',
+    action: 'customMessage',
+    payload: {
+      content: messageToSend.value,
+      sender: 'PluginA',
+      timestamp: Date.now()
+    },
     timestamp: Date.now()
   });
   
@@ -140,15 +188,51 @@ const sendMessageToRichTextPlugin = () => {
   messageToSend.value = '';
 };
 
+// iframe相关方法
+const onRichTextFrameLoad = () => {
+  console.log('富文本编辑器iframe已加载');
+  // 可以在这里进行一些初始化操作
+};
+
+const toggleFrameVisibility = () => {
+  frameVisible.value = !frameVisible.value;
+  
+  if (richTextFrameRef.value && richTextFrameRef.value.contentWindow) {
+    // 通过postMessage控制iframe内内容的可见性
+    richTextFrameRef.value.contentWindow.postMessage(
+      { type: 'setVisibility', visible: frameVisible.value }, 
+      '*'  // 生产环境中应使用具体域名
+    );
+  }
+};
+
+const syncContentToFrame = () => {
+  if (richTextFrameRef.value && richTextFrameRef.value.contentWindow) {
+    // 通过postMessage同步内容到iframe
+    richTextFrameRef.value.contentWindow.postMessage(
+      { 
+        type: 'setContent', 
+        content: richTextContent.value || '<p>请输入内容...</p>' 
+      }, 
+      '*'  // 生产环境中应使用具体域名
+    );
+  }
+};
+
 onMounted(() => {
-  // 订阅来自其他插件的消息
-  // 这里仅为演示，实际的订阅逻辑会更复杂
-  console.log('插件通信已准备就绪');
+  if (pluginAPI) {
+    // 订阅来自其他插件的消息
+    unsubscribe = pluginAPI.subscribeToMessages('PluginA', handleMessageEvent);
+  } else {
+    console.warn('插件API不可用，无法订阅消息');
+  }
 });
 
 onUnmounted(() => {
   // 取消订阅
-  console.log('组件卸载，清理资源');
+  if (unsubscribe) {
+    unsubscribe();
+  }
 });
 </script>
 
