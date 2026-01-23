@@ -30,25 +30,9 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/rich-text-demo', // 富文本编辑器演示页面
     name: 'RichTextDemo',
-    component: () => import('../views/RichTextView.vue'),
-    meta: {
-      title: 'Plugin A Rich Text Editor Demo'
-    }
-  },
-  {
-    path: '/rich-text-plugin-demo', // 通过PluginPortal使用富文本编辑器演示
-    name: 'RichTextPluginDemo',
     component: () => import('../views/RichTextDemo.vue'),
     meta: {
-      title: 'Plugin A Rich Text Plugin Demo'
-    }
-  },
-  {
-    path: '/form-with-richtext', // 表单中集成富文本编辑器演示
-    name: 'FormWithRichText',
-    component: () => import('../views/FormWithRichText.vue'),
-    meta: {
-      title: 'Plugin A Form with Rich Text'
+      title: 'Plugin A Rich Text Editor Demo'
     }
   },
   {
