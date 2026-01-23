@@ -24,8 +24,6 @@
     >
       <div id="richtext-container" style="height: 500px; border: 1px solid #ccc;"></div>
       <template #footer>
-        <el-button @click="updateContentInMicroApp">更新内容</el-button>
-        <el-button @click="getContentFromMicroApp">获取内容</el-button>
         <el-button @click="closeRichTextEditorDialog">关闭</el-button>
       </template>
     </el-dialog>
@@ -33,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, nextTick } from 'vue';
 import { ElButton, ElMessage, ElDialog } from 'element-plus';
 import { loadMicroApp } from 'qiankun';
 
@@ -60,25 +58,23 @@ if (richTextDialogVisible.value) {
 let microAppInstance: any = null;
 
 // 从主应用获取富文本插件URL
-let richTextPluginUrl = '/plugins/FastdotnetRichText/index.html'; // 默认URL
+let richTextPluginUrl = ''; // 默认URL
 
 if (pluginAPI) {
   const plugins = pluginAPI.getActivePlugins();
   // 使用实际的插件ID
   let richTextPlugin = plugins.find((p: any) => p.id === '11365281228129299');
   if (richTextPlugin) {
-    richTextPluginUrl = richTextPlugin.entry || `/plugins/FastdotnetRichText/index.html`;
+    richTextPluginUrl = richTextPlugin.entry;
   }
 }
 
 // 打开富文本编辑器对话框
-const openRichTextEditorDialog = () => {
-  richTextDialogVisible.value = true;
-  
-  // 延迟加载富文本编辑器，确保DOM已渲染
-  setTimeout(() => {
-    loadRichTextMicroApp();
-  }, 100);
+const openRichTextEditorDialog = async () => {
+  richTextDialogVisible.value = true;  
+  // 等待对话框DOM完全渲染
+  await nextTick();
+  loadRichTextMicroApp();
 };
 
 // 关闭富文本编辑器对话框
@@ -112,6 +108,10 @@ const loadRichTextMicroApp = async () => {
         onChange: (content: string) => {
           richTextContent.value = content;
           console.log('富文本内容已更新:', content);
+        },
+        // onReady 回调用于确认微应用已准备就绪
+        onReady: () => {
+          console.log('富文本编辑器已准备就绪');
         }
       }
     });
@@ -123,54 +123,6 @@ const loadRichTextMicroApp = async () => {
   }
 };
 
-// 更新微应用中的内容
-const updateContentInMicroApp = () => {
-  // 更新本地内容并传递给富文本编辑器
-  const newContent = '<p>这是从父应用更新的内容: ' + new Date().toLocaleString() + '</p>';
-  richTextContent.value = newContent;
-  
-  if (microAppInstance) {
-    // 通过window.postMessage向微应用更新内容
-    const iframe = document.querySelector('#richtext-container iframe');
-    if (iframe && (iframe as HTMLIFrameElement).contentWindow) {
-      // 调用微应用暴露的全局方法来更新内容
-      (iframe as HTMLIFrameElement).contentWindow!.postMessage({
-        type: 'setContent',
-        content: newContent
-      }, '*');
-      
-      ElMessage.success('已向富文本编辑器发送更新内容');
-    }
-  }
-};
-
-// 从微应用获取内容
-const getContentFromMicroApp = () => {
-  if (microAppInstance) {
-    // 通过postMessage向微应用请求内容
-    const iframe = document.querySelector('#richtext-container iframe');
-    if (iframe && (iframe as HTMLIFrameElement).contentWindow) {
-      const requestId = 'getContent_' + Date.now();
-      
-      // 监听响应
-      const handleMessage = (event: MessageEvent) => {
-        if (event.data && event.data.type === 'getContent' && event.data.requestId === requestId) {
-          richTextContent.value = event.data.content || '';
-          ElMessage.success('已从富文本编辑器获取内容');
-          window.removeEventListener('message', handleMessage);
-        }
-      };
-      
-      window.addEventListener('message', handleMessage);
-      
-      // 发送获取内容请求
-      (iframe as HTMLIFrameElement).contentWindow!.postMessage({
-        type: 'getContentRequest',
-        requestId: requestId
-      }, '*');
-    }
-  }
-};
 </script>
 
 <style scoped>
