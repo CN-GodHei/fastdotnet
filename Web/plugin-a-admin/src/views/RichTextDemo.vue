@@ -1,17 +1,7 @@
 <template>
   <div class="rich-text-demo" style="padding: 20px;">
-    <h1 style="font-size: 32px; color: #1890ff; margin-bottom: 20px;">富文本插件调用演示</h1>
-    <p style="font-size: 16px; margin-bottom: 30px;">此页面演示如何在演示插件中调用富文本插件的功能</p>
-
-    <!-- 调用富文本插件按钮 -->
-    <div style="margin-bottom: 30px;">
-      <el-button type="primary" size="large" @click="openRichTextEditor">
-        打开富文本编辑器
-      </el-button>
-      <el-button @click="loadRichTextPluginViaPortal" style="margin-left: 10px;">
-        通过iframe加载富文本插件
-      </el-button>
-    </div>
+    <h1 style="font-size: 32px; color: #1890ff; margin-bottom: 20px;">富文本编辑器演示</h1>
+    <p style="font-size: 16px; margin-bottom: 30px;">演示如何在页面中嵌入富文本编辑器</p>
 
     <!-- 显示富文本内容 -->
     <div v-if="richTextContent" style="margin-top: 30px; border: 1px solid #ddd; padding: 20px; border-radius: 4px;">
@@ -19,50 +9,33 @@
       <div v-html="richTextContent" style="border-top: 1px solid #eee; padding-top: 15px;"></div>
     </div>
 
-    <!-- 通过iframe嵌入富文本插件 -->
-    <div v-if="showPluginPortal" style="margin-top: 30px; border: 1px solid #ddd; padding: 20px; border-radius: 4px;">
-      <h3>通过iframe嵌入的富文本编辑器：</h3>
-      <div id="richtext-container" style="height: 500px;">
-        <iframe 
-          :src="richTextPluginUrl" 
-          width="100%" 
-          height="100%" 
-          frameborder="0" 
-          ref="richTextFrameRef"
-          @load="onRichTextFrameLoad"
-        ></iframe>
-      </div>
-      <div style="margin-top: 10px;">
-        <el-button @click="toggleFrameVisibility">{{ frameVisible ? '隐藏' : '显示' }}编辑器</el-button>
-        <el-button @click="syncContentToFrame">同步内容到编辑器</el-button>
-        <el-button @click="getContentFromFrame">从编辑器获取内容</el-button>
-      </div>
+    <!-- 操作按钮 -->
+    <div style="margin-top: 30px;">
+      <el-button type="primary" @click="openRichTextEditorDialog">打开富文本编辑器</el-button>
     </div>
 
-    <!-- 插件间通信演示 -->
-    <div style="margin-top: 30px; border: 1px solid #ddd; padding: 20px; border-radius: 4px;">
-      <h3>插件间通信演示</h3>
-      <el-input 
-        v-model="messageToSend" 
-        placeholder="输入要发送给富文本插件的消息" 
-        style="margin-bottom: 10px;"
-      />
-      <el-button @click="sendMessageToRichTextPlugin">发送消息给富文本插件</el-button>
-      
-      <div v-if="receivedMessages.length > 0" style="margin-top: 20px;">
-        <h4>来自其他插件的消息：</h4>
-        <div v-for="(msg, index) in receivedMessages" :key="index" 
-             style="padding: 10px; margin: 5px 0; background-color: #f0f0f0; border-radius: 4px;">
-          {{ msg }}
-        </div>
-      </div>
-    </div>
+    <!-- 富文本编辑器对话框 -->
+    <el-dialog
+      v-model="richTextDialogVisible"
+      title="富文本编辑器"
+      width="80%"
+      top="5vh"
+      destroy-on-close
+    >
+      <div id="richtext-container" style="height: 500px; border: 1px solid #ccc;"></div>
+      <template #footer>
+        <el-button @click="updateContentInMicroApp">更新内容</el-button>
+        <el-button @click="getContentFromMicroApp">获取内容</el-button>
+        <el-button @click="closeRichTextEditorDialog">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import { ElButton, ElInput, ElMessage } from 'element-plus';
+import { ref } from 'vue';
+import { ElButton, ElMessage, ElDialog } from 'element-plus';
+import { loadMicroApp } from 'qiankun';
 
 // 获取主应用提供的插件API
 const pluginAPI = (window as any).__PLUGIN_API__;
@@ -74,214 +47,130 @@ if (!pluginAPI) {
 
 // 富文本内容
 const richTextContent = ref('');
-const showPluginPortal = ref(false);
-const messageToSend = ref('');
-const receivedMessages = ref<string[]>([]);
 
-// iframe相关
-const richTextPluginUrl = ref(''); // 富文本插件URL，从主应用获取
-const frameVisible = ref(true);
-const richTextFrameRef = ref<HTMLIFrameElement | null>(null);
+// 对话框显示控制
+const richTextDialogVisible = ref(false);
+
+// 确保初始化时对话框是隐藏的
+if (richTextDialogVisible.value) {
+  richTextDialogVisible.value = false;
+}
+
+// 用于管理微应用实例
+let microAppInstance: any = null;
 
 // 从主应用获取富文本插件URL
+let richTextPluginUrl = '/plugins/FastdotnetRichText/index.html'; // 默认URL
+
 if (pluginAPI) {
   const plugins = pluginAPI.getActivePlugins();
   // 使用实际的插件ID
   let richTextPlugin = plugins.find((p: any) => p.id === '11365281228129299');
   if (richTextPlugin) {
-    richTextPluginUrl.value = richTextPlugin.entry || `/plugins/FastdotnetRichText/index.html`;
-  } else {
-    // 如果未找到插件配置，则使用默认URL
-    richTextPluginUrl.value = '/plugins/FastdotnetRichText/index.html';
+    richTextPluginUrl = richTextPlugin.entry || `/plugins/FastdotnetRichText/index.html`;
   }
-} else {
-  // 如果插件API不可用，则使用默认URL
-  richTextPluginUrl.value = '/plugins/FastdotnetRichText/index.html';
 }
 
-// 插件属性
-const pluginProps = ref({
-  initialContent: richTextContent.value || '<p>初始内容</p>',
-  onUpdateContent: (content: string) => {
-    richTextContent.value = content;
-  }
-});
-
-// 用于插件间通信的事件监听器
-const handleMessageEvent = (message: any) => {
-  receivedMessages.value.push(`收到来自${message.fromPlugin}插件的消息: ${message.action} - ${JSON.stringify(message.payload)}`);
+// 打开富文本编辑器对话框
+const openRichTextEditorDialog = () => {
+  richTextDialogVisible.value = true;
+  
+  // 延迟加载富文本编辑器，确保DOM已渲染
+  setTimeout(() => {
+    loadRichTextMicroApp();
+  }, 100);
 };
 
-// 订阅来自其他插件的消息
-let unsubscribe: (() => void) | null = null;
+// 关闭富文本编辑器对话框
+const closeRichTextEditorDialog = () => {
+  richTextDialogVisible.value = false;
+  
+  // 卸载富文本微应用
+  if (microAppInstance) {
+    microAppInstance.unmount();
+    microAppInstance = null;
+  }
+};
 
-// 打开富文本编辑器 - 通过主应用API调用富文本插件
-const openRichTextEditor = async () => {
+// 加载富文本微应用
+const loadRichTextMicroApp = async () => {
+  const container = document.getElementById('richtext-container');
+  if (!container) {
+    ElMessage.error('找不到富文本编辑器容器');
+    return;
+  }
+  
   try {
-    if (!pluginAPI) {
-      ElMessage.error('插件API不可用');
-      return;
-    }
-    
-    // 检查富文本插件是否可用
-    const plugins = pluginAPI.getActivePlugins();
-    const richTextPlugin = plugins.find((p: any) => p.id === '11365281228129299');
-    
-    if (!richTextPlugin) {
-      ElMessage.error('富文本插件未找到或未启用');
-      return;
-    }
-    
-    // 发送消息给富文本插件，请求打开编辑器
-    pluginAPI.sendMessage({
-      fromPlugin: 'PluginA',
-      toPlugin: 'FastdotnetRichText',
-      action: 'openEditor',
-      payload: {
-        content: richTextContent.value || '<p>请输入内容...</p>',
-        callbackId: 'editor_callback_' + Date.now()
-      },
-      timestamp: Date.now()
+    // 使用loadMicroApp加载富文本编辑器微应用
+    microAppInstance = await loadMicroApp({
+      name: 'FastdotnetRichText',
+      entry: richTextPluginUrl,
+      container: container,
+      props: {
+        initialContent: richTextContent.value || '<p>请输入内容...</p>',
+        showToolbar: true,
+        onChange: (content: string) => {
+          richTextContent.value = content;
+          console.log('富文本内容已更新:', content);
+        }
+      }
     });
     
-    ElMessage.success('已发送请求给富文本插件');
+    ElMessage.success('富文本编辑器已加载');
   } catch (error) {
-    console.error('打开富文本编辑器失败:', error);
-    ElMessage.error('打开富文本编辑器失败');
+    console.error('加载富文本编辑器失败:', error);
+    ElMessage.error('加载富文本编辑器失败');
   }
 };
 
-// 通过iframe加载富文本插件
-const loadRichTextPluginViaPortal = () => {
-  showPluginPortal.value = true;
-  ElMessage.success('富文本编辑器已嵌入到当前页面');
-};
-
-// 发送消息给富文本插件
-const sendMessageToRichTextPlugin = () => {
-  if (!messageToSend.value.trim()) {
-    ElMessage.warning('请输入要发送的消息');
-    return;
-  }
+// 更新微应用中的内容
+const updateContentInMicroApp = () => {
+  // 更新本地内容并传递给富文本编辑器
+  const newContent = '<p>这是从父应用更新的内容: ' + new Date().toLocaleString() + '</p>';
+  richTextContent.value = newContent;
   
-  if (!pluginAPI) {
-    ElMessage.error('插件API不可用');
-    return;
-  }
-
-  // 通过插件API发送消息
-  pluginAPI.sendMessage({
-    fromPlugin: 'PluginA',
-    toPlugin: 'FastdotnetRichText',
-    action: 'customMessage',
-    payload: {
-      content: messageToSend.value,
-      sender: 'PluginA',
-      timestamp: Date.now()
-    },
-    timestamp: Date.now()
-  });
-  
-  // 记录发送的消息
-  receivedMessages.value.push(`已发送消息给富文本插件: ${messageToSend.value}`);
-  
-  // 清空输入框
-  messageToSend.value = '';
-};
-
-// iframe相关方法
-const onRichTextFrameLoad = () => {
-  console.log('富文本编辑器iframe已加载');
-  // 可以在这里进行一些初始化操作
-};
-
-const toggleFrameVisibility = () => {
-  frameVisible.value = !frameVisible.value;
-  
-  if (richTextFrameRef.value && richTextFrameRef.value.contentWindow) {
-    // 通过postMessage控制iframe内内容的可见性
-    richTextFrameRef.value.contentWindow.postMessage(
-      { type: 'setVisibility', visible: frameVisible.value }, 
-      '*'  // 生产环境中应使用具体域名
-    );
+  if (microAppInstance) {
+    // 通过window.postMessage向微应用更新内容
+    const iframe = document.querySelector('#richtext-container iframe');
+    if (iframe && (iframe as HTMLIFrameElement).contentWindow) {
+      // 调用微应用暴露的全局方法来更新内容
+      (iframe as HTMLIFrameElement).contentWindow!.postMessage({
+        type: 'setContent',
+        content: newContent
+      }, '*');
+      
+      ElMessage.success('已向富文本编辑器发送更新内容');
+    }
   }
 };
 
-const syncContentToFrame = () => {
-  if (richTextFrameRef.value && richTextFrameRef.value.contentWindow) {
-    // 通过postMessage同步内容到iframe
-    richTextFrameRef.value.contentWindow.postMessage(
-      { 
-        type: 'setContent', 
-        content: '<p>请输入内容...</p>' 
-      }, 
-      '*'  // 生产环境中应使用具体域名
-    );
-  }
-};
-
-// 从iframe获取内容
-const getContentFromFrame = () => {
-  if (richTextFrameRef.value && richTextFrameRef.value.contentWindow) {
-    // 通过postMessage请求iframe返回内容
-    richTextFrameRef.value.contentWindow.postMessage(
-      { 
+// 从微应用获取内容
+const getContentFromMicroApp = () => {
+  if (microAppInstance) {
+    // 通过postMessage向微应用请求内容
+    const iframe = document.querySelector('#richtext-container iframe');
+    if (iframe && (iframe as HTMLIFrameElement).contentWindow) {
+      const requestId = 'getContent_' + Date.now();
+      
+      // 监听响应
+      const handleMessage = (event: MessageEvent) => {
+        if (event.data && event.data.type === 'getContent' && event.data.requestId === requestId) {
+          richTextContent.value = event.data.content || '';
+          ElMessage.success('已从富文本编辑器获取内容');
+          window.removeEventListener('message', handleMessage);
+        }
+      };
+      
+      window.addEventListener('message', handleMessage);
+      
+      // 发送获取内容请求
+      (iframe as HTMLIFrameElement).contentWindow!.postMessage({
         type: 'getContentRequest',
-        requestId: 'get_content_' + Date.now()
-      }, 
-      '*'  // 生产环境中应使用具体域名
-    );
-    ElMessage.info('已请求富文本编辑器发送内容');
-    console.log('已发送getContentRequest消息');
+        requestId: requestId
+      }, '*');
+    }
   }
 };
-
-// 监听来自富文本编辑器的消息
-const handleIframeMessage = (event: MessageEvent) => {
-  // 验证消息来源（在生产环境中应该使用具体的域名）
-  // if (event.origin !== window.location.origin) return;
-  
-  const { type, content, timestamp, requestId } = event.data || {};
-  
-  console.log('收到iframe消息:', { type, content, timestamp, requestId });
-  
-  if (type === 'contentChanged' && content !== undefined) {
-    // 更新本地的富文本内容
-    richTextContent.value = content;
-    console.log('收到富文本编辑器内容更新:', content);
-  } else if (type === 'getContent' && content !== undefined) {
-    // 收到富文本编辑器主动发送的内容或响应请求发送的内容
-    richTextContent.value = content;
-    ElMessage.success(`从富文本编辑器获取内容成功 (时间: ${new Date(timestamp).toLocaleTimeString()})`);
-    console.log('收到富文本编辑器发送的内容:', content);
-  } else if (type === 'getContentError') {
-    // 收到错误消息
-    console.error('收到富文本编辑器错误:', event.data.error);
-    ElMessage.error(`获取内容失败: ${event.data.error}`);
-  }
-};
-
-// 在组件挂载时添加事件监听器
-onMounted(() => {
-  window.addEventListener('message', handleIframeMessage);
-  
-  if (pluginAPI) {
-    // 订阅来自其他插件的消息
-    unsubscribe = pluginAPI.subscribeToMessages('PluginA', handleMessageEvent);
-  } else {
-    console.warn('插件API不可用，无法订阅消息');
-  }
-});
-
-// 在组件卸载时移除事件监听器
-onUnmounted(() => {
-  window.removeEventListener('message', handleIframeMessage);
-  
-  // 取消订阅
-  if (unsubscribe) {
-    unsubscribe();
-  }
-});
 </script>
 
 <style scoped>
