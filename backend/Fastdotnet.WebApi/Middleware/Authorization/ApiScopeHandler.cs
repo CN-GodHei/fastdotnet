@@ -118,7 +118,7 @@ namespace Fastdotnet.WebApi.Middleware.Authorization
                         var userCategory = categoryClaim.Value;
                         var requiredScope = apiScopeAttr.Scope;
 
-                        // 检查权限
+                        // 检查API作用访问权限
                         if (IsAccessAllowed(userCategory, requiredScope))
                         {
                             context.Succeed(requirement);
