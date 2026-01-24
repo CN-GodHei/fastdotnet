@@ -68,13 +68,13 @@ namespace Fastdotnet.Service.Service
             var allMenus = await _menuRepository.GetListAsync(m => menuIds.Contains(m.Id) && m.Category == category && m.IsEnabled);
 
             // 4. Filter menus by permission
-            var userPermissions = await _permissionService.GetUserPermissionsAsync(userId, category);
-            var accessibleMenus = allMenus
-                .Where(m => string.IsNullOrEmpty(m.PermissionCode) || userPermissions.Contains(m.PermissionCode))
-                .ToList();
+            //var userPermissions = await _permissionService.GetUserPermissionsAsync(userId, category);
+            //var accessibleMenus = allMenus
+            //    .Where(m => string.IsNullOrEmpty(m.PermissionCode) || userPermissions.Contains(m.PermissionCode))
+            //    .ToList();
 
             // 5. Build menu tree
-            return await BuildMenuTree(accessibleMenus, null);
+            return await BuildMenuTree(allMenus, null);
         }
 
         public async Task<List<FdMenuDto>> BuildMenuTree(List<FdMenu> allMenus, string? parentCode)
