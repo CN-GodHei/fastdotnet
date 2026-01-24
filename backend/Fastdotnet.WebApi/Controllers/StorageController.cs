@@ -11,7 +11,7 @@ namespace Fastdotnet.WebApi.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    [ApiUsageScope(Core.Enum.ApiUsageScopeEnum.AdminOnly)]
+    [ApiUsageScope(Core.Enum.ApiUsageScopeEnum.Both)]
     public class StorageController : ControllerBase
     {
         private readonly IStorageService _storageService;

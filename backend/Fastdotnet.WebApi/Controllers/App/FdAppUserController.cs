@@ -6,6 +6,7 @@ namespace Fastdotnet.WebApi.Controllers.App
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ApiUsageScope(Core.Enum.ApiUsageScopeEnum.AppOnly)]
     public class FdAppUserController 
         //: AppGenericDtoControllerBase<FdAppUser, CreateFdAppUserDto, UpdateFdAppUserDto, FdAppUserDto>
     {
