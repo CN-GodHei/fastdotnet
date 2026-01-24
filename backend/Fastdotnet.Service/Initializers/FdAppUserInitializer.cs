@@ -18,12 +18,15 @@ namespace Fastdotnet.Service.Initializers
         private readonly IRepository<FdAppUser> _Repository;
         private readonly IRepository<FdAppUserRole> _UserRoleRepository;
         private readonly IRepository<FdRole> _fdroleRepository;
+        private readonly IRepository<FdRoleMenu> _fdroleMenuRepository;
 
-        public FdAppUserInitializer(IRepository<FdAppUser> Repository, IRepository<FdAppUserRole> userRoleRepository, IRepository<FdRole> fdroleRepository)
+        public FdAppUserInitializer(IRepository<FdAppUser> Repository, IRepository<FdAppUserRole> userRoleRepository,
+            IRepository<FdRole> fdroleRepository, IRepository<FdRoleMenu> fdroleMenuRepository)
         {
             _Repository = Repository;
             _UserRoleRepository = userRoleRepository;
             _fdroleRepository = fdroleRepository;
+            _fdroleMenuRepository = fdroleMenuRepository;
         }
 
         public async Task InitializeAsync()
@@ -48,12 +51,10 @@ namespace Fastdotnet.Service.Initializers
             {
                 await _Repository.InsertRangeAsync(ToInsert);
             }
-            const string superAdminRoleCode = "SUPER_ADMIN";
-            const string APP_NOMAL_ROLECODE = "APP_ROLE_001";
+            const string APP_DEFAULT_ROLECODE = "APP_ROLE_001";
             var _entitys = new List<FdRole>
             {
-                //new FdRole{Name = "超级角色",Code = superAdminRoleCode, Category = "Admin",IsSystem = true,Description = "拥有系统所有权限", Belong= SystemCategory.Admin},
-                new FdRole{Name = "普通角色",Code = APP_NOMAL_ROLECODE, Category = "APP",IsSystem = true,Description = "APP端普通角色", Belong= SystemCategory.App},
+                new FdRole{Name = "默认",Code = APP_DEFAULT_ROLECODE, Category = "APP",IsSystem = true,Description = "APP端默认角色", Belong= SystemCategory.App,IsDefault=true},
             };
 
             // 直接使用条件查询已存在的项
@@ -68,10 +69,17 @@ namespace Fastdotnet.Service.Initializers
                 await _fdroleRepository.InsertRangeAsync(RoleToInsert);
             }
             var userrole = await _UserRoleRepository.GetFirstAsync(x => x.AppUserId == entitys.FirstOrDefault().Id);
+            var temp = _fdroleRepository.GetFirstAsync(x => x.Code == APP_DEFAULT_ROLECODE).GetAwaiter().GetResult();
             if (userrole == null)
             {
-                var temp = _fdroleRepository.GetFirstAsync(x => x.Code == APP_NOMAL_ROLECODE).GetAwaiter().GetResult();
                 await _UserRoleRepository.InsertAsync(new FdAppUserRole { RoleId = temp.Id, AppUserId = entitys.FirstOrDefault().Id });
+            }
+            string appUserDefaultMenuId = "12262382148846597";
+            //APP端默认角色可用菜单
+            var appUserDefaultMenu = await _fdroleMenuRepository.GetFirstAsync(w => w.RoleId == temp.Id && w.MenuId == appUserDefaultMenuId);
+            if (appUserDefaultMenu == null)
+            {
+                await _fdroleMenuRepository.InsertAsync(new FdRoleMenu { RoleId = temp.Id, MenuId = appUserDefaultMenuId });
             }
         }
     }

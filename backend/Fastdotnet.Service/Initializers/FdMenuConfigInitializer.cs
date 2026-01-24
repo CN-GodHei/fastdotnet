@@ -30,7 +30,7 @@ namespace Fastdotnet.Service.Initializers
             //}
 
 
-            var configs = new List<FdMenu>
+            var AdminMenu = new List<FdMenu>
             {
                 new FdMenu {Title="控制台", Name = "", Code = "MENU_CODE_11365281228129285", Path = "/dashboard", Icon = "ele-HomeFilled", Sort = 0, Type = MenuType.Menu, Module = "string", Category = "Admin", IsExternal = false, ExternalUrl = "string", IsEnabled = true, PermissionCode = "string", Component = null, IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = false,ParentCode=null },
                 new FdMenu {Title="SignalR示例", Name = "", Code = "MENU_CODE_11365281228129284", Path = "system/signalr-example.vue", Icon = "iconfont icon-shouye_dongtaihui", Sort = 0, Type = MenuType.Menu, Module = "string", Category = "Admin", IsExternal = false, ExternalUrl = "string", IsEnabled = true, PermissionCode = "string", Component = null, IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = false,ParentCode=null },
@@ -47,13 +47,17 @@ namespace Fastdotnet.Service.Initializers
                 new FdMenu {Title="前端模板", Name = "sysCodeGen", Code = "MENU_CODE_11365291745215491", Path = "/dev/fdtemplate", Icon = "string", Sort = 0, Type = MenuType.Menu, Module = "string", Category = "Admin", IsExternal = false, ExternalUrl = "string", IsEnabled = true, PermissionCode = "string", Component = "/dev/fdtemplate/index.vue", IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = false ,ParentCode="MENU_CODE_11365290021618692"},
                 new FdMenu {Title="生成测试", Name = "FdAdminUser", Code = "MENU_CODE_11365291745215494", Path = "/dev/fdtemplatetest", Icon = "string", Sort = 0, Type = MenuType.Menu, Module = "string", Category = "Admin", IsExternal = false, ExternalUrl = "string", IsEnabled = true, PermissionCode = "string", Component = "/dev/fdtemplate/test.vue", IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = false ,ParentCode="MENU_CODE_11365290021618692"},
             };
-
+            var AppMenu = new List<FdMenu>
+            {
+                new FdMenu {Id="12262382148846597",Title="控制台APP", Name = "", Code = "MENU_CODE_11366281228129285", Path = "/dashboard", Icon = "ele-HomeFilled", Sort = 0, Type = MenuType.Menu, Module = "string", Category = "App", IsExternal = false, ExternalUrl = "string", IsEnabled = true, PermissionCode = "string", Component = null, IsHide = false, IsKeepAlive = true, IsAffix = false, IsIframe = false, IsFdMicroApp = false,ParentCode=null },
+            };
+            AdminMenu.AddRange(AppMenu);
             // 直接使用条件查询已存在的菜单项
-            var existingMenus = await _systemConfigRepository.GetListAsync(m => configs.Select(c => c.Code).Contains(m.Code));
+            var existingMenus = await _systemConfigRepository.GetListAsync(m => AdminMenu.Select(c => c.Code).Contains(m.Code));
             var existingCodes = existingMenus.Select(m => m.Code).ToHashSet();
 
             // 只插入不存在的菜单项
-            var menusToInsert = configs.Where(c => !existingCodes.Contains(c.Code)).ToList();
+            var menusToInsert = AdminMenu.Where(c => !existingCodes.Contains(c.Code)).ToList();
 
             if (menusToInsert.Any())
             {
