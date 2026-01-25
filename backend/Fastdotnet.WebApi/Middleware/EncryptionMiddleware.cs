@@ -91,13 +91,13 @@ namespace Fastdotnet.WebApi.Middleware
                             {
                                 var encryptedBody = await EncryptResponseBody(responseBody, algorithm);
 
+                                // 将私钥添加到响应头，供客户端解密使用
+                                await AddPublicKeyToResponseHeader(context, algorithm);
+
                                 // 清空原始响应流并写入加密后的内容
                                 context.Response.Body = originalResponseBody; // 恢复原始响应流
                                 context.Response.ContentLength = null; // 重置内容长度
                                 await context.Response.WriteAsync(encryptedBody);
-
-                                // 将公钥添加到响应头，供客户端解密使用
-                                //await AddPublicKeyToResponseHeader(context, algorithm);
                             }
                             catch (Exception ex)
                             {
@@ -133,15 +133,15 @@ namespace Fastdotnet.WebApi.Middleware
         }
 
         /// <summary>
-        /// 将公钥添加到响应头
+        /// 将私钥添加到响应头
         /// </summary>
         private async Task AddPublicKeyToResponseHeader(HttpContext context, string algorithm)
         {
-            var (success, publicKey) = await GetResponseEncryptionKeyAsync(algorithm, false); // false 表示获取公钥
-            if (success && !string.IsNullOrEmpty(publicKey))
+            var (success, privateKey) = await GetResponseEncryptionKeyAsync(algorithm, true); // true 表示获取私钥
+            if (success && !string.IsNullOrEmpty(privateKey))
             {
-                // 将公钥或对称密钥添加到响应头
-                context.Response.Headers[$"X-{algorithm}-PublicKey"] = publicKey;
+                // 将私钥或对称密钥添加到响应头
+                context.Response.Headers[$"X-{algorithm}-PrivateKey"] = privateKey;
             }
         }
 
