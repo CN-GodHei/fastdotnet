@@ -18,7 +18,7 @@ namespace Fastdotnet.Core.Attributes
             var attr = methodOrType.GetCustomAttribute<EncryptRequestAttribute>();
             if (attr != null)
             {
-                return attr.Enabled;
+                return true;
             }
 
             // 如果方法上没有找到特性，尝试从类型上查找
@@ -31,7 +31,7 @@ namespace Fastdotnet.Core.Attributes
                 attr = type.GetCustomAttribute<EncryptRequestAttribute>();
             }
 
-            return attr?.Enabled ?? false;
+            return attr != null;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Fastdotnet.Core.Attributes
             var attr = methodOrType.GetCustomAttribute<EncryptResponseAttribute>();
             if (attr != null)
             {
-                return attr.Enabled;
+                return true;
             }
 
             // 如果方法上没有找到特性，尝试从类型上查找
@@ -57,7 +57,7 @@ namespace Fastdotnet.Core.Attributes
                 attr = type.GetCustomAttribute<EncryptResponseAttribute>();
             }
 
-            return attr?.Enabled ?? false;
+            return attr != null;
         }
 
         /// <summary>
