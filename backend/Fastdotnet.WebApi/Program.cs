@@ -194,7 +194,13 @@ if (app.Environment.IsDevelopment())
 //    app.UseHttpsRedirection();
 //}
 //app.UseHttpsRedirection();
+app.UseRouting(); // 添加路由中间件
 app.UseMiddleware<RequestIdMiddleware>();
+// 注册加密解密中间件
+//if (!app.Environment.IsDevelopment())
+//{
+    app.UseMiddleware<EncryptionMiddleware>();
+//}
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<OperationLogMiddleware>();
 app.UseMiddleware<PluginStaticFileMiddleware>();
@@ -205,7 +211,7 @@ app.UseMiddleware<RateLimitMiddleware>();
 
 app.UseMiddleware<DynamicMiddlewareDispatcher>();
 
-app.UseRouting(); // 添加路由中间件
+
 app.UseAuthentication();
 app.UseAuthorization();
 // 👇 启用优雅停机
