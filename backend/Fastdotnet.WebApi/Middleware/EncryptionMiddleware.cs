@@ -7,9 +7,8 @@ using Microsoft.Extensions.Caching.Hybrid;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Fastdotnet.WebApi.Middleware
 {
@@ -81,7 +80,6 @@ namespace Fastdotnet.WebApi.Middleware
                     // 检查是否需要对响应数据进行加密
                     if (ShouldEncryptResponse(methodInfo, controllerTypeInfo))
                     {
-
                         var algorithm = GetResponseEncryptionAlgorithm(methodInfo, controllerTypeInfo);
 
                         newResponseBody.Seek(0, SeekOrigin.Begin);
@@ -93,8 +91,9 @@ namespace Fastdotnet.WebApi.Middleware
                             {
                                 var encryptedBody = await EncryptResponseBody(responseBody, algorithm);
 
-                                context.Response.Body.Seek(0, SeekOrigin.Begin);
-                                context.Response.Body.SetLength(0);
+                                // 清空原始响应流并写入加密后的内容
+                                context.Response.Body = originalResponseBody; // 恢复原始响应流
+                                context.Response.ContentLength = null; // 重置内容长度
                                 await context.Response.WriteAsync(encryptedBody);
 
                                 // 将公钥添加到响应头，供客户端解密使用
@@ -102,15 +101,25 @@ namespace Fastdotnet.WebApi.Middleware
                             }
                             catch (Exception ex)
                             {
+                                // 发生错误时，恢复原始响应流
+                                context.Response.Body = originalResponseBody;
                                 context.Response.StatusCode = 500;
                                 await context.Response.WriteAsync($"响应数据加密失败: {ex.Message}");
                                 return;
                             }
                         }
+                        else
+                        {
+                            // 如果不是JSON响应或为空，也需要将内容写回到原始响应流
+                            context.Response.Body = originalResponseBody;
+                            newResponseBody.Seek(0, SeekOrigin.Begin);
+                            await newResponseBody.CopyToAsync(originalResponseBody);
+                        }
                     }
                     else
                     {
                         // 如果不需要加密响应，将原响应内容复制回原始响应流
+                        context.Response.Body = originalResponseBody;
                         newResponseBody.Seek(0, SeekOrigin.Begin);
                         await newResponseBody.CopyToAsync(originalResponseBody);
                     }
@@ -245,88 +254,105 @@ namespace Fastdotnet.WebApi.Middleware
                 throw new InvalidOperationException($"无法获取{algorithm}加密密钥");
             }
 
-            // 解析响应体以检查是否为ApiResult格式
-            using var jsonDoc = JsonDocument.Parse(responseBody);
-            var root = jsonDoc.RootElement;
-
-            // 检查是否包含ApiResult的基本字段：Code、Msg、Data
-            if (root.TryGetProperty("Code", out _) && 
-                root.TryGetProperty("Msg", out _) && 
-                root.TryGetProperty("Data", out var dataProperty))
+            try
             {
-                // 这是一个ApiResult格式的响应，只加密Data字段
-                var originalData = dataProperty.ToString();
-                string encryptedData;
+                // 解析响应体以检查是否为ApiResult格式
+                var jObject = JObject.Parse(responseBody);
 
-                switch (algorithm.ToUpper())
+                // 检查是否包含ApiResult的基本字段：Code、Msg、Data
+                if (jObject.ContainsKey("Code") && 
+                    jObject.ContainsKey("Msg") && 
+                    jObject.ContainsKey("Data"))
                 {
-                    case "SM2":
-                        // SM2加密需要公钥
-                        encryptedData = encryptionService.EncryptWithSM2(originalData, key);
-                        break;
+                    // 这是一个ApiResult格式的响应，只加密Data字段
+                    var originalData = jObject["Data"]?.ToString();
+                    string encryptedData;
 
-                    case "AES":
-                        // AES加密需要密钥
-                        encryptedData = encryptionService.EncryptWithAES(originalData, key);
-                        break;
+                    switch (algorithm.ToUpper())
+                    {
+                        case "SM2":
+                            // SM2加密需要公钥
+                            encryptedData = encryptionService.EncryptWithSM2(originalData, key);
+                            break;
 
-                    case "RSA":
-                        // RSA加密需要公钥
-                        encryptedData = encryptionService.EncryptWithRSA(originalData, key);
-                        break;
+                        case "AES":
+                            // AES加密需要密钥
+                            encryptedData = encryptionService.EncryptWithAES(originalData, key);
+                            break;
 
-                    case "SM4":
-                        // SM4加密需要密钥
-                        encryptedData = encryptionService.EncryptWithSM4(originalData, key);
-                        break;
+                        case "RSA":
+                            // RSA加密需要公钥
+                            encryptedData = encryptionService.EncryptWithRSA(originalData, key);
+                            break;
 
-                    default:
-                        throw new NotSupportedException($"不支持的加密算法: {algorithm}");
+                        case "SM4":
+                            // SM4加密需要密钥
+                            encryptedData = encryptionService.EncryptWithSM4(originalData, key);
+                            break;
+
+                        default:
+                            throw new NotSupportedException($"不支持的加密算法: {algorithm}");
+                    }
+
+                    // 重建响应体，保持Code和Msg不变，只替换Data为加密内容
+                    jObject["Data"] = encryptedData;
+                    return jObject.ToString(Formatting.None);
                 }
-
-                // 重建响应体，保持Code和Msg不变，只替换Data为加密内容
-                using var doc = JsonDocument.Parse(responseBody);
-                var jsonElement = doc.RootElement;
-                var jsonObject = new JsonObject();
-                
-                foreach (var property in jsonElement.EnumerateObject())
+                else
                 {
-                    if (property.Name.Equals("Data", StringComparison.OrdinalIgnoreCase))
+                    // 不是ApiResult格式，按原来的方式加密整个响应体
+                    switch (algorithm.ToUpper())
                     {
-                        jsonObject[property.Name] = JsonValue.Create(encryptedData);
-                    }
-                    else
-                    {
-                        jsonObject[property.Name] = JsonNode.Parse(property.Value.GetRawText());
+                        case "SM2":
+                            // SM2加密需要公钥
+                            return encryptionService.EncryptWithSM2(responseBody, key);
+
+                        case "AES":
+                            // AES加密需要密钥
+                            return encryptionService.EncryptWithAES(responseBody, key);
+
+                        case "RSA":
+                            // RSA加密需要公钥
+                            return encryptionService.EncryptWithRSA(responseBody, key);
+
+                        case "SM4":
+                            // SM4加密需要密钥
+                            return encryptionService.EncryptWithSM4(responseBody, key);
+
+                        default:
+                            throw new NotSupportedException($"不支持的加密算法: {algorithm}");
                     }
                 }
-
-                return jsonObject.ToJsonString();
             }
-            else
+            catch (JsonReaderException ex)
             {
-                // 不是ApiResult格式，按原来的方式加密整个响应体
+                // 如果JSON解析失败，记录错误并返回原始加密方式
+                Console.WriteLine($"JSON解析错误: {ex.Message}");
+                // 如果响应不是有效的JSON，仍然尝试加密整个响应体
                 switch (algorithm.ToUpper())
                 {
                     case "SM2":
-                        // SM2加密需要公钥
                         return encryptionService.EncryptWithSM2(responseBody, key);
 
                     case "AES":
-                        // AES加密需要密钥
                         return encryptionService.EncryptWithAES(responseBody, key);
 
                     case "RSA":
-                        // RSA加密需要公钥
                         return encryptionService.EncryptWithRSA(responseBody, key);
 
                     case "SM4":
-                        // SM4加密需要密钥
                         return encryptionService.EncryptWithSM4(responseBody, key);
 
                     default:
                         throw new NotSupportedException($"不支持的加密算法: {algorithm}");
                 }
+            }
+            catch (Exception ex)
+            {
+                // 其他异常也记录并返回原始加密方式
+                Console.WriteLine($"加密处理错误: {ex.Message}");
+                // 如果在加密过程中发生错误，抛出异常让调用方处理
+                throw;
             }
         }
 
