@@ -9,6 +9,7 @@ using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Security;
 
+
 namespace Fastdotnet.Core.Utils
 {
     /// <summary>
@@ -65,7 +66,8 @@ namespace Fastdotnet.Core.Utils
         {
             var generator = new ECKeyPairGenerator();
             var secureRandom = new SecureRandom();
-            var keyGenParam = new KeyGenerationParameters(secureRandom, 256);
+            // 使用我们定义的SM2域参数
+            var keyGenParam = new ECKeyGenerationParameters(sm2DomainParams, secureRandom);
             generator.Init(keyGenParam);
             
             var keyPair = generator.GenerateKeyPair();
@@ -95,8 +97,11 @@ namespace Fastdotnet.Core.Utils
             try
             {
                 var publicKeyBytes = Hex.Decode(publicKey);
+                
+                // 使用Bouncy Castle内置的API来解析公钥点
                 var ecPoint = sm2Curve.DecodePoint(publicKeyBytes);
-                var publicKeyParams = new ECPublicKeyParameters("SM2", ecPoint, sm2DomainParams);
+                
+                var publicKeyParams = new ECPublicKeyParameters(ecPoint, sm2DomainParams);
                 
                 var engine = new Org.BouncyCastle.Crypto.Engines.SM2Engine();
                 var cipherText = Encoding.UTF8.GetBytes(plainText);
@@ -129,7 +134,7 @@ namespace Fastdotnet.Core.Utils
             try
             {
                 var privateKeyBigInt = new BigInteger(privateKey, 16);
-                var privateKeyParams = new ECPrivateKeyParameters("SM2", privateKeyBigInt, sm2DomainParams);
+                var privateKeyParams = new ECPrivateKeyParameters(privateKeyBigInt, sm2DomainParams);
                 
                 var engine = new Org.BouncyCastle.Crypto.Engines.SM2Engine();
                 var cipherTextBytes = Hex.Decode(cipherText);
