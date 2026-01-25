@@ -1,7 +1,10 @@
 using Fastdotnet.Core.Attributes;
 using Fastdotnet.Core.Enum;
+using Fastdotnet.Core.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace Fastdotnet.WebApi.Controllers.System
@@ -53,13 +56,14 @@ namespace Fastdotnet.WebApi.Controllers.System
         }
         
         /// <summary>
-        /// 加密特性使用示例 - 使用默认加密设置
+        /// 加密特性使用示例 - 使用加密特性，请求参数解密固定使用SM2算法，响应加密使用SM2算法
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [EncryptRequest(true, "SM2")]
-        [EncryptResponse(true, "SM2")]
+        [EncryptRequest]
+        [EncryptResponse]
         [HttpPost("encrypt/default")]
+        [ApiUsageScope(ApiUsageScopeEnum.AdminOnly)]
         public async Task<IActionResult> DefaultEncryption([FromBody] ExampleRequest request)
         {
             var response = new ExampleResponse
@@ -72,41 +76,99 @@ namespace Fastdotnet.WebApi.Controllers.System
         }
 
         /// <summary>
-        /// 加密特性使用示例 - 使用AES算法
+        /// 加密特性使用示例 - 请求参数解密固定使用SM2算法，响应加密使用SM2算法
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [EncryptRequest(algorithm: "AES")]
-        [EncryptResponse(algorithm: "AES")]
-        [HttpPost("encrypt/aes")]
-        public async Task<IActionResult> AesEncryption([FromBody] ExampleRequest request)
+        [EncryptRequest]
+        [EncryptResponse]
+        [HttpPost("encrypt/sm2")]
+        [ApiUsageScope(ApiUsageScopeEnum.AdminOnly)]
+        [AllowAnonymous]
+        public async Task<ExampleResponse> Sm2Encryption([FromBody] ExampleRequest request)
         {
             var response = new ExampleResponse
             {
-                Data = $"Processed with AES: {request.Data}",
+                Data = $"Processed with SM2: {request.Data}",
                 Timestamp = DateTime.Now
             };
             
-            return Ok(response);
+            return response;
         }
 
         /// <summary>
-        /// 加密特性使用示例 - 禁用加密
+        /// 将参数使用SM2加密后返回
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [EncryptRequest(false)] // 禁用请求加密
-        [EncryptResponse(false)] // 禁用响应加密
-        [HttpPost("encrypt/no-encryption")]
-        public async Task<IActionResult> NoEncryption([FromBody] ExampleRequest request)
+        [HttpPost("encrypt-with-config-key")]
+        [AllowAnonymous]
+        public async Task<IActionResult> EncryptWithConfigKey([FromBody] ExampleRequest request)
         {
-            var response = new ExampleResponse
+            try
             {
-                Data = $"Processed without encryption: {request.Data}",
-                Timestamp = DateTime.Now
-            };
+                var encryptionService = new EncryptionService();
+                
+                // 从配置中获取公钥
+                var configuration = HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+                var publicKey = configuration.GetSection("RequestParamEncryption:PublicKey").Value;
+                
+                if (string.IsNullOrEmpty(publicKey))
+                {
+                    return BadRequest("配置中未找到加密公钥");
+                }
+                
+                
+                // 将请求对象序列化为JSON字符串
+                var jsonData = JsonConvert.SerializeObject(request);
+                
+                // 使用配置中的公钥进行SM2加密
+                string encryptedData;
+                try
+                {
+                    encryptedData = encryptionService.EncryptWithSM2(jsonData, publicKey);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest($"SM2加密失败: {ex.Message}. 请确保公钥格式正确");
+                }
+                
+                var response = new
+                {
+                    OriginalData = request,
+                    EncryptedData = encryptedData,
+                    PublicKeyUsed = publicKey,
+                    Success = true,
+                    Message = "参数已使用配置中的公钥加密成功"
+                };
+                
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Success = false, Message = ex.Message });
+            }
+        }
+        
+        /// <summary>
+        /// 验证是否为有效的十六进制字符串
+        /// </summary>
+        /// <param name="hexString">十六进制字符串</param>
+        /// <returns>是否有效</returns>
+        private bool IsValidHexString(string hexString)
+        {
+            if (string.IsNullOrEmpty(hexString))
+                return false;
             
-            return Ok(response);
+            foreach (char c in hexString)
+            {
+                if (!((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f')))
+                {
+                    return false;
+                }
+            }
+            
+            return true;
         }
     }
 
