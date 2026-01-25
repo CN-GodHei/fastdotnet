@@ -29,6 +29,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac" />
     <PackageReference Include="AutoMapper" />
+    <PackageReference Include="BouncyCastle.Cryptography" />
     <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
