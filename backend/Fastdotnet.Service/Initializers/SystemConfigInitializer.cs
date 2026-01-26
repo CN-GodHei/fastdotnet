@@ -5,7 +5,6 @@ using Fastdotnet.Core.IService;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace Fastdotnet.Service.Initializers
 {
