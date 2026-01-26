@@ -47,7 +47,7 @@ namespace Fastdotnet.WebApi.Middleware
                     // 检查是否需要对请求参数进行解密
                     if (ShouldDecryptRequest(methodInfo, controllerTypeInfo))
                     {
-                        var algorithm = "SM2"; // 固定使用SM2算法
+                        var algorithm = "RSA"; // 固定使用RSA算法
 
                         // 读取并解密请求体
                         context.Request.EnableBuffering();
@@ -165,23 +165,13 @@ namespace Fastdotnet.WebApi.Middleware
 
 
         /// <summary>
-        /// 获取请求加密算法
-        /// </summary>
-        private string GetRequestEncryptionAlgorithm(MethodInfo methodInfo, Type controllerTypeInfo)
-        {
-            return EncryptionAttributeHelper.GetRequestEncryptionAlgorithm(methodInfo) ??
-                   EncryptionAttributeHelper.GetRequestEncryptionAlgorithm(controllerTypeInfo) ??
-                   "SM2";
-        }
-
-        /// <summary>
         /// 获取响应加密算法
         /// </summary>
         private string GetResponseEncryptionAlgorithm(MethodInfo methodInfo, Type controllerTypeInfo)
         {
             return EncryptionAttributeHelper.GetResponseEncryptionAlgorithm(methodInfo) ??
                    EncryptionAttributeHelper.GetResponseEncryptionAlgorithm(controllerTypeInfo) ??
-                   "SM2";
+                   "RSA";
         }
 
         /// <summary>
@@ -215,7 +205,7 @@ namespace Fastdotnet.WebApi.Middleware
             // 移除可能的引号
             var trimmedBody = encryptedBody.Trim('"');
             // 使用配置中的固定密钥解密请求参数
-            var key = GetRequestParamKey("SM2", true); // 固定使用SM2算法，true 表示获取解密密钥（私钥）
+            var key = GetRequestParamKey("RSA", true); // 固定使用RSA算法，true 表示获取解密密钥（私钥）
             if (string.IsNullOrEmpty(key))
             {
                 throw new InvalidOperationException($"无法获取{algorithm}解密密钥");
@@ -223,9 +213,6 @@ namespace Fastdotnet.WebApi.Middleware
 
             switch (algorithm.ToUpper())
             {
-                case "SM2":
-                    // SM2解密需要私钥
-                    return encryptionService.DecryptWithSM2(trimmedBody, key);
 
                 case "AES":
                     // AES解密需要密钥
@@ -270,10 +257,7 @@ namespace Fastdotnet.WebApi.Middleware
 
                     switch (algorithm.ToUpper())
                     {
-                        case "SM2":
-                            // SM2加密需要公钥
-                            encryptedData = CryptographyUtils.Sm2Encrypt(originalData, key);
-                            break;
+
 
                         case "AES":
                             // AES加密需要密钥
@@ -299,10 +283,6 @@ namespace Fastdotnet.WebApi.Middleware
                     // 不是ApiResult格式，按原来的方式加密整个响应体
                     switch (algorithm.ToUpper())
                     {
-                        case "SM2":
-                            // SM2加密需要公钥
-                            return encryptionService.EncryptWithSM2(responseBody, key);
-
                         case "AES":
                             // AES加密需要密钥
                             return encryptionService.EncryptWithAES(responseBody, key);
@@ -324,9 +304,6 @@ namespace Fastdotnet.WebApi.Middleware
                 // 如果响应不是有效的JSON，仍然尝试加密整个响应体
                 switch (algorithm.ToUpper())
                 {
-                    case "SM2":
-                        return encryptionService.EncryptWithSM2(responseBody, key);
-
                     case "AES":
                         return encryptionService.EncryptWithAES(responseBody, key);
 
@@ -393,13 +370,12 @@ namespace Fastdotnet.WebApi.Middleware
             var encryptionService = new EncryptionService();
             try
             {
-                if (algorithm.ToUpper() is "SM2" or "RSA")
+                if (algorithm.ToUpper() is "RSA")
                 {
                     // 非对称加密算法
                     var (publicKey, privateKey) = encryptionService.GenerateKeyPair(
                         algorithm.ToUpper() switch
                         {
-                            "SM2" => EncryptionService.AlgorithmType.SM2,
                             "RSA" => EncryptionService.AlgorithmType.RSA,
                             _ => throw new NotSupportedException($"不支持的加密算法: {algorithm}")
                         });
@@ -418,7 +394,7 @@ namespace Fastdotnet.WebApi.Middleware
                     var requestedKey = isForDecryption ? privateKey : publicKey;
                     return (true, requestedKey);
                 }
-                else if (algorithm.ToUpper() is "AES" or "SM4")
+                else if (algorithm.ToUpper() is "AES" )
                 {
                     // 对称加密算法，生成固定长度的密钥
                     var key = GenerateSymmetricKey(algorithm);
@@ -452,7 +428,6 @@ namespace Fastdotnet.WebApi.Middleware
             var keyLength = algorithm.ToUpper() switch
             {
                 "AES" => 32, // AES-256需要32字节密钥
-                "SM4" => 16, // SM4需要16字节密钥
                 _ => 16  // 默认16字节
             };
 

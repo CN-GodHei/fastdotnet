@@ -15,7 +15,6 @@ namespace Fastdotnet.Core.Utils
         /// </summary>
         public enum AlgorithmType
         {
-            SM2,
             AES,
             RSA
         }
@@ -44,12 +43,6 @@ namespace Fastdotnet.Core.Utils
         {
             switch (options.Algorithm)
             {
-                case AlgorithmType.SM2:
-                    // 对于SM2，需要有公钥
-                    if (string.IsNullOrEmpty(options.Key))
-                        throw new ArgumentException("SM2加密需要提供公钥", nameof(options));
-                    return CryptographyUtils.Sm2Encrypt(plainText, options.Key);
-
 
                 case AlgorithmType.AES:
                     if (string.IsNullOrEmpty(options.Key))
@@ -76,12 +69,6 @@ namespace Fastdotnet.Core.Utils
         {
             switch (options.Algorithm)
             {
-                case AlgorithmType.SM2:
-                    // 对于SM2，需要有私钥
-                    if (string.IsNullOrEmpty(options.Key))
-                        throw new ArgumentException("SM2解密需要提供私钥", nameof(options));
-                    return CryptographyUtils.Sm2Decrypt(cipherText, options.Key);
-
 
                 case AlgorithmType.AES:
                     if (string.IsNullOrEmpty(options.Key))
@@ -126,9 +113,6 @@ namespace Fastdotnet.Core.Utils
         {
             switch (algorithm)
             {
-                case AlgorithmType.SM2:
-                    return CryptographyUtils.GenerateSm2KeyPair();
-
                 case AlgorithmType.RSA:
                     return CryptographyUtils.GenerateRSAKeyPair(keySize);
 
@@ -183,39 +167,6 @@ namespace Fastdotnet.Core.Utils
             return _defaultService;
         }
 
-        /// <summary>
-        /// 使用SM2加密
-        /// </summary>
-        /// <param name="service">加密服务</param>
-        /// <param name="plainText">明文</param>
-        /// <param name="publicKey">公钥</param>
-        /// <returns>加密结果</returns>
-        public static string EncryptWithSM2(this EncryptionService service, string plainText, string publicKey)
-        {
-            var options = new EncryptionService.EncryptionOptions
-            {
-                Algorithm = EncryptionService.AlgorithmType.SM2,
-                Key = publicKey
-            };
-            return service.Encrypt(plainText, options);
-        }
-
-        /// <summary>
-        /// 使用SM2解密
-        /// </summary>
-        /// <param name="service">加密服务</param>
-        /// <param name="cipherText">密文</param>
-        /// <param name="privateKey">私钥</param>
-        /// <returns>解密结果</returns>
-        public static string DecryptWithSM2(this EncryptionService service, string cipherText, string privateKey)
-        {
-            var options = new EncryptionService.EncryptionOptions
-            {
-                Algorithm = EncryptionService.AlgorithmType.SM2,
-                Key = privateKey
-            };
-            return service.Decrypt(cipherText, options);
-        }
         
 
         /// <summary>
@@ -294,15 +245,5 @@ namespace Fastdotnet.Core.Utils
             return service.Decrypt(cipherText, options);
         }
 
-        /// <summary>
-        /// 计算SM3哈希
-        /// </summary>
-        /// <param name="service">加密服务</param>
-        /// <param name="input">输入数据</param>
-        /// <returns>哈希值</returns>
-        //public static string HashWithSM3(this EncryptionService service, string input)
-        //{
-        //    return service.Hash(input, EncryptionService.AlgorithmType.SM3);
-        //}
     }
 }

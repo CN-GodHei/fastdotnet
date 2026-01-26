@@ -12,9 +12,9 @@ namespace Fastdotnet.Core.Attributes
 
 
         /// <summary>
-        /// 加密算法类型 - 固定为SM2
+        /// 加密算法类型 - 固定为RSA
         /// </summary>
-        public string Algorithm { get; } = "SM2";
+        public string Algorithm { get; } = "RSA";
 
         /// <summary>
         /// 密钥标识

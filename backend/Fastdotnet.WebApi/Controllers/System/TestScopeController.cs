@@ -54,9 +54,9 @@ namespace Fastdotnet.WebApi.Controllers.System
         {
             return Ok(new { message = "这是无作用域限制接口，所有人都可以访问" });
         }
-        
+
         /// <summary>
-        /// 加密特性使用示例 - 使用加密特性，请求参数解密固定使用SM2算法，响应加密使用SM2算法
+        /// 加密特性使用示例 - 使用加密特性，请求参数解密固定使用RSA算法，响应加密使用RSA算法
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -76,20 +76,20 @@ namespace Fastdotnet.WebApi.Controllers.System
         }
 
         /// <summary>
-        /// 加密特性使用示例 - 请求参数解密固定使用SM2算法，响应加密使用SM2算法
+        /// 加密特性使用示例 - 请求参数解密固定使用RSA算法，响应加密使用RSA算法
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         [EncryptRequest]
         [EncryptResponse]
-        [HttpPost("encrypt/sm2")]
+        [HttpPost("encrypt/rsa")]
         [ApiUsageScope(ApiUsageScopeEnum.AdminOnly)]
         [AllowAnonymous]
-        public async Task<ExampleResponse> Sm2Encryption([FromBody] ExampleRequest request)
+        public async Task<ExampleResponse> RSAEncryption([FromBody] ExampleRequest request)
         {
             var response = new ExampleResponse
             {
-                Data = $"Processed with SM2: {request.Data}",
+                Data = $"Processed with rsa: {request.Data}",
                 Timestamp = DateTime.Now
             };
             
@@ -97,7 +97,7 @@ namespace Fastdotnet.WebApi.Controllers.System
         }
 
         /// <summary>
-        /// 将参数使用SM2加密后返回
+        /// 将参数使用RSA加密后返回
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -122,15 +122,15 @@ namespace Fastdotnet.WebApi.Controllers.System
                 // 将请求对象序列化为JSON字符串
                 var jsonData = JsonConvert.SerializeObject(request);
                 
-                // 使用配置中的公钥进行SM2加密
+                // 使用配置中的公钥进行RSA加密
                 string encryptedData;
                 try
                 {
-                    encryptedData = encryptionService.EncryptWithSM2(jsonData, publicKey);
+                    encryptedData = encryptionService.EncryptWithRSA(jsonData, publicKey);
                 }
                 catch (Exception ex)
                 {
-                    return BadRequest($"SM2加密失败: {ex.Message}. 请确保公钥格式正确");
+                    return BadRequest($"RSA加密失败: {ex.Message}. 请确保公钥格式正确");
                 }
                 
                 var response = new
@@ -150,26 +150,6 @@ namespace Fastdotnet.WebApi.Controllers.System
             }
         }
         
-        /// <summary>
-        /// 验证是否为有效的十六进制字符串
-        /// </summary>
-        /// <param name="hexString">十六进制字符串</param>
-        /// <returns>是否有效</returns>
-        private bool IsValidHexString(string hexString)
-        {
-            if (string.IsNullOrEmpty(hexString))
-                return false;
-            
-            foreach (char c in hexString)
-            {
-                if (!((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f')))
-                {
-                    return false;
-                }
-            }
-            
-            return true;
-        }
     }
 
     /// <summary>

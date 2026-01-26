@@ -19,7 +19,7 @@ namespace Fastdotnet.WebApi.Controllers.System
         /// <summary>
         /// 生成加密算法的密钥对
         /// </summary>
-        /// <param name="algorithm">加密算法类型 (SM2, RSA, AES, SM4)</param>
+        /// <param name="algorithm">加密算法类型 (RSA, AES)</param>
         /// <returns>包含公钥和私钥的响应</returns>
         [HttpPost("generate")]
         [AllowAnonymous] // 允许匿名访问
@@ -35,14 +35,13 @@ namespace Fastdotnet.WebApi.Controllers.System
             try
             {
                 var encryptionService = new EncryptionService();
-                
-                if (algorithm is "SM2" or "RSA")
+
+                if (algorithm is "RSA")
                 {
                     // 非对称加密算法
                     var (publicKey, privateKey) = encryptionService.GenerateKeyPair(
                         algorithm switch
                         {
-                            "SM2" => EncryptionService.AlgorithmType.SM2,
                             "RSA" => EncryptionService.AlgorithmType.RSA,
                             _ => throw new NotSupportedException($"不支持的加密算法: {algorithm}")
                         });
@@ -56,7 +55,7 @@ namespace Fastdotnet.WebApi.Controllers.System
                         Message = $"{algorithm}密钥对生成成功"
                     });
                 }
-                else if (algorithm is "AES" or "SM4")
+                else if (algorithm is "AES")
                 {
                     // 对称加密算法
                     var key = GenerateSymmetricKey(algorithm);
@@ -106,14 +105,13 @@ namespace Fastdotnet.WebApi.Controllers.System
 
             try
             {
-                if (algorithm is "SM2" or "RSA")
+                if (algorithm is "RSA")
                 {
                     // 非对称加密算法 - 生成临时密钥对返回公钥
                     var encryptionService = new EncryptionService();
                     var (publicKey, _) = encryptionService.GenerateKeyPair(
                         algorithm switch
                         {
-                            "SM2" => EncryptionService.AlgorithmType.SM2,
                             "RSA" => EncryptionService.AlgorithmType.RSA,
                             _ => throw new NotSupportedException($"不支持的加密算法: {algorithm}")
                         });
@@ -125,7 +123,7 @@ namespace Fastdotnet.WebApi.Controllers.System
                         PublicKey = publicKey
                     });
                 }
-                else if (algorithm is "AES" or "SM4")
+                else if (algorithm is "AES")
                 {
                     // 对称加密算法
                     var key = GenerateSymmetricKey(algorithm);
@@ -170,14 +168,13 @@ namespace Fastdotnet.WebApi.Controllers.System
 
             try
             {
-                if (algorithm is "SM2" or "RSA")
+                if (algorithm is "RSA")
                 {
                     // 非对称加密算法 - 生成临时密钥对返回私钥
                     var encryptionService = new EncryptionService();
                     var (_, privateKey) = encryptionService.GenerateKeyPair(
                         algorithm switch
                         {
-                            "SM2" => EncryptionService.AlgorithmType.SM2,
                             "RSA" => EncryptionService.AlgorithmType.RSA,
                             _ => throw new NotSupportedException($"不支持的加密算法: {algorithm}")
                         });
@@ -189,7 +186,7 @@ namespace Fastdotnet.WebApi.Controllers.System
                         PrivateKey = privateKey
                     });
                 }
-                else if (algorithm is "AES" or "SM4")
+                else if (algorithm is "AES")
                 {
                     // 对称加密算法，与公钥使用相同的密钥
                     var key = GenerateSymmetricKey(algorithm);
@@ -226,10 +223,8 @@ namespace Fastdotnet.WebApi.Controllers.System
         {
             var algorithms = new[]
             {
-                new { Name = "SM2", Type = "非对称加密", Description = "中国国家密码算法标准" },
                 new { Name = "RSA", Type = "非对称加密", Description = "广泛使用的公钥加密算法" },
                 new { Name = "AES", Type = "对称加密", Description = "高级加密标准，常用AES-256" },
-                new { Name = "SM4", Type = "对称加密", Description = "中国国家密码算法标准" }
             };
 
             return Ok(new
@@ -249,7 +244,6 @@ namespace Fastdotnet.WebApi.Controllers.System
             var keyLength = algorithm switch
             {
                 "AES" => 32, // AES-256需要32字节密钥
-                "SM4" => 16, // SM4需要16字节密钥
                 _ => 16  // 默认16字节
             };
 
