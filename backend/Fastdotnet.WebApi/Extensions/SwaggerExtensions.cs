@@ -102,6 +102,8 @@ public static class SwaggerExtensions
             c.DocumentFilter<TagOrderDocumentFilter>();
             // 添加操作过滤器，为继承自GenericDtoControllerBase的控制器生成文档
             c.OperationFilter<InheritedGenericControllerOperationFilter>();
+            // 添加加密相关信息的操作过滤器
+            c.OperationFilter<EncryptionOperationFilter>();
 
             // 启用 XML 文档注释
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
