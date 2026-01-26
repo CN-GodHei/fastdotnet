@@ -240,7 +240,6 @@ namespace Fastdotnet.WebApi.Middleware
             {
                 throw new InvalidOperationException($"无法获取{algorithm}加密密钥");
             }
-
             try
             {
                 // 解析响应体以检查是否为ApiResult格式
@@ -267,6 +266,9 @@ namespace Fastdotnet.WebApi.Middleware
                         case "RSA":
                             // RSA加密需要公钥
                             encryptedData = encryptionService.EncryptWithRSA(originalData, key);
+                            //尝试解密
+                            var (success1, key1) = await GetResponseEncryptionKeyAsync(algorithm, true); // false 表示获取加密密钥（公钥或对称密钥）
+                            string aa = encryptionService.DecryptWithRSA(encryptedData, key1);
                             break;
 
 

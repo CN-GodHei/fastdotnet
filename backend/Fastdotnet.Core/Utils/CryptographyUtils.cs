@@ -185,22 +185,73 @@ namespace Fastdotnet.Core.Utils
             
             using var rsa = RSA.Create();
             
-            // 检查公钥格式，如果是Base64格式则转换为PEM格式
-            if (IsBase64String(publicKey))
+            try
             {
-                // Base64格式的公钥，需要转换成PEM格式
-                rsa.ImportRSAPublicKey(Convert.FromBase64String(publicKey), out _);
+                // 检查公钥格式，如果是Base64格式则转换
+                if (IsBase64String(publicKey))
+                {
+                    // 尝试导入Base64格式的公钥
+                    byte[] keyBytes = Convert.FromBase64String(publicKey);
+                    rsa.ImportRSAPublicKey(keyBytes, out _);
+                }
+                else
+                {
+                    // 尝试导入PEM格式的公钥
+                    rsa.ImportFromPem(publicKey);
+                }
+            }
+            catch (CryptographicException)
+            {
+                // 如果上面的方法失败，尝试另一种Base64导入方式
+                if (IsBase64String(publicKey))
+                {
+                    // 尝试不同的导入方法
+                    using var tempRsa = RSA.Create();
+                    byte[] keyBytes = Convert.FromBase64String(publicKey);
+                    tempRsa.ImportRSAPublicKey(keyBytes, out _);
+                    
+                    // 将临时RSA实例的参数复制到主RSA实例
+                    var parameters = tempRsa.ExportParameters(false);
+                    rsa.ImportParameters(parameters);
+                }
+                else
+                {
+                    throw; // 重新抛出原始异常
+                }
+            }
+            
+            // 使用分段加密处理可能较大的数据
+            var plainBytes = Encoding.UTF8.GetBytes(plainText);
+            
+            // 计算每段的最大大小
+            int maxLength = rsa.KeySize / 8 - 2 * SHA256.Create().HashSize / 8 - 2; // OAEP填充的计算公式
+            
+            if (plainBytes.Length <= maxLength)
+            {
+                // 数据较小，直接加密
+                var encryptedBytes = rsa.Encrypt(plainBytes, padding);
+                return Convert.ToBase64String(encryptedBytes);
             }
             else
             {
-                // PEM格式的公钥
-                rsa.ImportFromPem(publicKey);
+                // 数据较大，需要分段加密
+                var encryptedBlocks = new List<string>();
+                
+                for (int i = 0; i < plainBytes.Length; i += maxLength)
+                {
+                    int currentBlockSize = Math.Min(maxLength, plainBytes.Length - i);
+                    byte[] currentBlock = new byte[currentBlockSize];
+                    Array.Copy(plainBytes, i, currentBlock, 0, currentBlockSize);
+                    
+                    byte[] encryptedBlock = rsa.Encrypt(currentBlock, padding);
+                    
+                    // 将每个加密块转换为Base64并添加到列表
+                    encryptedBlocks.Add(Convert.ToBase64String(encryptedBlock));
+                }
+                
+                // 使用特殊分隔符连接所有加密块
+                return string.Join("|SPLIT|", encryptedBlocks);
             }
-            
-            var plainBytes = Encoding.UTF8.GetBytes(plainText);
-            var encryptedBytes = rsa.Encrypt(plainBytes, padding);
-            
-            return Convert.ToBase64String(encryptedBytes);
         }
         
         /// <summary>
@@ -222,21 +273,104 @@ namespace Fastdotnet.Core.Utils
             
             using var rsa = RSA.Create();
             
-            // 检查私钥格式，如果是Base64格式则转换为PEM格式
-            if (IsBase64String(privateKey))
+            try
             {
-                // Base64格式的私钥，需要转换成PEM格式
-                rsa.ImportRSAPrivateKey(Convert.FromBase64String(privateKey), out _);
+                // 检查私钥格式，如果是Base64格式则转换
+                if (IsBase64String(privateKey))
+                {
+                    // 尝试导入Base64格式的私钥
+                    byte[] keyBytes = Convert.FromBase64String(privateKey);
+                    rsa.ImportRSAPrivateKey(keyBytes, out _);
+                }
+                else
+                {
+                    // 尝试导入PEM格式的私钥
+                    rsa.ImportFromPem(privateKey);
+                }
             }
-            else
+            catch (CryptographicException ex)
             {
-                // PEM格式的私钥
-                rsa.ImportFromPem(privateKey);
+                // 如果上面的方法失败，先检查是否是由于传入了错误的参数
+                // 如果privateKey看起来像是加密后的数据而非私钥，则抛出更明确的错误
+                if (IsBase64String(privateKey) && privateKey.Length > 512) // 典型的加密数据会比较长
+                {
+                    throw new ArgumentException("传入的私钥参数可能不是有效的私钥，而是加密后的数据。请确认传入了正确的私钥。", nameof(privateKey), ex);
+                }
+                
+                // 如果上面的方法失败，尝试另一种Base64导入方式
+                if (IsBase64String(privateKey))
+                {
+                    try
+                    {
+                        // 尝试不同的导入方法
+                        using var tempRsa = RSA.Create();
+                        byte[] keyBytes = Convert.FromBase64String(privateKey);
+                        tempRsa.ImportRSAPrivateKey(keyBytes, out _);
+                        
+                        // 将临时RSA实例的参数复制到主RSA实例
+                        var parameters = tempRsa.ExportParameters(true);
+                        rsa.ImportParameters(parameters);
+                    }
+                    catch (CryptographicException)
+                    {
+                        // 如果所有方法都失败，抛出原始异常
+                        throw ex;
+                    }
+                }
+                else
+                {
+                    throw; // 重新抛出原始异常
+                }
             }
             
-            var cipherBytes = Convert.FromBase64String(cipherText);
-            var decryptedBytes = rsa.Decrypt(cipherBytes, padding);
+            // 检查是否为分段加密的数据
+            // 分段加密的数据使用特殊分隔符 "|SPLIT|" 连接
+            bool isSegmentedEncrypted = cipherText.Contains("|SPLIT|");
             
+            // 如果不是分段加密，直接转换为字节数组
+            byte[] cipherBytes = !isSegmentedEncrypted ? Convert.FromBase64String(cipherText) : null;
+            
+            if (isSegmentedEncrypted)
+            {
+                // 分段解密
+                try
+                {
+                    // 使用分隔符 "|SPLIT|" 分割密文
+                    string[] encryptedBlocks = cipherText.Split(new string[] { "|SPLIT|" }, StringSplitOptions.None);
+                    
+                    var decryptedBlocks = new List<byte[]>();
+                    
+                    foreach (string encryptedBlockBase64 in encryptedBlocks)
+                    {
+                        if (!string.IsNullOrEmpty(encryptedBlockBase64))
+                        {
+                            // 将Base64字符串转换为字节数组
+                            byte[] encryptedBlock = Convert.FromBase64String(encryptedBlockBase64);
+                            
+                            // 解密当前块
+                            byte[] decryptedBlock = rsa.Decrypt(encryptedBlock, padding);
+                            decryptedBlocks.Add(decryptedBlock);
+                        }
+                    }
+                    
+                    // 合并所有解密块
+                    var result = new List<byte>();
+                    foreach (var block in decryptedBlocks)
+                    {
+                        result.AddRange(block);
+                    }
+                    
+                    return Encoding.UTF8.GetString(result.ToArray());
+                }
+                catch (Exception)
+                {
+                    // 如果分段解密失败，尝试单次解密
+                    // 例如，如果密文看起来像包含分隔符但实际上不是分段加密
+                }
+            }
+            
+            // 单次解密
+            var decryptedBytes = rsa.Decrypt(Convert.FromBase64String(cipherText), padding);
             return Encoding.UTF8.GetString(decryptedBytes);
         }
         
@@ -259,16 +393,39 @@ namespace Fastdotnet.Core.Utils
             
             using var rsa = RSA.Create();
             
-            // 检查私钥格式，如果是Base64格式则转换为PEM格式
-            if (IsBase64String(privateKey))
+            try
             {
-                // Base64格式的私钥，需要转换成PEM格式
-                rsa.ImportRSAPrivateKey(Convert.FromBase64String(privateKey), out _);
+                // 检查私钥格式，如果是Base64格式则转换
+                if (IsBase64String(privateKey))
+                {
+                    // 尝试导入Base64格式的私钥
+                    byte[] keyBytes = Convert.FromBase64String(privateKey);
+                    rsa.ImportRSAPrivateKey(keyBytes, out _);
+                }
+                else
+                {
+                    // 尝试导入PEM格式的私钥
+                    rsa.ImportFromPem(privateKey);
+                }
             }
-            else
+            catch (CryptographicException)
             {
-                // PEM格式的私钥
-                rsa.ImportFromPem(privateKey);
+                // 如果上面的方法失败，尝试另一种Base64导入方式
+                if (IsBase64String(privateKey))
+                {
+                    // 尝试不同的导入方法
+                    using var tempRsa = RSA.Create();
+                    byte[] keyBytes = Convert.FromBase64String(privateKey);
+                    tempRsa.ImportRSAPrivateKey(keyBytes, out _);
+                    
+                    // 将临时RSA实例的参数复制到主RSA实例
+                    var parameters = tempRsa.ExportParameters(true);
+                    rsa.ImportParameters(parameters);
+                }
+                else
+                {
+                    throw; // 重新抛出原始异常
+                }
             }
             
             var dataBytes = Encoding.UTF8.GetBytes(data);
@@ -300,16 +457,39 @@ namespace Fastdotnet.Core.Utils
             
             using var rsa = RSA.Create();
             
-            // 检查公钥格式，如果是Base64格式则转换为PEM格式
-            if (IsBase64String(publicKey))
+            try
             {
-                // Base64格式的公钥，需要转换成PEM格式
-                rsa.ImportRSAPublicKey(Convert.FromBase64String(publicKey), out _);
+                // 检查公钥格式，如果是Base64格式则转换
+                if (IsBase64String(publicKey))
+                {
+                    // 尝试导入Base64格式的公钥
+                    byte[] keyBytes = Convert.FromBase64String(publicKey);
+                    rsa.ImportRSAPublicKey(keyBytes, out _);
+                }
+                else
+                {
+                    // 尝试导入PEM格式的公钥
+                    rsa.ImportFromPem(publicKey);
+                }
             }
-            else
+            catch (CryptographicException)
             {
-                // PEM格式的公钥
-                rsa.ImportFromPem(publicKey);
+                // 如果上面的方法失败，尝试另一种Base64导入方式
+                if (IsBase64String(publicKey))
+                {
+                    // 尝试不同的导入方法
+                    using var tempRsa = RSA.Create();
+                    byte[] keyBytes = Convert.FromBase64String(publicKey);
+                    tempRsa.ImportRSAPublicKey(keyBytes, out _);
+                    
+                    // 将临时RSA实例的参数复制到主RSA实例
+                    var parameters = tempRsa.ExportParameters(false);
+                    rsa.ImportParameters(parameters);
+                }
+                else
+                {
+                    throw; // 重新抛出原始异常
+                }
             }
             
             var dataBytes = Encoding.UTF8.GetBytes(data);
