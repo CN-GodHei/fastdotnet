@@ -16,8 +16,6 @@ namespace Fastdotnet.Core.Utils
         public enum AlgorithmType
         {
             SM2,
-            SM3,
-            SM4,
             AES,
             RSA
         }
@@ -50,12 +48,8 @@ namespace Fastdotnet.Core.Utils
                     // 对于SM2，需要有公钥
                     if (string.IsNullOrEmpty(options.Key))
                         throw new ArgumentException("SM2加密需要提供公钥", nameof(options));
-                    return CryptographyUtils.SM2Encrypt(plainText, options.Key);
+                    return CryptographyUtils.Sm2Encrypt(plainText, options.Key);
 
-                case AlgorithmType.SM4:
-                    if (string.IsNullOrEmpty(options.Key))
-                        throw new ArgumentException("SM4加密需要提供密钥", nameof(options));
-                    return CryptographyUtils.SM4Encrypt(plainText, options.Key, options.Mode, options.Padding);
 
                 case AlgorithmType.AES:
                     if (string.IsNullOrEmpty(options.Key))
@@ -86,12 +80,8 @@ namespace Fastdotnet.Core.Utils
                     // 对于SM2，需要有私钥
                     if (string.IsNullOrEmpty(options.Key))
                         throw new ArgumentException("SM2解密需要提供私钥", nameof(options));
-                    return CryptographyUtils.SM2Decrypt(cipherText, options.Key);
+                    return CryptographyUtils.Sm2Decrypt(cipherText, options.Key);
 
-                case AlgorithmType.SM4:
-                    if (string.IsNullOrEmpty(options.Key))
-                        throw new ArgumentException("SM4解密需要提供密钥", nameof(options));
-                    return CryptographyUtils.SM4Decrypt(cipherText, options.Key, options.Mode, options.Padding);
 
                 case AlgorithmType.AES:
                     if (string.IsNullOrEmpty(options.Key))
@@ -114,17 +104,17 @@ namespace Fastdotnet.Core.Utils
         /// <param name="input">输入数据</param>
         /// <param name="algorithm">哈希算法类型</param>
         /// <returns>哈希值</returns>
-        public string Hash(string input, AlgorithmType algorithm)
-        {
-            switch (algorithm)
-            {
-                case AlgorithmType.SM3:
-                    return CryptographyUtils.SM3Hash(input);
+        //public string Hash(string input, AlgorithmType algorithm)
+        //{
+        //    switch (algorithm)
+        //    {
+        //        case AlgorithmType.SM3:
+        //            return CryptographyUtils.SM3Hash(input);
 
-                default:
-                    throw new NotSupportedException($"不支持的哈希算法: {algorithm}");
-            }
-        }
+        //        default:
+        //            throw new NotSupportedException($"不支持的哈希算法: {algorithm}");
+        //    }
+        //}
 
         /// <summary>
         /// 生成指定算法的密钥对
@@ -137,7 +127,7 @@ namespace Fastdotnet.Core.Utils
             switch (algorithm)
             {
                 case AlgorithmType.SM2:
-                    return CryptographyUtils.GenerateSM2KeyPair();
+                    return CryptographyUtils.GenerateSm2KeyPair();
 
                 case AlgorithmType.RSA:
                     return CryptographyUtils.GenerateRSAKeyPair(keySize);
@@ -226,50 +216,7 @@ namespace Fastdotnet.Core.Utils
             };
             return service.Decrypt(cipherText, options);
         }
-
-        /// <summary>
-        /// 使用SM4加密
-        /// </summary>
-        /// <param name="service">加密服务</param>
-        /// <param name="plainText">明文</param>
-        /// <param name="key">密钥</param>
-        /// <param name="mode">加密模式</param>
-        /// <param name="padding">填充模式</param>
-        /// <returns>加密结果</returns>
-        public static string EncryptWithSM4(this EncryptionService service, string plainText, string key, 
-            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.PKCS7)
-        {
-            var options = new EncryptionService.EncryptionOptions
-            {
-                Algorithm = EncryptionService.AlgorithmType.SM4,
-                Key = key,
-                Mode = mode,
-                Padding = padding
-            };
-            return service.Encrypt(plainText, options);
-        }
-
-        /// <summary>
-        /// 使用SM4解密
-        /// </summary>
-        /// <param name="service">加密服务</param>
-        /// <param name="cipherText">密文</param>
-        /// <param name="key">密钥</param>
-        /// <param name="mode">加密模式</param>
-        /// <param name="padding">填充模式</param>
-        /// <returns>解密结果</returns>
-        public static string DecryptWithSM4(this EncryptionService service, string cipherText, string key, 
-            CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.PKCS7)
-        {
-            var options = new EncryptionService.EncryptionOptions
-            {
-                Algorithm = EncryptionService.AlgorithmType.SM4,
-                Key = key,
-                Mode = mode,
-                Padding = padding
-            };
-            return service.Decrypt(cipherText, options);
-        }
+        
 
         /// <summary>
         /// 使用AES加密
@@ -353,9 +300,9 @@ namespace Fastdotnet.Core.Utils
         /// <param name="service">加密服务</param>
         /// <param name="input">输入数据</param>
         /// <returns>哈希值</returns>
-        public static string HashWithSM3(this EncryptionService service, string input)
-        {
-            return service.Hash(input, EncryptionService.AlgorithmType.SM3);
-        }
+        //public static string HashWithSM3(this EncryptionService service, string input)
+        //{
+        //    return service.Hash(input, EncryptionService.AlgorithmType.SM3);
+        //}
     }
 }

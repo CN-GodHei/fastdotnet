@@ -1,13 +1,23 @@
-using System;
-using System.Security.Cryptography;
-using System.Text;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.GM;
+using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities.Encoders;
+using System;
+using System.Numerics;
+using System.Security.Cryptography;
+using System.Text;
+using static System.Security.Cryptography.ECCurve;
+using BigInteger = Org.BouncyCastle.Math.BigInteger;
+using ECCurve = Org.BouncyCastle.Math.EC.ECCurve;
+using ECPoint = Org.BouncyCastle.Math.EC.ECPoint;
 
 
 namespace Fastdotnet.Core.Utils
@@ -17,143 +27,399 @@ namespace Fastdotnet.Core.Utils
     /// </summary>
     public static class CryptographyUtils
     {
-        #region SM2 国密算法
-        
-        /// <summary>
-        /// SM2加密参数
-        /// </summary>
-        private static readonly ECDomainParameters sm2DomainParams;
-        
-        /// <summary>
-        /// SM2曲线参数
-        /// </summary>
-        private static readonly FpCurve sm2Curve;
-        
-        /// <summary>
-        /// SM2基点
-        /// </summary>
-        private static readonly Org.BouncyCastle.Math.EC.ECPoint sm2G;
-        
-        /// <summary>
-        /// SM2公钥长度
-        /// </summary>
-        private const int Sm2PublicKeyLength = 64;
-        
-        /// <summary>
-        /// 静态构造函数初始化SM2参数
-        /// </summary>
-        static CryptographyUtils()
-        {
-            // 初始化SM2椭圆曲线参数 (y^2 = x^3 + ax + b)
-            // 使用推荐的素数域上的椭圆曲线参数
-            var p = new BigInteger("FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF", 16);
-            var a = new BigInteger("FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFC", 16);
-            var b = new BigInteger("28E9FA9E9D9F5E344D5A9E4BCF6509A7F39789F515AB8F92DDBCBD414D940E93", 16);
-            var n = new BigInteger("FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123", 16);
-            var gx = new BigInteger("32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7", 16);
-            var gy = new BigInteger("BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0", 16);
-            
-            sm2Curve = new FpCurve(p, a, b);
-            sm2G = sm2Curve.CreatePoint(gx, gy);
-            sm2DomainParams = new ECDomainParameters(sm2Curve, sm2G, n);
-        }
-        
+        #region SM2 密钥对生成
+
         /// <summary>
         /// 生成SM2密钥对
         /// </summary>
         /// <returns>包含公钥和私钥的元组</returns>
-        public static (string publicKey, string privateKey) GenerateSM2KeyPair()
+        public static (string privateKey, string publicKey) GenerateSm2KeyPair()
         {
-            var generator = new ECKeyPairGenerator();
-            var secureRandom = new SecureRandom();
-            // 使用我们定义的SM2域参数
-            var keyGenParam = new ECKeyGenerationParameters(sm2DomainParams, secureRandom);
-            generator.Init(keyGenParam);
-            
-            var keyPair = generator.GenerateKeyPair();
-            var privateKeyParams = (ECPrivateKeyParameters)keyPair.Private;
-            var publicKeyParams = (ECPublicKeyParameters)keyPair.Public;
-            
-            var privateKeyHex = privateKeyParams.D.ToString(16).PadLeft(64, '0');
-            var publicKeyHex = Hex.Encode(ECKeyConvertor.ConvertPublicKeyToBytes(publicKeyParams));
-            
-            return (publicKeyHex, privateKeyHex);
-        }
-        
-        /// <summary>
-        /// SM2加密
-        /// </summary>
-        /// <param name="plainText">明文</param>
-        /// <param name="publicKey">公钥（十六进制格式）</param>
-        /// <returns>加密后的数据（十六进制格式）</returns>
-        public static string SM2Encrypt(string plainText, string publicKey)
-        {
-            if (string.IsNullOrEmpty(plainText))
-                throw new ArgumentException("明文不能为空", nameof(plainText));
-                
-            if (string.IsNullOrEmpty(publicKey))
-                throw new ArgumentException("公钥不能为空", nameof(publicKey));
-            
             try
             {
-                var publicKeyBytes = Hex.Decode(publicKey);
-                
-                // 使用Bouncy Castle内置的API来解析公钥点
-                var ecPoint = sm2Curve.DecodePoint(publicKeyBytes);
-                
-                var publicKeyParams = new ECPublicKeyParameters(ecPoint, sm2DomainParams);
-                
-                var engine = new Org.BouncyCastle.Crypto.Engines.SM2Engine();
-                var cipherText = Encoding.UTF8.GetBytes(plainText);
-                
-                engine.Init(true, new ParametersWithRandom(publicKeyParams, new SecureRandom()));
-                var encryptedBytes = engine.ProcessBlock(cipherText, 0, cipherText.Length);
-                
-                return Hex.Encode(encryptedBytes);
+                // 使用SM2参数
+                X9ECParameters sm2EcParameters = GMNamedCurves.GetByName("sm2p256v1");
+                ECDomainParameters domainParameters = new ECDomainParameters(
+                    sm2EcParameters.Curve,
+                    sm2EcParameters.G,
+                    sm2EcParameters.N,
+                    sm2EcParameters.H);
+
+                // 生成密钥对
+                ECKeyPairGenerator keyPairGenerator = new ECKeyPairGenerator();
+                keyPairGenerator.Init(new ECKeyGenerationParameters(domainParameters, new SecureRandom()));
+                AsymmetricCipherKeyPair keyPair = keyPairGenerator.GenerateKeyPair();
+
+                // 获取私钥
+                ECPrivateKeyParameters privateKeyParams = (ECPrivateKeyParameters)keyPair.Private;
+                // 获取公钥
+                ECPublicKeyParameters publicKeyParams = (ECPublicKeyParameters)keyPair.Public;
+
+                // 转换为十六进制字符串（与前端sm-crypto格式兼容）
+                string privateKeyHex = privateKeyParams.D.ToString(16).PadLeft(64, '0');
+                string publicKeyHex = EncodePublicKeyToHex(publicKeyParams.Q);
+
+                return (publicKeyHex,privateKeyHex);
             }
             catch (Exception ex)
             {
-                throw new CryptographicException($"SM2加密失败: {ex.Message}", ex);
+                throw new Exception("生成SM2密钥对失败", ex);
             }
         }
-        
+
+        /// <summary>
+        /// 从私钥生成公钥
+        /// </summary>
+        public static string GetPublicKeyFromPrivateKey(string privateKeyHex)
+        {
+            try
+            {
+                BigInteger d = new BigInteger(privateKeyHex, 16);
+                X9ECParameters sm2EcParameters = GMNamedCurves.GetByName("sm2p256v1");
+                ECPoint q = sm2EcParameters.G.Multiply(d);
+                return EncodePublicKeyToHex(q);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("从私钥生成公钥失败", ex);
+            }
+        }
+
+        #endregion
+
+        #region SM2 加密
+
+        /// <summary>
+        /// SM2加密（与前端sm-crypto兼容）
+        /// </summary>
+        /// <param name="plainText">明文</param>
+        /// <param name="publicKeyHex">公钥（十六进制）</param>
+        /// <param name="cipherMode">加密模式：C1C3C2 或 C1C2C3（默认C1C3C2，与sm-crypto兼容）</param>
+        /// <returns>Base64编码的密文</returns>
+        public static string Sm2Encrypt(string plainText, string publicKeyHex, string cipherMode = "C1C3C2")
+        {
+            try
+            {
+                byte[] plainData = Encoding.UTF8.GetBytes(plainText);
+                byte[] encryptedData = DoSm2Encrypt(plainData, publicKeyHex, cipherMode);
+                return Convert.ToBase64String(encryptedData);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("SM2加密失败", ex);
+            }
+        }
+
+        /// <summary>
+        /// SM2加密（返回十六进制）
+        /// </summary>
+        public static string Sm2EncryptToHex(string plainText, string publicKeyHex, string cipherMode = "C1C3C2")
+        {
+            try
+            {
+                byte[] plainData = Encoding.UTF8.GetBytes(plainText);
+                byte[] encryptedData = DoSm2Encrypt(plainData, publicKeyHex, cipherMode);
+                return ByteArrayToHexString(encryptedData);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("SM2加密失败", ex);
+            }
+        }
+
+        private static byte[] DoSm2Encrypt(byte[] plainData, string publicKeyHex, string cipherMode)
+        {
+            X9ECParameters sm2EcParameters = GMNamedCurves.GetByName("sm2p256v1");
+            ECDomainParameters domainParameters = new ECDomainParameters(
+                sm2EcParameters.Curve,
+                sm2EcParameters.G,
+                sm2EcParameters.N,
+                sm2EcParameters.H);
+
+            // 解码公钥
+            ECPoint publicKeyPoint = DecodePublicKeyFromHex(publicKeyHex, sm2EcParameters.Curve);
+            ECPublicKeyParameters publicKey = new ECPublicKeyParameters(publicKeyPoint, domainParameters);
+
+            // 创建SM2加密引擎
+            SM2Engine sm2Engine = new SM2Engine(new SM3Digest());
+            sm2Engine.Init(true, new ParametersWithRandom(publicKey, new SecureRandom()));
+
+            // 加密数据
+            byte[] encrypted = sm2Engine.ProcessBlock(plainData, 0, plainData.Length);
+
+            // 根据模式重组数据
+            return ReformatCipherData(encrypted, cipherMode);
+        }
+
+        #endregion
+
+        #region SM2 解密
+
         /// <summary>
         /// SM2解密
         /// </summary>
-        /// <param name="cipherText">密文（十六进制格式）</param>
-        /// <param name="privateKey">私钥（十六进制格式）</param>
+        /// <param name="cipherTextBase64">Base64编码的密文</param>
+        /// <param name="privateKeyHex">私钥（十六进制）</param>
+        /// <param name="cipherMode">加密模式：C1C3C2 或 C1C2C3（默认C1C3C2）</param>
         /// <returns>解密后的明文</returns>
-        public static string SM2Decrypt(string cipherText, string privateKey)
+        public static string Sm2Decrypt(string cipherTextBase64, string privateKeyHex, string cipherMode = "C1C3C2")
         {
-            if (string.IsNullOrEmpty(cipherText))
-                throw new ArgumentException("密文不能为空", nameof(cipherText));
-                
-            if (string.IsNullOrEmpty(privateKey))
-                throw new ArgumentException("私钥不能为空", nameof(privateKey));
-            
             try
             {
-                var privateKeyBigInt = new BigInteger(privateKey, 16);
-                var privateKeyParams = new ECPrivateKeyParameters(privateKeyBigInt, sm2DomainParams);
-                
-                var engine = new Org.BouncyCastle.Crypto.Engines.SM2Engine();
-                var cipherTextBytes = Hex.Decode(cipherText);
-                
-                engine.Init(false, privateKeyParams);
-                var decryptedBytes = engine.ProcessBlock(cipherTextBytes, 0, cipherTextBytes.Length);
-                
-                return Encoding.UTF8.GetString(decryptedBytes);
+                byte[] cipherData = Convert.FromBase64String(cipherTextBase64);
+                byte[] decryptedData = DoSm2Decrypt(cipherData, privateKeyHex, cipherMode);
+                return Encoding.UTF8.GetString(decryptedData);
             }
             catch (Exception ex)
             {
-                throw new CryptographicException($"SM2解密失败: {ex.Message}", ex);
+                throw new Exception("SM2解密失败", ex);
             }
         }
-        
+
+        /// <summary>
+        /// SM2解密（十六进制输入）
+        /// </summary>
+        public static string Sm2DecryptFromHex(string cipherTextHex, string privateKeyHex, string cipherMode = "C1C3C2")
+        {
+            try
+            {
+                byte[] cipherData = HexStringToByteArray(cipherTextHex);
+                byte[] decryptedData = DoSm2Decrypt(cipherData, privateKeyHex, cipherMode);
+                return Encoding.UTF8.GetString(decryptedData);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("SM2解密失败", ex);
+            }
+        }
+
+        private static byte[] DoSm2Decrypt(byte[] cipherData, string privateKeyHex, string cipherMode)
+        {
+            X9ECParameters sm2EcParameters = GMNamedCurves.GetByName("sm2p256v1");
+            ECDomainParameters domainParameters = new ECDomainParameters(
+                sm2EcParameters.Curve,
+                sm2EcParameters.G,
+                sm2EcParameters.N,
+                sm2EcParameters.H);
+
+            // 解码私钥
+            BigInteger d = new BigInteger(privateKeyHex, 16);
+            ECPrivateKeyParameters privateKey = new ECPrivateKeyParameters(d, domainParameters);
+
+            // 根据模式重新组织密文数据
+            byte[] reformattedData = ReformatCipherData(cipherData, cipherMode);
+
+            // 创建SM2解密引擎
+            SM2Engine sm2Engine = new SM2Engine(new SM3Digest());
+            sm2Engine.Init(false, privateKey);
+
+            // 解密数据
+            return sm2Engine.ProcessBlock(reformattedData, 0, reformattedData.Length);
+        }
+
         #endregion
-        
+
+        #region 辅助方法
+
+        /// <summary>
+        /// 编码公钥为十六进制字符串（04 + X + Y）
+        /// </summary>
+        private static string EncodePublicKeyToHex(ECPoint publicKeyPoint)
+        {
+            byte[] x = publicKeyPoint.XCoord.GetEncoded();
+            byte[] y = publicKeyPoint.YCoord.GetEncoded();
+
+            // 确保长度为32字节（256位）
+            x = PadTo32Bytes(x);
+            y = PadTo32Bytes(y);
+
+            return "04" + ByteArrayToHexString(x) + ByteArrayToHexString(y);
+        }
+
+        /// <summary>
+        /// 从十六进制字符串解码公钥
+        /// </summary>
+        private static ECPoint DecodePublicKeyFromHex(string publicKeyHex, ECCurve curve)
+        {
+            if (publicKeyHex.StartsWith("04"))
+            {
+                publicKeyHex = publicKeyHex.Substring(2);
+            }
+
+            if (publicKeyHex.Length != 128) // 64字节 = 128个十六进制字符
+            {
+                throw new ArgumentException("无效的公钥长度");
+            }
+
+            string xHex = publicKeyHex.Substring(0, 64);
+            string yHex = publicKeyHex.Substring(64, 64);
+
+            BigInteger x = new BigInteger(xHex, 16);
+            BigInteger y = new BigInteger(yHex, 16);
+
+            return curve.CreatePoint(x, y);
+        }
+
+        /// <summary>
+        /// 填充到32字节
+        /// </summary>
+        private static byte[] PadTo32Bytes(byte[] data)
+        {
+            if (data.Length == 32) return data;
+
+            byte[] padded = new byte[32];
+            if (data.Length > 32)
+            {
+                Array.Copy(data, data.Length - 32, padded, 0, 32);
+            }
+            else
+            {
+                Array.Copy(data, 0, padded, 32 - data.Length, data.Length);
+            }
+            return padded;
+        }
+
+        /// <summary>
+        /// 重新组织密文数据格式
+        /// </summary>
+        private static byte[] ReformatCipherData(byte[] cipherData, string cipherMode)
+        {
+            // C1: 65字节（04 + X + Y）
+            // C2: 明文长度
+            // C3: 32字节（SM3哈希）
+
+            if (cipherData.Length < 97) // 至少65 + 1 + 32
+            {
+                return cipherData;
+            }
+
+            byte[] c1 = new byte[65]; // 04 + 32字节X + 32字节Y
+            byte[] c3 = new byte[32]; // SM3哈希
+            byte[] c2 = new byte[cipherData.Length - 97]; // 剩余部分
+
+            if (cipherMode == "C1C3C2")
+            {
+                // 默认格式：C1C3C2
+                // BouncyCastle输出已经是这种格式
+                return cipherData;
+            }
+            else if (cipherMode == "C1C2C3")
+            {
+                // 需要转换为C1C2C3格式
+                Array.Copy(cipherData, 0, c1, 0, 65); // C1
+                Array.Copy(cipherData, 65 + 32, c2, 0, c2.Length); // C2
+                Array.Copy(cipherData, 65, c3, 0, 32); // C3
+
+                // 组合为C1C2C3
+                byte[] result = new byte[cipherData.Length];
+                Array.Copy(c1, 0, result, 0, 65);
+                Array.Copy(c2, 0, result, 65, c2.Length);
+                Array.Copy(c3, 0, result, 65 + c2.Length, 32);
+
+                return result;
+            }
+            else
+            {
+                throw new ArgumentException("不支持的加密模式，仅支持C1C3C2或C1C2C3");
+            }
+        }
+
+        /// <summary>
+        /// 验证SM2密钥对
+        /// </summary>
+        public static bool VerifyKeyPair(string privateKeyHex, string publicKeyHex)
+        {
+            try
+            {
+                string generatedPublicKey = GetPublicKeyFromPrivateKey(privateKeyHex);
+                return generatedPublicKey.Equals(publicKeyHex, StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 字节数组转十六进制字符串
+        /// </summary>
+        private static string ByteArrayToHexString(byte[] bytes)
+        {
+            if (bytes == null || bytes.Length == 0)
+                return string.Empty;
+
+            char[] c = new char[bytes.Length * 2];
+            int b;
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                b = bytes[i] >> 4;
+                c[i * 2] = (char)(55 + b + (((b - 10) >> 31) & -7));
+                b = bytes[i] & 0xF;
+                c[i * 2 + 1] = (char)(55 + b + (((b - 10) >> 31) & -7));
+            }
+            return new string(c);
+        }
+
+        /// <summary>
+        /// 十六进制字符串转字节数组
+        /// </summary>
+        private static byte[] HexStringToByteArray(string hex)
+        {
+            if (string.IsNullOrEmpty(hex))
+                return Array.Empty<byte>();
+
+            if (hex.Length % 2 != 0)
+                throw new ArgumentException("十六进制字符串长度必须是偶数");
+
+            byte[] bytes = new byte[hex.Length / 2];
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                string byteValue = hex.Substring(i * 2, 2);
+                bytes[i] = Convert.ToByte(byteValue, 16);
+            }
+            return bytes;
+        }
+
+        #endregion
+
+        #region 与前端兼容的便捷方法
+
+        /// <summary>
+        /// 生成与sm-crypto兼容的密钥对
+        /// </summary>
+        public static dynamic GenerateSm2KeyPairForFrontend()
+        {
+            var keys = GenerateSm2KeyPair();
+            return new
+            {
+                privateKey = keys.privateKey,
+                publicKey = keys.publicKey,
+                message = "使用私钥进行解密，使用公钥进行加密"
+            };
+        }
+
+        /// <summary>
+        /// 解密前端使用sm-crypto加密的数据
+        /// </summary>
+        public static string DecryptFromFrontend(string cipherTextBase64, string privateKeyHex)
+        {
+            // sm-crypto默认使用C1C3C2模式
+            return Sm2Decrypt(cipherTextBase64, privateKeyHex, "C1C3C2");
+        }
+
+        /// <summary>
+        /// 加密数据供前端sm-crypto解密
+        /// </summary>
+        public static string EncryptForFrontend(string plainText, string publicKeyHex)
+        {
+            // sm-crypto默认使用C1C3C2模式
+            return Sm2Encrypt(plainText, publicKeyHex, "C1C3C2");
+        }
+
+        #endregion
+
         #region AES 加密算法
-        
+
         /// <summary>
         /// AES加密
         /// </summary>
@@ -382,230 +648,6 @@ namespace Fastdotnet.Core.Utils
         
         #endregion
         
-        #region SM3 哈希算法
-        
-        /// <summary>
-        /// 计算SM3哈希值
-        /// </summary>
-        /// <param name="input">输入字符串</param>
-        /// <returns>哈希值（十六进制格式）</returns>
-        public static string SM3Hash(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-                throw new ArgumentException("输入不能为空", nameof(input));
-            
-            var inputBytes = Encoding.UTF8.GetBytes(input);
-            var digest = new SM3Digest();
-            digest.BlockUpdate(inputBytes, 0, inputBytes.Length);
-            
-            var hash = new byte[digest.GetDigestSize()];
-            digest.DoFinal(hash, 0);
-            
-            return Hex.Encode(hash);
-        }
-        
-        #endregion
-        
-        #region SM4 加密算法
-        
-        /// <summary>
-        /// SM4加密（基于BouncyCastle实现）
-        /// </summary>
-        /// <param name="plainText">明文</param>
-        /// <param name="key">密钥（16字节）</param>
-        /// <param name="mode">加密模式</param>
-        /// <param name="padding">填充模式</param>
-        /// <returns>加密结果（Base64格式）</returns>
-        public static string SM4Encrypt(string plainText, string key, CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.PKCS7)
-        {
-            if (string.IsNullOrEmpty(plainText))
-                throw new ArgumentException("明文不能为空", nameof(plainText));
-                
-            if (string.IsNullOrEmpty(key) || Encoding.UTF8.GetBytes(key).Length != 16)
-                throw new ArgumentException("SM4密钥必须为16字节", nameof(key));
-            
-            try
-            {
-                // 使用BouncyCastle实现SM4算法
-                var engine = new Org.BouncyCastle.Crypto.Engines.SM4Engine();
-                
-                // 准备密钥
-                var keyBytes = Encoding.UTF8.GetBytes(key);
-                var keyParam = new KeyParameter(keyBytes);
-                
-                // 根据模式设置参数
-                ICipherParameters parameters;
-                byte[] ivBytes = null;
-                
-                if (mode == CipherMode.CBC)
-                {
-                    ivBytes = new byte[16];
-                    RandomNumberGenerator.Fill(ivBytes); // 生成随机IV
-                    parameters = new ParametersWithIV(keyParam, ivBytes);
-                }
-                else
-                {
-                    parameters = keyParam;
-                }
-                
-                // 初始化加密器
-                engine.Init(true, parameters); // true表示加密模式
-                
-                var plainBytes = Encoding.UTF8.GetBytes(plainText);
-                
-                // 按16字节块处理数据
-                var blockSize = engine.GetBlockSize();
-                var output = new byte[plainBytes.Length + blockSize]; // 预留空间用于填充
-                var totalLen = 0;
-                
-                for (int i = 0; i < plainBytes.Length; i += blockSize)
-                {
-                    var block = new byte[blockSize];
-                    var len = Math.Min(blockSize, plainBytes.Length - i);
-                    Array.Copy(plainBytes, i, block, 0, len);
-                    
-                    // 如果不是完整块，需要进行填充
-                    if (len < blockSize)
-                    {
-                        if (padding == PaddingMode.PKCS7)
-                        {
-                            var padLen = (byte)(blockSize - len);
-                            for (int j = len; j < blockSize; j++)
-                                block[j] = padLen;
-                        }
-                        else
-                        {
-                            // 对于非完整块，用0填充
-                            for (int j = len; j < blockSize; j++)
-                                block[j] = 0;
-                        }
-                    }
-                    
-                    var processedLen = engine.ProcessBlock(block, 0, output, totalLen);
-                    totalLen += processedLen;
-                }
-                
-                // 构建最终输出（如果使用CBC模式，需要包含IV）
-                if (mode == CipherMode.CBC)
-                {
-                    var finalOutput = new byte[ivBytes.Length + totalLen];
-                    Buffer.BlockCopy(ivBytes, 0, finalOutput, 0, ivBytes.Length);
-                    Buffer.BlockCopy(output, 0, finalOutput, ivBytes.Length, totalLen);
-                    return Convert.ToBase64String(finalOutput);
-                }
-                else
-                {
-                    var finalOutput = new byte[totalLen];
-                    Array.Copy(output, 0, finalOutput, 0, totalLen);
-                    return Convert.ToBase64String(finalOutput);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new CryptographicException($"SM4加密失败: {ex.Message}", ex);
-            }
-        }
-        
-        /// <summary>
-        /// SM4解密（基于BouncyCastle实现）
-        /// </summary>
-        /// <param name="cipherText">密文（Base64格式）</param>
-        /// <param name="key">密钥（16字节）</param>
-        /// <param name="mode">加密模式</param>
-        /// <param name="padding">填充模式</param>
-        /// <returns>解密后的明文</returns>
-        public static string SM4Decrypt(string cipherText, string key, CipherMode mode = CipherMode.CBC, PaddingMode padding = PaddingMode.PKCS7)
-        {
-            if (string.IsNullOrEmpty(cipherText))
-                throw new ArgumentException("密文不能为空", nameof(cipherText));
-                
-            if (string.IsNullOrEmpty(key) || Encoding.UTF8.GetBytes(key).Length != 16)
-                throw new ArgumentException("SM4密钥必须为16字节", nameof(key));
-            
-            try
-            {
-                var cipherBytes = Convert.FromBase64String(cipherText);
-                
-                // 使用BouncyCastle实现SM4算法
-                var engine = new Org.BouncyCastle.Crypto.Engines.SM4Engine();
-                
-                // 准备密钥
-                var keyBytes = Encoding.UTF8.GetBytes(key);
-                var keyParam = new KeyParameter(keyBytes);
-                
-                // 处理IV（如果是CBC模式）
-                ICipherParameters parameters;
-                int offset = 0;
-                
-                if (mode == CipherMode.CBC)
-                {
-                    if (cipherBytes.Length < 16)
-                        throw new ArgumentException("密文长度不足，无法提取IV");
-                    
-                    var ivBytes = new byte[16];
-                    Buffer.BlockCopy(cipherBytes, 0, ivBytes, 0, 16);
-                    offset = 16;
-                    parameters = new ParametersWithIV(keyParam, ivBytes);
-                }
-                else
-                {
-                    parameters = keyParam;
-                }
-                
-                // 初始化解密器
-                engine.Init(false, parameters); // false表示解密模式
-                
-                // 获取密文数据部分
-                var cipherData = new byte[cipherBytes.Length - offset];
-                Buffer.BlockCopy(cipherBytes, offset, cipherData, 0, cipherData.Length);
-                
-                var blockSize = engine.GetBlockSize();
-                var output = new byte[cipherData.Length];
-                var totalLen = 0;
-                
-                for (int i = 0; i < cipherData.Length; i += blockSize)
-                {
-                    var block = new byte[blockSize];
-                    var len = Math.Min(blockSize, cipherData.Length - i);
-                    Array.Copy(cipherData, i, block, 0, len);
-                    
-                    var processedLen = engine.ProcessBlock(block, 0, output, totalLen);
-                    totalLen += processedLen;
-                }
-                
-                // 如果使用PKCS7填充，需要移除填充
-                if (padding == PaddingMode.PKCS7 && totalLen > 0)
-                {
-                    var padLen = output[totalLen - 1];
-                    if (padLen <= blockSize && padLen > 0)
-                    {
-                        // 验证填充
-                        bool isValidPad = true;
-                        for (int i = totalLen - padLen; i < totalLen; i++)
-                        {
-                            if (output[i] != padLen)
-                            {
-                                isValidPad = false;
-                                break;
-                            }
-                        }
-                        
-                        if (isValidPad)
-                        {
-                            totalLen -= padLen;
-                        }
-                    }
-                }
-                
-                return Encoding.UTF8.GetString(output, 0, totalLen);
-            }
-            catch (Exception ex)
-            {
-                throw new CryptographicException($"SM4解密失败: {ex.Message}", ex);
-            }
-        }
-        
-        #endregion
     }
     
     #region 辅助类
@@ -650,26 +692,7 @@ namespace Fastdotnet.Core.Utils
             throw new ArgumentException($"Invalid hex character: {c}");
         }
     }
-    
-    /// <summary>
-    /// EC密钥转换辅助类
-    /// </summary>
-    internal static class ECKeyConvertor
-    {
-        public static byte[] ConvertPublicKeyToBytes(ECPublicKeyParameters publicKeyParams)
-        {
-            var q = publicKeyParams.Q.Normalize();
-            var x = q.AffineXCoord.GetEncoded();
-            var y = q.AffineYCoord.GetEncoded();
-            
-            var result = new byte[1 + x.Length + y.Length]; // 04标识符 + x坐标 + y坐标
-            result[0] = 0x04; // 未压缩格式标识符
-            Buffer.BlockCopy(x, 0, result, 1, x.Length);
-            Buffer.BlockCopy(y, 0, result, 1 + x.Length, y.Length);
-            
-            return result;
-        }
-    }
+
     
     #endregion
 }
