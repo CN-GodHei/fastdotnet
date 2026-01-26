@@ -80,11 +80,11 @@ service.interceptors.response.use(
 				// Code 为 0 表示成功，直接返回 Data 部分
 				// 这样业务代码可以直接使用返回的数据，无需再 .Data
 						// 检查响应头是否包含解密标识，如果有则对响应数据进行解密
-				const privateKey = response.headers['x-sm2-privatekey'] || response.headers['x-sm2-private-key'];
-				if (privateKey && res.data) {
+				const privateKey = response.headers['x-rsa-privatekey'];
+				if (privateKey && res.Data) {
 					try {
 						// 如果响应头包含解密标识，则对响应数据进行解密
-						return decryptResponse(res.data, 'SM2');
+						return decryptResponse(res.Data, 'RSA', privateKey);
 					} catch (error) {
 						console.error('响应解密失败:', error);
 					}
