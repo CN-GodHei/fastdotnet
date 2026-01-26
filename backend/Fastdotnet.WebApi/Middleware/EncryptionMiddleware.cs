@@ -260,8 +260,8 @@ namespace Fastdotnet.WebApi.Middleware
                 var jObject = JObject.Parse(responseBody);
 
                 // 检查是否包含ApiResult的基本字段：Code、Msg、Data
-                if (jObject.ContainsKey("Code") && 
-                    jObject.ContainsKey("Msg") && 
+                if (jObject.ContainsKey("Code") &&
+                    jObject.ContainsKey("Msg") &&
                     jObject.ContainsKey("Data"))
                 {
                     // 这是一个ApiResult格式的响应，只加密Data字段
@@ -272,7 +272,7 @@ namespace Fastdotnet.WebApi.Middleware
                     {
                         case "SM2":
                             // SM2加密需要公钥
-                            encryptedData = encryptionService.EncryptWithSM2(originalData, key);
+                            encryptedData = CryptographyUtils.Sm2Encrypt(originalData, key);
                             break;
 
                         case "AES":
@@ -285,10 +285,6 @@ namespace Fastdotnet.WebApi.Middleware
                             encryptedData = encryptionService.EncryptWithRSA(originalData, key);
                             break;
 
-                        case "SM4":
-                            // SM4加密需要密钥
-                            encryptedData = encryptionService.EncryptWithSM4(originalData, key);
-                            break;
 
                         default:
                             throw new NotSupportedException($"不支持的加密算法: {algorithm}");
@@ -315,9 +311,6 @@ namespace Fastdotnet.WebApi.Middleware
                             // RSA加密需要公钥
                             return encryptionService.EncryptWithRSA(responseBody, key);
 
-                        case "SM4":
-                            // SM4加密需要密钥
-                            return encryptionService.EncryptWithSM4(responseBody, key);
 
                         default:
                             throw new NotSupportedException($"不支持的加密算法: {algorithm}");
@@ -340,8 +333,6 @@ namespace Fastdotnet.WebApi.Middleware
                     case "RSA":
                         return encryptionService.EncryptWithRSA(responseBody, key);
 
-                    case "SM4":
-                        return encryptionService.EncryptWithSM4(responseBody, key);
 
                     default:
                         throw new NotSupportedException($"不支持的加密算法: {algorithm}");
