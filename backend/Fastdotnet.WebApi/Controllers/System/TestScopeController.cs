@@ -107,7 +107,6 @@ namespace Fastdotnet.WebApi.Controllers.System
         {
             try
             {
-                var encryptionService = new EncryptionService();
                 
                 // 从配置中获取公钥
                 var configuration = HttpContext.RequestServices.GetRequiredService<IConfiguration>();
@@ -126,7 +125,7 @@ namespace Fastdotnet.WebApi.Controllers.System
                 string encryptedData;
                 try
                 {
-                    encryptedData = encryptionService.EncryptWithRSA(jsonData, publicKey);
+                    encryptedData = CryptographyUtils.RSAEncrypt(jsonData, publicKey);
                 }
                 catch (Exception ex)
                 {

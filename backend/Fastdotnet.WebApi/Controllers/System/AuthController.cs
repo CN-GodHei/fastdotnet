@@ -38,6 +38,7 @@ namespace Fastdotnet.WebApi.Controllers.System
         /// <returns></returns>
         [HttpPost("admin/login")]
         [ApiUsageScope(ApiUsageScopeEnum.AdminOnly)]
+        [EncryptResponse]
         public async Task<LoginResultDto> AdminLogin([FromBody] LoginDto dto)
         {
             // 1. 检查系统配置是否启用验证码

@@ -20,6 +20,7 @@
     <Compile Remove="Initializers\PermissionSyncInitializer.cs" />
     <Compile Remove="Plugin\IPlugin.cs" />
     <Compile Remove="Plugin\PluginConfig.cs" />
+    <Compile Remove="Utils\EncryptionService.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -47,7 +47,6 @@ namespace Fastdotnet.WebApi.Middleware
                     // 检查是否需要对请求参数进行解密
                     if (ShouldDecryptRequest(methodInfo, controllerTypeInfo))
                     {
-                        var algorithm = "RSA"; // 固定使用RSA算法
 
                         // 读取并解密请求体
                         context.Request.EnableBuffering();
@@ -56,7 +55,7 @@ namespace Fastdotnet.WebApi.Middleware
                         {
                             try
                             {
-                                var decryptedBody = DecryptRequestBody(requestBody, algorithm);
+                                var decryptedBody = DecryptRequestBody(requestBody);
                                 await RewriteRequestBody(context.Request, decryptedBody);
                             }
                             catch (Exception ex)
@@ -89,10 +88,10 @@ namespace Fastdotnet.WebApi.Middleware
                         {
                             try
                             {
-                                var encryptedBody = await EncryptResponseBody(responseBody, algorithm);
+                                var encryptedBody = await EncryptResponseBody(responseBody);
 
                                 // 将私钥添加到响应头，供客户端解密使用
-                                await AddPublicKeyToResponseHeader(context, algorithm);
+                                await AddPublicKeyToResponseHeader(context);
 
                                 // 清空原始响应流并写入加密后的内容
                                 context.Response.Body = originalResponseBody; // 恢复原始响应流
@@ -135,13 +134,13 @@ namespace Fastdotnet.WebApi.Middleware
         /// <summary>
         /// 将私钥添加到响应头
         /// </summary>
-        private async Task AddPublicKeyToResponseHeader(HttpContext context, string algorithm)
+        private async Task AddPublicKeyToResponseHeader(HttpContext context)
         {
-            var (success, privateKey) = await GetResponseEncryptionKeyAsync(algorithm, true); // true 表示获取私钥
+            var (success, privateKey) = await GetResponseEncryptionKeyAsync( true); // true 表示获取私钥
             if (success && !string.IsNullOrEmpty(privateKey))
             {
                 // 将私钥或对称密钥添加到响应头
-                context.Response.Headers[$"X-{algorithm}-PrivateKey"] = privateKey;
+                context.Response.Headers[$"X-Rsa-PrivateKey"] = privateKey;
             }
         }
 
@@ -199,46 +198,34 @@ namespace Fastdotnet.WebApi.Middleware
         /// <summary>
         /// 解密请求体
         /// </summary>
-        private string DecryptRequestBody(string encryptedBody, string algorithm)
+        private string DecryptRequestBody(string encryptedBody)
         {
-            var encryptionService = new EncryptionService();
+            //var encryptionService = new EncryptionService();
             // 移除可能的引号
             var trimmedBody = encryptedBody.Trim('"');
             // 使用配置中的固定密钥解密请求参数
             var key = GetRequestParamKey("RSA", true); // 固定使用RSA算法，true 表示获取解密密钥（私钥）
             if (string.IsNullOrEmpty(key))
             {
-                throw new InvalidOperationException($"无法获取{algorithm}解密密钥");
+                throw new InvalidOperationException($"无法获取Rsa解密密钥");
             }
 
-            switch (algorithm.ToUpper())
-            {
-
-                case "AES":
-                    // AES解密需要密钥
-                    return encryptionService.DecryptWithAES(trimmedBody, key);
-
-                case "RSA":
-                    // RSA解密需要私钥
-                    return encryptionService.DecryptWithRSA(trimmedBody, key);
-
-                default:
-                    throw new NotSupportedException($"不支持的解密算法: {algorithm}");
-            }
+            // RSA解密需要私钥
+            return CryptographyUtils.RSADecrypt(trimmedBody, key);
         }
 
         /// <summary>
         /// 加密响应体
         /// </summary>
-        private async Task<string> EncryptResponseBody(string responseBody, string algorithm)
+        private async Task<string> EncryptResponseBody(string responseBody)
         {
-            var encryptionService = new EncryptionService();
+            //var encryptionService = new EncryptionService();
 
             // 从缓存中获取响应加密密钥
-            var (success, key) = await GetResponseEncryptionKeyAsync(algorithm, false); // false 表示获取加密密钥（公钥或对称密钥）
+            var (success, key) = await GetResponseEncryptionKeyAsync( false); // false 表示获取加密密钥（公钥或对称密钥）
             if (!success)
             {
-                throw new InvalidOperationException($"无法获取{algorithm}加密密钥");
+                throw new InvalidOperationException($"无法获取Rsa加密密钥");
             }
             try
             {
@@ -254,27 +241,11 @@ namespace Fastdotnet.WebApi.Middleware
                     var originalData = jObject["Data"]?.ToString();
                     string encryptedData;
 
-                    switch (algorithm.ToUpper())
-                    {
-
-
-                        case "AES":
-                            // AES加密需要密钥
-                            encryptedData = encryptionService.EncryptWithAES(originalData, key);
-                            break;
-
-                        case "RSA":
-                            // RSA加密需要公钥
-                            encryptedData = encryptionService.EncryptWithRSA(originalData, key);
-                            //尝试解密
-                            var (success1, key1) = await GetResponseEncryptionKeyAsync(algorithm, true); // false 表示获取加密密钥（公钥或对称密钥）
-                            string aa = encryptionService.DecryptWithRSA(encryptedData, key1);
-                            break;
-
-
-                        default:
-                            throw new NotSupportedException($"不支持的加密算法: {algorithm}");
-                    }
+                    // RSA加密需要公钥
+                    encryptedData = CryptographyUtils.RSAEncrypt(originalData, key);
+                    //尝试解密
+                    var (success1, key1) = await GetResponseEncryptionKeyAsync(true); // false 表示获取加密密钥（公钥或对称密钥）
+                    string aa = CryptographyUtils.RSADecrypt(encryptedData, key1);
 
                     // 重建响应体，保持Code和Msg不变，只替换Data为加密内容
                     jObject["Data"] = encryptedData;
@@ -283,20 +254,8 @@ namespace Fastdotnet.WebApi.Middleware
                 else
                 {
                     // 不是ApiResult格式，按原来的方式加密整个响应体
-                    switch (algorithm.ToUpper())
-                    {
-                        case "AES":
-                            // AES加密需要密钥
-                            return encryptionService.EncryptWithAES(responseBody, key);
+                    return CryptographyUtils.RSAEncrypt(responseBody, key);
 
-                        case "RSA":
-                            // RSA加密需要公钥
-                            return encryptionService.EncryptWithRSA(responseBody, key);
-
-
-                        default:
-                            throw new NotSupportedException($"不支持的加密算法: {algorithm}");
-                    }
                 }
             }
             catch (JsonReaderException ex)
@@ -304,18 +263,8 @@ namespace Fastdotnet.WebApi.Middleware
                 // 如果JSON解析失败，记录错误并返回原始加密方式
                 Console.WriteLine($"JSON解析错误: {ex.Message}");
                 // 如果响应不是有效的JSON，仍然尝试加密整个响应体
-                switch (algorithm.ToUpper())
-                {
-                    case "AES":
-                        return encryptionService.EncryptWithAES(responseBody, key);
+                return CryptographyUtils.RSAEncrypt(responseBody, key);
 
-                    case "RSA":
-                        return encryptionService.EncryptWithRSA(responseBody, key);
-
-
-                    default:
-                        throw new NotSupportedException($"不支持的加密算法: {algorithm}");
-                }
             }
             catch (Exception ex)
             {
@@ -356,10 +305,10 @@ namespace Fastdotnet.WebApi.Middleware
         /// <summary>
         /// 从缓存中获取响应加密密钥（使用缓存中的动态密钥）
         /// </summary>
-        private async Task<(bool success, string key)> GetResponseEncryptionKeyAsync(string algorithm, bool isForDecryption)
+        private async Task<(bool success, string key)> GetResponseEncryptionKeyAsync(bool isForDecryption)
         {
             var keyType = isForDecryption ? "PrivateKey" : "PublicKey";
-            var cacheKey = $"Fastdotnet_Encryption_Response_{algorithm}_{keyType}";
+            var cacheKey = $"Fastdotnet_Encryption_Response_Rsa_{keyType}";
 
             // 首先尝试从缓存获取密钥
             var cachedKey = await _cacheService.GetAsync<string>(cacheKey);
@@ -369,52 +318,26 @@ namespace Fastdotnet.WebApi.Middleware
             }
 
             // 如果缓存中没有密钥，生成新的密钥对并存储到缓存
-            var encryptionService = new EncryptionService();
+            //var encryptionService = new EncryptionService();
             try
             {
-                if (algorithm.ToUpper() is "RSA")
+                // 非对称加密算法
+                var (publicKey, privateKey) = CryptographyUtils.GenerateRSAKeyPair();
+
+                // 将密钥对存入缓存，使用配置中的过期时间
+                var options = new HybridCacheEntryOptions
                 {
-                    // 非对称加密算法
-                    var (publicKey, privateKey) = encryptionService.GenerateKeyPair(
-                        algorithm.ToUpper() switch
-                        {
-                            "RSA" => EncryptionService.AlgorithmType.RSA,
-                            _ => throw new NotSupportedException($"不支持的加密算法: {algorithm}")
-                        });
+                    Expiration = TimeSpan.FromHours(24),                 // 24小时后过期
+                    LocalCacheExpiration = TimeSpan.FromHours(24)          // 本地缓存24小时过期
+                };
 
-                    // 将密钥对存入缓存，使用配置中的过期时间
-                    var options = new HybridCacheEntryOptions
-                    {
-                        Expiration = TimeSpan.FromHours(24),                 // 24小时后过期
-                        LocalCacheExpiration = TimeSpan.FromHours(24)          // 本地缓存24小时过期
-                    };
+                await _cacheService.SetAsync($"Fastdotnet_Encryption_Response_Rsa_PublicKey", publicKey, options);
+                await _cacheService.SetAsync($"Fastdotnet_Encryption_Response_Rsa_PrivateKey", privateKey, options);
 
-                    await _cacheService.SetAsync($"Fastdotnet_Encryption_Response_{algorithm}_PublicKey", publicKey, options);
-                    await _cacheService.SetAsync($"Fastdotnet_Encryption_Response_{algorithm}_PrivateKey", privateKey, options);
+                // 返回请求的密钥类型
+                var requestedKey = isForDecryption ? privateKey : publicKey;
+                return (true, requestedKey);
 
-                    // 返回请求的密钥类型
-                    var requestedKey = isForDecryption ? privateKey : publicKey;
-                    return (true, requestedKey);
-                }
-                else if (algorithm.ToUpper() is "AES" )
-                {
-                    // 对称加密算法，生成固定长度的密钥
-                    var key = GenerateSymmetricKey(algorithm);
-
-                    // 将密钥存入缓存，使用配置中的过期时间
-                    var options = new HybridCacheEntryOptions
-                    {
-                        Expiration = TimeSpan.FromHours(24),                 // 24小时后过期
-                        LocalCacheExpiration = TimeSpan.FromHours(24)          // 本地缓存24小时过期
-                    };
-
-                    var symmetricCacheKey = $"Fastdotnet_Encryption_Response_{algorithm}_{keyType}";
-                    await _cacheService.SetAsync(symmetricCacheKey, key, options);
-
-                    return (true, key);
-                }
-
-                return (false, "");
             }
             catch (Exception)
             {

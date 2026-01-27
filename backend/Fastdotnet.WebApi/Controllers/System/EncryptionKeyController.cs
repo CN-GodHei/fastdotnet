@@ -19,59 +19,26 @@ namespace Fastdotnet.WebApi.Controllers.System
         /// <summary>
         /// 生成加密算法的密钥对
         /// </summary>
-        /// <param name="algorithm">加密算法类型 (RSA, AES)</param>
+        /// <param name="algorithm">加密算法类型 (RSA)</param>
         /// <returns>包含公钥和私钥的响应</returns>
         [HttpPost("generate")]
         [AllowAnonymous] // 允许匿名访问
         public async Task<IActionResult> GenerateKeyPair([FromBody] string algorithm)
         {
-            if (string.IsNullOrWhiteSpace(algorithm))
-            {
-                return BadRequest("算法类型不能为空");
-            }
-
-            algorithm = algorithm.ToUpper();
-
             try
             {
-                var encryptionService = new EncryptionService();
 
-                if (algorithm is "RSA")
-                {
-                    // 非对称加密算法
-                    var (publicKey, privateKey) = encryptionService.GenerateKeyPair(
-                        algorithm switch
-                        {
-                            "RSA" => EncryptionService.AlgorithmType.RSA,
-                            _ => throw new NotSupportedException($"不支持的加密算法: {algorithm}")
-                        });
+                // 非对称加密算法
+                var (publicKey, privateKey) = CryptographyUtils.GenerateRSAKeyPair();
 
-                    return Ok(new
-                    {
-                        Success = true,
-                        Algorithm = algorithm,
-                        PublicKey = publicKey,
-                        PrivateKey = privateKey,
-                        Message = $"{algorithm}密钥对生成成功"
-                    });
-                }
-                else if (algorithm is "AES")
+                return Ok(new
                 {
-                    // 对称加密算法
-                    var key = GenerateSymmetricKey(algorithm);
-
-                    return Ok(new
-                    {
-                        Success = true,
-                        Algorithm = algorithm,
-                        Key = key, // 对称加密算法只有单一密钥
-                        Message = $"{algorithm}密钥生成成功"
-                    });
-                }
-                else
-                {
-                    return BadRequest($"不支持的加密算法: {algorithm}");
-                }
+                    Success = true,
+                    Algorithm = algorithm,
+                    PublicKey = publicKey,
+                    PrivateKey = privateKey,
+                    Message = $"{algorithm}密钥对生成成功"
+                });
             }
             catch (NotSupportedException ex)
             {
@@ -105,40 +72,15 @@ namespace Fastdotnet.WebApi.Controllers.System
 
             try
             {
-                if (algorithm is "RSA")
-                {
-                    // 非对称加密算法 - 生成临时密钥对返回公钥
-                    var encryptionService = new EncryptionService();
-                    var (publicKey, _) = encryptionService.GenerateKeyPair(
-                        algorithm switch
-                        {
-                            "RSA" => EncryptionService.AlgorithmType.RSA,
-                            _ => throw new NotSupportedException($"不支持的加密算法: {algorithm}")
-                        });
+                // 非对称加密算法 - 生成临时密钥对返回公钥
+                var (publicKey, _) = CryptographyUtils.GenerateRSAKeyPair();
 
-                    return Ok(new
-                    {
-                        Success = true,
-                        Algorithm = algorithm,
-                        PublicKey = publicKey
-                    });
-                }
-                else if (algorithm is "AES")
+                return Ok(new
                 {
-                    // 对称加密算法
-                    var key = GenerateSymmetricKey(algorithm);
-
-                    return Ok(new
-                    {
-                        Success = true,
-                        Algorithm = algorithm,
-                        Key = key
-                    });
-                }
-                else
-                {
-                    return BadRequest($"不支持的加密算法: {algorithm}");
-                }
+                    Success = true,
+                    Algorithm = algorithm,
+                    PublicKey = publicKey
+                });
             }
             catch (Exception ex)
             {
@@ -159,49 +101,17 @@ namespace Fastdotnet.WebApi.Controllers.System
         [AllowAnonymous] // 允许匿名访问
         public async Task<IActionResult> GetPrivateKey(string algorithm)
         {
-            if (string.IsNullOrWhiteSpace(algorithm))
-            {
-                return BadRequest("算法类型不能为空");
-            }
-
-            algorithm = algorithm.ToUpper();
 
             try
             {
-                if (algorithm is "RSA")
-                {
-                    // 非对称加密算法 - 生成临时密钥对返回私钥
-                    var encryptionService = new EncryptionService();
-                    var (_, privateKey) = encryptionService.GenerateKeyPair(
-                        algorithm switch
-                        {
-                            "RSA" => EncryptionService.AlgorithmType.RSA,
-                            _ => throw new NotSupportedException($"不支持的加密算法: {algorithm}")
-                        });
+                var (_, privateKey) = CryptographyUtils.GenerateRSAKeyPair();
 
-                    return Ok(new
-                    {
-                        Success = true,
-                        Algorithm = algorithm,
-                        PrivateKey = privateKey
-                    });
-                }
-                else if (algorithm is "AES")
+                return Ok(new
                 {
-                    // 对称加密算法，与公钥使用相同的密钥
-                    var key = GenerateSymmetricKey(algorithm);
-
-                    return Ok(new
-                    {
-                        Success = true,
-                        Algorithm = algorithm,
-                        Key = key
-                    });
-                }
-                else
-                {
-                    return BadRequest($"不支持的加密算法: {algorithm}");
-                }
+                    Success = true,
+                    Algorithm = algorithm,
+                    PrivateKey = privateKey
+                });
             }
             catch (Exception ex)
             {
@@ -213,26 +123,6 @@ namespace Fastdotnet.WebApi.Controllers.System
             }
         }
 
-        /// <summary>
-        /// 获取所有可用的加密算法列表
-        /// </summary>
-        /// <returns>算法列表</returns>
-        [HttpGet("algorithms")]
-        [AllowAnonymous] // 允许匿名访问
-        public IActionResult GetAvailableAlgorithms()
-        {
-            var algorithms = new[]
-            {
-                new { Name = "RSA", Type = "非对称加密", Description = "广泛使用的公钥加密算法" },
-                new { Name = "AES", Type = "对称加密", Description = "高级加密标准，常用AES-256" },
-            };
-
-            return Ok(new
-            {
-                Success = true,
-                Algorithms = algorithms
-            });
-        }
 
         /// <summary>
         /// 生成对称加密算法的密钥
