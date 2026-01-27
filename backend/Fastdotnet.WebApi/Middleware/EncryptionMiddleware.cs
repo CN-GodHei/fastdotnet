@@ -303,7 +303,7 @@ namespace Fastdotnet.WebApi.Middleware
         }
 
         /// <summary>
-        /// 从缓存中获取响应加密密钥（使用缓存中的动态密钥）
+        /// 从缓存中获取响应加密密钥（使用缓存中的动态密钥）isForDecryption true表示私钥
         /// </summary>
         private async Task<(bool success, string key)> GetResponseEncryptionKeyAsync(bool isForDecryption)
         {
