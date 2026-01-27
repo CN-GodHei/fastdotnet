@@ -9,12 +9,11 @@ import { dynamicRoutes, notFoundAndNoPower } from '@/router/route';
 import { formatTwoStageRoutes, formatFlatteningRoutes, router } from '@/router/index';
 import { useRoutesList } from '@/stores/routesList';
 import { useTagsViewRoutes } from '@/stores/tagsViewRoutes';
-import { useMenuApi } from '@/api/menu/index';
+import { getApiAdminFdMenuTree } from '@/api/fd-system-api-admin/FdMenu';
 
 // 后端控制路由
 
 // 引入 api 请求接口
-const menuApi = useMenuApi();
 
 /**
  * 获取目录下的 .vue、.tsx 全部文件
@@ -118,7 +117,7 @@ export async function getBackEndControlRoutes() {
 		// 从适配的菜单 API 获取用户菜单树
 		// 由于 request.ts 已修改为直接返回 res.Data，
 		// 这里的 res 就是 res.Data，即菜单数组 [...]
-		const menuTreeData = await useMenuApi().getUserMenuTree();
+		const menuTreeData = await getApiAdminFdMenuTree();
 		//console.log('后端返回的菜单数据 (已处理):', menuTreeData); // 添加日志查看结构
 
 		// 直接返回，包装成 { data: ... } 的格式以匹配 vue-next-admin 的预期
