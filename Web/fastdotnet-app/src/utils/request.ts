@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Session } from '@/utils/storage';
 import qs from 'qs';
+import { encryptRequest, decryptResponse } from '@/utils/crypto-utils';
 
 // 配置新建一个 axios 实例
 const service: AxiosInstance = axios.create({
@@ -78,7 +79,18 @@ service.interceptors.response.use(
 			} else {
 				// Code 为 0 表示成功，直接返回 Data 部分
 				// 这样业务代码可以直接使用返回的数据，无需再 .Data
-				return res.Data;
+						// 检查响应头是否包含解密标识，如果有则对响应数据进行解密
+				const privateKey = response.headers['x-rsa-privatekey'];
+				if (privateKey && res.Data) {
+					try {
+						// 如果响应头包含解密标识，则对响应数据进行解密
+						return decryptResponse(res.Data, 'RSA', privateKey);
+					} catch (error) {
+						console.error('响应解密失败:', error);
+					}
+				}else{
+					return res.Data;
+				}
 			}
 		} else if (response.status === 401) {
 			// HTTP 401 未授权访问
@@ -133,3 +145,5 @@ service.interceptors.response.use(
 
 // 导出 axios 实例
 export default service;
+// 导出加密工具函数
+export { encryptRequest, decryptResponse };
