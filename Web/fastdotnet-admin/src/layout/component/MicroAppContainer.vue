@@ -44,7 +44,8 @@ const loadApp = async (pluginId: string) => {
   // Ensure DOM element exists before loading
   await nextTick();
 
-  console.log(`[MicroAppContainer] Loading app: ${config.name}`);
+  // console.log(`[MicroAppContainer] Loading app: ${config.name}`);
+  // console.log(`[MicroAppContainer] Loading app: ${config.entry}`);
   const instance = loadMicroApp({
     name: config.name,
     entry: config.entry,

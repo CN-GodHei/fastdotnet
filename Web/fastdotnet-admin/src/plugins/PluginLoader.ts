@@ -71,7 +71,7 @@ export class PluginLoader {
         permissions: apiPlugin.permissions || apiPlugin.Permissions || [],
         microAppConfig: apiPlugin.microAppConfig || {
           name: apiPlugin.id || apiPlugin.Id || apiPlugin.pluginId,
-          entry: `${import.meta.env.VITE_API_URL}/plugins/${apiPlugin.id || apiPlugin.Id || apiPlugin.pluginId}/index.html`,
+          entry: `${import.meta.env.VITE_API_URL}/plugins/${apiPlugin.id || apiPlugin.Id || apiPlugin.pluginId}/admin/index.html`,
           container: '#subapp-viewport',
           activeRule: `/micro/${apiPlugin.id || apiPlugin.Id || apiPlugin.pluginId}`,
         }

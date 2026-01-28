@@ -146,7 +146,7 @@ export async function startQiankun() {
                         let entry = getDebugEntry(menu.PluginId);
                         // 如果还是没有entry，则使用默认的插件地址                                                       
                         if (!entry) {
-                            entry = import.meta.env.VITE_API_URL + "/plugins/" + menu.PluginId + "/index.html";
+                            entry = import.meta.env.VITE_API_URL + "/plugins/" + menu.PluginId + "/app/index.html";
                         }
                         const appName = `${menu.PluginId}`;
                         const activeRule = `/micro/${menu.PluginId}`;
