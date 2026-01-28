@@ -21,7 +21,6 @@
     <PackageReference Include="AutoMapper" />
     <PackageReference Include="Fastdotnet.Plugin.Core" />
     <PackageReference Include="Lazy.Captcha.Core" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
     <PackageReference Include="Newtonsoft.Json" />
