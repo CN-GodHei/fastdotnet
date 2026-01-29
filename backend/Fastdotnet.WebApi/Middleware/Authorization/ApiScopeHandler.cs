@@ -51,15 +51,11 @@ namespace Fastdotnet.WebApi.Middleware.Authorization
                     var controllerType = controllerActionDescriptor.ControllerTypeInfo.AsType();
                     var methodInfo = controllerActionDescriptor.MethodInfo;
                                     
-                    // 首先检查动作方法上的特性
-                    var actionApiScopeAttr = methodInfo.GetCustomAttributes(typeof(ApiUsageScopeAttribute), false)
-                        .OfType<ApiUsageScopeAttribute>()
-                        .FirstOrDefault();
+                    // 首先检查动作方法上的特性（包括继承链）
+                    var actionApiScopeAttr = GetInheritedAttribute<ApiUsageScopeAttribute>(methodInfo);
                                     
-                    // 如果动作方法上没有，则检查控制器类型的特性
-                    var controllerApiScopeAttr = actionApiScopeAttr ?? controllerType.GetCustomAttributes(typeof(ApiUsageScopeAttribute), false)
-                        .OfType<ApiUsageScopeAttribute>()
-                        .FirstOrDefault();
+                    // 如果动作方法上没有，则检查控制器类型的特性（包括继承链）
+                    var controllerApiScopeAttr = actionApiScopeAttr ?? GetInheritedAttribute<ApiUsageScopeAttribute>(controllerType);
                                     
                     var apiScopeAttr = actionApiScopeAttr ?? controllerApiScopeAttr;
                                 
@@ -112,15 +108,11 @@ namespace Fastdotnet.WebApi.Middleware.Authorization
                         var controllerType = controllerActionDescriptor.ControllerTypeInfo.AsType();
                         var methodInfo = controllerActionDescriptor.MethodInfo;
                                             
-                        // 首先检查动作方法上的特性
-                        var actionApiScopeAttr = methodInfo.GetCustomAttributes(typeof(ApiUsageScopeAttribute), false)
-                            .OfType<ApiUsageScopeAttribute>()
-                            .FirstOrDefault();
+                        // 首先检查动作方法上的特性（包括继承链）
+                        var actionApiScopeAttr = GetInheritedAttribute<ApiUsageScopeAttribute>(methodInfo);
                                             
-                        // 如果动作方法上没有，则检查控制器类型的特性
-                        var controllerApiScopeAttr = actionApiScopeAttr ?? controllerType.GetCustomAttributes(typeof(ApiUsageScopeAttribute), false)
-                            .OfType<ApiUsageScopeAttribute>()
-                            .FirstOrDefault();
+                        // 如果动作方法上没有，则检查控制器类型的特性（包括继承链）
+                        var controllerApiScopeAttr = actionApiScopeAttr ?? GetInheritedAttribute<ApiUsageScopeAttribute>(controllerType);
                                             
                         var apiScopeAttr = actionApiScopeAttr ?? controllerApiScopeAttr;
                                         
@@ -161,6 +153,75 @@ namespace Fastdotnet.WebApi.Middleware.Authorization
             await Task.CompletedTask;
         }
 
+        /// <summary>
+        /// 从方法继承链中获取指定类型的特性，包括重写的方法
+        /// </summary>
+        /// <typeparam name="T">特性类型</typeparam>
+        /// <param name="methodInfo">方法信息</param>
+        /// <returns>找到的特性或null</returns>
+        private T GetInheritedAttribute<T>(System.Reflection.MethodInfo methodInfo) where T : System.Attribute
+        {
+            // 首先检查当前方法是否有特性
+            var attribute = methodInfo.GetCustomAttribute<T>(false);
+            if (attribute != null)
+            {
+                return attribute;
+            }
+
+            // 检查继承链，查找重写的方法
+            var baseMethod = methodInfo.GetBaseDefinition();
+            if (baseMethod != null && baseMethod != methodInfo)
+            {
+                attribute = baseMethod.GetCustomAttribute<T>(false);
+                if (attribute != null)
+                {
+                    return attribute;
+                }
+            }
+            
+            return null;
+        }
+        
+        /// <summary>
+        /// 从类型继承链中获取指定类型的特性，包括接口
+        /// </summary>
+        /// <typeparam name="T">特性类型</typeparam>
+        /// <param name="type">类型信息</param>
+        /// <returns>找到的特性或null</returns>
+        private T GetInheritedAttribute<T>(System.Type type) where T : System.Attribute
+        {
+            // 首先检查当前类型是否有特性
+            var attribute = type.GetCustomAttribute<T>(false);
+            if (attribute != null)
+            {
+                return attribute;
+            }
+
+            // 检查基类
+            var baseType = type.BaseType;
+            while (baseType != null && baseType != typeof(object))
+            {
+                attribute = baseType.GetCustomAttribute<T>(false);
+                if (attribute != null)
+                {
+                    return attribute;
+                }
+                baseType = baseType.BaseType;
+            }
+
+            // 检查接口
+            foreach (var interfaceType in type.GetInterfaces())
+            {
+                attribute = interfaceType.GetCustomAttribute<T>(false);
+                if (attribute != null)
+                {
+                    return attribute;
+                }
+            }
+
+            return null;
+        }
+        
         private bool IsAccessAllowed(string userCategory, ApiUsageScopeEnum requiredScope)
         {
             // 根据用户类别和所需作用域判断是否允许访问
