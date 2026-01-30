@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request from '@/utils/request';
+import request, { encryptRequest } from '@/utils/request';
 
 /** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/CodeGenConfig */
 export async function getApiCodeGenConfig(options?: { [key: string]: any }) {
@@ -9,7 +9,6 @@ export async function getApiCodeGenConfig(options?: { [key: string]: any }) {
 		...(options || {}),
 	});
 }
-
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/CodeGenConfig */
 export async function postApiCodeGenConfig(body: APIModel.CreateFdCodeGenConfigDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdCodeGenConfigDto>('/api/CodeGenConfig', {
@@ -21,7 +20,6 @@ export async function postApiCodeGenConfig(body: APIModel.CreateFdCodeGenConfigD
 		...(options || {}),
 	});
 }
-
 /** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/CodeGenConfig/${param0} */
 export async function getApiCodeGenConfigId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -29,13 +27,13 @@ export async function getApiCodeGenConfigId(
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
+
 	return request<APIModel.FdCodeGenConfigDto>(`/api/CodeGenConfig/${param0}`, {
 		method: 'GET',
 		params: { ...queryParams },
 		...(options || {}),
 	});
 }
-
 /** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/CodeGenConfig/${param0} */
 export async function putApiCodeGenConfigId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -44,6 +42,7 @@ export async function putApiCodeGenConfigId(
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
+
 	return request<APIModel.FdCodeGenConfigDto>(`/api/CodeGenConfig/${param0}`, {
 		method: 'PUT',
 		headers: {
@@ -54,7 +53,6 @@ export async function putApiCodeGenConfigId(
 		...(options || {}),
 	});
 }
-
 /** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/CodeGenConfig/${param0} */
 export async function deleteApiCodeGenConfigId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -62,13 +60,13 @@ export async function deleteApiCodeGenConfigId(
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
+
 	return request<boolean>(`/api/CodeGenConfig/${param0}`, {
 		method: 'DELETE',
 		params: { ...queryParams },
 		...(options || {}),
 	});
 }
-
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/CodeGenConfig/batch */
 export async function putApiCodeGenConfigBatch(body: APIModel.UpdateFdCodeGenConfigDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGenConfig/batch', {
@@ -80,7 +78,6 @@ export async function putApiCodeGenConfigBatch(body: APIModel.UpdateFdCodeGenCon
 		...(options || {}),
 	});
 }
-
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/CodeGenConfig/batch */
 export async function postApiCodeGenConfigBatch(body: APIModel.CreateFdCodeGenConfigDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGenConfig/batch', {
@@ -92,7 +89,6 @@ export async function postApiCodeGenConfigBatch(body: APIModel.CreateFdCodeGenCo
 		...(options || {}),
 	});
 }
-
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/CodeGenConfig/batch */
 export async function deleteApiCodeGenConfigBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGenConfig/batch', {
@@ -104,7 +100,6 @@ export async function deleteApiCodeGenConfigBatch(body: string[], options?: { [k
 		...(options || {}),
 	});
 }
-
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/CodeGenConfig/batch/updatebycondition */
 export async function putApiCodeGenConfigBatchUpdatebycondition(
 	body: APIModel.UpdateFdCodeGenConfigDtoBatchUpdateByConditionDto,
@@ -119,7 +114,6 @@ export async function putApiCodeGenConfigBatchUpdatebycondition(
 		...(options || {}),
 	});
 }
-
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/CodeGenConfig/page */
 export async function getApiCodeGenConfigPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -138,7 +132,6 @@ export async function getApiCodeGenConfigPage(
 		...(options || {}),
 	});
 }
-
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/CodeGenConfig/page/search */
 export async function postApiCodeGenConfigPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/CodeGenConfig/page/search', {
@@ -150,7 +143,6 @@ export async function postApiCodeGenConfigPageSearch(body: APIModel.PageQueryByC
 		...(options || {}),
 	});
 }
-
 /** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/CodeGenConfig/recyclebin */
 export async function getApiCodeGenConfigRecyclebin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -169,7 +161,6 @@ export async function getApiCodeGenConfigRecyclebin(
 		...(options || {}),
 	});
 }
-
 /** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/CodeGenConfig/recyclebin/${param0}/permanent */
 export async function deleteApiCodeGenConfigRecyclebinIdPermanent(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -177,13 +168,13 @@ export async function deleteApiCodeGenConfigRecyclebinIdPermanent(
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
+
 	return request<boolean>(`/api/CodeGenConfig/recyclebin/${param0}/permanent`, {
 		method: 'DELETE',
 		params: { ...queryParams },
 		...(options || {}),
 	});
 }
-
 /** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/CodeGenConfig/recyclebin/${param0}/restore */
 export async function putApiCodeGenConfigRecyclebinIdRestore(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -191,13 +182,13 @@ export async function putApiCodeGenConfigRecyclebinIdRestore(
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
+
 	return request<boolean>(`/api/CodeGenConfig/recyclebin/${param0}/restore`, {
 		method: 'PUT',
 		params: { ...queryParams },
 		...(options || {}),
 	});
 }
-
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/CodeGenConfig/recyclebin/permanent */
 export async function postApiCodeGenConfigRecyclebinPermanent(body: APIModel.FdCodeGenConfigBooleanFuncExpression, options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGenConfig/recyclebin/permanent', {
@@ -209,7 +200,6 @@ export async function postApiCodeGenConfigRecyclebinPermanent(body: APIModel.FdC
 		...(options || {}),
 	});
 }
-
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/CodeGenConfig/recyclebin/restore */
 export async function postApiCodeGenConfigRecyclebinRestore(body: APIModel.FdCodeGenConfigBooleanFuncExpression, options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGenConfig/recyclebin/restore', {
@@ -221,7 +211,6 @@ export async function postApiCodeGenConfigRecyclebinRestore(body: APIModel.FdCod
 		...(options || {}),
 	});
 }
-
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/CodeGenConfig/recyclebin/search */
 export async function postApiCodeGenConfigRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/CodeGenConfig/recyclebin/search', {

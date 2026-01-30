@@ -6,6 +6,7 @@ import * as Auth from './Auth';
 import * as Captcha from './Captcha';
 import * as CodeGen from './CodeGen';
 import * as CodeGenConfig from './CodeGenConfig';
+import * as EncryptionKey from './EncryptionKey';
 import * as FdAdminUser from './FdAdminUser';
 import * as FdAppUser from './FdAppUser';
 import * as FdBlacklists from './FdBlacklists';
@@ -21,11 +22,13 @@ import * as FdSystemInfoConfig from './FdSystemInfoConfig';
 import * as Plugin from './Plugin';
 import * as Storage from './Storage';
 import * as System from './System';
+import * as TestScope from './TestScope';
 export default {
 	Auth,
 	Captcha,
 	CodeGen,
 	CodeGenConfig,
+	EncryptionKey,
 	FdAdminUser,
 	FdAppUser,
 	FdBlacklists,
@@ -41,4 +44,5 @@ export default {
 	Plugin,
 	Storage,
 	System,
+	TestScope,
 };

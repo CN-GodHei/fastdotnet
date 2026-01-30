@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request from '@/utils/request';
+import request, { encryptRequest } from '@/utils/request';
 
 /** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/admin/FdMenuButtons */
 export async function getApiAdminFdMenuButtons(options?: { [key: string]: any }) {
@@ -9,7 +9,6 @@ export async function getApiAdminFdMenuButtons(options?: { [key: string]: any })
 		...(options || {}),
 	});
 }
-
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/admin/FdMenuButtons */
 export async function postApiAdminFdMenuButtons(body: APIModel.CreateFdFdMenuButtonDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdMenuButtonDto>('/api/admin/FdMenuButtons', {
@@ -21,7 +20,6 @@ export async function postApiAdminFdMenuButtons(body: APIModel.CreateFdFdMenuBut
 		...(options || {}),
 	});
 }
-
 /** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/admin/FdMenuButtons/${param0} */
 export async function getApiAdminFdMenuButtonsId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -29,13 +27,13 @@ export async function getApiAdminFdMenuButtonsId(
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
+
 	return request<APIModel.FdMenuButtonDto>(`/api/admin/FdMenuButtons/${param0}`, {
 		method: 'GET',
 		params: { ...queryParams },
 		...(options || {}),
 	});
 }
-
 /** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/admin/FdMenuButtons/${param0} */
 export async function putApiAdminFdMenuButtonsId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -44,6 +42,7 @@ export async function putApiAdminFdMenuButtonsId(
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
+
 	return request<APIModel.FdMenuButtonDto>(`/api/admin/FdMenuButtons/${param0}`, {
 		method: 'PUT',
 		headers: {
@@ -54,7 +53,6 @@ export async function putApiAdminFdMenuButtonsId(
 		...(options || {}),
 	});
 }
-
 /** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/admin/FdMenuButtons/${param0} */
 export async function deleteApiAdminFdMenuButtonsId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -62,13 +60,13 @@ export async function deleteApiAdminFdMenuButtonsId(
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
+
 	return request<boolean>(`/api/admin/FdMenuButtons/${param0}`, {
 		method: 'DELETE',
 		params: { ...queryParams },
 		...(options || {}),
 	});
 }
-
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/FdMenuButtons/batch */
 export async function putApiAdminFdMenuButtonsBatch(body: APIModel.UpdateFdFdMenuButtonDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdMenuButtons/batch', {
@@ -80,7 +78,6 @@ export async function putApiAdminFdMenuButtonsBatch(body: APIModel.UpdateFdFdMen
 		...(options || {}),
 	});
 }
-
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/FdMenuButtons/batch */
 export async function postApiAdminFdMenuButtonsBatch(body: APIModel.CreateFdFdMenuButtonDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdMenuButtons/batch', {
@@ -92,7 +89,6 @@ export async function postApiAdminFdMenuButtonsBatch(body: APIModel.CreateFdFdMe
 		...(options || {}),
 	});
 }
-
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/admin/FdMenuButtons/batch */
 export async function deleteApiAdminFdMenuButtonsBatch(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdMenuButtons/batch', {
@@ -104,7 +100,6 @@ export async function deleteApiAdminFdMenuButtonsBatch(body: string[], options?:
 		...(options || {}),
 	});
 }
-
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdMenuButtons/batch/updatebycondition */
 export async function putApiAdminFdMenuButtonsBatchUpdatebycondition(
 	body: APIModel.UpdateFdFdMenuButtonDtoBatchUpdateByConditionDto,
@@ -119,7 +114,6 @@ export async function putApiAdminFdMenuButtonsBatchUpdatebycondition(
 		...(options || {}),
 	});
 }
-
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/admin/FdMenuButtons/page */
 export async function getApiAdminFdMenuButtonsPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -138,7 +132,6 @@ export async function getApiAdminFdMenuButtonsPage(
 		...(options || {}),
 	});
 }
-
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdMenuButtons/page/search */
 export async function postApiAdminFdMenuButtonsPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdMenuButtons/page/search', {
@@ -150,7 +143,6 @@ export async function postApiAdminFdMenuButtonsPageSearch(body: APIModel.PageQue
 		...(options || {}),
 	});
 }
-
 /** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/admin/FdMenuButtons/recyclebin */
 export async function getApiAdminFdMenuButtonsRecyclebin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -169,7 +161,6 @@ export async function getApiAdminFdMenuButtonsRecyclebin(
 		...(options || {}),
 	});
 }
-
 /** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/admin/FdMenuButtons/recyclebin/${param0}/permanent */
 export async function deleteApiAdminFdMenuButtonsRecyclebinIdPermanent(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -177,13 +168,13 @@ export async function deleteApiAdminFdMenuButtonsRecyclebinIdPermanent(
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
+
 	return request<boolean>(`/api/admin/FdMenuButtons/recyclebin/${param0}/permanent`, {
 		method: 'DELETE',
 		params: { ...queryParams },
 		...(options || {}),
 	});
 }
-
 /** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/admin/FdMenuButtons/recyclebin/${param0}/restore */
 export async function putApiAdminFdMenuButtonsRecyclebinIdRestore(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -191,13 +182,13 @@ export async function putApiAdminFdMenuButtonsRecyclebinIdRestore(
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
+
 	return request<boolean>(`/api/admin/FdMenuButtons/recyclebin/${param0}/restore`, {
 		method: 'PUT',
 		params: { ...queryParams },
 		...(options || {}),
 	});
 }
-
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdMenuButtons/recyclebin/permanent */
 export async function postApiAdminFdMenuButtonsRecyclebinPermanent(
 	body: APIModel.FdMenuButtonBooleanFuncExpression,
@@ -212,7 +203,6 @@ export async function postApiAdminFdMenuButtonsRecyclebinPermanent(
 		...(options || {}),
 	});
 }
-
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdMenuButtons/recyclebin/restore */
 export async function postApiAdminFdMenuButtonsRecyclebinRestore(body: APIModel.FdMenuButtonBooleanFuncExpression, options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdMenuButtons/recyclebin/restore', {
@@ -224,7 +214,6 @@ export async function postApiAdminFdMenuButtonsRecyclebinRestore(body: APIModel.
 		...(options || {}),
 	});
 }
-
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdMenuButtons/recyclebin/search */
 export async function postApiAdminFdMenuButtonsRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdMenuButtons/recyclebin/search', {

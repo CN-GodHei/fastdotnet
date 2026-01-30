@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request from '@/utils/request';
+import request, { encryptRequest } from '@/utils/request';
 
 /** 生成验证码图片 GET /api/Captcha/generate */
 export async function getApiCaptchaGenerate(
@@ -16,7 +16,6 @@ export async function getApiCaptchaGenerate(
 		...(options || {}),
 	});
 }
-
 /** 验证验证码 (仅供测试使用)
 在正常的登录流程中，验证码验证应在后端完成，而不是通过此接口。 POST /api/Captcha/validate */
 export async function postApiCaptchaValidate(

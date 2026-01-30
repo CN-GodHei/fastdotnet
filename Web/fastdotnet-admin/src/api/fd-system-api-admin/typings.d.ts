@@ -112,6 +112,16 @@ declare namespace APIModel {
 		Avatar?: string;
 	};
 
+	type CreateFdAppUserDto = {
+		Username: string;
+		Password: string;
+		Email: string;
+		PhoneNumber: string;
+		Nickname?: string;
+		AvatarUrl: string;
+		Status?: number;
+	};
+
 	type CreateFdBlacklistDto = {
 		Type: string;
 		Value: string;
@@ -470,6 +480,10 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type deleteApiFdAppUserIdParams = {
+		id: string;
+	};
+
 	type deleteApiStorage_openAPI_deleteFileNameParams = {
 		/** 文件名 */
 		fileName: string;
@@ -486,6 +500,17 @@ declare namespace APIModel {
 		ReturnType?: string;
 		TailCall?: boolean;
 		CanReduce?: boolean;
+	};
+
+	type ExampleRequest = {
+		Data?: string;
+		Token?: string;
+	};
+
+	type ExampleResponse = {
+		Data?: string;
+		Timestamp?: string;
+		Success?: boolean;
 	};
 
 	type Expression = {
@@ -620,6 +645,11 @@ declare namespace APIModel {
 		Nickname?: string;
 		AvatarUrl?: string;
 		Status?: number;
+	};
+
+	type FdAppUserDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdAppUserDto[];
 	};
 
 	type FdBlacklistBooleanFuncExpression = {
@@ -1297,6 +1327,25 @@ declare namespace APIModel {
 		configId: string;
 	};
 
+	type getApiEncryptionKeyPrivateAlgorithmParams = {
+		/** 加密算法类型 */
+		algorithm: string;
+	};
+
+	type getApiEncryptionKeyPublicAlgorithmParams = {
+		/** 加密算法类型 */
+		algorithm: string;
+	};
+
+	type getApiFdAppUserIdParams = {
+		id: string;
+	};
+
+	type getApiFdAppUserPageParams = {
+		pageIndex?: number;
+		pageSize?: number;
+	};
+
 	type getApiPluginActivePluginIdParams = {
 		pluginId: string;
 	};
@@ -1412,6 +1461,16 @@ declare namespace APIModel {
 		0 = '0',
 		1 = '1',
 	}
+
+	type MetricQueryRequest = {
+		MetricIds?: string[];
+		StartDate?: string;
+		EndDate?: string;
+		Dimensions?: string[];
+		Filters?: Record<string, any>;
+		PageNumber?: number;
+		PageSize?: number;
+	};
 
 	type OfflineActivationRequestDto = {
 		PluginId: string;
@@ -1757,6 +1816,10 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type putApiFdAppUserIdParams = {
+		id: string;
+	};
+
 	type ResetPasswordDto = {
 		NewPassword: string;
 	};
@@ -1840,6 +1903,20 @@ declare namespace APIModel {
 	type UpdateFdAdminUserDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateFdAdminUserDto;
+	};
+
+	type UpdateFdAppUserDto = {
+		Username?: string;
+		Email?: string;
+		PhoneNumber?: string;
+		Nickname?: string;
+		AvatarUrl?: string;
+		Status?: number;
+	};
+
+	type UpdateFdAppUserDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdAppUserDto;
 	};
 
 	type UpdateFdBlacklistDto = {
