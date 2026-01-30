@@ -15,6 +15,7 @@ namespace Fastdotnet.Plugin.Contracts.Metrics
         string Formula { get; }                // 计算公式说明
         string[] Dimensions { get; }           // 支持维度：region, product_type
         string[] Tags { get; }                 // 标签：revenue,kpi
+        MetricDefinitionType DefinitionType { get; }  // 定义类型：Code/Sql
     }
 
     public enum MetricValueType

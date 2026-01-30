@@ -129,6 +129,7 @@ namespace PluginA.Metrics
         public string Formula { get; set; } = string.Empty;
         public string[] Dimensions { get; set; } = Array.Empty<string>();
         public string[] Tags { get; set; } = Array.Empty<string>();
+        public MetricDefinitionType DefinitionType { get; set; } = MetricDefinitionType.Code;
     }
     
     public class MetricNotFoundException : Exception
