@@ -15,7 +15,7 @@ namespace Fastdotnet.Core.Entities.Admin
         /// <summary>
         /// 登录用户名 (必须唯一)
         /// </summary>
-        [SugarColumn(ColumnName = "username", IsNullable = false, ColumnDescription = "登录用户名 (必须唯一)")]
+        [SugarColumn(ColumnName = "username", IsNullable = false, ColumnDescription = "用户名")]
         public string Username { get; set; }
 
         /// <summary>
@@ -27,13 +27,13 @@ namespace Fastdotnet.Core.Entities.Admin
         /// <summary>
         /// 真实姓名
         /// </summary>
-        [SugarColumn(ColumnName = "name", IsNullable = true, ColumnDescription = "真实姓名")]
+        [SugarColumn(ColumnName = "name", IsNullable = true, ColumnDescription = "姓名")]
         public string Name { get; set; }
 
         /// <summary>
         /// 管理员邮箱
         /// </summary>
-        [SugarColumn(ColumnName = "email", IsNullable = true, ColumnDescription = "管理员邮箱")]
+        [SugarColumn(ColumnName = "email", IsNullable = true, ColumnDescription = "邮箱")]
         public string Email { get; set; }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Fastdotnet.Core.Entities.Admin
         /// <summary>
         /// 账户是否激活
         /// </summary>
-        [SugarColumn(ColumnName = "is_active", ColumnDescription = "账户是否激活")]
+        [SugarColumn(ColumnName = "is_active", ColumnDescription = "是否激活")]
         public bool IsActive { get; set; } = true;
 
         /// <summary>
