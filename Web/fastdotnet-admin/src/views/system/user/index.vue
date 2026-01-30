@@ -1,158 +1,308 @@
 <template>
-	<div class="system-user-container layout-padding">
-		<el-card shadow="hover" class="layout-padding-auto">
-			<div class="system-user-search mb15">
-				<el-input size="default" placeholder="请输入用户名称" style="max-width: 180px"> </el-input>
-				<el-button size="default" type="primary" class="ml10">
-					<el-icon>
-						<ele-Search />
-					</el-icon>
-					查询
-				</el-button>
-				<el-button size="default" type="success" class="ml10" @click="onOpenAddUser('add')">
-					<el-icon>
-						<ele-FolderAdd />
-					</el-icon>
-					新增用户
-				</el-button>
+	<div class="fdadminuser-container">
+		<el-card shadow="hover" :body-style="{ padding: 2 }">
+			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
+				<div v-show="state.searchCollapsed">
+					<el-form-item label="用户名" prop="Username">
+						<el-input v-model="state.queryParams.Username" placeholder="请输入用户名" clearable
+							style="width: 150px" />
+					</el-form-item>
+					<el-form-item label="姓名" prop="Name">
+						<el-input v-model="state.queryParams.Name" placeholder="请输入姓名" clearable style="width: 150px" />
+					</el-form-item>
+					<el-form-item label="邮箱" prop="Email">
+						<el-input v-model="state.queryParams.Email" placeholder="请输入邮箱" clearable
+							style="width: 150px" />
+					</el-form-item>
+					<el-form-item label="电话" prop="Phone">
+						<el-input v-model="state.queryParams.Phone" placeholder="请输入电话" clearable
+							style="width: 150px" />
+					</el-form-item>
+					<el-form-item label="是否激活" prop="IsActive">
+						<el-select v-model="state.queryParams.IsActive" placeholder="请选择是否激活" clearable
+							style="width: 150px">
+							<el-option label="是" :value="true" />
+							<el-option label="否" :value="false" />
+						</el-select>
+					</el-form-item>
+				</div>
+				<el-form-item>
+					<el-button-group>
+						<el-button type="primary" icon="ele-Search" @click="handleQuery"> 查询 </el-button>
+						<el-button icon="ele-Refresh" @click="resetQuery"> 重置 </el-button>
+						<el-button @click="toggleSearchCollapse"
+							:icon="state.searchCollapsed ? 'ele-ArrowUp' : 'ele-ArrowDown'">
+							{{ state.searchCollapsed ? '收起' : '展开' }}
+						</el-button>
+					</el-button-group>
+				</el-form-item>
+			</el-form>
+		</el-card>
+
+		<el-card class="full-table" shadow="hover" style="margin-top: 5px">
+			<div class="table-toolbar" style="margin-bottom: 15px;">
+				<el-button type="primary" icon="ele-Plus" @click="openAddDialog"> 新增 </el-button>
+				<el-button icon="ele-Download"> 导出 </el-button>
 			</div>
-			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
-				<el-table-column type="index" label="序号" width="60" />
-				<el-table-column prop="userName" label="账户名称" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="userNickname" label="用户昵称" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="roleSign" label="关联角色" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="department" label="部门" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="phone" label="手机号" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="email" label="邮箱" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="status" label="用户状态" show-overflow-tooltip>
-					<template #default="scope">
-						<el-tag type="success" v-if="scope.row.status">启用</el-tag>
-						<el-tag type="info" v-else>禁用</el-tag>
+			<el-table :data="state.tableData.data" style="width: 100%" v-loading="state.loading" border>
+				<el-table-column prop="Username" label="用户名" show-overflow-tooltip />
+				<el-table-column prop="Name" label="姓名" show-overflow-tooltip />
+				<el-table-column prop="Email" label="邮箱" show-overflow-tooltip />
+				<el-table-column prop="Phone" label="电话" show-overflow-tooltip />
+
+				<el-table-column prop="IsActive" label="是否激活" show-overflow-tooltip>
+					<template #default="{ row }">
+						<el-tag :type="row.IsActive ? 'success' : 'danger'" size="small">
+							{{ row.IsActive ? '是' : '否' }}
+						</el-tag>
 					</template>
 				</el-table-column>
-				<el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column>
-				<el-table-column label="操作" width="100">
+				<el-table-column label="操作" width="180" fixed="right" align="center">
 					<template #default="scope">
-						<el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
-							>修改</el-button
-						>
-						<el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
+						<el-button icon="ele-Edit" size="small" text type="primary"
+							@click="openEditDialog(scope.row)">修改</el-button>
+						<el-button icon="ele-Delete" size="small" text type="danger"
+							@click="handleDelete(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
-			<el-pagination
-				@size-change="onHandleSizeChange"
-				@current-change="onHandleCurrentChange"
-				class="mt15"
-				:pager-count="5"
-				:page-sizes="[10, 20, 30]"
-				v-model:current-page="state.tableData.param.pageNum"
-				background
-				v-model:page-size="state.tableData.param.pageSize"
-				layout="total, sizes, prev, pager, next, jumper"
-				:total="state.tableData.total"
-			>
-			</el-pagination>
+			<el-pagination v-model:currentPage="state.pagination.page" v-model:page-size="state.pagination.pageSize"
+				:total="state.pagination.total" :page-sizes="[10, 20, 50, 100]" size="small" background
+				@size-change="handleSizeChange" @current-change="handleCurrentChange"
+				layout="total, sizes, prev, pager, next, jumper" />
 		</el-card>
-		<UserDialog ref="userDialogRef" @refresh="getTableData()" />
+
+		<el-dialog v-model="state.dialog.visible" draggable :close-on-click-modal="false" width="700px">
+			<template #header>
+				<div style="color: #fff">
+					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Edit />
+					</el-icon>
+					<span> { state.dialog.title } </span>
+				</div>
+			</template>
+			<el-form :model="state.formData" ref="formRef" label-width="auto">
+				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+					<el-form-item label="用户名" prop="Username">
+						<el-input v-model="state.formData.Username" placeholder="请输入用户名" maxlength="255" show-word-limit
+							clearable />
+					</el-form-item>
+				</el-col>
+				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+					<el-form-item label="姓名" prop="Name">
+						<el-input v-model="state.formData.Name" placeholder="请输入姓名" maxlength="255" show-word-limit
+							clearable />
+					</el-form-item>
+				</el-col>
+				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+					<el-form-item label="邮箱" prop="Email">
+						<el-input v-model="state.formData.Email" placeholder="请输入邮箱" maxlength="255" show-word-limit
+							clearable />
+					</el-form-item>
+				</el-col>
+				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+					<el-form-item label="电话" prop="Phone">
+						<el-input v-model="state.formData.Phone" placeholder="请输入电话" maxlength="255" show-word-limit
+							clearable />
+					</el-form-item>
+				</el-col>
+				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+					<el-form-item label="头像" prop="Avatar">
+						<el-input v-model="state.formData.Avatar" placeholder="请输入头像" maxlength="255" show-word-limit
+							clearable />
+					</el-form-item>
+				</el-col>
+				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+					<el-form-item label="是否激活" prop="IsActive">
+						<el-switch v-model="state.formData.IsActive" :active-value="true" :inactive-value="false" />
+					</el-form-item>
+				</el-col>
+			</el-form>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="state.dialog.visible = false">取 消</el-button>
+					<el-button type="primary" @click="submitForm">确 定</el-button>
+				</span>
+			</template>
+		</el-dialog>
 	</div>
 </template>
 
-<script setup lang="ts" name="systemUser">
-import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
+<script lang="ts" setup name="FdAdminUser">
+import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
+import { buildMixedQuery } from '@/utils/queryBuilder';
 
-// 引入组件
-const UserDialog = defineAsyncComponent(() => import('@/views/system/user/dialog.vue'));
+import dayjs from 'dayjs'; // 引入日期处理库
+import * as FdAdminUserApi from '@/api/fd-system-api-admin/FdAdminUser';
 
-// 定义变量内容
-const userDialogRef = ref();
-const state = reactive<SysUserState>({
+const queryForm = ref();
+const formRef = ref();
+
+const state = reactive({
+	loading: false,
+	searchCollapsed: true,
 	tableData: {
-		data: [],
-		total: 0,
-		loading: false,
-		param: {
-			pageNum: 1,
-			pageSize: 10,
-		},
+		data: [] as APIModel.FdAdminUserDto[]
 	},
-});
+	queryParams: {
+		Username: null,
+		Name: null,
+		Email: null,
+		Phone: null,
+		IsActive: null,
 
-// 初始化表格数据
-const getTableData = () => {
-	state.tableData.loading = true;
-	const data = [];
-	for (let i = 0; i < 2; i++) {
-		data.push({
-			userName: i === 0 ? 'admin' : 'test',
-			userNickname: i === 0 ? '我是管理员' : '我是普通用户',
-			roleSign: i === 0 ? 'admin' : 'common',
-			department: i === 0 ? ['vueNextAdmin', 'IT外包服务'] : ['vueNextAdmin', '资本控股'],
-			phone: '12345678910',
-			email: 'vueNextAdmin@123.com',
-			sex: '女',
-			password: '123456',
-			overdueTime: new Date(),
-			status: true,
-			describe: i === 0 ? '不可删除' : '测试用户',
-			createTime: new Date().toLocaleString(),
-		});
+	},
+	pagination: {
+		page: 1,
+		pageSize: 20,
+		total: 0,
+	},
+	dialog: {
+		visible: false,
+		title: '',
+		type: 'create' as 'create' | 'update',
+	},
+	formData: {
+		Id: '',
+		Username: '',
+		Name: '',
+		Email: '',
+		Phone: '',
+		Avatar: '',
+		IsActive: false,
 	}
-	state.tableData.data = data;
-	state.tableData.total = state.tableData.data.length;
-	setTimeout(() => {
-		state.tableData.loading = false;
-	}, 500);
+});
+const toggleSearchCollapse = () => {
+	state.searchCollapsed = !state.searchCollapsed;
 };
-// 打开新增用户弹窗
-const onOpenAddUser = (type: string) => {
-	userDialogRef.value.openDialog(type);
+// 获取列表
+const getList = async () => {
+	state.loading = true;
+	try {
+		//构建查询条件
+		const queryConfig =
+		{
+			customs: [
+				{ field: 'Username', operator: 'contains', value: state.queryParams.Username, },
+				{ field: 'Name', operator: 'contains', value: state.queryParams.Name, },
+				{ field: 'Email', operator: 'eq', value: state.queryParams.Email, },
+				{ field: 'Phone', operator: 'eq', value: state.queryParams.Phone, },
+				{ field: 'IsActive', operator: 'eq', value: state.queryParams.IsActive, },
+			],
+			ranges: {}
+		}
+		const searchBody: APIModel.PageQueryByConditionDto = {
+			PageIndex: state.pagination.page,
+			PageSize: state.pagination.pageSize,
+		};
+		const queryResult = buildMixedQuery(queryConfig);
+		if (queryResult.dynamicQuery) {
+			searchBody.DynamicQuery = queryResult.dynamicQuery;
+			searchBody.QueryParameters = queryResult.queryParameters;
+		}
+		// 调试日志
+		//console.log('Search request body:', searchBody);
+		const response = await FdAdminUserApi.postApiAdminFdAdminUserPageSearch(searchBody);
+		state.tableData.data = response.Items as APIModel.FdAdminUserDto[] || [] as APIModel.FdAdminUserDto[];
+		state.pagination.total = response.PageInfo?.Total || 0;
+	} catch (error) {
+		ElMessage.error('获取数据失败');
+		//console.error(error);
+	} finally {
+		state.loading = false;
+	}
 };
-// 打开修改用户弹窗
-const onOpenEditUser = (type: string, row: RowUserType) => {
-	userDialogRef.value.openDialog(type, row);
+
+// 查询
+const handleQuery = () => {
+	state.pagination.page = 1;
+	getList();
 };
-// 删除用户
-const onRowDel = (row: RowUserType) => {
-	ElMessageBox.confirm(`此操作将永久删除账户名称：“${row.userName}”，是否继续?`, '提示', {
-		confirmButtonText: '确认',
-		cancelButtonText: '取消',
-		type: 'warning',
-	})
-		.then(() => {
-			getTableData();
+
+// 重置
+const resetQuery = () => {
+	queryForm.value.resetFields();
+	handleQuery();
+};
+
+// 改变页面容量
+const handleSizeChange = (val: number) => {
+	state.pagination.pageSize = val;
+	getList();
+};
+
+// 改变页码序号
+const handleCurrentChange = (val: number) => {
+	state.pagination.page = val;
+	getList();
+};
+
+// 打开新增对话框
+const openAddDialog = () => {
+	state.dialog.visible = true;
+	state.dialog.title = '新增';
+	state.dialog.type = 'create';
+	formRef.value?.resetFields();
+};
+
+// 打开编辑对话框
+const openEditDialog = (row: any) => {
+	state.dialog.visible = true;
+	state.dialog.title = '编辑';
+	state.dialog.type = 'update';
+	state.formData = { ...row };
+};
+
+// 提交表单
+const submitForm = () => {
+	formRef.value.validate(async (valid: boolean) => {
+		if (!valid) return;
+		try {
+			if (state.dialog.type === 'update' && state.formData.Id) {
+				// 更新接口调用
+				const updateData = { ...state.formData } as APIModel.UpdateFdAdminUserDto;
+				await FdAdminUserApi.putApiAdminFdAdminUserId({ id: state.formData.Id }, updateData);
+				ElMessage.success('更新成功');
+			} else {
+				// 新增接口调用
+				const createData = { ...state.formData } as APIModel.CreateFdAdminUserDto;
+				await FdAdminUserApi.postApiAdminFdAdminUser(createData);
+				ElMessage.success('添加成功');
+			}
+			state.dialog.visible = false;
+			getList();
+		} catch (error) {
+			console.error(error);
+			ElMessage.error(state.dialog.type === 'update' ? '更新失败' : '添加失败');
+		}
+	});
+};
+
+// 删除
+const handleDelete = (row: APIModel.FdAdminUserDto) => {
+	ElMessageBox.confirm('确定删除吗？')
+		.then(async () => {
+			// 删除接口调用
+			await FdAdminUserApi.deleteAdminFdAdminUserId({ id: row.Id as string });
 			ElMessage.success('删除成功');
+			getList();
 		})
-		.catch(() => {});
+		.catch(() => {
+			ElMessage.error('删除失败');
+			return;
+		});
 };
-// 分页改变
-const onHandleSizeChange = (val: number) => {
-	state.tableData.param.pageSize = val;
-	getTableData();
-};
-// 分页改变
-const onHandleCurrentChange = (val: number) => {
-	state.tableData.param.pageNum = val;
-	getTableData();
-};
-// 页面加载时
+
 onMounted(() => {
-	getTableData();
+	getList();
 });
 </script>
-
 <style scoped lang="scss">
-.system-user-container {
-	:deep(.el-card__body) {
-		display: flex;
-		flex-direction: column;
-		flex: 1;
-		overflow: auto;
-		.el-table {
-			flex: 1;
-		}
-	}
-}
-</style>
+// .el-form--inline .el-form-item {
+// 	margin-right: 12px !important; // 稍微紧凑一点
+// 	margin-bottom: 8px !important;
+// }
+
+// .fdadminuser-container .el-card:first-child .el-form .el-form-item:last-of-type {
+// 	margin-bottom: 5 !important;
+// }</style>
