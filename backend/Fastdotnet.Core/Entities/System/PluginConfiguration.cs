@@ -20,7 +20,7 @@ namespace Fastdotnet.Core.Entities.System
         /// <summary>
         /// 配置信息：
         /// </summary>
-        [SugarColumn(ColumnName = "config_json", ColumnDescription = "插件配置")]
+        [SugarColumn(ColumnName = "config_json", ColumnDescription = "插件配置", ColumnDataType = "TEXT")]
         public string ConfigJson { get; set; } = "{}";
     }
 }
