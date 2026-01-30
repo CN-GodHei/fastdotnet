@@ -8,6 +8,7 @@ using global::System.IO.Compression;
 using MailKit.Search;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using SQLitePCL;
 using SqlSugar;
 using System.Reflection;
 using System.Text;
@@ -315,7 +316,7 @@ namespace Fastdotnet.Service.Service
                 "int" or "integer" => "int",
                 "bigint" => "long",
                 "smallint" => "short",
-                "tinyint" => "byte",
+                "tinyint" => "bool",
                 "bit" or "boolean" => "bool",
                 "varchar" or "char" or "text" or "longtext" or "mediumtext" or "ntext" or "nchar" or "nvarchar" => "string",
                 "decimal" or "numeric" or "money" or "smallmoney" => "decimal",
@@ -448,7 +449,7 @@ namespace {nameSpace ?? "Fastdotnet.Service.Service"}
 }}";
         }
 
-        public async Task<string> GenerateControllerContentAsync(string entityName, string nameSpace, string TableComment,string apiscop)
+        public async Task<string> GenerateControllerContentAsync(string entityName, string nameSpace, string TableComment, string apiscop)
         {
             return $@"using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.Entities;
@@ -480,14 +481,14 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
         private string getbasecontroller(string apiscop)
         {
             string baseControlelr = "GenericDtoControllerBase";
-            if (apiscop=="App")
+            if (apiscop == "App")
             {
                 baseControlelr = "AppGenericDtoControllerBase";
             }
             return baseControlelr;
         }
 
-        public async Task<string> GenerateFrontendVueContentAsync(string entityName,  string busName, string pagePath, string TableComment, 
+        public async Task<string> GenerateFrontendVueContentAsync(string entityName, string busName, string pagePath, string TableComment,
             List<FdCodeGenConfig> configcolumns, string apiscop)
         {
             // 使用反射获取BaseEntity的所有公共属性名称
@@ -532,7 +533,7 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 			</div>
 			<el-table :data=""state.tableData.data"" style=""width: 100%"" v-loading=""state.loading"" border>
 				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherTable == true).Select((col, idx) =>
-                    $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ShowColumnName ?? col.PropertyName}\" show-overflow-tooltip />"
+                  BuildElTableColumn(col)
                 ))}
 				<el-table-column label=""操作"" width=""180"" fixed=""right"" align=""center"">
 					<template #default=""scope"">
@@ -634,7 +635,7 @@ const getList = async () => {{
 	}}
     // 调试日志
     //console.log('Search request body:', searchBody);
-		const response = await {entityName}Api.post{apiscop}{entityName}PageSearch(searchBody);
+		const response = await {entityName}Api.postApi{apiscop}{entityName}PageSearch(searchBody);
 		state.tableData.data = response.Items as APIModel.{entityName}Dto[] || [] as APIModel.{entityName}Dto[];
 		state.pagination.total = response.PageInfo?.Total || 0;
 	}} catch (error) {{
@@ -693,12 +694,12 @@ const submitForm = () => {{
 			if (state.dialog.type === 'update'&&state.formData.{configcolumns.Where(w => w.ColumnKey == true).FirstOrDefault().PropertyName ?? configcolumns.FirstOrDefault().PropertyName}) {{
 				// 更新接口调用
 				const updateData = {{ ...state.formData }} as APIModel.Update{entityName}Dto;
-				await {entityName}Api.put{apiscop}{entityName}Id({{ id: state.formData.Id }}, updateData);
+				await {entityName}Api.putApi{apiscop}{entityName}Id({{ id: state.formData.Id }}, updateData);
 				ElMessage.success('更新成功');
 			}} else {{
 				// 新增接口调用
                 const createData= {{ ...state.formData }} as APIModel.Create{entityName}Dto;
-                await {entityName}Api.post{apiscop}{entityName}(createData);
+                await {entityName}Api.postApi{apiscop}{entityName}(createData);
 				ElMessage.success('添加成功');
 			}}
 			state.dialog.visible = false;
@@ -757,7 +758,7 @@ onMounted(() => {{
             {
                 return $@"maxlength=""{fdCodeGenConfig.ColumnLength}"" show-word-limit";
             }
-            
+
             return string.Empty;
         }
 
@@ -790,7 +791,7 @@ onMounted(() => {{
             {
                 // 对于BETWEEN查询，目前主要支持数值和日期类型的范围查询
                 string componentStart, componentEnd;
-                
+
                 // 对于范围查询，我们假设是数值或日期类型
                 if (fdCodeGenConfig.EffectType?.ToLower() == "datetime" || fdCodeGenConfig.EffectType?.ToLower() == "date" || fdCodeGenConfig.EffectType?.ToLower() == "datepicker" || fdCodeGenConfig.EffectType?.ToLower() == "time" || fdCodeGenConfig.EffectType?.ToLower() == "timepicker")
                 {
@@ -803,7 +804,7 @@ onMounted(() => {{
                     componentStart = $@"<el-input-number v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}"" placeholder=""请输入起始{fdCodeGenConfig.ShowColumnName}"" style=""width: 150px"" />";
                     componentEnd = $@"<el-input-number v-model=""state.queryParams.{fdCodeGenConfig.PropertyName}_1"" placeholder=""请输入结束{fdCodeGenConfig.ShowColumnName}"" style=""width: 150px"" />";
                 }
-                
+
                 return $@"<el-form-item label=""{fdCodeGenConfig.ShowColumnName}"" prop=""{fdCodeGenConfig.PropertyName}"">
                 <div style=""display: flex; gap: 8px;"">
                     {componentStart}
@@ -923,7 +924,7 @@ onMounted(() => {{
                 _ => $@"<el-input v-model=""state.formData.{fdCodeGenConfig.PropertyName}"" placeholder=""请输入{showColumnName}"" {maxLengthAttr} clearable />"
             };
         }
-        
+
         /// <summary>
         /// 根据字段类型获取布尔值的表示形式
         /// </summary>
@@ -934,6 +935,22 @@ onMounted(() => {{
         {
             var isBoolType = fdCodeGenConfig.NetType?.ToLower() == "bool" || fdCodeGenConfig.NetType?.ToLower() == "bool?";
             return isBoolType ? (boolValue ? "true" : "false") : (boolValue ? "1" : "0");
+        }
+
+        private string BuildElTableColumn(FdCodeGenConfig col)
+        {
+            if (col.NetType?.ToLower() == "bool" || col.NetType?.ToLower() == "bool?")
+            {
+                return $@"
+<el-table-column prop=""{col.PropertyName}"" label=""{col.ShowColumnName ?? col.PropertyName}"" show-overflow-tooltip>
+  <template #default=""{{ row }}"">
+    <el-tag :type=""row.{col.PropertyName} ? 'success' : 'danger'"" size=""small"">
+      {{{{ row.{col.PropertyName} ? '是' : '否' }}}}
+    </el-tag>
+  </template>
+</el-table-column>";
+            }
+            return $"				<el-table-column prop=\"{col.PropertyName}\" label=\"{col.ShowColumnName ?? col.PropertyName}\" show-overflow-tooltip />";
         }
 
         /// <summary>
@@ -1016,7 +1033,7 @@ onMounted(() => {{
                 return "DatePicker";
 
             // 布尔类型
-            if (dataType.Contains("bool") || dataType.Contains("bit"))
+            if (dataType.Contains("bool") || dataType.Contains("bit") || dataType.Contains("tinyint"))
                 return "Switch";
 
             // 文本类型（长度较长）
