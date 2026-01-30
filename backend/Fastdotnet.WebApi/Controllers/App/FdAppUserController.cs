@@ -6,22 +6,22 @@ namespace Fastdotnet.WebApi.Controllers.App
 {
     [ApiController]
     [Route("api/[controller]")]
-    [ApiUsageScope(Core.Enum.ApiUsageScopeEnum.AppOnly)]
+    [ApiUsageScope(Core.Enum.ApiUsageScopeEnum.Both)]
     public class FdAppUserController 
-        //: AppGenericDtoControllerBase<FdAppUser, CreateFdAppUserDto, UpdateFdAppUserDto, FdAppUserDto>
+        : AppGenericDtoControllerBase<FdAppUser, CreateFdAppUserDto, UpdateFdAppUserDto, FdAppUserDto>
     {
-        //public FdAppUserController(IBaseService<FdAppUser, string> service, IMapper mapper, ICurrentUser currentUser) : base(service, mapper, currentUser)
-        //{
-        //}
+        public FdAppUserController(IBaseService<FdAppUser, string> service, IMapper mapper, ICurrentUser currentUser) : base(service, mapper, currentUser)
+        {
+        }
         private readonly IBaseService<FdAppUser, string> _service;
         private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
-        public  FdAppUserController(IBaseService<FdAppUser, string> service, IMapper mapper, ICurrentUser currentUser) 
-        {
-            _service = service;
-            _mapper = mapper;
-            _currentUser = currentUser;
-        }
+        //public  FdAppUserController(IBaseService<FdAppUser, string> service, IMapper mapper, ICurrentUser currentUser) 
+        //{
+        //    _service = service;
+        //    _mapper = mapper;
+        //    _currentUser = currentUser;
+        //}
         [HttpGet("getUserInfo")]
         public async Task<FdAppUserDto> getUserInfo()
         {
