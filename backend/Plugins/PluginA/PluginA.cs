@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Fastdotnet.Plugin.Contracts.Extensibility.Users;
 using Fastdotnet.Core.Initializers;
+using Fastdotnet.Plugin.Contracts.Metrics;
 
 // The namespace for the WebApi project must be included to find the DynamicMiddlewareRegistry.
 
@@ -100,6 +101,9 @@ namespace PluginA
             
             // 注册用户扩展处理器，用于处理PluginA的用户扩展数据
             builder.RegisterType<PluginAUserExtensionHandler>().As<IFdAppUserExtensionHandler<Entities.PluginAUserExtension>>().InstancePerLifetimeScope();
+            
+            // 注册指标提供者
+            builder.RegisterType<Metrics.PluginAMetricProvider>().As<IMetricProvider>().InstancePerLifetimeScope();
             
             // 注册初始化器，用于创建插件需要的数据库表
             //builder.RegisterType<PluginAUserExtensionInitializer>().As<IStartupTask>().InstancePerLifetimeScope();
