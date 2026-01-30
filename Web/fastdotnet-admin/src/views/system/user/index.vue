@@ -1,5 +1,5 @@
 <template>
-	<div class="fdadminuser-container">
+	<div class="fdappuser-container">
 		<el-card shadow="hover" :body-style="{ padding: 2 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
 				<div v-show="state.searchCollapsed">
@@ -7,22 +7,23 @@
 						<el-input v-model="state.queryParams.Username" placeholder="请输入用户名" clearable
 							style="width: 150px" />
 					</el-form-item>
-					<el-form-item label="姓名" prop="Name">
-						<el-input v-model="state.queryParams.Name" placeholder="请输入姓名" clearable style="width: 150px" />
-					</el-form-item>
 					<el-form-item label="邮箱" prop="Email">
 						<el-input v-model="state.queryParams.Email" placeholder="请输入邮箱" clearable
 							style="width: 150px" />
 					</el-form-item>
-					<el-form-item label="电话" prop="Phone">
-						<el-input v-model="state.queryParams.Phone" placeholder="请输入电话" clearable
+					<el-form-item label="手机号" prop="PhoneNumber">
+						<el-input v-model="state.queryParams.PhoneNumber" placeholder="请输入手机号" clearable
 							style="width: 150px" />
 					</el-form-item>
-					<el-form-item label="是否激活" prop="IsActive">
-						<el-select v-model="state.queryParams.IsActive" placeholder="请选择是否激活" clearable
+					<el-form-item label="昵称" prop="Nickname">
+						<el-input v-model="state.queryParams.Nickname" placeholder="请输入昵称" clearable
+							style="width: 150px" />
+					</el-form-item>
+					<el-form-item label="账户状态" prop="Status">
+						<el-select v-model="state.queryParams.Status" placeholder="请选择账户状态" clearable
 							style="width: 150px">
-							<el-option label="是" :value="true" />
-							<el-option label="否" :value="false" />
+							<el-option label="是" :value="1" />
+							<el-option label="否" :value="0" />
 						</el-select>
 					</el-form-item>
 				</div>
@@ -46,17 +47,10 @@
 			</div>
 			<el-table :data="state.tableData.data" style="width: 100%" v-loading="state.loading" border>
 				<el-table-column prop="Username" label="用户名" show-overflow-tooltip />
-				<el-table-column prop="Name" label="姓名" show-overflow-tooltip />
 				<el-table-column prop="Email" label="邮箱" show-overflow-tooltip />
-				<el-table-column prop="Phone" label="电话" show-overflow-tooltip />
-
-				<el-table-column prop="IsActive" label="是否激活" show-overflow-tooltip>
-					<template #default="{ row }">
-						<el-tag :type="row.IsActive ? 'success' : 'danger'" size="small">
-							{{ row.IsActive ? '是' : '否' }}
-						</el-tag>
-					</template>
-				</el-table-column>
+				<el-table-column prop="PhoneNumber" label="手机号" show-overflow-tooltip />
+				<el-table-column prop="Nickname" label="昵称" show-overflow-tooltip />
+				<el-table-column prop="Status" label="账户状态" show-overflow-tooltip />
 				<el-table-column label="操作" width="180" fixed="right" align="center">
 					<template #default="scope">
 						<el-button icon="ele-Edit" size="small" text type="primary"
@@ -88,32 +82,32 @@
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="姓名" prop="Name">
-						<el-input v-model="state.formData.Name" placeholder="请输入姓名" maxlength="255" show-word-limit
-							clearable />
-					</el-form-item>
-				</el-col>
-				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 					<el-form-item label="邮箱" prop="Email">
 						<el-input v-model="state.formData.Email" placeholder="请输入邮箱" maxlength="255" show-word-limit
 							clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="电话" prop="Phone">
-						<el-input v-model="state.formData.Phone" placeholder="请输入电话" maxlength="255" show-word-limit
+					<el-form-item label="手机号" prop="PhoneNumber">
+						<el-input v-model="state.formData.PhoneNumber" placeholder="请输入手机号" maxlength="255"
+							show-word-limit clearable />
+					</el-form-item>
+				</el-col>
+				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+					<el-form-item label="昵称" prop="Nickname">
+						<el-input v-model="state.formData.Nickname" placeholder="请输入昵称" maxlength="255" show-word-limit
 							clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="头像" prop="Avatar">
-						<el-input v-model="state.formData.Avatar" placeholder="请输入头像" maxlength="255" show-word-limit
+					<el-form-item label="头像" prop="AvatarUrl">
+						<el-input v-model="state.formData.AvatarUrl" placeholder="请输入头像" maxlength="255" show-word-limit
 							clearable />
 					</el-form-item>
 				</el-col>
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-					<el-form-item label="是否激活" prop="IsActive">
-						<el-switch v-model="state.formData.IsActive" :active-value="true" :inactive-value="false" />
+					<el-form-item label="账户状态" prop="Status">
+						<el-switch v-model="state.formData.Status" :active-value="1" :inactive-value="0" />
 					</el-form-item>
 				</el-col>
 			</el-form>
@@ -127,13 +121,13 @@
 	</div>
 </template>
 
-<script lang="ts" setup name="FdAdminUser">
+<script lang="ts" setup name="FdAppUser">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
-import * as FdAdminUserApi from '@/api/fd-system-api-admin/FdAdminUser';
+import * as FdAppUserApi from '@/api/fd-system-api-admin/FdAppUser';
 
 const queryForm = ref();
 const formRef = ref();
@@ -142,14 +136,14 @@ const state = reactive({
 	loading: false,
 	searchCollapsed: true,
 	tableData: {
-		data: [] as APIModel.FdAdminUserDto[]
+		data: [] as APIModel.FdAppUserDto[]
 	},
 	queryParams: {
 		Username: null,
-		Name: null,
 		Email: null,
-		Phone: null,
-		IsActive: null,
+		PhoneNumber: null,
+		Nickname: null,
+		Status: null,
 
 	},
 	pagination: {
@@ -165,11 +159,11 @@ const state = reactive({
 	formData: {
 		Id: '',
 		Username: '',
-		Name: '',
 		Email: '',
-		Phone: '',
-		Avatar: '',
-		IsActive: false,
+		PhoneNumber: '',
+		Nickname: '',
+		AvatarUrl: '',
+		Status: '',
 	}
 });
 const toggleSearchCollapse = () => {
@@ -184,10 +178,10 @@ const getList = async () => {
 		{
 			customs: [
 				{ field: 'Username', operator: 'contains', value: state.queryParams.Username, },
-				{ field: 'Name', operator: 'contains', value: state.queryParams.Name, },
 				{ field: 'Email', operator: 'eq', value: state.queryParams.Email, },
-				{ field: 'Phone', operator: 'eq', value: state.queryParams.Phone, },
-				{ field: 'IsActive', operator: 'eq', value: state.queryParams.IsActive, },
+				{ field: 'PhoneNumber', operator: 'eq', value: state.queryParams.PhoneNumber, },
+				{ field: 'Nickname', operator: 'contains', value: state.queryParams.Nickname, },
+				{ field: 'Status', operator: 'eq', value: state.queryParams.Status, },
 			],
 			ranges: {}
 		}
@@ -202,8 +196,8 @@ const getList = async () => {
 		}
 		// 调试日志
 		//console.log('Search request body:', searchBody);
-		const response = await FdAdminUserApi.postApiAdminFdAdminUserPageSearch(searchBody);
-		state.tableData.data = response.Items as APIModel.FdAdminUserDto[] || [] as APIModel.FdAdminUserDto[];
+		const response = await FdAppUserApi.postApiFdAppUserPageSearch(searchBody);
+		state.tableData.data = response.Items as APIModel.FdAppUserDto[] || [] as APIModel.FdAppUserDto[];
 		state.pagination.total = response.PageInfo?.Total || 0;
 	} catch (error) {
 		ElMessage.error('获取数据失败');
@@ -260,13 +254,13 @@ const submitForm = () => {
 		try {
 			if (state.dialog.type === 'update' && state.formData.Id) {
 				// 更新接口调用
-				const updateData = { ...state.formData } as APIModel.UpdateFdAdminUserDto;
-				await FdAdminUserApi.putApiAdminFdAdminUserId({ id: state.formData.Id }, updateData);
+				const updateData = { ...state.formData } as APIModel.UpdateFdAppUserDto;
+				await FdAppUserApi.putApiFdAppUserId({ id: state.formData.Id }, updateData);
 				ElMessage.success('更新成功');
 			} else {
 				// 新增接口调用
-				const createData = { ...state.formData } as APIModel.CreateFdAdminUserDto;
-				await FdAdminUserApi.postApiAdminFdAdminUser(createData);
+				const createData = { ...state.formData } as APIModel.CreateFdAppUserDto;
+				await FdAppUserApi.postApiFdAppUser(createData);
 				ElMessage.success('添加成功');
 			}
 			state.dialog.visible = false;
@@ -279,11 +273,11 @@ const submitForm = () => {
 };
 
 // 删除
-const handleDelete = (row: APIModel.FdAdminUserDto) => {
+const handleDelete = (row: APIModel.FdAppUserDto) => {
 	ElMessageBox.confirm('确定删除吗？')
 		.then(async () => {
 			// 删除接口调用
-			await FdAdminUserApi.deleteAdminFdAdminUserId({ id: row.Id as string });
+			await FdAppUserApi.deleteAdminFdAppUserId({ id: row.Id as string });
 			ElMessage.success('删除成功');
 			getList();
 		})
