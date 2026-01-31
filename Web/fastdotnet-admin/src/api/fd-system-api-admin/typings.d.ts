@@ -1,9 +1,5 @@
 declare namespace APIModel {
-	enum ActivationStatusDto {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-	}
+	type ActivationStatusDto = 0 | 1 | 2;
 
 	type ApiResult = {
 		Code?: number;
@@ -242,7 +238,7 @@ declare namespace APIModel {
 	type CreateFdRoleDto = {
 		Name: string;
 		Description?: string;
-		Category: string;
+		Belong: SystemCategory;
 	};
 
 	type CreateFdSystemInfoConfigDto = {
@@ -284,21 +280,6 @@ declare namespace APIModel {
 		ThirdPartyData?: string;
 		CallbackData?: string;
 		PaidTime?: string;
-	};
-
-	type CreateOrderRequest = {
-		OrderId?: string;
-		Amount?: number;
-		Description?: string;
-		NotifyUrl?: string;
-	};
-
-	type CreatePaymentRequest = {
-		OrderId?: string;
-		Amount?: number;
-		Subject?: string;
-		NotifyUrl?: string;
-		PaymentMethod?: PaymentMethod;
 	};
 
 	type CreatePluginAUserExtensionDto = {
@@ -440,12 +421,12 @@ declare namespace APIModel {
 		id: string;
 	};
 
-	type deleteApiAdminFdRolesIdParams = {
+	type deleteApiAdminFdRoleIdParams = {
 		/** 要删除的记录的唯一标识符 */
 		id: string;
 	};
 
-	type deleteApiAdminFdRolesRecyclebinIdPermanentParams = {
+	type deleteApiAdminFdRoleRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -519,93 +500,92 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
-	enum ExpressionType {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-		3 = '3',
-		4 = '4',
-		5 = '5',
-		6 = '6',
-		7 = '7',
-		8 = '8',
-		9 = '9',
-		10 = '10',
-		11 = '11',
-		12 = '12',
-		13 = '13',
-		14 = '14',
-		15 = '15',
-		16 = '16',
-		17 = '17',
-		18 = '18',
-		19 = '19',
-		20 = '20',
-		21 = '21',
-		22 = '22',
-		23 = '23',
-		24 = '24',
-		25 = '25',
-		26 = '26',
-		27 = '27',
-		28 = '28',
-		29 = '29',
-		30 = '30',
-		31 = '31',
-		32 = '32',
-		33 = '33',
-		34 = '34',
-		35 = '35',
-		36 = '36',
-		37 = '37',
-		38 = '38',
-		39 = '39',
-		40 = '40',
-		41 = '41',
-		42 = '42',
-		43 = '43',
-		44 = '44',
-		45 = '45',
-		46 = '46',
-		47 = '47',
-		48 = '48',
-		49 = '49',
-		50 = '50',
-		51 = '51',
-		52 = '52',
-		53 = '53',
-		54 = '54',
-		55 = '55',
-		56 = '56',
-		57 = '57',
-		58 = '58',
-		59 = '59',
-		60 = '60',
-		61 = '61',
-		62 = '62',
-		63 = '63',
-		64 = '64',
-		65 = '65',
-		66 = '66',
-		67 = '67',
-		68 = '68',
-		69 = '69',
-		70 = '70',
-		71 = '71',
-		72 = '72',
-		73 = '73',
-		74 = '74',
-		75 = '75',
-		76 = '76',
-		77 = '77',
-		78 = '78',
-		79 = '79',
-		80 = '80',
-		81 = '81',
-		82 = '82',
-		83 = '83',
-		84 = '84',
-	}
+	type ExpressionType =
+		| 0
+		| 1
+		| 2
+		| 3
+		| 4
+		| 5
+		| 6
+		| 7
+		| 8
+		| 9
+		| 10
+		| 11
+		| 12
+		| 13
+		| 14
+		| 15
+		| 16
+		| 17
+		| 18
+		| 19
+		| 20
+		| 21
+		| 22
+		| 23
+		| 24
+		| 25
+		| 26
+		| 27
+		| 28
+		| 29
+		| 30
+		| 31
+		| 32
+		| 33
+		| 34
+		| 35
+		| 36
+		| 37
+		| 38
+		| 39
+		| 40
+		| 41
+		| 42
+		| 43
+		| 44
+		| 45
+		| 46
+		| 47
+		| 48
+		| 49
+		| 50
+		| 51
+		| 52
+		| 53
+		| 54
+		| 55
+		| 56
+		| 57
+		| 58
+		| 59
+		| 60
+		| 61
+		| 62
+		| 63
+		| 64
+		| 65
+		| 66
+		| 67
+		| 68
+		| 69
+		| 70
+		| 71
+		| 72
+		| 73
+		| 74
+		| 75
+		| 76
+		| 77
+		| 78
+		| 79
+		| 80
+		| 81
+		| 82
+		| 83
+		| 84;
 
 	type FdAdminUserBooleanFuncExpression = {
 		Type?: string;
@@ -972,9 +952,10 @@ declare namespace APIModel {
 		Name?: string;
 		Code?: string;
 		Description?: string;
-		Category?: string;
+		Belong?: SystemCategory;
 		IsSystem?: boolean;
 		CreatedAt?: string;
+		IsDefault?: boolean;
 	};
 
 	type FdRoleDtoPageResult = {
@@ -1209,23 +1190,23 @@ declare namespace APIModel {
 		pageSize?: number;
 	};
 
-	type getApiAdminFdRolesIdParams = {
+	type getApiAdminFdRoleIdParams = {
 		/** 记录的唯一标识符 */
 		id: string;
 	};
 
-	type getApiAdminFdRolesIdPermissionsParams = {
+	type getApiAdminFdRoleIdPermissionsParams = {
 		id: string;
 	};
 
-	type getApiAdminFdRolesPageParams = {
+	type getApiAdminFdRolePageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
 		pageSize?: number;
 	};
 
-	type getApiAdminFdRolesRecyclebinParams = {
+	type getApiAdminFdRoleRecyclebinParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
 		/** 页面大小 */
@@ -1395,10 +1376,7 @@ declare namespace APIModel {
 		Items?: GiftRecordDto[];
 	};
 
-	enum LicenseTypeDto {
-		0 = '0',
-		1 = '1',
-	}
+	type LicenseTypeDto = 0 | 1;
 
 	type LoginDto = {
 		Username: string;
@@ -1457,10 +1435,7 @@ declare namespace APIModel {
 		CustomReplacement?: string;
 	};
 
-	enum MenuType {
-		0 = '0',
-		1 = '1',
-	}
+	type MenuType = 0 | 1;
 
 	type MetricQueryRequest = {
 		MetricIds?: string[];
@@ -1491,13 +1466,7 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
-	enum OnlinePaymentChannelDto {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-		3 = '3',
-		4 = '4',
-	}
+	type OnlinePaymentChannelDto = 0 | 1 | 2 | 3 | 4;
 
 	type OnlinePaymentDto = {
 		Id?: string;
@@ -1539,11 +1508,6 @@ declare namespace APIModel {
 		IsByRef?: boolean;
 		CanReduce?: boolean;
 	};
-
-	enum PaymentMethod {
-		0 = '0',
-		1 = '1',
-	}
 
 	type PluginATestBooleanFuncExpression = {
 		Type?: string;
@@ -1645,7 +1609,7 @@ declare namespace APIModel {
 		id: string;
 	};
 
-	type postApiAdminFdRolesIdPermissionsParams = {
+	type postApiAdminFdRoleIdPermissionsParams = {
 		id: string;
 	};
 
@@ -1673,18 +1637,7 @@ declare namespace APIModel {
 		bucketName?: string;
 	};
 
-	type PreCreateRequest = {
-		OrderId?: string;
-		Amount?: number;
-		Subject?: string;
-		NotifyUrl?: string;
-	};
-
-	enum PurchaseStatusDto {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-	}
+	type PurchaseStatusDto = 0 | 1 | 2;
 
 	type putApiAdminFdAdminUserIdParams = {
 		/** 要更新的记录的唯一标识符 */
@@ -1776,12 +1729,12 @@ declare namespace APIModel {
 		id: string;
 	};
 
-	type putApiAdminFdRolesIdParams = {
+	type putApiAdminFdRoleIdParams = {
 		/** 要更新的记录的唯一标识符 */
 		id: string;
 	};
 
-	type putApiAdminFdRolesRecyclebinIdRestoreParams = {
+	type putApiAdminFdRoleRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
@@ -1840,11 +1793,9 @@ declare namespace APIModel {
 		ConfigParams?: Record<string, any>;
 	};
 
-	enum SupportedLicenseModeDto {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-	}
+	type SupportedLicenseModeDto = 0 | 1 | 2;
+
+	type SystemCategory = 0 | 1;
 
 	type SystemInfoConfigBooleanFuncExpression = {
 		Type?: string;

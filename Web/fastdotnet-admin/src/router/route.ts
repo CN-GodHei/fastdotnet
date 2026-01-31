@@ -94,21 +94,6 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 						},
 					},
 					{
-						path: '/system/role',
-						name: 'systemRole',
-						component: () => import('@/views/system/role/index.vue'),
-						meta: {
-							title: 'message.router.systemRole',
-							isLink: '',
-							isHide: false,
-							isKeepAlive: true,
-							isAffix: false,
-							isIframe: false,
-							roles: ['admin'],
-							icon: 'ele-ColdDrink',
-						},
-					},
-					{
 						path: '/system/user',
 						name: 'systemUser',
 						component: () => import('@/views/system/user/index.vue'),

@@ -6,13 +6,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     [ApiController]
     [Route("api/admin/[Controller]")]
     [Authorize]
-    public class FdRolesController : GenericDtoControllerBase<FdRole, string, CreateFdRoleDto, UpdateFdRoleDto, FdRoleDto>
+    public class FdRoleController : GenericDtoControllerBase<FdRole, string, CreateFdRoleDto, UpdateFdRoleDto, FdRoleDto>
     {
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
         private readonly IRepository<FdAppUserRole> _appUserRoleRepository;
         private readonly IRepository<FdRolePermission> _rolePermissionRepository;
 
-        public FdRolesController(
+        public FdRoleController(
             IBaseService<FdRole, string> service,
             IMapper mapper,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
