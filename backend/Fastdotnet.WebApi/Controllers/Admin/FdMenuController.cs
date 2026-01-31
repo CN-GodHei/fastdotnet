@@ -49,13 +49,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             if (isSuperAdmin)
             {
                 // 超管获取所有菜单
-                var menutemp = await _service.GetListAsync(m => m.Category == "Admin" && m.IsEnabled);
+                var menutemp = await _service.GetListAsync(m => m.Belong == SystemCategory.Admin && m.IsEnabled);
                 menus = await _menuService.BuildMenuTree(menutemp, null);
             }
             else
             {
                 // 普通用户根据权限获取菜单
-                menus = await _menuService.GetUserMenusAsync(userId, "Admin");
+                menus = await _menuService.GetUserMenusAsync(userId, SystemCategory.Admin);
             }
 
             return menus;
@@ -67,7 +67,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public override async Task<List<FdMenuDto>> GetAll( CancellationToken cancellationToken = default)
         {
             // 获取所有菜单
-            var menus = await _service.GetListAsync(m => m.Category == "Admin");
+            var menus = await _service.GetListAsync(m => m.Belong == SystemCategory.Admin);
             
             // 构建树形结构
             var menuTree = await _menuService.BuildMenuTree(menus, null);

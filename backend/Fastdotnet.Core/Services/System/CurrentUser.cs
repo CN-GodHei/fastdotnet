@@ -42,10 +42,10 @@ namespace Fastdotnet.Core.Services.System
                 // 首先尝试从token中获取category
                 var userType = User?.Claims.FirstOrDefault(c => c.Type == "category")?.Value;
                 
-                // 如果token中没有category，则从请求头中获取System-Category
+                // 如果token中没有category，则从请求头中获取System-Belong
                 if (string.IsNullOrEmpty(userType))
                 {
-                    userType = _httpContextAccessor.HttpContext?.Request.Headers["System-Category"].FirstOrDefault();
+                    userType = _httpContextAccessor.HttpContext?.Request.Headers["System-Belong"].FirstOrDefault();
                 }
                 
                 // 如果都没有获取到，返回默认值"Admin"

@@ -68,8 +68,8 @@ namespace Fastdotnet.Core.Entities.System
         /// <summary>
         /// 菜单分类: Admin/App
         /// </summary>
-        [SugarColumn(ColumnName = "category", IsNullable = false, Length = 50, ColumnDescription = "菜单分类: Admin/App")]
-        public string Category { get; set; }
+        [SugarColumn(ColumnName = "belong", IsNullable = false, ColumnDescription = "属于管理端还是应用端")]
+        public SystemCategory Belong { get; set; }
 
         /// <summary>
         /// 是否外链
@@ -141,5 +141,11 @@ namespace Fastdotnet.Core.Entities.System
 
         [SugarColumn(ColumnName = "plugin_id", IsNullable = true, ColumnDescription = "插件Id")]
         public string PluginId { get; set; }
+
+        /// <summary>
+        /// 属于
+        /// </summary>
+        //[SugarColumn(ColumnName = "belong", IsNullable = false, ColumnDescription = "属于管理端还是应用端")]
+        //public SystemCategory Belong { get; set; }
     }
 }

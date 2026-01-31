@@ -36,7 +36,7 @@ namespace Fastdotnet.Core.Entities.System
         /// 角色类别: "Admin" 或 "App"
         /// </summary>
         //[SugarColumn(ColumnName = "category", IsNullable = false, Length = 50, ColumnDescription = "角色类别: \"Admin\" 或 \"App\"")]
-        //public string Category { get; set; }
+        //public string Belong { get; set; }
 
         /// <summary>
         /// 父级角色ID，用于支持角色层级

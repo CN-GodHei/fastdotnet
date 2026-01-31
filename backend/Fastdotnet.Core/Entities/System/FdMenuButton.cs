@@ -1,5 +1,6 @@
 using Fastdotnet.Core.Dtos.Base;
 using Fastdotnet.Core.Dtos.Interfaces;
+using Fastdotnet.Core.Enum;
 using SqlSugar;
 
 namespace Fastdotnet.Core.Entities.System
@@ -44,7 +45,7 @@ namespace Fastdotnet.Core.Entities.System
         /// 按钮分类: Admin/App
         /// </summary>
         [SugarColumn(ColumnName = "category", IsNullable = false, Length = 50, ColumnDescription = "按钮分类: Admin/App")]
-        public string Category { get; set; }
+        public SystemCategory Belong { get; set; }
 
         /// <summary>
         /// 排序
