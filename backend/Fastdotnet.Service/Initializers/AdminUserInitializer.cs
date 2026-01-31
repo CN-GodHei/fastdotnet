@@ -1,11 +1,12 @@
-using System.Threading.Tasks;
+using Fastdotnet.Core.Entities.Admin;
+using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Initializers;
+using Fastdotnet.Core.IService;
 using Fastdotnet.Service.IService.Admin;
 using Microsoft.Extensions.Logging;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.Entities.Admin;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Fastdotnet.Service.Initializers
 {
@@ -46,9 +47,9 @@ namespace Fastdotnet.Service.Initializers
                 {
                     Name = "超级角色",
                     Code = superAdminRoleCode,
-                    Category = "Admin",
                     IsSystem = true,
-                    Description = "拥有系统所有权限"
+                    Description = "拥有系统所有权限",
+                    Belong = SystemCategory.Admin
                 };
                 await _roleRepository.InsertAsync(superAdminRole);
                 //_logger.LogInformation("Super Admin role created successfully.");

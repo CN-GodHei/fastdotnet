@@ -1,4 +1,5 @@
 using Fastdotnet.Core.Dtos;
+using Fastdotnet.Core.Enum;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
@@ -55,7 +56,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 throw new BusinessException($"系统角色 '{entity.Name}' 不允许删除。");
             }
 
-            bool inUse = entity.Category == "Admin"
+            bool inUse = entity.Belong == SystemCategory.Admin
                 ? await _adminUserRoleRepository.ExistsAsync(ur => ur.RoleId == entity.Id)
                 : await _appUserRoleRepository.ExistsAsync(ur => ur.RoleId == entity.Id);
 

@@ -53,7 +53,7 @@ namespace Fastdotnet.Service.Initializers
             const string APP_DEFAULT_ROLECODE = "APP_ROLE_001";
             var _entitys = new List<FdRole>
             {
-                new FdRole{Name = "默认",Code = APP_DEFAULT_ROLECODE, Category = "APP",IsSystem = true,Description = "APP端默认角色", Belong= SystemCategory.App,IsDefault=true},
+                new FdRole{Name = "默认",Code = APP_DEFAULT_ROLECODE,IsSystem = true,Description = "APP端默认角色", Belong= SystemCategory.App,IsDefault=true},
             };
 
             // 直接使用条件查询已存在的项
