@@ -1,23 +1,3 @@
-using Azure.Core;
-using Fastdotnet.Core.Dtos.Base;
-using Fastdotnet.Core.Dtos.Interfaces;
-using Fastdotnet.Core.Dtos.LogModels;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Utils;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using SqlSugar;
-using SqlSugar.SplitTableExtensions;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Yitter.IdGenerator;
 
 namespace Fastdotnet.Orm;
 
