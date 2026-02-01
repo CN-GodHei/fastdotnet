@@ -1,10 +1,3 @@
-using Fastdotnet.Core.Dtos.Base;
-using Fastdotnet.Core.IService;
-using SqlSugar;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace Fastdotnet.Core.IService
 {

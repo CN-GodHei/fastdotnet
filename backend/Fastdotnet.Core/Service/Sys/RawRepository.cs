@@ -1,15 +1,4 @@
-﻿using Fastdotnet.Core.Dtos.Base;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.IService.Sys;
-using Fastdotnet.Core.Services.System;
-using SqlSugar;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
-
+﻿
 namespace Fastdotnet.Core.Service.Sys
 {
     public class RawRepository<T, TKey> : IRawRepository<T, TKey>

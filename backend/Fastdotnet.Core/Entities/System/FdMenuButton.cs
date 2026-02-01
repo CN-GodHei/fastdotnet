@@ -1,7 +1,3 @@
-using Fastdotnet.Core.Dtos.Base;
-using Fastdotnet.Core.Dtos.Interfaces;
-using Fastdotnet.Core.Enum;
-using SqlSugar;
 
 namespace Fastdotnet.Core.Entities.System
 {

@@ -1,8 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using Fastdotnet.Core.IService;
-using Microsoft.AspNetCore.Http;
 
 namespace Fastdotnet.Core.Services.System
 {

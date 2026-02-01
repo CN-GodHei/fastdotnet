@@ -1,17 +1,4 @@
-﻿using Fastdotnet.Core.Entities.Admin;
-using Fastdotnet.Core.Entities.App;
-using Fastdotnet.Core.Enum;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.IService.Sys;
-using Microsoft.Extensions.Caching.Hybrid;
-using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Fastdotnet.Core.Service.Sys
 {
     public class UserDisplayNameService : IUserDisplayNameService

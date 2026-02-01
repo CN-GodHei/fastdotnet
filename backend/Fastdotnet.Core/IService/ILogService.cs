@@ -1,5 +1,3 @@
-using Fastdotnet.Core.Dtos.LogModels;
-using System.Threading.Tasks;
 
 namespace Fastdotnet.Core.IService
 {

@@ -1,5 +1,4 @@
-using System;
-using System.ComponentModel.DataAnnotations;
+
 
 namespace Fastdotnet.Core.Dtos.Admin.Users
 {

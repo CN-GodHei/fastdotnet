@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 
 namespace Fastdotnet.Core.Dtos.Admin.Users
 {

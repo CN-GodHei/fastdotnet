@@ -1,16 +1,3 @@
-using Fastdotnet.Core.Dtos;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Services.System;
-using Microsoft.Extensions.Caching.Hybrid;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fastdotnet.Core.Utils.Extensions
 {

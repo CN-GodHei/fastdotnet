@@ -1,5 +1,3 @@
-using AutoMapper;
-using Fastdotnet.Core.Entities.System;
 
 namespace Fastdotnet.Core.Dtos.System
 {

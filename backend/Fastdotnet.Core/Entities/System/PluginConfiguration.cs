@@ -1,10 +1,3 @@
-using SqlSugar;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Fastdotnet.Core.Dtos.Base;
 
 namespace Fastdotnet.Core.Entities.System
 {

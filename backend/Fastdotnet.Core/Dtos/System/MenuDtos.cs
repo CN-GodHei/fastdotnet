@@ -1,10 +1,3 @@
-using AutoMapper;
-using Fastdotnet.Core.Entities.System;
-using System.Collections.Generic;
-using System.Linq;
-using System;
-using Fastdotnet.Core.Enum;
-using Fastdotnet.Core.Dtos.Common;
 
 namespace Fastdotnet.Core.Dtos.System
 {

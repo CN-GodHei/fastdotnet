@@ -1,6 +1,3 @@
-using Fastdotnet.Core.Enum;
-using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Fastdotnet.Core.Dtos.System
 {

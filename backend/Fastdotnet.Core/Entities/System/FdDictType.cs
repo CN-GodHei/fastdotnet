@@ -1,12 +1,4 @@
-﻿using Fastdotnet.Core.Dtos.Base;
-using Fastdotnet.Core.Enum;
-using SqlSugar;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace Fastdotnet.Core.Entities.System
 {
