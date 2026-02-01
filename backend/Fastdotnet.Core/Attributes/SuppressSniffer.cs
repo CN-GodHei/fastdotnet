@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fastdotnet.Core.Enum
+namespace Fastdotnet.Core.Attributes
 {
     /// <summary>
     /// 不被扫描和发现的特性
