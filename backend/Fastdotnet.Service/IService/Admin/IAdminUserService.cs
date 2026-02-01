@@ -1,7 +1,3 @@
-using Fastdotnet.Core.Dtos;
-using Fastdotnet.Core.Dtos.Admin.Users;
-using Fastdotnet.Core.Entities.Admin;
-using System.Threading.Tasks;
 
 namespace Fastdotnet.Service.IService.Admin
 {
