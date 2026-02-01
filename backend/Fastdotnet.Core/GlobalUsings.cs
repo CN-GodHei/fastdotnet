@@ -16,8 +16,6 @@ global using Fastdotnet.Core.IService;
 global using Fastdotnet.Core.IService.App;
 global using Fastdotnet.Core.IService.Sys;
 global using Fastdotnet.Core.Middleware;
-global using Fastdotnet.Core.Models;
-global using Fastdotnet.Core.Models.Base;
 global using Fastdotnet.Core.Service;
 global using Fastdotnet.Core.Service.Sys;
 global using Fastdotnet.Core.Services.System;
