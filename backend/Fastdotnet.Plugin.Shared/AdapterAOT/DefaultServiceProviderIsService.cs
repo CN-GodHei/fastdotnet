@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
+﻿
 namespace Fastdotnet.Plugin.Shared.AdapterAOT
 {
     /// <summary>

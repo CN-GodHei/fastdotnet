@@ -1,12 +1,4 @@
-﻿using Autofac;
-using Fastdotnet.Core.Dtos;
-using Fastdotnet.Plugin.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace Fastdotnet.Plugin.Shared.AdapterAOT
 {

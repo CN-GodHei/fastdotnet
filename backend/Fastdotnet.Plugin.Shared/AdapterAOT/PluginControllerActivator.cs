@@ -1,9 +1,4 @@
-﻿using Autofac;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-
+﻿
 namespace Fastdotnet.Plugin.Shared.AdapterAOT
 {
     public class PluginControllerActivator : IControllerActivator
