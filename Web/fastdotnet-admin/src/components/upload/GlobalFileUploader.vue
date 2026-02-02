@@ -5,27 +5,57 @@
       <el-tag size="small" :type="storageTypeTagType">{{ storageTypeName }}</el-tag>
     </div>
     
-    <!-- 上传组件 -->
-    <el-upload
-      v-bind="$attrs"
-      :action="uploadAction"
-      :headers="uploadHeaders"
-      :data="uploadData"
-      :before-upload="handleBeforeUpload"
-      :http-request="currentStorageConfig.supportDirectUpload ? customUpload : defaultUpload"
-      :on-success="handleSuccess"
-      :on-error="handleError"
-      :on-progress="handleProgress"
-      :disabled="isUploading"
-    >
-      <slot>
-        <el-button type="primary">
-          <el-icon><Plus /></el-icon>
-          <span>点击上传</span>
-        </el-button>
-      </slot>
-      <slot name="tip" v-if="$slots.tip"></slot>
-    </el-upload>
+    <!-- 根据文件类型和配置决定是否使用图片预览裁剪组件 -->
+    <template v-if="shouldUseImagePreview">
+      <ImagePreviewCropper
+        :bucket-name="bucketName"
+        :max-size="maxSize"
+        :accept="accept"
+        :show-storage-info="showStorageInfo"
+        :show-progress="showProgress"
+        :custom-params="customParams"
+        :show-storage-type-label="showStorageTypeLabel"
+        :enable-preview="enableImagePreview"
+        :enable-crop="enableImageCrop"
+        :crop-aspect-ratio="cropAspectRatio"
+        :list-type="listType"
+        :limit="limit"
+        @success="emit('success', $event)"
+        @error="emit('error', $event)"
+        @progress="emit('progress', $event)"
+        @change="emit('change', $event)"
+      >
+        <slot></slot>
+        <template #tip v-if="$slots.tip">
+          <slot name="tip"></slot>
+        </template>
+      </ImagePreviewCropper>
+    </template>
+    <template v-else>
+      <!-- 上传组件 -->
+      <el-upload
+        v-bind="$attrs"
+        :action="uploadAction"
+        :headers="uploadHeaders"
+        :data="uploadData"
+        :before-upload="handleBeforeUpload"
+        :http-request="currentStorageConfig.supportDirectUpload ? customUpload : defaultUpload"
+        :on-success="handleSuccess"
+        :on-error="handleError"
+        :on-progress="handleProgress"
+        :disabled="isUploading"
+        :list-type="listType"
+        :limit="limit"
+      >
+        <slot>
+          <el-button type="primary">
+            <el-icon><Plus /></el-icon>
+            <span>点击上传</span>
+          </el-button>
+        </slot>
+        <slot name="tip" v-if="$slots.tip"></slot>
+      </el-upload>
+    </template>
     
     <!-- 上传进度条 -->
     <el-progress 
@@ -44,6 +74,9 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import { getApiStorageConfig, postApiStorageGetUploadCredential, postApiStorageUpload } from '@/api/fd-system-api-admin/Storage';
 import { Plus } from '@element-plus/icons-vue';
 
+// 按需引入图片预览裁剪组件
+import ImagePreviewCropper from './ImagePreviewCropper.vue';
+
 interface Props {
   /** 存储桶名称 */
   bucketName?: string;
@@ -59,6 +92,16 @@ interface Props {
   customParams?: Record<string, any>;
   /** 是否显示当前存储类型标签 */
   showStorageTypeLabel?: boolean;
+  /** 是否启用图片预览功能 */
+  enableImagePreview?: boolean;
+  /** 是否启用图片裁剪功能 */
+  enableImageCrop?: boolean;
+  /** 裁剪宽高比 */
+  cropAspectRatio?: number;
+  /** 上传列表的类型 */
+  listType?: 'text' | 'picture' | 'picture-card';
+  /** 文件数量限制 */
+  limit?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -67,7 +110,12 @@ const props = withDefaults(defineProps<Props>(), {
   showStorageInfo: true,
   showProgress: true,
   customParams: () => ({}),
-  showStorageTypeLabel: true
+  showStorageTypeLabel: true,
+  enableImagePreview: true,
+  enableImageCrop: true,
+  cropAspectRatio: 1,
+  listType: 'picture-card',
+  limit: 1
 });
 
 const emit = defineEmits(['success', 'error', 'progress', 'change']);
@@ -98,6 +146,19 @@ const uploadProgress = ref(0);
 const uploadProgressStatus = ref<'success' | 'exception' | undefined>(undefined);
 
 // 计算属性
+const shouldUseImagePreview = computed(() => {
+  // 检查是否接受图片类型
+  const acceptsImages = props.accept ? 
+    props.accept.toLowerCase().includes('image') || props.accept.toLowerCase().includes('jpeg') || 
+    props.accept.toLowerCase().includes('jpg') || props.accept.toLowerCase().includes('png') || 
+    props.accept.toLowerCase().includes('gif') || props.accept.toLowerCase().includes('bmp') || 
+    props.accept.toLowerCase().includes('webp')
+    : false;
+  
+  // 只有在明确接受图片类型且启用预览功能时才使用图片预览组件
+  return acceptsImages && (props.enableImagePreview || props.enableImageCrop);
+});
+
 const storageTypeName = computed(() => {
   const names: Record<string, string> = {
     'local': '本地存储',

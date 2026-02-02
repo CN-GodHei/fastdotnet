@@ -129,11 +129,16 @@
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 					<el-form-item label="头像上传" prop="AvatarUpload">
 						<GlobalFileUploader
+							ref="avatarUploaderRef"
 							bucket-name="user-avatars"
 							:max-size="2"
 							accept="image/*"
 							:showStorageTypeLabel=false
 							list-type="picture-card"
+							:enable-image-preview="true"
+							:enable-image-crop="true"
+							:crop-aspect-ratio="1"
+							:auto-upload="false"
 							@success="onAvatarUploadSuccess"
 							@error="onAvatarUploadError"
 						>
@@ -177,6 +182,7 @@ import GlobalFileUploader from '@/components/upload/GlobalFileUploader.vue';
 
 const queryForm = ref();
 const formRef = ref();
+const avatarUploaderRef = ref();
 
 const state = reactive({
 	loading: false,
