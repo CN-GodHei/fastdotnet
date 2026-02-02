@@ -153,6 +153,8 @@ interface Props {
   enableCrop?: boolean;
   /** 是否启用预览功能 */
   enablePreview?: boolean;
+  /** 是否将图片转换为WebP格式（GIF除外） */
+  convertToWebP?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -165,7 +167,8 @@ const props = withDefaults(defineProps<Props>(), {
   limit: 1,
   cropAspectRatio: 1, // 1:1 比例
   enableCrop: true,
-  enablePreview: true
+  enablePreview: true,
+  convertToWebP: true
 });
 
 const emit = defineEmits(['success', 'error', 'progress', 'change']);
@@ -366,8 +369,12 @@ const uploadSelectedImage = async () => {
   if (!selectedImage.value) return;
 
   try {
-    // 恢复原始文件对象
-    const file = selectedImage.value.originalFile;
+    // 检查是否需要转换为WebP格式
+    let file = selectedImage.value.originalFile;
+    if (props.convertToWebP && file.type !== 'image/gif') {
+      file = await convertToWebP(file);
+    }
+    
     await uploadFile(file);
     previewDialogVisible.value = false;
   } catch (error: any) {
@@ -429,6 +436,45 @@ const resetCropper = () => {
 };
 
 /**
+ * 将图片转换为WebP格式
+ */
+const convertToWebP = (file: File): Promise<File> => {
+  return new Promise((resolve) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      
+      ctx?.drawImage(img, 0, 0);
+      
+      canvas.toBlob((blob) => {
+        if (blob) {
+          // 创建新的File对象，使用WebP格式
+          const webpFile = new File([blob], file.name.replace(/\.[^/.]+$/, '.webp'), {
+            type: 'image/webp',
+            lastModified: Date.now()
+          });
+          resolve(webpFile);
+        } else {
+          // 如果转换失败，返回原始文件
+          resolve(file);
+        }
+      }, 'image/webp', 0.85); // 使用85%的质量
+    };
+    
+    img.onerror = () => {
+      // 如果加载失败，返回原始文件
+      resolve(file);
+    };
+    
+    img.src = URL.createObjectURL(file);
+  });
+};
+
+/**
  * 获取裁剪数据
  */
 const getCropData = () => {
@@ -449,7 +495,13 @@ const getCropData = () => {
       if (!blob) return;
       
       // 创建新的文件对象
-      const file = new File([blob], `cropped_${selectedImage.value.name}`, { type: 'image/jpeg' });
+      let file = new File([blob], `cropped_${selectedImage.value.name.replace(/\.[^/.]+$/, '.webp')}`, { type: 'image/webp' });
+      
+      // 检查是否需要转换为WebP格式
+      if (props.convertToWebP) {
+        // 由于裁剪后的图片已经是WebP格式，这里我们保持不变
+        // 如果需要其他格式转换逻辑，可以在此处添加
+      }
       
       // 更新选中的图片为裁剪后的图片
       selectedImage.value = {
@@ -461,7 +513,7 @@ const getCropData = () => {
       // 上传裁剪后的图片
       await uploadFile(file);
       cropperDialogVisible.value = false;
-    }, 'image/jpeg');
+    }, 'image/webp', 0.85); // 使用WebP格式和85%质量
   }
 };
 

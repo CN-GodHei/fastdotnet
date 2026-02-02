@@ -20,6 +20,7 @@
         :crop-aspect-ratio="cropAspectRatio"
         :list-type="listType"
         :limit="limit"
+        :convert-to-web-p="convertToWebP"
         @success="emit('success', $event)"
         @error="emit('error', $event)"
         @progress="emit('progress', $event)"
@@ -102,6 +103,8 @@ interface Props {
   listType?: 'text' | 'picture' | 'picture-card';
   /** 文件数量限制 */
   limit?: number;
+  /** 是否将图片转换为WebP格式（GIF除外） */
+  convertToWebP?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -115,7 +118,8 @@ const props = withDefaults(defineProps<Props>(), {
   enableImageCrop: true,
   cropAspectRatio: 1,
   listType: 'picture-card',
-  limit: 1
+  limit: 1,
+  convertToWebP: true
 });
 
 const emit = defineEmits(['success', 'error', 'progress', 'change']);

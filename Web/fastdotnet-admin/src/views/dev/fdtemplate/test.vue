@@ -138,7 +138,7 @@
 							:enable-image-preview="true"
 							:enable-image-crop="true"
 							:crop-aspect-ratio="1"
-							:auto-upload="false"
+							:convert-to-web-p="true"
 							@success="onAvatarUploadSuccess"
 							@error="onAvatarUploadError"
 						>
