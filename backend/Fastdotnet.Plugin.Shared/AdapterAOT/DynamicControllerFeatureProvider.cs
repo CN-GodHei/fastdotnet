@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
-
+﻿
 namespace Fastdotnet.Plugin.Shared.AdapterAOT
 {
     /// <summary>

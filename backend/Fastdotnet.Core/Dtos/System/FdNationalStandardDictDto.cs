@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿
 namespace Fastdotnet.Core.Dtos.System
 {
     /// <summary>

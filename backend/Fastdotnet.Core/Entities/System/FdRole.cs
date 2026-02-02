@@ -1,8 +1,3 @@
-using Fastdotnet.Core.Dtos.Base;
-using Fastdotnet.Core.Dtos.Interfaces;
-using Fastdotnet.Core.Enum;
-using Newtonsoft.Json.Linq;
-using SqlSugar;
 
 namespace Fastdotnet.Core.Entities.System
 {
@@ -35,8 +30,8 @@ namespace Fastdotnet.Core.Entities.System
         /// <summary>
         /// 角色类别: "Admin" 或 "App"
         /// </summary>
-        [SugarColumn(ColumnName = "category", IsNullable = false, Length = 50, ColumnDescription = "角色类别: \"Admin\" 或 \"App\"")]
-        public string Category { get; set; }
+        //[SugarColumn(ColumnName = "category", IsNullable = false, Length = 50, ColumnDescription = "角色类别: \"Admin\" 或 \"App\"")]
+        //public string Belong { get; set; }
 
         /// <summary>
         /// 父级角色ID，用于支持角色层级

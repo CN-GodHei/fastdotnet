@@ -1,5 +1,3 @@
-using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Fastdotnet.Core.Dtos.System
 {
@@ -9,9 +7,10 @@ namespace Fastdotnet.Core.Dtos.System
         public string Name { get; set; }
         public string Code { get; set; }
         public string? Description { get; set; }
-        public string Category { get; set; }
+        public SystemCategory Belong { get; set; }
         public bool IsSystem { get; set; }
         public DateTime CreatedAt { get; set; }
+        public bool IsDefault { get; set; }
     }
 
     public class CreateFdRoleDto
@@ -22,7 +21,8 @@ namespace Fastdotnet.Core.Dtos.System
         public string? Description { get; set; }
 
         [Required(ErrorMessage = "角色分类不能为空")]
-        public string Category { get; set; } // "Admin" or "User"
+        public SystemCategory Belong { get; set; }
+
     }
 
     public class UpdateFdRoleDto

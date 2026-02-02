@@ -1,20 +1,3 @@
-using Fastdotnet.Core.Dtos.Auth;
-using Fastdotnet.Core.Entities.Admin;
-using Fastdotnet.Core.Entities.App;
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.Exceptions;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Settings;
-using Fastdotnet.Service.IService;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fastdotnet.Service.Service
 {

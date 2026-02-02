@@ -1,5 +1,3 @@
-using SqlSugar;
-using System.Collections.Generic;
 
 namespace Fastdotnet.Orm;
 

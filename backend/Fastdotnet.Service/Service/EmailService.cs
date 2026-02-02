@@ -1,13 +1,3 @@
-using System.Threading.Tasks;
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.Exceptions;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Service.IService;
-using MailKit.Net.Smtp;
-using MailKit.Security;
-using Microsoft.Extensions.Logging;
-using MimeKit;
-using MimeKit.Text;
 
 namespace Fastdotnet.Service.Service
 {

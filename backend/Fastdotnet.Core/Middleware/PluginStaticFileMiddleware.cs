@@ -1,7 +1,3 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.FileProviders;
-using System.Threading.Tasks;
 
 namespace Fastdotnet.Core.Middleware
 {

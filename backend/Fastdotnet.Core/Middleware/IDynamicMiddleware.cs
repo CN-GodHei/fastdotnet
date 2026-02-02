@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
 
 namespace Fastdotnet.Core.Middleware
 {

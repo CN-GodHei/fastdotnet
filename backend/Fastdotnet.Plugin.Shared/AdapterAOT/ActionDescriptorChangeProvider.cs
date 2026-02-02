@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.Extensions.Primitives;
-
+﻿
 namespace Fastdotnet.Plugin.Shared.AdapterAOT
 {
     /// <summary>

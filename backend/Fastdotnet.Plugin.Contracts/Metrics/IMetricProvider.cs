@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Fastdotnet.Plugin.Contracts.Metrics
 {

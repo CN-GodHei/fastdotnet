@@ -17,7 +17,7 @@ import * as FdMenu from './FdMenu';
 import * as FdMenuButtons from './FdMenuButtons';
 import * as FdPermissions from './FdPermissions';
 import * as FdRatelimitRule from './FdRatelimitRule';
-import * as FdRoles from './FdRoles';
+import * as FdRole from './FdRole';
 import * as FdSystemInfoConfig from './FdSystemInfoConfig';
 import * as Plugin from './Plugin';
 import * as Storage from './Storage';
@@ -39,7 +39,7 @@ export default {
 	FdMenuButtons,
 	FdPermissions,
 	FdRatelimitRule,
-	FdRoles,
+	FdRole,
 	FdSystemInfoConfig,
 	Plugin,
 	Storage,

@@ -1,5 +1,3 @@
-using Fastdotnet.Core.Dtos.System;
-using Fastdotnet.Core.Entities.System;
 
 namespace Fastdotnet.Core.IService
 {

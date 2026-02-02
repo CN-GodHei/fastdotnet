@@ -1,5 +1,3 @@
-using System;
-
 namespace Fastdotnet.Core.Exceptions;
 
 /// <summary>

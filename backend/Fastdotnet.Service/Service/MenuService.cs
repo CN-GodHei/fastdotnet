@@ -1,13 +1,3 @@
-using AutoMapper;
-using Fastdotnet.Core.Dtos.System;
-using Fastdotnet.Core.Entities.Admin;
-using Fastdotnet.Core.Entities.App;
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Service.IService;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Fastdotnet.Service.Service
 {
@@ -35,11 +25,11 @@ namespace Fastdotnet.Service.Service
             _mapper = mapper;
         }
 
-        public async Task<List<FdMenuDto>> GetUserMenusAsync(string userId, string category)
+        public async Task<List<FdMenuDto>> GetUserMenusAsync(string userId, SystemCategory category)
         {
             // 1. Get user's roles
             List<string> roleIds;
-            if (category == "Admin")
+            if (category == SystemCategory.Admin)
             {
                 var userRoles = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
                 roleIds = userRoles.Select(ur => ur.RoleId).ToList();
@@ -65,7 +55,7 @@ namespace Fastdotnet.Service.Service
             }
 
             // 3. Get menus
-            var allMenus = await _menuRepository.GetListAsync(m => menuIds.Contains(m.Id) && m.Category == category && m.IsEnabled);
+            var allMenus = await _menuRepository.GetListAsync(m => menuIds.Contains(m.Id) && m.Belong == category && m.IsEnabled);
 
             // 4. Filter menus by permission
             //var userPermissions = await _permissionService.GetUserPermissionsAsync(userId, category);

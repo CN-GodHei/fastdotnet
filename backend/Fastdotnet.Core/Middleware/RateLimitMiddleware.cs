@@ -1,10 +1,3 @@
-using Fastdotnet.Core.Dtos.System;
-using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.Services.System;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace Fastdotnet.Core.Middleware
 {

@@ -1,4 +1,3 @@
-using System.Reflection;
 
 namespace Fastdotnet.Plugin.Contracts
 {

@@ -1,13 +1,4 @@
-﻿using Fastdotnet.Core.Entities.System;
-using Fastdotnet.Core.Enum;
-using Fastdotnet.Core.Initializers;
-using Fastdotnet.Core.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Fastdotnet.Service.Initializers
 {
     public class MenuButtonsInitializer : IStartupTask
@@ -40,7 +31,7 @@ namespace Fastdotnet.Service.Initializers
                         Description = $"{menu.Name} - 查询模块",
                         MenuCode = menu.Code,
                         Module = menu.Module ?? "System",
-                        Category = menu.Category ?? "Admin",
+                        Belong = menu.Belong ,
                         Sort = 1,
                         IsEnabled = true,
                         PermissionCode = $"{menu.Code?.ToLower() ?? menu.Id}_queryModule"
@@ -52,7 +43,7 @@ namespace Fastdotnet.Service.Initializers
                         Description = $"{menu.Name} - 详情",
                         MenuCode = menu.Code,
                         Module = menu.Module ?? "System",
-                        Category = menu.Category ?? "Admin",
+                        Belong = menu.Belong ,
                         Sort = 1,
                         IsEnabled = true,
                         PermissionCode = $"{menu.Code?.ToLower() ?? menu.Id}_detail"
@@ -64,7 +55,7 @@ namespace Fastdotnet.Service.Initializers
                         Description = $"{menu.Name} - 查看按钮",
                         MenuCode = menu.Code,
                         Module = menu.Module ?? "System",
-                        Category = menu.Category ?? "Admin",
+                        Belong = menu.Belong ,
                         Sort = 1,
                         IsEnabled = true,
                         PermissionCode = $"{menu.Code?.ToLower() ?? menu.Id}_view"
@@ -76,7 +67,7 @@ namespace Fastdotnet.Service.Initializers
                         Description = $"{menu.Name} - 新增按钮",
                         MenuCode = menu.Code,
                         Module = menu.Module ?? "System",
-                        Category = menu.Category ?? "Admin",
+                        Belong = menu.Belong ,
                         Sort = 2,
                         IsEnabled = true,
                         PermissionCode = $"{menu.Code?.ToLower() ?? menu.Id}_add"
@@ -88,7 +79,7 @@ namespace Fastdotnet.Service.Initializers
                         Description = $"{menu.Name} - 编辑按钮",
                         MenuCode = menu.Code,
                         Module = menu.Module ?? "System",
-                        Category = menu.Category ?? "Admin",
+                        Belong = menu.Belong ,
                         Sort = 3,
                         IsEnabled = true,
                         PermissionCode = $"{menu.Code?.ToLower() ?? menu.Id}_edit"
@@ -100,7 +91,7 @@ namespace Fastdotnet.Service.Initializers
                         Description = $"{menu.Name} - 删除按钮",
                         MenuCode = menu.Code,
                         Module = menu.Module ?? "System",
-                        Category = menu.Category ?? "Admin",
+                        Belong = menu.Belong ,
                         Sort = 4,
                         IsEnabled = true,
                         PermissionCode = $"{menu.Code?.ToLower() ?? menu.Id}_delete"

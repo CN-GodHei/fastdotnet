@@ -1,17 +1,18 @@
 using Fastdotnet.Core.Dtos;
+using Fastdotnet.Core.Enum;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
     [Route("api/admin/[Controller]")]
     [Authorize]
-    public class FdRolesController : GenericDtoControllerBase<FdRole, string, CreateFdRoleDto, UpdateFdRoleDto, FdRoleDto>
+    public class FdRoleController : GenericDtoControllerBase<FdRole, string, CreateFdRoleDto, UpdateFdRoleDto, FdRoleDto>
     {
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
         private readonly IRepository<FdAppUserRole> _appUserRoleRepository;
         private readonly IRepository<FdRolePermission> _rolePermissionRepository;
 
-        public FdRolesController(
+        public FdRoleController(
             IBaseService<FdRole, string> service,
             IMapper mapper,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
@@ -55,7 +56,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 throw new BusinessException($"系统角色 '{entity.Name}' 不允许删除。");
             }
 
-            bool inUse = entity.Category == "Admin"
+            bool inUse = entity.Belong == SystemCategory.Admin
                 ? await _adminUserRoleRepository.ExistsAsync(ur => ur.RoleId == entity.Id)
                 : await _appUserRoleRepository.ExistsAsync(ur => ur.RoleId == entity.Id);
 
