@@ -115,7 +115,7 @@
 		</el-dialog>
 		
 		<!-- 分配权限对话框 -->
-		<el-dialog v-model="state.permissionDialog.visible" draggable :close-on-click-modal="false" width="800px" style="--el-dialog-padding-primary: 0; --el-dialog-max-height: 70vh;">
+		<el-dialog v-model="state.permissionDialog.visible" draggable :close-on-click-modal="false" width="800px" height="600px" style="--el-dialog-padding-primary: 0;">
 			<template #header>
 				<div style="color: #fff">
 					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Tickets />
@@ -207,16 +207,19 @@
   margin-right: 8px;
 }
 
-// 权限分配对话框样式
+// 固定高度宽度的权限分配对话框
 .permission-tree-container {
-  max-height: 60vh;
+  height: 500px; /* 写死高度 */
   overflow-y: auto;
   padding: 16px;
 }
 
-// 对话框样式调整
-.el-dialog__body {
-  padding: 0;
+.el-dialog {
+  &.permission-dialog {
+    .el-dialog__body {
+      padding: 0;
+    }
+  }
 }
 </style>
 
@@ -564,15 +567,18 @@ onMounted(() => {
   margin-right: 8px;
 }
 
-// 权限分配对话框样式
+// 固定高度宽度的权限分配对话框
 .permission-tree-container {
-  max-height: 60vh;
+  height: 500px; /* 写死高度 */
   overflow-y: auto;
   padding: 16px;
 }
 
-// 对话框样式调整
-.el-dialog__body {
-  padding: 0;
+.el-dialog {
+  &.permission-dialog {
+    .el-dialog__body {
+      padding: 0;
+    }
+  }
 }
 </style>
