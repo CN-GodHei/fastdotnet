@@ -134,7 +134,7 @@
 				:default-expand-all="true"
 				:show-checkbox="true"
 				:expand-on-click-node="false"
-				:check-strictly="false"
+				:check-strictly="true"
 			>
 				<template #default="{ node, data }">
 					<span class="custom-tree-node">
@@ -281,12 +281,8 @@ const processMenuBtnData = (menuBtnList: APIModel.MenuBtnRe[]): MenuBtnRe[] => {
 
 // 处理按钮选择变化
 const handleBtnChange = (data: MenuBtnRe, val: string[]) => {
-  // 更新按钮的选中状态
-  if (data.BtnList) {
-    data.BtnList.forEach(btn => {
-      btn.DataStatus = val.includes(btn.Id) ? 1 : 3; // 1-Added, 3-Deleted (简化处理)
-    });
-  }
+  // 更新选中按钮数组
+  data.selectedBtns = val;
 };
 
 // 重置表单
@@ -320,28 +316,38 @@ const savePermissions = async () => {
 
 // 构建权限数据
 const buildPermissionData = (menuBtnList: MenuBtnRe[]): APIModel.MenuBtnRe[] => {
-  return menuBtnList.map(item => {
-    // 处理按钮权限
-    const BtnList = item.BtnList?.map((btn: MenuBtnReStatusDto) => {
-      // 根据是否选中确定数据状态
-      const isSelected = item.selectedBtns?.includes(btn.Id);
-      return {
-        Id: btn.Id,
-        Name: btn.Name,
-        DataStatus: isSelected ? 1 : 3, // 1-Added, 3-Deleted
-        Exist: isSelected
-      } as APIModel.MenuBtnReStatusDto;
-    }) || [];
+  return menuBtnList.flatMap(item => {
+    // 检查当前菜单是否被选中（通过检查是否有子菜单或按钮被选中）
+    // 如果菜单下有按钮被选中，或有子菜单被选中，则当前菜单也被选中
+    const hasSelectedButtons = item.selectedBtns && item.selectedBtns.length > 0;
+    const hasSelectedChildren = item.Children ? buildPermissionData(item.Children) : [];
     
-    return {
-      Id: item.Id,
-      Name: item.Name,
-      Title: item.Title,
-      DataStatus: item.Exist ? 2 : 1, // 2-Modified, 1-Added (简化处理)
-      Exist: true, // 根据实际业务逻辑调整
-      BtnList: BtnList,
-      Children: item.Children ? buildPermissionData(item.Children) : undefined
-    } as APIModel.MenuBtnRe;
+    // 如果有选中的按钮或子菜单，则返回该菜单
+    if (hasSelectedButtons || hasSelectedChildren.length > 0) {
+      // 过滤出被选中的按钮
+      const selectedBtnList = item.BtnList?.filter(btn => item.selectedBtns?.includes(btn.Id)) || [];
+      
+      const BtnList = selectedBtnList.map(btn => {
+        return {
+          Id: btn.Id,
+          Name: btn.Name,
+          DataStatus: 1, // 1-Added
+          Exist: true
+        } as APIModel.MenuBtnReStatusDto;
+      });
+      
+      return [{
+        Id: item.Id,
+        Name: item.Name,
+        Title: item.Title,
+        DataStatus: 1, // 1-Added
+        Exist: true,
+        BtnList: BtnList,
+        Children: hasSelectedChildren, // 只返回被选中的子菜单
+      } as APIModel.MenuBtnRe];
+    } else {
+      return []; // 没有选中菜单或其按钮或子菜单，不返回该项
+    }
   });
 };
 

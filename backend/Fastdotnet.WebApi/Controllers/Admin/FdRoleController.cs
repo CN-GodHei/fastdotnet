@@ -158,14 +158,14 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                         break;
                     case DataStatus.NoChange:
                         // 无变化 - 如果存在则添加
-                        if (menuBtn.Exist)
-                        {
-                            roleMenus.Add(new FdRoleMenu
-                            {
-                                RoleId = roleId,
-                                MenuId = menuBtn.Id
-                            });
-                        }
+                        //if (menuBtn.Exist)
+                        //{
+                        //    roleMenus.Add(new FdRoleMenu
+                        //    {
+                        //        RoleId = roleId,
+                        //        MenuId = menuBtn.Id
+                        //    });
+                        //}
                         break;
                 }
                 
