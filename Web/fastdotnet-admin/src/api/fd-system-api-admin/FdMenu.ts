@@ -114,6 +114,20 @@ export async function putApiAdminFdMenuBatchUpdatebycondition(
 		...(options || {}),
 	});
 }
+/** 此处后端没有提供注释 GET /api/admin/FdMenu/menu-btns */
+export async function getApiAdminFdMenuMenuBtns(
+	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+	params: APIModel.getApiAdminFdMenuMenuBtnsParams,
+	options?: { [key: string]: any }
+) {
+	return request<APIModel.MenuBtnRe[]>('/api/admin/FdMenu/menu-btns', {
+		method: 'GET',
+		params: {
+			...params,
+		},
+		...(options || {}),
+	});
+}
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/admin/FdMenu/page */
 export async function getApiAdminFdMenuPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

@@ -67,6 +67,25 @@ export async function deleteApiAdminFdRoleId(
 		...(options || {}),
 	});
 }
+/** 此处后端没有提供注释 POST /api/admin/FdRole/${param0}/menu-btns */
+export async function postApiAdminFdRoleIdMenuBtns(
+	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+	params: APIModel.postApiAdminFdRoleIdMenuBtnsParams,
+	body: APIModel.MenuBtnRe[],
+	options?: { [key: string]: any }
+) {
+	const { id: param0, ...queryParams } = params;
+
+	return request<boolean>(`/api/admin/FdRole/${param0}/menu-btns`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		params: { ...queryParams },
+		data: body,
+		...(options || {}),
+	});
+}
 /** 此处后端没有提供注释 GET /api/admin/FdRole/${param0}/permissions */
 export async function getApiAdminFdRoleIdPermissions(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

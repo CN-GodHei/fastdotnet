@@ -282,6 +282,21 @@ declare namespace APIModel {
 		PaidTime?: string;
 	};
 
+	type CreateOrderRequest = {
+		OrderId?: string;
+		Amount?: number;
+		Description?: string;
+		NotifyUrl?: string;
+	};
+
+	type CreatePaymentRequest = {
+		OrderId?: string;
+		Amount?: number;
+		Subject?: string;
+		NotifyUrl?: string;
+		PaymentMethod?: PaymentMethod;
+	};
+
 	type CreatePluginAUserExtensionDto = {
 		Preferences?: string;
 		Points?: number;
@@ -335,6 +350,8 @@ declare namespace APIModel {
 		AvatarUrl: string;
 		Status?: number;
 	};
+
+	type DataStatus = 0 | 1 | 2 | 3;
 
 	type deleteApiAdminFdAdminUserIdParams = {
 		/** 要删除的记录的唯一标识符 */
@@ -1128,6 +1145,11 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type getApiAdminFdMenuMenuBtnsParams = {
+		Belong?: number;
+		RoleId?: string;
+	};
+
 	type getApiAdminFdMenuPageParams = {
 		/** 页码 (从1开始) */
 		pageIndex?: number;
@@ -1435,6 +1457,23 @@ declare namespace APIModel {
 		CustomReplacement?: string;
 	};
 
+	type MenuBtnRe = {
+		Id?: string;
+		Name?: string;
+		Title?: string;
+		DataStatus?: DataStatus;
+		Exist?: boolean;
+		Children?: MenuBtnRe[];
+		BtnList?: MenuBtnReStatusDto[];
+	};
+
+	type MenuBtnReStatusDto = {
+		Id?: string;
+		Name?: string;
+		DataStatus?: DataStatus;
+		Exist?: boolean;
+	};
+
 	type MenuType = 0 | 1;
 
 	type MetricQueryRequest = {
@@ -1508,6 +1547,8 @@ declare namespace APIModel {
 		IsByRef?: boolean;
 		CanReduce?: boolean;
 	};
+
+	type PaymentMethod = 0 | 1;
 
 	type PluginATestBooleanFuncExpression = {
 		Type?: string;
@@ -1609,6 +1650,10 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type postApiAdminFdRoleIdMenuBtnsParams = {
+		id: string;
+	};
+
 	type postApiAdminFdRoleIdPermissionsParams = {
 		id: string;
 	};
@@ -1635,6 +1680,13 @@ declare namespace APIModel {
 	type postApiStorageUploadParams = {
 		/** 存储桶名称（可选） */
 		bucketName?: string;
+	};
+
+	type PreCreateRequest = {
+		OrderId?: string;
+		Amount?: number;
+		Subject?: string;
+		NotifyUrl?: string;
 	};
 
 	type PurchaseStatusDto = 0 | 1 | 2;
