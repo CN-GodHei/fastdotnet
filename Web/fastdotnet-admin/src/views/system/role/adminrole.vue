@@ -317,13 +317,13 @@ const savePermissions = async () => {
 // 构建权限数据
 const buildPermissionData = (menuBtnList: MenuBtnRe[]): APIModel.MenuBtnRe[] => {
   return menuBtnList.flatMap(item => {
-    // 检查当前菜单是否被选中（通过检查是否有子菜单或按钮被选中）
-    // 如果菜单下有按钮被选中，或有子菜单被选中，则当前菜单也被选中
+    // 检查当前菜单是否被选中（通过Tree组件）或是否有按钮被选中
+    const isMenuSelected = menuTreeRef.value?.getCheckedKeys().includes(item.Id) || false;
     const hasSelectedButtons = item.selectedBtns && item.selectedBtns.length > 0;
     const hasSelectedChildren = item.Children ? buildPermissionData(item.Children) : [];
     
-    // 如果有选中的按钮或子菜单，则返回该菜单
-    if (hasSelectedButtons || hasSelectedChildren.length > 0) {
+    // 如果菜单被选中、或有按钮被选中、或有子菜单被选中，则返回该菜单
+    if (isMenuSelected || hasSelectedButtons || hasSelectedChildren.length > 0) {
       // 过滤出被选中的按钮
       const selectedBtnList = item.BtnList?.filter(btn => item.selectedBtns?.includes(btn.Id)) || [];
       
