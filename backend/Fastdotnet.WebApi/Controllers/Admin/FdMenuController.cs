@@ -10,6 +10,8 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         private readonly ICurrentUser _currentUser;
         private readonly IRepository<FdRole> _roleRepository;
         private readonly IRepository<FdMenuButton> _MenuBtnRepository;
+        private readonly IRepository<FdRoleMenu> _roleMenuRepository;
+        private readonly IRepository<FdRoleMenuButton> _roleMenuBtnRepository;
         private readonly IAdminUserService _adminUserService;
         private readonly IUserRefFiller _userRefFiller;
         public FdMenuController(
@@ -20,7 +22,10 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             IRepository<FdAdminUserRole> adminUserRoleRepository,
             IAdminUserService adminUserService,
             IRepository<FdRole> roleRepository,
+            IRepository<FdRoleMenu> roleMenuRepository,
+            IRepository<FdRoleMenuButton> roleMenuBtnRepository,
             IUserRefFiller userRefFiller,
+
             IRepository<FdMenuButton> menuBtnRepository) : base(service, mapper)
         {
             _menuService = menuService;
@@ -29,6 +34,8 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             _roleRepository = roleRepository;
             _userRefFiller = userRefFiller;
             _MenuBtnRepository = menuBtnRepository;
+            _roleMenuRepository = roleMenuRepository;
+            _roleMenuBtnRepository = roleMenuBtnRepository;
         }
 
         [HttpGet("tree")]
@@ -114,7 +121,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         [HttpGet("menu-btns")]
         //[Authorize(Policy = Permissions.Admin.Menus.View)]
-        public async Task<List<MenuBtnRe>> GetMenuBtn(int Belong, CancellationToken cancellationToken = default)
+        public async Task<List<MenuBtnRe>> GetMenuBtn(int Belong, string RoleId, CancellationToken cancellationToken = default)
         {
             SystemCategory systemCategory = (SystemCategory)Belong;
             
@@ -132,16 +139,29 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             // 获取菜单下的按钮
             var menuBtns = await _MenuBtnRepository.GetListAsync(m => menuCodes.Contains(m.MenuCode), cancellationToken);
             
+            // 如果角色Id不为空则说明是在已存在的角色上要进行修改，应返回角色已有的菜单和菜单 Exist 字段
+            var roleExistMenuIds = new List<string>();
+            var roleExistMenuBtnIds = new List<string>();
+            
+            if (!string.IsNullOrEmpty(RoleId))
+            {
+                var roleExistMenu = await _roleMenuRepository.GetListAsync(x => x.RoleId == RoleId);//对象里有 MenuId
+                var roleExistMenuBtn = await _roleMenuBtnRepository.GetListAsync(x => x.RoleId == RoleId);//对象里有 MenuButtonId
+                
+                roleExistMenuIds = roleExistMenu.Select(m => m.MenuId).ToList();
+                roleExistMenuBtnIds = roleExistMenuBtn.Select(mb => mb.MenuButtonId).ToList();
+            }
+            
             // 使用 _menuService.BuildMenuTree 构建菜单树形结构
             var menuTree = await _menuService.BuildMenuTree(menus, null);
             
             // 将菜单树形结构转换为 MenuBtnRe 树形结构
-            var result = ConvertFdMenuTreeToMenuBtnReTree(menuTree, menuBtns);
+            var result = ConvertFdMenuTreeToMenuBtnReTree(menuTree, menuBtns, roleExistMenuIds, roleExistMenuBtnIds);
             
             return result;
         }
         
-        private List<MenuBtnRe> ConvertFdMenuTreeToMenuBtnReTree(List<FdMenuDto> menuTree, List<FdMenuButton> menuBtns)
+        private List<MenuBtnRe> ConvertFdMenuTreeToMenuBtnReTree(List<FdMenuDto> menuTree, List<FdMenuButton> menuBtns, List<string> roleExistMenuIds, List<string> roleExistMenuBtnIds)
         {
             var result = new List<MenuBtnRe>();
             
@@ -150,11 +170,12 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 // 获取当前菜单的按钮
                 var menuButtons = menuBtns.Where(mb => mb.MenuCode == menu.Code).ToList();
                 
-                // 创建按钮列表的 IdNameStatusDto 集合
-                var btnList = menuButtons.Select(mb => new IdNameStatusDto(
+                // 创建按钮列表的 MenuBtnReStatusDto 集合
+                var btnList = menuButtons.Select(mb => new MenuBtnReStatusDto(
                     Id: mb.Id,
                     Name: mb.Name,
-                    DataStatus: DataStatus.NoChange
+                    DataStatus: DataStatus.NoChange,
+                    Exist: roleExistMenuBtnIds.Contains(mb.Id)  // 根据角色权限设置 Exist 字段
                 )).ToList();
                 
                 var menuBtnRe = new MenuBtnRe
@@ -163,10 +184,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                     Name = menu.Name,
                     Title = menu.Title,
                     BtnList = btnList,
-                    Children = menu.Children != null ? ConvertFdMenuTreeToMenuBtnReTree(menu.Children, menuBtns) : new List<MenuBtnRe>()
+                    Exist = roleExistMenuIds.Contains(menu.Id), // 根据角色权限设置 Exist 字段
+                    Children = menu.Children != null ? ConvertFdMenuTreeToMenuBtnReTree(menu.Children, menuBtns, roleExistMenuIds, roleExistMenuBtnIds) : new List<MenuBtnRe>()
                 };
+                
                 result.Add(menuBtnRe);
             }
+            
             return result;
         }
     }

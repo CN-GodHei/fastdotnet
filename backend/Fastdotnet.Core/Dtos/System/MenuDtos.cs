@@ -119,10 +119,12 @@ namespace Fastdotnet.Core.Dtos.System
 
         public string Name { get; set; }
         public string Title { get; set; }
+        public bool Exist { get; set; }
         public List<MenuBtnRe> Children { get; set; }
-        public List<IdNameStatusDto> BtnList { get; set; }
+        //public List<IdNameStatusDto> BtnList { get; set; }
+        public List<MenuBtnReStatusDto> BtnList { get; set; }
     }
 
-    //public record IdNameStatusDto<TId>(TId Id, string Name, DataStatus DataStatus);
+    public record MenuBtnReStatusDto(string Id, string Name, DataStatus DataStatus, bool Exist);
 
 }
