@@ -27,7 +27,7 @@ namespace Fastdotnet.Core.Dtos.System
         public string ExternalUrl { get; set; }
         public bool IsEnabled { get; set; }
         public string PermissionCode { get; set; }
-        
+
         // 新增字段 - 用于对接 vue-next-admin
         public string? Component { get; set; }
         public string? PluginId { get; set; }
@@ -64,7 +64,7 @@ namespace Fastdotnet.Core.Dtos.System
         public string ExternalUrl { get; set; }
         public bool IsEnabled { get; set; } = true;
         public string PermissionCode { get; set; }
-        
+
         // 新增字段 - 用于对接 vue-next-admin
         public string? Component { get; set; }
         public bool IsHide { get; set; } = false;
@@ -94,7 +94,7 @@ namespace Fastdotnet.Core.Dtos.System
         public string ExternalUrl { get; set; }
         public bool IsEnabled { get; set; }
         public string PermissionCode { get; set; }
-        
+
         // 新增字段 - 用于对接 vue-next-admin
         public string? Component { get; set; }
         public bool IsHide { get; set; }
@@ -109,4 +109,20 @@ namespace Fastdotnet.Core.Dtos.System
         public bool SupportDesktop { get; set; } = false;
         public bool SupportMobile { get; set; } = false;
     }
+
+    /// <summary>
+    /// 菜单按钮关系
+    /// </summary>
+    public record MenuBtnRe
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+        public string Title { get; set; }
+        public List<MenuBtnRe> Children { get; set; }
+        public List<IdNameStatusDto> BtnList { get; set; }
+    }
+
+    //public record IdNameStatusDto<TId>(TId Id, string Name, DataStatus DataStatus);
+
 }
