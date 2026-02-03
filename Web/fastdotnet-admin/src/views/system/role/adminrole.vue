@@ -117,8 +117,9 @@
 		<!-- 分配权限对话框 -->
 		<el-dialog v-model="state.permissionDialog.visible" draggable :close-on-click-modal="false" width="800px" height="600px" style="--el-dialog-padding-primary: 0;">
 			<template #header>
-				<div style="color: #fff">
-					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Tickets />
+				<div>
+					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle">
+						<ele-Tickets />
 					</el-icon>
 					<span> {{ state.permissionDialog.title }} </span>
 				</div>
@@ -299,6 +300,7 @@ const openAssignPermissionsDialog = async (row: APIModel.FdRoleDto) => {
   try {
     state.currentRoleId = row.Id as string;
     state.permissionDialog.visible = true;
+	console.log(`为 "${row.Name}" 分配权限`)
     state.permissionDialog.title = `为 "${row.Name}" 分配权限`;
     
     // 获取菜单按钮数据
