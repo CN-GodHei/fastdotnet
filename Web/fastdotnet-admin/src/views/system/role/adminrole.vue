@@ -167,63 +167,6 @@
 	</div>
 </template>
 
-<style scoped lang="scss">
-.custom-tree-node {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-.menu-name {
-  flex: 1;
-  margin-right: 12px;
-  font-weight: 500;
-}
-
-.btn-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.btn-checkbox {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background-color: #f5f7fa;
-  margin-right: 4px;
-}
-
-.btn-label {
-  margin-left: 4px;
-  font-size: 12px;
-}
-
-.el-tree-node__content {
-  padding: 6px 0;
-}
-
-.el-checkbox {
-  margin-right: 8px;
-}
-
-// 固定高度宽度的权限分配对话框
-.permission-tree-container {
-  height: 500px; /* 写死高度 */
-  overflow-y: auto;
-  padding: 16px;
-}
-
-.el-dialog {
-  &.permission-dialog {
-    .el-dialog__body {
-      padding: 0;
-    }
-  }
-}
-</style>
-
 <script lang="ts" setup name="FdRole">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage, ElTree } from 'element-plus';
