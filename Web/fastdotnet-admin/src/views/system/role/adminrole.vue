@@ -52,10 +52,12 @@
 					</template>
 				</el-table-column>
 				<!-- <el-table-column prop="Belong" label="属于管理端还是应用端" show-overflow-tooltip /> -->
-				<el-table-column label="操作" width="180" fixed="right" align="center">
+				<el-table-column label="操作" width="280" fixed="right" align="center">
 					<template #default="scope">
 						<el-button icon="ele-Edit" size="small" text type="primary"
 							@click="openEditDialog(scope.row)">修改</el-button>
+						<el-button icon="ele-Tickets" size="small" text type="primary"
+							@click="openAssignPermissionsDialog(scope.row)">分配权限</el-button>
 						<el-button icon="ele-Delete" size="small" text type="danger"
 							@click="handleDelete(scope.row)">删除</el-button>
 					</template>
@@ -72,7 +74,7 @@
 				<div style="color: #fff">
 					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Edit />
 					</el-icon>
-					<span> { state.dialog.title } </span>
+					<span> {{ state.dialog.title }} </span>
 				</div>
 			</template>
 			<el-form :model="state.formData" ref="formRef" label-width="auto">
@@ -107,22 +109,147 @@
 				<span class="dialog-footer">
 					<el-button @click="state.dialog.visible = false">取 消</el-button>
 					<el-button type="primary" @click="submitForm">确 定</el-button>
+					<el-button @click="resetForm">重 置</el-button>
+				</span>
+			</template>
+		</el-dialog>
+		
+		<!-- 分配权限对话框 -->
+		<el-dialog v-model="state.permissionDialog.visible" draggable :close-on-click-modal="false" width="800px" style="--el-dialog-padding-primary: 0; --el-dialog-max-height: 70vh;">
+			<template #header>
+				<div style="color: #fff">
+					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Tickets />
+					</el-icon>
+					<span> {{ state.permissionDialog.title }} </span>
+				</div>
+			</template>
+			
+			<div class="permission-tree-container">
+				<el-tree
+				ref="menuTreeRef"
+				:data="state.menuBtnData"
+				:props="state.treeProps"
+				node-key="Id"
+				:default-expand-all="true"
+				:show-checkbox="true"
+				:expand-on-click-node="false"
+				:check-strictly="false"
+			>
+				<template #default="{ node, data }">
+					<span class="custom-tree-node">
+						<span class="menu-name">{{ data.Title }}</span>
+						<span v-if="data.BtnList && data.BtnList.length > 0" class="btn-group">
+							<el-checkbox-group v-model="data.selectedBtns" @change="(val: string[]) => handleBtnChange(data, val)">
+								<el-checkbox
+									v-for="btn in data.BtnList"
+									:key="btn.Id"
+									:label="btn.Id"
+									:disabled="btn.disabled"
+									class="btn-checkbox"
+								>
+									<span class="btn-label">{{ btn.Name }}</span>
+								</el-checkbox>
+							</el-checkbox-group>
+						</span>
+					</span>
+				</template>
+			</el-tree>
+			</div>
+			
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="state.permissionDialog.visible = false">取 消</el-button>
+					<el-button type="primary" @click="savePermissions">保 存</el-button>
 				</span>
 			</template>
 		</el-dialog>
 	</div>
 </template>
 
+<style scoped lang="scss">
+.custom-tree-node {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.menu-name {
+  flex: 1;
+  margin-right: 12px;
+  font-weight: 500;
+}
+
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn-checkbox {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: #f5f7fa;
+  margin-right: 4px;
+}
+
+.btn-label {
+  margin-left: 4px;
+  font-size: 12px;
+}
+
+.el-tree-node__content {
+  padding: 6px 0;
+}
+
+.el-checkbox {
+  margin-right: 8px;
+}
+
+// 权限分配对话框样式
+.permission-tree-container {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+// 对话框样式调整
+.el-dialog__body {
+  padding: 0;
+}
+</style>
+
 <script lang="ts" setup name="FdRole">
 import { ref, reactive, onMounted } from 'vue';
-import { ElMessageBox, ElMessage } from 'element-plus';
+import { ElMessageBox, ElMessage, ElTree } from 'element-plus';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
 import * as FdRoleApi from '@/api/fd-system-api-admin/FdRole';
+import * as FdMenuApi from '@/api/fd-system-api-admin/FdMenu';
 
 const queryForm = ref();
 const formRef = ref();
+const menuTreeRef = ref<InstanceType<typeof ElTree>>();
+
+interface MenuBtnRe {
+  Id: string;
+  Name: string;
+  Title: string;
+  DataStatus: number; // DataStatus enum value
+  Exist: boolean;
+  Children?: MenuBtnRe[];
+  BtnList?: MenuBtnReStatusDto[];
+  selectedBtns?: string[]; // 用于存储选中的按钮ID
+}
+
+interface MenuBtnReStatusDto {
+  Id: string;
+  Name: string;
+  DataStatus: number;
+  Exist: boolean;
+}
 
 const state = reactive({
 	loading: false,
@@ -151,8 +278,125 @@ const state = reactive({
 		Description: '',
 		ParentId: '',
 		Belong: 0,
-	}
+	},
+	permissionDialog: {
+		visible: false,
+		title: '',
+	},
+	menuBtnData: [] as MenuBtnRe[],
+	treeProps: {
+		children: 'Children',
+		label: 'Name',
+	},
+	currentRoleId: '' // 记录当前正在分配权限的角色ID
 });
+
+// 打开分配权限对话框
+const openAssignPermissionsDialog = async (row: APIModel.FdRoleDto) => {
+  try {
+    state.currentRoleId = row.Id as string;
+    state.permissionDialog.visible = true;
+    state.permissionDialog.title = `为 "${row.Name}" 分配权限`;
+    
+    // 获取菜单按钮数据
+    const menuBtnData = (await FdMenuApi.getApiAdminFdMenuMenuBtns({ Belong: 0, RoleId: row.Id as string })) as unknown as APIModel.MenuBtnRe[]; // 封装的request返回的就是data的内容
+    state.menuBtnData = processMenuBtnData(menuBtnData);
+  } catch (error) {
+    ElMessage.error('获取权限数据失败');
+    console.error(error);
+  }
+};
+
+// 处理菜单按钮数据，添加选中状态
+const processMenuBtnData = (menuBtnList: APIModel.MenuBtnRe[]): MenuBtnRe[] => {
+  return menuBtnList.map(item => {
+    // 初始化选中的按钮
+    const selectedBtns = item.BtnList?.filter((btn: APIModel.MenuBtnReStatusDto) => btn.Exist).map((btn: APIModel.MenuBtnReStatusDto) => btn.Id!) || [];
+    
+    return {
+      Id: item.Id!,
+      Name: item.Name!,
+      Title: item.Title || '',
+      DataStatus: item.DataStatus || 0,
+      Exist: item.Exist || false,
+      selectedBtns: selectedBtns,
+      Children: item.Children ? processMenuBtnData(item.Children) : undefined,
+      BtnList: item.BtnList?.map((btn: APIModel.MenuBtnReStatusDto) => ({
+        Id: btn.Id!,
+        Name: btn.Name!,
+        DataStatus: btn.DataStatus || 0,
+        Exist: btn.Exist || false
+      }))
+    };
+  });
+};
+
+// 处理按钮选择变化
+const handleBtnChange = (data: MenuBtnRe, val: string[]) => {
+  // 更新按钮的选中状态
+  if (data.BtnList) {
+    data.BtnList.forEach(btn => {
+      btn.DataStatus = val.includes(btn.Id) ? 1 : 3; // 1-Added, 3-Deleted (简化处理)
+    });
+  }
+};
+
+// 重置表单
+const resetForm = () => {
+  formRef.value?.resetFields();
+};
+
+// 保存权限分配
+const savePermissions = async () => {
+  try {
+    // 构建权限数据
+    const permissionData = buildPermissionData(state.menuBtnData);
+    
+    // 调用保存接口
+    const result = await FdRoleApi.postApiAdminFdRoleIdMenuBtns(
+      { id: state.currentRoleId },
+      permissionData
+    );
+    
+    if (result) {
+      ElMessage.success('权限分配成功');
+      state.permissionDialog.visible = false;
+    } else {
+      ElMessage.error('权限分配失败');
+    }
+  } catch (error) {
+    ElMessage.error('权限分配失败');
+    console.error(error);
+  }
+};
+
+// 构建权限数据
+const buildPermissionData = (menuBtnList: MenuBtnRe[]): APIModel.MenuBtnRe[] => {
+  return menuBtnList.map(item => {
+    // 处理按钮权限
+    const BtnList = item.BtnList?.map((btn: MenuBtnReStatusDto) => {
+      // 根据是否选中确定数据状态
+      const isSelected = item.selectedBtns?.includes(btn.Id);
+      return {
+        Id: btn.Id,
+        Name: btn.Name,
+        DataStatus: isSelected ? 1 : 3, // 1-Added, 3-Deleted
+        Exist: isSelected
+      } as APIModel.MenuBtnReStatusDto;
+    }) || [];
+    
+    return {
+      Id: item.Id,
+      Name: item.Name,
+      Title: item.Title,
+      DataStatus: item.Exist ? 2 : 1, // 2-Modified, 1-Added (简化处理)
+      Exist: true, // 根据实际业务逻辑调整
+      BtnList: BtnList,
+      Children: item.Children ? buildPermissionData(item.Children) : undefined
+    } as APIModel.MenuBtnRe;
+  });
+};
+
 const toggleSearchCollapse = () => {
 	state.searchCollapsed = !state.searchCollapsed;
 };
@@ -276,13 +520,59 @@ const handleDelete = (row: APIModel.FdRoleDto) => {
 onMounted(() => {
 	getList();
 });
-</script>
-<style scoped lang="scss">
-// .el-form--inline .el-form-item {
-// 	margin-right: 12px !important; // 稍微紧凑一点
-// 	margin-bottom: 8px !important;
-// }
 
-// .fdadminuser-container .el-card:first-child .el-form .el-form-item:last-of-type {
-// 	margin-bottom: 5 !important;
-// }</style>
+</script>
+
+<style scoped lang="scss">
+.custom-tree-node {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.menu-name {
+  flex: 1;
+  margin-right: 12px;
+  font-weight: 500;
+}
+
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn-checkbox {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: #f5f7fa;
+  margin-right: 4px;
+}
+
+.btn-label {
+  margin-left: 4px;
+  font-size: 12px;
+}
+
+.el-tree-node__content {
+  padding: 6px 0;
+}
+
+.el-checkbox {
+  margin-right: 8px;
+}
+
+// 权限分配对话框样式
+.permission-tree-container {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+// 对话框样式调整
+.el-dialog__body {
+  padding: 0;
+}
+</style>
