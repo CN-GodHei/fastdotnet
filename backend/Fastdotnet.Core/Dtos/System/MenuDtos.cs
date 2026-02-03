@@ -119,6 +119,7 @@ namespace Fastdotnet.Core.Dtos.System
 
         public string Name { get; set; }
         public string Title { get; set; }
+        public DataStatus DataStatus { get; set; } // 添加 DataStatus 字段
         public bool Exist { get; set; }
         public List<MenuBtnRe> Children { get; set; }
         //public List<IdNameStatusDto> BtnList { get; set; }
