@@ -290,6 +290,73 @@ const processMenuBtnData = (menuBtnList: APIModel.MenuBtnRe[]): MenuBtnRe[] => {
   });
 };
 
+// 更新父级菜单状态
+const updateParentMenuState = (childId: string) => {
+  // 在树形数据中查找包含此子节点的父节点
+  const findAndProcessParents = (menuList: MenuBtnRe[]) => {
+    for (const menu of menuList) {
+      // 检查当前菜单的直接子节点
+      if (menu.Children) {
+        const hasChild = menu.Children.some(child => child.Id === childId);
+        if (hasChild) {
+          // 找到了父节点，更新其状态
+          updateMenuNodeState(menu);
+          return true;
+        }
+        // 递归检查更深层的子节点
+        if (findAndProcessParents(menu.Children)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+  
+  findAndProcessParents(state.menuBtnData);
+};
+
+// 更新单个菜单节点的状态
+const updateMenuNodeState = (menu: MenuBtnRe) => {
+  // 检查子节点的选中状态
+  let hasCheckedChildren = false;
+  let hasUncheckedChildren = false;
+  
+  // 检查直接子菜单
+  if (menu.Children) {
+    for (const child of menu.Children) {
+      const isChecked = menuTreeRef.value?.getCheckedKeys().includes(child.Id) || false;
+      const isHalfChecked = menuTreeRef.value?.getHalfCheckedKeys().includes(child.Id) || false;
+      const hasButtons = child.selectedBtns && child.selectedBtns.length > 0;
+      
+      if (isChecked || isHalfChecked || hasButtons) {
+        hasCheckedChildren = true;
+      } else {
+        hasUncheckedChildren = true;
+      }
+    }
+  }
+  
+  // 根据子节点状态更新当前节点
+  if (hasCheckedChildren && hasUncheckedChildren) {
+    // 部分子节点被选中 - 设置为半选中
+    menuTreeRef.value?.setChecked(menu.Id, false, false);
+    // Element Plus 的半选中需要特殊处理
+    const treeNode = menuTreeRef.value?.getNode(menu.Id);
+    if (treeNode) {
+      treeNode.indeterminate = true;
+    }
+  } else if (hasCheckedChildren && !hasUncheckedChildren) {
+    // 所有子节点都被选中 - 设置为全选中
+    menuTreeRef.value?.setChecked(menu.Id, true, false);
+  } else {
+    // 没有子节点被选中 - 保持当前状态或取消选中
+    const currentChecked = menuTreeRef.value?.getCheckedKeys().includes(menu.Id) || false;
+    if (!currentChecked) {
+      menuTreeRef.value?.setChecked(menu.Id, false, false);
+    }
+  }
+};
+
 // 处理树节点选中状态变化
 const handleTreeCheckChange = (data: MenuBtnRe, checked: boolean) => {
   // 只有当用户主动取消菜单节点选中时，才清空按钮
@@ -314,6 +381,11 @@ const handleTreeCheckChange = (data: MenuBtnRe, checked: boolean) => {
       // 确实没有按钮被选中，可以清空
       data.selectedBtns = [];
     }
+  }
+  
+  // 处理父级菜单联动
+  if (checked) {
+    updateParentMenuState(data.Id);
   }
 };
 
@@ -351,6 +423,9 @@ const handleSingleBtnChange = (data: MenuBtnRe, btnId: string, checked: boolean)
       menuTreeRef.value?.setChecked(data.Id, false, false);
     }
   }
+  
+  // 处理父级菜单联动
+  updateParentMenuState(data.Id);
   
   console.log('按钮状态:', data.Title, data.selectedBtns);
 };
