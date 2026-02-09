@@ -135,22 +135,22 @@
 				:show-checkbox="true"
 				:expand-on-click-node="false"
 				:check-strictly="true"
-			>
+				@check-change="handleTreeCheckChange"
+				>
 				<template #default="{ node, data }">
 					<span class="custom-tree-node">
 						<span class="menu-name">{{ data.Title }}</span>
 						<span v-if="data.BtnList && data.BtnList.length > 0" class="btn-group">
-							<el-checkbox-group v-model="data.selectedBtns" @change="(val: string[]) => handleBtnChange(data, val)">
-								<el-checkbox
-									v-for="btn in data.BtnList"
-									:key="btn.Id"
-									:label="btn.Id"
-									:disabled="btn.disabled"
-									class="btn-checkbox"
-								>
-									<span class="btn-label">{{ btn.Name }}</span>
-								</el-checkbox>
-							</el-checkbox-group>
+							<el-checkbox
+								v-for="btn in data.BtnList"
+								:key="btn.Id"
+								:checked="data.selectedBtns?.includes(btn.Id)"
+								@change="(checked: boolean) => handleSingleBtnChange(data, btn.Id, checked)"
+								:disabled="btn.disabled"
+								class="btn-checkbox"
+							>
+								<span class="btn-label">{{ btn.Name }}</span>
+							</el-checkbox>
 						</span>
 					</span>
 				</template>
@@ -184,11 +184,11 @@ interface MenuBtnRe {
   Id: string;
   Name: string;
   Title: string;
-  DataStatus: number; // DataStatus enum value
+  DataStatus: number;
   Exist: boolean;
   Children?: MenuBtnRe[];
   BtnList?: MenuBtnReStatusDto[];
-  selectedBtns?: string[]; // 用于存储选中的按钮ID
+  selectedBtns: string[]; // 保持简单，确保是数组
 }
 
 interface MenuBtnReStatusDto {
@@ -196,6 +196,7 @@ interface MenuBtnReStatusDto {
   Name: string;
   DataStatus: number;
   Exist: boolean;
+  disabled?: boolean;
 }
 
 const state = reactive({
@@ -258,10 +259,17 @@ const openAssignPermissionsDialog = async (row: APIModel.FdRoleDto) => {
 // 处理菜单按钮数据，添加选中状态
 const processMenuBtnData = (menuBtnList: APIModel.MenuBtnRe[]): MenuBtnRe[] => {
   return menuBtnList.map(item => {
-    // 初始化选中的按钮
-    const selectedBtns = item.BtnList?.filter((btn: APIModel.MenuBtnReStatusDto) => btn.Exist).map((btn: APIModel.MenuBtnReStatusDto) => btn.Id!) || [];
+    // 确保初始化选中的按钮为数组
+    const selectedBtns: string[] = [];
+    if (item.BtnList) {
+      item.BtnList.forEach((btn: APIModel.MenuBtnReStatusDto) => {
+        if (btn.Exist) {
+          selectedBtns.push(btn.Id!);
+        }
+      });
+    }
     
-    return {
+    const result: MenuBtnRe = {
       Id: item.Id!,
       Name: item.Name!,
       Title: item.Title || '',
@@ -273,16 +281,104 @@ const processMenuBtnData = (menuBtnList: APIModel.MenuBtnRe[]): MenuBtnRe[] => {
         Id: btn.Id!,
         Name: btn.Name!,
         DataStatus: btn.DataStatus || 0,
-        Exist: btn.Exist || false
+        Exist: btn.Exist || false,
+        disabled: false // 默认不禁用
       }))
     };
+    
+    return result;
   });
+};
+
+// 处理树节点选中状态变化
+const handleTreeCheckChange = (data: MenuBtnRe, checked: boolean) => {
+  // 只有当用户主动取消菜单节点选中时，才清空按钮
+  // 注意：这里不处理按钮变化触发的节点状态变化
+  if (!checked) {
+    // 检查是否真的是用户主动取消，而不是按钮变化引起的
+    const hasSelectedButtons = data.selectedBtns && data.selectedBtns.length > 0;
+    if (hasSelectedButtons) {
+      // 如果有按钮被选中，说明这是由按钮变化触发的，不应清空按钮
+      // 延迟执行，让按钮处理完成后再检查
+      setTimeout(() => {
+        const stillHasButtons = data.selectedBtns && data.selectedBtns.length > 0;
+        if (stillHasButtons) {
+          // 重新选中节点，因为还有按钮被选中
+          menuTreeRef.value?.setChecked(data.Id, true, false);
+        } else {
+          // 真的是用户主动取消菜单节点
+          data.selectedBtns = [];
+        }
+      }, 0);
+    } else {
+      // 确实没有按钮被选中，可以清空
+      data.selectedBtns = [];
+    }
+  }
+};
+
+// 处理单个按钮选择变化
+const handleSingleBtnChange = (data: MenuBtnRe, btnId: string, checked: boolean) => {
+  // 确保数组存在
+  if (!data.selectedBtns) {
+    data.selectedBtns = [];
+  }
+  
+  const currentIndex = data.selectedBtns.indexOf(btnId);
+  
+  if (checked && currentIndex === -1) {
+    // 添加选中项
+    data.selectedBtns.push(btnId);
+  } else if (!checked && currentIndex > -1) {
+    // 移除选中项
+    data.selectedBtns.splice(currentIndex, 1);
+  }
+  
+  // 强制触发响应式更新
+  data.selectedBtns = [...data.selectedBtns];
+  
+  // 同步树节点状态 - 只有当没有任何按钮被选中时才取消菜单选中
+  if (data.selectedBtns.length > 0) {
+    // 有按钮被选中，确保菜单节点也被选中
+    menuTreeRef.value?.setChecked(data.Id, true, false);
+  } else {
+    // 没有按钮被选中，且菜单节点不是被直接选中的情况下才取消
+    const checkedNodes = menuTreeRef.value?.getCheckedKeys() || [];
+    const halfCheckedNodes = menuTreeRef.value?.getHalfCheckedKeys() || [];
+    
+    // 只有当菜单节点既不是直接选中也不是半选中时才取消
+    if (!checkedNodes.includes(data.Id) && !halfCheckedNodes.includes(data.Id)) {
+      menuTreeRef.value?.setChecked(data.Id, false, false);
+    }
+  }
+  
+  console.log('按钮状态:', data.Title, data.selectedBtns);
 };
 
 // 处理按钮选择变化
 const handleBtnChange = (data: MenuBtnRe, val: string[]) => {
+  // 确保 selectedBtns 是数组类型
+  if (!Array.isArray(val)) {
+    val = [];
+  }
+  
   // 更新选中按钮数组
-  data.selectedBtns = val;
+  data.selectedBtns = [...val]; // 创建新数组确保响应式更新
+  
+  // 同步更新树节点的选中状态
+  if (val.length > 0) {
+    // 如果有按钮被选中，确保对应的菜单节点也被选中
+    menuTreeRef.value?.setChecked(data.Id, true, false);
+  } else {
+    // 如果没有按钮被选中，检查是否需要取消菜单节点选中
+    // 只有当菜单节点本身未被直接选中时才取消
+    const checkedNodes = menuTreeRef.value?.getCheckedKeys() || [];
+    if (!checkedNodes.includes(data.Id)) {
+      menuTreeRef.value?.setChecked(data.Id, false, false);
+    }
+  }
+  
+  console.log('按钮选择变化:', data.Title, data.selectedBtns);
 };
 
 // 重置表单
