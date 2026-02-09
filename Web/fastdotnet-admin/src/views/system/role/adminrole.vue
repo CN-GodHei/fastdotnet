@@ -244,11 +244,14 @@ const openAssignPermissionsDialog = async (row: APIModel.FdRoleDto) => {
   try {
     state.currentRoleId = row.Id as string;
     state.permissionDialog.visible = true;
-	console.log(`为 "${row.Name}" 分配权限`)
+    console.log(`为 "${row.Name}" 分配权限`)
     state.permissionDialog.title = `为 "${row.Name}" 分配权限`;
     
+    // 先清空现有数据，避免显示旧数据
+    state.menuBtnData = [];
+    
     // 获取菜单按钮数据
-    const menuBtnData = (await FdMenuApi.getApiAdminFdMenuMenuBtns({ Belong: 0, RoleId: row.Id as string })) as unknown as APIModel.MenuBtnRe[]; // 封装的request返回的就是data的内容
+    const menuBtnData = (await FdMenuApi.getApiAdminFdMenuMenuBtns({ Belong: 0, RoleId: row.Id as string })) as unknown as APIModel.MenuBtnRe[];
     state.menuBtnData = processMenuBtnData(menuBtnData);
     
     // 延迟设置 Tree 组件的选中状态，确保 DOM 已经渲染
