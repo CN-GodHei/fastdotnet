@@ -6,6 +6,7 @@ namespace Fastdotnet.Core.Entities.System
     /// 菜单表
     /// </summary>
     [SugarTable("fd_menu", "菜单")]
+    [SugarIndex("index_fd_menu_code", nameof(Code), OrderByType.Asc, IsUnique = true)]
     public class FdMenu 
         : AuditableEntity
         //: BaseEntity, ISoftDelete
