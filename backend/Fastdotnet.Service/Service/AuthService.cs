@@ -82,6 +82,12 @@ namespace Fastdotnet.Service.Service
                 userName = user.Username;
 
                 var userRoles = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
+                if (!userRoles.Any())
+                {
+                    //获取默认角色
+                    var DefaultRole = await _roleRepository.GetFirstAsync(x => x.IsDefault == true && x.Belong == SystemCategory.Admin);
+                    userRoles.Add(new FdAdminUserRole { RoleId = DefaultRole.Id });
+                }
                 var roleIds = userRoles.Select(ur => ur.RoleId).ToList();
                 if (roleIds.Any())
                 {
@@ -100,6 +106,12 @@ namespace Fastdotnet.Service.Service
                 userName = user.Username;
 
                 var userRoles = await _appUserRoleRepository.GetListAsync(ur => ur.AppUserId == userId);
+                if (!userRoles.Any())
+                {
+                    //获取默认角色
+                    var DefaultRole = await _roleRepository.GetFirstAsync(x => x.IsDefault == true && x.Belong == SystemCategory.App);
+                    userRoles.Add(new FdAppUserRole { RoleId = DefaultRole.Id });
+                }
                 var roleIds = userRoles.Select(ur => ur.RoleId).ToList();
                 if (roleIds.Any())
                 {
