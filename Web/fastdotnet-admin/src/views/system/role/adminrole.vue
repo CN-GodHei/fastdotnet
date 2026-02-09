@@ -250,6 +250,11 @@ const openAssignPermissionsDialog = async (row: APIModel.FdRoleDto) => {
     // 获取菜单按钮数据
     const menuBtnData = (await FdMenuApi.getApiAdminFdMenuMenuBtns({ Belong: 0, RoleId: row.Id as string })) as unknown as APIModel.MenuBtnRe[]; // 封装的request返回的就是data的内容
     state.menuBtnData = processMenuBtnData(menuBtnData);
+    
+    // 延迟设置 Tree 组件的选中状态，确保 DOM 已经渲染
+    setTimeout(() => {
+      initializeTreeCheckedState(state.menuBtnData);
+    }, 100);
   } catch (error) {
     ElMessage.error('获取权限数据失败');
     console.error(error);
@@ -259,7 +264,7 @@ const openAssignPermissionsDialog = async (row: APIModel.FdRoleDto) => {
 // 处理菜单按钮数据，添加选中状态
 const processMenuBtnData = (menuBtnList: APIModel.MenuBtnRe[]): MenuBtnRe[] => {
   return menuBtnList.map(item => {
-    // 确保初始化选中的按钮为数组
+    // 根据 Exist 字段初始化选中的按钮
     const selectedBtns: string[] = [];
     if (item.BtnList) {
       item.BtnList.forEach((btn: APIModel.MenuBtnReStatusDto) => {
@@ -269,7 +274,7 @@ const processMenuBtnData = (menuBtnList: APIModel.MenuBtnRe[]): MenuBtnRe[] => {
       });
     }
     
-    const result: MenuBtnRe = {
+    return {
       Id: item.Id!,
       Name: item.Name!,
       Title: item.Title || '',
@@ -282,11 +287,31 @@ const processMenuBtnData = (menuBtnList: APIModel.MenuBtnRe[]): MenuBtnRe[] => {
         Name: btn.Name!,
         DataStatus: btn.DataStatus || 0,
         Exist: btn.Exist || false,
-        disabled: false // 默认不禁用
+        disabled: false
       }))
     };
+  });
+};
+
+// 初始化 Tree 组件的选中状态
+const initializeTreeCheckedState = (menuList: MenuBtnRe[]) => {
+  menuList.forEach(menu => {
+    // 根据 Exist 字段设置菜单节点选中状态
+    if (menu.Exist) {
+      menuTreeRef.value?.setChecked(menu.Id, true, false);
+    }
     
-    return result;
+    // 递归处理子菜单
+    if (menu.Children) {
+      initializeTreeCheckedState(menu.Children);
+    }
+  });
+  
+  // 处理父子菜单联动状态
+  menuList.forEach(menu => {
+    if (menu.Children) {
+      updateParentMenuState(menu.Id);
+    }
   });
 };
 
@@ -466,7 +491,7 @@ const savePermissions = async () => {
   try {
     // 构建权限数据
     const permissionData = buildPermissionData(state.menuBtnData);
-    
+    console.log(permissionData)
     // 调用保存接口
     const result = await FdRoleApi.postApiAdminFdRoleIdMenuBtns(
       { id: state.currentRoleId },
