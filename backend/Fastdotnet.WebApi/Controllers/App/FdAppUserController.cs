@@ -10,12 +10,17 @@ namespace Fastdotnet.WebApi.Controllers.App
     public class FdAppUserController 
         : AppGenericDtoControllerBase<FdAppUser, CreateFdAppUserDto, UpdateFdAppUserDto, FdAppUserDto>
     {
-        public FdAppUserController(IBaseService<FdAppUser, string> service, IMapper mapper, ICurrentUser currentUser) : base(service, mapper, currentUser)
+        public FdAppUserController(IBaseService<FdAppUser, string> service, IMapper mapper, ICurrentUser currentUser, IAppUserService appUserService) : base(service, mapper, currentUser)
         {
+            _service = service;
+            _mapper = mapper;
+            _currentUser = currentUser;
+            _appUserService = appUserService;
         }
         private readonly IBaseService<FdAppUser, string> _service;
         private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
+        private readonly IAppUserService _appUserService;
         //public  FdAppUserController(IBaseService<FdAppUser, string> service, IMapper mapper, ICurrentUser currentUser) 
         //{
         //    _service = service;
@@ -33,16 +38,16 @@ namespace Fastdotnet.WebApi.Controllers.App
             }
 
             // 获取用户角色
-            //var userRoleRelations = await _adminUserService.GetUserRoleRelationsAsync(_currentUser.Id);
-            //var roleIds = userRoleRelations.Select(ur => ur.RoleId).ToList();
+            var userRoleRelations = await _appUserService.GetUserRoleRelationsAsync(_currentUser.Id);
+            var roleIds = userRoleRelations.Select(ur => ur.RoleId).ToList();
 
-            //// 获取用户按钮权限
-            //var buttons = await _adminUserService.GetUserButtonPermissionsAsync(_currentUser.Id);
+            // 获取用户按钮权限
+            var buttons = await _appUserService.GetUserButtonPermissionsAsync(_currentUser.Id);
 
             // 构造返回对象
             var userDto = _mapper.Map<FdAppUserDto>(user);
-            //userDto.RoleIds = roleIds;
-            //userDto.Buttons = buttons;
+            userDto.RoleIds = roleIds;
+            userDto.Buttons = buttons;
 
             return userDto;
         }

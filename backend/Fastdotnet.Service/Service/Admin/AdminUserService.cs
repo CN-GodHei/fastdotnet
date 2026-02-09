@@ -1,5 +1,5 @@
 
-namespace Fastdotnet.Service.Service.Admin
+namespace Fastdotnet.Service.Admin
 {
     public class AdminUserService : IAdminUserService
     {
@@ -120,7 +120,12 @@ namespace Fastdotnet.Service.Service.Admin
         
         public async Task<List<FdAdminUserRole>> GetUserRoleRelationsAsync(string userId)
         {
-            return await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
+            //return await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
+            var userExistRole = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
+            var DefaultRole = await _roleRepository.GetListAsync(r => r.IsDefault && r.Belong == SystemCategory.Admin);
+            return new List<FdAdminUserRole> {
+                new FdAdminUserRole { AdminUserId = userId, RoleId = DefaultRole.FirstOrDefault()?.Id }
+            }.Union(userExistRole).ToList();
         }
         
         public async Task<List<string>> GetUserButtonPermissionsAsync(string userId)

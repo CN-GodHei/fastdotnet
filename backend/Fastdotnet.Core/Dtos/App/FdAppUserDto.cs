@@ -149,5 +149,15 @@ namespace Fastdotnet.Core.Dtos.App
         /// 注册时间
         /// </summary>
         //public DateTime RegistrationDate { get; set; }
+
+        /// <summary>
+        /// 用户的角色ID列表
+        /// </summary>
+        public List<string> RoleIds { get; set; } = new List<string>();
+
+        /// <summary>
+        /// 用户的按钮权限列表
+        /// </summary>
+        public List<string> Buttons { get; set; } = new List<string>();
     }
 }

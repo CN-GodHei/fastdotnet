@@ -9,13 +9,18 @@ namespace Fastdotnet.Service.Service
         private readonly IRepository<FdAppUserRole> _appUserRoleRepository;
         private readonly IPermissionService _permissionService;
         private readonly IMapper _mapper;
+        private readonly IAdminUserService _adminUserService;
+        private readonly IAppUserService _appUserService;
+
         public MenuService(
             IRepository<FdMenu> menuRepository,
             IRepository<FdRoleMenu> roleMenuRepository,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
             IRepository<FdAppUserRole> appUserRoleRepository,
             IPermissionService permissionService,
-            IMapper mapper)
+            IMapper mapper,
+            IAdminUserService adminUserService,
+            IAppUserService appUserService)
         {
             _menuRepository = menuRepository;
             _roleMenuRepository = roleMenuRepository;
@@ -23,6 +28,8 @@ namespace Fastdotnet.Service.Service
             _appUserRoleRepository = appUserRoleRepository;
             _permissionService = permissionService;
             _mapper = mapper;
+            _adminUserService = adminUserService;
+            _appUserService = appUserService;
         }
 
         public async Task<List<FdMenuDto>> GetUserMenusAsync(string userId, SystemCategory category)
@@ -31,12 +38,14 @@ namespace Fastdotnet.Service.Service
             List<string> roleIds;
             if (category == SystemCategory.Admin)
             {
-                var userRoles = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
+                //var userRoles = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
+                var userRoles = await _adminUserService.GetUserRoleRelationsAsync(userId);
                 roleIds = userRoles.Select(ur => ur.RoleId).ToList();
             }
             else
             {
-                var userRoles = await _appUserRoleRepository.GetListAsync(ur => ur.AppUserId == userId);
+                //var userRoles = await _appUserRoleRepository.GetListAsync(ur => ur.AppUserId == userId);
+                var userRoles = await _appUserService.GetUserRoleRelationsAsync(userId);
                 roleIds = userRoles.Select(ur => ur.RoleId).ToList();
             }
 
@@ -87,7 +96,8 @@ namespace Fastdotnet.Service.Service
                 }
 
                 // 使用 AutoMapper 和异步处理
-                var tasks = childMenus.Select(async m => {
+                var tasks = childMenus.Select(async m =>
+                {
                     // 使用 AutoMapper 映射基本属性
                     var menuDto = _mapper.Map<FdMenuDto>(m);
                     // 递归构建子菜单

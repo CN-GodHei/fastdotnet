@@ -46,21 +46,24 @@ namespace Fastdotnet.Service.Initializers
             {
                 await _Repository.InsertRangeAsync(ToInsert);
             }
-            const string APP_DEFAULT_ROLECODE = "APP_ROLE_001";
-            await _fdRoleInitializer.RoleInitializer();
-            var userrole = await _UserRoleRepository.GetFirstAsync(x => x.AppUserId == entitys.FirstOrDefault().Id);
-            var temp = _fdroleRepository.GetFirstAsync(x => x.Code == APP_DEFAULT_ROLECODE).GetAwaiter().GetResult();
-            if (userrole == null)
-            {
-                await _UserRoleRepository.InsertAsync(new FdAppUserRole { RoleId = temp.Id, AppUserId = entitys.FirstOrDefault().Id });
-            }
-            string appUserDefaultMenuId = "12262382148846597";
-            //APP端默认角色可用菜单
-            var appUserDefaultMenu = await _fdroleMenuRepository.GetFirstAsync(w => w.RoleId == temp.Id && w.MenuId == appUserDefaultMenuId);
-            if (appUserDefaultMenu == null)
-            {
-                await _fdroleMenuRepository.InsertAsync(new FdRoleMenu { RoleId = temp.Id, MenuId = appUserDefaultMenuId });
-            }
+
+            //默认角色菜单不做硬编码:系统初始化完成后，会自动创建默认角色，从后台配置默认角色能访问的菜单
+            
+            //const string APP_DEFAULT_ROLECODE = "APP_ROLE_001";
+            //await _fdRoleInitializer.RoleInitializer();
+            //var userrole = await _UserRoleRepository.GetFirstAsync(x => x.AppUserId == entitys.FirstOrDefault().Id);
+            //var temp = _fdroleRepository.GetFirstAsync(x => x.Code == APP_DEFAULT_ROLECODE).GetAwaiter().GetResult();
+            //if (userrole == null)
+            //{
+            //    await _UserRoleRepository.InsertAsync(new FdAppUserRole { RoleId = temp.Id, AppUserId = entitys.FirstOrDefault().Id });
+            //}
+            //string appUserDefaultMenuId = "12262382148846597";
+            ////APP端默认角色可用菜单
+            //var appUserDefaultMenu = await _fdroleMenuRepository.GetFirstAsync(w => w.RoleId == temp.Id && w.MenuId == appUserDefaultMenuId);
+            //if (appUserDefaultMenu == null)
+            //{
+            //    await _fdroleMenuRepository.InsertAsync(new FdRoleMenu { RoleId = temp.Id, MenuId = appUserDefaultMenuId });
+            //}
         }
     }
 }

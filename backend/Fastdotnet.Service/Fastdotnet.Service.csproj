@@ -16,9 +16,4 @@
     <ProjectReference Include="..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="IService\App\" />
-    <Folder Include="Service\App\" />
-  </ItemGroup>
-
 </Project>
