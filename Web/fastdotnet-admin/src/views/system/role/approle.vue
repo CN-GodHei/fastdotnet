@@ -54,11 +54,11 @@
 				<!-- <el-table-column prop="Belong" label="属于管理端还是应用端" show-overflow-tooltip /> -->
 				<el-table-column label="操作" width="280" fixed="right" align="center">
 					<template #default="scope">
-						<el-button icon="ele-Edit" size="small" text type="primary"
+						<el-button :disabled="scope.row.IsDefault" icon="ele-Edit" size="small" text type="primary"
 							@click="openEditDialog(scope.row)">修改</el-button>
-						<el-button icon="ele-Tickets" size="small" text type="primary"
+						<el-button :disabled="scope.row.IsDefault" icon="ele-Tickets" size="small" text type="primary"
 							@click="openAssignPermissionsDialog(scope.row)">分配权限</el-button>
-						<el-button icon="ele-Delete" size="small" text type="danger"
+						<el-button :disabled="scope.row.IsDefault" icon="ele-Delete" size="small" text type="danger"
 							@click="handleDelete(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
