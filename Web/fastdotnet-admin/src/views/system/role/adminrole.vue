@@ -244,7 +244,7 @@ const openAssignPermissionsDialog = async (row: APIModel.FdRoleDto) => {
   try {
     state.currentRoleId = row.Id as string;
     state.permissionDialog.visible = true;
-    console.log(`为 "${row.Name}" 分配权限`)
+    //console.log(`为 "${row.Name}" 分配权限`)
     state.permissionDialog.title = `为 "${row.Name}" 分配权限`;
     
     // 先清空现有数据，避免显示旧数据
@@ -260,7 +260,7 @@ const openAssignPermissionsDialog = async (row: APIModel.FdRoleDto) => {
     }, 100);
   } catch (error) {
     ElMessage.error('获取权限数据失败');
-    console.error(error);
+    //console.error(error);
   }
 };
 
@@ -455,7 +455,7 @@ const handleSingleBtnChange = (data: MenuBtnRe, btnId: string, checked: boolean)
   // 处理父级菜单联动
   updateParentMenuState(data.Id);
   
-  console.log('按钮状态:', data.Title, data.selectedBtns);
+  //console.log('按钮状态:', data.Title, data.selectedBtns);
 };
 
 // 处理按钮选择变化
@@ -481,7 +481,7 @@ const handleBtnChange = (data: MenuBtnRe, val: string[]) => {
     }
   }
   
-  console.log('按钮选择变化:', data.Title, data.selectedBtns);
+  //console.log('按钮选择变化:', data.Title, data.selectedBtns);
 };
 
 // 重置表单
@@ -494,7 +494,7 @@ const savePermissions = async () => {
   try {
     // 构建权限数据
     const permissionData = buildPermissionData(state.menuBtnData);
-    console.log(permissionData)
+    //console.log(permissionData)
     // 调用保存接口
     const result = await FdRoleApi.postApiAdminFdRoleIdMenuBtns(
       { id: state.currentRoleId },
@@ -509,7 +509,7 @@ const savePermissions = async () => {
     }
   } catch (error) {
     ElMessage.error('权限分配失败');
-    console.error(error);
+    //console.error(error);
   }
 };
 
@@ -577,13 +577,13 @@ const getList = async () => {
 			searchBody.QueryParameters = queryResult.queryParameters;
 		}
 		// 调试日志
-		//console.log('Search request body:', searchBody);
+		////console.log('Search request body:', searchBody);
 		const response = await FdRoleApi.postApiAdminFdRolePageSearch(searchBody);
 		state.tableData.data = response.Items as APIModel.FdRoleDto[] || [] as APIModel.FdRoleDto[];
 		state.pagination.total = response.PageInfo?.Total || 0;
 	} catch (error) {
 		ElMessage.error('获取数据失败');
-		//console.error(error);
+		////console.error(error);
 	} finally {
 		state.loading = false;
 	}
@@ -649,7 +649,7 @@ const submitForm = () => {
 			state.dialog.visible = false;
 			getList();
 		} catch (error) {
-			console.error(error);
+			//console.error(error);
 			ElMessage.error(state.dialog.type === 'update' ? '更新失败' : '添加失败');
 		}
 	});
