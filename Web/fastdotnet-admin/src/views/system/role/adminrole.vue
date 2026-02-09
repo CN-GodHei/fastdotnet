@@ -57,7 +57,7 @@
 					<template #default="scope">
 						<el-button :disabled="scope.row.IsDefault || scope.row.Code === 'SUPER_ADMIN'" icon="ele-Edit"
 							size="small" text type="primary" @click="openEditDialog(scope.row)">修改</el-button>
-						<el-button :disabled="scope.row.IsDefault || scope.row.Code === 'SUPER_ADMIN'"
+						<el-button :disabled="scope.row.Code === 'SUPER_ADMIN'"
 							icon="ele-Tickets" size="small" text type="primary"
 							@click="openAssignPermissionsDialog(scope.row)">分配权限</el-button>
 						<el-button :disabled="scope.row.IsDefault || scope.row.Code === 'SUPER_ADMIN'" icon="ele-Delete"
