@@ -2,6 +2,7 @@ using Autofac.Core;
 using Fastdotnet.Core.IService.Sys;
 using Fastdotnet.Core.Service.Sys;
 using Fastdotnet.Plugin.Contracts;
+using Fastdotnet.Service.IService.Sys;
 
 var builder = WebApplication.CreateBuilder(args);
 // 可选：延长停机超时时间
@@ -94,6 +95,7 @@ builder.Services.AddScoped<IUserRefFiller, UserRefFiller>();
 //builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 //builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 //builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
+builder.Services.AddScoped<IFdRoleInitializerService, FdRoleInitializerService>();
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IApplicationInitializer, OrmCodeFirstInitializer>();
