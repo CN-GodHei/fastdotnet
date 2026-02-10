@@ -374,6 +374,21 @@ namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
 
 namespace {nameSpace ?? "Fastdotnet.Core.Models"}
 {{
+
+     /// <summary>
+    /// AutoMapper配置文件
+    /// </summary>
+    public class {entityName}Profile : Profile
+    {{
+        public {entityName}Profile()
+        {{
+            // Source -> Target
+            CreateMap<{entityName}, {entityName}Dto>().MaskSensitiveData();
+            CreateMap<Create{entityName}Dto, {entityName}>();
+            CreateMap<Update{entityName}Dto, {entityName}>();
+        }}
+    }}
+
     /// <summary>
     ///新增传输模型
     /// </summary>
