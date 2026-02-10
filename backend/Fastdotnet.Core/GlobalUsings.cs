@@ -62,3 +62,4 @@ global using System.Threading;
 global using System.Threading.Tasks;
 global using Yitter.IdGenerator;
 global using AutoMapper;
+global using Fastdotnet.Core.Extensions;

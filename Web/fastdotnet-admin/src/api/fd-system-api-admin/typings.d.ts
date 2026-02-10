@@ -108,6 +108,11 @@ declare namespace APIModel {
 		Avatar?: string;
 	};
 
+	type CreateFdAdminUserRoleDto = {
+		AdminUserId?: string;
+		RoleId?: string;
+	};
+
 	type CreateFdAppUserDto = {
 		Username: string;
 		Password: string;
@@ -479,6 +484,16 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type deleteApiFdAdminUserRoleIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteApiFdAdminUserRoleRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
 	type deleteApiFdAppUserIdParams = {
 		id: string;
 	};
@@ -634,6 +649,28 @@ declare namespace APIModel {
 	type FdAdminUserDtoPageResult = {
 		PageInfo?: PageInfo;
 		Items?: FdAdminUserDto[];
+	};
+
+	type FdAdminUserRoleBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type FdAdminUserRoleDto = {
+		Id?: string;
+		AdminUserId?: string;
+		RoleId?: string;
+	};
+
+	type FdAdminUserRoleDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdAdminUserRoleDto[];
 	};
 
 	type FdAppUserDto = {
@@ -1345,6 +1382,25 @@ declare namespace APIModel {
 		algorithm: string;
 	};
 
+	type getApiFdAdminUserRoleIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getApiFdAdminUserRolePageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getApiFdAdminUserRoleRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
 	type getApiFdAppUserIdParams = {
 		id: string;
 	};
@@ -1826,6 +1882,16 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type putApiFdAdminUserRoleIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putApiFdAdminUserRoleRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
 	type putApiFdAppUserIdParams = {
 		id: string;
 	};
@@ -1911,6 +1977,16 @@ declare namespace APIModel {
 	type UpdateFdAdminUserDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateFdAdminUserDto;
+	};
+
+	type UpdateFdAdminUserRoleDto = {
+		AdminUserId?: string;
+		RoleId?: string;
+	};
+
+	type UpdateFdAdminUserRoleDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdAdminUserRoleDto;
 	};
 
 	type UpdateFdAppUserDto = {

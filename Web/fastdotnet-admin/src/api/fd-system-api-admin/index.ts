@@ -8,6 +8,7 @@ import * as CodeGen from './CodeGen';
 import * as CodeGenConfig from './CodeGenConfig';
 import * as EncryptionKey from './EncryptionKey';
 import * as FdAdminUser from './FdAdminUser';
+import * as FdAdminUserRole from './FdAdminUserRole';
 import * as FdAppUser from './FdAppUser';
 import * as FdBlacklists from './FdBlacklists';
 import * as FdDictData from './FdDictData';
@@ -30,6 +31,7 @@ export default {
 	CodeGenConfig,
 	EncryptionKey,
 	FdAdminUser,
+	FdAdminUserRole,
 	FdAppUser,
 	FdBlacklists,
 	FdDictData,
