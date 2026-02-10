@@ -209,10 +209,13 @@ namespace Fastdotnet.Core.Entities.System
         /// <summary>
         /// 增改
         /// </summary>
-        [SugarColumn(ColumnDescription = "增改", IsNullable = true)]
+        [SugarColumn(ColumnDescription = "新增", IsNullable = true)]
         [MaxLength(8)]
-        public bool WhetherAddUpdate { get; set; }
+        public bool WhetherAdd { get; set; }
 
+        [SugarColumn(ColumnDescription = "修改", IsNullable = true)]
+        [MaxLength(8)]
+        public bool WhetherUpdate { get; set; }
         /// <summary>
         /// 导入
         /// </summary>

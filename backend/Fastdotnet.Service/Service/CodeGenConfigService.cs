@@ -379,7 +379,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
     /// </summary>
     public class Create{entityName}Dto
     {{
-{string.Join("\n", filteredColumns.Where(col => !col.ColumnKey && col.WhetherAddUpdate == true).Select(col => GenerateDtoProperty(col, true)))}
+{string.Join("\n", filteredColumns.Where(col => !col.ColumnKey && col.WhetherAdd == true).Select(col => GenerateDtoProperty(col, true)))}
     }}
 
     /// <summary>
@@ -387,7 +387,7 @@ namespace {nameSpace ?? "Fastdotnet.Core.Models"}
     /// </summary>
     public class Update{entityName}Dto
     {{
-{string.Join("\n", primaryKeyColumns.Where(x => x.EnableMask == false && x.WhetherAddUpdate == true).Select(col => GenerateDtoProperty(col, false)))}
+{string.Join("\n", primaryKeyColumns.Where(x => x.EnableMask == false && x.WhetherUpdate == true).Select(col => GenerateDtoProperty(col, false)))}
     }}
 
     /// <summary>
@@ -547,7 +547,7 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
 				</div>
 			</template>
 			<el-form :model=""state.formData"" ref=""formRef"" label-width=""auto"">
-				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherAddUpdate == true).Select(col =>
+				{string.Join("\n\t\t\t\t", configcolumns.Where(x => x.WhetherAdd == true).Select(col =>
                     $"				<el-col :xs=\"24\" :sm=\"12\" :md=\"12\" :lg=\"12\" :xl=\"12\" class=\"mb20\">\n					<el-form-item label=\"{col.ShowColumnName ?? col.PropertyName}\" prop=\"{col.PropertyName}\">\n						{GetFormComponentByEffectType(col)}\n					</el-form-item>\n				</el-col>"
                 ))}
 			</el-form>
@@ -593,7 +593,7 @@ const state = reactive({{
 	}},
 	formData: {{
     Id:'',
-	{string.Join("\n\t", configcolumns.Where(x => x.WhetherAddUpdate == true).Select((col, idx) => $@"{col.PropertyName}:{getTSDefaultvAalue(col)},"))}
+	{string.Join("\n\t", configcolumns.Where(x => x.WhetherAdd == true).Select((col, idx) => $@"{col.PropertyName}:{getTSDefaultvAalue(col)},"))}
 }}
 }});
 const toggleSearchCollapse = () => {{

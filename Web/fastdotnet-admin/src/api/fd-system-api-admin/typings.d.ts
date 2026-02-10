@@ -145,7 +145,8 @@ declare namespace APIModel {
 		WhetherRequired?: boolean;
 		WhetherSortable?: boolean;
 		WhetherTable?: boolean;
-		WhetherAddUpdate?: boolean;
+		WhetherAdd?: boolean;
+		WhetherUpdate?: boolean;
 		WhetherImport?: boolean;
 		WhetherCommon?: boolean;
 		OrderNo?: number;
@@ -642,6 +643,8 @@ declare namespace APIModel {
 		Nickname?: string;
 		AvatarUrl?: string;
 		Status?: number;
+		RoleIds?: string[];
+		Buttons?: string[];
 	};
 
 	type FdAppUserDtoPageResult = {
@@ -720,6 +723,8 @@ declare namespace APIModel {
 		WhetherSortable?: boolean;
 		WhetherTable?: boolean;
 		WhetherAddUpdate?: boolean;
+		WhetherAdd?: boolean;
+		WhetherUpdate?: boolean;
 		WhetherImport?: boolean;
 		WhetherCommon?: boolean;
 		OrderNo?: number;
@@ -1955,7 +1960,8 @@ declare namespace APIModel {
 		WhetherRequired?: boolean;
 		WhetherSortable?: boolean;
 		WhetherTable?: boolean;
-		WhetherAddUpdate?: boolean;
+		WhetherAdd?: boolean;
+		WhetherUpdate?: boolean;
 		WhetherImport?: boolean;
 		WhetherCommon?: boolean;
 		OrderNo?: number;

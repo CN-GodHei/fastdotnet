@@ -70,9 +70,14 @@
 						<el-checkbox v-model="scope.row.WhetherTable" />
 					</template>
 				</el-table-column>
-				<el-table-column prop="WhetherAddUpdate" label="增改显示" width="70" align="center" show-overflow-tooltip>
+				<el-table-column prop="WhetherAdd" label="新增显示" width="70" align="center" show-overflow-tooltip>
 					<template #default="scope">
-						<el-checkbox v-model="scope.row.WhetherAddUpdate" />
+						<el-checkbox v-model="scope.row.WhetherAdd" />
+					</template>
+				</el-table-column>
+				<el-table-column prop="WhetherUpdate" label="修改显示" width="70" align="center" show-overflow-tooltip>
+					<template #default="scope">
+						<el-checkbox v-model="scope.row.WhetherUpdate" />
 					</template>
 				</el-table-column>
 				<el-table-column prop="WhetherImport" label="导入" width="70" align="center" show-overflow-tooltip>

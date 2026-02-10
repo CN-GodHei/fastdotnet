@@ -239,7 +239,8 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                     EffectType = _codeGenConfigService.GetEffectTypeByColumnName(col.ColumnName, col.DataType), // 根据字段名和数据类型推断作用类型
                     OrderNo = index + 100, // 默认排序
                     WhetherTable = baseEntityProperties.Contains(col.PropertyName) ? false : true,
-                    WhetherAddUpdate = baseEntityProperties.Contains(col.PropertyName) ? false : true,
+                    WhetherAdd = baseEntityProperties.Contains(col.PropertyName) ? false : true,
+                    WhetherUpdate = baseEntityProperties.Contains(col.PropertyName) ? false : true,
                     WhetherImport = baseEntityProperties.Contains(col.PropertyName) ? false : true,
                     WhetherSortable = baseEntityProperties.Contains(col.PropertyName) ? false : true,
                     WhetherQuery = baseEntityProperties.Contains(col.PropertyName) ? false : true,

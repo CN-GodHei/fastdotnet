@@ -135,6 +135,16 @@ namespace Fastdotnet.Core.Dtos.System
         public bool WhetherAddUpdate { get; set; }
 
         /// <summary>
+        /// 新增
+        /// </summary>
+        public bool WhetherAdd { get; set; }
+
+        /// <summary>
+        /// 修改
+        /// </summary>
+        public bool WhetherUpdate { get; set; }
+
+        /// <summary>
         /// 导入
         /// </summary>
         public bool WhetherImport { get; set; }
@@ -314,10 +324,16 @@ namespace Fastdotnet.Core.Dtos.System
         /// </summary>
         public bool WhetherTable { get; set; }
 
+
         /// <summary>
-        /// 增改
+        /// 新增
         /// </summary>
-        public bool WhetherAddUpdate { get; set; }
+        public bool WhetherAdd { get; set; }
+
+        /// <summary>
+        /// 修改
+        /// </summary>
+        public bool WhetherUpdate { get; set; }
 
         /// <summary>
         /// 导入
@@ -504,9 +520,14 @@ namespace Fastdotnet.Core.Dtos.System
         public bool WhetherTable { get; set; }
 
         /// <summary>
-        /// 增改
+        /// 新增
         /// </summary>
-        public bool WhetherAddUpdate { get; set; }
+        public bool WhetherAdd { get; set; }
+
+        /// <summary>
+        /// 修改
+        /// </summary>
+        public bool WhetherUpdate { get; set; }
 
         /// <summary>
         /// 导入
