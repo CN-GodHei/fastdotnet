@@ -1976,6 +1976,12 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type QueryByConditionDto = {
+		DynamicQuery?: string;
+		QueryParameters?: any[];
+		SelectFields?: string[];
+	};
+
 	type ResetPasswordDto = {
 		NewPassword: string;
 	};

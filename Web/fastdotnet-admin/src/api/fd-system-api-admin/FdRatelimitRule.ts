@@ -143,6 +143,17 @@ export async function getApiAdminFdRatelimitRuleCheck(
 		...(options || {}),
 	});
 }
+/** 根据自定义条件获取列表(不分页) 根据自定义条件获取列表(不分页) POST /api/admin/FdRatelimitRule/list-by-condition */
+export async function postApiAdminFdRatelimitRuleListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
+	return request<any>('/api/admin/FdRatelimitRule/list-by-condition', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/admin/FdRatelimitRule/page */
 export async function getApiAdminFdRatelimitRulePage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
