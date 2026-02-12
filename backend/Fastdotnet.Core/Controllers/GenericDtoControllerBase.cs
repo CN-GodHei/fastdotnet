@@ -151,29 +151,47 @@ namespace Fastdotnet.Core.Controllers
         }
 
         /// <summary>
-        /// 根据自定义条件获取列表(不分页)
+        /// 根据自定义条件获取列表(不分页、支持只查询特定列)
         /// </summary>
         /// <param name="query"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        //[HttpGet]
-        //public virtual async Task<List<TDto>> GetListByConditionAsync([FromBody] PageQueryByConditionDto query, CancellationToken cancellationToken = default)
-        //{
-        //    // 构建动态表达式
-        //    Expression<Func<TEntity, bool>>? whereExpression = null;
+        [HttpPost("list-by-condition")]
+        public async Task<IActionResult> GetListByCondition(
+            [FromBody] QueryByConditionDto query,
+            CancellationToken cancellationToken = default)
+        {
+            if (query.SelectFields.Count()>0)
+            {
+                var result = await _service.GetProjectedListByConditionAsync(
+                query.DynamicQuery,
+                query.QueryParameters,
+                query.SelectFields,
+                cancellationToken);
+                return Ok(result);
 
-        //    // 如果有动态查询条件，则构建表达式
-        //    if (!string.IsNullOrEmpty(query.DynamicQuery))
-        //    {
-        //        whereExpression = DynamicExpressionParser.ParseLambda<TEntity, bool>(
-        //            ParsingConfig.Default,
-        //            false,
-        //            query.DynamicQuery,
-        //            query.QueryParameters ?? new object[0]);
-        //    }
-        //    var entities = await _service.GetListAsync(whereExpression,cancellationToken);
-        //    return _mapper.Map<List<TDto>>(entities);
-        //}
+            }
+            else
+            {
+                // 构建动态表达式
+                Expression<Func<TEntity, bool>>? whereExpression = null;
+
+                // 如果有动态查询条件，则构建表达式
+                if (!string.IsNullOrEmpty(query.DynamicQuery))
+                {
+                    whereExpression = DynamicExpressionParser.ParseLambda<TEntity, bool>(
+                        ParsingConfig.Default,
+                        false,
+                        query.DynamicQuery,
+                        query.QueryParameters ?? new object[0]);
+                }
+
+                var result = await _service.GetListAsync(
+                    whereExpression);
+
+                return Ok(result);
+            }
+        }
         /// <summary>
         /// 根据ID获取实体
         /// </summary>
@@ -809,6 +827,21 @@ namespace Fastdotnet.Core.Controllers
 
         #region 映射方法
 
+
+        #endregion
+
+        #region 辅助方法
+        // 辅助方法：将实体转为字典（可指定字段）
+        private static Dictionary<string, object> ToDictionary(object entity, List<PropertyInfo>? props = null)
+        {
+            props ??= entity.GetType().GetProperties().Where(p => p.CanRead).ToList();
+            var dict = new Dictionary<string, object>();
+            foreach (var prop in props)
+            {
+                dict[prop.Name] = prop.GetValue(entity) ?? DBNull.Value;
+            }
+            return dict;
+        }
 
         #endregion
     }

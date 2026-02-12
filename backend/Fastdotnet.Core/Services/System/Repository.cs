@@ -530,6 +530,60 @@ namespace Fastdotnet.Core.Services.System
                 .ToListAsync(ct);
         }
 
+        public async Task<List<Dictionary<string, object>>> GetProjectedListAsync(
+    Expression<Func<T, bool>>? whereExpression,
+    string[] selectFields,
+    CancellationToken ct = default)
+        {
+            if (selectFields == null || selectFields.Length == 0)
+                throw new ArgumentException("SelectFields cannot be null or empty.");
+
+            // 字段白名单校验
+            var validProperties = typeof(T).GetProperties()
+                .Where(p => p.CanRead)
+                .ToDictionary(p => p.Name, StringComparer.OrdinalIgnoreCase);
+
+            var validatedColumns = new List<string>();
+            foreach (var field in selectFields)
+            {
+                if (validProperties.TryGetValue(field, out var propInfo))
+                {
+                    validatedColumns.Add(propInfo.Name); // 保留实体中的真实属性名（大小写）
+                }
+                // 不再 throw，而是静默忽略无效字段
+            }
+
+            // 如果过滤后没有有效字段，可以决定是否报错或返回空列表
+            if (validatedColumns.Count == 0)
+            {
+                // 选项1：返回空列表（无字段可查）
+                return new List<Dictionary<string, object>>();
+            }
+
+            // 构建查询
+            var query = _db.Queryable<T>();
+            if (whereExpression != null)
+                query = query.Where(whereExpression);
+            // 构建 Select 字符串
+            string selectClause = string.Join(", ", validatedColumns);
+            // 关键：只选择指定列
+            query = query.Select(selectClause);
+
+            var entities = await query.ToListAsync(ct);
+
+            // 转为字典
+            return entities.Select(entity =>
+            {
+                var dict = new Dictionary<string, object>();
+                foreach (var prop in validatedColumns)
+                {
+                    var value = typeof(T).GetProperty(prop)?.GetValue(entity);
+                    dict[prop] = value ?? DBNull.Value;
+                }
+                return dict;
+            }).ToList();
+        }
+
         #endregion
     }
 

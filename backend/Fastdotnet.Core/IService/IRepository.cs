@@ -35,6 +35,15 @@ namespace Fastdotnet.Core.IService
             Expression<Func<T, bool>> whereExpression,
             Expression<Func<T, TResult>> selectExpression,
             CancellationToken ct = default);
+
+        /// <summary>
+        /// 根据条件和指定字段列表查询，返回字典列表
+        /// </summary>
+        Task<List<Dictionary<string, object>>> GetProjectedListAsync(
+            Expression<Func<T, bool>>? whereExpression,
+            string[] selectFields,
+            CancellationToken ct = default);
+
         /// <summary>
         /// 根据条件查询第一个实体
         /// </summary>

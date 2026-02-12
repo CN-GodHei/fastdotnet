@@ -157,6 +157,19 @@ namespace Fastdotnet.Core.IService
         /// <returns>删除成功的数量</returns>
         Task<int> DeleteAsync(Expression<Func<TEntity, bool>> whereExpression);
 
+        /// <summary>
+        /// 根据动态条件和指定字段投影查询数据，返回字典列表
+        /// </summary>
+        /// <param name="dynamicQuery"></param>
+        /// <param name="parameters"></param>
+        /// <param name="selectFields"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        Task<List<Dictionary<string, object>>> GetProjectedListByConditionAsync(
+               string? dynamicQuery,
+               object[]? parameters,
+               string[]? selectFields,
+               CancellationToken ct = default);
         #endregion
 
         #region 回收站操作

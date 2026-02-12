@@ -44,6 +44,48 @@ namespace Fastdotnet.Core.Controllers
         }
 
         /// <summary>
+        /// 根据自定义条件获取列表(不分页、支持只查询特定列)
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost("list-by-condition")]
+        public async Task<IActionResult> GetListByCondition(
+            [FromBody] QueryByConditionDto query,
+            CancellationToken cancellationToken = default)
+        {
+            if (query.SelectFields.Count() > 0)
+            {
+                var result = await _service.GetProjectedListByConditionAsync(
+                query.DynamicQuery,
+                query.QueryParameters,
+                query.SelectFields,
+                cancellationToken);
+                return Ok(result);
+
+            }
+            else
+            {
+                // 构建动态表达式
+                Expression<Func<TEntity, bool>>? whereExpression = null;
+
+                // 如果有动态查询条件，则构建表达式
+                if (!string.IsNullOrEmpty(query.DynamicQuery))
+                {
+                    whereExpression = DynamicExpressionParser.ParseLambda<TEntity, bool>(
+                        ParsingConfig.Default,
+                        false,
+                        query.DynamicQuery,
+                        query.QueryParameters ?? new object[0]);
+                }
+
+                var result = await _service.GetListAsync(
+                    whereExpression);
+
+                return Ok(result);
+            }
+        }
+        /// <summary>
         /// 根据ID获取实体
         /// </summary>
         /// <param name="id">实体ID</param>

@@ -70,7 +70,10 @@ namespace Fastdotnet.WebApi.Filters
                     operation.Summary = "获取所有记录";
                     operation.Description = "检索并返回系统中该类型的所有记录。";
                     break;
-
+                case "GetListByCondition":
+                    operation.Summary = "根据自定义条件获取列表(不分页)";
+                    operation.Description = "根据自定义条件获取列表(不分页)";
+                    break;
                 case "GetById":
                     operation.Summary = "根据ID获取记录";
                     operation.Description = "根据提供的唯一标识符(ID)检索特定记录的详细信息。";

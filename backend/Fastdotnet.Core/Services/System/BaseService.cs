@@ -196,6 +196,32 @@ namespace Fastdotnet.Core.Services.System
             return await _repository.DeleteAsync(whereExpression);
         }
 
+        public async Task<List<Dictionary<string, object>>> GetProjectedListByConditionAsync(
+        string? dynamicQuery,
+        object[]? queryParameters,
+        string[]? selectFields,
+        CancellationToken cancellationToken = default)
+            {
+                if (selectFields == null || selectFields.Length == 0)
+                    throw new ArgumentException("At least one field must be specified in SelectFields.");
+
+                // 构建动态 Where 表达式
+                Expression<Func<TEntity, bool>>? whereExpression = null;
+                if (!string.IsNullOrEmpty(dynamicQuery))
+                {
+                    whereExpression = DynamicExpressionParser.ParseLambda<TEntity, bool>(
+                        ParsingConfig.Default,
+                        false,
+                        dynamicQuery,
+                        queryParameters ?? new object[0]);
+                }
+
+                // 直接调用仓储方法 
+                return await _repository.GetProjectedListAsync(
+                    whereExpression,
+                    selectFields,
+                    cancellationToken);
+            }
         #endregion
 
         #region 回收站操作
@@ -278,7 +304,7 @@ namespace Fastdotnet.Core.Services.System
 
         public async Task<List<TProjection>> GetListAsync<TProjection>(Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, TProjection>> selector, CancellationToken ct = default)
         {
-            return await _repository.GetListAsync(whereExpression, selector,ct);
+            return await _repository.GetListAsync(whereExpression, selector, ct);
         }
 
         #endregion
