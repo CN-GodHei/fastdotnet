@@ -10,6 +10,7 @@ import * as EncryptionKey from './EncryptionKey';
 import * as FdAdminUser from './FdAdminUser';
 import * as FdAdminUserRole from './FdAdminUserRole';
 import * as FdAppUser from './FdAppUser';
+import * as FdAppUserRole from './FdAppUserRole';
 import * as FdBlacklists from './FdBlacklists';
 import * as FdDictData from './FdDictData';
 import * as FdDictType from './FdDictType';
@@ -33,6 +34,7 @@ export default {
 	FdAdminUser,
 	FdAdminUserRole,
 	FdAppUser,
+	FdAppUserRole,
 	FdBlacklists,
 	FdDictData,
 	FdDictType,

@@ -55,6 +55,8 @@
 					<template #default="scope">
 						<el-button icon="ele-Edit" size="small" text type="primary"
 							@click="openEditDialog(scope.row)">修改</el-button>
+						<el-button icon="ele-User" size="small" text type="primary"
+							@click="openAssignRoleDialog(scope.row)">分配角色</el-button>
 						<el-button icon="ele-Delete" size="small" text type="danger"
 							@click="handleDelete(scope.row)">删除</el-button>
 					</template>
@@ -118,6 +120,40 @@
 				</span>
 			</template>
 		</el-dialog>
+
+		
+		<!-- 分配角色对话框 -->
+		<el-dialog v-model="state.roleDialog.visible" draggable :close-on-click-modal="false" width="600px">
+			<template #header>
+				<div style="color: #fff">
+					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-User /> </el-icon>
+					<span> {{ state.roleDialog.title }} </span>
+				</div>
+			</template>
+			<div class="role-selection-container">
+				<el-transfer 
+					v-model="state.roleDialog.selectedRoles" 
+					:data="state.roleDialog.allRoles"
+					:titles="['可分配角色', '已分配角色']"
+					:button-texts="['移除', '添加']"
+					:format="{
+						noChecked: '${total}',
+						hasChecked: '${checked}/${total}'
+					}"
+					@change="handleRoleTransferChange">
+					<template #default="{ option }">
+						<span>{{ option.name }}</span>
+						<el-tag size="small" type="info" style="margin-left: 8px;">{{ option.code }}</el-tag>
+					</template>
+				</el-transfer>
+			</div>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="state.roleDialog.visible = false">取 消</el-button>
+					<el-button type="primary" @click="saveRoleAssignment">保 存</el-button>
+				</span>
+			</template>
+		</el-dialog>
 	</div>
 </template>
 
@@ -128,7 +164,8 @@ import { buildMixedQuery } from '@/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
 import * as FdAppUserApi from '@/api/fd-system-api-admin/FdAppUser';
-
+import * as FdRoleApi from '@/api/fd-system-api-admin/FdRole';
+import * as FdAppUserRoleApi from '@/api/fd-system-api-admin/FdAppUserRole';
 const queryForm = ref();
 const formRef = ref();
 
@@ -155,6 +192,14 @@ const state = reactive({
 		visible: false,
 		title: '',
 		type: 'create' as 'create' | 'update',
+	},
+	roleDialog: {
+		visible: false,
+		title: '',
+		userId: '',
+		selectedRoles: [] as string[],
+		allRoles: [] as Array<{ key: string; name: string; code: string }>[],
+		currentUserRoles: [] as string[],
 	},
 	formData: {
 		Id: '',
@@ -271,13 +316,86 @@ const submitForm = () => {
 		}
 	});
 };
+// 打开分配角色对话框
+const openAssignRoleDialog = async (row: APIModel.FdAppUserDto) => {
+	try {
+		state.roleDialog.userId = row.Id as string;
+		state.roleDialog.title = `为 "${row.Nickname}" 分配角色`;
+		state.roleDialog.visible = true;
+		
+		// 获取所有角色
+		await loadAllRoles();
+		
+		// 获取用户当前角色
+		await loadUserRoles(row.Id as string);
+		
+	} catch (error) {
+		ElMessage.error('获取角色数据失败');
+	}
+};
 
+// 加载所有角色
+const loadAllRoles = async () => {
+	try {
+		const response = await FdRoleApi.getApiAdminFdRole();
+		state.roleDialog.allRoles = (response || []).map((role: APIModel.FdRoleDto) => ({
+			key: role.Id as string,
+			name: role.Name as string,
+			code: role.Code as string
+		}));
+	} catch (error) {
+		ElMessage.error('获取角色列表失败');
+	}
+};
+
+// 加载用户当前角色
+const loadUserRoles = async (userId: string) => {
+	try {
+		// 使用专门的用户角色查询接口
+		const roleIds = await FdAppUserRoleApi.getApiFdAppUserRoleUserUserIdRoles({ userId });
+		state.roleDialog.currentUserRoles = roleIds || [];
+		state.roleDialog.selectedRoles = [...state.roleDialog.currentUserRoles];
+	} catch (error) {
+		ElMessage.error('获取用户角色失败');
+	}
+};
+
+// 处理角色转移变化
+const handleRoleTransferChange = (value: string[], direction: 'left' | 'right', movedKeys: string[]) => {
+	state.roleDialog.selectedRoles = value;
+};
+
+// 保存角色分配
+const saveRoleAssignment = async () => {
+	try {
+		const userId = state.roleDialog.userId;
+		const selectedRoles = state.roleDialog.selectedRoles;
+		
+		// 使用后端事务安全的分配接口
+		const assignDto: APIModel.AssignUserRolesDto = {
+			UserId: userId,
+			RoleIds: selectedRoles
+		};
+		
+		const result = await FdAppUserRoleApi.postApiFdAppUserRoleAssignRoles(assignDto);
+		
+		if (result) {
+			ElMessage.success('角色分配保存成功');
+			state.roleDialog.visible = false;
+		} else {
+			ElMessage.error('角色分配保存失败');
+		}
+		
+	} catch (error) {
+		ElMessage.error('角色分配保存失败');
+	}
+};
 // 删除
 const handleDelete = (row: APIModel.FdAppUserDto) => {
 	ElMessageBox.confirm('确定删除吗？')
 		.then(async () => {
 			// 删除接口调用
-			await FdAppUserApi.deleteAdminFdAppUserId({ id: row.Id as string });
+			await FdAppUserApi.deleteApiFdAppUserId({ id: row.Id as string });
 			ElMessage.success('删除成功');
 			getList();
 		})
@@ -299,4 +417,22 @@ onMounted(() => {
 
 // .fdadminuser-container .el-card:first-child .el-form .el-form-item:last-of-type {
 // 	margin-bottom: 5 !important;
-// }</style>
+// }
+.role-selection-container {
+	padding: 20px;
+	
+	:deep(.el-transfer) {
+		display: flex;
+		align-items: center;
+		
+		.el-transfer-panel {
+			flex: 1;
+			min-height: 300px;
+		}
+		
+		.el-transfer__buttons {
+			padding: 0 20px;
+		}
+	}
+}
+</style>

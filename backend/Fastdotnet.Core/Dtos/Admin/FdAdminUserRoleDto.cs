@@ -75,4 +75,21 @@
 
         public string RoleId { get; set; }
     }
+
+    /// <summary>
+    /// 用户角色分配业务传输模型
+    /// </summary>
+    public class AssignUserRolesDto
+    {
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        [Required(ErrorMessage = "用户ID不能为空")]
+        public string UserId { get; set; }
+
+        /// <summary>
+        /// 要分配的角色ID列表
+        /// </summary>
+        public List<string> RoleIds { get; set; } = new();
+    }
 }

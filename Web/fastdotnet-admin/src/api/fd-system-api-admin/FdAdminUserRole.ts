@@ -67,6 +67,17 @@ export async function deleteApiFdAdminUserRoleId(
 		...(options || {}),
 	});
 }
+/** 为用户分配角色（事务安全的一次性操作） POST /api/FdAdminUserRole/assign-roles */
+export async function postApiFdAdminUserRoleAssignRoles(body: APIModel.AssignUserRolesDto, options?: { [key: string]: any }) {
+	return request<boolean>('/api/FdAdminUserRole/assign-roles', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/FdAdminUserRole/batch */
 export async function putApiFdAdminUserRoleBatch(body: APIModel.UpdateFdAdminUserRoleDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/FdAdminUserRole/batch', {
@@ -222,6 +233,20 @@ export async function postApiFdAdminUserRoleRecyclebinSearch(body: APIModel.Page
 			'Content-Type': 'application/json',
 		},
 		data: body,
+		...(options || {}),
+	});
+}
+/** 获取指定用户当前角色 GET /api/FdAdminUserRole/user/${param0}/roles */
+export async function getApiFdAdminUserRoleUserUserIdRoles(
+	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+	params: APIModel.getApiFdAdminUserRoleUserUserIdRolesParams,
+	options?: { [key: string]: any }
+) {
+	const { userId: param0, ...queryParams } = params;
+
+	return request<string[]>(`/api/FdAdminUserRole/user/${param0}/roles`, {
+		method: 'GET',
+		params: { ...queryParams },
 		...(options || {}),
 	});
 }

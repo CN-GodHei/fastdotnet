@@ -62,6 +62,7 @@ namespace Fastdotnet.Core.Dtos.App
     /// </summary>
     public class UpdateFdAppUserDto
     {
+        public string Id { get; set; }
 
         /// <summary>
         /// 用户名
@@ -109,6 +110,7 @@ namespace Fastdotnet.Core.Dtos.App
     /// </summary>
     public class FdAppUserDto
     {
+        public string Id { get; set; }
 
         /// <summary>
         /// 用户名

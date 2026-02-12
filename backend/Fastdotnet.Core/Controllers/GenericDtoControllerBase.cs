@@ -151,6 +151,30 @@ namespace Fastdotnet.Core.Controllers
         }
 
         /// <summary>
+        /// 根据自定义条件获取列表(不分页)
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        //[HttpGet]
+        //public virtual async Task<List<TDto>> GetListByConditionAsync([FromBody] PageQueryByConditionDto query, CancellationToken cancellationToken = default)
+        //{
+        //    // 构建动态表达式
+        //    Expression<Func<TEntity, bool>>? whereExpression = null;
+
+        //    // 如果有动态查询条件，则构建表达式
+        //    if (!string.IsNullOrEmpty(query.DynamicQuery))
+        //    {
+        //        whereExpression = DynamicExpressionParser.ParseLambda<TEntity, bool>(
+        //            ParsingConfig.Default,
+        //            false,
+        //            query.DynamicQuery,
+        //            query.QueryParameters ?? new object[0]);
+        //    }
+        //    var entities = await _service.GetListAsync(whereExpression,cancellationToken);
+        //    return _mapper.Map<List<TDto>>(entities);
+        //}
+        /// <summary>
         /// 根据ID获取实体
         /// </summary>
         /// <param name="id">实体ID</param>

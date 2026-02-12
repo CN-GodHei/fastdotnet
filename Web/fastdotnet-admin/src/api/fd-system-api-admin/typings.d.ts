@@ -37,6 +37,11 @@ declare namespace APIModel {
 		PermissionIds?: string[];
 	};
 
+	type AssignUserRolesDto = {
+		UserId: string;
+		RoleIds?: string[];
+	};
+
 	type BooleanApiResult = {
 		Data?: boolean;
 		Code?: number;
@@ -121,6 +126,11 @@ declare namespace APIModel {
 		Nickname?: string;
 		AvatarUrl: string;
 		Status?: number;
+	};
+
+	type CreateFdAppUserRoleDto = {
+		AppUserId?: string;
+		RoleId?: string;
 	};
 
 	type CreateFdBlacklistDto = {
@@ -498,6 +508,16 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type deleteApiFdAppUserRoleIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteApiFdAppUserRoleRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
 	type deleteApiStorage_openAPI_deleteFileNameParams = {
 		/** 文件名 */
 		fileName: string;
@@ -674,6 +694,7 @@ declare namespace APIModel {
 	};
 
 	type FdAppUserDto = {
+		Id?: string;
 		Username?: string;
 		Email?: string;
 		PhoneNumber?: string;
@@ -687,6 +708,28 @@ declare namespace APIModel {
 	type FdAppUserDtoPageResult = {
 		PageInfo?: PageInfo;
 		Items?: FdAppUserDto[];
+	};
+
+	type FdAppUserRoleBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type FdAppUserRoleDto = {
+		Id?: string;
+		AppUserId?: string;
+		RoleId?: string;
+	};
+
+	type FdAppUserRoleDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdAppUserRoleDto[];
 	};
 
 	type FdBlacklistBooleanFuncExpression = {
@@ -1401,6 +1444,10 @@ declare namespace APIModel {
 		pageSize?: number;
 	};
 
+	type getApiFdAdminUserRoleUserUserIdRolesParams = {
+		userId: string;
+	};
+
 	type getApiFdAppUserIdParams = {
 		id: string;
 	};
@@ -1408,6 +1455,29 @@ declare namespace APIModel {
 	type getApiFdAppUserPageParams = {
 		pageIndex?: number;
 		pageSize?: number;
+	};
+
+	type getApiFdAppUserRoleIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getApiFdAppUserRolePageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getApiFdAppUserRoleRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getApiFdAppUserRoleUserUserIdRolesParams = {
+		userId: string;
 	};
 
 	type getApiPluginActivePluginIdParams = {
@@ -1896,6 +1966,16 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type putApiFdAppUserRoleIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putApiFdAppUserRoleRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
 	type ResetPasswordDto = {
 		NewPassword: string;
 	};
@@ -1990,6 +2070,7 @@ declare namespace APIModel {
 	};
 
 	type UpdateFdAppUserDto = {
+		Id?: string;
 		Username?: string;
 		Email?: string;
 		PhoneNumber?: string;
@@ -2001,6 +2082,16 @@ declare namespace APIModel {
 	type UpdateFdAppUserDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateFdAppUserDto;
+	};
+
+	type UpdateFdAppUserRoleDto = {
+		AppUserId?: string;
+		RoleId?: string;
+	};
+
+	type UpdateFdAppUserRoleDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdAppUserRoleDto;
 	};
 
 	type UpdateFdBlacklistDto = {

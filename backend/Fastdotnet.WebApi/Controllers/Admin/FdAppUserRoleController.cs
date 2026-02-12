@@ -1,17 +1,16 @@
 ﻿namespace Fastdotnet.WebApi.Controllers.Admin
 {
     /// <summary>
-    /// FdAdminUserRole 控制器
+    /// FdAppUserRole 控制器
     /// </summary>
     [Route("api/[controller]")]
-    public class FdAdminUserRoleController : GenericDtoControllerBase<FdAdminUserRole, string, CreateFdAdminUserRoleDto, UpdateFdAdminUserRoleDto, FdAdminUserRoleDto>
+    public class FdAppUserRoleController : GenericDtoControllerBase<FdAppUserRole, string, CreateFdAppUserRoleDto, UpdateFdAppUserRoleDto, FdAppUserRoleDto>
     {
-        private readonly IBaseService<FdAdminUserRole, string> _baseService;
+        private readonly IBaseService<FdAppUserRole, string> _baseService;
         private readonly IUnitOfWork _unitOfWork;
-
-        public FdAdminUserRoleController(
-            //IFdAdminUserRoleService fdadminuserroleService,
-            IBaseService<FdAdminUserRole, string> service,
+        public FdAppUserRoleController(
+            //IFdAppUserRoleService fdappuserroleService,
+            IBaseService<FdAppUserRole, string> service,
             IMapper mapper,
             IUnitOfWork unitOfWork) : base(service, mapper)
         {
@@ -30,11 +29,11 @@
             try
             {
                 // 1. 删除用户现有角色关联
-                var Delresult = await _baseService.DeleteAsync(x => x.AdminUserId == dto.UserId);
+                var Delresult = await _baseService.DeleteAsync(x => x.AppUserId == dto.UserId);
                 // 2. 创建新的角色关联
-                var newUserRoles = dto.RoleIds.Select(roleId => new FdAdminUserRole
+                var newUserRoles = dto.RoleIds.Select(roleId => new FdAppUserRole
                 {
-                    AdminUserId = dto.UserId,
+                    AppUserId = dto.UserId,
                     RoleId = roleId
                 }).ToList();
 
@@ -60,7 +59,7 @@
         public async Task<ActionResult<List<string>>> GetUserRoles(string userId)
         {
             userId.IsValid();
-            var roles = await _baseService.GetListAsync(x=>x.AdminUserId==userId);
+            var roles = await _baseService.GetListAsync(x => x.AppUserId == userId);
             return roles.Select(ur => ur.RoleId).ToList();
         }
     }
