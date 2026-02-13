@@ -329,12 +329,13 @@ const openAssignRoleDialog = async (row: APIModel.FdAdminUserDto) => {
 		state.roleDialog.userId = row.Id as string;
 		state.roleDialog.title = `为 "${row.Name}" 分配角色`;
 		state.roleDialog.visible = true;
-		
-		// 获取所有角色
-		await loadAllRoles();
-		
 		// 获取用户当前角色
 		await loadUserRoles(row.Id as string);
+		// 获取所有角色
+		await loadAllRoles();
+		state.roleDialog.selectedRoles = [...state.roleDialog.currentUserRoles];
+		
+
 		
 	} catch (error) {
 		ElMessage.error('获取角色数据失败');
@@ -377,7 +378,6 @@ const loadUserRoles = async (userId: string) => {
 		// 使用专门的用户角色查询接口
 		const roleIds = await FdAdminUserRoleApi.getApiFdAdminUserRoleUserUserIdRoles({ userId });
 		state.roleDialog.currentUserRoles = roleIds || [];
-		state.roleDialog.selectedRoles = [...state.roleDialog.currentUserRoles];
 	} catch (error) {
 		ElMessage.error('获取用户角色失败');
 	}
