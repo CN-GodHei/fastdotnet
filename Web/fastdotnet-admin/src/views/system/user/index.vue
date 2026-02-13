@@ -51,7 +51,7 @@
 				<el-table-column prop="PhoneNumber" label="手机号" show-overflow-tooltip />
 				<el-table-column prop="Nickname" label="昵称" show-overflow-tooltip />
 				<el-table-column prop="Status" label="账户状态" show-overflow-tooltip />
-				<el-table-column label="操作" width="180" fixed="right" align="center">
+				<el-table-column label="操作" width="260" fixed="right" align="center">
 					<template #default="scope">
 						<el-button icon="ele-Edit" size="small" text type="primary"
 							@click="openEditDialog(scope.row)">修改</el-button>
@@ -337,7 +337,23 @@ const openAssignRoleDialog = async (row: APIModel.FdAppUserDto) => {
 // 加载所有角色
 const loadAllRoles = async () => {
 	try {
-		const response = await FdRoleApi.getApiAdminFdRole();
+		//构建查询条件
+		const queryConfig =
+		{
+			customs: [
+				{ field: 'Belong', operator: 'eq', value: 1, },
+			],
+			ranges: {}
+		}
+		const searchBody: APIModel.QueryByConditionDto = {
+			SelectFields:["Id","Name","Code"]
+		};
+		const queryResult = buildMixedQuery(queryConfig);
+		if (queryResult.dynamicQuery) {
+			searchBody.DynamicQuery = queryResult.dynamicQuery;
+			searchBody.QueryParameters = queryResult.queryParameters;
+		}
+		const response = await FdRoleApi.postApiAdminFdRoleListByCondition(searchBody);
 		state.roleDialog.allRoles = (response || []).map((role: APIModel.FdRoleDto) => ({
 			key: role.Id as string,
 			name: role.Name as string,

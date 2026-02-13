@@ -344,7 +344,23 @@ const openAssignRoleDialog = async (row: APIModel.FdAdminUserDto) => {
 // 加载所有角色
 const loadAllRoles = async () => {
 	try {
-		const response = await FdRoleApi.getApiAdminFdRole();
+		//构建查询条件
+		const queryConfig =
+		{
+			customs: [
+				{ field: 'Belong', operator: 'eq', value: 0, },
+			],
+			ranges: {}
+		}
+		const searchBody: APIModel.QueryByConditionDto = {
+			SelectFields:["Id","Name","Code"]
+		};
+		const queryResult = buildMixedQuery(queryConfig);
+		if (queryResult.dynamicQuery) {
+			searchBody.DynamicQuery = queryResult.dynamicQuery;
+			searchBody.QueryParameters = queryResult.queryParameters;
+		}
+		const response = await FdRoleApi.postApiAdminFdRoleListByCondition(searchBody);
 		state.roleDialog.allRoles = (response || []).map((role: APIModel.FdRoleDto) => ({
 			key: role.Id as string,
 			name: role.Name as string,
