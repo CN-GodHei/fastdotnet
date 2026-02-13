@@ -29,6 +29,11 @@
         public async Task<bool> AssignUserRoles([FromBody] AssignUserRolesDto dto)
         {
             dto.IsValid();
+            bool isTargetSuperAdmin = await _adminUserService.IsSuperAdminAsync(dto.UserId);
+            if (isTargetSuperAdmin)
+            {
+                throw new BusinessException("超管用户不允许修改");
+            }
             await _unitOfWork.BeginTransactionAsync();
             try
             {
