@@ -8,14 +8,18 @@
     {
         private readonly IBaseService<FdAppUserRole, string> _baseService;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAppUserService _appUserService;
+
         public FdAppUserRoleController(
             //IFdAppUserRoleService fdappuserroleService,
             IBaseService<FdAppUserRole, string> service,
             IMapper mapper,
-            IUnitOfWork unitOfWork) : base(service, mapper)
+            IUnitOfWork unitOfWork,
+            IAppUserService appUserService) : base(service, mapper)
         {
             _baseService = service;
             _unitOfWork = unitOfWork;
+            _appUserService = appUserService;
         }
 
         /// <summary>
@@ -59,7 +63,7 @@
         public async Task<ActionResult<List<string>>> GetUserRoles(string userId)
         {
             userId.IsValid();
-            var roles = await _baseService.GetListAsync(x => x.AppUserId == userId);
+            var roles = await _appUserService.GetUserRoleRelationsAsync(userId);
             return roles.Select(ur => ur.RoleId).ToList();
         }
     }
