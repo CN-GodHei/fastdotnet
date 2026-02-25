@@ -1,20 +1,48 @@
 <template>
-	<div class="system-menu-container layout-pd">
-		<el-card shadow="hover">
-			<div class="system-menu-search mb15">
-				<el-input size="default" placeholder="请输入菜单名称" style="max-width: 180px"> </el-input>
-				<el-button v-auth="'menu_code_11365291745215493_queryModule'" size="default" type="primary" class="ml10">
-					<el-icon>
-						<ele-Search />
-					</el-icon>
-					查询
-				</el-button>
-				<el-button v-auth="'menu_code_11365291745215493_add'" size="default" type="success" class="ml10" @click="onOpenAddMenu">
-					<el-icon>
-						<ele-FolderAdd />
-					</el-icon>
-					新增菜单
-				</el-button>
+	<div class="fdmenu-container">
+		<el-card shadow="hover" :body-style="{ padding: 2 }">
+			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
+				<div v-show="state.searchCollapsed">
+					<el-form-item label="模块分类" prop="Belong">
+						<el-select placeholder="请选择模块分类" clearable v-model="state.queryParams.Belong" style="width: 150px" @change="handleBelongChange">
+							<el-option label="管理端" :value="0"></el-option>
+							<el-option label="应用端" :value="1"></el-option>
+						</el-select>
+					</el-form-item>
+					<el-form-item label="菜单名称" prop="Title">
+						<el-input placeholder="请输入菜单名称" clearable v-model="state.queryParams.Title"
+							style="width: 150px" />
+					</el-form-item>
+					<el-form-item label="组件名称" prop="Name">
+						<el-input placeholder="请输入组件名称" clearable v-model="state.queryParams.Name"
+							style="width: 150px" />
+					</el-form-item>
+					<el-form-item label="路由路径" prop="Path">
+						<el-input placeholder="请输入路由路径" clearable v-model="state.queryParams.Path"
+							style="width: 150px" />
+					</el-form-item>
+					<el-form-item label="权限标识" prop="PermissionCode">
+						<el-input placeholder="请输入权限标识" clearable v-model="state.queryParams.PermissionCode"
+							style="width: 150px" />
+					</el-form-item>
+				</div>
+				<el-form-item>
+					<el-button-group>
+						<el-button type="primary" icon="ele-Search" @click="handleQuery"> 查询 </el-button>
+						<el-button icon="ele-Refresh" @click="resetQuery"> 重置 </el-button>
+						<el-button @click="toggleSearchCollapse"
+							:icon="state.searchCollapsed ? 'ele-ArrowUp' : 'ele-ArrowDown'">
+							{{ state.searchCollapsed ? '收起' : '展开' }}
+						</el-button>
+					</el-button-group>
+				</el-form-item>
+			</el-form>
+		</el-card>
+
+		<el-card class="full-table" shadow="hover" style="margin-top: 5px">
+			<div class="table-toolbar" style="margin-bottom: 15px;">
+				<el-button v-auth="'menu_code_11365291745215493_add'" type="primary" icon="ele-Plus" @click="onOpenAddMenu"> 新增 </el-button>
+				<el-button icon="ele-Download"> 导出 </el-button>
 			</div>
 			<el-table
 				:data="state.tableData.data"
@@ -49,7 +77,7 @@
 				</el-table-column>
 				<el-table-column label="操作" show-overflow-tooltip width="140">
 						<template #default="scope">
-							<el-button v-auth="'menu_code_11365291745215493_add'" size="small" text type="primary" @click="onOpenAddMenu('add')">新增</el-button>
+							<el-button v-auth="'menu_code_11365291745215493_add'" size="small" text type="primary" @click="onOpenAddMenu('add', scope.row)">新增</el-button>
 							<el-button v-auth="'menu_code_11365291745215493_edit'" size="small" text type="primary" @click="onOpenEditMenu('edit', scope.row)">修改</el-button>
 							<el-button v-auth="'menu_code_11365291745215493_delete'" size="small" text type="primary" @click="onTabelRowDel(scope.row)">删除</el-button>
 						</template>
@@ -60,28 +88,64 @@
 	</div>
 </template>
 
-<script setup lang="ts" name="systemMenu">
+<script setup lang="ts" name="FdMenu">
 import { defineAsyncComponent, ref, onMounted, reactive } from 'vue';
 import { RouteRecordRaw } from 'vue-router';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import * as MenuApi from '@/api/fd-system-api-admin/FdMenu';
 // 引入组件
 const MenuDialog = defineAsyncComponent(() => import('@/views/system/menu/dialog.vue'));
+import { buildMixedQuery } from '@/utils/queryBuilder';
 
-// 定义变量内容
+const queryForm = ref();
 const menuDialogRef = ref();
 const state = reactive({
+	loading: false,
+	searchCollapsed: true,
 	tableData: {
 		data: [] as APIModel.FdMenuDto[],
 		loading: true,
 	},
+	queryParams: {
+		Title: null,
+		Name: null,
+		Path: null,
+		PermissionCode: null,
+		Belong: 0,
+	},
 });
+
+// 切换搜索区域折叠状态
+const toggleSearchCollapse = () => {
+	state.searchCollapsed = !state.searchCollapsed;
+};
 
 // 获取路由数据
 const getTableData = async () => {
 	state.tableData.loading = true;
 	try {
-		const res = await MenuApi.getApiAdminFdMenu();
+				//构建查询条件
+		const queryConfig =
+		{
+			customs: [
+				{ field: 'Belong', operator: 'eq', value: state.queryParams.Belong !== null ? state.queryParams.Belong : 0, },
+				{ field: 'Title', operator: 'eq', value: state.queryParams.Title, },
+				{ field: 'Name', operator: 'eq', value: state.queryParams.Name, },
+				{ field: 'Path', operator: 'eq', value: state.queryParams.Path, },
+				{ field: 'PermissionCode', operator: 'eq', value: state.queryParams.PermissionCode, },
+			],
+			ranges: {}
+		}
+		const searchBody: APIModel.QueryByConditionDto = {
+
+		};
+		const queryResult = buildMixedQuery(queryConfig);
+		if (queryResult.dynamicQuery) {
+			searchBody.DynamicQuery = queryResult.dynamicQuery;
+			searchBody.QueryParameters = queryResult.queryParameters;
+		}
+		// const res = await MenuApi.getApiAdminFdMenu();
+		const res = await MenuApi.postApiAdminFdMenuListByCondition(searchBody);
 		state.tableData.data = res || [];
 	} catch (error) {
 		ElMessage.error('获取菜单数据失败');
@@ -89,9 +153,31 @@ const getTableData = async () => {
 		state.tableData.loading = false;
 	}
 };
+
+// 模块分类变更事件
+const handleBelongChange = () => {
+	getTableData();
+};
+
+// 查询
+const handleQuery = () => {
+	getTableData();
+};
+
+// 重置
+const resetQuery = () => {
+	queryForm.value.resetFields();
+	handleQuery();
+};
 // 打开新增菜单弹窗
-const onOpenAddMenu = (type: string) => {
-	menuDialogRef.value.openDialog('add');
+const onOpenAddMenu = (type: string, row?: APIModel.FdMenuDto) => {
+	if (row) {
+		// 如果传递了row参数，说明是在某一行下新增子菜单
+		menuDialogRef.value.openDialog('add', row);
+	} else {
+		// 否则是新增顶级菜单
+		menuDialogRef.value.openDialog('add');
+	}
 };
 // 打开编辑菜单弹窗
 const onOpenEditMenu = (type: string, row: APIModel.FdMenuDto) => {
