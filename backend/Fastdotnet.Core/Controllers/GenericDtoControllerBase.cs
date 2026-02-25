@@ -161,6 +161,8 @@ namespace Fastdotnet.Core.Controllers
             [FromBody] QueryByConditionDto query,
             CancellationToken cancellationToken = default)
         {
+            // 可以在子类中重写BeforeGetListByCondition方法来添加自定义逻辑
+            await BeforeGetListByCondition(query);
             if (query.SelectFields.Count()>0)
             {
                 var result = await _service.GetProjectedListByConditionAsync(
@@ -168,6 +170,10 @@ namespace Fastdotnet.Core.Controllers
                 query.QueryParameters,
                 query.SelectFields,
                 cancellationToken);
+
+                // 可以在子类中重写AfterGetListByCondition方法来添加自定义逻辑
+                await AfterGetListByCondition(query, result);
+
                 return Ok(result);
 
             }
@@ -188,9 +194,29 @@ namespace Fastdotnet.Core.Controllers
 
                 var result = await _service.GetListAsync(
                     whereExpression);
-
+                // 可以在子类中重写AfterGetListByCondition方法来添加自定义逻辑
+                await AfterGetListByCondition(query, result);
                 return Ok(result);
             }
+        }
+
+        /// <summary>
+        /// 根据自定义条件获取列表前的钩子方法
+        /// </summary>
+        /// <param name="query">查询条件</param>
+        protected virtual Task BeforeGetListByCondition(QueryByConditionDto query)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 根据自定义条件获取列表后的钩子方法
+        /// </summary>
+        /// <param name="query">查询条件</param>
+        /// <param name="result">查询结果</param>
+        protected virtual Task AfterGetListByCondition(QueryByConditionDto query, object result)
+        {
+            return Task.CompletedTask;
         }
         /// <summary>
         /// 根据ID获取实体

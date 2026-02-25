@@ -47,6 +47,6 @@ namespace Fastdotnet.Core.Dtos
         /// 要返回的字段列表，例如: ["Id", "Name", "Email"]
         /// 如果为空或 null，则返回所有字段（即完整 TDto）
         /// </summary>
-        public string[]? SelectFields { get; set; }
+        public string[]? SelectFields { get; set; } = [];
     }
 }
