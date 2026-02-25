@@ -173,15 +173,15 @@ const resetQuery = () => {
 const onOpenAddMenu = (type: string, row?: APIModel.FdMenuDto) => {
 	if (row) {
 		// 如果传递了row参数，说明是在某一行下新增子菜单
-		menuDialogRef.value.openDialog('add', row);
+		menuDialogRef.value.openDialog('add', row, state.queryParams.Belong);
 	} else {
 		// 否则是新增顶级菜单
-		menuDialogRef.value.openDialog('add');
+		menuDialogRef.value.openDialog('add', undefined, state.queryParams.Belong);
 	}
 };
 // 打开编辑菜单弹窗
 const onOpenEditMenu = (type: string, row: APIModel.FdMenuDto) => {
-	menuDialogRef.value.openDialog(type, row);
+	menuDialogRef.value.openDialog(type, row, state.queryParams.Belong);
 };
 // 删除当前行
 const onTabelRowDel = (row: APIModel.FdMenuDto) => {

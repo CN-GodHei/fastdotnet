@@ -138,6 +138,11 @@
 						</el-col>
 					</template>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="模块分类">
+							<el-input v-model="state.ruleForm.BelongLabel" placeholder="模块分类" disabled class="w100"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="菜单排序">
 							<el-input-number v-model="state.ruleForm.Sort" controls-position="right" placeholder="请输入排序" class="w100" />
 						</el-form-item>
@@ -219,6 +224,7 @@ import * as MenuApi from '@/api/fd-system-api-admin/FdMenu';
 
 import { ElMessage } from 'element-plus';
 // import { setBackEndControlRefreshRoutes } from "@/router/backEnd";
+import { buildMixedQuery } from '@/utils/queryBuilder';
 
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
@@ -231,9 +237,11 @@ const menuDialogFormRef = ref();
 const stores = useRoutesList();
 const { routesList } = storeToRefs(stores);
 const state = reactive({
+	// 存储传入的 belong 值
+	inheritedBelong: 0,
 	// 参数请参考 `/src/router/route.ts` 中的 `dynamicRoutes` 路由菜单格式
 	ruleForm: {
-		menuSuperior: [], // 上级菜单
+		menuSuperior: [] as string[], // 上级菜单
 		menuType: 'menu', // 菜单类型
 		Id: '', // 菜单ID
 		Name: '', // 菜单名称（用于组件name属性）
@@ -245,6 +253,7 @@ const state = reactive({
 		IsKeepAlive: true, // 是否缓存
 		IsAffix: false, // 是否固定
 		IsIframe: false, // 是否内嵌
+		isLink: false, // 是否外链
 		Path: '', // 路由路径
 		Redirect: '', // 路由重定向，有子集 Children 时
 		Sort: 0, // 菜单排序
@@ -257,6 +266,8 @@ const state = reactive({
 		Module: '', // 模块
 		Category: '', // 分类
 		IsFdMicroApp: false, // 是否微应用
+		Belong: 0, // 模块分类 (0: 管理端, 1: 应用端)
+		BelongLabel: '管理端', // 模块分类显示文本
 		Children: [] as APIModel.FdMenuDto[], // 子菜单
 	},
 	menuData: [] as APIModel.FdMenuDto[], // 上级菜单数据
@@ -268,38 +279,41 @@ const state = reactive({
 	},
 });
 
-// 获取菜单数据
-// const getMenuData = (routes: APIModel.FdMenuDto[]) => {
-// 	const arr: APIModel.FdMenuDto[] = [];
-// 	routes.map((val: APIModel.FdMenuDto) => {
-// 		// 创建一个新的对象，不修改原始数据
-// 		const newItem = { ...val };
+// 加载菜单数据
+const loadMenuData = async () => {
+	try {
+		//构建查询条件
+		const queryConfig =
+		{
+			customs: [
+				{ field: 'Belong', operator: 'eq', value: state.inheritedBelong, },
+			],
+			ranges: {}
+		}
+		const searchBody: APIModel.QueryByConditionDto = {};
+		const queryResult = buildMixedQuery(queryConfig);
+		if (queryResult.dynamicQuery) {
+			searchBody.DynamicQuery = queryResult.dynamicQuery;
+			searchBody.QueryParameters = queryResult.queryParameters;
+		}
+		// const res = await MenuApi.getApiAdminFdMenu();
+		const res = await MenuApi.postApiAdminFdMenuListByCondition(searchBody);
+		// const res = await MenuApi.getApiAdminFdMenuTree();
+		state.menuData = res || [];
+	} catch (error) {
+		console.error('加载菜单数据失败:', error);
+		state.menuData = [];
+	}
+};
 
-// 		// 确保Name字段有值，如果没有则使用Code或Id
-// 		let displayName = '未知菜单';
-// 		if (val.Name && val.Name.trim() !== '') {
-// 			try {
-// 				displayName = i18n.global.t(val.Name);
-// 			} catch (e) {
-// 				displayName = val.Name;
-// 			}
-// 		} else if (val.Id && val.Id.trim() !== '') {
-// 			displayName = val.Id;
-// 		}
-
-// 		newItem['Name'] = displayName;
-
-// 		// 递归处理子菜单
-// 		if (val.Children && Array.isArray(val.Children)) {
-// 			newItem.Children = getMenuData(val.Children);
-// 		}
-
-// 		arr.push(newItem);
-// 	});
-// 	return arr;
-// };
 // 打开弹窗
-const openDialog = (type: string, row?: APIModel.FdMenuDto) => {
+const openDialog = async (type: string, row?: APIModel.FdMenuDto, belong?: number) => {
+	// 存储传入的 belong 值
+	state.inheritedBelong = belong !== undefined ? belong : 0;
+	
+	// 每次打开对话框时重新获取菜单数据
+	await loadMenuData();
+	
 	if (type === 'edit') {
 		// 编辑模式：需要根据MenuType判断是目录、菜单或按钮
 		state.ruleForm = JSON.parse(JSON.stringify(row));
@@ -319,9 +333,15 @@ const openDialog = (type: string, row?: APIModel.FdMenuDto) => {
 
 		// 设置上级菜单的值
 		if (row?.ParentCode) {
-			state.ruleForm.menuSuperior = [row.ParentCode];
+			state.ruleForm.menuSuperior = [row.ParentCode] as string[];
 		} else {
 			state.ruleForm.menuSuperior = [];
+		}
+		// 设置模块分类
+		if (row && 'Belong' in row && row.Belong !== undefined) {
+			state.ruleForm.Belong = row.Belong as number;
+		} else if (belong !== undefined) {
+			state.ruleForm.Belong = belong;
 		}
 		state.dialog.submitTxt = '修 改';
 	} else {
@@ -340,6 +360,7 @@ const openDialog = (type: string, row?: APIModel.FdMenuDto) => {
 			IsKeepAlive: true, // 是否缓存
 			IsAffix: false, // 是否固定
 			IsIframe: false, // 是否内嵌
+			isLink: false, // 是否外链
 			Path: '', // 路由路径
 			Redirect: '', // 路由重定向，有子集 Children 时
 			Sort: 0, // 菜单排序
@@ -352,6 +373,8 @@ const openDialog = (type: string, row?: APIModel.FdMenuDto) => {
 			Module: '', // 模块
 			Category: '', // 分类
 			IsFdMicroApp: false, // 是否微应用
+			Belong: belong !== undefined ? belong : 0, // 模块分类
+			BelongLabel: belong === 1 ? '应用端' : '管理端', // 模块分类显示文本
 			Children: [] as APIModel.FdMenuDto[], // 子菜单
 		};
 		state.dialog.title = '新增目录/菜单/按钮';
@@ -410,7 +433,7 @@ const onSubmit = async () => {
 					};
 
 					await import('@/api/fd-system-api-admin/FdMenuButtons').then((MenuButtonsApi) => {
-						MenuButtonsApi.putAdminFdMenuButtonsId({ id: state.ruleForm.Id }, updateData);
+						MenuButtonsApi.putApiAdminFdMenuButtonsId({ id: state.ruleForm.Id }, updateData);
 					});
 
 					ElMessage.success('按钮更新成功');
@@ -433,7 +456,7 @@ const onSubmit = async () => {
 				};
 
 				await import('@/api/fd-system-api-admin/FdMenuButtons').then((MenuButtonsApi) => {
-					MenuButtonsApi.postAdminFdMenuButtons(createData);
+					MenuButtonsApi.postApiAdminFdMenuButtons(createData);
 				});
 
 				// ElMessage.success('按钮创建成功');
@@ -456,13 +479,14 @@ const onSubmit = async () => {
 				// 编辑菜单/目录
 				if (state.ruleForm.Id) {
 					// 准备更新数据
-					const updateData: APIModel.UpdateFdMenuDto = {
+					const updateData: any = {
 						...state.ruleForm,
 						Type: state.ruleForm.menuType === 'menu' ? 1 : 0, // 1=Menu, 0=Directory
 						ParentCode:
 							state.ruleForm.menuSuperior && state.ruleForm.menuSuperior.length > 0
 								? state.ruleForm.menuSuperior[state.ruleForm.menuSuperior.length - 1] // 使用最后一级菜单
 								: null,
+						Belong: state.ruleForm.Belong, // 添加模块分类
 					};
 
 					await MenuApi.putApiAdminFdMenuId({ id: state.ruleForm.Id }, updateData);
@@ -474,13 +498,14 @@ const onSubmit = async () => {
 			} else {
 				// 新增菜单/目录
 				// 准备创建数据
-				const createData: APIModel.CreateFdMenuDto = {
+				const createData: any = {
 					...state.ruleForm,
 					Type: state.ruleForm.menuType === 'menu' ? 1 : 0, // 1=Menu, 0=Directory
 					ParentCode:
 						state.ruleForm.menuSuperior && state.ruleForm.menuSuperior.length > 0
 							? state.ruleForm.menuSuperior[state.ruleForm.menuSuperior.length - 1] // 使用最后一级菜单
 							: null,
+					Belong: state.ruleForm.Belong, // 添加模块分类
 				};
 				//console.log(11);
 
@@ -502,9 +527,8 @@ const onSubmit = async () => {
 };
 // 页面加载时
 onMounted(async () => {
-	// 从API获取菜单数据而不是使用store中的数据
-	const res = await MenuApi.getApiAdminFdMenuTree();
-	state.menuData = res || [];
+	// 初始加载数据
+	await loadMenuData();
 });
 
 // 暴露变量
