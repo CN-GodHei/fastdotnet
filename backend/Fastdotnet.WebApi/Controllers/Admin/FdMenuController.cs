@@ -85,6 +85,25 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             return menuDtos;
         }
 
+        /// <summary>
+        /// 根据自定义条件获取列表后的处理逻辑
+        /// </summary>
+        /// <param name="query">查询条件</param>
+        /// <param name="result">查询结果</param>
+        protected override async Task<object> AfterGetListByCondition(QueryByConditionDto query, object result)
+        {
+            // 调用基类方法确保基础逻辑执行
+            await base.AfterGetListByCondition(query, result);
+
+            // 构建树形结构
+            var menuTree = await _menuService.BuildMenuTree(_mapper.Map<List<FdMenu>>(result), null);
+
+            // 转换为 DTO
+            var menuDtos = _mapper.Map<List<FdMenuDto>>(menuTree);
+            await _userRefFiller.FillNamesAsync(menuDtos, SystemCategory.Admin, x => x.Creator, x => x.Updater);
+            return menuDtos;
+        }
+
         [Authorize(Policy = Permissions.Admin.Menus.View)]
         public override Task<FdMenuDto> GetById(string id, CancellationToken cancellationToken = default) => base.GetById(id);
 

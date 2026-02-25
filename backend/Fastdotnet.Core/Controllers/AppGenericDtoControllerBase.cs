@@ -65,9 +65,15 @@ namespace Fastdotnet.Core.Controllers
                 query.SelectFields,
                 cancellationToken);
                 // 可以在子类中重写AfterGetListByCondition方法来添加自定义逻辑
-                await AfterGetListByCondition(query, result);
-                return Ok(result);
+                // 调用 After 钩子并获取可能修改后的结果
+                var processedResult = await AfterGetListByCondition(query, result);
 
+                // 如果 After 钩子返回了新的结果，则使用新结果
+                if (processedResult != null)
+                {
+                    return Ok(processedResult);
+                }
+                return Ok(result);
             }
             else
             {
@@ -87,7 +93,14 @@ namespace Fastdotnet.Core.Controllers
                 var result = await _service.GetListAsync(
                     whereExpression);
                 // 可以在子类中重写AfterGetListByCondition方法来添加自定义逻辑
-                await AfterGetListByCondition(query, result);
+                // 调用 After 钩子并获取可能修改后的结果
+                var processedResult = await AfterGetListByCondition(query, result);
+
+                // 如果 After 钩子返回了新的结果，则使用新结果
+                if (processedResult != null)
+                {
+                    return Ok(processedResult);
+                }
                 return Ok(result);
             }
         }
@@ -102,15 +115,17 @@ namespace Fastdotnet.Core.Controllers
         }
 
         /// <summary>
-        /// 根据自定义条件获取列表后的钩子方法
+        /// 根据自定义条件获取列表后的钩子方法（可返回处理后的值）
         /// </summary>
         /// <param name="query">查询条件</param>
-        /// <param name="result">查询结果</param>
-        protected virtual Task AfterGetListByCondition(QueryByConditionDto query, object result)
+        /// <param name="result">原始查询结果</param>
+        /// <returns>处理后的结果（返回null则使用原始结果）</returns>
+        protected virtual Task<object?> AfterGetListByCondition(QueryByConditionDto query, object result)
         {
-            return Task.CompletedTask;
+            // 默认实现返回null，表示不修改原始结果
+            return Task.FromResult<object?>(null);
         }
-        
+
         /// <summary>
         /// 根据ID获取实体
         /// </summary>
