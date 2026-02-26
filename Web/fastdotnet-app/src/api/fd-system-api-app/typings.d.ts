@@ -41,6 +41,11 @@ declare namespace APIModel {
 		PermissionIds?: string[];
 	};
 
+	type AssignUserRolesDto = {
+		UserId: string;
+		RoleIds?: string[];
+	};
+
 	type BooleanApiResult = {
 		Data?: boolean;
 		Code?: number;
@@ -112,6 +117,26 @@ declare namespace APIModel {
 		Avatar?: string;
 	};
 
+	type CreateFdAdminUserRoleDto = {
+		AdminUserId?: string;
+		RoleId?: string;
+	};
+
+	type CreateFdAppUserDto = {
+		Username: string;
+		Password: string;
+		Email: string;
+		PhoneNumber: string;
+		Nickname?: string;
+		AvatarUrl: string;
+		Status?: number;
+	};
+
+	type CreateFdAppUserRoleDto = {
+		AppUserId?: string;
+		RoleId?: string;
+	};
+
 	type CreateFdBlacklistDto = {
 		Type: string;
 		Value: string;
@@ -139,7 +164,8 @@ declare namespace APIModel {
 		WhetherRequired?: boolean;
 		WhetherSortable?: boolean;
 		WhetherTable?: boolean;
-		WhetherAddUpdate?: boolean;
+		WhetherAdd?: boolean;
+		WhetherUpdate?: boolean;
 		WhetherImport?: boolean;
 		WhetherCommon?: boolean;
 		OrderNo?: number;
@@ -232,7 +258,7 @@ declare namespace APIModel {
 	type CreateFdRoleDto = {
 		Name: string;
 		Description?: string;
-		Category: string;
+		Belong: SystemCategory;
 	};
 
 	type CreateFdSystemInfoConfigDto = {
@@ -274,6 +300,21 @@ declare namespace APIModel {
 		ThirdPartyData?: string;
 		CallbackData?: string;
 		PaidTime?: string;
+	};
+
+	type CreateOrderRequest = {
+		OrderId?: string;
+		Amount?: number;
+		Description?: string;
+		NotifyUrl?: string;
+	};
+
+	type CreatePaymentRequest = {
+		OrderId?: string;
+		Amount?: number;
+		Subject?: string;
+		NotifyUrl?: string;
+		PaymentMethod?: PaymentMethod;
 	};
 
 	type CreatePluginAUserExtensionDto = {
@@ -330,6 +371,17 @@ declare namespace APIModel {
 		Status?: number;
 	};
 
+	enum DataStatus {
+		0 = '0',
+		1 = '1',
+		2 = '2',
+		3 = '3',
+	}
+
+	type deleteApiFdAppUserIdParams = {
+		id: string;
+	};
+
 	type deleteApiStorage_openAPI_deleteFileNameParams = {
 		/** 文件名 */
 		fileName: string;
@@ -346,6 +398,17 @@ declare namespace APIModel {
 		ReturnType?: string;
 		TailCall?: boolean;
 		CanReduce?: boolean;
+	};
+
+	type ExampleRequest = {
+		Data?: string;
+		Token?: string;
+	};
+
+	type ExampleResponse = {
+		Data?: string;
+		Timestamp?: string;
+		Success?: boolean;
 	};
 
 	type Expression = {
@@ -473,13 +536,65 @@ declare namespace APIModel {
 		Items?: FdAdminUserDto[];
 	};
 
+	type FdAdminUserRoleBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type FdAdminUserRoleDto = {
+		Id?: string;
+		AdminUserId?: string;
+		RoleId?: string;
+	};
+
+	type FdAdminUserRoleDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdAdminUserRoleDto[];
+	};
+
 	type FdAppUserDto = {
+		Id?: string;
 		Username?: string;
 		Email?: string;
 		PhoneNumber?: string;
 		Nickname?: string;
 		AvatarUrl?: string;
 		Status?: number;
+		RoleIds?: string[];
+		Buttons?: string[];
+	};
+
+	type FdAppUserDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdAppUserDto[];
+	};
+
+	type FdAppUserRoleBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type FdAppUserRoleDto = {
+		Id?: string;
+		AppUserId?: string;
+		RoleId?: string;
+	};
+
+	type FdAppUserRoleDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdAppUserRoleDto[];
 	};
 
 	type FdBlacklistBooleanFuncExpression = {
@@ -553,6 +668,8 @@ declare namespace APIModel {
 		WhetherSortable?: boolean;
 		WhetherTable?: boolean;
 		WhetherAddUpdate?: boolean;
+		WhetherAdd?: boolean;
+		WhetherUpdate?: boolean;
 		WhetherImport?: boolean;
 		WhetherCommon?: boolean;
 		OrderNo?: number;
@@ -802,9 +919,10 @@ declare namespace APIModel {
 		Name?: string;
 		Code?: string;
 		Description?: string;
-		Category?: string;
+		Belong?: SystemCategory;
 		IsSystem?: boolean;
 		CreatedAt?: string;
+		IsDefault?: boolean;
 	};
 
 	type FdRoleDtoPageResult = {
@@ -861,6 +979,15 @@ declare namespace APIModel {
 	type getApiCaptchaGenerateParams = {
 		/** 验证码标识符，通常是用户会话ID或GUID */
 		id?: string;
+	};
+
+	type getApiFdAppUserIdParams = {
+		id: string;
+	};
+
+	type getApiFdAppUserPageParams = {
+		pageIndex?: number;
+		pageSize?: number;
 	};
 
 	type getApiStorageDownloadFileNameParams = {
@@ -970,10 +1097,37 @@ declare namespace APIModel {
 		CustomReplacement?: string;
 	};
 
+	type MenuBtnRe = {
+		Id?: string;
+		Name?: string;
+		Title?: string;
+		DataStatus?: DataStatus;
+		Exist?: boolean;
+		Children?: MenuBtnRe[];
+		BtnList?: MenuBtnReStatusDto[];
+	};
+
+	type MenuBtnReStatusDto = {
+		Id?: string;
+		Name?: string;
+		DataStatus?: DataStatus;
+		Exist?: boolean;
+	};
+
 	enum MenuType {
 		0 = '0',
 		1 = '1',
 	}
+
+	type MetricQueryRequest = {
+		MetricIds?: string[];
+		StartDate?: string;
+		EndDate?: string;
+		Dimensions?: string[];
+		Filters?: Record<string, any>;
+		PageNumber?: number;
+		PageSize?: number;
+	};
 
 	type OfflineActivationRequestDto = {
 		PluginId: string;
@@ -1042,6 +1196,11 @@ declare namespace APIModel {
 		IsByRef?: boolean;
 		CanReduce?: boolean;
 	};
+
+	enum PaymentMethod {
+		0 = '0',
+		1 = '1',
+	}
 
 	type PluginATestBooleanFuncExpression = {
 		Type?: string;
@@ -1151,11 +1310,28 @@ declare namespace APIModel {
 		bucketName?: string;
 	};
 
+	type PreCreateRequest = {
+		OrderId?: string;
+		Amount?: number;
+		Subject?: string;
+		NotifyUrl?: string;
+	};
+
 	enum PurchaseStatusDto {
 		0 = '0',
 		1 = '1',
 		2 = '2',
 	}
+
+	type putApiFdAppUserIdParams = {
+		id: string;
+	};
+
+	type QueryByConditionDto = {
+		DynamicQuery?: string;
+		QueryParameters?: any[];
+		SelectFields?: string[];
+	};
 
 	type ResetPasswordDto = {
 		NewPassword: string;
@@ -1181,6 +1357,11 @@ declare namespace APIModel {
 		0 = '0',
 		1 = '1',
 		2 = '2',
+	}
+
+	enum SystemCategory {
+		0 = '0',
+		1 = '1',
 	}
 
 	type SystemInfoConfigBooleanFuncExpression = {
@@ -1242,6 +1423,41 @@ declare namespace APIModel {
 		Dto?: UpdateFdAdminUserDto;
 	};
 
+	type UpdateFdAdminUserRoleDto = {
+		AdminUserId?: string;
+		RoleId?: string;
+	};
+
+	type UpdateFdAdminUserRoleDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdAdminUserRoleDto;
+	};
+
+	type UpdateFdAppUserDto = {
+		Id?: string;
+		Username?: string;
+		Email?: string;
+		PhoneNumber?: string;
+		Nickname?: string;
+		AvatarUrl?: string;
+		Status?: number;
+	};
+
+	type UpdateFdAppUserDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdAppUserDto;
+	};
+
+	type UpdateFdAppUserRoleDto = {
+		AppUserId?: string;
+		RoleId?: string;
+	};
+
+	type UpdateFdAppUserRoleDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdAppUserRoleDto;
+	};
+
 	type UpdateFdBlacklistDto = {
 		Type: string;
 		Value: string;
@@ -1275,7 +1491,8 @@ declare namespace APIModel {
 		WhetherRequired?: boolean;
 		WhetherSortable?: boolean;
 		WhetherTable?: boolean;
-		WhetherAddUpdate?: boolean;
+		WhetherAdd?: boolean;
+		WhetherUpdate?: boolean;
 		WhetherImport?: boolean;
 		WhetherCommon?: boolean;
 		OrderNo?: number;

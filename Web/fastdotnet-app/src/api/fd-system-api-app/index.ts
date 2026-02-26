@@ -10,6 +10,7 @@ import * as FdSystemInfoConfig from './FdSystemInfoConfig';
 import * as Plugin from './Plugin';
 import * as Storage from './Storage';
 import * as System from './System';
+import * as TestScope from './TestScope';
 export default {
 	Auth,
 	AppMenus,
@@ -19,4 +20,5 @@ export default {
 	Plugin,
 	Storage,
 	System,
+	TestScope,
 };
