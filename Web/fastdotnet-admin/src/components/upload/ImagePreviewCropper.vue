@@ -128,7 +128,8 @@ import { Plus, ZoomIn, ZoomOut, RefreshLeft, RefreshRight, Refresh } from '@elem
 import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
 
-import { getApiStorageConfig, postApiStorageGetUploadCredential, postApiStorageUpload } from '@/api/fd-system-api-admin/Storage';
+import { getApiStorageConfig, postApiStorageGetUploadCredential } from '@/api/fd-system-api-admin/Storage';
+import { uploadFile as uploadFileUtil } from '@/utils/upload';
 
 interface Props {
   /** 存储桶名称 */
@@ -689,23 +690,15 @@ const defaultUploadFile = async (file: File) => {
       formData.append('bucketName', props.bucketName);
     }
 
-    // 通过API上传
-    const params = {
-      bucketName: props.bucketName
-    };
-    const body = {};
-    const response: any = await postApiStorageUpload(params, body, file, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    // 通过统一的上传工具上传
+    const response: any = await uploadFileUtil({
+      file: file,
+      bucketName: props.bucketName,
+      onProgress: (percent: number) => {
+        uploadProgress.value = percent;
+        emit('progress', { percent }, file, []);
       },
-      timeout: 60000, // 60秒超时
-      onUploadProgress: (progressEvent: any) => {
-        const percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total!
-        );
-        uploadProgress.value = percentCompleted;
-        emit('progress', { percent: percentCompleted }, file, []);
-      }
+      timeout: 60000
     });
 
     // response现在直接是{ Url, FileName }格式

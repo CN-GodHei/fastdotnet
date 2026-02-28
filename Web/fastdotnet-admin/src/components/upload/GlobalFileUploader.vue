@@ -72,7 +72,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, reactive } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { getApiStorageConfig, postApiStorageGetUploadCredential, postApiStorageUpload } from '@/api/fd-system-api-admin/Storage';
+import { getApiStorageConfig, postApiStorageGetUploadCredential } from '@/api/fd-system-api-admin/Storage';
+import { uploadFile } from '@/utils/upload';
 import { Plus } from '@element-plus/icons-vue';
 
 // 按需引入图片预览裁剪组件
@@ -411,24 +412,16 @@ const defaultUpload = async (options: {
       formData.append('bucketName', props.bucketName);
     }
 
-    // 通过API上传
-    const params = {
-      bucketName: props.bucketName
-    };
-    const body = {};
-    const response: any = await postApiStorageUpload(params, body, options.file, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    // 通过统一的上传工具上传
+    const response: any = await uploadFile({
+      file: options.file,
+      bucketName: props.bucketName,
+      onProgress: (percent: number) => {
+        uploadProgress.value = percent;
+        options.onProgress({ percent });
+        emit('progress', { percent }, options.file, []);
       },
-      timeout: 60000, // 60秒超时
-      onUploadProgress: (progressEvent: any) => {
-        const percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total!
-        );
-        uploadProgress.value = percentCompleted;
-        options.onProgress({ percent: percentCompleted });
-        emit('progress', { percent: percentCompleted }, options.file, []);
-      }
+      timeout: 60000
     });
 console.log(response)
     // response现在直接是{ Url, FileName }格式
