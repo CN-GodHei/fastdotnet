@@ -57,14 +57,12 @@ const uploadFileViaBackend = async (
   onProgress?: (percent: number) => void,
   timeout: number = 60000
 ): Promise<UploadResult> => {
-  const formData = new FormData();
-  formData.append('file', file, file.name);
-  
-  if (bucketName) {
-    formData.append('bucketName', bucketName);
-  }
-
-  const response: any = await request.post('/api/storage/upload', formData, {
+  // 使用专门的上传API
+  const params = {
+    bucketName: bucketName
+  };
+  const body = {};
+  const response: any = await postApiStorageUpload(params, body, file, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -81,7 +79,6 @@ const uploadFileViaBackend = async (
 
   return response;
 };
-
 /**
  * 前端直传文件
  */
