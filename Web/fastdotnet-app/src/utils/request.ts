@@ -113,10 +113,16 @@ service.interceptors.response.use(
 			// return Promise.reject(new Error('未授权访问'));
 			return Promise.reject(response);
 		} else if (response.status === 422) {
-			ElMessage.error(res.Msg || res.message || '验证错误');
+			ElMessage.error(res.msg || res.Msg || res.message ||'验证错误');
 			// HTTP 422 验证错误，是后端返回的一种可控异常，主要是提示消息
 			// 422虽然在validateStatus中被视为成功，但仍需要reject以便调用方可以处理错误
-        	return Promise.reject(new Error(res.Msg || res.message || '验证错误'));
+			const error={
+				message:res.msg || res.Msg || res.message || '验证错误',
+				tip:"422为特定业务错误代码,请求封装层会统一弹提示，无需再业务界面重复提示",
+				code:422
+			}
+        	// return Promise.reject(new Error(res.msg || res.Msg || res.message || '验证错误'));
+        	return Promise.reject(error);
         	// return Promise.reject(new Error());
 		}
 	},
