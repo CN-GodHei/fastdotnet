@@ -1,44 +1,13 @@
 <template>
-  <div class="marketplace-iframe-container layout-padding">
-    <el-card shadow="hover" header="插件市场" class="marketplace-card">
-      <div class="toolbar mb15">
-        <el-button 
-          size="default" 
-          type="primary" 
-          @click="refreshIframe"
-        >
-          <el-icon><ele-Refresh /></el-icon>
-          刷新
-        </el-button>
-        <el-button 
-          size="default" 
-          @click="goBack"
-          :disabled="!canGoBack"
-        >
-          <el-icon><ele-ArrowLeft /></el-icon>
-          后退
-        </el-button>
-        <el-button 
-          size="default" 
-          @click="goForward"
-          :disabled="!canGoForward"
-        >
-          <el-icon><ele-ArrowRight /></el-icon>
-          前进
-        </el-button>
-      </div>
-      
-      <div class="iframe-container">
-        <iframe
-          ref="marketplaceIframe"
-          :src="iframeSrc"
-          frameborder="0"
-          width="100%"
-          height="100%"
-          @load="onIframeLoad"
-        ></iframe>
-      </div>
-    </el-card>
+  <div class="marketplace-iframe-container" style="height: 100%; position: relative;">
+    <!-- iframe - 强制占满整个容器 -->
+    <iframe
+      ref="marketplaceIframe"
+      :src="iframeSrc"
+      frameborder="0"
+      style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%;"
+      @load="onIframeLoad"
+    ></iframe>
   </div>
 </template>
 
@@ -58,29 +27,8 @@ const marketplaceIframe = ref<HTMLIFrameElement | null>(null)
 const canGoBack = ref(false)
 const canGoForward = ref(false)
 
-// iframe源地址 - 指向插件商城的实际地址
-const iframeSrc = ref('http://localhost:8099/app/plugins') // 更新为插件市场的正确地址
-
-// 刷新iframe
-const refreshIframe = () => {
-  if (marketplaceIframe.value) {
-    marketplaceIframe.value.src = iframeSrc.value
-  }
-}
-
-// 后退
-const goBack = () => {
-  if (marketplaceIframe.value?.contentWindow) {
-    marketplaceIframe.value.contentWindow.history.back()
-  }
-}
-
-// 前进
-const goForward = () => {
-  if (marketplaceIframe.value?.contentWindow) {
-    marketplaceIframe.value.contentWindow.history.forward()
-  }
-}
+// iframe源地址 - 指向我们新创建的插件管理页面
+const iframeSrc = ref('http://localhost:3000/plugin-manager/embedded?layout=none') // 指向Nuxt项目的插件管理页面
 
 // iframe加载完成事件
 const onIframeLoad = () => {
@@ -201,31 +149,6 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 .marketplace-iframe-container {
-  height: 100%; // 确保容器高度为100%
-
-  :deep(.el-card__body) {
-    display: flex;
-    flex-direction: column;
-    height: 100%; // 确保卡片内容区域高度为100%
-  }
-
-  .toolbar {
-    display: flex;
-    gap: 10px;
-  }
-
-  .iframe-container {
-    flex: 1; // 使用Flexbox填充剩余空间
-    overflow: hidden;
-    margin-top: 15px;
-    height: calc(100% - 50px); // 调整高度以适应工具栏
-
-    iframe {
-      border-radius: 4px;
-      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-      height: 100%; // 确保iframe高度为100%
-      width: 100%;
-    }
-  }
+  height: 100% !important;
 }
 </style>

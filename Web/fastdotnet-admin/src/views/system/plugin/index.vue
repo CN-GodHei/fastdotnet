@@ -45,7 +45,7 @@
           <plugin-marketplace ref="marketplaceRef" />
         </el-tab-pane> -->
         
-        <el-tab-pane label="插件市场(iframe)" name="marketplace-iframe">
+        <el-tab-pane label="插件市场" name="marketplace-iframe">
           <plugin-marketplace-iframe ref="marketplaceIframeRef" @plugin-action="handlePluginAction" />
         </el-tab-pane>
       </el-tabs>
