@@ -108,6 +108,9 @@ public class ApplicationModule : Module
             return config.CreateMapper();
         }).As<IMapper>().InstancePerLifetimeScope();
 
+        // 注册本地存储服务
+        containerBuilder.RegisterType<LocalStorageService>().AsSelf().InstancePerLifetimeScope();
+        
         // 如果需要在Autofac中进行更精细的缓存服务控制，可以在这里添加
         //containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().InstancePerLifetimeScope();
         //containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().OwnedByLifetimeScope();
