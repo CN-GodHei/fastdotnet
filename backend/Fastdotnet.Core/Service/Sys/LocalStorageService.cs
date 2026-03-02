@@ -7,10 +7,12 @@ namespace Fastdotnet.Core.Service.Sys
     public class LocalStorageService : IStorageService
     {
         private readonly StorageOptions _options;
+        IBaseService<FdDictData, string> _service;
 
-        public LocalStorageService(IOptions<StorageOptions> options)
+        public LocalStorageService(IOptions<StorageOptions> options, IBaseService<FdDictData, string> service)
         {
             _options = options.Value ?? throw new ArgumentNullException(nameof(options));
+            _service = service;
         }
 
         public async Task<string> UploadAsync(Stream fileStream, string fileName, string? bucketName = null)
@@ -34,7 +36,8 @@ namespace Fastdotnet.Core.Service.Sys
 
             // 返回访问URL
             var relativePath = Path.Combine(bucketName ?? _options.DefaultBucket, uniqueFileName).Replace('\\', '/');
-            return $"{_options.BaseUrl}/{relativePath}";
+            var siteDomain = await _service.GetFirstAsync(w => w.Code == "CODE_09_01");
+            return $"{siteDomain.Value}{_options.BaseUrl}/{relativePath}";
         }
 
         public async Task<byte[]> DownloadAsync(string fileName, string? bucketName = null)

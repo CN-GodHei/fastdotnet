@@ -49,9 +49,17 @@ namespace Fastdotnet.Core.Service.Sys
                             }
                             else
                             {
-                                // 如果还是获取不到合适的实现，创建默认的LocalStorageService
-                                var options = scope.ServiceProvider.GetService<IOptions<StorageOptions>>();
-                                _currentStorageService = new LocalStorageService(options);
+                                // 如果还是获取不到合适的实现，通过DI容器创建LocalStorageService
+                                 localStorageService = scope.ServiceProvider.GetService<LocalStorageService>();
+                                if (localStorageService != null)
+                                {
+                                    _currentStorageService = localStorageService;
+                                }
+                                else
+                                {
+                                    // 如果连LocalStorageService都无法通过DI获取，则抛出异常
+                                    throw new InvalidOperationException("无法获取LocalStorageService实例，请确保已正确注册相关服务");
+                                }
                             }
                         }
                     }
@@ -154,9 +162,17 @@ namespace Fastdotnet.Core.Service.Sys
                     }
                     else
                     {
-                        // 如果还是获取不到合适的实现，创建默认的LocalStorageService
-                        var options = scope.ServiceProvider.GetService<IOptions<StorageOptions>>();
-                        _currentStorageService = new LocalStorageService(options);
+                        // 如果还是获取不到合适的实现，通过DI容器创建LocalStorageService
+                        var localStorageService = scope.ServiceProvider.GetService<LocalStorageService>();
+                        if (localStorageService != null)
+                        {
+                            _currentStorageService = localStorageService;
+                        }
+                        else
+                        {
+                            // 如果连LocalStorageService都无法通过DI获取，则抛出异常
+                            throw new InvalidOperationException("无法获取LocalStorageService实例，请确保已正确注册相关服务");
+                        }
                     }
                 }
             }
