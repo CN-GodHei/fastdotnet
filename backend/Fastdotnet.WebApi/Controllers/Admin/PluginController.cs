@@ -51,6 +51,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 throw new BusinessException("无效的插件下载地址，仅支持 HTTP/HTTPS!");
             }
             string? tempPath = null;
+            string? actualPluginPath = null; // 记录实际插件路径
 
             try
             {
@@ -67,18 +68,34 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 var zipPath = Path.Combine(tempPath, "plugin.zip");
                 await global::System.IO.File.WriteAllBytesAsync(zipPath, pluginBytes);
 
-                // 6. 解压
+                // 6. 解压到临时目录
                 global::System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, tempPath);
 
-                // 7. 校验解压内容 (必须包含 DLL)
-                var dllFiles = Directory.GetFiles(tempPath, "*.dll", SearchOption.AllDirectories);
+                // 7. 处理可能的嵌套目录结构（ZIP 文件通常自带一层文件夹）
+                actualPluginPath = FindActualPluginRoot(tempPath);
+
+                // 8. 校验解压内容 (必须包含 DLL)
+                var dllFiles = Directory.GetFiles(actualPluginPath, "*.dll", SearchOption.AllDirectories);
                 if (!dllFiles.Any())
                 {
                     return BadRequest(new { Message = "插件包中未找到任何 DLL 文件，可能不是有效的插件包" });
                 }
 
-                Directory.Move(tempPath, targetPath);
-                tempPath = null; // 标记移动成功，finally 中不再清理
+                // 9. 移动实际插件目录到目标位置
+                Directory.Move(actualPluginPath, targetPath);
+                
+                // 如果实际插件路径与临时路径不同，说明有嵌套目录，需要清理父目录
+                if (!string.IsNullOrEmpty(tempPath) && actualPluginPath != tempPath && Directory.Exists(tempPath))
+                {
+                    try
+                    {
+                        Directory.Delete(tempPath, true);
+                    }
+                    catch { /* 忽略清理异常 */ }
+                }
+                
+                // 标记已清理完成
+                tempPath = null;
                 return Ok(new
                 {
                     Installed = true,
@@ -159,6 +176,15 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         /// <summary>
+        /// 获取所有当前活动的插件
+        /// </summary>
+        [HttpGet("active")]
+        public IActionResult GetActivePlugins()
+        {
+            return Ok(_pluginLoadService.GetActivePlugins());
+        }
+
+        /// <summary>
         /// 获取所有已加载的插件（无论是否激活）
         /// </summary>
         [HttpGet("loaded")]
@@ -168,12 +194,28 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         /// <summary>
-        /// 获取所有当前活动的插件
+        /// 查找实际的插件根目录（处理 ZIP 文件自带的嵌套文件夹）
         /// </summary>
-        [HttpGet("active")]
-        public IActionResult GetActivePlugins()
+        /// <param name="extractPath">解压后的临时目录</param>
+        /// <returns>实际包含插件文件的根目录</returns>
+        private static string FindActualPluginRoot(string extractPath)
         {
-            return Ok(_pluginLoadService.GetActivePlugins());
+            var directories = Directory.GetDirectories(extractPath);
+            
+            // 如果只有一个子目录，且该子目录包含 DLL 文件，则返回子目录
+            if (directories.Length == 1)
+            {
+                var singleSubDir = directories[0];
+                var dllFiles = Directory.GetFiles(singleSubDir, "*.dll", SearchOption.AllDirectories);
+                
+                if (dllFiles.Any())
+                {
+                    return singleSubDir;
+                }
+            }
+            
+            // 否则返回原始解压目录（可能在根目录就有 DLL 文件）
+            return extractPath;
         }
 
         /// <summary>
