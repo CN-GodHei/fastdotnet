@@ -78,10 +78,10 @@ const sendInitialData = () => {
   }
 }
 
-// 监听来自iframe的消息
+// 监听来自 iframe 的消息
 const handleMessage = (event: MessageEvent) => {
   try {
-    // 注意：生产环境中应该验证event.origin
+    // 注意：生产环境中应该验证 event.origin
     const { type, data } = event.data
     
     switch (type) {
@@ -100,11 +100,54 @@ const handleMessage = (event: MessageEvent) => {
         window.dispatchEvent(new CustomEvent('refresh-plugin-list'))
         break
         
+      case 'INSTALL_PLUGIN':
+        // 处理安装插件请求
+        handleInstallPlugin(data)
+        break
+        
       default:
         console.log('未知消息类型:', type)
     }
   } catch (e) {
-    console.error('处理iframe消息失败:', e)
+    console.error('处理 iframe 消息失败:', e)
+  }
+}
+
+// 处理安装插件请求
+const handleInstallPlugin = async (data: any) => {
+  const { pluginId, pluginName ,DownloadurlId} = data
+  
+  try {
+    // TODO: 调用主应用的后端 API 进行安装
+    // 这里应该调用实际的安装接口
+    console.log('收到安装插件请求:', pluginId, pluginName,DownloadurlId)
+    
+    // 模拟安装过程（替换为实际的 API 调用）
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    
+    // 发送安装成功结果回 iframe
+    if (marketplaceIframe.value?.contentWindow) {
+      marketplaceIframe.value.contentWindow.postMessage({
+        type: 'INSTALL_PLUGIN_RESULT',
+        data: {
+          success: true,
+          pluginId,
+          pluginName
+        }
+      }, '*')
+    }
+  } catch (error: any) {
+    // 发送安装失败结果回 iframe
+    if (marketplaceIframe.value?.contentWindow) {
+      marketplaceIframe.value.contentWindow.postMessage({
+        type: 'INSTALL_PLUGIN_RESULT',
+        data: {
+          success: false,
+          pluginId,
+          error: error.message || '安装失败'
+        }
+      }, '*')
+    }
   }
 }
 
