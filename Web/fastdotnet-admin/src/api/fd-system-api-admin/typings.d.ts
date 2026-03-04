@@ -1,4 +1,6 @@
 declare namespace APIModel {
+	type ActivationStatus = 0 | 1 | 2;
+
 	type ActivationStatusDto = 0 | 1 | 2;
 
 	type ApiResult = {
@@ -7,6 +9,30 @@ declare namespace APIModel {
 	};
 
 	type AppMarketplacePluginDto = {
+		Id?: string;
+		Name?: string;
+		Author?: string;
+		Category?: string;
+		SupportedLicenseMode?: SupportedLicenseModeDto;
+		Price_SingleServer?: number;
+		Price_MultiServer?: number;
+		IsFree?: boolean;
+		DocumentationUrl?: string;
+		PurchaseStatus?: string;
+		SubTitle?: string;
+		IconUrl?: string;
+		LatestVersion?: string;
+		LatestDocumentationUrl?: string;
+		LatestReleaseNotes?: string;
+		DownloadCount?: number;
+	};
+
+	type AppMarketplacePluginDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: AppMarketplacePluginDto[];
+	};
+
+	type AppMarketplacePluginGetByIdDto = {
 		Id?: string;
 		Name?: string;
 		Description?: string;
@@ -19,11 +45,14 @@ declare namespace APIModel {
 		DocumentationUrl?: string;
 		PurchaseStatus?: string;
 		SubTitle?: string;
-	};
-
-	type AppMarketplacePluginDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: AppMarketplacePluginDto[];
+		IconUrl?: string;
+		UserPurchased?: boolean;
+		UserPurchasedSingleServer?: boolean;
+		UserPurchasedMultiServer?: boolean;
+		LatestVersion?: string;
+		LatestDocumentationUrl?: string;
+		LatestReleaseNotes?: string;
+		DownloadCount?: number;
 	};
 
 	type AppRegisterDto = {
@@ -272,21 +301,15 @@ declare namespace APIModel {
 		GivenTime?: string;
 	};
 
-	type CreateMarketplacePluginDto = {
-		PluginId: string;
-		Name: string;
+	type CreateMkMarketplacePluginsDto = {
+		Name?: string;
+		SubTitle?: string;
 		Description?: string;
-		Version: string;
 		Author?: string;
 		Category?: string;
-		SupportedLicenseMode?: SupportedLicenseModeDto;
-		Price_SingleServer?: number;
-		Price_MultiServer?: number;
 		IsActive?: boolean;
 		IsFree?: boolean;
-		DownloadUrl?: string;
-		DocumentationUrl?: string;
-		SubTitle?: string;
+		IconUrl?: string;
 	};
 
 	type CreateOnlinePaymentDto = {
@@ -1503,6 +1526,24 @@ declare namespace APIModel {
 		relativePath: string;
 	};
 
+	type GiftRecord = {
+		PurchaseId?: number;
+		Reason?: string;
+		GivenBy?: string;
+		GivenTime?: string;
+		CreateTime?: string;
+		UpdateTime?: string;
+		Purchase?: UserPluginPurchase;
+		CreatedBy?: string;
+		UpdatedBy?: string;
+		DeletedBy?: string;
+		Id?: string;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+		DeletedAt?: string;
+	};
+
 	type GiftRecordBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -1529,6 +1570,8 @@ declare namespace APIModel {
 		Items?: GiftRecordDto[];
 	};
 
+	type LicenseType = 0 | 1;
+
 	type LicenseTypeDto = 0 | 1;
 
 	type LoginDto = {
@@ -1540,42 +1583,6 @@ declare namespace APIModel {
 
 	type LoginResultDto = {
 		Token?: string;
-	};
-
-	type MarketplacePluginBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type MarketplacePluginDto = {
-		Id?: string;
-		PluginId: string;
-		Name: string;
-		Description?: string;
-		Version: string;
-		Author?: string;
-		Category?: string;
-		SupportedLicenseMode?: SupportedLicenseModeDto;
-		Price_SingleServer?: number;
-		Price_MultiServer?: number;
-		IsActive?: boolean;
-		IsFree?: boolean;
-		DownloadUrl?: string;
-		DocumentationUrl?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-		SubTitle?: string;
-	};
-
-	type MarketplacePluginDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: MarketplacePluginDto[];
 	};
 
 	type MaskConfigModel = {
@@ -1617,12 +1624,125 @@ declare namespace APIModel {
 		PageSize?: number;
 	};
 
+	type MkMarketplacePlugins = {
+		Name?: string;
+		SubTitle?: string;
+		Description?: string;
+		IconUrl?: string;
+		Author?: string;
+		Category?: string;
+		SupportedLicenseMode?: SupportedLicenseMode;
+		IsActive?: boolean;
+		IsFree?: boolean;
+		DownloadCount?: number;
+		Versions?: MkMarketplacePluginVersions[];
+		Purchases?: UserPluginPurchase[];
+		Activations?: UserPluginActivation[];
+		CreatedBy?: string;
+		UpdatedBy?: string;
+		DeletedBy?: string;
+		Id?: string;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+		DeletedAt?: string;
+	};
+
+	type MkMarketplacePluginsBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type MkMarketplacePluginsDto = {
+		Name?: string;
+		SubTitle?: string;
+		Description?: string;
+		Author?: string;
+		Category?: string;
+		SupportedLicenseMode?: SupportedLicenseMode;
+		IsActive?: boolean;
+		IsFree?: boolean;
+		DownloadCount?: number;
+		IconUrl?: string;
+	};
+
+	type MkMarketplacePluginsDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: MkMarketplacePluginsDto[];
+	};
+
+	type MkMarketplacePluginsPageResult = {
+		PageInfo?: PageInfo;
+		Items?: MkMarketplacePlugins[];
+	};
+
+	type MkMarketplacePluginVersions = {
+		PluginId?: string;
+		Version?: string;
+		DownloadUrl?: string;
+		DocumentationUrl?: string;
+		ReleaseNotes?: string;
+		IsActive?: boolean;
+		Price_SingleServer?: number;
+		Price_MultiServer?: number;
+		Plugin?: MkMarketplacePlugins;
+		CreatedBy?: string;
+		UpdatedBy?: string;
+		DeletedBy?: string;
+		Id?: string;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+		DeletedAt?: string;
+	};
+
+	type MkMarketplacePluginVersionsDto = {
+		Id?: string;
+		PluginId?: string;
+		Version?: string;
+		DownloadUrl?: string;
+		DocumentationUrl?: string;
+		ReleaseNotes?: string;
+		IsActive?: boolean;
+		PriceSingleServer?: number;
+		PriceMultiServer?: number;
+		CreatedBy?: string;
+		UpdatedBy?: string;
+		DeletedBy?: string;
+	};
+
 	type OfflineActivationRequestDto = {
 		PluginId: string;
 		MachineFingerprint: string;
 		RequestTimestamp?: string;
 		ClientInfo?: string;
 		Nonce?: string;
+	};
+
+	type OnlinePayment = {
+		PurchaseId?: number;
+		Channel?: OnlinePaymentChannel;
+		TransactionId?: string;
+		ThirdPartyData?: string;
+		CallbackData?: string;
+		PaidTime?: string;
+		CreateTime?: string;
+		UpdateTime?: string;
+		Purchase?: UserPluginPurchase;
+		CreatedBy?: string;
+		UpdatedBy?: string;
+		DeletedBy?: string;
+		Id?: string;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+		DeletedAt?: string;
 	};
 
 	type OnlinePaymentBooleanFuncExpression = {
@@ -1635,6 +1755,8 @@ declare namespace APIModel {
 		TailCall?: boolean;
 		CanReduce?: boolean;
 	};
+
+	type OnlinePaymentChannel = 0 | 1 | 2 | 3 | 4;
 
 	type OnlinePaymentChannelDto = 0 | 1 | 2 | 3 | 4;
 
@@ -1753,6 +1875,22 @@ declare namespace APIModel {
 		entryPoint?: string;
 	};
 
+	type PointRedemption = {
+		PurchaseId?: number;
+		PointsUsed?: number;
+		UserId?: string;
+		RedeemedTime?: string;
+		Purchase?: UserPluginPurchase;
+		CreatedBy?: string;
+		UpdatedBy?: string;
+		DeletedBy?: string;
+		Id?: string;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+		DeletedAt?: string;
+	};
+
 	type PointRedemptionBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -1819,6 +1957,8 @@ declare namespace APIModel {
 		Subject?: string;
 		NotifyUrl?: string;
 	};
+
+	type PurchaseStatus = 0 | 1 | 2;
 
 	type PurchaseStatusDto = 0 | 1 | 2;
 
@@ -2002,6 +2142,8 @@ declare namespace APIModel {
 		ConfigParams?: Record<string, any>;
 	};
 
+	type SupportedLicenseMode = 0 | 1 | 2;
+
 	type SupportedLicenseModeDto = 0 | 1 | 2;
 
 	type SystemCategory = 0 | 1;
@@ -2050,6 +2192,11 @@ declare namespace APIModel {
 	type UpdateCodeGenDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateCodeGenDto;
+	};
+
+	type UpdateDescriptionDto = {
+		Id: string;
+		Description?: string;
 	};
 
 	type UpdateFdAdminUserDto = {
@@ -2298,27 +2445,35 @@ declare namespace APIModel {
 		Dto?: UpdateGiftRecordDto;
 	};
 
-	type UpdateMarketplacePluginDto = {
-		Id?: string;
-		PluginId: string;
-		Name: string;
+	type UpdateMkMarketplacePluginsDto = {
+		Name?: string;
+		SubTitle?: string;
 		Description?: string;
-		Version: string;
 		Author?: string;
 		Category?: string;
-		SupportedLicenseMode?: SupportedLicenseModeDto;
-		Price_SingleServer?: number;
-		Price_MultiServer?: number;
 		IsActive?: boolean;
 		IsFree?: boolean;
-		DownloadUrl?: string;
-		DocumentationUrl?: string;
-		SubTitle?: string;
+		IconUrl?: string;
 	};
 
-	type UpdateMarketplacePluginDtoBatchUpdateByConditionDto = {
+	type UpdateMkMarketplacePluginsDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMarketplacePluginDto;
+		Dto?: UpdateMkMarketplacePluginsDto;
+	};
+
+	type UpdateMkMarketplacePluginVersionsDto = {
+		Id: string;
+		PluginId?: string;
+		Version: string;
+		DownloadUrl?: string;
+		DocumentationUrl?: string;
+		ReleaseNotes?: string;
+		IsActive?: boolean;
+		PriceSingleServer?: number;
+		PriceMultiServer?: number;
+		CreatedBy?: string;
+		UpdatedBy?: string;
+		DeletedBy?: string;
 	};
 
 	type UpdateOnlinePaymentDto = {
@@ -2410,6 +2565,34 @@ declare namespace APIModel {
 		SupportDirectUpload?: boolean;
 	};
 
+	type UserPluginActivation = {
+		PurchaseId?: number;
+		PluginId?: string;
+		UserId?: string;
+		LicenseType?: LicenseType;
+		ActivationDate?: string;
+		MachineFingerprint?: string;
+		IpAddress?: string;
+		Hostname?: string;
+		LicenseFileContent?: string;
+		Status?: ActivationStatus;
+		DeactivationDate?: string;
+		RevocationReason?: string;
+		Notes?: string;
+		CreateTime?: string;
+		UpdateTime?: string;
+		Purchase?: UserPluginPurchase;
+		Plugin?: MkMarketplacePlugins;
+		CreatedBy?: string;
+		UpdatedBy?: string;
+		DeletedBy?: string;
+		Id?: string;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+		DeletedAt?: string;
+	};
+
 	type UserPluginActivationBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -2443,6 +2626,36 @@ declare namespace APIModel {
 	type UserPluginActivationDtoPageResult = {
 		PageInfo?: PageInfo;
 		Items?: UserPluginActivationDto[];
+	};
+
+	type UserPluginPurchase = {
+		UserId?: string;
+		PluginId?: string;
+		OrderId?: string;
+		LicenseType?: LicenseType;
+		Quantity?: number;
+		PurchasePrice?: number;
+		Currency?: string;
+		PurchaseDate?: string;
+		UpdatesUntil?: string;
+		IsLifetime?: boolean;
+		Status?: PurchaseStatus;
+		Notes?: string;
+		CreateTime?: string;
+		UpdateTime?: string;
+		Plugin?: MkMarketplacePlugins;
+		Activations?: UserPluginActivation[];
+		OnlinePayment?: OnlinePayment;
+		PointRedemption?: PointRedemption;
+		GiftRecord?: GiftRecord;
+		CreatedBy?: string;
+		UpdatedBy?: string;
+		DeletedBy?: string;
+		Id?: string;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+		DeletedAt?: string;
 	};
 
 	type UserPluginPurchaseBooleanFuncExpression = {
