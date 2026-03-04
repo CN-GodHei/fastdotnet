@@ -51,6 +51,17 @@ export async function postApiPluginEnablePluginId(
 		...(options || {}),
 	});
 }
+/** 从URL下载并加载插件 POST /api/Plugin/load */
+export async function postApiPluginLoad(body: APIModel.DownloadPluginDto, options?: { [key: string]: any }) {
+	return request<any>('/api/Plugin/load', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
 /** 获取所有已加载的插件（无论是否激活） GET /api/Plugin/loaded */
 export async function getApiPluginLoaded(options?: { [key: string]: any }) {
 	return request<any>('/api/Plugin/loaded', {

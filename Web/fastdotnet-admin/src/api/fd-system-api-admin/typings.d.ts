@@ -548,6 +548,19 @@ declare namespace APIModel {
 		bucketName?: string;
 	};
 
+	type DownloadPluginDto = {
+		/** 下载链接 */
+		Url: string;
+		/** Token */
+		Token: string;
+		/** 插件Id */
+		PluginId: string;
+		/** 插件名称 */
+		PluginName: string;
+		/** 版本 */
+		Version: string;
+	};
+
 	type EmailConfigBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
