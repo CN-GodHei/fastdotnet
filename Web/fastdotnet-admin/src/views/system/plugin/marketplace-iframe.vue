@@ -115,12 +115,12 @@ const handleMessage = (event: MessageEvent) => {
 
 // 处理安装插件请求
 const handleInstallPlugin = async (data: any) => {
-  const { pluginId, pluginName ,DownloadurlId} = data
+  const { pluginId, pluginName ,DownloadurlId,token} = data
   
   try {
     // TODO: 调用主应用的后端 API 进行安装
     // 这里应该调用实际的安装接口
-    console.log('收到安装插件请求:', pluginId, pluginName,DownloadurlId)
+    console.log('收到安装插件请求:', pluginId, pluginName,DownloadurlId,token)
     
     // 模拟安装过程（替换为实际的 API 调用）
     await new Promise(resolve => setTimeout(resolve, 2000))
