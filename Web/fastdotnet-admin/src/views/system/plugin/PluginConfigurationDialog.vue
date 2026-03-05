@@ -10,12 +10,8 @@
         class="mb15"
       />
       
-      <el-form label-position="top">
-        <el-form-item label="插件名称">
-          <el-input :value="pluginName" disabled placeholder="插件名称" />
-        </el-form-item>
-        
-        <el-form-item label="配置内容 (JSON 格式)" required>
+      <el-form label-position="top">        
+        <el-form-item :label="`${pluginName} -  配置内容`" required>
           <div ref="monacoEditorRef" style="width: 100%; height: 500px; border: 1px solid #dcdfe6; border-radius: 4px;"></div>
           <div v-if="jsonError" class="json-error-tip">
             <el-tag type="danger" size="small">

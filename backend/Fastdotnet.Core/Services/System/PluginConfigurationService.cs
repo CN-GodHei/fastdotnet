@@ -68,7 +68,7 @@ namespace Fastdotnet.Core.Services.System
 
             var record = await _PluginConfigurationRepository.GetByIdAsync(pluginId);
 
-            return record.ConfigJson;
+            return record?.ConfigJson;
         }
 
         public async Task SaveRawJsonAsync(string pluginId, string rawJson)
