@@ -16,18 +16,18 @@
         </el-form-item>
         
         <el-form-item label="配置内容 (JSON 格式)" required>
-          <el-input
-            v-model="configJson"
-            type="textarea"
-            :rows="15"
-            placeholder='请输入 JSON 格式的配置，例如：{"key": "value"}'
-            @input="validateJson"
-          />
+          <div ref="monacoEditorRef" style="width: 100%; height: 500px; border: 1px solid #dcdfe6; border-radius: 4px;"></div>
           <div v-if="jsonError" class="json-error-tip">
-            <el-tag type="danger" size="small">JSON 格式错误：{{ jsonError }}</el-tag>
+            <el-tag type="danger" size="small">
+              <el-icon><ele-Close /></el-icon>
+              {{ jsonError }}
+            </el-tag>
           </div>
-          <div v-else-if="jsonValid" class="json-valid-tip">
-            <el-tag type="success" size="small">✓ JSON 格式正确</el-tag>
+          <div v-else-if="jsonValid && configJson.trim()" class="json-valid-tip">
+            <el-tag type="success" size="small">
+              <el-icon><ele-Check /></el-icon>
+              JSON 格式正确
+            </el-tag>
           </div>
         </el-form-item>
       </el-form>
@@ -35,7 +35,8 @@
     
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="handleCancel">取消</el-button>
+        <el-button icon="ele-Close" @click="handleCancel">关 闭</el-button>
+        <el-button icon="ele-CopyDocument" type="primary" @click="handleCopy">复 制</el-button>
         <el-button type="primary" @click="handleConfirm" :disabled="!jsonValid && !!jsonError">
           保存配置
         </el-button>
@@ -45,8 +46,10 @@
 </template>
 
 <script setup lang="ts" name="PluginConfigurationDialog">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
+import * as monaco from 'monaco-editor'
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import {
   getApiPluginConfigurationGetPluginConfigurationByPluginId,
   putApiPluginConfigurationPluginId
@@ -85,6 +88,64 @@ const configJson = ref('')
 const jsonValid = ref(false)
 const jsonError = ref('')
 
+// 防止 monaco 报黄
+self.MonacoEnvironment = {
+  getWorker: (_: string, label: string) => new EditorWorker(),
+};
+
+// Monaco Editor 实例
+let monacoEditor: any = null;
+const monacoEditorRef = ref();
+
+// 初始化 Monaco Editor
+const initMonacoEditor = () => {
+  if (!monacoEditorRef.value) {
+    console.error('monacoEditorRef is not available');
+    return;
+  }
+  
+  monacoEditor = monaco.editor.create(monacoEditorRef.value, {
+    theme: 'vs-dark', // 主题 vs vs-dark hc-black
+    value: '', // 默认显示的值
+    language: 'json',
+    formatOnPaste: true,
+    wordWrap: 'on', // 自动换行
+    wrappingIndent: 'indent',
+    folding: true, // 是否折叠
+    foldingHighlight: true, // 折叠等高线
+    foldingStrategy: 'indentation', // 折叠方式 auto | indentation
+    showFoldingControls: 'always', // 是否一直显示折叠 always | mouseOver
+    disableLayerHinting: true, // 等宽优化
+    emptySelectionClipboard: false, // 空选择剪切板
+    selectionClipboard: false, // 选择剪切板
+    automaticLayout: true, // 自动布局
+    codeLens: false, // 代码镜头
+    scrollBeyondLastLine: false, // 滚动完最后一行后再滚动一屏幕
+    colorDecorators: true, // 颜色装饰器
+    accessibilitySupport: 'auto', // 辅助功能支持 "auto" | "off" | "on"
+    lineNumbers: 'on', // 行号
+    lineNumbersMinChars: 5, // 行号最小字符
+    readOnly: false, // 是否只读
+    minimap: {
+      enabled: false // 不显示小地图
+    },
+    suggest: {
+      showWords: false // 禁用单词建议
+    },
+    padding: {
+      top: 10, // 顶部内边距
+      bottom: 10 // 底部内边距
+    }
+  });
+  
+  // 监听编辑器内容变化
+  monacoEditor.onDidChangeModelContent(() => {
+    const newValue = monacoEditor.getValue();
+    configJson.value = newValue;
+    validateJson();
+  });
+};
+
 // 验证 JSON 格式
 const validateJson = () => {
   if (!configJson.value.trim()) {
@@ -94,7 +155,9 @@ const validateJson = () => {
   }
   
   try {
-    JSON.parse(configJson.value)
+    const parsed = JSON.parse(configJson.value)
+    // 自动格式化为带缩进的 JSON
+    configJson.value = JSON.stringify(parsed, null, 2)
     jsonValid.value = true
     jsonError.value = ''
   } catch (e: any) {
@@ -102,6 +165,18 @@ const validateJson = () => {
     jsonError.value = e.message
   }
 }
+
+// 复制 JSON
+const handleCopy = async () => {
+  if (!monacoEditor || !configJson.value.trim()) return;
+  
+  try {
+    await navigator.clipboard.writeText(configJson.value);
+    ElMessage.success('复制成功');
+  } catch (e: any) {
+    ElMessage.error('复制失败');
+  }
+};
 
 // 获取插件配置
 const fetchConfig = async (id: string) => {
@@ -149,10 +224,23 @@ const handleCancel = () => {
 // 监听对话框打开
 watch(
   () => props.modelValue,
-  (val) => {
+  async (val) => {
     if (val && props.pluginId) {
       pluginId.value = props.pluginId
-      fetchConfig(props.pluginId)
+      
+      // 等待 DOM 更新后初始化编辑器
+      await nextTick()
+      if (!monacoEditor) {
+        initMonacoEditor()
+      }
+      
+      // 获取配置数据
+      await fetchConfig(props.pluginId)
+      
+      // 数据加载完成后设置到编辑器
+      if (monacoEditor) {
+        monacoEditor.setValue(configJson.value)
+      }
     }
   },
   { immediate: true }
@@ -165,9 +253,17 @@ watch(
     margin-bottom: 15px;
   }
   
+  .monaco-editor-wrapper {
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
   .json-error-tip,
   .json-valid-tip {
     margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 }
 
