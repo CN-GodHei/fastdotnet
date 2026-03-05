@@ -20,16 +20,16 @@
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        [HttpGet("Get-Plugin-ConfigurationBy/{id}")]
+        [HttpGet("Get-Plugin-ConfigurationBy/{PluginId}")]
         public async Task<string?> GetPluginConfigurationById(string PluginId)
         {
             return await _pluginConfigurationService.GetRawJsonAsync(PluginId);
         }
 
-        [HttpPut("{id}")]
-        public async Task<bool> Update(string Id, [FromBody] string RawJson)
+        [HttpPut("{PluginId}")]
+        public async Task<bool> Update(string PluginId, [FromBody] string RawJson)
         {
-            await _pluginConfigurationService.SaveRawJsonAsync(Id, RawJson);
+            await _pluginConfigurationService.SaveRawJsonAsync(PluginId, RawJson);
             return true;
         }
     }

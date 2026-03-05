@@ -35,6 +35,7 @@
                   >启用</el-button
                 >
                 <el-button size="small" type="danger" @click="handleDisable(scope.row)" v-else>停用</el-button>
+                <el-button size="small" type="info" @click="handleConfig(scope.row)">配置</el-button>
                 <el-button size="small" type="warning" @click="handleUninstall(scope.row)">卸载</el-button>
               </template>
             </el-table-column>
@@ -50,6 +51,13 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
+    
+    <!-- 插件配置对话框 -->
+    <PluginConfigurationDialog 
+      v-model="configDialogVisible" 
+      :plugin-id="currentConfigPluginId"
+      @save-success="handleConfigSaveSuccess"
+    />
   </div>
 </template>
 
@@ -64,6 +72,7 @@ import {
   postApiPluginUninstallPluginId
 } from '@/api/fd-system-api-admin/Plugin'
 import { MicroAppEvents, receiveFromMicroApp, removeMicroAppEventListener } from '@/utils/microAppCommunication'
+import PluginConfigurationDialog from './PluginConfigurationDialog.vue'
 
 // 异步加载插件市场组件
 // const PluginMarketplace = defineAsyncComponent(() => import('./marketplace.vue'))
@@ -83,6 +92,10 @@ interface Plugin {
 // refs
 const marketplaceRef = ref<any>(null)
 const marketplaceIframeRef = ref<any>(null)
+
+// 配置对话框
+const configDialogVisible = ref(false)
+const currentConfigPluginId = ref('')
 
 // 当前激活的选项卡
 const activeTab = ref('installed')
@@ -185,6 +198,18 @@ const handleUninstall = (row: Plugin) => {
       }))
     })
   })
+}
+
+// 配置插件
+const handleConfig = (row: Plugin) => {
+  currentConfigPluginId.value = row.id
+  configDialogVisible.value = true
+}
+
+// 配置保存成功
+const handleConfigSaveSuccess = () => {
+  // 可以在这里做一些后续操作，比如刷新列表等
+  console.log('配置保存成功')
 }
 
 // 处理选项卡切换

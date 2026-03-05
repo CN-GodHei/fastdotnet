@@ -1504,9 +1504,8 @@ declare namespace APIModel {
 		pluginId: string;
 	};
 
-	type getApiPluginConfigurationGetPluginConfigurationByIdParams = {
-		PluginId?: string;
-		id: string;
+	type getApiPluginConfigurationGetPluginConfigurationByPluginIdParams = {
+		PluginId: string;
 	};
 
 	type getApiStorageDownloadFileNameParams = {
@@ -2048,8 +2047,8 @@ declare namespace APIModel {
 		id: string;
 	};
 
-	type putApiPluginConfigurationIdParams = {
-		Id: string;
+	type putApiPluginConfigurationPluginIdParams = {
+		PluginId: string;
 	};
 
 	type QueryByConditionDto = {
