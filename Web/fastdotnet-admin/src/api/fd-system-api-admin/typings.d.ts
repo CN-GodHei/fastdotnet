@@ -336,11 +336,6 @@ declare namespace APIModel {
 		PaymentMethod?: PaymentMethod;
 	};
 
-	type CreatePluginAUserExtensionDto = {
-		Preferences?: string;
-		Points?: number;
-	};
-
 	type CreatePointRedemptionDto = {
 		PurchaseId: number;
 		PointsUsed?: number;
@@ -377,17 +372,6 @@ declare namespace APIModel {
 		IsLifetime?: boolean;
 		Status?: PurchaseStatusDto;
 		Notes?: string;
-	};
-
-	type CreateUserWithExtensionRequest = {
-		ExtensionData?: CreatePluginAUserExtensionDto;
-		Username: string;
-		Password: string;
-		Email: string;
-		PhoneNumber: string;
-		Nickname?: string;
-		AvatarUrl: string;
-		Status?: number;
 	};
 
 	type DataStatus = 0 | 1 | 2 | 3;
@@ -1520,6 +1504,11 @@ declare namespace APIModel {
 		pluginId: string;
 	};
 
+	type getApiPluginConfigurationGetPluginConfigurationByIdParams = {
+		PluginId?: string;
+		id: string;
+	};
+
 	type getApiStorageDownloadFileNameParams = {
 		/** 文件名 */
 		fileName: string;
@@ -1626,16 +1615,6 @@ declare namespace APIModel {
 	};
 
 	type MenuType = 0 | 1;
-
-	type MetricQueryRequest = {
-		MetricIds?: string[];
-		StartDate?: string;
-		EndDate?: string;
-		Dimensions?: string[];
-		Filters?: Record<string, any>;
-		PageNumber?: number;
-		PageSize?: number;
-	};
 
 	type MkMarketplacePlugins = {
 		Name?: string;
@@ -1815,66 +1794,6 @@ declare namespace APIModel {
 	};
 
 	type PaymentMethod = 0 | 1;
-
-	type PluginATestBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type PluginATestCreateDto = {
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-	};
-
-	type PluginATestDto = {
-		Id?: string;
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-		CreatedAt?: string;
-		UpdateTime?: string;
-	};
-
-	type PluginATestDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: PluginATestDto[];
-	};
-
-	type PluginATestUpdateDto = {
-		Id?: string;
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-	};
-
-	type PluginATestUpdateDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: PluginATestUpdateDto;
-	};
-
-	type PluginAUserExtension = {
-		FdAppUserId?: string;
-		Preferences?: string;
-		Points?: number;
-		Id?: string;
-		CreatedAt?: string;
-		UpdatedAt?: string;
-		IsDeleted?: boolean;
-		DeletedAt?: string;
-	};
 
 	type PluginInfo = {
 		id?: string;
@@ -2129,6 +2048,10 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type putApiPluginConfigurationIdParams = {
+		Id: string;
+	};
+
 	type QueryByConditionDto = {
 		DynamicQuery?: string;
 		QueryParameters?: any[];
@@ -2137,10 +2060,6 @@ declare namespace APIModel {
 
 	type ResetPasswordDto = {
 		NewPassword: string;
-	};
-
-	type SendMessageRequest = {
-		Message?: string;
 	};
 
 	type SendRegistrationCodeDto = {

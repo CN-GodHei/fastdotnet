@@ -22,6 +22,7 @@ import * as FdRatelimitRule from './FdRatelimitRule';
 import * as FdRole from './FdRole';
 import * as FdSystemInfoConfig from './FdSystemInfoConfig';
 import * as Plugin from './Plugin';
+import * as PluginConfiguration from './PluginConfiguration';
 import * as Storage from './Storage';
 import * as System from './System';
 import * as TestScope from './TestScope';
@@ -46,6 +47,7 @@ export default {
 	FdRole,
 	FdSystemInfoConfig,
 	Plugin,
+	PluginConfiguration,
 	Storage,
 	System,
 	TestScope,
