@@ -79,6 +79,11 @@ namespace Fastdotnet.Core.Services.System
         {
             if (string.IsNullOrWhiteSpace(pluginId))
                 throw new ArgumentException("PluginId cannot be null or empty.", nameof(pluginId));
+            var pluginInfo = await _PluginConfigurationRepository.GetFirstAsync(w => w.PluginId == pluginId);
+            if (pluginInfo == null)
+            {
+                throw new BusinessException("插件不支持配置");
+            }
             if (rawJson == null)
                 throw new ArgumentNullException(nameof(rawJson));
 
