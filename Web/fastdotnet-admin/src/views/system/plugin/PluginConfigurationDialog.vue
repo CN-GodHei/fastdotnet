@@ -11,8 +11,8 @@
       />
       
       <el-form label-position="top">
-        <el-form-item label="插件 ID">
-          <el-input v-model="pluginId" disabled placeholder="插件 ID" />
+        <el-form-item label="插件名称">
+          <el-input :value="pluginName" disabled placeholder="插件名称" />
         </el-form-item>
         
         <el-form-item label="配置内容 (JSON 格式)" required>
@@ -59,11 +59,13 @@ import {
 interface Props {
   modelValue: boolean
   pluginId?: string
+  pluginName?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
-  pluginId: ''
+  pluginId: '',
+  pluginName: ''
 })
 
 // 定义 emits

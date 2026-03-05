@@ -56,6 +56,7 @@
     <PluginConfigurationDialog 
       v-model="configDialogVisible" 
       :plugin-id="currentConfigPluginId"
+      :plugin-name="currentConfigPluginName"
       @save-success="handleConfigSaveSuccess"
     />
   </div>
@@ -96,6 +97,7 @@ const marketplaceIframeRef = ref<any>(null)
 // 配置对话框
 const configDialogVisible = ref(false)
 const currentConfigPluginId = ref('')
+const currentConfigPluginName = ref('')
 
 // 当前激活的选项卡
 const activeTab = ref('installed')
@@ -203,6 +205,7 @@ const handleUninstall = (row: Plugin) => {
 // 配置插件
 const handleConfig = (row: Plugin) => {
   currentConfigPluginId.value = row.id
+  currentConfigPluginName.value = row.name
   configDialogVisible.value = true
 }
 
