@@ -240,10 +240,12 @@ watch(
       // 获取配置数据
       await fetchConfig(props.pluginId)
       
-      // 数据加载完成后设置到编辑器
-      if (monacoEditor) {
-        monacoEditor.setValue(configJson.value)
-      }
+      // 确保编辑器初始化完成后再设置值
+      setTimeout(() => {
+        if (monacoEditor) {
+          monacoEditor.setValue(configJson.value)
+        }
+      }, 100)
     }
   },
   { immediate: true }
