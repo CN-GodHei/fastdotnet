@@ -11,7 +11,7 @@
       />
       
       <el-form label-position="top">        
-        <el-form-item :label="`${pluginName} -  配置内容`" required>
+        <el-form-item :label="`${pluginName} -  配置内容${getShowText()}`" required>
           <div ref="monacoEditorRef" style="width: 100%; height: 500px; border: 1px solid #dcdfe6; border-radius: 4px;"></div>
           <div v-if="jsonError" class="json-error-tip">
             <el-tag type="danger" size="small">
@@ -33,7 +33,11 @@
       <span class="dialog-footer">
         <el-button icon="ele-Close" @click="handleCancel">关 闭</el-button>
         <el-button icon="ele-CopyDocument" type="primary" @click="handleCopy">复 制</el-button>
-        <el-button type="primary" @click="handleConfirm" :disabled="!jsonValid && !!jsonError">
+        <el-button 
+          type="primary" 
+          @click="handleConfirm" 
+          :disabled="!jsonValid || !!jsonError || !isConfigurable"
+        >
           保存配置
         </el-button>
       </span>
@@ -85,6 +89,9 @@ const configJson = ref('')
 // JSON 验证状态
 const jsonValid = ref(false)
 const jsonError = ref('')
+
+// 插件是否支持配置
+const isConfigurable = ref(false)
 
 // 防止 monaco 报黄
 self.MonacoEnvironment = {
@@ -180,7 +187,6 @@ const handleCopy = async () => {
 const fetchConfig = async (id: string) => {
   try {
     const response = await getApiPluginConfigurationGetPluginConfigurationByPluginId({ PluginId: id })
-    console.log(response)
     // 后端返回的是 { ExistRocord?: boolean; RawJson?: string; }
     // 如果存在记录，使用 RawJson，否则使用空对象
     if (response?.ExistRocord && response?.RawJson) {
@@ -188,6 +194,7 @@ const fetchConfig = async (id: string) => {
     } else {
       configJson.value = '{}'
     }
+    isConfigurable.value = response?.ExistRocord || false
     validateJson()
   } catch (error: any) {
     ElMessage.error('获取配置失败：' + (error.message || '未知错误'))
@@ -250,6 +257,11 @@ watch(
   },
   { immediate: true }
 )
+
+const getShowText = () => {
+    if (!isConfigurable.value) return ` -插件不支持配置`
+    return ``
+}
 </script>
 
 <style scoped lang="scss">
