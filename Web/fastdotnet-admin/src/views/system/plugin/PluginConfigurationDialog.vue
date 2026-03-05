@@ -181,8 +181,13 @@ const fetchConfig = async (id: string) => {
   try {
     const response = await getApiPluginConfigurationGetPluginConfigurationByPluginId({ PluginId: id })
     console.log(response)
-    // 后端返回的是 JSON 字符串，直接赋值
-    configJson.value = response || '{}'
+    // 后端返回的是 { ExistRocord?: boolean; RawJson?: string; }
+    // 如果存在记录，使用 RawJson，否则使用空对象
+    if (response?.ExistRocord && response?.RawJson) {
+      configJson.value = response.RawJson
+    } else {
+      configJson.value = '{}'
+    }
     validateJson()
   } catch (error: any) {
     ElMessage.error('获取配置失败：' + (error.message || '未知错误'))
