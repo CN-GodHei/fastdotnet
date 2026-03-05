@@ -21,7 +21,7 @@
         /// <param name="Id"></param>
         /// <returns></returns>
         [HttpGet("Get-Plugin-ConfigurationBy/{PluginId}")]
-        public async Task<string?> GetPluginConfigurationById(string PluginId)
+        public async Task<PluginConfigurationGetRawJsonDto> GetPluginConfigurationById(string PluginId)
         {
             return await _pluginConfigurationService.GetRawJsonAsync(PluginId);
         }

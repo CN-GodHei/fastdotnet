@@ -61,14 +61,18 @@ namespace Fastdotnet.Core.Services.System
         // 原始 JSON 操作（高级用法）
         // ----------------------------
 
-        public async Task<string?> GetRawJsonAsync(string pluginId)
+        public async Task<PluginConfigurationGetRawJsonDto> GetRawJsonAsync(string pluginId)
         {
             if (string.IsNullOrWhiteSpace(pluginId))
                 throw new ArgumentException("PluginId cannot be null or empty.", nameof(pluginId));
-
+            PluginConfigurationGetRawJsonDto pluginConfigurationGetRawJsonDto = new PluginConfigurationGetRawJsonDto();
             var record = await _PluginConfigurationRepository.GetByIdAsync(pluginId);
-
-            return record?.ConfigJson;
+            if (record != null)
+            {
+                pluginConfigurationGetRawJsonDto.ExistRocord = true;
+            }
+            pluginConfigurationGetRawJsonDto.RawJson = record?.ConfigJson;
+            return pluginConfigurationGetRawJsonDto;
         }
 
         public async Task SaveRawJsonAsync(string pluginId, string rawJson)

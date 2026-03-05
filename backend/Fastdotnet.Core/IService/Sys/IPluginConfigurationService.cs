@@ -30,7 +30,7 @@ namespace Fastdotnet.Core.IService.Sys
         /// <summary>
         /// 获取插件的原始 JSON 配置字符串
         /// </summary>
-        Task<string?> GetRawJsonAsync(string pluginId);
+        Task<PluginConfigurationGetRawJsonDto> GetRawJsonAsync(string pluginId);
 
         /// <summary>
         /// 保存插件的原始 JSON 配置（需确保 JSON 有效）

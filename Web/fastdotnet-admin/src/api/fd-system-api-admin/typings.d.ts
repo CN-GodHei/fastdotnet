@@ -1794,6 +1794,11 @@ declare namespace APIModel {
 
 	type PaymentMethod = 0 | 1;
 
+	type PluginConfigurationGetRawJsonDto = {
+		ExistRocord?: boolean;
+		RawJson?: string;
+	};
+
 	type PluginInfo = {
 		id?: string;
 		name?: string;

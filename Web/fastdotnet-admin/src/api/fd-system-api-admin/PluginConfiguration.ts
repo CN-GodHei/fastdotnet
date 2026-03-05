@@ -29,7 +29,7 @@ export async function getApiPluginConfigurationGetPluginConfigurationByPluginId(
 ) {
 	const { PluginId: param0, ...queryParams } = params;
 
-	return request<string>(`/api/PluginConfiguration/Get-Plugin-ConfigurationBy/${param0}`, {
+	return request<APIModel.PluginConfigurationGetRawJsonDto>(`/api/PluginConfiguration/Get-Plugin-ConfigurationBy/${param0}`, {
 		method: 'GET',
 		params: { ...queryParams },
 		...(options || {}),
