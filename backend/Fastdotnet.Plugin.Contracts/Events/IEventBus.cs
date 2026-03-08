@@ -42,3 +42,17 @@ public interface IEventHandler<in TEvent> where TEvent : class
     /// <param name="cancellationToken">取消令牌</param>
     Task HandleAsync(TEvent @event, CancellationToken cancellationToken = default);
 }
+
+/// <summary>
+/// 内部事件处理器接口（用于反射调用，支持非泛型场景）
+/// 这是 EventBus 内部使用的适配器接口，所有事件处理器都需要实现这个接口
+/// </summary>
+public interface IEventHandlerInternal
+{
+    /// <summary>
+    /// 处理事件（非泛型版本）
+    /// </summary>
+    /// <param name="event">事件实例（object 类型）</param>
+    /// <param name="cancellationToken">取消令牌</param>
+    Task HandleAsync(object @event, CancellationToken cancellationToken = default);
+}
