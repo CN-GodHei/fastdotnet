@@ -92,7 +92,7 @@ namespace PluginA
             builder.RegisterType<PluginAMiddleware>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<PluginAPermissionProvider>().As<IPermissionProvider>().InstancePerLifetimeScope();
             //builder.RegisterType<PluginEntityService>().As<IPluginEntityService>().InstancePerLifetimeScope();
-            
+
             // ========== 事件总线演示：注册事件处理器 ==========
             builder.RegisterType<Fastdotnet.PluginA.EventHandlers.OrderPaidEventHandler>()
                 .As<Fastdotnet.Plugin.Contracts.Events.IEventHandler<Fastdotnet.Plugin.Contracts.Events.PaymentCompletedEvent>>()
@@ -100,7 +100,7 @@ namespace PluginA
             builder.RegisterType<Fastdotnet.PluginA.EventHandlers.PluginInstalledEventHandler>()
                 .As<Fastdotnet.Plugin.Contracts.Events.IEventHandler<Fastdotnet.Plugin.Contracts.Events.PluginInstalledEvent>>()
                 .InstancePerLifetimeScope();
-            
+
             // ========== 事件总线演示：注册商城订单服务（用于发布事件） ==========
             builder.RegisterType<Fastdotnet.PluginA.Services.MallOrderService>().AsSelf().InstancePerLifetimeScope();
             
