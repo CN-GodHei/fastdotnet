@@ -41,14 +41,8 @@ public class InMemoryEventBus : IEventBus, IDisposable
             {
                 try
                 {
-                    // 创建独立的作用域（支持依赖注入）
-                    using var scope = _serviceProvider.CreateScope();
-                    
-                    // 从作用域中解析处理器
-                    var scopedHandler = (IEventHandlerInternal)ActivatorUtilities
-                        .CreateInstance(scope.ServiceProvider, handler.GetType());
-                    
-                    await scopedHandler.HandleAsync(@event, cancellationToken);
+                    // ✅ 直接使用已保存的 handler 实例，不再重新创建
+                    await handler.HandleAsync(@event, cancellationToken);
                 }
                 catch (Exception ex)
                 {
@@ -63,7 +57,7 @@ public class InMemoryEventBus : IEventBus, IDisposable
         }
         else
         {
-            _logger.LogDebug("没有订阅者：{EventType}", eventType.Name);
+            _logger.LogError("没有订阅者：{EventType}", eventType.Name);
         }
     }
     
@@ -76,11 +70,24 @@ public class InMemoryEventBus : IEventBus, IDisposable
         
         lock (handlers)
         {
-            if (!handlers.Any(h => h.GetType() == handler.GetType()))
+            if (!handlers.Any(h => ReferenceEquals(h, handler)))
             {
-                handlers.Add((IEventHandlerInternal)handler);
-                _logger.LogInformation("订阅事件：{EventType} -> {HandlerType}", 
-                    typeof(TEvent).Name, handler.GetType().Name);
+                // ✅ 直接保存 handler 引用，不再包装
+                // 注意：这里需要 handler 同时实现 IEventHandlerInternal
+                if (handler is IEventHandlerInternal internalHandler)
+                {
+                    handlers.Add(internalHandler);
+                    _logger.LogInformation("订阅事件：{EventType} -> {HandlerType}", 
+                        typeof(TEvent).Name, handler.GetType().Name);
+                }
+                else
+                {
+                    // 如果不支持，则使用适配器包装
+                    var adapter = new EventHandlerAdapter<TEvent>(handler);
+                    handlers.Add(adapter);
+                    _logger.LogInformation("订阅事件（使用适配器）: {EventType} -> {HandlerType}", 
+                        typeof(TEvent).Name, handler.GetType().Name);
+                }
             }
         }
     }
