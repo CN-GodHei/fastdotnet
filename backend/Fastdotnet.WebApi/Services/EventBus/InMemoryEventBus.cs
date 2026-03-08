@@ -72,8 +72,7 @@ public class InMemoryEventBus : IEventBus, IDisposable
         {
             if (!handlers.Any(h => ReferenceEquals(h, handler)))
             {
-                // ✅ 直接保存 handler 引用，不再包装
-                // 注意：这里需要 handler 同时实现 IEventHandlerInternal
+                // ✅ 如果 handler 实现了 IEventHandlerInternal，直接使用
                 if (handler is IEventHandlerInternal internalHandler)
                 {
                     handlers.Add(internalHandler);
@@ -82,7 +81,7 @@ public class InMemoryEventBus : IEventBus, IDisposable
                 }
                 else
                 {
-                    // 如果不支持，则使用适配器包装
+                    // ❌ 否则使用适配器包装（备用方案）
                     var adapter = new EventHandlerAdapter<TEvent>(handler);
                     handlers.Add(adapter);
                     _logger.LogInformation("订阅事件（使用适配器）: {EventType} -> {HandlerType}", 
@@ -132,14 +131,6 @@ public class InMemoryEventBus : IEventBus, IDisposable
         _semaphore.Dispose();
         _handlers.Clear();
     }
-}
-
-/// <summary>
-/// 内部接口，用于反射调用
-/// </summary>
-internal interface IEventHandlerInternal
-{
-    Task HandleAsync(object @event, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
