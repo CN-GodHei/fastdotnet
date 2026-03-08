@@ -1,4 +1,6 @@
+using Fastdotnet.Core.Enum;
 using Fastdotnet.PluginA.Services;
+using Fastdotnet.Plugin.Contracts.Events;
 
 namespace Fastdotnet.PluginA.Controllers;
 
@@ -6,31 +8,31 @@ namespace Fastdotnet.PluginA.Controllers;
 /// 商城订单控制器（演示事件发布）
 /// </summary>
 [ApiController]
-[Route("api/pluginA/[controller]")]
+[Route("api/[controller]")]
+[ApiUsageScope(ApiUsageScopeEnum.AppOnly)]
 public class MallOrderController : ControllerBase
 {
     private readonly MallOrderService _orderService;
     private readonly ILogger<MallOrderController> _logger;
-    
+    private readonly IEventBus _eventBus;
+
     public MallOrderController(
         MallOrderService orderService,
-        ILogger<MallOrderController> logger)
+        ILogger<MallOrderController> logger, IEventBus eventBus)
     {
         _orderService = orderService;
         _logger = logger;
+        _eventBus = eventBus;
     }
     
     /// <summary>
-    /// 创建订单并发布事件
+    /// 创建订单（Service 中已发布事件）
     /// </summary>
     [HttpPost("create")]
     public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest request)
     {
         try
         {
-            _logger.LogInformation("收到创建订单请求：用户={UserId}, 金额={Amount:C}", 
-                request.UserId, request.TotalAmount);
-            
             var orderId = await _orderService.CreateOrderAsync(
                 request.UserId, 
                 request.TotalAmount, 
@@ -40,7 +42,7 @@ public class MallOrderController : ControllerBase
             {
                 success = true,
                 orderId = orderId,
-                message = "订单创建成功，已发布 MallOrderCreatedEvent 事件"
+                message = "订单创建成功"
             });
         }
         catch (Exception ex)

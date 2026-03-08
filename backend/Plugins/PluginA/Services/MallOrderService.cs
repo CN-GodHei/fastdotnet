@@ -1,5 +1,4 @@
 using Fastdotnet.Plugin.Contracts.Events;
-using Fastdotnet.PluginA.Events;
 
 namespace Fastdotnet.PluginA.Services;
 
@@ -30,26 +29,28 @@ public class MallOrderService
             orderId, userId, totalAmount);
         
         // TODO: 这里应该有实际的订单创建逻辑（保存到数据库等）
-        await Task.Delay(100); // 模拟数据库操作
+        //await Task.Delay(100); // 模拟数据库操作
         
-        // 发布订单创建事件
-        var orderCreatedEvent = new MallOrderCreatedEvent
+        // 发布通用订单创建事件（供支付插件订阅）
+        var orderCreatedEvent = new OrderCreatedEvent
         {
             OrderId = orderId,
             UserId = userId,
-            TotalAmount = totalAmount,
-            ItemCount = itemCount,
-            Source = "PluginA",
-            Data = new Dictionary<string, object>
+            Amount = totalAmount,
+            Description = $"商城订单-{orderId}",  // 微信支付用
+            Subject = $"商城订单-{orderId}",     // 支付宝用
+            NotifyUrl = "https://localhost:5001/api/unified-pay/notify",
+            ExtraData = new Dictionary<string, string>
             {
-                ["CreateTime"] = DateTime.Now,
+                ["ItemCount"] = itemCount.ToString(),
+                ["CreateTime"] = DateTime.Now.ToString(),
                 ["Status"] = "Pending"
             }
         };
         
         await _eventBus.PublishAsync(orderCreatedEvent);
         
-        _logger.LogInformation("【PluginA】订单创建成功，已发布 MallOrderCreatedEvent 事件");
+        _logger.LogInformation("【PluginA】订单创建成功，已发布 OrderCreatedEvent 事件");
         
         return orderId;
     }

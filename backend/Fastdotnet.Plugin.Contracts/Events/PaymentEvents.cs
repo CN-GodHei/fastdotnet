@@ -1,6 +1,50 @@
 namespace Fastdotnet.Plugin.Contracts.Events;
 
 /// <summary>
+/// 订单创建事件（通用标准事件，所有业务插件使用此事件）
+/// </summary>
+[Event(Name = "OrderCreated", Description = "订单创建", Group = "Order", Persistent = true)]
+public class OrderCreatedEvent : DomainEvent
+{
+    public override string AggregateId => OrderId;
+    
+    /// <summary>
+    /// 订单 ID
+    /// </summary>
+    public string OrderId { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// 用户 ID
+    /// </summary>
+    public string UserId { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// 订单金额（元）
+    /// </summary>
+    public decimal Amount { get; set; }
+    
+    /// <summary>
+    /// 商品描述（微信支付用）
+    /// </summary>
+    public string Description { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// 商品标题（支付宝用）
+    /// </summary>
+    public string Subject { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// 异步通知地址
+    /// </summary>
+    public string NotifyUrl { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// 扩展数据
+    /// </summary>
+    public Dictionary<string, string> ExtraData { get; set; } = new();
+}
+
+/// <summary>
 /// 支付请求事件
 /// </summary>
 [Event(Name = "PaymentRequested", Description = "支付请求", Group = "Payment")]
