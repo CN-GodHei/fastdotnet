@@ -110,8 +110,13 @@ public class ApplicationModule : Module
 
         // 注册本地存储服务
         containerBuilder.RegisterType<LocalStorageService>().AsSelf().InstancePerLifetimeScope();
-        
-        // 如果需要在Autofac中进行更精细的缓存服务控制，可以在这里添加
+                
+        // 注册事件总线服务（供插件使用）
+        containerBuilder.RegisterType<Fastdotnet.WebApi.Services.EventBus.InMemoryEventBus>()
+            .As<Fastdotnet.Plugin.Contracts.Events.IEventBus>()
+            .SingleInstance();
+                
+        // 如果需要在 Autofac 中进行更精细的缓存服务控制，可以在这里添加
         //containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().InstancePerLifetimeScope();
         //containerBuilder.RegisterType<HybridCacheService>().As<IHybridCacheService>().OwnedByLifetimeScope();
     }
