@@ -31,9 +31,8 @@
             </el-table-column>
             <el-table-column label="操作" width="200">
               <template #default="scope">
-                <el-button size="small" type="primary" @click="handleEnable(scope.row)" v-if="!scope.row.enabled"
-                  >启用</el-button
-                >
+                <el-button size="small" type="primary" @click="handleEnable(scope.row)"
+                  v-if="!scope.row.enabled">启用</el-button>
                 <el-button size="small" type="danger" @click="handleDisable(scope.row)" v-else>停用</el-button>
                 <el-button size="small" type="info" @click="handleConfig(scope.row)">配置</el-button>
                 <el-button size="small" type="warning" @click="handleUninstall(scope.row)">卸载</el-button>
@@ -41,24 +40,20 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        
+
         <!-- <el-tab-pane label="插件市场(qiankun)" name="marketplace">
           <plugin-marketplace ref="marketplaceRef" />
         </el-tab-pane> -->
-        
+
         <el-tab-pane label="插件市场" name="marketplace-iframe">
           <plugin-marketplace-iframe ref="marketplaceIframeRef" @plugin-action="handlePluginAction" />
         </el-tab-pane>
       </el-tabs>
     </el-card>
-    
+
     <!-- 插件配置对话框 -->
-    <PluginConfigurationDialog 
-      v-model="configDialogVisible" 
-      :plugin-id="currentConfigPluginId"
-      :plugin-name="currentConfigPluginName"
-      @save-success="handleConfigSaveSuccess"
-    />
+    <PluginConfigurationDialog v-model="configDialogVisible" :plugin-id="currentConfigPluginId"
+      :plugin-name="currentConfigPluginName" @save-success="handleConfigSaveSuccess" />
   </div>
 </template>
 
@@ -112,7 +107,7 @@ const getPluginList = () => {
   // 扫描插件
   getApiPluginScan().then((res: any) => {
     pluginList.value = res
-    
+
     // 如果在插件市场页面，通知它更新插件列表
     if (activeTab.value === 'marketplace' && marketplaceRef.value) {
       // 可以通过适当的方式通知插件市场组件更新数据
@@ -143,17 +138,20 @@ const handleEnable = (row: Plugin) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    postApiPluginEnablePluginId({ pluginId: row.id }).then(() => {
-      ElMessage.success('启用成功')
-      getPluginList() // 重新获取插件列表
-      
-      // 通知插件市场插件状态变更
-      window.dispatchEvent(new CustomEvent('micro-app-event', {
-        detail: {
-          type: MicroAppEvents.UPDATE_INSTALLED_PLUGINS,
-          data: { action: 'enable', pluginId: row.id }
-        }
-      }))
+    postApiPluginEnablePluginId({ pluginId: row.id }).then((res) => {
+      if (res.Code == 200) {
+        ElMessage.success('启用成功')
+        getPluginList() // 重新获取插件列表
+        // 通知插件市场插件状态变更
+        window.dispatchEvent(new CustomEvent('micro-app-event', {
+          detail: {
+            type: MicroAppEvents.UPDATE_INSTALLED_PLUGINS,
+            data: { action: 'enable', pluginId: row.id }
+          }
+        }))
+      } else {
+        ElMessage.error(res.Msg)
+      }
     })
   })
 }
@@ -168,7 +166,7 @@ const handleDisable = (row: Plugin) => {
     postApiPluginDisablePluginId({ pluginId: row.id }).then(() => {
       ElMessage.success('停用成功')
       getPluginList() // 重新获取插件列表
-      
+
       // 通知插件市场插件状态变更
       window.dispatchEvent(new CustomEvent('micro-app-event', {
         detail: {
@@ -190,7 +188,7 @@ const handleUninstall = (row: Plugin) => {
     postApiPluginUninstallPluginId({ pluginId: row.id }).then(() => {
       ElMessage.success('卸载成功')
       getPluginList() // 重新获取插件列表
-      
+
       // 通知插件市场插件状态变更
       window.dispatchEvent(new CustomEvent('micro-app-event', {
         detail: {
@@ -231,26 +229,26 @@ const listenToMicroAppEvents = () => {
   receiveFromMicroApp(MicroAppEvents.REFRESH_PLUGIN_LIST_REQUEST, () => {
     getPluginList()
   })
-  
+
   // 监听安装插件请求
   receiveFromMicroApp(MicroAppEvents.INSTALL_PLUGIN_REQUEST, (data) => {
     // 处理安装插件请求
     console.log('收到安装插件请求:', data)
     // 这里应该调用实际的安装插件API
   })
-  
+
   // 监听卸载插件请求
   receiveFromMicroApp(MicroAppEvents.UNINSTALL_PLUGIN_REQUEST, (data) => {
     // 处理卸载插件请求
     console.log('收到卸载插件请求:', data)
   })
-  
+
   // 监听启用插件请求
   receiveFromMicroApp(MicroAppEvents.ENABLE_PLUGIN_REQUEST, (data) => {
     // 处理启用插件请求
     console.log('收到启用插件请求:', data)
   })
-  
+
   // 监听停用插件请求
   receiveFromMicroApp(MicroAppEvents.DISABLE_PLUGIN_REQUEST, (data) => {
     // 处理停用插件请求
@@ -261,28 +259,28 @@ const listenToMicroAppEvents = () => {
 // 处理来自iframe插件市场的插件操作请求
 const handlePluginAction = (event: CustomEvent) => {
   const { action, pluginId } = event.detail
-  
+
   switch (action) {
     case 'install':
       ElMessage.info(`iframe插件市场请求安装插件: ${pluginId}`)
       // 在这里实现实际的安装逻辑
       break
-      
+
     case 'uninstall':
       ElMessage.info(`iframe插件市场请求卸载插件: ${pluginId}`)
       // 在这里实现实际的卸载逻辑
       break
-      
+
     case 'enable':
       ElMessage.info(`iframe插件市场请求启用插件: ${pluginId}`)
       // 在这里实现实际的启用逻辑
       break
-      
+
     case 'disable':
       ElMessage.info(`iframe插件市场请求停用插件: ${pluginId}`)
       // 在这里实现实际的停用逻辑
       break
-      
+
     default:
       console.warn('未知插件操作:', action)
   }
@@ -292,7 +290,7 @@ const handlePluginAction = (event: CustomEvent) => {
 onMounted(() => {
   getPluginList()
   listenToMicroAppEvents()
-  
+
   // 监听自定义事件
   window.addEventListener('refresh-plugin-list', getPluginList)
 })
@@ -300,7 +298,7 @@ onMounted(() => {
 // 组件卸载时清理事件监听
 onUnmounted(() => {
   window.removeEventListener('refresh-plugin-list', getPluginList)
-  
+
   // 移除微应用事件监听
   // removeMicroAppEventListener(MicroAppEvents.REFRESH_PLUGIN_LIST_REQUEST, getPluginList)
 })
@@ -313,18 +311,18 @@ onUnmounted(() => {
     flex-direction: column;
     height: calc(100vh - 200px);
   }
-  
+
   :deep(.system-plugin-tabs) {
     flex: 1;
     display: flex;
     flex-direction: column;
-    
+
     .el-tabs__content {
       flex: 1;
       overflow: auto;
       height: 100%;
     }
-    
+
     .el-tab-pane {
       height: 100%;
       min-height: 400px;
