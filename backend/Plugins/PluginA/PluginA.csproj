@@ -1,32 +1,61 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>PluginA</AssemblyName>
-    <RootNamespace>PluginA</RootNamespace>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <DocumentationFile></DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AssemblyName>PluginA</AssemblyName>
+		<RootNamespace>PluginA</RootNamespace>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<DocumentationFile></DocumentationFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Controllers\PluginATestController.cs" />
-    <Compile Remove="Controllers\TestController.cs" />
-    <Compile Remove="Entities\PluginEntity.cs" />
-    <Compile Remove="IService\IPluginEntityService.cs" />
-    <Compile Remove="Services\PluginEntityService.cs" />
-    <Compile Remove="Services\TestService.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Controllers\PluginATestController.cs" />
+		<Compile Remove="Controllers\TestController.cs" />
+		<Compile Remove="Entities\PluginEntity.cs" />
+		<Compile Remove="IService\IPluginEntityService.cs" />
+		<Compile Remove="Services\PluginEntityService.cs" />
+		<Compile Remove="Services\TestService.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
-    <ProjectReference Include="..\..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" />
-    <ProjectReference Include="..\..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
+		<ProjectReference Include="..\..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" />
+		<ProjectReference Include="..\..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Services\" />
+	</ItemGroup>
 
+	<PropertyGroup>
+		<!-- ========================================== -->
+		<!-- 1. 在此处配置你的 PluginId (必填项)       -->
+		<!-- ========================================== -->
+		<!-- 请修改下面的值为你唯一的插件ID -->
+		<PluginId>11375910391972869</PluginId>
+	</PropertyGroup>
+	<!-- ========================================== -->
+	<!-- 2. 强制校验逻辑 (如果没配 PluginId 则报错) -->
+	<!-- ========================================== -->
+	<Target Name="ValidatePluginConfiguration" BeforeTargets="BeforeBuild">
+		<!-- 检查 PluginId 是否为空 -->
+		<Error
+		  Condition="'$(PluginId)' == ''"
+		  Text="编译失败: 必须在 .csproj 的 &lt;PropertyGroup&gt; 中配置 &lt;PluginId&gt; 属性，否则无法生成有效的插件程序集。"
+    />
+	</Target>
+
+	<!-- ========================================== -->
+	<!-- 3. 将 PluginId 注入到生成的 DLL 元数据中   -->
+	<!-- ========================================== -->
+	<ItemGroup>
+		<!-- 只有当 PluginId 有值时才添加此 Attribute -->
+		<AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute"
+						   Condition="'$(PluginId)' != ''">
+			<_Parameter1>PluginId</_Parameter1>
+			<_Parameter2>$(PluginId)</_Parameter2>
+		</AssemblyAttribute>
+	</ItemGroup>
 </Project>
