@@ -4,6 +4,11 @@ namespace Fastdotnet.Plugin.Contracts
     public interface IPlugin
     {
         /// <summary>
+        /// 插件Id
+        /// </summary>
+        string PluginId { get; }
+
+        /// <summary>
         /// 获取插件名称
         /// </summary>
         string Name { get; }

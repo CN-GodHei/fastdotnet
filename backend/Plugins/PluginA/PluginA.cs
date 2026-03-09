@@ -26,6 +26,7 @@ namespace PluginA
     {
         public string Name => "PluginA";
         public string Version => "1.0.0";
+        public string PluginId => "11375910391972869";
 
         /// <summary>
         /// Called when the plugin is enabled. Use this to register services with the host.

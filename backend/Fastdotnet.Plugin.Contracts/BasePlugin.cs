@@ -17,7 +17,12 @@ namespace Fastdotnet.Plugin.Contracts
         /// 获取插件版本
         /// </summary>
         public string Version => GetPluginInfo()?.version ?? string.Empty;
-        
+
+        /// <summary>
+        /// 插件Id
+        /// </summary>
+        public string PluginId => GetPluginInfo()?.id ?? string.Empty;
+
         /// <summary>
         /// 获取当前插件的信息
         /// </summary>
