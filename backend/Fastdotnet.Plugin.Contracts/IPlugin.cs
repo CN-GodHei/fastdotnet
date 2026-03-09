@@ -6,7 +6,7 @@ namespace Fastdotnet.Plugin.Contracts
         /// <summary>
         /// 插件Id
         /// </summary>
-        string PluginId { get; }
+        //string PluginId { get; }
 
         /// <summary>
         /// 获取插件名称
