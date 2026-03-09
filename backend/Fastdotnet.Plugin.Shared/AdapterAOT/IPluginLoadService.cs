@@ -8,6 +8,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
         Task<ApiResult> EnablePluginAsync(string pluginId);
         Task<ApiResult> DisablePluginAsync(string pluginId);
         Task<ApiResult> UninstallPluginAsync(string pluginId);
+        Task<ApiResult> InstallPlugin(string pluginId, string Version, string UserToken);
         bool IsPluginActive(string pluginId);
         IEnumerable<PluginInfo> GetLoadedPlugins();
         IEnumerable<string> GetActivePlugins();
