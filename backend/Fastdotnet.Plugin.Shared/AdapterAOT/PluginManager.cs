@@ -98,7 +98,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
         /// <param name="pluginPath">插件路径</param>
         /// <param name="customLoadContext">自定义加载上下文</param>
         /// <returns>加载的程序集和上下文</returns>
-        public (Assembly Assembly, AssemblyLoadContext Context)? LoadPluginWithContext(PluginInfo config, string pluginPath, AssemblyLoadContext customLoadContext)
+        public (Assembly Assembly, AssemblyLoadContext Context,string pluginId)? LoadPluginWithContext(PluginInfo config, string pluginPath, AssemblyLoadContext customLoadContext)
         {
             // Load the assembly into a byte array and then from a memory stream
             // to avoid locking the original DLL file on disk.
@@ -106,7 +106,9 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
             using var memoryStream = new MemoryStream(assemblyBytes);
             var loadedAssembly = customLoadContext.LoadFromStream(memoryStream);
             var part = new AssemblyPart(loadedAssembly);
-
+            var pluginId = loadedAssembly.GetCustomAttributes<AssemblyMetadataAttribute>()
+               .FirstOrDefault(m => m.Key == "PluginId")
+               ?.Value;
             if (_loadedPlugins.TryAdd(config.id, (customLoadContext, loadedAssembly, config, part)))
             {
                 var serviceTypes = new List<Type>();
@@ -125,7 +127,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
 
                 ActionDescriptorChangeProvider.Instance.NotifyChanges();
 
-                return (loadedAssembly, customLoadContext);
+                return (loadedAssembly, customLoadContext, pluginId);
             }
 
             return null;
