@@ -13,6 +13,10 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <Version>1.0.0</Version>
     <UserSecretsId>0a59ff70-b22c-4536-8642-2101c0d66669</UserSecretsId>
+    
+    <!-- 自包含发布配置 -->
+    <SelfContained>false</SelfContained>
+    <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
 
   <ItemGroup>
