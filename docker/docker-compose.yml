@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  fastdotnet-api:
+    build:
+      context: ..
+      dockerfile: ../Dockerfile
+    image: fastdotnet-api:latest
+    container_name: fastdotnet-api
+    
+    # 端口映射：宿主机端口：容器端口 (18889)
+    ports:
+      - "18889:18889"
+    
+    environment:
+      # ASP.NET Core 环境
+      - ASPNETCORE_ENVIRONMENT=Production
+      
+      # 监听地址（与 Program.cs 中的配置一致）
+      - ASPNETCORE_URLS=http://+:18889
+      
+      # 密钥文件路径配置
+      - Marketplace__PrivateKeyPath=/app/secrets/marketplace_private_key.txt
+      
+      # .NET 版本
+      - DOTNET_RUNNING_IN_CONTAINER=true
+    
+    volumes:
+      # 挂载密钥文件（只读模式，安全）
+      - ./secrets/marketplace_private_key.txt:/app/secrets/marketplace_private_key.txt:ro
+      
+      # 持久化数据目录
+      - fastdotnet-data:/app/data
+      
+      # 日志目录（可选）
+      - fastdotnet-logs:/app/logs
+    
+    restart: unless-stopped
+    
+    networks:
+      - fastdotnet-network
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18889/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# 定义网络
+networks:
+  fastdotnet-network:
+    driver: bridge
+
+# 定义数据卷
+volumes:
+  fastdotnet-data:
+  fastdotnet-logs:
