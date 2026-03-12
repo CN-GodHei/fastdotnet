@@ -1,0 +1,68 @@
+# SQLite 模式配置 - 无需 MySQL
+
+version: '3.8'
+
+services:
+  fastdotnet-api:
+    build:
+      context: ..
+      dockerfile: ../Dockerfile
+    image: fastdotnet-api:latest
+    container_name: fastdotnet-api
+    
+    # 端口映射
+    ports:
+      - "18889:18889"
+    
+    environment:
+      # ASP.NET Core 环境
+      - ASPNETCORE_ENVIRONMENT=Production
+      
+      # 监听地址
+      - ASPNETCORE_URLS=http://+:18889
+      
+      # 密钥文件路径配置
+      - Marketplace__PrivateKeyPath=/app/secrets/marketplace_private_key.txt
+      
+      # .NET 版本
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      
+      # 注意：这里没有配置 MySQL 连接字符串
+      # 应用会使用 appsettings.json 中的默认 SQLite 配置
+    
+    volumes:
+      # 挂载密钥文件（只读模式，安全）
+      - ./secrets/marketplace_private_key.txt:/app/secrets/marketplace_private_key.txt:ro
+      
+      # 持久化数据目录（包含 SQLite 数据库文件）
+      - fastdotnet-data:/app/data
+      
+      # 日志目录（可选）
+      - fastdotnet-logs:/app/logs
+      
+      # 插件目录（重要！用于存放动态加载的插件）
+      - fastdotnet-plugins:/app/plugins
+    
+    restart: unless-stopped
+    
+    networks:
+      - fastdotnet-network
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18889/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# 定义网络
+networks:
+  fastdotnet-network:
+    driver: bridge
+
+# 定义数据卷
+volumes:
+  fastdotnet-data:
+  fastdotnet-logs:
+  fastdotnet-plugins:

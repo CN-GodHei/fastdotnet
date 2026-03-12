@@ -1,0 +1,20 @@
+# 使用外部 MySQL 服务器的配置示例
+# 复制此文件为 docker-compose.override.yml 来使用外部数据库
+
+version: '3.8'
+
+services:
+  # 注意：这里不包含 MySQL 服务，使用外部数据库
+  
+  fastdotnet-api:
+    environment:
+      # 外部 MySQL 服务器连接字符串
+      - ConnectionStrings__DefaultConnection=Server=your-mysql-server.com;Database=fastdotnet;Uid=fastdotnet;Pwd=your_password;SslMode=None;AllowLoadLocalInfile=true;AllowUserVariables=true;
+      - SqlSugar__Connections__0__ConfigId=main
+      - SqlSugar__Connections__0__ConnectionString=Server=your-mysql-server.com;Database=fastdotnet;Uid=fastdotnet;Pwd=your_password;SslMode=None;AllowLoadLocalInfile=true;AllowUserVariables=true;
+      - SqlSugar__Connections__0__DbType=MySql
+      - SqlSugar__Connections__0__IsAutoCloseConnection=true
+      - SqlSugar__Connections__1__ConfigId=log
+      - SqlSugar__Connections__1__ConnectionString=Server=your-mysql-server.com;Database=fastdotnet_log;Uid=fastdotnet;Pwd=your_password;SslMode=None;AllowLoadLocalInfile=true;AllowUserVariables=true;
+      - SqlSugar__Connections__1__DbType=MySql
+      - SqlSugar__Connections__1__IsAutoCloseConnection=true

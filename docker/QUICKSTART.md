@@ -1,220 +1,153 @@
-# 🚀 Fastdotnet Docker 快速开始指南
+# 快速启动指南
 
-## ⚡ 3 分钟快速部署
+## ⚠️ 网络问题解决方案
 
-### 前提条件
-
-✅ 已安装 [Docker Desktop](https://www.docker.com/products/docker-desktop/)  
-✅ Docker Desktop 正在运行  
-✅ 你的项目在开发环境正常运行
+由于 Docker Hub 访问限制，如果遇到拉取镜像失败，可以选择以下方案：
 
 ---
 
-### 步骤 1️⃣：导出私钥（1 分钟）
+## 🔧 方案一：配置 Docker 镜像加速器（推荐）
 
-打开 PowerShell，运行：
+### Windows Docker Desktop 配置
 
-```powershell
-cd D:\GodHeiWorkSpace\开源项目开发\Fastdotnet\docker
-.\export-secret.ps1
-```
+1. 打开 Docker Desktop
+2. 点击设置图标 ⚙️
+3. 选择 **Docker Engine**
+4. 在 `registry-mirrors` 中添加国内镜像源：
 
-这个脚本会自动从 user-secrets 导出私钥到 Docker 密钥文件。
-
-**输出示例：**
-```
-=====================================
-  导出私钥到 Docker
-=====================================
-
-📁 项目路径：D:\...\Fastdotnet\backend\Fastdotnet.WebApi
-📄 目标文件：D:\...\Fastdotnet\docker\secrets\marketplace_private_key.txt
-
-🔍 检查 user-secrets 配置...
-✅ 找到私钥配置
-   长度：1824 字符
-
-💾 保存私钥到文件...
-✅ 私钥已成功导出！
-
-📄 文件位置：...\marketplace_private_key.txt
-📏 文件大小：1824 字节
-```
-
----
-
-### 步骤 2️⃣：启动 Docker 容器（2-5 分钟）
-
-```powershell
-# 首次启动需要构建镜像
-.\start.ps1 -Build
-```
-
-**输出示例：**
-```
-=====================================
-  Fastdotnet Docker 管理脚本
-=====================================
-
-🔨 构建 Docker 镜像（无缓存）...
-[+] Building 120.5s (15/15) FINISHED
- => [internal] load build definition from Dockerfile
- => ...
-
-✅ 构建成功
-
-🚀 启动服务...
-Creating network "docker_fastdotnet-network" with driver "bridge"
-Creating volume "fastdotnet-data" with default driver
-Creating volume "fastdotnet-logs" with default driver
-Creating fastdotnet-api ... done
-
-📊 查看服务状态:
-NAME              STATUS                   PORTS
-fastdotnet-api    Up (healthy)             0.0.0.0:18889->18889/tcp
-```
-
----
-
-### 步骤 3️⃣：验证部署（30 秒）
-
-```powershell
-# 在新窗口测试 API
-curl http://localhost:18889/health
-```
-
-如果返回健康信息，说明部署成功！✅
-
----
-
-## 🎉 完成！
-
-现在你的应用已经在 Docker 容器中运行了！
-
-### 访问地址
-
-- **API**: http://localhost:18889
-- **健康检查**: http://localhost:18889/health
-- **Swagger UI**: http://localhost:18889/swagger
-
-### 健康检查接口
-
-**请求示例：**
-```bash
-curl http://localhost:18889/health
-```
-
-**响应示例：**
 ```json
 {
-  "status": "Healthy",
-  "timestamp": "2026-03-11T12:00:00Z",
-  "version": "1.0.0.0",
-  "environment": "Production"
+  "builder": {
+    "gc": {
+      "defaultKeepStorage": "20GB",
+      "enabled": true
+    }
+  },
+  "experimental": false,
+  "registry-mirrors": [
+    "https://docker.m.daocloud.io",
+    "https://docker.1panel.live"
+  ]
 }
 ```
 
-**用途：**
-- ✅ Docker 容器健康检查
-- ✅ 负载均衡器后端探测
-- ✅ 监控系统状态检测
-- ✅ 应用存活验证
+5. 点击 **Apply & Restart**
 
----
+### 重启后执行
 
-## 📝 日常使用命令
-
-### 启动应用
-```powershell
-cd D:\GodHeiWorkSpace\开源项目开发\Fastdotnet\docker
-.\start.ps1
-```
-
-### 查看日志
-```powershell
-.\start.ps1 -Logs
-```
-
-### 停止应用
-```powershell
-.\start.ps1 -Stop
-```
-
-### 重启应用
-```powershell
-.\start.ps1 -Restart
-```
-
-### 完全清理（删除所有数据）
-```powershell
-.\start.ps1 -Clean
+```bash
+cd docker
+docker-compose up -d
 ```
 
 ---
 
-## 🔧 关于端口 18889
+## 🌐 方案二：使用外部 MySQL 服务器（无需等待）
 
-你的程序在 `Program.cs` 中指定了 18889 端口：
+如果急需启动，可以先使用外部 MySQL：
 
-```csharp
-app.Run("http://*:18889");
-```
+### 步骤 1：准备 MySQL
 
-Docker 配置做了端口映射：
-- **宿主机**: 18889
-- **容器内**: 18889
+确保你有可用的 MySQL 服务器（版本 >= 8.0）
 
-所以你可以直接在浏览器访问：http://localhost:18889
+### 步骤 2：修改配置
 
----
+复制外部数据库配置文件：
 
-## 🐛 遇到问题？
-
-### 问题 1：提示找不到 user-secrets
-
-**解决：**
 ```powershell
-# 初始化 user-secrets
-dotnet user-secrets init --project ../backend/Fastdotnet.WebApi
-
-# 设置私钥
-dotnet user-secrets set "Marketplace:PrivateKey" "你的私钥 Base64" --project ../backend/Fastdotnet.WebApi
-
-# 重新导出
-.\export-secret.ps1
+cd docker
+Copy-Item docker-compose.external-db.yml docker-compose.override.yml
 ```
 
-### 问题 2：端口 18889 被占用
+编辑 `docker-compose.override.yml`，修改为你的实际数据库信息：
 
-**解决 1：找出占用进程**
-```powershell
-netstat -ano | findstr :18889
-```
-
-**解决 2：修改 docker-compose.yml**
 ```yaml
-ports:
-  - "8080:18889"  # 改为其他端口
+environment:
+  - ConnectionStrings__DefaultConnection=Server=你的 MySQL 服务器;Database=fastdotnet;Uid=用户名;Pwd=密码;SslMode=None;AllowLoadLocalInfile=true;AllowUserVariables=true;
 ```
 
-### 问题 3：容器启动失败
+### 步骤 3：启动 API 服务
 
-**查看详细日志：**
-```powershell
-docker-compose logs
-```
-
-**进入容器调试：**
-```powershell
-docker exec -it fastdotnet-api /bin/bash
+```bash
+docker-compose up -d fastdotnet-api
 ```
 
 ---
 
-## 📚 更多文档
+## 📦 方案三：手动下载镜像
 
-详细文档请查看：[README.md](README.md)
+### 1. 通过其他方式获取 MySQL 镜像
+
+如果有同事已经有 MySQL 镜像，可以导出分享：
+
+```bash
+# 从有镜像的机器导出
+docker save mysql:8.0 -o mysql-8.tar
+
+# 传输到你的机器
+# 然后加载
+docker load -i mysql-8.tar
+```
+
+### 2. 标记镜像
+
+```bash
+docker tag mysql:8.0 mysql:8.0
+```
+
+### 3. 启动容器
+
+```bash
+cd docker
+docker-compose up -d
+```
 
 ---
 
-**祝你使用愉快！** 🎈
+## 💡 临时建议
+
+### 如果只是测试应用功能
+
+可以先用 SQLite 模式运行，不需要 MySQL：
+
+1. 修改 `docker-compose.yml`，注释掉 MySQL 相关配置
+2. 应用会自动使用 SQLite（appsettings.json 中的默认配置）
+
+```yaml
+# 注释掉 MySQL 服务
+# fastdotnet-mysql:
+#   image: mysql:8.0
+#   ...
+
+fastdotnet-api:
+  # ... 其他配置保持不变
+```
+
+---
+
+## 🚀 验证启动成功
+
+```bash
+# 查看容器状态
+docker-compose ps
+
+# 应该看到：
+# NAME                    STATUS         PORTS
+# fastdotnet-api          Up (healthy)   0.0.0.0:18889->18889/tcp
+# fastdotnet-mysql        Up (healthy)   3306/tcp
+```
+
+---
+
+## 📞 需要帮助？
+
+如果以上方案都无法解决，请检查：
+
+1. **网络连接** - 确保能访问外网
+2. **防火墙设置** - Docker 可能需要特殊配置
+3. **DNS 配置** - 尝试修改 DNS 为 8.8.8.8 或 1.1.1.1
+4. **公司代理** - 某些公司网络可能限制 Docker Hub
+
+---
+
+**最后更新：** 2025-03-12
