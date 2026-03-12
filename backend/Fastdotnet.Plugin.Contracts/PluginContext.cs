@@ -82,7 +82,7 @@ namespace Fastdotnet.Plugin.Contracts
                 var dirInfo = new DirectoryInfo(directory);
                 while (dirInfo?.Parent != null)
                 {
-                    if (dirInfo.Parent.Name.Equals("Plugins", StringComparison.OrdinalIgnoreCase) ||
+                    if (dirInfo.Parent.Name.Equals("plugins", StringComparison.OrdinalIgnoreCase) ||
                         dirInfo.Parent.Name.Equals("plugins", StringComparison.OrdinalIgnoreCase))
                     {
                         return dirInfo.Name;
@@ -158,7 +158,7 @@ namespace Fastdotnet.Plugin.Contracts
                     
                     // 继续向上搜索一级
                     currentDir = currentDir.Parent;
-                    if (currentDir == null || currentDir.Name == "Plugins") // 避免搜索得太远
+                    if (currentDir == null || currentDir.Name == "plugins") // 避免搜索得太远
                     {
                         break;
                     }

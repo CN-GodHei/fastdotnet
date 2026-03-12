@@ -2,7 +2,7 @@ namespace Fastdotnet.WebApi.Extensions;
 
 public static class SwaggerExtensions
 {
-    private const string PluginsFolderName = "Plugins";
+    private const string PluginsFolderName = "plugins";
 
     /// <summary>
     /// 注册 Swagger 生成器（AddSwaggerGen）
@@ -28,7 +28,7 @@ public static class SwaggerExtensions
             });
 
             // 为插件动态添加API文档定义 - admin 和 app 版本
-            var pluginDirs = Directory.GetDirectories(Path.Combine(AppContext.BaseDirectory, "Plugins"));
+            var pluginDirs = Directory.GetDirectories(Path.Combine(AppContext.BaseDirectory, "plugins"));
             foreach (var pluginDir in pluginDirs)
             {
                 try
