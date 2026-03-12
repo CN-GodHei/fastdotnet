@@ -43,13 +43,13 @@ namespace Fastdotnet.Core.Dtos.Base
         /// 创建时间
         /// </summary>
         [SplitField]
-        [SugarColumn(ColumnName = "created_at", ColumnDescription = "创建时间", ColumnDataType = "datetime")]
+        [SugarColumn(ColumnName = "created_at", ColumnDescription = "创建时间")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         /// <summary>
         /// 更新时间
         /// </summary>
-        [SugarColumn(ColumnName = "updated_at", ColumnDescription = "更新时间", IsNullable = true, ColumnDataType = "datetime")]
+        [SugarColumn(ColumnName = "updated_at", ColumnDescription = "更新时间", IsNullable = true)]
         public DateTime? UpdatedAt { get; set; }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Fastdotnet.Core.Dtos.Base
         /// <summary>
         /// 删除时间
         /// </summary>
-        [SugarColumn(ColumnName = "deleted_at", ColumnDescription = "删除时间", IsNullable = true, ColumnDataType = "datetime")]
+        [SugarColumn(ColumnName = "deleted_at", ColumnDescription = "删除时间", IsNullable = true)]
         public DateTime? DeletedAt { get; set; }
     }
 }
