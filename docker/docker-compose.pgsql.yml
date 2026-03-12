@@ -14,6 +14,7 @@ services:
       - "5432:5432"
     volumes:
       - fastdotnet-pgsql-data:/var/lib/postgresql/data
+      - ./init-multi-db.sql:/docker-entrypoint-initdb.d/init-multi-db.sql:ro
     networks:
       - fastdotnet-network
     healthcheck:
@@ -47,16 +48,19 @@ services:
       # .NET 版本
       - DOTNET_RUNNING_IN_CONTAINER=true
       
-      # 数据库连接字符串（使用 PostgreSQL 容器）
+      # 数据库连接字符串 (使用 PostgreSQL 容器)
       - ConnectionStrings__DefaultConnection=Host=fastdotnet-pgsql;Database=fastdotnet;Username=fastdotnet;Password=fastdotnet
       - SqlSugar__Connections__0__ConfigId=main
       - SqlSugar__Connections__0__ConnectionString=Host=fastdotnet-pgsql;Database=fastdotnet;Username=fastdotnet;Password=fastdotnet
       - SqlSugar__Connections__0__DbType=PostgreSQL
       - SqlSugar__Connections__0__IsAutoCloseConnection=true
       - SqlSugar__Connections__1__ConfigId=log
-      - SqlSugar__Connections__1__ConnectionString=Host=fastdotnet-pgsql;Database=fastdotnet_log;Username=fastdotnet;Password=fastdotnet
+      - SqlSugar__Connections__1__ConnectionString=Host=fastdotnet-pgsql;Database=fastdotnet;Username=fastdotnet;Password=fastdotnet
       - SqlSugar__Connections__1__DbType=PostgreSQL
       - SqlSugar__Connections__1__IsAutoCloseConnection=true
+      
+      # 主数据库配置 (覆盖 appsettings.json 中的默认配置)
+      - SqlSugar__EnableSqlExecutionLogging=true
     
     volumes:
       # 挂载密钥文件（只读模式，安全）
