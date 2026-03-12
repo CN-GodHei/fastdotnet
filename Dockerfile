@@ -14,10 +14,10 @@ WORKDIR /src
 COPY ["backend/Directory.Build.props", "backend/"]
 COPY ["backend/Directory.Packages.props", "backend/"]
 
-# 复制解决方案文件（如果存在）
-COPY ["backend/*.sln", "./"]
+# 复制解决方案文件
+COPY ["backend/Fastdotnet.sln", "./"]
 
-# 复制所有项目文件
+# 复制所有项目文件（只复制必要的项目）
 COPY ["backend/Fastdotnet.WebApi/Fastdotnet.WebApi.csproj", "Fastdotnet.WebApi/"]
 COPY ["backend/Fastdotnet.Core/Fastdotnet.Core.csproj", "Fastdotnet.Core/"]
 COPY ["backend/Fastdotnet.Orm/Fastdotnet.Orm.csproj", "Fastdotnet.Orm/"]
@@ -26,33 +26,37 @@ COPY ["backend/Fastdotnet.Plugin.Contracts/Fastdotnet.Plugin.Contracts.csproj", 
 COPY ["backend/Fastdotnet.Plugin.Shared/Fastdotnet.Plugin.Shared.csproj", "Fastdotnet.Plugin.Shared/"]
 
 # 创建正确的项目目录结构并移动项目文件
-# 这确保所有项目文件都在正确的位置，便于解决方案还原
 RUN mkdir -p backend && \
-    # 将包管理文件移动到 backend 目录
-    mv backend/Directory.Build.props ./ 2>/dev/null || true && \
-    mv backend/Directory.Packages.props ./ 2>/dev/null || true && \
-    # 检查是否有解决方案文件
-    if [ -f "backend/*.sln" ]; then \
-        mv backend/*.sln ./ 2>/dev/null || true; \
-    fi
+    # 将包管理文件移动到根目录
+    mv backend/Directory.Build.props ./ && \
+    mv backend/Directory.Packages.props ./
 
-# 还原 NuGet 包（使用解决方案文件或直接还原项目）
-# 优先使用解决方案文件还原
-RUN if [ -f "*.sln" ]; then \
-        dotnet restore; \
-    else \
-        dotnet restore "Fastdotnet.WebApi/Fastdotnet.WebApi.csproj"; \
-    fi
+# 还原 NuGet 包（直接还原各项目，避免解决方案中包含 Plugins）
+WORKDIR /src
+RUN dotnet restore "Fastdotnet.WebApi/Fastdotnet.WebApi.csproj" && \
+    dotnet restore "Fastdotnet.Core/Fastdotnet.Core.csproj" && \
+    dotnet restore "Fastdotnet.Service/Fastdotnet.Service.csproj"
 
-# 复制所有源代码
-COPY backend/ .
+# 有选择地复制源代码（排除不必要的文件和目录）
+COPY backend/Fastdotnet.WebApi/ Fastdotnet.WebApi/
+COPY backend/Fastdotnet.Core/ Fastdotnet.Core/
+COPY backend/Fastdotnet.Orm/ Fastdotnet.Orm/
+COPY backend/Fastdotnet.Service/ Fastdotnet.Service/
+COPY backend/Fastdotnet.Plugin.Contracts/ Fastdotnet.Plugin.Contracts/
+COPY backend/Fastdotnet.Plugin.Shared/ Fastdotnet.Plugin.Shared/
 
 # 构建应用
 WORKDIR "/src/Fastdotnet.WebApi"
 RUN dotnet build "Fastdotnet.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Fastdotnet.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseHost=false
+# 启用发布优化：禁用调试符号（代码裁剪需要自包含部署，这里先不启用）
+RUN dotnet publish "Fastdotnet.WebApi.csproj" \
+    -c $BUILD_CONFIGURATION \
+    -o /app/publish \
+    /p:UseHost=false \
+    /p:DebugType=None \
+    /p:DebugSymbols=false
 
 FROM base AS final
 WORKDIR /app

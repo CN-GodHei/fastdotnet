@@ -3,6 +3,7 @@
 **/.git
 **/.gitignore
 **/*.md
+**/.history
 **/.vs
 **/.vscode
 **/bin
@@ -14,5 +15,6 @@
 **/TestResults
 **/*.user
 **/.DS_Store
-docker/secrets/*
-!docker/secrets/.gitkeep
+**/node_modules
+**/*.csproj.user
+**/testoutput
