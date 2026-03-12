@@ -14,13 +14,13 @@ namespace PluginA.Entities
         /// <summary>
         /// 名称
         /// </summary>
-        [SugarColumn(ColumnDataType = "nvarchar(50)", IsNullable = false)]
+        [SugarColumn( IsNullable = false)]
         public string Name { get; set; }
 
         /// <summary>
         /// 描述
         /// </summary>
-        [SugarColumn(ColumnDataType = "nvarchar(500)", IsNullable = true)]
+        [SugarColumn(IsNullable = true)]
         public string Description { get; set; }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace PluginA.Entities
         /// <summary>
         /// 创建者
         /// </summary>
-        [SugarColumn(ColumnDataType = "nvarchar(50)", IsNullable = true)]
+        [SugarColumn( IsNullable = true)]
         public string Creator { get; set; }
     }
 }
