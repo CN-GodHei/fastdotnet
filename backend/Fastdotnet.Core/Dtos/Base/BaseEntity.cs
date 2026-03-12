@@ -11,12 +11,12 @@ namespace Fastdotnet.Core.Dtos.Base
         /// 主键ID
         /// </summary>
         string Id { get; set; }
-        
+
         /// <summary>
         /// 创建时间
         /// </summary>
         DateTime CreatedAt { get; set; }
-        
+
         /// <summary>
         /// 更新时间
         /// </summary>
@@ -27,7 +27,7 @@ namespace Fastdotnet.Core.Dtos.Base
         /// </summary>
         DateTime? DeletedAt { get; set; }
     }
-    
+
     /// <summary>
     /// 基础实体类
     /// </summary>
@@ -36,7 +36,7 @@ namespace Fastdotnet.Core.Dtos.Base
         /// <summary>
         /// 主键ID
         /// </summary>
-        [SugarColumn(ColumnName = "id", IsPrimaryKey = true, ColumnDescription="主键id")]
+        [SugarColumn(ColumnName = "id", IsPrimaryKey = true, ColumnDescription = "主键id")]
         public string Id { get; set; }
 
         /// <summary>
