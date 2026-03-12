@@ -136,7 +136,8 @@ namespace Fastdotnet.Core.Services.System
         /// <returns>插入后的实体</returns>
         public virtual async Task<T> InsertAsync(T entity)
         {
-            var id = await _db.Insertable(entity).ExecuteReturnIdentityAsync();
+            //var id = await _db.Insertable(entity).ExecuteReturnIdentityAsync();
+            await _db.Insertable(entity).ExecuteCommandAsync();
             //entity.Id = Convert.ToInt64(id);
             return entity;
         }
