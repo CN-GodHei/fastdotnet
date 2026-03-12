@@ -47,7 +47,7 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host "Build failed!" -ForegroundColor Red
     exit 1 
 }
-$duration = (Get-Date - $startTime).TotalSeconds
+$duration = (New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds
 Write-Host "Build successful! Duration: $([math]::Round($duration, 2))s" -ForegroundColor Green
 docker images fastdotnet-api:$Tag
 
