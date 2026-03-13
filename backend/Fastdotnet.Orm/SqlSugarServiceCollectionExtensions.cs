@@ -362,7 +362,24 @@ public static class SqlSugarServiceCollectionExtensions
 
         if (entityTypes.Any())
         {
+
+#if DEBUG
+            try
+            {
+                foreach (var item in entityTypes)
+                {
+                    Console.WriteLine($"正在初始化主业务库表：{item.FullName}");
+                    sqlClient.CodeFirst.SplitTables().InitTables(item);
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+#else
             sqlClient.CodeFirst.SplitTables().InitTables(entityTypes);
+#endif
         }
     }
 

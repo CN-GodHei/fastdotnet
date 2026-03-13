@@ -17,7 +17,7 @@ public class OrmCodeFirstInitializer : IApplicationInitializer
     {
         // 获取主业务数据库连接
         var mainDb = _sqlSugarClient.AsTenant().GetConnection("main");
-        
+
         // 获取日志数据库连接
         var logDb = _sqlSugarClient.AsTenant().GetConnection("log");
 
@@ -39,7 +39,25 @@ public class OrmCodeFirstInitializer : IApplicationInitializer
         // 为主业务库初始化表
         if (mainEntityTypes.Any())
         {
-            mainDb.CodeFirst.SplitTables().InitTables(mainEntityTypes);
+
+#if DEBUG
+            try
+            {
+                foreach (var item in mainEntityTypes)
+                {
+                    Console.WriteLine($"正在初始化主业务库表：{item.FullName}");
+                    mainDb.CodeFirst.SplitTables().InitTables(item);
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+#else
+                    mainDb.CodeFirst.SplitTables().InitTables(mainEntityTypes);
+
+#endif
         }
 
         // 为日志库初始化表
