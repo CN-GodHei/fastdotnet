@@ -41,10 +41,7 @@
 	<!-- ========================================== -->
 	<Target Name="ValidatePluginConfiguration" BeforeTargets="BeforeBuild">
 		<!-- 检查 PluginId 是否为空 -->
-		<Error
-		  Condition="'$(PluginId)' == ''"
-		  Text="编译失败: 必须在 .csproj 的 &lt;PropertyGroup&gt; 中配置 &lt;PluginId&gt; 属性，否则无法生成有效的插件程序集。"
-    />
+		<Error Condition="'$(PluginId)' == ''" Text="编译失败: 必须在 .csproj 的 &lt;PropertyGroup&gt; 中配置 &lt;PluginId&gt; 属性，否则无法生成有效的插件程序集。" />
 	</Target>
 
 	<!-- ========================================== -->
@@ -52,10 +49,12 @@
 	<!-- ========================================== -->
 	<ItemGroup>
 		<!-- 只有当 PluginId 有值时才添加此 Attribute -->
-		<AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute"
-						   Condition="'$(PluginId)' != ''">
+		<AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute" Condition="'$(PluginId)' != ''">
 			<_Parameter1>PluginId</_Parameter1>
 			<_Parameter2>$(PluginId)</_Parameter2>
 		</AssemblyAttribute>
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="SqlSugarCore" />
 	</ItemGroup>
 </Project>
