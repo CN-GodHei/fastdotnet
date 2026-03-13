@@ -35,7 +35,7 @@ namespace Fastdotnet.Core.Entities.System
         /// <summary>
         /// 权限类型 (e.g., "Menu", "Api", "Data")
         /// </summary>
-        [SugarColumn(ColumnName = "type", IsNullable = false, Length = 50, ColumnDescription = "权限类型 (e.g., \"Menu\", \"Api\", \"Data\")")]
+        [SugarColumn(ColumnName = "type", IsNullable = false, ColumnDescription = "权限类型 (e.g., \"Menu\", \"Api\", \"Data\")")]
         public PermissionType Type { get; set; }
 
         /// <summary>

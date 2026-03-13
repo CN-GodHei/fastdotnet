@@ -40,7 +40,7 @@ namespace Fastdotnet.Core.Entities.System
         /// <summary>
         /// 按钮分类: Admin/App
         /// </summary>
-        [SugarColumn(ColumnName = "category", IsNullable = false, Length = 50, ColumnDescription = "按钮分类: Admin/App")]
+        [SugarColumn(ColumnName = "category", IsNullable = false, ColumnDescription = "按钮分类: Admin/App")]
         public SystemCategory Belong { get; set; }
 
         /// <summary>
