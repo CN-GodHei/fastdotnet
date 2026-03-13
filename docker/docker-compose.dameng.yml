@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  # 达梦数据库服务
+  # 注意：需要先手动下载并导入达梦数据库镜像
+  # 下载地址：https://download.dameng.com/eco/dm8/dm8_20241022_x86_rh6_64_single.tar
+  # 导入命令：docker load -i dm8_20241022_x86_rh6_64_single.tar
+  fastdotnet-dameng:
+    # 方案 1：使用阿里云镜像（推荐）
+    image: registry.cn-hangzhou.aliyuncs.com/qiluo-images/dm8_single:dm8_20230808_rev197096_x86_rh6_64
+    # 方案 2：使用本地导入的镜像（取消下面注释并使用自己的镜像）
+    # image: dm8_single:dm8_20241022_x86_rh6_64_single
+    container_name: fastdotnet-dameng
+    restart: unless-stopped
+    privileged: true
+    environment:
+      - PAGE_SIZE=16
+      - LD_LIBRARY_PATH=/opt/dmdbms/bin
+      - EXTENT_SIZE=32
+      - BLANK_PAD_MODE=1
+      - LOG_SIZE=1024
+      - UNICODE_FLAG=1
+      - LENGTH_IN_CHAR=1
+      - INSTANCE_NAME=fastdotnet
+      - CASE_SENSITIVE=0
+    ports:
+      - "5236:5236"
+    volumes:
+      - fastdotnet-dameng-data:/opt/dmdbms/data
+      - ./init-dameng.sql:/docker-entrypoint-initdb.d/init-dameng.sql:ro
+    networks:
+      - fastdotnet-network
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/dmdbms/bin/disql SYSDBA/SYSDBA001 -c \"select 1;\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  fastdotnet-api:
+    build:
+      context: ..
+      dockerfile: ../Dockerfile
+    image: fastdotnet-api:latest
+    container_name: fastdotnet-api
+    
+    # 端口映射：宿主机端口：容器端口 (18889)
+    ports:
+      - "18889:18889"
+    
+    environment:
+      # ASP.NET Core 环境
+      - ASPNETCORE_ENVIRONMENT=Production
+      
+      # 监听地址（与 Program.cs 中的配置一致）
+      - ASPNETCORE_URLS=http://+:18889
+      
+      # 密钥文件路径配置
+      - Marketplace__PrivateKeyPath=/app/secrets/marketplace_private_key.txt
+      
+      # .NET 版本
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      
+      # 数据库连接字符串（使用达梦数据库容器）
+      - ConnectionStrings__DefaultConnection=Server=fastdotnet-dameng;Database=fastdotnet;Uid=fastdotnet;Pwd=fastdotnet;Port=5236
+      - SqlSugar__Connections__0__ConfigId=main
+      - SqlSugar__Connections__0__ConnectionString=Server=fastdotnet-dameng;Database=fastdotnet;Uid=fastdotnet;Pwd=fastdotnet;Port=5236
+      - SqlSugar__Connections__0__DbType=Dameng
+      - SqlSugar__Connections__0__IsAutoCloseConnection=true
+      - SqlSugar__Connections__1__ConfigId=log
+      - SqlSugar__Connections__1__ConnectionString=Server=fastdotnet-dameng;Database=fastdotnet;Uid=fastdotnet;Pwd=fastdotnet;Port=5236
+      - SqlSugar__Connections__1__DbType=Dameng
+      - SqlSugar__Connections__1__IsAutoCloseConnection=true
+    
+    volumes:
+      # 挂载密钥文件（只读模式，安全）
+      - ./secrets/marketplace_private_key.txt:/app/secrets/marketplace_private_key.txt:ro
+      
+      # 持久化数据目录
+      - fastdotnet-data:/app/data
+      
+      # 日志目录（可选）
+      - fastdotnet-logs:/app/logs
+      
+      # 插件目录（重要！用于存放动态加载的插件）
+      - fastdotnet-plugins:/app/plugins
+    
+    depends_on:
+      fastdotnet-dameng:
+        condition: service_healthy
+    
+    restart: unless-stopped
+    
+    networks:
+      - fastdotnet-network
+    
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18889/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# 定义网络
+networks:
+  fastdotnet-network:
+    driver: bridge
+
+# 定义数据卷
+volumes:
+  fastdotnet-dameng-data:
+  fastdotnet-data:
+  fastdotnet-logs:
+  fastdotnet-plugins:
