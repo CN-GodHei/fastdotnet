@@ -114,3 +114,4 @@ volumes:
   fastdotnet-data:
   fastdotnet-logs:
   fastdotnet-plugins:
+  fastdotnet-wwwroot:
