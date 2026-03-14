@@ -69,7 +69,7 @@ environment:
 ### 步骤 3：启动 API 服务
 
 ```bash
-docker-compose up -d fastdotnet-api
+docker-compose up -d fastdotnetwebapi
 ```
 
 ---
@@ -119,7 +119,7 @@ docker-compose up -d
 #   image: mysql:8.0
 #   ...
 
-fastdotnet-api:
+fastdotnetwebapi:
   # ... 其他配置保持不变
 ```
 
@@ -133,7 +133,7 @@ docker-compose ps
 
 # 应该看到：
 # NAME                    STATUS         PORTS
-# fastdotnet-api          Up (healthy)   0.0.0.0:18889->18889/tcp
+# fastdotnetwebapi          Up (healthy)   0.0.0.0:18889->18889/tcp
 # fastdotnet-mysql        Up (healthy)   3306/tcp
 ```
 

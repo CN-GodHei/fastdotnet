@@ -4,7 +4,7 @@
 
 ✅ **SQLite 模式已成功启动**
 
-- 容器名：fastdotnet-api
+- 容器名：fastdotnetwebapi
 - 访问地址：http://localhost:18889
 - 数据库：SQLite（内置）
 - 数据持久化：fastdotnet-data volume
@@ -190,7 +190,7 @@ docker-compose [-f 文件名] logs -f
 
 ```bash
 # 进入 API 容器
-docker exec -it fastdotnet-api /bin/bash
+docker exec -it fastdotnetwebapi /bin/bash
 
 # 进入 MySQL 容器（如果使用容器模式）
 docker exec -it fastdotnet-mysql /bin/bash
@@ -266,7 +266,7 @@ Test-Path ./secrets/marketplace_private_key.txt
 
 ```bash
 # 查看详细日志
-docker-compose logs fastdotnet-api
+docker-compose logs fastdotnetwebapi
 
 # 常见原因：
 # 1. 密钥文件不存在
@@ -288,10 +288,10 @@ curl http://localhost:18889/health
 
 ```bash
 # SQLite 模式下，检查数据目录
-docker exec fastdotnet-api ls -la /app/data
+docker exec fastdotnetwebapi ls -la /app/data
 
 # MySQL 模式下，检查连接
-docker exec fastdotnet-api curl -f http://localhost:18889/health
+docker exec fastdotnetwebapi curl -f http://localhost:18889/health
 ```
 
 ---

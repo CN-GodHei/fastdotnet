@@ -3,12 +3,12 @@
 version: '3.8'
 
 services:
-  fastdotnet-api:
+  fastdotnetwebapi:
     build:
       context: ..
       dockerfile: ../Dockerfile
-    image: fastdotnet-api:latest
-    container_name: fastdotnet-api
+    image: fastdotnetwebapi:latest
+    container_name: fastdotnetwebapi
     
     # 端口映射
     ports:

@@ -123,12 +123,12 @@ Step 1/15 : FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
  ---> Using cache
 ...
 Successfully built a1b2c3d4e5f6
-Successfully tagged fastdotnet-api:latest
+Successfully tagged fastdotnetwebapi:latest
 
 Build successful! Duration: 85.32s
 
 REPOSITORY       TAG       IMAGE ID       CREATED         SIZE
-fastdotnet-api   latest    a1b2c3d4e5f6   10 seconds ago   98.5MB
+fastdotnetwebapi   latest    a1b2c3d4e5f6   10 seconds ago   98.5MB
 
 Done!
 ```

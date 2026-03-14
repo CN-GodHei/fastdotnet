@@ -6,7 +6,7 @@ version: '3.8'
 services:
   # 注意：这里不包含 MySQL 服务，使用外部数据库
   
-  fastdotnet-api:
+  fastdotnetwebapi:
     environment:
       # 外部 MySQL 服务器连接字符串
       - ConnectionStrings__DefaultConnection=Server=your-mysql-server.com;Database=fastdotnet;Uid=fastdotnet;Pwd=your_password;SslMode=None;AllowLoadLocalInfile=true;AllowUserVariables=true;

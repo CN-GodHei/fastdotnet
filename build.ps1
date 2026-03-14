@@ -23,9 +23,9 @@ Write-Host ""
 # Clean if requested
 if ($Clean) {
     Write-Host "Cleaning old images..." -ForegroundColor Yellow
-    $container = docker ps -a --filter "name=fastdotnet-api" --format "{{.ID}}"
+    $container = docker ps -a --filter "name=fastdotnetwebapi" --format "{{.ID}}"
     if ($container) { docker rm -f $container | Out-Null }
-    $image = docker images fastdotnet-api --format "{{.ID}}"
+    $image = docker images fastdotnetwebapi --format "{{.ID}}"
     if ($image) { docker rmi -f $image | Out-Null }
     docker image prune -f | Out-Null
 }
@@ -38,9 +38,9 @@ $contextPath = Join-Path $PSScriptRoot "."
 $dockerfilePath = Join-Path $PSScriptRoot "Dockerfile"
 
 if ($NoCache) {
-    & docker build --no-cache -t "fastdotnet-api:$Tag" -f $dockerfilePath $contextPath
+    & docker build --no-cache -t "fastdotnetwebapi:$Tag" -f $dockerfilePath $contextPath
 } else {
-    & docker build -t "fastdotnet-api:$Tag" -f $dockerfilePath $contextPath
+    & docker build -t "fastdotnetwebapi:$Tag" -f $dockerfilePath $contextPath
 }
 
 if ($LASTEXITCODE -ne 0) { 
@@ -49,7 +49,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 $duration = (New-TimeSpan -Start $startTime -End (Get-Date)).TotalSeconds
 Write-Host "Build successful! Duration: $([math]::Round($duration, 2))s" -ForegroundColor Green
-docker images fastdotnet-api:$Tag
+docker images fastdotnetwebapi:$Tag
 
 # Push if requested
 if ($Push) {
@@ -58,8 +58,8 @@ if ($Push) {
         Write-Host "Please provide -RegistryHost and -Namespace parameters" -ForegroundColor Yellow
         Write-Host "Example: .\build.ps1 -Push -RegistryHost `"registry.cn-hangzhou.aliyuncs.com`" -Namespace `"your-namespace`"" -ForegroundColor Gray
     } else {
-        $fullName = "$RegistryHost/$Namespace/fastdotnet-api:$Tag"
-        docker tag "fastdotnet-api:$Tag" $fullName
+        $fullName = "$RegistryHost/$Namespace/fastdotnetwebapi:$Tag"
+        docker tag "fastdotnetwebapi:$Tag" $fullName
         if ($LASTEXITCODE -eq 0) {
             docker push $fullName
             if ($LASTEXITCODE -eq 0) { 

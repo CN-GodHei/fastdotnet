@@ -75,7 +75,7 @@ if ($Build) {
     Write-Host "[SUCCESS] Build completed" -ForegroundColor Green
 } else {
     # If no image exists, try to build it
-    $imageExists = docker images fastdotnet-api:latest --format "{{.Repository}}"
+    $imageExists = docker images fastdotnetwebapi:latest --format "{{.Repository}}"
     if (-not $imageExists) {
         Write-Host "[IMAGE] Image does not exist, starting build..." -ForegroundColor Yellow
         docker-compose -f $ComposeFile build
@@ -122,5 +122,5 @@ Write-Host "  View logs:      docker-compose logs -f" -ForegroundColor Gray
 Write-Host "  Stop service:   .\start.ps1 -Stop" -ForegroundColor Gray
 Write-Host "  Restart:        .\start.ps1 -Restart" -ForegroundColor Gray
 Write-Host "  Full cleanup:   .\start.ps1 -Clean" -ForegroundColor Gray
-Write-Host "  Enter container: docker exec -it fastdotnet-api /bin/bash" -ForegroundColor Gray
+Write-Host "  Enter container: docker exec -it fastdotnetwebapi /bin/bash" -ForegroundColor Gray
 Write-Host ""

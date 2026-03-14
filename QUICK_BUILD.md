@@ -47,7 +47,7 @@ docker-compose build --no-cache
 cd D:\GodHeiWorkSpace\开源项目开发\Fastdotnet
 
 # 构建镜像
-docker build -t fastdotnet-api:latest -f Dockerfile .
+docker build -t fastdotnetwebapi:latest -f Dockerfile .
 ```
 
 **优点：**
@@ -80,7 +80,7 @@ Write-Host "`n🔨 开始构建..." -ForegroundColor Yellow
 
 # 4. 验证结果
 Write-Host "`n✅ 验证构建结果..." -ForegroundColor Yellow
-docker images fastdotnet-api
+docker images fastdotnetwebapi
 ```
 
 ### 日常构建（预计 30 秒 -2 分钟）
@@ -268,7 +268,7 @@ cd ..
 
 # 5. 部署到服务器
 # SSH 到服务器执行：
-# docker pull registry.cn-hangzhou.aliyuncs.com/your-namespace/fastdotnet-api:latest
+# docker pull registry.cn-hangzhou.aliyuncs.com/your-namespace/fastdotnetwebapi:latest
 # docker-compose up -d
 ```
 

@@ -37,12 +37,12 @@ services:
       retries: 5
       start_period: 60s
 
-  fastdotnet-api:
+  fastdotnetwebapi:
     build:
       context: ..
       dockerfile: ../Dockerfile
-    image: fastdotnet-api:latest
-    container_name: fastdotnet-api
+    image: fastdotnetwebapi:latest
+    container_name: fastdotnetwebapi
     
     # 端口映射：宿主机端口：容器端口 (18889)
     ports:

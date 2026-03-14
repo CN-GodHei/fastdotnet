@@ -40,7 +40,7 @@ graph LR
 │  本地开发机器   │     │   Docker Hub     │     │  生产服务器     │
 │                 │     │   /私有仓库      │     │                 │
 │  git clone      │────▶│                  │────▶│  docker pull    │
-│  docker build   │     │  fastdotnet-api  │     │  docker run     │
+│  docker build   │     │  fastdotnetwebapi  │     │  docker run     │
 │  docker push    │     │                  │     │                 │
 └─────────────────┘     └──────────────────┘     └─────────────────┘
 ```
@@ -149,7 +149,7 @@ graph LR
 **选择 1：Docker Hub（免费公开）**
 ```bash
 # 注册账号：https://hub.docker.com/
-# 创建仓库：fastdotnet-api
+# 创建仓库：fastdotnetwebapi
 ```
 
 **选择 2：阿里云容器镜像服务（推荐国内用户）**
@@ -157,7 +157,7 @@ graph LR
 # 访问：https://cr.console.aliyun.com/
 # 创建个人实例
 # 创建命名空间：your-namespace
-# 创建仓库：fastdotnet-api
+# 创建仓库：fastdotnetwebapi
 ```
 
 **选择 3：腾讯云容器镜像服务**
@@ -189,29 +189,29 @@ cd D:\GodHeiWorkSpace\开源项目开发\Fastdotnet\docker
 docker-compose build
 
 # 或者手动构建
-docker build -t fastdotnet-api:latest ..
+docker build -t fastdotnetwebapi:latest ..
 ```
 
 #### 第 4 步：标记镜像
 
 **Docker Hub:**
 ```bash
-docker tag fastdotnet-api:latest your-dockerhub-username/fastdotnet-api:latest
+docker tag fastdotnetwebapi:latest your-dockerhub-username/fastdotnetwebapi:latest
 # 例如：
-docker tag fastdotnet-api:registry.cn-hangzhou.aliyuncs.com/your-namespace/fastdotnet-api:latest
+docker tag fastdotnetwebapi:registry.cn-hangzhou.aliyuncs.com/your-namespace/fastdotnetwebapi:latest
 ```
 
 **阿里云:**
 ```bash
-docker tag fastdotnet-api:latest registry.cn-hangzhou.aliyuncs.com/your-namespace/fastdotnet-api:latest
+docker tag fastdotnetwebapi:latest registry.cn-hangzhou.aliyuncs.com/your-namespace/fastdotnetwebapi:latest
 ```
 
 #### 第 5 步：推送镜像
 
 ```bash
-docker push your-dockerhub-username/fastdotnet-api:latest
+docker push your-dockerhub-username/fastdotnetwebapi:latest
 # 或
-docker push registry.cn-hangzhou.aliyuncs.com/your-namespace/fastdotnet-api:latest
+docker push registry.cn-hangzhou.aliyuncs.com/your-namespace/fastdotnetwebapi:latest
 ```
 
 #### 第 6 步：在服务器上拉取并运行
@@ -224,9 +224,9 @@ ssh user@your-server-ip
 
 **拉取镜像：**
 ```bash
-docker pull your-dockerhub-username/fastdotnet-api:latest
+docker pull your-dockerhub-username/fastdotnetwebapi:latest
 # 或
-docker pull registry.cn-hangzhou.aliyuncs.com/your-namespace/fastdotnet-api:latest
+docker pull registry.cn-hangzhou.aliyuncs.com/your-namespace/fastdotnetwebapi:latest
 ```
 
 **创建密钥文件：**
@@ -239,14 +239,14 @@ nano /opt/fastdotnet/secrets/marketplace_private_key.txt
 **启动容器：**
 ```bash
 docker run -d \
-  --name fastdotnet-api \
+  --name fastdotnetwebapi \
   -p 18889:18889 \
   -v /opt/fastdotnet/secrets/marketplace_private_key.txt:/app/secrets/marketplace_private_key.txt:ro \
   -e ASPNETCORE_ENVIRONMENT=Production \
   -e ASPNETCORE_URLS=http://+:18889 \
   -e Marketplace__PrivateKeyPath=/app/secrets/marketplace_private_key.txt \
   --restart unless-stopped \
-  your-dockerhub-username/fastdotnet-api:latest
+  your-dockerhub-username/fastdotnetwebapi:latest
 ```
 
 **或使用 docker-compose（推荐）：**
@@ -256,9 +256,9 @@ docker run -d \
 version: '3.8'
 
 services:
-  fastdotnet-api:
-    image: registry.cn-hangzhou.aliyuncs.com/your-namespace/fastdotnet-api:latest
-    container_name: fastdotnet-api
+  fastdotnetwebapi:
+    image: registry.cn-hangzhou.aliyuncs.com/your-namespace/fastdotnetwebapi:latest
+    container_name: fastdotnetwebapi
     ports:
       - "18889:18889"
     environment:
@@ -487,9 +487,9 @@ cat > docker-compose.yml << 'EOF'
 version: '3.8'
 
 services:
-  fastdotnet-api:
+  fastdotnetwebapi:
     image: ghcr.io/your-username/fastdotnet:main
-    container_name: fastdotnet-api
+    container_name: fastdotnetwebapi
     ports:
       - "18889:18889"
     environment:
@@ -565,10 +565,10 @@ Write-Host "✅ 构建成功" -ForegroundColor Green
 # 2. 标记镜像
 $RegistryHost = "registry.cn-hangzhou.aliyuncs.com"
 $Namespace = "your-namespace"
-$FullImageName = "$RegistryHost/$Namespace/fastdotnet-api:$ImageTag"
+$FullImageName = "$RegistryHost/$Namespace/fastdotnetwebapi:$ImageTag"
 
 Write-Host "🏷️  标记镜像为：$FullImageName" -ForegroundColor Yellow
-docker tag fastdotnet-api:$ImageTag $FullImageName
+docker tag fastdotnetwebapi:$ImageTag $FullImageName
 
 # 3. 推送镜像
 Write-Host "📤 推送镜像到远程仓库..." -ForegroundColor Yellow
@@ -614,7 +614,7 @@ set -e
 
 REGISTRY_HOST="registry.cn-hangzhou.aliyuncs.com"
 NAMESPACE="your-namespace"
-IMAGE_NAME="$REGISTRY_HOST/$NAMESPACE/fastdotnet-api:latest"
+IMAGE_NAME="$REGISTRY_HOST/$NAMESPACE/fastdotnetwebapi:latest"
 
 echo "======================================"
 echo "  Fastdotnet 自动部署脚本"
@@ -755,7 +755,7 @@ docker run --rm \
 **A:**
 ```bash
 # 使用 docker stats
-docker stats fastdotnet-api
+docker stats fastdotnetwebapi
 
 # 使用 Portainer（图形化管理）
 docker run -d -p 9000:9000 \
