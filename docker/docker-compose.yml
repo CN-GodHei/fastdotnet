@@ -71,6 +71,7 @@ services:
       
       # 插件目录（重要！用于存放动态加载的插件）
       - fastdotnet-plugins:/app/plugins
+      - fastdotnet-wwwroot:/app/wwwroot
     
     restart: unless-stopped
     

@@ -34,4 +34,9 @@ RUN dotnet publish "./Fastdotnet.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+# 创建必要目录（包括密钥目录、插件目录等）
+RUN mkdir -p /app/secrets && \
+    mkdir -p /app/data && \
+    mkdir -p /app/logs && \
+    mkdir -p /app/plugins
 ENTRYPOINT ["dotnet", "Fastdotnet.WebApi.dll"]
