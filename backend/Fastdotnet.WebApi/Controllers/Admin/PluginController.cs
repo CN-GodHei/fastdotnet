@@ -121,8 +121,24 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         {
             return Ok(new { IsActive = _pluginLoadService.IsPluginActive(pluginId) });
         }
+        /// <summary>
+        /// 设置用户授权码
+        /// </summary>
+        public async Task<bool> SetAuthCode([FromBody] SetAuthCodeDto setAuthCodeDto)
+        {
+            setAuthCodeDto.IsValid();
+            return await _pluginLoadService.SetAuthCode(setAuthCodeDto.AuthCode);
+        }
     }
 
+    public class SetAuthCodeDto
+    {
+        /// <summary>
+        /// 用户授权码
+        /// </summary>
+        [Required]
+        public string AuthCode { get; set; }
+    }
     /// <summary>
     /// 插件下载传输模型
     /// </summary>
