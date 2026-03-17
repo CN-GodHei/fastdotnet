@@ -63,6 +63,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         [HttpGet("public/all")]
         [AllowAnonymous] // 此接口允许匿名访问
         [ApiUsageScope(ApiUsageScopeEnum.Both)]
+        [SkipAntiReplayAttribute]
         public async Task<Dictionary<string, object>> GetPublicConfigs()
         {
             if (string.IsNullOrEmpty(_currentUser.UserType))
@@ -71,6 +72,16 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             }
             var configs = await _service.GetListAsync(x=>x.Belong==EnumHelper.ParseEnum<SystemCategory>(_currentUser.UserType));
             return configs.ToDictionary(c => c.Code, c => c.Value);
+        }
+
+        [HttpGet("GetServiceDateTime")]
+        [AllowAnonymous] // 此接口允许匿名访问
+        [SkipAntiReplayAttribute]
+        public async Task<string> GetServiceDateTime()
+        {
+            // 获取当前 UTC 时间并转换为 Unix 时间戳（秒）
+            //return DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            return DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
         }
     }
 }
