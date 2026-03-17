@@ -199,6 +199,8 @@ if (app.Environment.IsDevelopment())
 //app.UseHttpsRedirection();
 app.UseRouting(); // 添加路由中间件
 app.UseMiddleware<RequestIdMiddleware>();
+// 注册防重放攻击中间件（在认证之前执行）
+app.UseMiddleware<AntiReplayMiddleware>();
 // 注册加密解密中间件
 //if (!app.Environment.IsDevelopment())
 //{

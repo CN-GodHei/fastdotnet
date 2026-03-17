@@ -2,6 +2,7 @@ using Fastdotnet.Core.Dtos;
 using Fastdotnet.Core.Dtos.Auth;
 using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Services.System;
+using Fastdotnet.Core.Attributes;
 
 namespace Fastdotnet.WebApi.Controllers.System
 {
@@ -11,6 +12,7 @@ namespace Fastdotnet.WebApi.Controllers.System
     [ApiController]
     [Route("api/auth")]
     [AllowAnonymous] // 将此控制器标记为允许匿名访问
+    [SkipAntiReplay(Reason = "登录注册接口需要跳过防重放验证")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;

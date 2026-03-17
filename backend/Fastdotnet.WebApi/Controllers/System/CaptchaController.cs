@@ -1,4 +1,5 @@
 using Fastdotnet.Core.Enum;
+using Fastdotnet.Core.Attributes;
 
 namespace Fastdotnet.WebApi.Controllers
 {
@@ -9,6 +10,7 @@ namespace Fastdotnet.WebApi.Controllers
     [ApiController]
     [AllowAnonymous] // 允许匿名访问
     [ApiUsageScope(ApiUsageScopeEnum.Both)]
+    [SkipAntiReplay(Reason = "验证码接口需要跳过防重放验证")]
     public class CaptchaController : ControllerBase
     {
         private readonly ICaptcha _captcha;
