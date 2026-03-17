@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Caching.Hybrid;
+using NetTaste;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -22,6 +24,10 @@ namespace Fastdotnet.WebApi.Middleware
 
         public async Task InvokeAsync(HttpContext context, IHybridCacheService cacheService)
         {
+#if DEBUG
+            await _next(context);
+            return;
+#endif
             // 跳过特定路径（如登录、获取公钥等不需要防重放的接口）
             if (ShouldSkipAntiReplay(context))
             {
