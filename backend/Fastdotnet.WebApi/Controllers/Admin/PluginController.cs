@@ -124,6 +124,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// <summary>
         /// 设置用户授权码
         /// </summary>
+        [HttpPost("SetAuthCode")]
         public async Task<bool> SetAuthCode([FromBody] SetAuthCodeDto setAuthCodeDto)
         {
             setAuthCodeDto.IsValid();
