@@ -1,5 +1,7 @@
 ﻿
 
+using Fastdotnet.Core.Dtos.System;
+
 namespace Fastdotnet.Plugin.Shared.AdapterAOT
 {
     public interface IPluginLoadService
@@ -10,6 +12,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
         Task<ApiResult> UninstallPluginAsync(string pluginId);
         Task<ApiResult> InstallPlugin(string pluginId, string Version, string UserToken);
         Task<bool> SetAuthCode(string AuthCode);
+        Task<bool> SetPluginLicense(SetPluginLicenseDto setPluginLicenseDto);
         bool IsPluginActive(string pluginId);
         IEnumerable<PluginInfo> GetLoadedPlugins();
         IEnumerable<string> GetActivePlugins();

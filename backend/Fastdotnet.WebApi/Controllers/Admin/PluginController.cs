@@ -130,6 +130,16 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             setAuthCodeDto.IsValid();
             return await _pluginLoadService.SetAuthCode(setAuthCodeDto.AuthCode);
         }
+
+        /// <summary>
+        /// 设置插件许可
+        /// </summary>
+        [HttpPost("SetPluginLicense")]
+        public async Task<bool> SetPluginLicense([FromBody] SetPluginLicenseDto setAuthCodeDto)
+        {
+            setAuthCodeDto.IsValid();
+            return await _pluginLoadService.SetPluginLicense(setAuthCodeDto);
+        }
     }
 
     public class SetAuthCodeDto
