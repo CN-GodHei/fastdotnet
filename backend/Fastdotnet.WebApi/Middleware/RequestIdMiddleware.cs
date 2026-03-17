@@ -26,16 +26,18 @@ public class RequestIdMiddleware
         // 回写 RequestID 到响应头
         context.Response.Headers[REQUEST_ID_HEADER] = requestId;
 
+        context.Response.OnStarting(() =>
+        {
+            var timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
+            context.Response.Headers[SERVER_TIMESTAMP_HEADER] = timestamp;
+            return Task.CompletedTask;
+        });
         try
         {
             await _next(context);
         }
         finally
         {
-            // 在响应完成后添加服务器时间戳（表示响应生成时的服务器时间）
-            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
-            context.Response.Headers[SERVER_TIMESTAMP_HEADER] = timestamp;
-            
             // 清理上下文（防止 AsyncLocal 泄漏）
             RequestIdManager.Clear();
         }
