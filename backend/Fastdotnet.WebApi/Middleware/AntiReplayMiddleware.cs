@@ -43,11 +43,11 @@ namespace Fastdotnet.WebApi.Middleware
             // 1. 验证必填字段
             if (string.IsNullOrEmpty(timestampStr) || string.IsNullOrEmpty(nonce))
             {
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                context.Response.StatusCode = StatusCodes.Status409Conflict;
                 context.Response.ContentType = "application/json; charset=utf-8";
                 var errorResult = new ApiResult<object>
                 {
-                    Code = 400,
+                    Code = 409,
                     Msg = "缺少必要的防重放请求头：X-Timestamp, X-Nonce"
                 };
                 await context.Response.WriteAsJsonAsync(errorResult);
@@ -57,11 +57,11 @@ namespace Fastdotnet.WebApi.Middleware
             // 2. 验证时间戳有效性（防止旧请求重放）
             if (!long.TryParse(timestampStr, out long timestamp))
             {
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                context.Response.StatusCode = StatusCodes.Status409Conflict;
                 context.Response.ContentType = "application/json; charset=utf-8";
                 var errorResult = new ApiResult<object>
                 {
-                    Code = 400,
+                    Code = 409,
                     Msg = "X-Timestamp 格式无效，应为 Unix 时间戳（秒）"
                 };
                 await context.Response.WriteAsJsonAsync(errorResult);
@@ -75,11 +75,11 @@ namespace Fastdotnet.WebApi.Middleware
             // 检查时间窗口（允许前后 2.5 分钟的误差）
             if (Math.Abs(timeDiff) > TIMESTAMP_WINDOW_SECONDS / 2)
             {
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                context.Response.StatusCode = StatusCodes.Status409Conflict;
                 context.Response.ContentType = "application/json; charset=utf-8";
                 var errorResult = new ApiResult<object>
                 {
-                    Code = 400,
+                    Code = 409,
                     Msg = $"请求时间戳已过期，允许的误差范围为{TIMESTAMP_WINDOW_SECONDS / 2}秒"
                 };
                 await context.Response.WriteAsJsonAsync(errorResult);
