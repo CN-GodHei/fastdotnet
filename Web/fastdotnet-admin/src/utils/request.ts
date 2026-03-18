@@ -183,7 +183,20 @@ service.interceptors.request.use(
 
 		// 优化 Nonce 生成：结合时间戳 + 随机串 + 计数器（防止高并发下 UUID 碰撞或重复）
 		// 简单的 UUID v4 通常足够，但为了极致安全，可以加一个毫秒级后缀
-		const nonce = `${crypto.randomUUID()}-${Date.now()}`;
+		// 使用兼容性更好的方法生成 UUID（避免某些浏览器不支持 crypto.randomUUID）
+		const generateUUID = () => {
+			if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+				return crypto.randomUUID();
+			}
+			// 降级方案：使用随机数生成 UUID v4
+			return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+				const r = Math.random() * 16 | 0;
+				const v = c === 'x' ? r : (r & 0x3 | 0x8);
+				return v.toString(16);
+			});
+		};
+		
+		const nonce = `${generateUUID()}-${Date.now()}`;
 
 		const method = config.method?.toUpperCase() || 'GET';
 		const path = config.url || '';
