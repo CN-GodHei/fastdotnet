@@ -103,7 +103,7 @@ builder.Services.AddScoped<IFdRoleInitializerService, FdRoleInitializerService>(
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IAppUserService, AppUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-//builder.Services.AddScoped<IApplicationInitializer, OrmCodeFirstInitializer>();
+builder.Services.AddScoped<IApplicationInitializer, OrmCodeFirstInitializer>();
 //builder.Services.AddScoped<IApplicationInitializer, BlacklistInitializer>();
 //builder.Services.AddScoped<IApplicationInitializer, RateLimitRuleInitializer>();
 // 扫描并注册所有 IApplicationInitializer 实现
