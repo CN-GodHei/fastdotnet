@@ -19,7 +19,7 @@
             </el-button>
             <el-button size="default" type="success" class="ml10" @click="handleBatchLicense">
               <el-icon>
-                <ele-Refresh />
+                <ele-Key />
               </el-icon>
               批量授权
             </el-button>
