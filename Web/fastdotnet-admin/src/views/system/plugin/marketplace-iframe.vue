@@ -13,7 +13,7 @@
 
 <script setup lang="ts" name="pluginMarketplaceIframe">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { getApiPluginScan,postApiPluginLoad } from '@/api/fd-system-api-admin/Plugin'
+import { getApiPluginScan, postApiPluginLoad, postApiPluginSetAuthCode } from '@/api/fd-system-api-admin/Plugin'
 
 // 定义事件发射器
 const emit = defineEmits<{
@@ -105,6 +105,11 @@ const handleMessage = (event: MessageEvent) => {
         handleInstallPlugin(data)
         break
         
+      case 'LOGIN_SUCCESS':
+        // 处理登录成功消息
+        handleLoginSuccess(data)
+        break
+        
       default:
         console.log('未知消息类型:', type)
     }
@@ -161,7 +166,21 @@ const handlePluginAction = (data: any) => {
   }))
 }
 
-// 发送已安装插件列表到iframe
+// 处理登录成功消息
+const handleLoginSuccess = async (data: any) => {
+  const { AuthCode } = data
+  
+  try {
+    // 调用后端接口，将 AuthCode 写入
+   var re= await postApiPluginSetAuthCode({
+      AuthCode: AuthCode
+    })
+  } catch (error) {
+    console.error('处理登录成功消息失败:', error)
+  }
+}
+
+// 发送已安装插件列表到 iframe
 const sendInstalledPlugins = () => {
   getApiPluginScan().then((res: any) => {
     const installedPlugins = res || []
