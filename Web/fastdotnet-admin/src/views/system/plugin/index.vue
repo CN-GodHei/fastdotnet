@@ -1,6 +1,20 @@
 <template>
   <div class="system-plugin-container layout-pd">
     <el-card shadow="hover" header="插件管理">
+      <div class="server-auth-section">
+        <span class="auth-label">用户授权码：</span>
+        <el-input 
+          v-model="serverAuthCode" 
+          placeholder="暂无授权码"
+          style="max-width: 400px; margin-right: 10px"
+          disabled
+        />
+        <el-tooltip content="设置授权码" placement="bottom">
+          <el-button size="small" type="primary" @click="handleSetAuthCodeDialog" :loading="settingAuthCode">
+            <el-icon><ele-Edit /></el-icon>
+          </el-button>
+        </el-tooltip>
+      </div>
       <el-tabs v-model="activeTab" class="system-plugin-tabs" @tab-change="handleTabChange">
         <el-tab-pane label="已安装插件" name="installed">
           <div class="system-plugin-search mb15">
@@ -72,18 +86,58 @@
       :selected-plugins="selectedPlugins"
       @save-success="handleLicenseSaveSuccess" 
     />
+    
+    <!-- 设置服务器用户授权码对话框 -->
+    <el-dialog 
+      v-model="setAuthDialogVisible" 
+      title="设置服务器用户授权码" 
+      width="600px"
+      :close-on-click-modal="false"
+    >
+      <el-form label-position="top">
+        <el-alert 
+          title="授权说明" 
+          type="info" 
+          description="请输入服务器用户授权码，确保授权码正确有效后点击保存" 
+          show-icon 
+          :closable="false"
+          class="mb15"
+        />
+        
+        <el-form-item label="服务器用户授权码" required>
+          <el-input
+            v-model="tempAuthCode"
+            type="textarea"
+            :rows="6"
+            placeholder="请输入服务器用户授权码"
+            autocomplete="off"
+          />
+        </el-form-item>
+      </el-form>
+      
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="setAuthDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleSetAuthCode" :loading="settingAuthCode">
+            确 定
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts" name="systemPlugin">
 import { ref, onMounted, defineAsyncComponent, onUnmounted } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
-// 导入插件相关的API
+// 导入插件相关的 API
 import {
   getApiPluginScan,
   postApiPluginEnablePluginId,
   postApiPluginDisablePluginId,
-  postApiPluginUninstallPluginId
+  postApiPluginUninstallPluginId,
+  getApiPluginGetAuthCode,
+  postApiPluginSetAuthCode
 } from '@/api/fd-system-api-admin/Plugin'
 import { MicroAppEvents, receiveFromMicroApp, removeMicroAppEventListener } from '@/utils/microAppCommunication'
 import PluginConfigurationDialog from './PluginConfigurationDialog.vue'
@@ -124,6 +178,12 @@ const selectedPlugins = ref<Plugin[]>([])
 // 当前激活的选项卡
 const activeTab = ref('installed')
 
+// 服务器用户授权码
+const serverAuthCode = ref('')
+const settingAuthCode = ref(false)
+const setAuthDialogVisible = ref(false)
+const tempAuthCode = ref('') // 临时存储输入的授权码
+
 // 插件列表
 const pluginList = ref<Plugin[]>([])
 // 搜索名称
@@ -156,6 +216,33 @@ const handleSearch = () => {
 // 扫描插件
 const handleScan = () => {
   getPluginList()
+}
+
+// 打开设置授权码对话框
+const handleSetAuthCodeDialog = () => {
+  tempAuthCode.value = serverAuthCode.value // 回显当前值
+  setAuthDialogVisible.value = true
+}
+
+// 设置服务器用户授权码
+const handleSetAuthCode = async () => {
+  if (!tempAuthCode.value.trim()) {
+    ElMessage.warning('请输入服务器用户授权码')
+    return
+  }
+  
+  try {
+    settingAuthCode.value = true
+    await postApiPluginSetAuthCode({ AuthCode: tempAuthCode.value })
+    ElMessage.success('设置授权码成功')
+    setAuthDialogVisible.value = false
+    // 更新显示的授权码
+    serverAuthCode.value = tempAuthCode.value
+  } catch (error: any) {
+    ElMessage.error('设置授权码失败：' + (error.message || '未知错误'))
+  } finally {
+    settingAuthCode.value = false
+  }
 }
 
 // 启用插件
@@ -348,10 +435,23 @@ const handlePluginAction = (event: CustomEvent) => {
 onMounted(() => {
   getPluginList()
   listenToMicroAppEvents()
-
+  
   // 监听自定义事件
   window.addEventListener('refresh-plugin-list', getPluginList)
+  
+  // 获取服务器用户授权码
+  fetchServerAuthCode()
 })
+
+// 获取服务器用户授权码
+const fetchServerAuthCode = async () => {
+  try {
+    const res = await getApiPluginGetAuthCode()
+    serverAuthCode.value = typeof res === 'string' ? res : ''
+  } catch (error: any) {
+    console.error('获取授权码失败:', error)
+  }
+}
 
 // 组件卸载时清理事件监听
 onUnmounted(() => {
@@ -364,6 +464,22 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .system-plugin-container {
+  .server-auth-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f5f7fa;
+    border-radius: 4px;
+    
+    .auth-label {
+      font-weight: 600;
+      color: #303133;
+      margin-right: 12px;
+      white-space: nowrap;
+    }
+  }
+  
   :deep(.el-card__body) {
     display: flex;
     flex-direction: column;

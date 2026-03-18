@@ -51,6 +51,13 @@ export async function postApiPluginEnablePluginId(
 		...(options || {}),
 	});
 }
+/** 获取用户授权码 GET /api/Plugin/GetAuthCode */
+export async function getApiPluginGetAuthCode(options?: { [key: string]: any }) {
+	return request<string>('/api/Plugin/GetAuthCode', {
+		method: 'GET',
+		...(options || {}),
+	});
+}
 /** 从URL下载并加载插件 POST /api/Plugin/load */
 export async function postApiPluginLoad(body: APIModel.DownloadPluginDto, options?: { [key: string]: any }) {
 	return request<APIModel.ApiResult>('/api/Plugin/load', {

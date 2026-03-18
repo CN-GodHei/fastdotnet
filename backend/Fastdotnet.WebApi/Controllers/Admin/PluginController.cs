@@ -135,7 +135,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// <summary>
         /// 获取用户授权码
         /// </summary>
-        [HttpPost("GetAuthCode")]
+        [HttpGet("GetAuthCode")]
         public async Task<string> GetAuthCode()
         {
             return await _pluginLoadService.GetAuthCode();
