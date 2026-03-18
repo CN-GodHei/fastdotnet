@@ -10,7 +10,7 @@
       <el-alert 
         title="授权说明" 
         type="info" 
-        description="请输入插件授权码，确保授权码正确有效后点击保存" 
+        :description="getAlertDescription()" 
         show-icon 
         :closable="false"
         class="mb15"
@@ -22,7 +22,7 @@
         label-position="top"
         :rules="formRules"
       >
-        <el-form-item label="插件信息" class="mb15">
+        <el-form-item label="插件信息" class="mb15" v-if="!isBatch">
           <div class="plugin-info">
             <span class="plugin-label">插件名称：</span>
             <span class="plugin-value">{{ pluginName }}</span>
@@ -33,13 +33,32 @@
           </div>
         </el-form-item>
         
+        <el-form-item label="已选插件" class="mb15" v-else>
+          <div class="selected-plugins-info">
+            <div class="plugin-count">
+              <el-tag type="primary" size="large">{{ selectedPlugins.length }} 个插件</el-tag>
+            </div>
+            <div class="plugin-list">
+              <el-tag 
+                v-for="plugin in selectedPlugins" 
+                :key="plugin.id" 
+                size="small" 
+                style="margin-right: 8px; margin-bottom: 8px"
+              >
+                {{ plugin.name }}
+              </el-tag>
+            </div>
+          </div>
+        </el-form-item>
+        
+        <!-- 授权类型：根据是否批量自动判断，用户不可修改 -->
+        <!-- 单个插件使用类型 '0'，批量授权使用类型 '1' -->
         <el-form-item label="授权类型" prop="Type" required>
           <el-select 
             v-model="licenseForm.Type" 
             placeholder="请选择授权类型" 
             style="width: 100%"
-            clearable
-            @change="handleTypeChange"
+            disabled
           >
             <el-option label="单个授权" value="0" />
             <el-option label="多个授权" value="1" />
@@ -63,7 +82,7 @@
           <div v-else-if="jsonValid && licenseForm.LicenseStr.trim()" class="json-valid-tip">
             <el-tag type="success" size="small">
               <el-icon><ele-Check /></el-icon>
-              {{ licenseType === '0' ? 'JSON 对象格式正确' : 'JSON 数组格式正确' }}
+              {{ props.isBatch ? 'JSON 数组格式正确' : 'JSON 对象格式正确' }}
             </el-tag>
           </div>
         </el-form-item>
@@ -86,17 +105,32 @@ import { ref, computed, watch, nextTick } from 'vue'
 import { ElMessage, FormInstance } from 'element-plus'
 import { postApiPluginSetPluginLicense } from '@/api/fd-system-api-admin/Plugin'
 
+// 定义插件数据类型
+interface Plugin {
+  id: string
+  name: string
+  version: string
+  description: string
+  enabled: boolean
+  author: string
+  entryPoint: string
+}
+
 // 定义 props
 interface Props {
   modelValue: boolean
   pluginId?: string
   pluginName?: string
+  isBatch?: boolean // 是否为批量授权
+  selectedPlugins?: Plugin[] // 批量授权时选中的插件列表
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
   pluginId: '',
-  pluginName: ''
+  pluginName: '',
+  isBatch: false,
+  selectedPlugins: () => []
 })
 
 // 定义 emits
@@ -119,7 +153,7 @@ const submitting = ref(false)
 
 // 表单数据
 const licenseForm = ref({
-  Type: '', // '0'-单个，'1'-多个
+  Type: '0', // '0'-单个，'1'-多个（自动赋值）
   LicenseStr: ''
 })
 
@@ -154,12 +188,19 @@ watch(
 
 // 获取占位符文本
 const getPlaceholderText = () => {
-  if (licenseType.value === '0') {
-    return '请输入授权信息（JSON 对象格式，例如：{"key": "value"}）'
-  } else if (licenseType.value === '1') {
-    return '请输入授权信息（JSON 数组格式，例如：[{"key": "value1"}, {"key": "value2"}]）'
+  if (props.isBatch) {
+    return '请输入批量授权信息（JSON 数组格式，包含所有插件的授权数据）'
   }
-  return '请先选择授权类型'
+  // 单个授权默认使用 JSON 对象格式
+  return '请输入授权信息（JSON 对象格式，例如：{"key": "value"}）'
+}
+
+// 获取提示信息
+const getAlertDescription = () => {
+  if (props.isBatch) {
+    return `正在为 ${props.selectedPlugins.length} 个插件进行批量授权，请输入授权信息`
+  }
+  return '请输入插件授权信息，确保格式正确后点击保存'
 }
 
 // 验证 JSON 格式
@@ -184,10 +225,10 @@ const validateJson = () => {
       jsonError.value = ''
     } else if (licenseType.value === '0' && Array.isArray(parsed)) {
       jsonValid.value = false
-      jsonError.value = '单个授权类型应输入 JSON 对象格式'
+      jsonError.value = '单个授权应输入 JSON 对象格式'
     } else if (licenseType.value === '1' && !Array.isArray(parsed)) {
       jsonValid.value = false
-      jsonError.value = '多个授权类型应输入 JSON 数组格式'
+      jsonError.value = '批量授权应输入 JSON 数组格式'
     } else {
       jsonValid.value = false
       jsonError.value = 'JSON 格式不正确'
@@ -210,7 +251,7 @@ const handleTypeChange = () => {
 const handleClose = () => {
   licenseFormRef.value?.resetFields()
   licenseForm.value = {
-    Type: '',
+    Type: '0',
     LicenseStr: ''
   }
   jsonValid.value = false
@@ -262,13 +303,13 @@ const handleConfirm = async () => {
 watch(
   () => props.modelValue,
   async (val) => {
-    if (val && props.pluginId) {
+    if (val && (props.pluginId || props.selectedPlugins.length > 0)) {
       // 等待 DOM 更新
       await nextTick()
       
-      // 重置表单
+      // 根据是否批量授权自动设置类型
       licenseForm.value = {
-        Type: '',
+        Type: props.isBatch ? '1' : '0', // 批量授权为'1'，单个授权为'0'
         LicenseStr: ''
       }
       jsonValid.value = false
@@ -319,5 +360,19 @@ watch(
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.selected-plugins-info {
+  .plugin-count {
+    margin-bottom: 12px;
+  }
+  
+  .plugin-list {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 8px;
+    background-color: #f5f7fa;
+    border-radius: 4px;
+  }
 }
 </style>

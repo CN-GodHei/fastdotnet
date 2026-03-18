@@ -17,15 +17,16 @@
               </el-icon>
               扫描插件
             </el-button>
-            <el-button size="default" type="success" class="ml10" @click="handleScan">
+            <el-button size="default" type="success" class="ml10" @click="handleBatchLicense">
               <el-icon>
                 <ele-Refresh />
               </el-icon>
               批量授权
             </el-button>
           </div>
-          <el-table :data="pluginList" style="width: 100%">
-            <el-table-column prop="id" label="插件ID" show-overflow-tooltip></el-table-column>
+          <el-table ref="tableRef" :data="pluginList" style="width: 100%">
+            <el-table-column type="selection" width="55" />
+            <el-table-column prop="id" label="插件 ID" show-overflow-tooltip></el-table-column>
             <el-table-column prop="name" label="插件名称" show-overflow-tooltip></el-table-column>
             <el-table-column prop="version" label="版本" show-overflow-tooltip></el-table-column>
             <el-table-column prop="description" label="描述" show-overflow-tooltip></el-table-column>
@@ -63,8 +64,14 @@
       :plugin-name="currentConfigPluginName" @save-success="handleConfigSaveSuccess" />
     
     <!-- 插件授权对话框 -->
-    <PluginLicenseDialog v-model="licenseDialogVisible" :plugin-id="currentLicensePluginId"
-      :plugin-name="currentLicensePluginName" @save-success="handleLicenseSaveSuccess" />
+    <PluginLicenseDialog 
+      v-model="licenseDialogVisible" 
+      :plugin-id="currentLicensePluginId"
+      :plugin-name="currentLicensePluginName" 
+      :is-batch="isBatchLicense"
+      :selected-plugins="selectedPlugins"
+      @save-success="handleLicenseSaveSuccess" 
+    />
   </div>
 </template>
 
@@ -100,6 +107,7 @@ interface Plugin {
 // refs
 const marketplaceRef = ref<any>(null)
 const marketplaceIframeRef = ref<any>(null)
+const tableRef = ref<any>(null)
 
 // 配置对话框
 const configDialogVisible = ref(false)
@@ -110,6 +118,8 @@ const currentConfigPluginName = ref('')
 const licenseDialogVisible = ref(false)
 const currentLicensePluginId = ref('')
 const currentLicensePluginName = ref('')
+const isBatchLicense = ref(false)
+const selectedPlugins = ref<Plugin[]>([])
 
 // 当前激活的选项卡
 const activeTab = ref('installed')
@@ -224,10 +234,28 @@ const handleConfig = (row: Plugin) => {
   configDialogVisible.value = true
 }
 
-// 授权插件
+// 授权插件（单个）
 const handlePluginLicense = (row: Plugin) => {
   currentLicensePluginId.value = row.id
   currentLicensePluginName.value = row.name
+  isBatchLicense.value = false
+  selectedPlugins.value = []
+  licenseDialogVisible.value = true
+}
+
+// 批量授权
+const handleBatchLicense = () => {
+  // 这里可以获取表格选中的行
+  // 由于使用了 selection 列，需要通过 ref 获取选中的行
+  const selection = tableRef.value?.getSelectionRows() || []
+  if (selection.length === 0) {
+    ElMessage.warning('请先选择要授权的插件')
+    return
+  }
+  selectedPlugins.value = selection
+  isBatchLicense.value = true
+  currentLicensePluginId.value = ''
+  currentLicensePluginName.value = `已选择 ${selection.length} 个插件`
   licenseDialogVisible.value = true
 }
 
