@@ -25,7 +25,7 @@ global using Fastdotnet.Service.Initializers;
 global using Fastdotnet.Service.IService;
 global using Fastdotnet.Service.IService.Admin;
 global using Fastdotnet.Service.Service;
-global using Fastdotnet.Service.Service.System;
+global using Fastdotnet.Service.Service.Sys;
 global using Fastdotnet.WebApi.Controllers;
 global using Fastdotnet.WebApi.Extensions;
 global using Fastdotnet.WebApi.Filters;

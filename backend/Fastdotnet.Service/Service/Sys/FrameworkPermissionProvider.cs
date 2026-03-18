@@ -1,5 +1,4 @@
-
-namespace Fastdotnet.Service.Service.System
+namespace Fastdotnet.Service.Service.Sys
 {
     /// <summary>
     /// 主框架的权限提供者

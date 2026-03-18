@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Fastdotnet.Service.Service.System
+namespace Fastdotnet.Service.Service.Sys
 {
     public class FdRoleInitializerService : IFdRoleInitializerService
     {

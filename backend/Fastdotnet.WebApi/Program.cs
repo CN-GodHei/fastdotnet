@@ -7,6 +7,7 @@ using Fastdotnet.Service.IService.App;
 using Fastdotnet.Service.IService.Sys;
 using Fastdotnet.Service.Service.Admin;
 using Fastdotnet.Service.Service.App;
+using Fastdotnet.Service.Service.Sys;
 
 var builder = WebApplication.CreateBuilder(args);
 // 可选：延长停机超时时间
