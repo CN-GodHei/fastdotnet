@@ -1,5 +1,7 @@
 
 
+using Fastdotnet.Core.Entities.Sys;
+
 namespace Fastdotnet.Service.Initializers
 {
     public class EmailConfigInitializer : IApplicationInitializer

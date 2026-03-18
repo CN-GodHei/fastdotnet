@@ -1,4 +1,7 @@
 
+using Fastdotnet.Core.Dtos.Sys;
+using Fastdotnet.Core.Entities.Sys;
+
 namespace Fastdotnet.Service.Mappings
 {
     public class CodeGenConfigProfile : Profile

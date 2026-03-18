@@ -1,4 +1,7 @@
-﻿namespace Fastdotnet.WebApi.Controllers.Admin
+﻿using Fastdotnet.Core.Dtos.Admin;
+using Fastdotnet.Service.IService.App;
+
+namespace Fastdotnet.WebApi.Controllers.Admin
 {
     /// <summary>
     /// FdAppUserRole 控制器

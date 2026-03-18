@@ -1,5 +1,8 @@
 
 
+using Fastdotnet.Core.Dtos.Sys;
+using Fastdotnet.Core.Entities.Sys;
+
 namespace Fastdotnet.Service.IService
 {
     public interface IMenuService

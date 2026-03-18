@@ -1,4 +1,6 @@
 
+using Fastdotnet.Core.Entities.Sys;
+
 namespace Fastdotnet.Service.Service
 {
     public abstract class EmailVerificationStrategyBase : IVerificationCodeStrategy

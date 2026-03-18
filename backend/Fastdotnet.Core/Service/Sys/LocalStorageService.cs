@@ -1,4 +1,7 @@
 
+using Fastdotnet.Core.Dtos.Storage;
+using Fastdotnet.Core.Entities.Sys;
+
 namespace Fastdotnet.Core.Service.Sys
 {
     /// <summary>

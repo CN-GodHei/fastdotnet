@@ -1,4 +1,5 @@
 ﻿
+using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Service.IService.Sys;
 
 namespace Fastdotnet.Service.Initializers

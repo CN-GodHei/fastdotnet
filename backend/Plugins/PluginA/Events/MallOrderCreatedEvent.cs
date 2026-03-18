@@ -1,6 +1,6 @@
 using Fastdotnet.Plugin.Contracts.Events;
 
-namespace Fastdotnet.PluginA.Events;
+namespace PluginA.Events;
 
 /// <summary>
 /// 商城订单创建事件（PluginA 业务事件示例）

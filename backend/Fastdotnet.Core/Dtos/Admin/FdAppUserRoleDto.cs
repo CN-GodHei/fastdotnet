@@ -1,4 +1,4 @@
-﻿namespace Fastdotnet.Service
+﻿namespace Fastdotnet.Core.Dtos.Admin
 {
 
     /// <summary>

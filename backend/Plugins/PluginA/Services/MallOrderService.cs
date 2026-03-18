@@ -1,6 +1,6 @@
 using Fastdotnet.Plugin.Contracts.Events;
 
-namespace Fastdotnet.PluginA.Services;
+namespace PluginA.Services;
 
 /// <summary>
 /// 商城订单服务（演示如何发布事件）

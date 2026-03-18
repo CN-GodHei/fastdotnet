@@ -4,7 +4,7 @@ using Fastdotnet.Core.IService;
 using Fastdotnet.Core.IService.Sys;
 using Fastdotnet.Core.Service.Sys;
 using Fastdotnet.Core.Services.App;
-using Fastdotnet.Core.Services.System;
+using Fastdotnet.Core.Services.Sys;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SqlSugar;

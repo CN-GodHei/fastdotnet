@@ -9,14 +9,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Fastdotnet.Plugin.Contracts;
 using PluginA.IService;
 using PluginA.Initializers;
-using Fastdotnet.PluginA.Services;
-using Fastdotnet.PluginA.EventHandlers;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Fastdotnet.Plugin.Contracts.Extensibility.Users;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Plugin.Contracts.Metrics;
+using PluginA.EventHandlers;
+using PluginA.Services;
 
 // The namespace for the WebApi project must be included to find the DynamicMiddlewareRegistry.
 
@@ -95,15 +95,15 @@ namespace PluginA
             //builder.RegisterType<PluginEntityService>().As<IPluginEntityService>().InstancePerLifetimeScope();
 
             // ========== 事件总线演示：注册事件处理器 ==========
-            builder.RegisterType<Fastdotnet.PluginA.EventHandlers.OrderPaidEventHandler>()
+            builder.RegisterType<OrderPaidEventHandler>()
                 .As<Fastdotnet.Plugin.Contracts.Events.IEventHandler<Fastdotnet.Plugin.Contracts.Events.PaymentCompletedEvent>>()
                 .InstancePerLifetimeScope();
-            builder.RegisterType<Fastdotnet.PluginA.EventHandlers.PluginInstalledEventHandler>()
+            builder.RegisterType<PluginInstalledEventHandler>()
                 .As<Fastdotnet.Plugin.Contracts.Events.IEventHandler<Fastdotnet.Plugin.Contracts.Events.PluginInstalledEvent>>()
                 .InstancePerLifetimeScope();
 
             // ========== 事件总线演示：注册商城订单服务（用于发布事件） ==========
-            builder.RegisterType<Fastdotnet.PluginA.Services.MallOrderService>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<MallOrderService>().AsSelf().InstancePerLifetimeScope();
             
             // 注册PluginAHub作为服务，以便其他组件可以使用它
             // 注意：这仅在插件内部需要直接使用Hub实例时才需要

@@ -1,5 +1,5 @@
 using Fastdotnet.Core.Dtos.System;
-using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Service.Service;
 using SqlSugar;
 using System;

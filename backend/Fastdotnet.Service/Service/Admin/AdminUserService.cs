@@ -1,5 +1,6 @@
+using Fastdotnet.Core.Entities.Sys;
 
-namespace Fastdotnet.Service.Admin
+namespace Fastdotnet.Service.Service.Admin
 {
     public class AdminUserService : IAdminUserService
     {

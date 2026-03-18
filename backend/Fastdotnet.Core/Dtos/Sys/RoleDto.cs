@@ -1,0 +1,34 @@
+namespace Fastdotnet.Core.Dtos.Sys
+{
+    public class FdRoleDto
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public string? Description { get; set; }
+        public SystemCategory Belong { get; set; }
+        public bool IsSystem { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public bool IsDefault { get; set; }
+    }
+
+    public class CreateFdRoleDto
+    {
+        [Required(ErrorMessage = "角色名称不能为空")]
+        public string Name { get; set; }
+
+        public string? Description { get; set; }
+
+        [Required(ErrorMessage = "角色分类不能为空")]
+        public SystemCategory Belong { get; set; }
+
+    }
+
+    public class UpdateFdRoleDto
+    {
+        [Required(ErrorMessage = "角色名称不能为空")]
+        public string Name { get; set; }
+
+        public string? Description { get; set; }
+    }
+}

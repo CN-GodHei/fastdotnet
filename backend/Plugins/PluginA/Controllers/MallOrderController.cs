@@ -1,8 +1,8 @@
 using Fastdotnet.Core.Enum;
-using Fastdotnet.PluginA.Services;
 using Fastdotnet.Plugin.Contracts.Events;
+using PluginA.Services;
 
-namespace Fastdotnet.PluginA.Controllers;
+namespace PluginA.Controllers;
 
 /// <summary>
 /// 商城订单控制器（演示事件发布）

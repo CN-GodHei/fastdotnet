@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Dto.Storage;
+using Fastdotnet.Core.Dtos.Storage;
 using Fastdotnet.Core.IService.Sys;
 using Fastdotnet.Core.Service.Sys;
 using Microsoft.AspNetCore.StaticFiles;

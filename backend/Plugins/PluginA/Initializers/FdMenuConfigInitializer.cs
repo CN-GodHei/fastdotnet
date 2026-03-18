@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Entities.System;
+using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;

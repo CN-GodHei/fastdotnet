@@ -1,4 +1,4 @@
-namespace Fastdotnet.Core.Dto.Storage
+namespace Fastdotnet.Core.Dtos.Storage
 {
     /// <summary>
     /// 上传凭证响应模型

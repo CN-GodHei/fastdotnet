@@ -1,5 +1,7 @@
 ﻿
 
+using Fastdotnet.Core.Dtos.Sys;
+
 namespace Fastdotnet.Core.IService.Sys
 {
     /// <summary>

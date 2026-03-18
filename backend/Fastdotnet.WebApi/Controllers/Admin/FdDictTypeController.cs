@@ -1,4 +1,7 @@
-﻿namespace Fastdotnet.WebApi.Controllers.Admin
+﻿using Fastdotnet.Core.Dtos.Sys;
+using Fastdotnet.Core.Entities.Sys;
+
+namespace Fastdotnet.WebApi.Controllers.Admin
 {
     /// <summary>
     /// FdDictType 控制器

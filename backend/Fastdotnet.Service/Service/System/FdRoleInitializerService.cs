@@ -1,4 +1,5 @@
-﻿using Fastdotnet.Service.IService.Sys;
+﻿using Fastdotnet.Core.Entities.Sys;
+using Fastdotnet.Service.IService.Sys;
 using System;
 using System.Collections.Generic;
 using System.Text;

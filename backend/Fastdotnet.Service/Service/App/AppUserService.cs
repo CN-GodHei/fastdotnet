@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Fastdotnet.Core.Entities.Sys;
+using Fastdotnet.Service.IService.App;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Fastdotnet.Service.App
+namespace Fastdotnet.Service.Service.App
 {
     public class AppUserService : IAppUserService
     {

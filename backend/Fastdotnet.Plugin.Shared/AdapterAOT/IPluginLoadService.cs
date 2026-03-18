@@ -1,6 +1,6 @@
 ﻿
 
-using Fastdotnet.Core.Dtos.System;
+using Fastdotnet.Core.Dtos.Sys;
 
 namespace Fastdotnet.Plugin.Shared.AdapterAOT
 {

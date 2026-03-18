@@ -1,6 +1,6 @@
 using Fastdotnet.Plugin.Contracts.Events;
 
-namespace Fastdotnet.PluginA.EventHandlers;
+namespace PluginA.EventHandlers;
 
 /// <summary>
 /// 支付完成事件处理器（PluginA 订阅支付插件事件）

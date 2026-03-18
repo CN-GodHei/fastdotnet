@@ -10,7 +10,7 @@ global using AutoMapper;
 global using Fastdotnet.Core.Attributes;
 global using Fastdotnet.Core.Controllers;
 global using Fastdotnet.Core.Entities.App;
-global using Fastdotnet.Core.Entities.System;
+global using Fastdotnet.Core.Entities.Sys;
 global using Fastdotnet.Core.Extensions;
 global using Fastdotnet.Core.Hubs;
 global using Fastdotnet.Core.Initializers;

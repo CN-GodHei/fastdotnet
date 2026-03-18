@@ -1,4 +1,6 @@
 using Fastdotnet.Core.Dtos.Base;
+using Fastdotnet.Core.Dtos.Sys;
+using Fastdotnet.Core.Entities.Sys;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
 {

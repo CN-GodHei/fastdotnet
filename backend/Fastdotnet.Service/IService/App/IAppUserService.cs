@@ -1,5 +1,4 @@
-
-namespace Fastdotnet.Service.IService.Admin
+namespace Fastdotnet.Service.IService.App
 {
     /// <summary>
     /// app端人员服务

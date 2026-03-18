@@ -1,6 +1,6 @@
 using Fastdotnet.Plugin.Contracts.Events;
 
-namespace Fastdotnet.PluginA.EventHandlers;
+namespace PluginA.EventHandlers;
 
 /// <summary>
 /// 插件安装事件处理器（PluginA 订阅系统事件）
