@@ -21,6 +21,7 @@ import * as FdPermissions from './FdPermissions';
 import * as FdRatelimitRule from './FdRatelimitRule';
 import * as FdRole from './FdRole';
 import * as FdSystemInfoConfig from './FdSystemInfoConfig';
+import * as Health from './Health';
 import * as Plugin from './Plugin';
 import * as PluginConfiguration from './PluginConfiguration';
 import * as Storage from './Storage';
@@ -46,6 +47,7 @@ export default {
 	FdRatelimitRule,
 	FdRole,
 	FdSystemInfoConfig,
+	Health,
 	Plugin,
 	PluginConfiguration,
 	Storage,

@@ -322,18 +322,14 @@ declare namespace APIModel {
 	};
 
 	type CreateOrderRequest = {
-		OrderId?: string;
-		Amount?: number;
-		Description?: string;
-		NotifyUrl?: string;
+		UserId?: string;
+		TotalAmount?: number;
+		ItemCount?: number;
 	};
 
-	type CreatePaymentRequest = {
-		OrderId?: string;
-		Amount?: number;
-		Subject?: string;
-		NotifyUrl?: string;
-		PaymentMethod?: PaymentMethod;
+	type CreatePluginAUserExtensionDto = {
+		Preferences?: string;
+		Points?: number;
 	};
 
 	type CreatePointRedemptionDto = {
@@ -372,6 +368,17 @@ declare namespace APIModel {
 		IsLifetime?: boolean;
 		Status?: PurchaseStatusDto;
 		Notes?: string;
+	};
+
+	type CreateUserWithExtensionRequest = {
+		ExtensionData?: CreatePluginAUserExtensionDto;
+		Username: string;
+		Password: string;
+		Email: string;
+		PhoneNumber: string;
+		Nickname?: string;
+		AvatarUrl: string;
+		Status?: number;
 	};
 
 	type DataStatus = 0 | 1 | 2 | 3;
@@ -533,14 +540,10 @@ declare namespace APIModel {
 	};
 
 	type DownloadPluginDto = {
-		/** 下载链接 */
-		Url: string;
 		/** Token */
 		Token: string;
 		/** 插件Id */
 		PluginId: string;
-		/** 插件名称 */
-		PluginName: string;
 		/** 版本 */
 		Version: string;
 	};
@@ -1527,6 +1530,10 @@ declare namespace APIModel {
 		relativePath: string;
 	};
 
+	type GetUserIdDto = {
+		Id?: string;
+	};
+
 	type GiftRecord = {
 		PurchaseId?: number;
 		Reason?: string;
@@ -1569,6 +1576,17 @@ declare namespace APIModel {
 	type GiftRecordDtoPageResult = {
 		PageInfo?: PageInfo;
 		Items?: GiftRecordDto[];
+	};
+
+	type HealthStatus = {
+		/** 健康状态（Healthy/Unhealthy） */
+		Status?: string;
+		/** 检查时间戳 */
+		Timestamp?: string;
+		/** 应用版本 */
+		Version?: string;
+		/** 运行环境 */
+		Environment?: string;
 	};
 
 	type LicenseType = 0 | 1;
@@ -1614,6 +1632,16 @@ declare namespace APIModel {
 	};
 
 	type MenuType = 0 | 1;
+
+	type MetricQueryRequest = {
+		MetricIds?: string[];
+		StartDate?: string;
+		EndDate?: string;
+		Dimensions?: string[];
+		Filters?: Record<string, any>;
+		PageNumber?: number;
+		PageSize?: number;
+	};
 
 	type MkMarketplacePlugins = {
 		Name?: string;
@@ -1792,7 +1820,65 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
-	type PaymentMethod = 0 | 1;
+	type PluginATestBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type PluginATestCreateDto = {
+		Name?: string;
+		Description?: string;
+		TestValue?: number;
+		IsEnabled?: boolean;
+		Creator?: string;
+	};
+
+	type PluginATestDto = {
+		Id?: string;
+		Name?: string;
+		Description?: string;
+		TestValue?: number;
+		IsEnabled?: boolean;
+		Creator?: string;
+		CreatedAt?: string;
+		UpdateTime?: string;
+	};
+
+	type PluginATestDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: PluginATestDto[];
+	};
+
+	type PluginATestUpdateDto = {
+		Id?: string;
+		Name?: string;
+		Description?: string;
+		TestValue?: number;
+		IsEnabled?: boolean;
+		Creator?: string;
+	};
+
+	type PluginATestUpdateDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: PluginATestUpdateDto;
+	};
+
+	type PluginAUserExtension = {
+		FdAppUserId?: string;
+		Preferences?: string;
+		Points?: number;
+		Id?: string;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+		DeletedAt?: string;
+	};
 
 	type PluginConfigurationGetRawJsonDto = {
 		ExistRocord?: boolean;
@@ -1885,13 +1971,6 @@ declare namespace APIModel {
 	type postApiStorageUploadParams = {
 		/** 存储桶名称（可选） */
 		bucketName?: string;
-	};
-
-	type PreCreateRequest = {
-		OrderId?: string;
-		Amount?: number;
-		Subject?: string;
-		NotifyUrl?: string;
 	};
 
 	type PurchaseStatus = 0 | 1 | 2;
@@ -2066,8 +2145,22 @@ declare namespace APIModel {
 		NewPassword: string;
 	};
 
+	type SendMessageRequest = {
+		Message?: string;
+	};
+
 	type SendRegistrationCodeDto = {
 		Email: string;
+	};
+
+	type SetAuthCodeDto = {
+		/** 用户授权码 */
+		AuthCode: string;
+	};
+
+	type SetPluginLicenseDto = {
+		Type: string;
+		LicenseStr: string;
 	};
 
 	type StorageConfigResponse = {

@@ -114,6 +114,13 @@ export async function putApiAdminFdSystemInfoConfigBatchUpdatebycondition(
 		...(options || {}),
 	});
 }
+/** 此处后端没有提供注释 GET /api/admin/FdSystemInfoConfig/GetServiceDateTime */
+export async function getApiAdminFdSystemInfoConfigGetServiceDateTime(options?: { [key: string]: any }) {
+	return request<string>('/api/admin/FdSystemInfoConfig/GetServiceDateTime', {
+		method: 'GET',
+		...(options || {}),
+	});
+}
 /** 根据自定义条件获取列表(不分页) 根据自定义条件获取列表(不分页) POST /api/admin/FdSystemInfoConfig/list-by-condition */
 export async function postApiAdminFdSystemInfoConfigListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
 	return request<any>('/api/admin/FdSystemInfoConfig/list-by-condition', {

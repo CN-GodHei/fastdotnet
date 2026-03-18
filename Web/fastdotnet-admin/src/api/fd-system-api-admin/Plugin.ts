@@ -53,7 +53,7 @@ export async function postApiPluginEnablePluginId(
 }
 /** 从URL下载并加载插件 POST /api/Plugin/load */
 export async function postApiPluginLoad(body: APIModel.DownloadPluginDto, options?: { [key: string]: any }) {
-	return request<any>('/api/Plugin/load', {
+	return request<APIModel.ApiResult>('/api/Plugin/load', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json-patch+json',
@@ -73,6 +73,28 @@ export async function getApiPluginLoaded(options?: { [key: string]: any }) {
 export async function getApiPluginScan(options?: { [key: string]: any }) {
 	return request<APIModel.PluginInfo[]>('/api/Plugin/scan', {
 		method: 'GET',
+		...(options || {}),
+	});
+}
+/** 设置用户授权码 POST /api/Plugin/SetAuthCode */
+export async function postApiPluginSetAuthCode(body: APIModel.SetAuthCodeDto, options?: { [key: string]: any }) {
+	return request<boolean>('/api/Plugin/SetAuthCode', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+/** 设置插件许可 POST /api/Plugin/SetPluginLicense */
+export async function postApiPluginSetPluginLicense(body: APIModel.SetPluginLicenseDto, options?: { [key: string]: any }) {
+	return request<boolean>('/api/Plugin/SetPluginLicense', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
 		...(options || {}),
 	});
 }
