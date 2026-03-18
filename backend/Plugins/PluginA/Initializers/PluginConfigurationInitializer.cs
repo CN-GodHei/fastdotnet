@@ -3,7 +3,7 @@ using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.IService;
 using Fastdotnet.Core.IService.Sys;
-using Fastdotnet.Core.Services.Sys;
+using Fastdotnet.Core.Service.Sys;
 using Fastdotnet.Core.Utils;
 using Fastdotnet.Plugin.Contracts;
 using Microsoft.Extensions.Logging;

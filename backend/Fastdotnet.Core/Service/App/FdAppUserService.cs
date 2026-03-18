@@ -1,5 +1,4 @@
-
-namespace Fastdotnet.Core.Services.App;
+namespace Fastdotnet.Core.Service.App;
 
 public class FdAppUserService : IFdAppUserService
 {

@@ -12,7 +12,7 @@ global using Fastdotnet.Core.Initializers;
 global using Fastdotnet.Core.IService;
 global using Fastdotnet.Core.Middleware;
 global using Fastdotnet.Core.Dtos.LogModels;
-global using Fastdotnet.Core.Services.Sys;
+global using Fastdotnet.Core.Service.Sys;
 global using Fastdotnet.Core.Settings;
 global using Fastdotnet.Core.Utils;
 global using Fastdotnet.Core.Utils.Extensions;

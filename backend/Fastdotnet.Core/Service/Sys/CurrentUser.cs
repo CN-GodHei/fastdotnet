@@ -2,7 +2,7 @@ using Fastdotnet.Core.Constants;
 using Fastdotnet.Core.Entities.Sys;
 using static Fastdotnet.Core.Constants.Permissions.Admin;
 
-namespace Fastdotnet.Core.Services.Sys
+namespace Fastdotnet.Core.Service.Sys
 {
     public class CurrentUser : ICurrentUser
     {

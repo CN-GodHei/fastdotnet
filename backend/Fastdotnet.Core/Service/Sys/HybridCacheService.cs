@@ -1,4 +1,4 @@
-namespace Fastdotnet.Core.Services.Sys
+namespace Fastdotnet.Core.Service.Sys
 {
     /// <summary>
     /// 混合缓存服务实现

@@ -1,6 +1,6 @@
 using Fastdotnet.Core.Entities.Sys;
 
-namespace Fastdotnet.Core.Services.Sys
+namespace Fastdotnet.Core.Service.Sys
 {
     /// <summary>
     /// 权限同步服务

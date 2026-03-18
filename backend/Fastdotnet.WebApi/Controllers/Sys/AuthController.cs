@@ -1,7 +1,7 @@
 using Fastdotnet.Core.Dtos;
 using Fastdotnet.Core.Dtos.Auth;
 using Fastdotnet.Core.Enum;
-using Fastdotnet.Core.Services.Sys;
+using Fastdotnet.Core.Service.Sys;
 using Fastdotnet.Core.Attributes;
 using Fastdotnet.Core.Entities.Sys;
 

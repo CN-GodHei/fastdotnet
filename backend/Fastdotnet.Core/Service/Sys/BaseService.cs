@@ -1,4 +1,4 @@
-namespace Fastdotnet.Core.Services.Sys
+namespace Fastdotnet.Core.Service.Sys
 {
     /// <summary>
     /// 基础服务实现类

@@ -1,5 +1,4 @@
-
-namespace Fastdotnet.Core.Services
+namespace Fastdotnet.Core.Service.Sys
 {
     /// <summary>
     /// 敏感数据脱敏服务

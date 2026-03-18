@@ -1,6 +1,6 @@
 using Fastdotnet.Core.Dtos.Sys;
 
-namespace Fastdotnet.Core.Services.Sys
+namespace Fastdotnet.Core.Service.Sys
 {
     /// <summary>
     /// 限流缓存服务接口

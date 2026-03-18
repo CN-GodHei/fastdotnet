@@ -1,7 +1,7 @@
 ﻿using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 
-namespace Fastdotnet.Core.Services.Sys
+namespace Fastdotnet.Core.Service.Sys
 {
     /// <summary>
     /// 插件配置服务实现
