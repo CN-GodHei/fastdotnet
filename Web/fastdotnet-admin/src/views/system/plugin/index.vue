@@ -17,6 +17,12 @@
               </el-icon>
               扫描插件
             </el-button>
+            <el-button size="default" type="success" class="ml10" @click="handleScan">
+              <el-icon>
+                <ele-Refresh />
+              </el-icon>
+              批量授权
+            </el-button>
           </div>
           <el-table :data="pluginList" style="width: 100%">
             <el-table-column prop="id" label="插件ID" show-overflow-tooltip></el-table-column>
@@ -29,12 +35,13 @@
                 <el-tag type="info" v-else>未启用</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="200">
+            <el-table-column label="操作" >
               <template #default="scope">
                 <el-button size="small" type="primary" @click="handleEnable(scope.row)"
                   v-if="!scope.row.enabled">启用</el-button>
                 <el-button size="small" type="danger" @click="handleDisable(scope.row)" v-else>停用</el-button>
                 <el-button size="small" type="info" @click="handleConfig(scope.row)">配置</el-button>
+                <el-button size="small" type="success" @click="handlePluginLicense(scope.row)">授权</el-button>
                 <el-button size="small" type="warning" @click="handleUninstall(scope.row)">卸载</el-button>
               </template>
             </el-table-column>
@@ -54,6 +61,10 @@
     <!-- 插件配置对话框 -->
     <PluginConfigurationDialog v-model="configDialogVisible" :plugin-id="currentConfigPluginId"
       :plugin-name="currentConfigPluginName" @save-success="handleConfigSaveSuccess" />
+    
+    <!-- 插件授权对话框 -->
+    <PluginLicenseDialog v-model="licenseDialogVisible" :plugin-id="currentLicensePluginId"
+      :plugin-name="currentLicensePluginName" @save-success="handleLicenseSaveSuccess" />
   </div>
 </template>
 
@@ -69,6 +80,7 @@ import {
 } from '@/api/fd-system-api-admin/Plugin'
 import { MicroAppEvents, receiveFromMicroApp, removeMicroAppEventListener } from '@/utils/microAppCommunication'
 import PluginConfigurationDialog from './PluginConfigurationDialog.vue'
+import PluginLicenseDialog from './PluginLicenseDialog.vue'
 
 // 异步加载插件市场组件
 // const PluginMarketplace = defineAsyncComponent(() => import('./marketplace.vue'))
@@ -93,6 +105,11 @@ const marketplaceIframeRef = ref<any>(null)
 const configDialogVisible = ref(false)
 const currentConfigPluginId = ref('')
 const currentConfigPluginName = ref('')
+
+// 授权对话框
+const licenseDialogVisible = ref(false)
+const currentLicensePluginId = ref('')
+const currentLicensePluginName = ref('')
 
 // 当前激活的选项卡
 const activeTab = ref('installed')
@@ -207,10 +224,23 @@ const handleConfig = (row: Plugin) => {
   configDialogVisible.value = true
 }
 
+// 授权插件
+const handlePluginLicense = (row: Plugin) => {
+  currentLicensePluginId.value = row.id
+  currentLicensePluginName.value = row.name
+  licenseDialogVisible.value = true
+}
+
 // 配置保存成功
 const handleConfigSaveSuccess = () => {
   // 可以在这里做一些后续操作，比如刷新列表等
   console.log('配置保存成功')
+}
+
+// 授权保存成功
+const handleLicenseSaveSuccess = () => {
+  // 可以在这里做一些后续操作，比如刷新列表等
+  console.log('授权保存成功')
 }
 
 // 处理选项卡切换

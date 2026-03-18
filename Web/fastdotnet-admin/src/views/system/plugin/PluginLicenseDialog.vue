@@ -1,0 +1,323 @@
+<template>
+  <el-dialog 
+    v-model="dialogVisible" 
+    title="插件授权" 
+    width="600px" 
+    :close-on-click-modal="false"
+    @close="handleClose"
+  >
+    <div class="license-content">
+      <el-alert 
+        title="授权说明" 
+        type="info" 
+        description="请输入插件授权码，确保授权码正确有效后点击保存" 
+        show-icon 
+        :closable="false"
+        class="mb15"
+      />
+      
+      <el-form 
+        ref="licenseFormRef"
+        :model="licenseForm"
+        label-position="top"
+        :rules="formRules"
+      >
+        <el-form-item label="插件信息" class="mb15">
+          <div class="plugin-info">
+            <span class="plugin-label">插件名称：</span>
+            <span class="plugin-value">{{ pluginName }}</span>
+          </div>
+          <div class="plugin-info">
+            <span class="plugin-label">插件 ID：</span>
+            <span class="plugin-value">{{ pluginId }}</span>
+          </div>
+        </el-form-item>
+        
+        <el-form-item label="授权类型" prop="Type" required>
+          <el-select 
+            v-model="licenseForm.Type" 
+            placeholder="请选择授权类型" 
+            style="width: 100%"
+            clearable
+            @change="handleTypeChange"
+          >
+            <el-option label="单个授权" value="0" />
+            <el-option label="多个授权" value="1" />
+          </el-select>
+        </el-form-item>
+        
+        <el-form-item label="授权信息" prop="LicenseStr" required>
+          <el-input
+            v-model="licenseForm.LicenseStr"
+            type="textarea"
+            :rows="8"
+            :placeholder="getPlaceholderText()"
+            autocomplete="off"
+          />
+          <div v-if="jsonError" class="json-error-tip">
+            <el-tag type="danger" size="small">
+              <el-icon><ele-Close /></el-icon>
+              {{ jsonError }}
+            </el-tag>
+          </div>
+          <div v-else-if="jsonValid && licenseForm.LicenseStr.trim()" class="json-valid-tip">
+            <el-tag type="success" size="small">
+              <el-icon><ele-Check /></el-icon>
+              {{ licenseType === '0' ? 'JSON 对象格式正确' : 'JSON 数组格式正确' }}
+            </el-tag>
+          </div>
+        </el-form-item>
+      </el-form>
+    </div>
+    
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button icon="ele-Close" @click="handleCancel">关 闭</el-button>
+        <el-button type="primary" @click="handleConfirm" :loading="submitting">
+          保存授权
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
+</template>
+
+<script setup lang="ts" name="PluginLicenseDialog">
+import { ref, computed, watch, nextTick } from 'vue'
+import { ElMessage, FormInstance } from 'element-plus'
+import { postApiPluginSetPluginLicense } from '@/api/fd-system-api-admin/Plugin'
+
+// 定义 props
+interface Props {
+  modelValue: boolean
+  pluginId?: string
+  pluginName?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  modelValue: false,
+  pluginId: '',
+  pluginName: ''
+})
+
+// 定义 emits
+const emit = defineEmits<{
+  'update:modelValue': [value: boolean]
+  'save-success': []
+}>()
+
+// 对话框可见性
+const dialogVisible = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value)
+})
+
+// 表单引用
+const licenseFormRef = ref<FormInstance>()
+
+// 提交状态
+const submitting = ref(false)
+
+// 表单数据
+const licenseForm = ref({
+  Type: '', // '0'-单个，'1'-多个
+  LicenseStr: ''
+})
+
+// 授权类型
+const licenseType = computed(() => licenseForm.value.Type)
+
+// JSON 验证状态
+const jsonValid = ref(false)
+const jsonError = ref('')
+
+// 表单验证规则
+const formRules = {
+  Type: [
+    { required: true, message: '请选择授权类型', trigger: 'change' }
+  ],
+  LicenseStr: [
+    { required: true, message: '请输入授权信息', trigger: 'blur' }
+  ]
+}
+
+// 监听授权信息输入变化，实时验证 JSON
+watch(
+  () => licenseForm.value.LicenseStr,
+  () => {
+    if (licenseForm.value.Type) {
+      validateJson()
+    }
+  }
+)
+
+// 关闭对话框
+
+// 获取占位符文本
+const getPlaceholderText = () => {
+  if (licenseType.value === '0') {
+    return '请输入授权信息（JSON 对象格式，例如：{"key": "value"}）'
+  } else if (licenseType.value === '1') {
+    return '请输入授权信息（JSON 数组格式，例如：[{"key": "value1"}, {"key": "value2"}]）'
+  }
+  return '请先选择授权类型'
+}
+
+// 验证 JSON 格式
+const validateJson = () => {
+  if (!licenseForm.value.LicenseStr.trim()) {
+    jsonValid.value = false
+    jsonError.value = ''
+    return
+  }
+  
+  try {
+    const parsed = JSON.parse(licenseForm.value.LicenseStr)
+    
+    // 根据授权类型验证格式
+    if (licenseType.value === '0' && !Array.isArray(parsed)) {
+      // 单个授权应该是对象
+      jsonValid.value = true
+      jsonError.value = ''
+    } else if (licenseType.value === '1' && Array.isArray(parsed)) {
+      // 多个授权应该是数组
+      jsonValid.value = true
+      jsonError.value = ''
+    } else if (licenseType.value === '0' && Array.isArray(parsed)) {
+      jsonValid.value = false
+      jsonError.value = '单个授权类型应输入 JSON 对象格式'
+    } else if (licenseType.value === '1' && !Array.isArray(parsed)) {
+      jsonValid.value = false
+      jsonError.value = '多个授权类型应输入 JSON 数组格式'
+    } else {
+      jsonValid.value = false
+      jsonError.value = 'JSON 格式不正确'
+    }
+  } catch (e: any) {
+    jsonValid.value = false
+    jsonError.value = e.message
+  }
+}
+
+// 处理授权类型变化
+const handleTypeChange = () => {
+  // 类型变化时重新验证 JSON
+  if (licenseForm.value.LicenseStr.trim()) {
+    validateJson()
+  }
+}
+
+// 关闭对话框
+const handleClose = () => {
+  licenseFormRef.value?.resetFields()
+  licenseForm.value = {
+    Type: '',
+    LicenseStr: ''
+  }
+  jsonValid.value = false
+  jsonError.value = ''
+}
+
+// 取消
+const handleCancel = () => {
+  dialogVisible.value = false
+}
+
+// 保存授权
+const handleConfirm = async () => {
+  if (!licenseFormRef.value) return
+  
+  await licenseFormRef.value.validate(async (valid) => {
+    if (!valid) {
+      ElMessage.warning('请填写完整的授权信息')
+      return
+    }
+    
+    // 额外验证 JSON 格式
+    if (!jsonValid.value && licenseForm.value.LicenseStr.trim()) {
+      ElMessage.error('授权信息格式不正确，请检查')
+      return
+    }
+    
+    try {
+      submitting.value = true
+      
+      // 调用设置插件许可 API
+      await postApiPluginSetPluginLicense({
+        Type: licenseForm.value.Type,
+        LicenseStr: licenseForm.value.LicenseStr
+      })
+      
+      ElMessage.success('授权成功')
+      dialogVisible.value = false
+      emit('save-success')
+    } catch (error: any) {
+      ElMessage.error('授权失败：' + (error.message || '未知错误'))
+    } finally {
+      submitting.value = false
+    }
+  })
+}
+
+// 监听对话框打开
+watch(
+  () => props.modelValue,
+  async (val) => {
+    if (val && props.pluginId) {
+      // 等待 DOM 更新
+      await nextTick()
+      
+      // 重置表单
+      licenseForm.value = {
+        Type: '',
+        LicenseStr: ''
+      }
+      jsonValid.value = false
+      jsonError.value = ''
+      
+      // 清除验证状态
+      licenseFormRef.value?.clearValidate()
+    }
+  },
+  { immediate: true }
+)
+</script>
+
+<style scoped lang="scss">
+.license-content {
+  .mb15 {
+    margin-bottom: 15px;
+  }
+  
+  .plugin-info {
+    padding: 8px 12px;
+    background-color: #f5f7fa;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    
+    .plugin-label {
+      color: #909399;
+      font-weight: 500;
+      margin-right: 8px;
+    }
+    
+    .plugin-value {
+      color: #303133;
+      font-weight: 600;
+    }
+  }
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.json-error-tip,
+.json-valid-tip {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+</style>
