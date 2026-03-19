@@ -168,8 +168,7 @@ const handlePluginAction = (data: any) => {
 
 // 处理登录成功消息
 const handleLoginSuccess = async (data: any) => {
-  const { AuthCode } = data
-  
+  const { AuthCode,Token } = data
   try {
     // 调用后端接口，将 AuthCode 写入
    var re= await postApiPluginSetAuthCode({
