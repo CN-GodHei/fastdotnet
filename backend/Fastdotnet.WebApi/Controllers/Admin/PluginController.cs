@@ -57,7 +57,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         [HttpPost("disable/{pluginId}")]
         public async Task<ApiResult> DisablePlugin(string pluginId)
         {
-            var result = await _pluginLoadService.DisablePluginAsync(pluginId);
+            var result = await _pluginLoadService.DisablePluginAsync(pluginId, true);
             return result;
         }
 

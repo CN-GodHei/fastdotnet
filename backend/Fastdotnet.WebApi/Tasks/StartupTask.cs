@@ -11,7 +11,7 @@
 
         public async Task ExecuteAsync()
         {
-            Console.WriteLine("Executing StartupTask...");
+            Console.WriteLine("开始初始化插件...");
             using (var scope = _serviceProvider.CreateScope())
             {
                 try
@@ -19,9 +19,9 @@
                     // ✅ 推荐：调用服务
                     var pluginLoader = scope.ServiceProvider.GetRequiredService<IPluginLoadService>();
 
-                    pluginLoader.StartInstalledPlugins();
+                    await pluginLoader.StartInstalledPlugins();
 
-                    Console.WriteLine("Test methods executed successfully.");
+                    Console.WriteLine("插件初始化完成");
                 }
                 catch (Exception ex)
                 {

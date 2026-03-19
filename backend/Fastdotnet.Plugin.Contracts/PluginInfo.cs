@@ -29,6 +29,11 @@ namespace Fastdotnet.Plugin.Contracts
         public bool enabled { get; set; }
 
         /// <summary>
+        /// 手动停止
+        /// </summary>
+        public bool ManualStop { get; set; }
+
+        /// <summary>
         /// 插件作者
         /// </summary>
         public string author { get; set; }
