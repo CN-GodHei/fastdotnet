@@ -156,6 +156,10 @@ import { getApiSystemMachineFingerprint } from '@/api/fd-system-api-admin/System
 import { MicroAppEvents, receiveFromMicroApp, removeMicroAppEventListener } from '@/utils/microAppCommunication'
 import PluginConfigurationDialog from './PluginConfigurationDialog.vue'
 import PluginLicenseDialog from './PluginLicenseDialog.vue'
+import { usePluginStore } from '@/stores/plugin'
+
+// 使用插件 store
+const pluginStore = usePluginStore()
 
 // 异步加载插件市场组件
 // const PluginMarketplace = defineAsyncComponent(() => import('./marketplace.vue'))
@@ -461,6 +465,13 @@ onMounted(() => {
   
   // 获取机器码
   fetchMachineCode()
+  
+  // 恢复插件商城的授权信息（如果之前有保存）
+  pluginStore.restoreMarketplaceAuth()
+  
+  // 监听授权信息变化
+  // console.log('插件商城 Token:', pluginStore.marketplaceToken)
+  // console.log('插件商城授权码:', pluginStore.marketplaceAuthCode)
 })
 
 // 获取服务器用户授权码
@@ -472,6 +483,25 @@ const fetchServerAuthCode = async () => {
     console.error('获取授权码失败:', error)
   }
 }
+
+// 使用插件商城 Token 的示例方法
+// const useMarketplaceToken = () => {
+//   // 从 store 中获取 token
+//   const token = pluginStore.marketplaceToken
+  
+//   if (!token) {
+//     ElMessage.warning('请先在插件商城登录')
+//     return
+//   }
+  
+//   // 这里可以使用 token 调用需要认证的 API
+//   console.log('使用插件商城 Token:', token)
+  
+//   // 示例：调用需要 token 的接口
+//   // await someApiThatNeedsToken({ headers: { Authorization: `Bearer ${token}` } })
+  
+//   ElMessage.success('Token 获取成功')
+// }
 
 // 获取机器码
 const fetchMachineCode = async () => {

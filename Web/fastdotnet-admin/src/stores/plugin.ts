@@ -1,10 +1,13 @@
 import { defineStore } from 'pinia'
-import { getPluginList, type Plugin } from '@/api/plugin' // 假设你有一个 API 文件来获取插件列表
+import { getApiPluginScan } from '@/api/fd-system-api-admin/Plugin' // 导入插件 API
 
 export const usePluginStore = defineStore('plugin', {
   state: () => ({
-    plugins: [] as Plugin[], // 插件列表
-    loading: false
+    plugins: [] as any[], // 插件列表
+    loading: false,
+    // 插件商城相关
+    marketplaceToken: '' as string, // 插件商城 Token
+    marketplaceAuthCode: '' as string // 插件商城授权码
   }),
 
   getters: {
@@ -17,6 +20,40 @@ export const usePluginStore = defineStore('plugin', {
   },
 
   actions: {
+    // 设置插件商城 Token 和授权码
+    setMarketplaceAuth(data: { Token?: string; AuthCode?: string }) {
+      if (data.Token) {
+        this.marketplaceToken = data.Token
+        // 可以选择持久化到 localStorage
+        localStorage.setItem('marketplace_token', data.Token)
+      }
+      if (data.AuthCode) {
+        this.marketplaceAuthCode = data.AuthCode
+        // 可以选择持久化到 localStorage
+        localStorage.setItem('marketplace_auth_code', data.AuthCode)
+      }
+    },
+    
+    // 清除插件商城 Token 和授权码
+    clearMarketplaceAuth() {
+      this.marketplaceToken = ''
+      this.marketplaceAuthCode = ''
+      localStorage.removeItem('marketplace_token')
+      localStorage.removeItem('marketplace_auth_code')
+    },
+    
+    // 从 localStorage 恢复 Token(可选)
+    restoreMarketplaceAuth() {
+      const token = localStorage.getItem('marketplace_token')
+      const authCode = localStorage.getItem('marketplace_auth_code')
+      if (token) {
+        this.marketplaceToken = token
+      }
+      if (authCode) {
+        this.marketplaceAuthCode = authCode
+      }
+    },
+    
     // 加载插件列表
     async loadPlugins() {
       // 避免重复加载
@@ -27,7 +64,7 @@ export const usePluginStore = defineStore('plugin', {
       this.loading = true
       try {
         // 调用 API 获取插件列表
-        const response = await getPluginList()
+        const response = await getApiPluginScan()
         // 假设 response.data 是插件数组
         this.plugins = response.data || []
       } catch (error) {
@@ -61,19 +98,3 @@ export const usePluginStore = defineStore('plugin', {
     }
   }
 })
-
-// 插件数据类型定义 (如果还没有定义的话)
-export interface Plugin {
-  id: string
-  name: string           // 插件名称
-  code: string           // 插件代码 (用于路由匹配)
-  version: string        // 插件版本
-  description: string    // 插件描述
-  author: string         // 插件作者
-  enabled: boolean       // 是否启用
-  entryPoint: string     // 入口地址 (例如: //localhost:8081)
-  category: 'Admin' | 'App' // 插件分类
-  createdAt: string      // 创建时间
-  updatedAt: string      // 更新时间
-  // 可以根据需要添加更多字段
-}

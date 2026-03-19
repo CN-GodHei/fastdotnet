@@ -14,11 +14,15 @@
 <script setup lang="ts" name="pluginMarketplaceIframe">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { getApiPluginScan, postApiPluginLoad, postApiPluginSetAuthCode } from '@/api/fd-system-api-admin/Plugin'
+import { usePluginStore } from '@/stores/plugin'
 
 // 定义事件发射器
 const emit = defineEmits<{
   (e: 'plugin-action', event: CustomEvent): void
 }>()
+
+// 使用插件 store
+const pluginStore = usePluginStore()
 
 // iframe引用
 const marketplaceIframe = ref<HTMLIFrameElement | null>(null)
@@ -168,12 +172,20 @@ const handlePluginAction = (data: any) => {
 
 // 处理登录成功消息
 const handleLoginSuccess = async (data: any) => {
-  const { AuthCode,Token } = data
+  const { AuthCode, Token } = data
   try {
     // 调用后端接口，将 AuthCode 写入
-   var re= await postApiPluginSetAuthCode({
+    await postApiPluginSetAuthCode({
       AuthCode: AuthCode
     })
+    
+    // 将 Token 和 AuthCode 存储到 Pinia Store，供 index.vue 使用
+    pluginStore.setMarketplaceAuth({
+      Token,
+      AuthCode
+    })
+    
+    console.log('插件商城授权信息已保存')
   } catch (error) {
     console.error('处理登录成功消息失败:', error)
   }
