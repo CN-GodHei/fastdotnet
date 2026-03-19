@@ -14,6 +14,18 @@
             <el-icon><ele-Edit /></el-icon>
           </el-button>
         </el-tooltip>
+        <span class="code-label ml20">机器码：</span>
+        <el-input 
+          v-model="machineCode" 
+          placeholder="加载中..."
+          style="max-width: 400px; margin-right: 10px"
+          disabled
+        />
+        <el-tooltip content="复制机器码" placement="bottom">
+          <el-button size="small" type="primary" @click="handleCopyMachineCode">
+            <el-icon><CopyDocument /></el-icon>
+          </el-button>
+        </el-tooltip>
       </div>
       <el-tabs v-model="activeTab" class="system-plugin-tabs" @tab-change="handleTabChange">
         <el-tab-pane label="已安装插件" name="installed">
@@ -130,6 +142,7 @@
 <script setup lang="ts" name="systemPlugin">
 import { ref, onMounted, defineAsyncComponent, onUnmounted } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
+import { CopyDocument } from '@element-plus/icons-vue'
 // 导入插件相关的 API
 import {
   getApiPluginScan,
@@ -139,6 +152,7 @@ import {
   getApiPluginGetAuthCode,
   postApiPluginSetAuthCode
 } from '@/api/fd-system-api-admin/Plugin'
+import { getApiSystemMachineFingerprint } from '@/api/fd-system-api-admin/System'
 import { MicroAppEvents, receiveFromMicroApp, removeMicroAppEventListener } from '@/utils/microAppCommunication'
 import PluginConfigurationDialog from './PluginConfigurationDialog.vue'
 import PluginLicenseDialog from './PluginLicenseDialog.vue'
@@ -183,6 +197,9 @@ const serverAuthCode = ref('')
 const settingAuthCode = ref(false)
 const setAuthDialogVisible = ref(false)
 const tempAuthCode = ref('') // 临时存储输入的授权码
+
+// 机器码
+const machineCode = ref('')
 
 // 插件列表
 const pluginList = ref<Plugin[]>([])
@@ -441,6 +458,9 @@ onMounted(() => {
   
   // 获取服务器用户授权码
   fetchServerAuthCode()
+  
+  // 获取机器码
+  fetchMachineCode()
 })
 
 // 获取服务器用户授权码
@@ -450,6 +470,59 @@ const fetchServerAuthCode = async () => {
     serverAuthCode.value = typeof res === 'string' ? res : ''
   } catch (error: any) {
     console.error('获取授权码失败:', error)
+  }
+}
+
+// 获取机器码
+const fetchMachineCode = async () => {
+  try {
+    const res = await getApiSystemMachineFingerprint()
+    machineCode.value = typeof res === 'string' ? res : ''
+  } catch (error: any) {
+    console.error('获取机器码失败:', error)
+  }
+}
+
+// 复制机器码
+const handleCopyMachineCode = () => {
+  if (!machineCode.value) {
+    ElMessage.warning('机器码为空')
+    return
+  }
+  
+  // 优先使用 Clipboard API，如果不可用则降级使用传统方法
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    // 使用现代 Clipboard API
+    navigator.clipboard.writeText(machineCode.value).then(() => {
+      ElMessage.success('机器码已复制到剪贴板')
+    }).catch((err: any) => {
+      console.error('复制失败:', err)
+      ElMessage.error('复制失败，请手动复制')
+    })
+  } else {
+    // 降级方案：使用 execCommand 方法
+    const textArea = document.createElement('textarea')
+    textArea.value = machineCode.value
+    textArea.style.position = 'fixed'
+    textArea.style.left = '-999999px'
+    textArea.style.top = '-999999px'
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+    
+    try {
+      const successful = document.execCommand('copy')
+      if (successful) {
+        ElMessage.success('机器码已复制到剪贴板')
+      } else {
+        ElMessage.error('复制失败，请手动复制')
+      }
+    } catch (err: any) {
+      console.error('复制失败:', err)
+      ElMessage.error('复制失败，请手动复制')
+    }
+    
+    document.body.removeChild(textArea)
   }
 }
 
@@ -471,8 +544,16 @@ onUnmounted(() => {
     padding: 15px;
     background-color: #f5f7fa;
     border-radius: 4px;
+    flex-wrap: wrap;
     
     .auth-label {
+      font-weight: 600;
+      color: #303133;
+      margin-right: 12px;
+      white-space: nowrap;
+    }
+    
+    .code-label {
       font-weight: 600;
       color: #303133;
       margin-right: 12px;
