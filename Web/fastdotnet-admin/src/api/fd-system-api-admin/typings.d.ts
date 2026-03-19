@@ -1891,6 +1891,7 @@ declare namespace APIModel {
 		description?: string;
 		version?: string;
 		enabled?: boolean;
+		ManualStop?: boolean;
 		author?: string;
 		dependencies?: string[];
 		tags?: string[];
@@ -2518,6 +2519,11 @@ declare namespace APIModel {
 	type UpdateOnlinePaymentDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateOnlinePaymentDto;
+	};
+
+	type UpdatePluginLicenseOnlineDto = {
+		Token: string;
+		PluginId: string;
 	};
 
 	type UpdatePointRedemptionDto = {

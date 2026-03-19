@@ -85,6 +85,19 @@
               {{ props.isBatch ? 'JSON 数组格式正确' : 'JSON 对象格式正确' }}
             </el-tag>
           </div>
+          
+          <!-- 在线授权按钮 -->
+          <div class="online-license-btn" v-if="!isBatch">
+            <el-button 
+              type="primary" 
+              plain 
+              @click="handleOnlineLicense"
+              :loading="onlineSubmitting"
+            >
+              <el-icon><ele-Connection /></el-icon>
+              在线授权
+            </el-button>
+          </div>
         </el-form-item>
       </el-form>
     </div>
@@ -103,7 +116,8 @@
 <script setup lang="ts" name="PluginLicenseDialog">
 import { ref, computed, watch, nextTick } from 'vue'
 import { ElMessage, FormInstance } from 'element-plus'
-import { postApiPluginSetPluginLicense } from '@/api/fd-system-api-admin/Plugin'
+import { postApiPluginSetPluginLicense, postApiPluginUpdatePluginLicenseOnline } from '@/api/fd-system-api-admin/Plugin'
+import { usePluginStore } from '@/stores/plugin'
 
 // 定义插件数据类型
 interface Plugin {
@@ -145,11 +159,15 @@ const dialogVisible = computed({
   set: (value) => emit('update:modelValue', value)
 })
 
+// 使用插件 store 获取商城 token
+const pluginStore = usePluginStore()
+
 // 表单引用
 const licenseFormRef = ref<FormInstance>()
 
 // 提交状态
 const submitting = ref(false)
+const onlineSubmitting = ref(false) // 在线授权提交状态
 
 // 表单数据
 const licenseForm = ref({
@@ -263,6 +281,39 @@ const handleCancel = () => {
   dialogVisible.value = false
 }
 
+// 在线授权
+const handleOnlineLicense = async () => {
+  if (!props.pluginId) {
+    ElMessage.warning('插件 ID 不能为空')
+    return
+  }
+  
+  // 检查是否有商城 token
+  const token = pluginStore.marketplaceToken
+  if (!token) {
+    ElMessage.warning('请先在插件商城登录')
+    return
+  }
+  
+  try {
+    onlineSubmitting.value = true
+    
+    // 调用在线授权 API，使用商城 Token 进行授权
+    await postApiPluginUpdatePluginLicenseOnline({
+      Token: token,      // 使用商城的 Token
+      PluginId: props.pluginId
+    })
+    
+    ElMessage.success('在线授权成功')
+    dialogVisible.value = false
+    emit('save-success')
+  } catch (error: any) {
+    ElMessage.error('在线授权失败：' + (error.message || '未知错误'))
+  } finally {
+    onlineSubmitting.value = false
+  }
+}
+
 // 保存授权
 const handleConfirm = async () => {
   if (!licenseFormRef.value) return
@@ -360,6 +411,11 @@ watch(
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.online-license-btn {
+  margin-top: 12px;
+  text-align: right;
 }
 
 .selected-plugins-info {

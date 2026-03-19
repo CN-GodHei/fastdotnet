@@ -119,3 +119,14 @@ export async function postApiPluginUninstallPluginId(
 		...(options || {}),
 	});
 }
+/** 在线更新授权 POST /api/Plugin/UpdatePluginLicenseOnline */
+export async function postApiPluginUpdatePluginLicenseOnline(body: APIModel.UpdatePluginLicenseOnlineDto, options?: { [key: string]: any }) {
+	return request<boolean>('/api/Plugin/UpdatePluginLicenseOnline', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
