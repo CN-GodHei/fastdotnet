@@ -327,6 +327,14 @@ declare namespace APIModel {
 		ItemCount?: number;
 	};
 
+	type CreatePaymentRequest = {
+		OrderId?: string;
+		Amount?: number;
+		Subject?: string;
+		NotifyUrl?: string;
+		PaymentMethod?: PaymentMethod;
+	};
+
 	type CreatePluginAUserExtensionDto = {
 		Preferences?: string;
 		Points?: number;
@@ -1820,6 +1828,15 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
+	type PayCreateOrderRequest = {
+		OrderId?: string;
+		Amount?: number;
+		Description?: string;
+		NotifyUrl?: string;
+	};
+
+	type PaymentMethod = 0 | 1;
+
 	type PluginATestBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -1972,6 +1989,13 @@ declare namespace APIModel {
 	type postApiStorageUploadParams = {
 		/** 存储桶名称（可选） */
 		bucketName?: string;
+	};
+
+	type PreCreateRequest = {
+		OrderId?: string;
+		Amount?: number;
+		Subject?: string;
+		NotifyUrl?: string;
 	};
 
 	type PurchaseStatus = 0 | 1 | 2;

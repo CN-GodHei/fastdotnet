@@ -49,6 +49,10 @@
               </el-icon>
               批量授权
             </el-button>
+            <el-button size="default" type="success" class="ml10" @click="handleOfflineInstall">
+              <el-icon><UploadFilled /></el-icon>
+              离线安装
+            </el-button>
           </div>
           <el-table ref="tableRef" :data="pluginList" style="width: 100%">
             <el-table-column type="selection" width="55" />
@@ -136,13 +140,64 @@
         </span>
       </template>
     </el-dialog>
+
+    <!-- 离线安装上传对话框 -->
+    <el-dialog
+      v-model="offlineInstallDialogVisible"
+      title="离线安装插件"
+      width="600px"
+      :close-on-click-modal="false"
+    >
+      <el-form label-position="top">
+        <el-alert
+          title="上传说明"
+          type="info"
+          description="请上传 .zip 格式的插件安装包，文件大小不超过 20MB"
+          show-icon
+          :closable="false"
+          class="mb15"
+        />
+
+        <el-form-item label="选择插件包文件" required>
+          <el-upload
+            ref="uploadRef"
+            drag
+            :auto-upload="false"
+            :on-change="handleFileChange"
+            :on-remove="handleFileRemove"
+            :limit="1"
+            accept=".zip"
+            :file-list="fileList"
+          >
+            <el-icon class="el-icon--upload"><UploadFilled /></el-icon>
+            <div class="el-upload__text">
+              将文件拖到此处，或<em>点击上传</em>
+            </div>
+            <template #tip>
+              <div class="el-upload__tip">
+                只能上传 zip 文件，且不超过 20MB
+              </div>
+            </template>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="offlineInstallDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleUploadFile" :loading="uploading">
+            开始安装
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts" name="systemPlugin">
 import { ref, onMounted, defineAsyncComponent, onUnmounted } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { CopyDocument } from '@element-plus/icons-vue'
+import { CopyDocument,UploadFilled } from '@element-plus/icons-vue'
 // 导入插件相关的 API
 import {
   getApiPluginScan,
@@ -150,7 +205,8 @@ import {
   postApiPluginDisablePluginId,
   postApiPluginUninstallPluginId,
   getApiPluginGetAuthCode,
-  postApiPluginSetAuthCode
+  postApiPluginSetAuthCode,
+  postApiPluginUploadOffline
 } from '@/api/fd-system-api-admin/Plugin'
 import { getApiSystemMachineFingerprint } from '@/api/fd-system-api-admin/System'
 import { MicroAppEvents, receiveFromMicroApp, removeMicroAppEventListener } from '@/utils/microAppCommunication'
@@ -210,6 +266,13 @@ const pluginList = ref<Plugin[]>([])
 // 搜索名称
 const searchName = ref('')
 
+// 离线安装相关
+const offlineInstallDialogVisible = ref(false)
+const uploadRef = ref<any>(null)
+const fileList = ref<any[]>([])
+const selectedFile = ref<File | null>(null)
+const uploading = ref(false)
+
 // 获取插件列表
 const getPluginList = () => {
   // 扫描插件
@@ -237,6 +300,66 @@ const handleSearch = () => {
 // 扫描插件
 const handleScan = () => {
   getPluginList()
+}
+
+// 打开离线安装对话框
+const handleOfflineInstall = () => {
+  offlineInstallDialogVisible.value = true
+  fileList.value = []
+  selectedFile.value = null
+}
+
+// 处理文件变化
+const handleFileChange = (file: any) => {
+  selectedFile.value = file.raw
+}
+
+// 处理文件移除
+const handleFileRemove = () => {
+  selectedFile.value = null
+}
+
+// 上传并安装文件
+const handleUploadFile = async () => {
+  if (!selectedFile.value) {
+    ElMessage.warning('请选择要上传的插件包文件')
+    return
+  }
+
+  // 验证文件大小
+  const maxSize = 20 * 1024 * 1024 // 20MB
+  if (selectedFile.value.size > maxSize) {
+    ElMessage.error(`文件大小超过限制 (20MB)`)
+    return
+  }
+
+  try {
+    uploading.value = true
+    
+    // 调用上传 API
+    const res = await postApiPluginUploadOffline({}, selectedFile.value, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      timeout: 60000, // 60 秒超时
+    })
+    
+    if (res.Installed === true) {
+      ElMessage.success('插件安装成功')
+      offlineInstallDialogVisible.value = false
+      fileList.value = []
+      selectedFile.value = null
+      // 刷新插件列表
+      getPluginList()
+    } else {
+      ElMessage.error(res.Msg || '插件安装失败')
+    }
+  } catch (error: any) {
+    console.error('上传失败:', error)
+    ElMessage.error(error.message || '上传失败，请重试')
+  } finally {
+    uploading.value = false
+  }
 }
 
 // 打开设置授权码对话框

@@ -1,6 +1,7 @@
 ﻿
 
 using Fastdotnet.Core.Dtos.Sys;
+using Microsoft.AspNetCore.Http;
 
 namespace Fastdotnet.Plugin.Shared.AdapterAOT
 {
@@ -11,6 +12,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
         Task<ApiResult> DisablePluginAsync(string pluginId, bool ManualStop);
         Task<ApiResult> UninstallPluginAsync(string pluginId);
         Task<ApiResult> InstallPlugin(string pluginId, string Version, string UserToken);
+        Task<ApiResult> UploadOfflinePackage(byte[] fileBytes, string fileName);
         Task<bool> SetAuthCode(string AuthCode);
         Task<string> GetAuthCode();
         Task<bool> SetPluginLicense(SetPluginLicenseDto setPluginLicenseDto);

@@ -162,6 +162,36 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             dto.IsValid();
             return await _pluginLoadService.UpdatePluginLicenseOnline(dto.PluginId, dto.Token);
         }
+
+        /// <summary>
+        /// 上传离线插件安装包
+        /// </summary>
+        /// <param name="file">插件包文件 (.zip)</param>
+        /// <returns>安装结果</returns>
+        [HttpPost("upload-offline")]
+        [RequestSizeLimit(20 * 1024 * 1024)] // 限制 20MB
+        public async Task<ApiResult> UploadOfflinePackage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return new ApiResult(400, "请上传文件");
+            }
+
+            // 验证文件扩展名
+            var fileExt = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (fileExt != ".zip")
+            {
+                return new ApiResult(400, "仅支持上传 .zip 格式的插件包");
+            }
+
+            // 将文件转为字节流传递给 Service 层
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+            var fileBytes = memoryStream.ToArray();
+            var fileName = file.FileName;
+
+            return await _pluginLoadService.UploadOfflinePackage(fileBytes, fileName);
+        }
     }
 
     public class SetAuthCodeDto
