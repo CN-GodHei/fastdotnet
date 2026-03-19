@@ -14,6 +14,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
         Task<bool> SetAuthCode(string AuthCode);
         Task<string> GetAuthCode();
         Task<bool> SetPluginLicense(SetPluginLicenseDto setPluginLicenseDto);
+        Task<bool> UpdatePluginLicenseOnline(string pluginId, string UserToken);
         bool IsPluginActive(string pluginId);
         IEnumerable<PluginInfo> GetLoadedPlugins();
         IEnumerable<string> GetActivePlugins();

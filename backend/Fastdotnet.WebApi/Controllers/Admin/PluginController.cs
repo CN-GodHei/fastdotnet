@@ -149,6 +149,19 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             setAuthCodeDto.IsValid();
             return await _pluginLoadService.SetPluginLicense(setAuthCodeDto);
         }
+
+
+        /// <summary>
+        /// 在线更新授权
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        [HttpPost("UpdatePluginLicenseOnline")]
+        public async Task<bool> UpdatePluginLicenseOnline([FromBody] UpdatePluginLicenseOnlineDto dto)
+        {
+            dto.IsValid();
+            return await _pluginLoadService.UpdatePluginLicenseOnline(dto.PluginId, dto.Token);
+        }
     }
 
     public class SetAuthCodeDto
