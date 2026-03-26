@@ -102,15 +102,18 @@ namespace Fastdotnet.Service.Service
             var attrStr = "";
             if (column.ColumnKey)
             {
-                attrStr = $"[SugarColumn(IsPrimaryKey = true,ColumnName = \"{column.ColumnName.ToLower()}\", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = \"{column.ColumnComment}\" {GetDefaultValue(column.DefaultValue)})]";
+                attrStr = $"[SugarColumn(IsPrimaryKey = true,ColumnName = \"{column.ColumnName.ToLower()}\",  IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = \"{column.ColumnComment}\" {GetDefaultValue(column.DefaultValue)})]";
+                //attrStr = $"[SugarColumn(IsPrimaryKey = true,ColumnName = \"{column.ColumnName.ToLower()}\", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = \"{column.ColumnComment}\" {GetDefaultValue(column.DefaultValue)})]";
             }
             else if (column.ColumnKey)
             {
-                attrStr = $@"[SugarColumn(IsIdentity = true,ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}""{GetDefaultValue(column.DefaultValue)})]";
+                attrStr = $@"[SugarColumn(IsIdentity = true,ColumnName = ""{column.ColumnName.ToLower()}"",  IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}""{GetDefaultValue(column.DefaultValue)})]";
+                //attrStr = $@"[SugarColumn(IsIdentity = true,ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}""{GetDefaultValue(column.DefaultValue)})]";
             }
             if (string.IsNullOrEmpty(attrStr))
             {
-                attrStr += $@"[SugarColumn(ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}"" {GetDefaultValue(column.DefaultValue)})]";
+                attrStr += $@"[SugarColumn(ColumnName = ""{column.ColumnName.ToLower()}"",  IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}"" {GetDefaultValue(column.DefaultValue)})]";
+                //attrStr += $@"[SugarColumn(ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}"" {GetDefaultValue(column.DefaultValue)})]";
             }
             return $"        {GenGenerateColumnComment(column.ColumnComment)}\n        {attrStr}\n        public {column.NetType} {column.PropertyName} {{ get; set; }}";
         }
@@ -342,7 +345,9 @@ namespace {nameSpace ?? "Fastdotnet.Core.Entities"}
     /// {TableComment} - 实体信息
     /// </summary>
     [SugarTable(""{tableName}"",""{TableComment}"")]
-    public class {entityName} : BaseEntity
+    public class {entityName} 
+    //: BaseEntity
+    : AuditableEntity
     {{
 {string.Join("\n", filteredColumns.Select(col => GeneratePropertyDefinition(col)))}
     }}
@@ -470,12 +475,19 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
     [Route(""api/[controller]"")]
     public class {entityName}Controller : {getbasecontroller(apiscop)}<{entityName}, string, Create{entityName}Dto, Update{entityName}Dto, {entityName}Dto>
     {{
+        private readonly IBaseService<{entityName}, string> _{entityName.ToLower()}baseService;
+        //private readonly I{entityName}Service _{entityName.ToLower()}Service;
+        private readonly IMapper _mapper;
+        private readonly ICurrentUser _currentUser;
         public {entityName}Controller(
             //I{entityName}Service {entityName.ToLower()}Service,
-            IBaseService<{entityName}, string> service,
-            IMapper mapper) : base(service, mapper)
+            IBaseService<{entityName}, string> {entityName.ToLower()}baseService,
+            IMapper mapper, ICurrentUser currentUser) : base({entityName.ToLower()}baseService, mapper, currentUser)
         {{
-
+            _{entityName.ToLower()}baseService = {entityName.ToLower()}baseService;
+            //_{entityName.ToLower()}Service = {entityName.ToLower()}Service;
+            _mapper = mapper;
+            _currentUser = currentUser;
         }}
     }}
 }}";
