@@ -387,6 +387,170 @@ namespace Fastdotnet.Core.Utils
         }
         
         #endregion
+
+        #region AES加密算法
+
+        /// <summary>
+        /// 生成 AES 密钥
+        /// </summary>
+        /// <param name="keySize">密钥长度（位），支持 128、192 或 256 位，默认 256 位</param>
+        /// <returns>Base64 编码的密钥</returns>
+        public static string GenerateAESKey(int keySize = 256)
+        {
+            using var aes = Aes.Create();
+            aes.KeySize = keySize;
+            aes.GenerateKey();
+            return Convert.ToBase64String(aes.Key);
+        }
+
+        /// <summary>
+        /// 生成初始化向量 (IV)
+        /// </summary>
+        /// <returns>Base64 编码的 IV</returns>
+        public static string GenerateAESIV()
+        {
+            using var aes = Aes.Create();
+            aes.GenerateIV();
+            return Convert.ToBase64String(aes.IV);
+        }
+
+        /// <summary>
+        /// AES加密
+        /// </summary>
+        /// <param name="plainText">明文</param>
+        /// <param name="key">密钥（Base64 格式）</param>
+        /// <param name="iv">初始化向量（Base64 格式，可选）</param>
+        /// <param name="cipherMode">加密模式，默认 CBC</param>
+        /// <param name="paddingMode">填充模式，默认 PKCS7</param>
+        /// <returns>加密后的数据（Base64 格式）</returns>
+        public static string AESEncrypt(string plainText, string key, string iv = null, 
+            CipherMode cipherMode = CipherMode.CBC, PaddingMode paddingMode = PaddingMode.PKCS7)
+        {
+            if (string.IsNullOrEmpty(plainText))
+                throw new ArgumentException("明文不能为空", nameof(plainText));
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentException("密钥不能为空", nameof(key));
+
+            using var aes = Aes.Create();
+            aes.Key = Convert.FromBase64String(key);
+            aes.Mode = cipherMode;
+            aes.Padding = paddingMode;
+
+            // 如果提供了 IV 则使用，否则使用自动生成的 IV
+            if (!string.IsNullOrEmpty(iv))
+            {
+                aes.IV = Convert.FromBase64String(iv);
+            }
+
+            using var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+            var plainBytes = Encoding.UTF8.GetBytes(plainText);
+            var encryptedBytes = encryptor.TransformFinalBlock(plainBytes, 0, plainBytes.Length);
+
+            // 将 IV 和密文一起返回（IV 在前 16 字节）
+            var result = new byte[aes.IV.Length + encryptedBytes.Length];
+            Buffer.BlockCopy(aes.IV, 0, result, 0, aes.IV.Length);
+            Buffer.BlockCopy(encryptedBytes, 0, result, aes.IV.Length, encryptedBytes.Length);
+
+            return Convert.ToBase64String(result);
+        }
+
+        /// <summary>
+        /// AES 解密
+        /// </summary>
+        /// <param name="cipherText">密文（Base64 格式，前 16 字节为 IV）</param>
+        /// <param name="key">密钥（Base64 格式）</param>
+        /// <param name="cipherMode">加密模式，默认 CBC</param>
+        /// <param name="paddingMode">填充模式，默认 PKCS7</param>
+        /// <returns>解密后的明文</returns>
+        public static string AESDecrypt(string cipherText, string key,
+            CipherMode cipherMode = CipherMode.CBC, PaddingMode paddingMode = PaddingMode.PKCS7)
+        {
+            if (string.IsNullOrEmpty(cipherText))
+                throw new ArgumentException("密文不能为空", nameof(cipherText));
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentException("密钥不能为空", nameof(key));
+
+            using var aes = Aes.Create();
+            aes.Key = Convert.FromBase64String(key);
+            aes.Mode = cipherMode;
+            aes.Padding = paddingMode;
+
+            var cipherBytes = Convert.FromBase64String(cipherText);
+
+            // 提取 IV（前 16 字节）
+            var iv = new byte[aes.BlockSize / 8];
+            Buffer.BlockCopy(cipherBytes, 0, iv, 0, iv.Length);
+            aes.IV = iv;
+
+            // 提取实际的密文（去除 IV）
+            var encryptedBytes = new byte[cipherBytes.Length - iv.Length];
+            Buffer.BlockCopy(cipherBytes, iv.Length, encryptedBytes, 0, encryptedBytes.Length);
+
+            using var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+            var decryptedBytes = decryptor.TransformFinalBlock(encryptedBytes, 0, encryptedBytes.Length);
+
+            return Encoding.UTF8.GetString(decryptedBytes);
+        }
+
+        /// <summary>
+        /// AES加密（使用 ECB 模式，不需要 IV）
+        /// </summary>
+        /// <param name="plainText">明文</param>
+        /// <param name="key">密钥（Base64 格式）</param>
+        /// <param name="paddingMode">填充模式，默认 PKCS7</param>
+        /// <returns>加密后的数据（Base64 格式）</returns>
+        public static string AESEncryptECB(string plainText, string key, PaddingMode paddingMode = PaddingMode.PKCS7)
+        {
+            if (string.IsNullOrEmpty(plainText))
+                throw new ArgumentException("明文不能为空", nameof(plainText));
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentException("密钥不能为空", nameof(key));
+
+            using var aes = Aes.Create();
+            aes.Key = Convert.FromBase64String(key);
+            aes.Mode = CipherMode.ECB;
+            aes.Padding = paddingMode;
+
+            using var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+            var plainBytes = Encoding.UTF8.GetBytes(plainText);
+            var encryptedBytes = encryptor.TransformFinalBlock(plainBytes, 0, plainBytes.Length);
+
+            return Convert.ToBase64String(encryptedBytes);
+        }
+
+        /// <summary>
+        /// AES 解密（使用 ECB 模式，不需要 IV）
+        /// </summary>
+        /// <param name="cipherText">密文（Base64 格式）</param>
+        /// <param name="key">密钥（Base64 格式）</param>
+        /// <param name="paddingMode">填充模式，默认 PKCS7</param>
+        /// <returns>解密后的明文</returns>
+        public static string AESDecryptECB(string cipherText, string key, PaddingMode paddingMode = PaddingMode.PKCS7)
+        {
+            if (string.IsNullOrEmpty(cipherText))
+                throw new ArgumentException("密文不能为空", nameof(cipherText));
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentException("密钥不能为空", nameof(key));
+
+            using var aes = Aes.Create();
+            aes.Key = Convert.FromBase64String(key);
+            aes.Mode = CipherMode.ECB;
+            aes.Padding = paddingMode;
+
+            using var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+            var cipherBytes = Convert.FromBase64String(cipherText);
+            var decryptedBytes = decryptor.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
+
+            return Encoding.UTF8.GetString(decryptedBytes);
+        }
+
+        #endregion
+
+
         
     }
 }
