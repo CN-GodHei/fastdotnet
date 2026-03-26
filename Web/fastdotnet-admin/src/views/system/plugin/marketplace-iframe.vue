@@ -335,7 +335,7 @@ const handleLoginSuccess = async (data: any) => {
       AuthCode
     })
 
-    console.log('插件商城授权信息已保存')
+    // console.log('插件商城授权信息已保存')
   } catch (error) {
     console.error('处理登录成功消息失败:', error)
   }
