@@ -85,7 +85,7 @@ public class GlobalExceptionMiddleware
         result = new ApiResult<object>
         {
             Code = statusCode,
-            Msg = errorMsg + "Debug模式输出具体错误:" + exception.Message
+            Msg = "Debug模式输出具体错误:" + exception.Message
         };
 #else
                  result = new ApiResult<object>
