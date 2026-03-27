@@ -495,8 +495,6 @@ const handleUninstall = (row: Plugin) => {
     type: 'warning'
   }).then(() => {
     postApiPluginUninstallPluginId({ pluginId: row.id }).then((res: any) => {
-      console.log(res)
-      
       if (res.Result === true) {
         // 检查是否为离线授权方式
         if (res.Offline === true && res.UninstallCode) {
