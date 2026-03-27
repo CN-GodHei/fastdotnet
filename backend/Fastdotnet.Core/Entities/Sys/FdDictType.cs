@@ -11,14 +11,14 @@
         /// <summary>
         /// 类型名称
         /// </summary>
-        [SugarColumn(ColumnName = "name", ColumnDescription = "类型名称", Length = 100)]
+        [SugarColumn(ColumnName = "name", ColumnDescription = "类型名称")]
         [Required, MaxLength(100)]
         public virtual string Name { get; set; }
 
         /// <summary>
         /// 类型编码（业务使用的主要字段，建议格式：SYS_XXX、BIZ_XXX）
         /// </summary>
-        [SugarColumn(ColumnName = "code", ColumnDescription = "类型编码", Length = 100)]
+        [SugarColumn(ColumnName = "code", ColumnDescription = "类型编码")]
         [Required, MaxLength(100)]
         public virtual string Code { get; set; }
 
@@ -31,7 +31,7 @@
         /// <summary>
         /// 备注
         /// </summary>
-        [SugarColumn(ColumnName = "remark", ColumnDescription = "备注", Length = 500, IsNullable = true)]
+        [SugarColumn(ColumnName = "remark", ColumnDescription = "备注", IsNullable = true)]
         [MaxLength(500)]
         public string? Remark { get; set; }
 
@@ -44,19 +44,19 @@
         /// <summary>
         /// 是否系统内置（Y-是，N-否）。系统内置字典不可修改删除
         /// </summary>
-        [SugarColumn(ColumnName = "sys_flag", ColumnDescription = "是否系统内置", DefaultValue = "N")]
+        [SugarColumn(ColumnName = "sys_flag", ColumnDescription = "是否系统内置")]
         public virtual YesNoEnum SysFlag { get; set; } = YesNoEnum.N;
 
         /// <summary>
         /// 插件系统内置标记（Y-是，N-否）。用于区分插件自带的字典类型
         /// </summary>
-        [SugarColumn(ColumnName = "plugin_sys_flag", ColumnDescription = "插件系统内置", DefaultValue = "N")]
+        [SugarColumn(ColumnName = "plugin_sys_flag", ColumnDescription = "插件系统内置")]
         public virtual YesNoEnum PluginSysFlag { get; set; } = YesNoEnum.N;
 
         /// <summary>
         /// 所属插件 ID（仅当 plugin_sys_flag=Y 时有效）
         /// </summary>
-        [SugarColumn(ColumnName = "plugin_id", ColumnDescription = "所属插件 ID", Length = 50, IsNullable = true)]
+        [SugarColumn(ColumnName = "plugin_id", ColumnDescription = "所属插件 ID", IsNullable = true)]
         [MaxLength(50)]
         public string? PluginId { get; set; }
 

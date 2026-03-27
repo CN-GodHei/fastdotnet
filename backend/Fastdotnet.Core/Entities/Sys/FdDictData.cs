@@ -54,7 +54,7 @@
     /// 系统字典值表
     /// </summary>
     [SugarTable("fd_dict_data", "系统字典值")]
-    [SugarIndex("index_{table}_type_value", nameof(DictTypeId), OrderByType.Asc, nameof(Value), OrderByType.Asc, IsUnique = true)]
+    //[SugarIndex("index_{table}_type_value", nameof(DictTypeId), OrderByType.Asc, nameof(Value), OrderByType.Asc, IsUnique = true)]
     [SugarIndex("index_{table}_type_code", nameof(DictTypeCode), OrderByType.Asc)]
     [SugarIndex("index_{table}_parent", nameof(ParentId), OrderByType.Asc)]
     public partial class FdDictData : BaseEntity
@@ -62,7 +62,7 @@
         /// <summary>
         /// 字典类型 ID（关联 fd_dict_type 表主键，用于高性能查询和外键约束）
         /// </summary>
-        [SugarColumn(ColumnName = "dict_type_id", ColumnDescription = "字典类型 ID", Length = 50)]
+        [SugarColumn(ColumnName = "dict_type_id", ColumnDescription = "字典类型 ID")]
         public string DictTypeId { get; set; }
 
         /// <summary>
@@ -75,22 +75,19 @@
         /// <summary>
         /// 字典类型编码（冗余字段，便于直观查询和调试，与 DictTypeId 保持一致）
         /// </summary>
-        [SugarColumn(ColumnName = "dict_type_code", ColumnDescription = "字典类型编码", Length = 100, IsNullable = true)]
-        [MaxLength(100)]
+        [SugarColumn(ColumnName = "dict_type_code", ColumnDescription = "字典类型编码", IsNullable = true)]
         public string? DictTypeCode { get; set; }
 
         /// <summary>
         /// 字典标签（前端显示的文本）
         /// </summary>
-        [SugarColumn(ColumnName = "label", ColumnDescription = "字典标签", Length = 128)]
-        [Required, MaxLength(128)]
+        [SugarColumn(ColumnName = "label", ColumnDescription = "字典标签")]
         public virtual string Label { get; set; }
 
         /// <summary>
         /// 字典键值（实际存储到业务数据表中的值，建议格式：0、1 或 SYS_XXX）
         /// </summary>
-        [SugarColumn(ColumnName = "value", ColumnDescription = "字典键值", Length = 500)]
-        [Required, MaxLength(500)]
+        [SugarColumn(ColumnName = "value", ColumnDescription = "字典键值")]
         public virtual string Value { get; set; }
 
         /// <summary>
@@ -102,15 +99,13 @@
         /// <summary>
         /// 字典编码（用于代码访问，建议格式：TYPE_CODE_01）
         /// </summary>
-        [SugarColumn(ColumnName = "code", ColumnDescription = "字典编码", Length = 100, IsNullable = true)]
-        [MaxLength(100)]
+        [SugarColumn(ColumnName = "code", ColumnDescription = "字典编码", IsNullable = true)]
         public virtual string? Code { get; set; }
 
         /// <summary>
         /// 父级字典项 ID（支持树形结构，根节点为空或""）
         /// </summary>
-        [SugarColumn(ColumnName = "parent_id", ColumnDescription = "父级 ID", Length = 50, DefaultValue = "")]
-        [MaxLength(50)]
+        [SugarColumn(ColumnName = "parent_id", ColumnDescription = "父级 ID", DefaultValue = "")]
         public string ParentId { get; set; } = "";
 
         /// <summary>
@@ -128,35 +123,31 @@
         /// <summary>
         /// 备注说明
         /// </summary>
-        [SugarColumn(ColumnName = "remark", ColumnDescription = "备注", Length = 500, IsNullable = true)]
-        [MaxLength(500)]
+        [SugarColumn(ColumnName = "remark", ColumnDescription = "备注", IsNullable = true)]
         public string? Remark { get; set; }
 
         /// <summary>
         /// 状态标识（Tag 颜色：primary/success/warning/danger/info）
         /// </summary>
-        [SugarColumn(ColumnName = "tag_type", ColumnDescription = "状态标识", Length = 20, IsNullable = true)]
-        [MaxLength(20)]
+        [SugarColumn(ColumnName = "tag_type", ColumnDescription = "状态标识", IsNullable = true)]
         public string? TagType { get; set; }
 
         /// <summary>
         /// CSS 类名（自定义样式类名）
         /// </summary>
-        [SugarColumn(ColumnName = "css_class", ColumnDescription = "CSS 类名", Length = 100, IsNullable = true)]
-        [MaxLength(100)]
+        [SugarColumn(ColumnName = "css_class", ColumnDescription = "CSS 类名", IsNullable = true)]
         public string? CssClass { get; set; }
 
         /// <summary>
         /// 列表样式（表格中显示时的额外样式类名）
         /// </summary>
-        [SugarColumn(ColumnName = "list_class", ColumnDescription = "列表样式", Length = 100, IsNullable = true)]
-        [MaxLength(100)]
+        [SugarColumn(ColumnName = "list_class", ColumnDescription = "列表样式", IsNullable = true)]
         public string? ListClass { get; set; }
 
         /// <summary>
         /// 是否默认值（Y-是，N-否）。标记为默认值的选项会在下拉框中优先选中
         /// </summary>
-        [SugarColumn(ColumnName = "is_default", ColumnDescription = "是否默认值", DefaultValue = "N")]
+        [SugarColumn(ColumnName = "is_default", ColumnDescription = "是否默认值")]
         public virtual YesNoEnum IsDefault { get; set; } = YesNoEnum.N;
 
         /// <summary>
