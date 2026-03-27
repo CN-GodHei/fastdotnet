@@ -1,8 +1,7 @@
-
 using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 
-namespace Fastdotnet.Service.IService.Sys
+namespace Fastdotnet.Core.IService.Sys
 {
     /// <summary>
     /// 字典数据服务接口

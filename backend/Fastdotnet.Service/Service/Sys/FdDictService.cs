@@ -2,6 +2,7 @@
 using System.Linq.Dynamic.Core;
 using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
+using Fastdotnet.Core.IService.Sys;
 using Fastdotnet.Service.IService.Sys;
 
 namespace Fastdotnet.Service.Service.Sys
