@@ -113,7 +113,7 @@ export async function postApiPluginUninstallPluginId(
 ) {
 	const { pluginId: param0, ...queryParams } = params;
 
-	return request<APIModel.ApiResult>(`/api/Plugin/uninstall/${param0}`, {
+	return request<APIModel.UninstallResDto>(`/api/Plugin/uninstall/${param0}`, {
 		method: 'POST',
 		params: { ...queryParams },
 		...(options || {}),

@@ -372,23 +372,12 @@ declare namespace APIModel {
 		PaidTime?: string;
 	};
 
-	type CreateOrderRequest = {
-		UserId?: string;
-		TotalAmount?: number;
-		ItemCount?: number;
-	};
-
 	type CreatePaymentRequest = {
 		OrderId?: string;
 		Amount?: number;
 		Subject?: string;
 		NotifyUrl?: string;
 		PaymentMethod?: PaymentMethod;
-	};
-
-	type CreatePluginAUserExtensionDto = {
-		Preferences?: string;
-		Points?: number;
 	};
 
 	type CreatePointRedemptionDto = {
@@ -427,17 +416,6 @@ declare namespace APIModel {
 		IsLifetime?: boolean;
 		Status?: PurchaseStatusDto;
 		Notes?: string;
-	};
-
-	type CreateUserWithExtensionRequest = {
-		ExtensionData?: CreatePluginAUserExtensionDto;
-		Username: string;
-		Password: string;
-		Email: string;
-		PhoneNumber: string;
-		Nickname?: string;
-		AvatarUrl: string;
-		Status?: number;
 	};
 
 	type DataStatus = 0 | 1 | 2 | 3;
@@ -1133,6 +1111,7 @@ declare namespace APIModel {
 	};
 
 	type FdNationalStandardDto = {
+		Id?: string;
 		StandardCode?: string;
 		StandardName?: string;
 		StandardNameEn?: string;
@@ -1894,16 +1873,6 @@ declare namespace APIModel {
 
 	type MenuType = 0 | 1;
 
-	type MetricQueryRequest = {
-		MetricIds?: string[];
-		StartDate?: string;
-		EndDate?: string;
-		Dimensions?: string[];
-		Filters?: Record<string, any>;
-		PageNumber?: number;
-		PageSize?: number;
-	};
-
 	type MkActivitiesBooleanFuncExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -2164,66 +2133,6 @@ declare namespace APIModel {
 	};
 
 	type PaymentMethod = 0 | 1;
-
-	type PluginATestBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type PluginATestCreateDto = {
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-	};
-
-	type PluginATestDto = {
-		Id?: string;
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-		CreatedAt?: string;
-		UpdateTime?: string;
-	};
-
-	type PluginATestDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: PluginATestDto[];
-	};
-
-	type PluginATestUpdateDto = {
-		Id?: string;
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-	};
-
-	type PluginATestUpdateDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: PluginATestUpdateDto;
-	};
-
-	type PluginAUserExtension = {
-		FdAppUserId?: string;
-		Preferences?: string;
-		Points?: number;
-		Id?: string;
-		CreatedAt?: string;
-		UpdatedAt?: string;
-		IsDeleted?: boolean;
-		DeletedAt?: string;
-	};
 
 	type PluginConfigurationGetRawJsonDto = {
 		ExistRocord?: boolean;
@@ -2522,10 +2431,6 @@ declare namespace APIModel {
 		NewPassword: string;
 	};
 
-	type SendMessageRequest = {
-		Message?: string;
-	};
-
 	type SendRegistrationCodeDto = {
 		Email: string;
 	};
@@ -2574,6 +2479,18 @@ declare namespace APIModel {
 	type TableUniqueConfigDto = {
 		Columns: string[];
 		Message?: string;
+	};
+
+	type UninstallResDto = {
+		Result?: boolean;
+		Offline?: boolean;
+		UninstallCode?: string;
+	};
+
+	type UninstallResDtoApiResult = {
+		Data?: UninstallResDto;
+		Code?: number;
+		Msg?: string;
 	};
 
 	type UnlockDto = {
