@@ -267,6 +267,30 @@ declare namespace APIModel {
 		SupportMobile?: boolean;
 	};
 
+	type CreateFdNationalStandardDto = {
+		StandardCode?: string;
+		StandardName?: string;
+		StandardNameEn: string;
+		StandardType?: string;
+		PublishDepartment: string;
+		PublishDate: string;
+		ImplementDate: string;
+		CurrentVersion?: string;
+		Status?: boolean;
+		TotalItems?: number;
+	};
+
+	type CreateFdNationalStandardItemDto = {
+		StandardId?: string;
+		ItemCode?: string;
+		ItemName?: string;
+		ItemNameEn: string;
+		ParentCode: string;
+		Level: number;
+		Sort?: number;
+		Status?: boolean;
+	};
+
 	type CreateFdPermissionDto = {
 		Name: string;
 		Code: string;
@@ -563,6 +587,26 @@ declare namespace APIModel {
 	};
 
 	type deleteApiFdAppUserRoleRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteApiFdNationalStandardIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteApiFdNationalStandardItemIdParams = {
+		/** 要删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteApiFdNationalStandardItemRecyclebinIdPermanentParams = {
+		/** 要永久删除的记录的唯一标识符 */
+		id: string;
+	};
+
+	type deleteApiFdNationalStandardRecyclebinIdPermanentParams = {
 		/** 要永久删除的记录的唯一标识符 */
 		id: string;
 	};
@@ -936,6 +980,7 @@ declare namespace APIModel {
 	};
 
 	type FdDictTypeDto = {
+		Id?: string;
 		Name?: string;
 		Code?: string;
 		OrderNo?: number;
@@ -1043,6 +1088,117 @@ declare namespace APIModel {
 	type FdMenuDtoPageResult = {
 		PageInfo?: PageInfo;
 		Items?: FdMenuDto[];
+	};
+
+	type FdNationalStandard = {
+		StandardCode?: string;
+		StandardName?: string;
+		StandardNameEn?: string;
+		StandardType?: string;
+		PublishDepartment?: string;
+		PublishDate?: string;
+		ImplementDate?: string;
+		CurrentVersion?: string;
+		Status?: boolean;
+		TotalItems?: number;
+		Extra?: string;
+		Id?: string;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+		DeletedAt?: string;
+	};
+
+	type FdNationalStandardBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type FdNationalStandardDetailDto = {
+		Id?: string;
+		StandardCode?: string;
+		StandardName?: string;
+		StandardType?: string;
+		CurrentVersion?: string;
+		Status?: boolean;
+		TotalItems?: number;
+		PublishDate?: string;
+		ImplementDate?: string;
+	};
+
+	type FdNationalStandardDto = {
+		StandardCode?: string;
+		StandardName?: string;
+		StandardNameEn?: string;
+		StandardType?: string;
+		PublishDepartment?: string;
+		PublishDate?: string;
+		ImplementDate?: string;
+		CurrentVersion?: string;
+		Status?: boolean;
+		TotalItems?: number;
+	};
+
+	type FdNationalStandardDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdNationalStandardDto[];
+	};
+
+	type FdNationalStandardItem = {
+		StandardId?: string;
+		ItemCode?: string;
+		ItemName?: string;
+		ItemNameEn?: string;
+		ParentCode?: string;
+		Level?: number;
+		Sort?: number;
+		Status?: boolean;
+		Extra?: string;
+		Id?: string;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+		DeletedAt?: string;
+	};
+
+	type FdNationalStandardItemBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type FdNationalStandardItemDto = {
+		Id?: string;
+		StandardId?: string;
+		ItemCode?: string;
+		ItemName?: string;
+		ItemNameEn?: string;
+		ParentCode?: string;
+		Level?: number;
+		Sort?: number;
+		Status?: boolean;
+		Children?: FdNationalStandardItemDto[];
+	};
+
+	type FdNationalStandardItemDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: FdNationalStandardItemDto[];
+	};
+
+	type FdNationalStandardItemDtoTreeModel = {
+		TreeData?: FdNationalStandardItemDto[];
+		Total?: number;
 	};
 
 	type FdPermissionBooleanFuncExpression = {
@@ -1545,6 +1701,52 @@ declare namespace APIModel {
 		userId: string;
 	};
 
+	type getApiFdNationalStandardIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getApiFdNationalStandardItemIdParams = {
+		/** 记录的唯一标识符 */
+		id: string;
+	};
+
+	type getApiFdNationalStandardItemPageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getApiFdNationalStandardItemRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getApiFdNationalStandardPageParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getApiFdNationalStandardRecyclebinParams = {
+		/** 页码 (从1开始) */
+		pageIndex?: number;
+		/** 页面大小 */
+		pageSize?: number;
+	};
+
+	type getApiFdNationalStandardStandardCodeDetailParams = {
+		standardCode: string;
+	};
+
+	type getApiFdNationalStandardStandardCodeTreeParams = {
+		standardCode: string;
+	};
+
 	type getApiPluginActivePluginIdParams = {
 		pluginId: string;
 	};
@@ -1629,6 +1831,12 @@ declare namespace APIModel {
 		Version?: string;
 		/** 运行环境 */
 		Environment?: string;
+	};
+
+	type ImportStandardRequest = {
+		Standard?: FdNationalStandard;
+		/** 标准条目列表 */
+		Items?: FdNationalStandardItem[];
 	};
 
 	type LicenseFileDto = {
@@ -2094,6 +2302,10 @@ declare namespace APIModel {
 		code?: string;
 	};
 
+	type postApiFdNationalStandardStandardCodeVersionParams = {
+		standardCode: string;
+	};
+
 	type postApiPluginDisablePluginIdParams = {
 		pluginId: string;
 	};
@@ -2272,6 +2484,26 @@ declare namespace APIModel {
 	};
 
 	type putApiFdAppUserRoleRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putApiFdNationalStandardIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putApiFdNationalStandardItemIdParams = {
+		/** 要更新的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putApiFdNationalStandardItemRecyclebinIdRestoreParams = {
+		/** 要恢复的记录的唯一标识符 */
+		id: string;
+	};
+
+	type putApiFdNationalStandardRecyclebinIdRestoreParams = {
 		/** 要恢复的记录的唯一标识符 */
 		id: string;
 	};
@@ -2495,6 +2727,7 @@ declare namespace APIModel {
 	};
 
 	type UpdateFdDictTypeDto = {
+		Id?: string;
 		Name?: string;
 		Code?: string;
 		OrderNo?: number;
@@ -2557,6 +2790,40 @@ declare namespace APIModel {
 	type UpdateFdMenuDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateFdMenuDto;
+	};
+
+	type UpdateFdNationalStandardDto = {
+		StandardCode?: string;
+		StandardName?: string;
+		StandardNameEn?: string;
+		StandardType?: string;
+		PublishDepartment?: string;
+		PublishDate?: string;
+		ImplementDate?: string;
+		CurrentVersion?: string;
+		Status?: boolean;
+		TotalItems?: number;
+	};
+
+	type UpdateFdNationalStandardDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdNationalStandardDto;
+	};
+
+	type UpdateFdNationalStandardItemDto = {
+		StandardId?: string;
+		ItemCode?: string;
+		ItemName?: string;
+		ItemNameEn?: string;
+		ParentCode?: string;
+		Level?: number;
+		Sort?: number;
+		Status?: boolean;
+	};
+
+	type UpdateFdNationalStandardItemDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdNationalStandardItemDto;
 	};
 
 	type UpdateFdPermissionDto = {
@@ -2779,6 +3046,13 @@ declare namespace APIModel {
 	type UpdateUserPluginPurchaseDtoBatchUpdateByConditionDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateUserPluginPurchaseDto;
+	};
+
+	type UpdateVersionRequest = {
+		/** 新版本号 */
+		NewVersion?: string;
+		/** 新版本的条目数据 */
+		NewItems?: FdNationalStandardItem[];
 	};
 
 	type UploadCredentialRequest = {

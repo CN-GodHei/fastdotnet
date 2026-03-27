@@ -17,6 +17,8 @@ import * as FdDictType from './FdDictType';
 import * as FdEmailConfig from './FdEmailConfig';
 import * as FdMenu from './FdMenu';
 import * as FdMenuButtons from './FdMenuButtons';
+import * as FdNationalStandard from './FdNationalStandard';
+import * as FdNationalStandardItem from './FdNationalStandardItem';
 import * as FdPermissions from './FdPermissions';
 import * as FdRatelimitRule from './FdRatelimitRule';
 import * as FdRole from './FdRole';
@@ -43,6 +45,8 @@ export default {
 	FdEmailConfig,
 	FdMenu,
 	FdMenuButtons,
+	FdNationalStandard,
+	FdNationalStandardItem,
 	FdPermissions,
 	FdRatelimitRule,
 	FdRole,

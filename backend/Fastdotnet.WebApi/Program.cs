@@ -96,6 +96,10 @@ builder.Services.AddScoped<IUserRefFiller, UserRefFiller>();
 // 注册字典数据初始化服务
 builder.Services.AddScoped<IFdDictService, FdDictService>();
 
+// 注册国家标准数据服务
+builder.Services.AddScoped<IFdNationalStandardService, FdNationalStandardService>();
+builder.Services.AddScoped<IFdNationalStandardItemService, FdNationalStandardItemService>();
+
 // 注册应用服务和初始化器
 // 注释：已在 Autofac 中注册
 //builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

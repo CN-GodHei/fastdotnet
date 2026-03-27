@@ -8,13 +8,13 @@ namespace Fastdotnet.Service.Mappings
     {
         public FdNationalStandardDictMappingProfile()
         {
-            CreateMap<FdNationalStandardDict, FdNationalStandardDictDto>()
+            CreateMap<FdNationalStandard, FdNationalStandardDictDto>()
                 .ForMember(t => t.ExtraObject,
                 tout => tout.MapFrom(src => string.IsNullOrWhiteSpace(src.Extra) ? null
                 : JsonConvert.DeserializeObject<Dictionary<string, object>>(src.Extra)));
-            CreateMap<CreateFdNationalStandardDictDto, FdNationalStandardDict>()
+            CreateMap<CreateFdNationalStandardDictDto, FdNationalStandard>()
                 .ForMember(t => t.Extra, topt => topt.MapFrom(src => src.ExtraObject != null ? JsonConvert.SerializeObject(src.ExtraObject) : null));
-            CreateMap<UpdateFdNationalStandardDictDto, FdNationalStandardDict>()
+            CreateMap<UpdateFdNationalStandardDictDto, FdNationalStandard>()
                 .ForMember(t => t.Extra, topt => topt.MapFrom(src => src.ExtraObject != null ? JsonConvert.SerializeObject(src.ExtraObject) : null));
         }
     }
