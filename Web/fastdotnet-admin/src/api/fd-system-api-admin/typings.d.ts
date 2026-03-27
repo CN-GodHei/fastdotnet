@@ -201,16 +201,20 @@ declare namespace APIModel {
 
 	type CreateFdDictDataDto = {
 		DictTypeId?: string;
+		DictTypeCode?: string;
 		Label?: string;
 		Value?: string;
+		ValueType?: number;
 		Code?: string;
-		Name: string;
-		TagType: string;
-		StyleSetting: string;
-		ClassSetting: string;
+		ParentId?: string;
+		Level?: number;
 		OrderNo?: number;
-		Remark: string;
-		ExtData: string;
+		Remark?: string;
+		TagType?: string;
+		CssClass?: string;
+		ListClass?: string;
+		IsDefault?: number;
+		ExtData?: string;
 		Status?: number;
 	};
 
@@ -301,6 +305,15 @@ declare namespace APIModel {
 		GivenTime?: string;
 	};
 
+	type CreateMkActivitiesDto = {
+		Name: string;
+		Type: string;
+		Ruleconfig: string;
+		Starttime: string;
+		Endtime: string;
+		Isactive: boolean;
+	};
+
 	type CreateMkMarketplacePluginsDto = {
 		Name?: string;
 		SubTitle?: string;
@@ -310,6 +323,20 @@ declare namespace APIModel {
 		IsActive?: boolean;
 		IsFree?: boolean;
 		IconUrl?: string;
+	};
+
+	type CreateMkUseractivityrecordsDto = {
+		Activityid: string;
+		Userid: string;
+		Status: string;
+		Progress: string;
+		Rewarddata: string;
+	};
+
+	type CreateMkUserServeInfoDto = {
+		UserId?: string;
+		MachineFingerprint?: string;
+		MachineName?: string;
 	};
 
 	type CreateOnlinePaymentDto = {
@@ -872,18 +899,24 @@ declare namespace APIModel {
 	};
 
 	type FdDictDataDto = {
+		Id?: string;
 		DictTypeId?: string;
+		DictTypeCode?: string;
 		Label?: string;
 		Value?: string;
+		ValueType?: number;
 		Code?: string;
-		Name?: string;
-		TagType?: string;
-		StyleSetting?: string;
-		ClassSetting?: string;
+		ParentId?: string;
+		Level?: number;
 		OrderNo?: number;
 		Remark?: string;
+		TagType?: string;
+		CssClass?: string;
+		ListClass?: string;
+		IsDefault?: number;
 		ExtData?: string;
 		Status?: number;
+		Children?: FdDictDataDto[];
 	};
 
 	type FdDictDataDtoPageResult = {
@@ -1140,6 +1173,7 @@ declare namespace APIModel {
 	type GenerateLicenseRequestDto = {
 		PluginId: string;
 		MachineFingerprint: string;
+		Notes?: string;
 	};
 
 	type getApiAdminFdAdminUserIdParams = {
@@ -1597,6 +1631,17 @@ declare namespace APIModel {
 		Environment?: string;
 	};
 
+	type LicenseFileDto = {
+		PluginId?: string;
+		UserId?: string;
+		LicenseType?: string;
+		MachineFingerprint?: string;
+		IssueDate?: string;
+		UpdatesUntil?: string;
+		Signature?: string;
+		Offline?: string;
+	};
+
 	type LicenseType = 0 | 1;
 
 	type LicenseTypeDto = 0 | 1;
@@ -1649,6 +1694,54 @@ declare namespace APIModel {
 		Filters?: Record<string, any>;
 		PageNumber?: number;
 		PageSize?: number;
+	};
+
+	type MkActivitiesBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type MkActivitiesDto = {
+		Name?: string;
+		Type?: string;
+		Ruleconfig?: string;
+		Starttime?: string;
+		Endtime?: string;
+		Isactive?: boolean;
+	};
+
+	type MkActivitiesDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: MkActivitiesDto[];
+	};
+
+	type MkInvitationsBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type MkInvitationsDto = {
+		Inviterid?: string;
+		Inviteeid?: string;
+		Activityid?: string;
+		Status?: string;
+	};
+
+	type MkInvitationsDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: MkInvitationsDto[];
 	};
 
 	type MkMarketplacePlugins = {
@@ -1744,12 +1837,39 @@ declare namespace APIModel {
 		DeletedBy?: string;
 	};
 
-	type OfflineActivationRequestDto = {
-		PluginId: string;
-		MachineFingerprint: string;
-		RequestTimestamp?: string;
-		ClientInfo?: string;
-		Nonce?: string;
+	type MkUseractivityrecordsBooleanFuncExpression = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type MkUseractivityrecordsDto = {
+		Activityid?: string;
+		Userid?: string;
+		Status?: string;
+		Progress?: string;
+		Rewarddata?: string;
+	};
+
+	type MkUseractivityrecordsDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: MkUseractivityrecordsDto[];
+	};
+
+	type MkUserServeInfoDto = {
+		UserId?: string;
+		MachineFingerprint?: string;
+		MachineName?: string;
+	};
+
+	type MkUserServeInfoDtoPageResult = {
+		PageInfo?: PageInfo;
+		Items?: MkUserServeInfoDto[];
 	};
 
 	type OnlinePayment = {
@@ -2350,16 +2470,21 @@ declare namespace APIModel {
 	};
 
 	type UpdateFdDictDataDto = {
+		Id: string;
 		DictTypeId?: string;
+		DictTypeCode?: string;
 		Label?: string;
 		Value?: string;
+		ValueType?: number;
 		Code?: string;
-		Name?: string;
-		TagType?: string;
-		StyleSetting?: string;
-		ClassSetting?: string;
+		ParentId?: string;
+		Level?: number;
 		OrderNo?: number;
 		Remark?: string;
+		TagType?: string;
+		CssClass?: string;
+		ListClass?: string;
+		IsDefault?: number;
 		ExtData?: string;
 		Status?: number;
 	};
@@ -2499,6 +2624,32 @@ declare namespace APIModel {
 		Dto?: UpdateGiftRecordDto;
 	};
 
+	type UpdateMkActivitiesDto = {
+		Name?: string;
+		Type?: string;
+		Ruleconfig?: string;
+		Starttime?: string;
+		Endtime?: string;
+		Isactive?: boolean;
+	};
+
+	type UpdateMkActivitiesDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateMkActivitiesDto;
+	};
+
+	type UpdateMkInvitationsDto = {
+		Inviterid?: string;
+		Inviteeid?: string;
+		Activityid?: string;
+		Status?: string;
+	};
+
+	type UpdateMkInvitationsDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateMkInvitationsDto;
+	};
+
 	type UpdateMkMarketplacePluginsDto = {
 		Name?: string;
 		SubTitle?: string;
@@ -2528,6 +2679,30 @@ declare namespace APIModel {
 		CreatedBy?: string;
 		UpdatedBy?: string;
 		DeletedBy?: string;
+	};
+
+	type UpdateMkUseractivityrecordsDto = {
+		Activityid?: string;
+		Userid?: string;
+		Status?: string;
+		Progress?: string;
+		Rewarddata?: string;
+	};
+
+	type UpdateMkUseractivityrecordsDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateMkUseractivityrecordsDto;
+	};
+
+	type UpdateMkUserServeInfoDto = {
+		UserId?: string;
+		MachineFingerprint?: string;
+		MachineName?: string;
+	};
+
+	type UpdateMkUserServeInfoDtoBatchUpdateByConditionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateMkUserServeInfoDto;
 	};
 
 	type UpdateOnlinePaymentDto = {
@@ -2625,7 +2800,6 @@ declare namespace APIModel {
 	};
 
 	type UserPluginActivation = {
-		PurchaseId?: number;
 		PluginId?: string;
 		UserId?: string;
 		LicenseType?: LicenseType;
@@ -2640,7 +2814,7 @@ declare namespace APIModel {
 		Notes?: string;
 		CreateTime?: string;
 		UpdateTime?: string;
-		Purchase?: UserPluginPurchase;
+		IsOffline?: boolean;
 		Plugin?: MkMarketplacePlugins;
 		CreatedBy?: string;
 		UpdatedBy?: string;
@@ -2680,6 +2854,7 @@ declare namespace APIModel {
 		Notes?: string;
 		CreateTime?: string;
 		UpdateTime?: string;
+		IsOffline?: boolean;
 	};
 
 	type UserPluginActivationDtoPageResult = {

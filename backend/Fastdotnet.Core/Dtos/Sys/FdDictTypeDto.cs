@@ -57,6 +57,10 @@
     /// </summary>
     public class UpdateFdDictTypeDto
     {
+        /// <summary>
+        /// Id
+        /// </summary>
+        public string Id { get; set; }
 
         /// <summary>
         /// name
@@ -108,6 +112,10 @@
     /// </summary>
     public class FdDictTypeDto
     {
+        /// <summary>
+        /// Id
+        /// </summary>
+        public string Id { get; set; }
 
         /// <summary>
         /// name

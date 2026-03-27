@@ -17,6 +17,6 @@ namespace Fastdotnet.Core.Enum
         /// 否
         /// </summary>
         [Description("否"), Theme("danger")]
-        N = 2
+        N = 0
     }
 }

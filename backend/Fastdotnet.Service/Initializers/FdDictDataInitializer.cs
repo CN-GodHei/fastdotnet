@@ -91,10 +91,6 @@ namespace Fastdotnet.Service.Initializers
                 new FdDictData{ Id="11921994044146655", DictTypeId="11921994044146608",Code="CODE_08_01", Label="用户注册", Value="UserRegister", OrderNo=105, Remark="用户注册", Status=StatusEnum.Enable },
                 new FdDictData{ Id="12458431967462405", DictTypeId="11921994044146609",Code="CODE_09_01", Label="站点域名", Value="http://127.0.0.1:18889", OrderNo=105, Remark="站点域名", Status=StatusEnum.Enable },
             };
-            foreach (var item in fdDictDataEntries)
-            {
-                item.Name = item.Label;
-            }
             await _repository.InsertRangeAsync(fdDictDataEntries);
         }
     }
