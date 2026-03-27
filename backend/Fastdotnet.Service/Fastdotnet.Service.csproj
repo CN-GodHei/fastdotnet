@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Initializers\FdDictDataInitializer.cs" />
+    <Compile Remove="Initializers\FdDictTypeInitializer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MailKit" />
     <PackageReference Include="SqlSugarCore" />
   </ItemGroup>
