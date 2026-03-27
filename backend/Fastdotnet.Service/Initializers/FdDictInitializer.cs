@@ -1,7 +1,7 @@
 
 using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
-using Fastdotnet.Service.IService.Sys;
+using Fastdotnet.Core.IService.Sys;
 
 namespace Fastdotnet.Service.Initializers
 {
