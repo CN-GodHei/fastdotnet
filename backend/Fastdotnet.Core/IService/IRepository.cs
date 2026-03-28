@@ -150,6 +150,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="id">主键</param>
         /// <returns>是否删除成功</returns>
         Task<bool> DeleteAsync(TKey id);
+        Task<bool> HardDeleteAsync(TKey id);
 
         /// <summary>
         /// 根据条件批量删除实体（软删除）
@@ -157,6 +158,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="whereExpression">条件表达式</param>
         /// <returns>删除成功的数量</returns>
         Task<int> DeleteAsync(Expression<Func<T, bool>> whereExpression);
+        Task<int> HardDeleteAsync(Expression<Func<T, bool>> whereExpression);
 
         #endregion
 

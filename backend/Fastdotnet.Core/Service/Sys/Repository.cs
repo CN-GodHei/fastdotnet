@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+
 namespace Fastdotnet.Core.Service.Sys
 {
     /// <summary>
@@ -156,15 +158,15 @@ namespace Fastdotnet.Core.Service.Sys
             //    {
             //        entity.Id = SnowflakeIdGenerator.NextStrId();
             //    }
-                
+
             //    if (entity.CreatedAt == default(DateTime))
             //    {
             //        entity.CreatedAt = DateTime.Now;
             //    }
             //}
-            
+
             var insertable = _db.Insertable(entities);
-            
+
             // 使用SqlSugar的批量插入方法
             var result = await insertable.ExecuteCommandAsync();
             return result;
@@ -277,7 +279,7 @@ namespace Fastdotnet.Core.Service.Sys
             // 如果实体实现了软删除接口，则执行软删除
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(T)))
             {
-               return await _db.Deleteable<T>().In(id).IsLogic().ExecuteCommandAsync("IsDeleted",true, "DeletedAt")>0;
+                return await _db.Deleteable<T>().In(id).IsLogic().ExecuteCommandAsync("IsDeleted", true, "DeletedAt") > 0;
             }
             else
             {
@@ -301,7 +303,7 @@ namespace Fastdotnet.Core.Service.Sys
                 // 使用 Updateable 进行软删除
                 var updateable = _db.Updateable<T>()
                     .SetColumns(it => new T { IsDeleted = true, DeletedAt = DateTime.Now });
-                
+
                 // 只有当条件表达式不为 null 时，才添加 WHERE 条件
                 if (whereExpression != null)
                 {
@@ -343,7 +345,7 @@ namespace Fastdotnet.Core.Service.Sys
         {
             // 查询已删除的数据
             Expression<Func<T, bool>> whereExpression = entity => entity.IsDeleted;
-            
+
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression);
 
@@ -356,7 +358,7 @@ namespace Fastdotnet.Core.Service.Sys
                 // 默认按删除时间倒序排列
                 query = query.OrderBy(entity => entity.DeletedAt, OrderByType.Desc);
             }
-            
+
             var list = await query.ToPageListAsync(pageIndex, pageSize, totalCount, cancellationToken);
             return new PageResult<T>
             {
@@ -402,7 +404,7 @@ namespace Fastdotnet.Core.Service.Sys
                 // 默认按删除时间倒序排列
                 query = query.OrderBy(entity => entity.DeletedAt, OrderByType.Desc);
             }
-            
+
             var list = await query.ToPageListAsync(pageIndex, pageSize, totalCount, cancellationToken);
             return new PageResult<T>
             {
@@ -427,9 +429,9 @@ namespace Fastdotnet.Core.Service.Sys
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(T)))
             {
                 var result = await _db.Updateable<T>()
-                    .SetColumns(it => new T 
-                    { 
-                        IsDeleted = false, 
+                    .SetColumns(it => new T
+                    {
+                        IsDeleted = false,
                         DeletedAt = null,
                         UpdatedAt = DateTime.Now
                     })
@@ -455,9 +457,9 @@ namespace Fastdotnet.Core.Service.Sys
                 var combinedExpression = CombineExpressions(deletedExpression, whereExpression);
 
                 var result = await _db.Updateable<T>()
-                    .SetColumns(it => new T 
-                    { 
-                        IsDeleted = false, 
+                    .SetColumns(it => new T
+                    {
+                        IsDeleted = false,
                         DeletedAt = null,
                         UpdatedAt = DateTime.Now
                     })
@@ -583,8 +585,36 @@ namespace Fastdotnet.Core.Service.Sys
                 return dict;
             }).ToList();
         }
-
         #endregion
+
+        public async Task<bool> HardDeleteAsync(TKey id)
+        {
+            var result = await _db.Deleteable<T>().In(id).ExecuteCommandAsync();
+            return result > 0;
+        }
+
+        //public async Task<int> HardDeleteAsync(Expression<Func<T, bool>> whereExpression)
+        //{
+        //    var result = await _db.Deleteable<T>()
+        //         .WhereIF(whereExpression != null, whereExpression)
+        //         .ExecuteCommandAsync();
+        //    return result;
+        //}
+        public async Task<int> HardDeleteAsync(Expression<Func<T, bool>> whereExpression)
+        {
+            if (whereExpression == null)
+            {
+                //避免删全表
+                return 0;
+            }
+
+            // 2. 只有当条件存在时，才执行删除
+            var result = await _db.Deleteable<T>()
+                 .Where(whereExpression) // 直接使用 Where，因为上面已经确保不为空
+                 .ExecuteCommandAsync();
+
+            return result;
+        }
     }
 
     /// <summary>

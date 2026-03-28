@@ -24,6 +24,7 @@ public static class SqlSugarServiceCollectionExtensions
             // 创建SqlSugarScope
             var scope = new SqlSugarScope(options.Connections, db =>
             {
+                StaticConfig.EnableAllWhereIF = true;
                 // AOP配置
                 db.Aop.OnLogExecuting = (sql, pars) =>
                 {
