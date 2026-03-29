@@ -24,10 +24,10 @@ namespace Fastdotnet.WebApi.Middleware
 
         public async Task InvokeAsync(HttpContext context, IHybridCacheService cacheService)
         {
-#if DEBUG
-            await _next(context);
-            return;
-#endif
+//#if DEBUG
+//            await _next(context);
+//            return;
+//#endif
             // 跳过特定路径（如登录、获取公钥等不需要防重放的接口）
             if (ShouldSkipAntiReplay(context))
             {
@@ -209,8 +209,18 @@ namespace Fastdotnet.WebApi.Middleware
                 }
 
                 // 构建待签名字符串
-                var signContent = $"{timestamp}|{nonce}|{method}|{path}|{body}";
-
+                // 使用 Base64 编码避免 Path/Body 中包含特殊字符（如 | ）导致解析问题
+                // 去掉开头的 / （与前端保持一致，前端 btoa 时不包含开头的 /）
+                if (path.StartsWith('/'))
+                {
+                    path = path.Substring(1);
+                }
+                var pathEncoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(path));
+                var bodyEncoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(body));
+                var signContent = $"{timestamp}|{nonce}|{method}|{pathEncoded}|{bodyEncoded}";
+                //var signContent = $"{timestamp}|{nonce}|{method}|{path}|{body}";
+                Console.WriteLine(path);
+                Console.WriteLine(signContent);
                 // TODO: 这里需要根据你的签名算法进行验证
                 // 方案 1：使用固定的密钥（适合内部系统）
                 // var secretKey = "your-secret-key-here";
