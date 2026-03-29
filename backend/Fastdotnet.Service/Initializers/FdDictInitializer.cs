@@ -237,6 +237,7 @@ namespace Fastdotnet.Service.Initializers
                     fdDictData = new List<FdDictData>
                     {
                         new FdDictData{ Id="12458431967462405", DictTypeId="11921994044146609", DictTypeCode="CODE_09", Code="CODE_09_01", Label="站点域名", Value="http://127.0.0.1:18889", ValueType=DictValueType.String, OrderNo=105, Remark="站点域名", Status=StatusEnum.Enable },
+                        new FdDictData{ Id="12458431967462406", DictTypeId="11921994044146609", DictTypeCode="CODE_09", Code="CODE_09_02", Label="站点域名-外网", Value="http://127.0.0.1:18889", ValueType=DictValueType.String, OrderNo=106, Remark="站点外网域名", Status=StatusEnum.Enable },
                     }
                 },
             };

@@ -39,7 +39,7 @@ public class MallOrderService
             Amount = totalAmount,
             Description = $"商城订单-{orderId}",  // 微信支付用
             Subject = $"商城订单-{orderId}",     // 支付宝用
-            NotifyUrl = "https://localhost:5001/api/unified-pay/notify",
+            //NotifyUrl = "https://localhost:5001/api/unified-pay/notify",//应该在支付插件内部统一处理，业务插件不应关心
             ExtraData = new Dictionary<string, string>
             {
                 ["ItemCount"] = itemCount.ToString(),
@@ -69,7 +69,7 @@ public class MallOrderService
             OrderId = orderId,
             Amount = amount,
             PaymentMethod = paymentMethod,
-            NotifyUrl = "https://localhost:5001/api/pluginA/payment/notify", // TODO: 配置化
+            //NotifyUrl = "https://localhost:5001/api/pluginA/payment/notify", // TODO: 配置化
             Source = "PluginA",
             ExtraData = new Dictionary<string, string>
             {
