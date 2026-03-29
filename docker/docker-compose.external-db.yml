@@ -1,4 +1,5 @@
-version: '3.8'
+# 使用外部 MySQL 服务器的配置示例
+# 使用方法：docker-compose -f docker-compose.yml -f docker-compose.external-db.yml up -d
 
 services:
   fastdotnetwebapi:

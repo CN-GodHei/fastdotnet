@@ -1,8 +1,17 @@
-version: '3.8'
+# 使用外部数据库（不启动 MySQL）
+# docker-compose -f docker-compose.yml -f docker-compose.external-db.yml up -d
+
+# 使用内部数据库（启动 MySQL）
+#docker-compose --profile internal-db up -d
+
+# 停止服务
+# docker-compose -f docker-compose.yml -f docker-compose.external-db.yml down
 
 services:
-  # MySQL 数据库服务
+  # MySQL 数据库服务（仅在使用内部数据库时启动）
   fastdotnet-mysql:
+    profiles:
+      - internal-db
     image: mysql:8.0
     container_name: fastdotnet-mysql
     restart: unless-stopped
