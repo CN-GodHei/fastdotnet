@@ -7,6 +7,17 @@
 # 停止服务
 # docker-compose -f docker-compose.yml -f docker-compose.external-db.yml down
 
+# 导出镜像
+# docker save -o fastdotnetwebapi.tar fastdotnetwebapi:latest
+# 上传
+# scp fastdotnetwebapi.tar root@127.0..01:/tmp
+
+# 导入镜像
+# docker load -i fastdotnetwebapi.tar
+
+# 验证导入成功
+# docker images | grep fastdotnetwebapi
+
 services:
   # MySQL 数据库服务（仅在使用内部数据库时启动）
   fastdotnet-mysql:

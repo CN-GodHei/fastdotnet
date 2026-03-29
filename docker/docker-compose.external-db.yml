@@ -15,6 +15,6 @@ services:
       - SqlSugar__Connections__0__DbType=MySql
       - SqlSugar__Connections__0__IsAutoCloseConnection=true
       - SqlSugar__Connections__1__ConfigId=log
-      - SqlSugar__Connections__1__ConnectionString=Server=host.docker.internal;Database=fastdotnet_log;Uid=fastdotnet;Pwd=fastdotnet;SslMode=None;AllowLoadLocalInfile=true;AllowUserVariables=true;
+      - SqlSugar__Connections__1__ConnectionString=Server=host.docker.internal;Database=fastdotnet_log;Uid=fastdotnet_log;Pwd=fastdotnet_log;SslMode=None;AllowLoadLocalInfile=true;AllowUserVariables=true;
       - SqlSugar__Connections__1__DbType=MySql
       - SqlSugar__Connections__1__IsAutoCloseConnection=true
