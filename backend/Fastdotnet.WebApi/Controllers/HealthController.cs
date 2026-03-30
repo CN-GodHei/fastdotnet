@@ -24,7 +24,7 @@ public class HealthController : ControllerBase
         var healthStatus = new HealthStatus
         {
             Status = "Healthy",
-            Timestamp = DateTime.UtcNow,
+            Timestamp = DateTime.Now,
             Version = GetApplicationVersion(),
             Environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"
         };
