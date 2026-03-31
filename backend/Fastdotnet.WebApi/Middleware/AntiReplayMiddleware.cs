@@ -219,8 +219,8 @@ namespace Fastdotnet.WebApi.Middleware
                 var bodyEncoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(body));
                 var signContent = $"{timestamp}|{nonce}|{method}|{pathEncoded}|{bodyEncoded}";
                 //var signContent = $"{timestamp}|{nonce}|{method}|{path}|{body}";
-                Console.WriteLine(path);
-                Console.WriteLine(signContent);
+                //Console.WriteLine(path);
+                //Console.WriteLine(signContent);
                 // TODO: 这里需要根据你的签名算法进行验证
                 // 方案 1：使用固定的密钥（适合内部系统）
                 // var secretKey = "your-secret-key-here";
