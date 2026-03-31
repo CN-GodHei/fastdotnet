@@ -7,7 +7,7 @@ namespace Fastdotnet.Plugin.Contracts.Metrics
         public string MetricId { get; set; }
         public object Value { get; set; }
         public Dictionary<string, object> Dimensions { get; set; } = new();
-        public DateTime CalculatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CalculatedAt { get; set; } = DateTime.Now;
         public TimeSpan CalculationDuration { get; set; }
         public Dictionary<string, object> Metadata { get; set; } = new();
     }

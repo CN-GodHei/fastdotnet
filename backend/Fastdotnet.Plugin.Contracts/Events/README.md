@@ -78,7 +78,7 @@ public class OrderService
             OrderId = orderId,
             TransactionNo = $"TXN_{Guid.NewGuid():N}",
             PaidAmount = 100.00m,
-            PaidAt = DateTime.UtcNow,
+            PaidAt = DateTime.Now,
             PaymentChannel = "Alipay",
             Data = new Dictionary<string, object>
             {

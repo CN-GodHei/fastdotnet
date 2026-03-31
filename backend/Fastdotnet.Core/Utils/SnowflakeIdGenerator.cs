@@ -101,6 +101,6 @@ public static class SnowflakeIdGenerator
     /// <returns></returns>
     private static long GetTimestamp()
     {
-        return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        return DateTimeOffset.Now.ToUnixTimeMilliseconds();
     }
 }

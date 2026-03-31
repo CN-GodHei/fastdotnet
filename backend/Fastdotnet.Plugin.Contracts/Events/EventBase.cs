@@ -13,7 +13,7 @@ public abstract class EventBase
     /// <summary>
     /// 发生时间（UTC）
     /// </summary>
-    public DateTime OccurredOn { get; set; } = DateTime.UtcNow;
+    public DateTime OccurredOn { get; set; } = DateTime.Now;
     
     /// <summary>
     /// 事件来源（插件名称或系统模块）

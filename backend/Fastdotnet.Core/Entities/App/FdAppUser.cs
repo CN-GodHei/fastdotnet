@@ -57,7 +57,7 @@ namespace Fastdotnet.Core.Entities.App
         /// 注册时间
         /// </summary>
         [SugarColumn(ColumnName = "registration_date", ColumnDescription = "注册时间")]
-        public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
+        public DateTime RegistrationDate { get; set; } = DateTime.Now;
 
         /// <summary>
         /// 最后登录时间

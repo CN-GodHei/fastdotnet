@@ -69,7 +69,7 @@ namespace Fastdotnet.Core.Hubs
             {
                 PluginId = pluginId,
                 Message = message,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.Now
             });
         }
 
@@ -110,7 +110,7 @@ namespace Fastdotnet.Core.Hubs
                 RoomName = roomName,
                 Message = message,
                 Sender = Context.ConnectionId,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.Now
             });
         }
 
@@ -130,7 +130,7 @@ namespace Fastdotnet.Core.Hubs
                 PluginId = pluginId,
                 MethodName = methodName,
                 Args = args,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.Now
             });
         }
 
