@@ -10,7 +10,7 @@
     <PackageVersion Include="Lazy.Captcha.Core" Version="2.2.2" />
     <PackageVersion Include="MailKit" Version="4.13.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication" Version="2.3.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.19" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
     <PackageVersion Include="Autofac" Version="8.4.0" />
     <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
@@ -20,21 +20,21 @@
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.5.0" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
     <PackageVersion Include="MinVer" Version="6.0.0" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="Obfuscar" Version="2.2.47" />
     <PackageVersion Include="Obfuscar.MsBuild" Version="2.2.47" />
     <PackageVersion Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageVersion Include="Scrutor" Version="4.2.2" />
+    <PackageVersion Include="Scrutor" Version="7.0.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.5.0" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="9.0.2" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="9.0.2" />
     <PackageVersion Include="SqlSugarCore" Version="5.1.4.214" />
-    <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.6.7" />
+    <PackageVersion Include="System.Linq.Dynamic.Core" Version="1.7.1" />
     <PackageVersion Include="Yitter.IdGenerator" Version="1.0.14" />
     <PackageVersion Include="System.Runtime.InteropServices" Version="4.3.0" />
     <PackageVersion Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
