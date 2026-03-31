@@ -90,20 +90,47 @@ public class ApplicationModule : Module
 
         containerBuilder.RegisterGeneric(typeof(RawRepository<>)).As(typeof(IRawRepository<>)).InstancePerLifetimeScope();
         containerBuilder.RegisterGeneric(typeof(RawRepository<,>)).As(typeof(IRawRepository<,>)).InstancePerLifetimeScope();
-        // 在Autofac中注册AutoMapper
+        // 在 Autofac 中注册 AutoMapper
         containerBuilder.Register(c =>
         {
             var context = c.Resolve<IComponentContext>();
             //var loggerFactory = context.Resolve<ILoggerFactory>(); // 1. 解析 ILoggerFactory
-
+        
             // 2. 创建和配置 MapperConfigurationExpression
             var expression = new AutoMapper.MapperConfigurationExpression();
-            expression.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
+                    
+            // 3. 安全地获取可扫描的程序集，避免 ReflectionTypeLoadException
+            var assemblies = new List<System.Reflection.Assembly>();
+            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                try
+                {
+                    // 尝试获取类型，如果失败则跳过该程序集
+                    _ = asm.GetTypes();
+                    assemblies.Add(asm);
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    // 记录错误但继续处理其他程序集
+                    Console.WriteLine($"跳过程序集 {asm.FullName}，原因：{ex.Message}");
+                    // 可选：输出详细的 LoaderExceptions 信息
+                    if (ex.LoaderExceptions != null)
+                    {
+                        foreach (var loaderEx in ex.LoaderExceptions)
+                        {
+                            if (loaderEx != null)
+                                Console.WriteLine($"  - {loaderEx.Message}");
+                        }
+                    }
+                }
+            }
+                    
+            expression.AddMaps(assemblies.ToArray());
             expression.ConstructServicesUsing(context.Resolve);
-
-            // 3. 使用你提供的特定构造函数创建 MapperConfiguration
+        
+            // 4. 使用你提供的特定构造函数创建 MapperConfiguration
             var config = new MapperConfiguration(expression);
-
+        
             return config.CreateMapper();
         }).As<IMapper>().InstancePerLifetimeScope();
 
