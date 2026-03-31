@@ -8,6 +8,7 @@ namespace Fastdotnet.WebApi.Controllers;
 /// </summary>
 [ApiController]
 [Route("[controller]")]
+[SkipAntiReplayAttribute]
 public class HealthController : ControllerBase
 {
     /// <summary>
@@ -23,7 +24,7 @@ public class HealthController : ControllerBase
         var healthStatus = new HealthStatus
         {
             Status = "Healthy",
-            Timestamp = DateTime.UtcNow,
+            Timestamp = DateTime.Now,
             Version = GetApplicationVersion(),
             Environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"
         };

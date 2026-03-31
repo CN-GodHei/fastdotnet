@@ -65,7 +65,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// 从磁盘物理删除一个已停用的插件
         /// </summary>
         [HttpPost("uninstall/{pluginId}")]
-        public async Task<ApiResult> UninstallPlugin(string pluginId)
+        public async Task<UninstallResDto> UninstallPlugin(string pluginId)
         {
             var result = await _pluginLoadService.UninstallPluginAsync(pluginId);
             return result;

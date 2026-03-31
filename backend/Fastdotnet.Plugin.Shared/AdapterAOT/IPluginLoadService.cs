@@ -10,7 +10,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
         Task<List<PluginInfo>> ScanPluginsAsync();
         Task<ApiResult> EnablePluginAsync(string pluginId);
         Task<ApiResult> DisablePluginAsync(string pluginId, bool ManualStop);
-        Task<ApiResult> UninstallPluginAsync(string pluginId);
+        Task<UninstallResDto> UninstallPluginAsync(string pluginId);
         Task<ApiResult> InstallPlugin(string pluginId, string Version, string UserToken);
         Task<ApiResult> UploadOfflinePackage(byte[] fileBytes, string fileName);
         Task<bool> SetAuthCode(string AuthCode);

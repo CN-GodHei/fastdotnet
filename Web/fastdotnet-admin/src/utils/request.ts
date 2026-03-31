@@ -210,9 +210,16 @@ service.interceptors.request.use(
 				? config.data
 				: JSON.stringify(config.data);
 		}
-
+		let normalizedPath = path;
+		// 去掉开头的 / （与后端保持一致）
+		if (normalizedPath.startsWith('/')) {
+			normalizedPath = normalizedPath.substring(1);
+		}
+		// 直接使用 btoa 编码，不使用 encodeURIComponent（与后端保持一致）
+		const pathEncoded = btoa(normalizedPath);
+		const bodyEncoded = body ? btoa(body) : '';
 		// 签名字符串构建 (必须与后端顺序、分隔符完全一致)
-		const signContent = `${timestamp}|${nonce}|${method}|${path}|${body}`;
+		const signContent = `${timestamp}|${nonce}|${method}|${pathEncoded}|${bodyEncoded}`;
 
 		// 【关键安全优化】：密钥获取策略
 		// 方案 A (推荐): 登录后从后端下发动态密钥，存储在 Session 中

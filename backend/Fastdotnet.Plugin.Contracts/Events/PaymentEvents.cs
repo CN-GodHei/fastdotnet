@@ -36,7 +36,7 @@ public class OrderCreatedEvent : DomainEvent
     /// <summary>
     /// 异步通知地址
     /// </summary>
-    public string NotifyUrl { get; set; } = string.Empty;
+    //public string NotifyUrl { get; set; } = string.Empty;
     
     /// <summary>
     /// 扩展数据
@@ -70,7 +70,7 @@ public class PaymentRequestedEvent : DomainEvent
     /// <summary>
     /// 异步通知地址
     /// </summary>
-    public string NotifyUrl { get; set; } = string.Empty;
+    //public string NotifyUrl { get; set; } = string.Empty;
     
     /// <summary>
     /// 扩展数据

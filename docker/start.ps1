@@ -1,6 +1,7 @@
 #!/usr/bin/env pwsh
 # Fastdotnet Docker Management Script
 # Usage: .\start.ps1 [-Build] [-Logs] [-Stop] [-Restart] [-Clean]
+# docker-compose -f docker-compose.yml -f docker-compose.external-db.yml up -d
 
 param(
     [switch]$Build,

@@ -191,13 +191,59 @@
         </span>
       </template>
     </el-dialog>
+
+    <!-- 离线卸载码对话框 -->
+    <el-dialog
+      v-model="uninstallCodeDialogVisible"
+      title="离线卸载确认"
+      width="600px"
+      :close-on-click-modal="false"
+    >
+      <el-form label-position="top">
+        <el-alert 
+          title="重要提示" 
+          type="warning" 
+          description="该插件为离线授权方式，已生成卸载码。请复制下方卸载码信息到官网进行离线授权撤销操作。" 
+          show-icon 
+          :closable="false"
+          class="mb15"
+        />
+        
+        <el-form-item label="卸载码" required>
+          <el-input
+            v-model="uninstallCodeText"
+            type="textarea"
+            :rows="6"
+            placeholder="卸载码将显示在这里"
+            readonly
+            autocomplete="off"
+          />
+        </el-form-item>
+      </el-form>
+      
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="copyUninstallCode" :loading="copying">
+            <el-icon><CopyDocument /></el-icon>
+            复制卸载码
+          </el-button>
+          <el-button type="primary" link @click="openOfficialWebsite">
+            <el-icon><Link /></el-icon>
+            访问官网
+          </el-button>
+          <el-button type="primary" @click="uninstallCodeDialogVisible = false">
+            关 闭
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts" name="systemPlugin">
 import { ref, onMounted, defineAsyncComponent, onUnmounted } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { CopyDocument,UploadFilled } from '@element-plus/icons-vue'
+import { CopyDocument,UploadFilled,Link } from '@element-plus/icons-vue'
 // 导入插件相关的 API
 import {
   getApiPluginScan,
@@ -272,6 +318,11 @@ const uploadRef = ref<any>(null)
 const fileList = ref<any[]>([])
 const selectedFile = ref<File | null>(null)
 const uploading = ref(false)
+
+// 离线卸载码相关
+const uninstallCodeDialogVisible = ref(false)
+const uninstallCodeText = ref('')
+const copying = ref(false)
 
 // 获取插件列表
 const getPluginList = () => {
@@ -443,19 +494,80 @@ const handleUninstall = (row: Plugin) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    postApiPluginUninstallPluginId({ pluginId: row.id }).then(() => {
-      ElMessage.success('卸载成功')
-      getPluginList() // 重新获取插件列表
-
-      // 通知插件市场插件状态变更
-      window.dispatchEvent(new CustomEvent('micro-app-event', {
-        detail: {
-          type: MicroAppEvents.UPDATE_INSTALLED_PLUGINS,
-          data: { action: 'uninstall', pluginId: row.id }
+    postApiPluginUninstallPluginId({ pluginId: row.id }).then((res: any) => {
+      if (res.Result === true) {
+        // 检查是否为离线授权方式
+        if (res.Offline === true && res.UninstallCode) {
+          // 显示离线卸载码对话框
+          uninstallCodeText.value = res.UninstallCode
+          uninstallCodeDialogVisible.value = true
+          ElMessage.success('插件已卸载，由于是离线授权方式，请复制卸载码到官网进行授权撤销')
+        } else {
+          ElMessage.success('卸载成功')
         }
-      }))
+        
+        getPluginList() // 重新获取插件列表
+
+        // 通知插件市场插件状态变更
+        window.dispatchEvent(new CustomEvent('micro-app-event', {
+          detail: {
+            type: MicroAppEvents.UPDATE_INSTALLED_PLUGINS,
+            data: { action: 'uninstall', pluginId: row.id }
+          }
+        }))
+      } else {
+        ElMessage.error(res.Msg || '卸载失败')
+      }
     })
   })
+}
+
+// 复制卸载码
+const copyUninstallCode = async () => {
+  if (!uninstallCodeText.value) {
+    ElMessage.warning('没有可复制的卸载码')
+    return
+  }
+  
+  try {
+    copying.value = true
+    
+    // 优先使用 Clipboard API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(uninstallCodeText.value)
+    } else {
+      // 降级方案：使用传统的 execCommand 方式
+      const textArea = document.createElement('textarea')
+      textArea.value = uninstallCodeText.value
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-999999px'
+      textArea.style.top = '-999999px'
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      
+      try {
+        const successful = document.execCommand('copy')
+        if (!successful) {
+          throw new Error('execCommand copy failed')
+        }
+      } finally {
+        document.body.removeChild(textArea)
+      }
+    }
+    
+    ElMessage.success('复制成功，请前往官网进行离线授权撤销')
+  } catch (error: any) {
+    console.error('复制失败:', error)
+    ElMessage.error('复制失败，请手动选择文本复制')
+  } finally {
+    copying.value = false
+  }
+}
+
+// 打开官网
+const openOfficialWebsite = () => {
+  window.open('https://fastdotnet.top', '_blank')
 }
 
 // 配置插件

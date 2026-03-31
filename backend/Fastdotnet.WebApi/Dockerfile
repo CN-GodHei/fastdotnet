@@ -28,7 +28,9 @@ RUN dotnet build "./Fastdotnet.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/bu
 # 此阶段用于发布要复制到最终阶段的服务项目
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Fastdotnet.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Fastdotnet.WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false /p:DebugType=None /p:EmbedAllSources=false
+# 删除开发环境配置文件
+RUN rm -f /app/publish/appsettings.Development.json
 
 # 此阶段在生产中使用，或在常规模式下从 VS 运行时使用(在不使用调试配置时为默认值)
 FROM base AS final

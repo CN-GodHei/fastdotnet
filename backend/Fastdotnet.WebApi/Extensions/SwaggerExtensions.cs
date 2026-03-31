@@ -11,12 +11,15 @@ public static class SwaggerExtensions
     {
         services.AddSwaggerGen(c =>
         {
-            // 添加主API文档 - admin 版本
+            // 使用完整类型名作为 schemaId，避免不同命名空间下相同类名的冲突
+            c.CustomSchemaIds(type => type.FullName);
+                
+            // 添加主 API 文档 - admin 版本
             c.SwaggerDoc("main-admin", new OpenApiInfo
             {
                 Title = "主系统 API",
                 Version = "v1",
-                Description = "Fastdotnet 主系统 API 文档（Admin端）"
+                Description = "Fastdotnet 主系统 API 文档（Admin 端）"
             });
             
             // 添加主API文档 - app 版本
