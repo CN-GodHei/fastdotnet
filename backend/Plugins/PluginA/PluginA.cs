@@ -17,6 +17,7 @@ using Fastdotnet.Core.Initializers;
 using Fastdotnet.Plugin.Contracts.Metrics;
 using PluginA.EventHandlers;
 using PluginA.Services;
+using PluginA.Contexts;
 
 // The namespace for the WebApi project must be included to find the DynamicMiddlewareRegistry.
 
@@ -35,17 +36,34 @@ namespace PluginA
         {
             //Console.WriteLine($"[{Name}] Initializing and registering middleware...");
             
-            // Get the central middleware registry from the host's services.
+            // ========== 注册 HTTP 中间件（IDynamicMiddleware） ==========
             var registry = serviceProvider.GetService<DynamicMiddlewareRegistry>();
             if (registry != null)
             {
-                // Register this plugin's middleware type.
+                // 注册原有的 HTTP 中间件
                 registry.Register(typeof(PluginAMiddleware));
-                //Console.WriteLine($"[{Name}] Middleware '{nameof(PluginAMiddleware)}' registered successfully.");
+                
+                // 注册新的 HTTP 中间件（用于调用业务操作管道）
+                registry.Register(typeof(HttpToBusinessOperationMiddleware));
+                
+                Console.WriteLine($"[{Name}] HTTP 中间件注册成功，共 {registry.GetMiddlewareTypes().Count()} 个");
+            }
+            
+            // ========== 注册泛型管道中间件（IPluginPipeline<TContext>） ==========
+            // 1. 获取业务操作管道的注册表
+            var businessOpRegistry = serviceProvider.GetService<PluginPipelineRegistry<BusinessOperationContext>>();
+            if (businessOpRegistry != null)
+            {
+                // 2. 注册三个中间件到管道注册表
+                businessOpRegistry.Register(typeof(BusinessOperationLoggingMiddleware));
+                businessOpRegistry.Register(typeof(BusinessOperationValidationMiddleware));
+                businessOpRegistry.Register(typeof(BusinessOperationPerformanceMiddleware));
+                
+                Console.WriteLine($"[{Name}] 业务操作管道中间件注册成功，共 {businessOpRegistry.GetPipelineTypes().Count()} 个中间件");
             }
             else
             {
-                //Console.WriteLine($"[{Name}] ERROR: Could not find {nameof(DynamicMiddlewareRegistry)}. Middleware not registered.");
+                Console.WriteLine($"[{Name}] 警告：未找到 PluginPipelineRegistry<BusinessOperationContext>，管道中间件未注册");
             }
             
             return Task.CompletedTask;
@@ -93,7 +111,7 @@ namespace PluginA
             builder.RegisterType<PluginAMiddleware>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<PluginAPermissionProvider>().As<IPermissionProvider>().InstancePerLifetimeScope();
             //builder.RegisterType<PluginEntityService>().As<IPluginEntityService>().InstancePerLifetimeScope();
-
+        
             // ========== 事件总线演示：注册事件处理器 ==========
             builder.RegisterType<OrderPaidEventHandler>()
                 .As<Fastdotnet.Plugin.Contracts.Events.IEventHandler<Fastdotnet.Plugin.Contracts.Events.PaymentCompletedEvent>>()
@@ -101,25 +119,57 @@ namespace PluginA
             builder.RegisterType<PluginInstalledEventHandler>()
                 .As<Fastdotnet.Plugin.Contracts.Events.IEventHandler<Fastdotnet.Plugin.Contracts.Events.PluginInstalledEvent>>()
                 .InstancePerLifetimeScope();
-
+        
             // ========== 事件总线演示：注册商城订单服务（用于发布事件） ==========
             builder.RegisterType<MallOrderService>().AsSelf().InstancePerLifetimeScope();
-            
-            // 注册PluginAHub作为服务，以便其他组件可以使用它
-            // 注意：这仅在插件内部需要直接使用Hub实例时才需要
+                    
+            // 注册 PluginAHub 作为服务，以便其他组件可以使用它
+            // 注意：这仅在插件内部需要直接使用 Hub 实例时才需要
             builder.RegisterType<Hubs.PluginAHub>().AsSelf().InstancePerLifetimeScope();
-            
+                    
             // 注册插件的服务，用于向客户端发送消息
             builder.RegisterType<Services.PluginAMessageService>().As<IPluginAMessageService>().InstancePerLifetimeScope();
-            
-            // 注册用户扩展处理器，用于处理PluginA的用户扩展数据
+                    
+            // 注册用户扩展处理器，用于处理 PluginA 的用户扩展数据
             builder.RegisterType<PluginAUserExtensionHandler>().As<IFdAppUserExtensionHandler<Entities.PluginAUserExtension>>().InstancePerLifetimeScope();
-            
+                    
             // 注册指标提供者
             builder.RegisterType<Metrics.PluginAMetricProvider>().As<IMetricProvider>().InstancePerLifetimeScope();
-            
+                    
             // 注册初始化器，用于创建插件需要的数据库表
             //builder.RegisterType<PluginAUserExtensionInitializer>().As<IStartupTask>().InstancePerLifetimeScope();
+                    
+            // ========== 注册泛型管道相关服务 ==========
+            // 1. 注册业务操作上下文管道注册表（单例）
+            builder.RegisterType<PluginPipelineRegistry<BusinessOperationContext>>()
+                .AsSelf()
+                .SingleInstance();
+                        
+            // 2. 注册业务操作上下文管道调度器（单例）
+            builder.RegisterType<PluginPipelineDispatcher<BusinessOperationContext>>()
+                .AsSelf()
+                .SingleInstance();
+                        
+            // 3. 注册三个中间件（瞬态，每次执行都会创建新实例）
+            builder.RegisterType<BusinessOperationLoggingMiddleware>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<BusinessOperationValidationMiddleware>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<BusinessOperationPerformanceMiddleware>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
+                        
+            // 4. 注册业务操作执行器（用于演示和使用管道）
+            builder.RegisterType<BusinessOperationExecutor>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
+                        
+            // 5. 注册 HTTP 到业务操作的桥接中间件（瞬态）
+            builder.RegisterType<HttpToBusinessOperationMiddleware>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
         }
 
         /// <summary>

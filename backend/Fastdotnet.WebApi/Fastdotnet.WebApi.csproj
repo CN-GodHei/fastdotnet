@@ -70,6 +70,12 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Fastdotnet.Plugin.Core">
+      <HintPath>..\..\..\fastdotnet.-plugin.-core\Fastdotnet.Plugin.Core\bin\Debug\net10.0\Fastdotnet.Plugin.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
   <!--
   <Target Name="SetupPluginDirectory" AfterTargets="Build">
     <PropertyGroup>
