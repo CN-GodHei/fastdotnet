@@ -2,18 +2,18 @@
 namespace Fastdotnet.Core.Middleware
 {
     /// <summary>
-    /// A thread-safe registry for storing and retrieving types of dynamically loaded middleware.
-    /// This service is registered as a singleton and acts as the central point of truth for the DynamicMiddlewareDispatcher.
-    /// It uses WeakReference to hold middleware types, preventing it from blocking plugin assembly unloading.
+    /// 一个线程安全的注册表，用于存储和检索动态加载的中间件类型。
+    /// 此服务作为单例注册，并作为 DynamicMiddlewareDispatcher 的中心事实点。
+    /// 它使用 WeakReference 来持有中间件类型，防止其阻止插件程序集卸载。
     /// </summary>
     public class DynamicMiddlewareRegistry
     {
         private readonly ConcurrentDictionary<string, WeakReference<Type>> _middlewareTypes = new ConcurrentDictionary<string, WeakReference<Type>>();
 
         /// <summary>
-        /// Registers a middleware type.
+        /// 注册一个中间件类型。
         /// </summary>
-        /// <param name="middlewareType">The type of the middleware to register. Must implement IDynamicMiddleware.</param>
+        /// <param name="middlewareType">要注册的中间件类型。必须实现 IDynamicMiddleware 接口。</param>
         public void Register(Type middlewareType)
         {
             if (middlewareType?.FullName == null) return;
@@ -21,9 +21,9 @@ namespace Fastdotnet.Core.Middleware
         }
 
         /// <summary>
-        /// Unregisters a middleware type.
+        /// 注销一个中间件类型。
         /// </summary>
-        /// <param name="middlewareType">The type of the middleware to unregister.</param>
+        /// <param name="middlewareType">要注销的中间件类型。</param>
         public void Unregister(Type middlewareType)
         {
             if (middlewareType?.FullName == null) return;
@@ -31,10 +31,10 @@ namespace Fastdotnet.Core.Middleware
         }
 
         /// <summary>
-        /// Gets a snapshot of the currently registered and active middleware types.
-        /// Dead references to garbage-collected types are cleaned up during this process.
+        /// 获取当前已注册且处于活动状态的中间件类型的快照。
+        /// 在此过程中会清理对垃圾回收类型的无效引用。
         /// </summary>
-        /// <returns>An enumerable of middleware types.</returns>
+        /// <returns>中间件类型的可枚举集合。</returns>
         public IEnumerable<Type> GetMiddlewareTypes()
         {
             var activeTypes = new List<Type>();
@@ -46,7 +46,7 @@ namespace Fastdotnet.Core.Middleware
                 }
                 else
                 {
-                    // Proactively remove dead references from the dictionary
+                    // 主动从字典中移除无效引用
                     _middlewareTypes.TryRemove(pair.Key, out _);
                 }
             }

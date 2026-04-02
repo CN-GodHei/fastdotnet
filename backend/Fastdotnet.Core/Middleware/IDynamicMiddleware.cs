@@ -2,17 +2,17 @@
 namespace Fastdotnet.Core.Middleware
 {
     /// <summary>
-    /// Defines a contract for middleware that can be dynamically discovered and executed by the host application.
-    /// This allows hot-pluggable plugins to participate in the HTTP request pipeline.
+    /// 定义了一个契约，用于主应用程序动态发现和执行的中间件。
+    /// 这允许热插拔的插件参与 HTTP 请求管道。
     /// </summary>
     public interface IDynamicMiddleware
     {
         /// <summary>
-        /// Handles the HTTP request.
+        /// 处理 HTTP 请求。
         /// </summary>
-        /// <param name="context">The HttpContext for the current request.</param>
-        /// <param name="next">The next middleware in the pipeline.</param>
-        /// <returns>A Task that represents the completion of the middleware execution.</returns>
+        /// <param name="context">当前请求的 HttpContext。</param>
+        /// <param name="next">管道中的下一个中间件。</param>
+        /// <returns>表示中间件执行完成的任务。</returns>
         Task InvokeAsync(HttpContext context, RequestDelegate next);
     }
 }
