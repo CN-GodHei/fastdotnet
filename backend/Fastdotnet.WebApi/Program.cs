@@ -6,6 +6,7 @@ using Fastdotnet.Service.IService.Sys;
 using Fastdotnet.Service.Service.Admin;
 using Fastdotnet.Service.Service.App;
 using Fastdotnet.Service.Service.Sys;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 // 可选：延长停机超时时间
@@ -74,8 +75,9 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    // 此处需要手动读取配置，因为此时DI容器还未完全构建
+    // 此处需要手动读取配置，因为此时 DI 容器还未完全构建
     var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>() ?? throw new InvalidOperationException("JwtSettings not configured.");
+    
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -84,7 +86,11 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtSettings.Issuer,
         ValidAudience = jwtSettings.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+        
+        // 配置 Claim 类型映射，确保 SignalR 能正确识别用户 ID
+        NameClaimType = JwtRegisteredClaimNames.NameId, // 使用 "nameid" 作为用户标识
+        RoleClaimType = ClaimTypes.Role
     };
 });
 
@@ -166,8 +172,13 @@ builder.Services.AddSingleton<IControllerActivator, PluginControllerActivator>()
 // 注册限流和黑名单缓存服务
 builder.Services.AddScoped<IRateLimitCacheService, RateLimitCacheService>();
 
-// 添加SignalR服务
-builder.Services.AddSignalR();
+// 添加 SignalR 服务
+builder.Services.AddSignalR()
+    .AddJsonProtocol(options =>
+    {
+        // 配置 JSON 序列化选项
+        options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
 
 // 注册IStorageContext服务
 builder.Services.AddScoped<IStorageContext, StorageContext>();
