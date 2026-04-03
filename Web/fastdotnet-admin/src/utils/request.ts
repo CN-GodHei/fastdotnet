@@ -201,7 +201,7 @@ service.interceptors.request.use(
 		const method = config.method?.toUpperCase() || 'GET';
 		const path = config.url || '';
 
-		// 确保 Body 序列化一致性与后端完全匹配
+		// 确保 Body 序列化一致性后端完全匹配
 		let body = '';
 		if (config.data && ['POST', 'PUT', 'PATCH'].includes(method)) {
 			// 如果已经是字符串（如 qs.stringify 后的），直接用；否则 JSON.stringify
@@ -215,9 +215,23 @@ service.interceptors.request.use(
 		if (normalizedPath.startsWith('/')) {
 			normalizedPath = normalizedPath.substring(1);
 		}
-		// 直接使用 btoa 编码，不使用 encodeURIComponent（与后端保持一致）
-		const pathEncoded = btoa(normalizedPath);
-		const bodyEncoded = body ? btoa(body) : '';
+				
+		// 【关键修复】：使用 UTF-8 兼容的 Base64 编码
+		// btoa 只能处理 Latin1 字符，需要先使用 encodeURIComponent 转义为 UTF-8
+		const encodeBase64 = (str: string): string => {
+			try {
+				// 先使用 encodeURIComponent 编码为 UTF-8，再使用 btoa
+				return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+					(match, p1) => String.fromCharCode(parseInt(p1, 16))
+				));
+			} catch (e) {
+				console.error('[Base64 编码失败]', str, e);
+				return btoa(str); // 降级处理
+			}
+		};
+				
+		const pathEncoded = encodeBase64(normalizedPath);
+		const bodyEncoded = body ? encodeBase64(body) : '';
 		// 签名字符串构建 (必须与后端顺序、分隔符完全一致)
 		const signContent = `${timestamp}|${nonce}|${method}|${pathEncoded}|${bodyEncoded}`;
 
