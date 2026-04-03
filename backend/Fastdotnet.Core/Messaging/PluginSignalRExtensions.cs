@@ -11,7 +11,7 @@ namespace Fastdotnet.Core.Messaging
     public static class PluginSignalRExtensions
     {
         /// <summary>
-        /// 发送插件消息（自动获取当前插件信息）
+        /// 发送插件消息（自动获取当前插件信息，如果失败则使用默认值）
         /// </summary>
         /// <typeparam name="T">消息数据类型</typeparam>
         /// <param name="hubContext">Hub 上下文</param>
@@ -26,18 +26,23 @@ namespace Fastdotnet.Core.Messaging
             string? targetUserId = null,
             CancellationToken cancellationToken = default)
         {
-            // 自动获取当前插件信息
-            var pluginInfo = PluginContext.GetCurrentPluginInfo();
-            
-            if (pluginInfo == null)
+            // 尝试自动获取当前插件信息
+            PluginInfo? pluginInfo = null;
+            try
             {
-                throw new InvalidOperationException("无法获取当前插件信息，请确保在插件上下文中调用此方法");
+                pluginInfo = PluginContext.GetCurrentPluginInfo();
             }
-
+            catch (Exception ex)
+            {
+                // 如果在非插件环境（如主程序）中调用，会抛出异常
+                // 这是正常的，我们使用默认的插件信息
+                Console.WriteLine($"[PluginSignalR] 无法获取插件信息，使用默认值：{ex.Message}");
+            }
+            
             var message = new PluginMessage<T>
             {
-                PluginId = pluginInfo.id,
-                PluginName = pluginInfo.name,
+                PluginId = pluginInfo?.id ?? "System",
+                PluginName = pluginInfo?.name ?? "System",
                 MessageType = messageType,
                 Data = data,
                 TargetUserId = targetUserId,
@@ -48,7 +53,7 @@ namespace Fastdotnet.Core.Messaging
         }
 
         /// <summary>
-        /// 发送文本通知（自动获取当前插件信息）
+        /// 发送文本通知（自动获取当前插件信息，如果失败则使用默认值）
         /// </summary>
         /// <param name="hubContext">Hub 上下文</param>
         /// <param name="title">标题</param>
@@ -64,16 +69,21 @@ namespace Fastdotnet.Core.Messaging
             string? targetUserId = null,
             CancellationToken cancellationToken = default)
         {
-            var pluginInfo = PluginContext.GetCurrentPluginInfo();
-            
-            if (pluginInfo == null)
+            // 尝试自动获取当前插件信息
+            PluginInfo? pluginInfo = null;
+            try
             {
-                throw new InvalidOperationException("无法获取当前插件信息");
+                pluginInfo = PluginContext.GetCurrentPluginInfo();
+            }
+            catch (Exception ex)
+            {
+                // 在非插件环境中，使用默认值
+                Console.WriteLine($"[PluginSignalR] 无法获取插件信息，使用默认值：{ex.Message}");
             }
 
             await hubContext.SendPluginNotificationAsync(
-                pluginInfo.id,
-                pluginInfo.name,
+                pluginInfo?.id ?? "System",
+                pluginInfo?.name ?? "System",
                 title,
                 message,
                 level,
