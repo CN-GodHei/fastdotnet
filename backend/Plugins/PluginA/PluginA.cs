@@ -23,16 +23,13 @@ using PluginA.Contexts;
 
 namespace PluginA
 {
-    public class PluginAImpl : IPlugin, IPluginSignalREndpoint
+    public class PluginAImpl : PluginBase, IPluginSignalREndpoint
     {
-        public string Name => "PluginA";
-        public string Version => "1.0.0";
-        public string PluginId => "11375910391972869";
+        public override string Name => "PluginA";
+        public override string Version => "1.0.0";
+        public override string PluginId => "11375910391972869";
 
-        /// <summary>
-        /// Called when the plugin is enabled. Use this to register services with the host.
-        /// </summary>
-        public Task InitializeAsync(IServiceProvider serviceProvider)
+        protected override async Task OnInitializeAsync(IServiceProvider serviceProvider)
         {
             //Console.WriteLine($"[{Name}] Initializing and registering middleware...");
             
@@ -66,25 +63,25 @@ namespace PluginA
                 Console.WriteLine($"[{Name}] 警告：未找到 PluginPipelineRegistry<BusinessOperationContext>，管道中间件未注册");
             }
             
-            return Task.CompletedTask;
+            return;
         }
 
-        public Task StartAsync()
+        protected override async Task OnStartAsync()
         {
             // Placeholder for start logic
-            return Task.CompletedTask;
+            return;
         }
 
-        public Task StopAsync()
+        protected override async Task OnStopAsync()
         {
             // Placeholder for stop logic
-            return Task.CompletedTask;
+            return;
         }
 
         /// <summary>
         /// Called when the plugin is disabled. Use this to clean up resources.
         /// </summary>
-        public Task UnloadAsync(IServiceProvider serviceProvider)
+        protected override async Task OnUnloadAsync(IServiceProvider serviceProvider)
         {
             //Console.WriteLine($"[{Name}] Unloading and unregistering middleware...");
 
@@ -97,14 +94,14 @@ namespace PluginA
             //     //Console.WriteLine($"[{Name}] Middleware '{nameof(PluginAMiddleware)}' unregistered successfully.");
             // }
             
-            return Task.CompletedTask;
+            return;
         }
 
         /// <summary>
         /// This method is called by the plugin system to register the plugin's own services
         /// into its dedicated DI scope.
         /// </summary>
-        public void ConfigureServices(ContainerBuilder builder)
+        public override void ConfigureServices(ContainerBuilder builder)
         {
             // This is where you would register services internal to the plugin.
             // For the middleware to be activated, it also needs to be registered here.

@@ -1,12 +1,43 @@
 ﻿
 namespace Fastdotnet.Plugin.Contracts
 {
+    /// <summary>
+    /// 插件生命周期状态
+    /// </summary>
+    public enum PluginLifecycleState
+    {
+        /// <summary>
+        /// 未初始化（刚加载）
+        /// </summary>
+        Uninitialized,
+        
+        /// <summary>
+        /// 已初始化（完成 InitializeAsync）
+        /// </summary>
+        Initialized,
+        
+        /// <summary>
+        /// 已启动（完成 StartAsync）
+        /// </summary>
+        Started,
+        
+        /// <summary>
+        /// 已停止（完成 StopAsync）
+        /// </summary>
+        Stopped,
+        
+        /// <summary>
+        /// 已卸载（完成 UnloadAsync）
+        /// </summary>
+        Unloaded
+    }
+
     public interface IPlugin
     {
         /// <summary>
-        /// 插件Id
+        /// 获取插件 Id
         /// </summary>
-        //string PluginId { get; }
+        string PluginId { get; }
 
         /// <summary>
         /// 获取插件名称
@@ -17,6 +48,11 @@ namespace Fastdotnet.Plugin.Contracts
         /// 获取插件版本
         /// </summary>
         string Version { get; }
+
+        /// <summary>
+        /// 获取插件当前生命周期状态
+        /// </summary>
+        PluginLifecycleState LifecycleState { get; }
 
         /// <summary>
         /// 插件初始化，在此处可以访问主程序的服务
@@ -43,7 +79,7 @@ namespace Fastdotnet.Plugin.Contracts
         /// <summary>
         /// 配置插件服务
         /// </summary>
-        /// <param name="builder">Autofac容器构建器</param>
+        /// <param name="builder">Autofac 容器构建器</param>
         void ConfigureServices(ContainerBuilder builder);
     }
 }
