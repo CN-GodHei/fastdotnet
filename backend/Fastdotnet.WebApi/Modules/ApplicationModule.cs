@@ -59,8 +59,6 @@ public class ApplicationModule : Module
         containerBuilder.Register(c => new PluginLoadService(
             c.Resolve<PluginManager>(),
             c.Resolve<ILifetimeScope>(),
-            c.Resolve<ILogger<PluginLoadService>>(),
-            c.Resolve<ILoggerFactory>(),
             c.Resolve<PluginStaticFileProviderRegistry>(),
             c.Resolve<IConfiguration>()
         )).As<IPluginLoadService>().SingleInstance();
