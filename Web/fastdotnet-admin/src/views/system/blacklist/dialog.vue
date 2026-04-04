@@ -73,16 +73,27 @@
 import { reactive, ref, nextTick } from 'vue';
 import { ElMessage } from 'element-plus';
 import {
-  postAdminBlacklists,
-  putAdminBlacklistsId,
-  getAdminBlacklistsId
-} from '@/api/fd-system-api-admin/Blacklists';
+  postApiAdminFdBlacklists,
+  putApiAdminFdBlacklistsId,
+  getApiAdminFdBlacklistsId
+} from '@/api/fd-system-api-admin/FdBlacklists';
 import type { 
   FdBlacklistDto, 
   CreateFdBlacklistDto, 
   UpdateFdBlacklistDto 
 } from '@/api/fd-system-api-admin/typings';
 import type { FormInstance } from 'element-plus';
+
+// 定义状态类型
+interface BlacklistDialogState {
+  dialogVisible: boolean;
+  dialogTitle: string;
+  submitLoading: boolean;
+  formData: any;
+  formRules: any;
+  actionType: string;
+  rowData?: FdBlacklistDto;
+}
 
 // 定义变量内容
 const blacklistFormRef = ref<FormInstance>();
@@ -117,7 +128,7 @@ const openDialog = async (type: string, row?: FdBlacklistDto) => {
   if (type === 'edit' && row?.Id) {
     // 编辑时需要先获取最新数据
     try {
-      const data = await getAdminBlacklistsId({ params: { id: row.Id } });
+      const data = await getApiAdminFdBlacklistsId({ id: row.Id });
       state.rowData = data;
       state.formData = {
         Id: data.Id,
@@ -178,7 +189,7 @@ const handleSubmit = () => {
           Reason: state.formData.Reason,
           ExpiredAt: state.formData.ExpiredAt
         };
-        await postAdminBlacklists(CreateTimea);
+        await postApiAdminFdBlacklists(CreateTimea);
         ElMessage.success('新增成功');
       } else {
         // 编辑
@@ -192,10 +203,7 @@ const handleSubmit = () => {
           Reason: state.formData.Reason,
           ExpiredAt: state.formData.ExpiredAt
         };
-        await putAdminBlacklistsId({ 
-          params: { id: state.formData.Id }, 
-          body: updateData 
-        });
+        await putApiAdminFdBlacklistsId({ id: state.formData.Id }, updateData);
         ElMessage.success('更新成功');
       }
       

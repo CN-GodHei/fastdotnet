@@ -35,8 +35,7 @@
             </GlobalFileUploader>
           </el-card>
         </el-col>
-      </el-col>
-    </el-row>
+      </el-row>
 
     <el-row :gutter="20" style="margin-top: 20px;">
       <el-col :span="24">
@@ -82,6 +81,7 @@
         </el-card>
       </el-col>
     </el-row>
+    </el-card>
   </div>
 </template>
 
