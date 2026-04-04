@@ -21,7 +21,8 @@ YitIdHelper.SetIdGenerator(options);
 builder.Services.AddCors(cors => cors.AddDefaultPolicy(policy =>
     policy.AllowAnyHeader()
          .AllowAnyMethod()
-         .AllowAnyOrigin()
+         .SetIsOriginAllowed(_ => true)  // 允许所有来源，但支持凭证
+         .AllowCredentials()  // 允许携带凭证（cookies、authorization headers）
          .WithExposedHeaders("*")));
 
 // 配置授权策略
@@ -91,6 +92,24 @@ builder.Services.AddAuthentication(options =>
         // 配置 Claim 类型映射，确保 SignalR 能正确识别用户 ID
         NameClaimType = JwtRegisteredClaimNames.NameId, // 使用 "nameid" 作为用户标识
         RoleClaimType = ClaimTypes.Role
+    };
+    
+    // 处理 SignalR 的 Token 传递（从 Query String 读取）
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            
+            // 如果请求路径是 SignalR Hub，则从 Query String 读取 Token
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/universalhub"))
+            {
+                context.Token = accessToken;
+            }
+            
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -246,7 +265,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
     // 注册主框架的SignalR端点
-    endpoints.MapHub<UniversalHub>("/api/signalr");
+    endpoints.MapHub<UniversalHub>("/universalhub");
 });
 
 // 5. 应用程序启动后执行启动任务

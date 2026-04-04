@@ -140,21 +140,9 @@ namespace Fastdotnet.Core.Hubs
         /// <returns></returns>
         public override async Task OnConnectedAsync()
         {
-            // 检查连接是否已携带有效的JWT Token
-            var httpContext = Context.GetHttpContext();
-            if (httpContext != null)
-            {
-                var token = httpContext.Request.Query["access_token"];
-                if (!string.IsNullOrEmpty(token))
-                {
-                    // 验证Token并标记连接为已鉴权
-                    if (ValidateAndAuthenticateToken(token, Context.ConnectionId))
-                    {
-                        Console.WriteLine($"[UniversalHub] 连接 {Context.ConnectionId} 已鉴权");
-                    }
-                }
-            }
-
+            // SignalR 会自动从 JWT Token 的 Claims 中提取 UserId 并建立映射
+            // 无需手动处理，直接使用 Clients.User(userId) 即可发送消息
+            
             await base.OnConnectedAsync();
         }
 

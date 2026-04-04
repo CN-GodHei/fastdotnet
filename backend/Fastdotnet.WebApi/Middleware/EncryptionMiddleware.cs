@@ -30,6 +30,13 @@ namespace Fastdotnet.WebApi.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
+            // 排除 SignalR 相关路径，避免干扰 negotiate 和 WebSocket 连接
+            if (context.Request.Path.StartsWithSegments("/universalhub", StringComparison.OrdinalIgnoreCase))
+            {
+                await _next(context);
+                return;
+            }
+
             //if (context.Resource is Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext mvcContext)
             //{
 
