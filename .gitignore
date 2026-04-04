@@ -131,3 +131,7 @@ fastdotnet.-plugin.-core
 docs
 wwwroot
 *.tar
+*.tar.gz
+*.zip
+*.7z
+*.rar
