@@ -13,7 +13,33 @@
 					</div>
 				</div>
 				<div class="right">
-					<img src="https://i.hd-r.cn/1a0d90a6c1e8b0184c7299dda713effd.png" />
+					<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+						<!-- 背景装饰 -->
+						<circle cx="400" cy="300" r="250" fill="var(--el-color-info-light-9)" opacity="0.3"/>
+						<circle cx="400" cy="300" r="200" fill="var(--el-color-info-light-8)" opacity="0.4"/>
+						
+						<!-- 404 数字 -->
+						<text x="400" y="280" text-anchor="middle" font-size="120" font-weight="bold" 
+						      fill="var(--el-color-info)" opacity="0.8">404</text>
+						
+						<!-- 装饰线条 -->
+						<line x1="250" y1="320" x2="550" y2="320" stroke="var(--el-color-info)" 
+						      stroke-width="3" opacity="0.5" stroke-linecap="round"/>
+						
+						<!-- 小图标 - 放大镜 -->
+						<g transform="translate(370, 350)">
+							<circle cx="30" cy="30" r="20" fill="none" stroke="var(--el-color-info)" 
+							      stroke-width="4" opacity="0.7"/>
+							<line x1="45" y1="45" x2="60" y2="60" stroke="var(--el-color-info)" 
+							      stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+						</g>
+						
+						<!-- 装饰点 -->
+						<circle cx="200" cy="200" r="8" fill="var(--el-color-info)" opacity="0.4"/>
+						<circle cx="600" cy="200" r="6" fill="var(--el-color-info)" opacity="0.3"/>
+						<circle cx="200" cy="400" r="6" fill="var(--el-color-info)" opacity="0.3"/>
+						<circle cx="600" cy="400" r="8" fill="var(--el-color-info)" opacity="0.4"/>
+					</svg>
 				</div>
 			</div>
 		</div>
@@ -79,9 +105,10 @@ const onGoHome = () => {
 			animation-name: error-img;
 			animation-duration: 2s;
 			animation-fill-mode: forwards;
-			img {
+			.error-svg {
 				width: 100%;
 				height: 100%;
+				display: block;
 			}
 		}
 	}

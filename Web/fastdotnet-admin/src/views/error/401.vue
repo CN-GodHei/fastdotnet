@@ -13,7 +13,38 @@
 					</div>
 				</div>
 				<div class="right">
-					<img src="https://i.hd-r.cn/2cf0d2e192660eec23eb9d0655753e7d.png" />
+					<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" class="error-svg">
+						<!-- 背景装饰 -->
+						<circle cx="400" cy="300" r="250" fill="var(--el-color-warning-light-9)" opacity="0.3"/>
+						<circle cx="400" cy="300" r="200" fill="var(--el-color-warning-light-8)" opacity="0.4"/>
+						
+						<!-- 401 数字 -->
+						<text x="400" y="280" text-anchor="middle" font-size="120" font-weight="bold" 
+						      fill="var(--el-color-warning)" opacity="0.8">401</text>
+						
+						<!-- 装饰线条 -->
+						<line x1="250" y1="320" x2="550" y2="320" stroke="var(--el-color-warning)" 
+						      stroke-width="3" opacity="0.5" stroke-linecap="round"/>
+						
+						<!-- 小图标 - 锁 -->
+						<g transform="translate(370, 350)">
+							<!-- 锁身 -->
+							<rect x="15" y="25" width="30" height="25" rx="3" fill="none" 
+							      stroke="var(--el-color-warning)" stroke-width="4" opacity="0.7"/>
+							<!-- 锁扣 -->
+							<path d="M 22 25 L 22 15 A 8 8 0 0 1 38 15 L 38 25" fill="none" 
+							      stroke="var(--el-color-warning)" stroke-width="4" opacity="0.7"/>
+							<!-- 钥匙孔 -->
+							<circle cx="30" cy="35" r="3" fill="var(--el-color-warning)" opacity="0.7"/>
+							<rect x="28.5" y="35" width="3" height="8" rx="1" fill="var(--el-color-warning)" opacity="0.7"/>
+						</g>
+						
+						<!-- 装饰点 -->
+						<circle cx="200" cy="200" r="8" fill="var(--el-color-warning)" opacity="0.4"/>
+						<circle cx="600" cy="200" r="6" fill="var(--el-color-warning)" opacity="0.3"/>
+						<circle cx="200" cy="400" r="6" fill="var(--el-color-warning)" opacity="0.3"/>
+						<circle cx="600" cy="400" r="8" fill="var(--el-color-warning)" opacity="0.4"/>
+					</svg>
 				</div>
 			</div>
 		</div>
@@ -79,9 +110,10 @@ const onSetAuth = () => {
 			animation-name: error-img;
 			animation-duration: 2s;
 			animation-fill-mode: forwards;
-			img {
+			.error-svg {
 				width: 100%;
 				height: 100%;
+				display: block;
 			}
 		}
 	}
