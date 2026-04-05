@@ -12,6 +12,7 @@ public class OrmCodeFirstInitializer : IApplicationInitializer
     {
         _sqlSugarClient = sqlSugarClient;
     }
+    public int Order => -1000;
 
     public async Task InitializeAsync()
     {
