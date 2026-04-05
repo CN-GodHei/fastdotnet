@@ -82,7 +82,7 @@ namespace Fastdotnet.Service.Initializers
     new SystemInfoConfig { Belong=SystemCategory.Admin, Name = "水印文案", Code = "wartermarkText", Value = "Fastdotnet", Description = "水印显示的文字内容", IsSystem = true },
 
     // ========== 其它设置 ==========
-    new SystemInfoConfig { Belong=SystemCategory.Admin, Name = "Tagsview 风格", Code = "tagsStyle", Value = "tags-style-five", Description = "标签页样式，可选值：tags-style-one / four / five", IsSystem = true },
+    new SystemInfoConfig { Belong=SystemCategory.Admin, Name = "Tagsview 风格", Code = "tagsStyle", Value = "tags-style-four", Description = "标签页样式，可选值：tags-style-one / four / five", IsSystem = true },
     new SystemInfoConfig { Belong=SystemCategory.Admin, Name = "主页面切换动画", Code = "animation", Value = "slide-right", Description = "页面切换动画，可选值：slide-right / slide-left / opacitys", IsSystem = true },
     new SystemInfoConfig { Belong=SystemCategory.Admin, Name = "分栏高亮风格", Code = "columnsAsideStyle", Value = "columns-round", Description = "分栏菜单高亮样式，可选值：columns-round / columns-card", IsSystem = true },
     new SystemInfoConfig { Belong=SystemCategory.Admin, Name = "分栏布局风格", Code = "columnsAsideLayout", Value = "columns-vertical", Description = "分栏菜单布局方向，可选值：columns-horizontal / vertical", IsSystem = true },
@@ -159,7 +159,7 @@ namespace Fastdotnet.Service.Initializers
     new SystemInfoConfig { Belong=SystemCategory.App, Name = "水印文案", Code = "wartermarkText", Value = "Fastdotnet", Description = "水印显示的文字内容", IsSystem = true },
 
     // ========== 其它设置 ==========
-    new SystemInfoConfig { Belong=SystemCategory.App, Name = "Tagsview 风格", Code = "tagsStyle", Value = "tags-style-five", Description = "标签页样式，可选值：tags-style-one / four / five", IsSystem = true },
+    new SystemInfoConfig { Belong=SystemCategory.App, Name = "Tagsview 风格", Code = "tagsStyle", Value = "tags-style-four", Description = "标签页样式，可选值：tags-style-one / four / five", IsSystem = true },
     new SystemInfoConfig { Belong=SystemCategory.App, Name = "主页面切换动画", Code = "animation", Value = "slide-right", Description = "页面切换动画，可选值：slide-right / slide-left / opacitys", IsSystem = true },
     new SystemInfoConfig { Belong=SystemCategory.App, Name = "分栏高亮风格", Code = "columnsAsideStyle", Value = "columns-round", Description = "分栏菜单高亮样式，可选值：columns-round / columns-card", IsSystem = true },
     new SystemInfoConfig { Belong=SystemCategory.App, Name = "分栏布局风格", Code = "columnsAsideLayout", Value = "columns-vertical", Description = "分栏菜单布局方向，可选值：columns-horizontal / vertical", IsSystem = true },
