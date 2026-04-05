@@ -1,6 +1,7 @@
 
 
 using Fastdotnet.Core.Entities.Sys;
+using Fastdotnet.Core.Utils;
 using Fastdotnet.Service.IService.Sys;
 
 namespace Fastdotnet.Service.Initializers
@@ -13,6 +14,7 @@ namespace Fastdotnet.Service.Initializers
         private readonly IRepository<FdAdminUser> _adminUserRepository;
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
         private readonly IFdRoleInitializerService _fdRoleInitializer;
+        private readonly IService.Sys.IPasswordService _passwordService;
 
         public AdminUserInitializer(
             IAdminUserService adminUserService,
@@ -21,6 +23,7 @@ namespace Fastdotnet.Service.Initializers
             IRepository<FdAdminUser> adminUserRepository,
             IRepository<FdAdminUserRole> adminUserRoleRepository
             ,IFdRoleInitializerService fdRoleInitializer
+            ,IService.Sys.IPasswordService passwordService
             )
         {
             _adminUserService = adminUserService;
@@ -29,7 +32,13 @@ namespace Fastdotnet.Service.Initializers
             _adminUserRepository = adminUserRepository;
             _adminUserRoleRepository = adminUserRoleRepository;
             _fdRoleInitializer = fdRoleInitializer;
+            _passwordService = passwordService;
         }
+
+        /// <summary>
+        /// 管理员用户初始化应该在字典初始化之后执行（Order = 2000）
+        /// </summary>
+        public int Order => 2000;
 
         public async Task InitializeAsync()
         {
@@ -47,7 +56,11 @@ namespace Fastdotnet.Service.Initializers
                 //_logger.LogInformation("Default admin user not found, creating it...");
                 // 在真实项目中，初始密码应从安全配置中读取
                 //await _adminUserService.CreateAsync(new Core.Models.Admin.Users.CreateFdAdminUserDto { Username = "superadmin", Password = "123456",Name= "超级管理员" });
-                await _adminUserRepository.InsertAsync(new FdAdminUser { Id = "11438163155878918", Username = "superadmin", Password = "123456", Name = "超级管理员" });
+                
+                // 获取默认加密密码（内部自动从字典读取并加密）
+                var hashedPassword = await _passwordService.GetDefaultEncryptedPasswordAsync();
+                await _adminUserRepository.InsertAsync(new FdAdminUser { Id = "11438163155878918", Username = "superadmin", Password = hashedPassword, Name = "超级管理员" });
+                
                 SuperAdminUser = await _adminUserRepository.GetFirstAsync(u => u.Username == "superadmin");
                 //_logger.LogInformation("Default admin user created successfully.");
             }

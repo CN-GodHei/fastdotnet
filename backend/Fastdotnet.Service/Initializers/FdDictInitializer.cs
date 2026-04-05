@@ -17,6 +17,11 @@ namespace Fastdotnet.Service.Initializers
             _dictInitializerService = dictInitializerService;
         }
 
+        /// <summary>
+        /// 字典初始化应该最先执行（Order = 1000）
+        /// </summary>
+        public int Order => 1000;
+
         public async Task InitializeAsync()
         {
             // 使用 DictTypeAndData 格式组织数据
@@ -240,10 +245,38 @@ namespace Fastdotnet.Service.Initializers
                         new FdDictData{ Id="12458431967462406", DictTypeId="11921994044146609", DictTypeCode="CODE_09", Code="CODE_09_02", Label="站点域名-外网", Value="http://127.0.0.1:18889", ValueType=DictValueType.String, OrderNo=106, Remark="站点外网域名", Status=StatusEnum.Enable },
                     }
                 },
+                
+                // PASSWORD_CONFIG: 密码加密配置
+                new DictTypeAndData
+                {
+                    fdDictType = new FdDictType
+                    {
+                        Id = "11921994044146610",
+                        Name = "密码加密配置",
+                        Code = "PASSWORD_CONFIG",
+                        SysFlag = YesNoEnum.Y,
+                        OrderNo = 202,
+                        Remark = "密码加密相关配置",
+                        Status = StatusEnum.Enable
+                    },
+                    fdDictData = new List<FdDictData>
+                    {
+                        // 密码加密类型：Irreversible(不可逆，默认) 或 Reversible(可逆)
+                        new FdDictData{ Id="11921994044146656", DictTypeId="11921994044146610", DictTypeCode="PASSWORD_CONFIG", Code="PasswordHashType", Label="密码加密类型", Value="Irreversible", ValueType=DictValueType.String, OrderNo=1, Remark="密码加密类型：Irreversible(不可逆，推荐) 或 Reversible(可逆)", Status=StatusEnum.Enable },
+                        // 密码加密密钥（仅在可逆加密时使用）
+                        // 注意：生产环境应该重新生成更安全的密钥，并使用安全的密钥管理方式
+                        new FdDictData{ Id="11921994044146657", DictTypeId="11921994044146610", DictTypeCode="PASSWORD_CONFIG", Code="PasswordEncryptionKey", Label="密码加密密钥", Value="APtTP1MbsRf2U6WzDzG6vd6qLBIZGPTI5yMwsf94pkA=", ValueType=DictValueType.String, OrderNo=2, Remark="密码加密密钥（Base64格式，256位AES密钥），仅在可逆加密时使用。生产环境请使用 CryptographyUtils.GenerateAESKey() 重新生成", Status=StatusEnum.Enable },
+                        // 默认密码（用于用户初始化和批量导入）
+                        new FdDictData{ Id="11921994044146658", DictTypeId="11921994044146610", DictTypeCode="PASSWORD_CONFIG", Code="DefaultUserPassword", Label="默认用户密码", Value="123456", ValueType=DictValueType.String, OrderNo=3, Remark="新用户初始化或批量导入时的默认密码。系统会自动对此密码进行哈希处理后存储。建议首次登录后立即修改", Status=StatusEnum.Enable },
+                    }
+                },
             };
 
             // 调用服务保存字典数据
             await _dictInitializerService.SaveDictDataAsync(dictTypeAndDataList);
+            
+            Console.WriteLine("[FdDictInitializer] 字典数据初始化完成");
+            Console.WriteLine("[FdDictInitializer] 已初始化 PASSWORD_CONFIG.DefaultUserPassword = '1234567'");
         }
     }
 }

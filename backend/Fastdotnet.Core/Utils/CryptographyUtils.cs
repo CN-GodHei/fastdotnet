@@ -550,6 +550,187 @@ namespace Fastdotnet.Core.Utils
 
         #endregion
 
+        #region 密码哈希与验证
+
+        /// <summary>
+        /// 密码加密类型枚举
+        /// </summary>
+        public enum PasswordHashType
+        {
+            /// <summary>
+            /// 不可逆加密（默认，推荐）- 使用PBKDF2算法
+            /// </summary>
+            Irreversible = 0,
+            
+            /// <summary>
+            /// 可逆加密 - 使用AES加密
+            /// </summary>
+            Reversible = 1
+        }
+
+        /// <summary>
+        /// 对密码进行哈希处理（不可逆加密）
+        /// 使用PBKDF2算法，生成包含盐值和哈希值的字符串
+        /// 格式："pbkdf2:iterations:salt:hash"
+        /// </summary>
+        /// <param name="password">明文密码</param>
+        /// <param name="iterations">迭代次数，默认10000次</param>
+        /// <returns>哈希后的密码字符串</returns>
+        public static string HashPassword(string password, int iterations = 10000)
+        {
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentException("密码不能为空", nameof(password));
+
+            // 生成随机盐值（16字节）
+            byte[] salt = new byte[16];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+
+            // 使用PBKDF2生成哈希
+            using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256))
+            {
+                byte[] hash = pbkdf2.GetBytes(32); // 32字节哈希值
+
+                // 组合格式：pbkdf2:iterations:salt:hash
+                return $"pbkdf2:{iterations}:{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}";
+            }
+        }
+
+        /// <summary>
+        /// 验证密码是否匹配哈希值
+        /// </summary>
+        /// <param name="password">待验证的明文密码</param>
+        /// <param name="hashedPassword">存储的哈希密码</param>
+        /// <returns>是否匹配</returns>
+        public static bool VerifyPassword(string password, string hashedPassword)
+        {
+            if (string.IsNullOrEmpty(password))
+                return false;
+
+            if (string.IsNullOrEmpty(hashedPassword))
+                return false;
+
+            try
+            {
+                // 解析哈希字符串
+                var parts = hashedPassword.Split(':');
+                if (parts.Length != 4 || parts[0] != "pbkdf2")
+                    return false;
+
+                int iterations = int.Parse(parts[1]);
+                byte[] salt = Convert.FromBase64String(parts[2]);
+                byte[] storedHash = Convert.FromBase64String(parts[3]);
+
+                // 使用相同的参数重新计算哈希
+                using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256))
+                {
+                    byte[] computedHash = pbkdf2.GetBytes(32);
+
+                    // 比较哈希值（恒定时间比较，防止时序攻击）
+                    return CryptographicOperations.FixedTimeEquals(storedHash, computedHash);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 加密密码（可逆加密）
+        /// 使用AES加密，需要提供一个密钥
+        /// </summary>
+        /// <param name="password">明文密码</param>
+        /// <param name="encryptionKey">加密密钥（Base64格式），如果为空则使用默认密钥</param>
+        /// <returns>加密后的密码（Base64格式）</returns>
+        public static string EncryptPassword(string password, string encryptionKey = null)
+        {
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentException("密码不能为空", nameof(password));
+
+            // 如果没有提供密钥，使用一个默认密钥（生产环境应该从配置中读取）
+            if (string.IsNullOrEmpty(encryptionKey))
+            {
+                // 警告：这是示例密钥，生产环境必须使用安全的密钥管理
+                encryptionKey = GenerateAESKey();
+            }
+
+            // 使用AES加密
+            return AESEncrypt(password, encryptionKey);
+        }
+
+        /// <summary>
+        /// 解密密码（可逆解密）
+        /// </summary>
+        /// <param name="encryptedPassword">加密后的密码（Base64格式）</param>
+        /// <param name="encryptionKey">解密密钥（Base64格式），必须与加密时使用的密钥相同</param>
+        /// <returns>解密后的明文密码</returns>
+        public static string DecryptPassword(string encryptedPassword, string encryptionKey)
+        {
+            if (string.IsNullOrEmpty(encryptedPassword))
+                throw new ArgumentException("加密密码不能为空", nameof(encryptedPassword));
+
+            if (string.IsNullOrEmpty(encryptionKey))
+                throw new ArgumentException("解密密钥不能为空", nameof(encryptionKey));
+
+            // 使用AES解密
+            return AESDecrypt(encryptedPassword, encryptionKey);
+        }
+
+        /// <summary>
+        /// 根据加密类型处理密码
+        /// </summary>
+        /// <param name="password">明文密码</param>
+        /// <param name="hashType">加密类型</param>
+        /// <param name="encryptionKey">可逆加密时的密钥（可选）</param>
+        /// <returns>处理后的密码</returns>
+        public static string ProcessPassword(string password, PasswordHashType hashType, string encryptionKey = null)
+        {
+            return hashType switch
+            {
+                PasswordHashType.Irreversible => HashPassword(password),
+                PasswordHashType.Reversible => EncryptPassword(password, encryptionKey),
+                _ => HashPassword(password) // 默认使用不可逆加密
+            };
+        }
+
+        /// <summary>
+        /// 验证密码（自动识别加密类型）
+        /// </summary>
+        /// <param name="password">待验证的明文密码</param>
+        /// <param name="storedPassword">存储的密码（可能是哈希或加密后的）</param>
+        /// <param name="hashType">加密类型</param>
+        /// <param name="encryptionKey">可逆加密时的密钥（可选）</param>
+        /// <returns>是否匹配</returns>
+        public static bool VerifyProcessedPassword(string password, string storedPassword, PasswordHashType hashType, string encryptionKey = null)
+        {
+            if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(storedPassword))
+                return false;
+
+            switch (hashType)
+            {
+                case PasswordHashType.Irreversible:
+                    return VerifyPassword(password, storedPassword);
+                
+                case PasswordHashType.Reversible:
+                    try
+                    {
+                        var decryptedPassword = DecryptPassword(storedPassword, encryptionKey);
+                        return password == decryptedPassword;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                
+                default:
+                    return VerifyPassword(password, storedPassword);
+            }
+        }
+
+        #endregion
 
         
     }

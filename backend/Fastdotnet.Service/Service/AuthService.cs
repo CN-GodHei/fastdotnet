@@ -1,5 +1,6 @@
 
 using Fastdotnet.Core.Entities.Sys;
+using Fastdotnet.Core.Utils;
 
 namespace Fastdotnet.Service.Service
 {
@@ -12,6 +13,7 @@ namespace Fastdotnet.Service.Service
         private readonly IRepository<FdRole> _roleRepository;
         private readonly JwtSettings _jwtSettings;
         private readonly IVerificationCodeManager _verificationCodeManager;
+        private readonly IService.Sys.IPasswordService _passwordService;
 
         public AuthService(
             IRepository<FdAdminUser> adminUserRepository,
@@ -20,7 +22,8 @@ namespace Fastdotnet.Service.Service
             IRepository<FdAdminUserRole> adminUserRoleRepository,
             IRepository<FdAppUserRole> appUserRoleRepository,
             IRepository<FdRole> roleRepository,
-            IVerificationCodeManager verificationCodeManager)
+            IVerificationCodeManager verificationCodeManager,
+            IService.Sys.IPasswordService passwordService)
         {
             _adminUserRepository = adminUserRepository;
             _appUserRepository = appUserRepository;
@@ -29,6 +32,7 @@ namespace Fastdotnet.Service.Service
             _appUserRoleRepository = appUserRoleRepository;
             _roleRepository = roleRepository;
             _verificationCodeManager = verificationCodeManager;
+            _passwordService = passwordService;
         }
 
         public async Task AppRegisterAsync(AppRegisterDto dto)
@@ -53,11 +57,14 @@ namespace Fastdotnet.Service.Service
                 throw new BusinessException("该邮箱已被注册");
             }
 
-            // 3. 创建新用户
+            // 3. 对密码进行加密处理
+            var hashedPassword = await _passwordService.EncryptPasswordAsync(dto.Password);
+
+            // 4. 创建新用户
             var newUser = new FdAppUser
             {
                 Username = dto.Username,
-                Password = dto.Password, // IMPORTANT: Storing plain text, following existing pattern
+                Password = hashedPassword, // 存储加密后的密码
                 Email = dto.Email,
                 Nickname = dto.Username, // 默认昵称等于用户名
                 AvatarUrl = "", // 默认头像
@@ -76,10 +83,18 @@ namespace Fastdotnet.Service.Service
             if (userCategory == "Admin")
             {
                 var user = await _adminUserRepository.GetFirstAsync(u => u.Username == dto.Username);
-                if (user == null || user.Password != dto.Password) // IMPORTANT: Replace with a proper password hash check
+                if (user == null)
                 {
                     throw new BusinessException("用户名或密码错误");
                 }
+
+                // 验证密码
+                bool isPasswordValid = await _passwordService.VerifyPasswordAsync(dto.Password, user.Password);
+                if (!isPasswordValid)
+                {
+                    throw new BusinessException("用户名或密码错误");
+                }
+
                 userId = user.Id;
                 userName = user.Username;
 
@@ -100,10 +115,18 @@ namespace Fastdotnet.Service.Service
             else if (userCategory == "App")
             {
                 var user = await _appUserRepository.GetFirstAsync(u => u.Username == dto.Username);
-                if (user == null || user.Password != dto.Password) // IMPORTANT: Replace with a proper password hash check
+                if (user == null)
                 {
                     throw new BusinessException("用户名或密码错误");
                 }
+
+                // 验证密码
+                bool isPasswordValid = await _passwordService.VerifyPasswordAsync(dto.Password, user.Password);
+                if (!isPasswordValid)
+                {
+                    throw new BusinessException("用户名或密码错误");
+                }
+
                 userId = user.Id;
                 userName = user.Username;
 

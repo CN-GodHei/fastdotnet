@@ -78,6 +78,11 @@ public class ApplicationModule : Module
         //插件配置
         containerBuilder.RegisterType<PluginConfigurationService>().As<IPluginConfigurationService>().InstancePerLifetimeScope();
 
+        // 注册密码服务
+        containerBuilder.RegisterType<Fastdotnet.Service.Service.Sys.PasswordService>()
+            .As<Fastdotnet.Service.IService.Sys.IPasswordService>()
+            .InstancePerLifetimeScope();
+
         // 注册通用服务以支持泛型依赖注入，类似 Program.cs 中的注册
         containerBuilder.RegisterGeneric(typeof(BaseService<,>)).As(typeof(IBaseService<,>)).InstancePerLifetimeScope();
         containerBuilder.RegisterGeneric(typeof(BaseService<>)).As(typeof(IBaseService<>)).InstancePerLifetimeScope();

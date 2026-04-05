@@ -1,5 +1,6 @@
 ﻿
 using Fastdotnet.Core.Entities.Sys;
+using Fastdotnet.Core.Utils;
 using Fastdotnet.Service.IService.Sys;
 
 namespace Fastdotnet.Service.Initializers
@@ -11,10 +12,12 @@ namespace Fastdotnet.Service.Initializers
         private readonly IRepository<FdRole> _fdroleRepository;
         private readonly IRepository<FdRoleMenu> _fdroleMenuRepository;
         private readonly IFdRoleInitializerService _fdRoleInitializer;
+        private readonly IService.Sys.IPasswordService _passwordService;
 
         public FdAppUserInitializer(IRepository<FdAppUser> Repository, IRepository<FdAppUserRole> userRoleRepository,
             IRepository<FdRole> fdroleRepository, IRepository<FdRoleMenu> fdroleMenuRepository
             ,IFdRoleInitializerService fdRoleInitializer
+            ,IService.Sys.IPasswordService passwordService
 
             )
         {
@@ -23,7 +26,13 @@ namespace Fastdotnet.Service.Initializers
             _fdroleRepository = fdroleRepository;
             _fdroleMenuRepository = fdroleMenuRepository;
             _fdRoleInitializer = fdRoleInitializer;
+            _passwordService = passwordService;
         }
+
+        /// <summary>
+        /// 用户初始化应该在字典初始化之后执行（Order = 2000）
+        /// </summary>
+        public int Order => 2000;
 
         public async Task InitializeAsync()
         {
@@ -31,9 +40,13 @@ namespace Fastdotnet.Service.Initializers
             //{
             //    return;
             //}
+            
+            // 获取默认加密密码（内部自动从字典读取并加密）
+            var hashedPassword = await _passwordService.GetDefaultEncryptedPasswordAsync();
+            
             var entitys = new List<FdAppUser>
             {
-                new FdAppUser { Id = "12055423131517957", Username = "admintest", Nickname = "AdminTest", Email = "fastdotnet@test.com", Password = "123456", PhoneNumber = "159****7417" }
+                new FdAppUser { Id = "12055423131517957", Username = "admintest", Nickname = "AdminTest", Email = "fastdotnet@test.com", Password = hashedPassword, PhoneNumber = "159****7417" }
             };
 
             // 直接使用条件查询已存在的项
