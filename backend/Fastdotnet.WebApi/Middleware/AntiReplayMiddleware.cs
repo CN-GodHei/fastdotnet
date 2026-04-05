@@ -15,7 +15,7 @@ namespace Fastdotnet.WebApi.Middleware
         private readonly RequestDelegate _next;
         private readonly ILogger<AntiReplayMiddleware> _logger;
         private const int TIMESTAMP_WINDOW_SECONDS = 300; // 时间窗口：5 分钟（±2.5 分钟）
-        
+
         public AntiReplayMiddleware(RequestDelegate next, ILogger<AntiReplayMiddleware> logger)
         {
             _next = next;
@@ -31,6 +31,17 @@ namespace Fastdotnet.WebApi.Middleware
             // 跳过特定路径（如登录、获取公钥等不需要防重放的接口）
             if (ShouldSkipAntiReplay(context))
             {
+                await _next(context);
+                return;
+            }
+            //特殊节点跳过，比如signalr的握手，无法手动标识跳过的属性
+            string[] specialPath = ["negotiate"];
+            
+            // 检查当前请求路径是否包含特殊路径
+            var requestPath = context.Request.Path.Value?.ToLowerInvariant();
+            if (!string.IsNullOrEmpty(requestPath) && specialPath.Any(path => requestPath.Contains(path)))
+            {
+                // _logger.LogDebug("跳过防重放验证（特殊路径）: {Path}", context.Request.Path);
                 await _next(context);
                 return;
             }
@@ -89,12 +100,12 @@ namespace Fastdotnet.WebApi.Middleware
             // 3. 验证 Nonce 是否已使用（防重放核心逻辑）
             var nonceCacheKey = $"anti_replay:nonce:{nonce}";
             var existingNonce = await cacheService.GetAsync<string>(nonceCacheKey);
-            
+
             if (!string.IsNullOrEmpty(existingNonce))
             {
-                _logger.LogWarning("检测到重放攻击：Nonce={Nonce}, IP={IP}, Path={Path}", 
+                _logger.LogWarning("检测到重放攻击：Nonce={Nonce}, IP={IP}, Path={Path}",
                     nonce, GetClientIp(context), context.Request.Path);
-                    
+
                 context.Response.StatusCode = StatusCodes.Status409Conflict;
                 context.Response.ContentType = "application/json; charset=utf-8";
                 var errorResult = new ApiResult<object>
@@ -111,7 +122,7 @@ namespace Fastdotnet.WebApi.Middleware
             {
                 Expiration = TimeSpan.FromSeconds(TIMESTAMP_WINDOW_SECONDS * 2) // 缓存 10 分钟
             };
-            
+
             await cacheService.SetAsync(nonceCacheKey, nonce, cacheOptions);
 
             // 5. 验证签名（可选，如果需要）
@@ -146,7 +157,7 @@ namespace Fastdotnet.WebApi.Middleware
             {
                 return true;
             }
-        
+
             // 检查当前路由的 ActionDescriptor 是否有 SkipAntiReplayAttribute 标记
             var endpoint = context.GetEndpoint();
             if (endpoint != null)
@@ -155,11 +166,11 @@ namespace Fastdotnet.WebApi.Middleware
                 var methodAttribute = endpoint.Metadata.GetMetadata<SkipAntiReplayAttribute>();
                 if (methodAttribute != null)
                 {
-                    _logger.LogDebug("跳过防重放验证：{Path}, 原因：{Reason}", 
+                    _logger.LogDebug("跳过防重放验证：{Path}, 原因：{Reason}",
                         context.Request.Path, methodAttribute.Reason);
                     return true;
                 }
-        
+
                 // 检查控制器类上是否有特性
                 var controllerActionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>();
                 if (controllerActionDescriptor != null)
@@ -168,13 +179,13 @@ namespace Fastdotnet.WebApi.Middleware
                     var classAttribute = controllerType.GetCustomAttribute<SkipAntiReplayAttribute>();
                     if (classAttribute != null)
                     {
-                        _logger.LogDebug("跳过防重放验证（控制器级别）: {Path}, 原因：{Reason}", 
+                        _logger.LogDebug("跳过防重放验证（控制器级别）: {Path}, 原因：{Reason}",
                             context.Request.Path, classAttribute.Reason);
                         return true;
                     }
                 }
             }
-        
+
             return false;
         }
 
@@ -187,17 +198,17 @@ namespace Fastdotnet.WebApi.Middleware
             {
                 // 获取客户端 IP
                 var clientIp = GetClientIp(context);
-                
+
                 // 构建签名字符串：Timestamp + Nonce + Method + Path + Body(可选)
                 var timestamp = context.Request.Headers["X-Timestamp"].ToString();
                 var nonce = context.Request.Headers["X-Nonce"].ToString();
                 var method = context.Request.Method;
                 var path = context.Request.Path.ToString();
-                
+
                 // 读取请求体（如果有的话）
                 string body = "";
-                if (context.Request.ContentLength > 0 && 
-                    (method.Equals("POST", StringComparison.OrdinalIgnoreCase) || 
+                if (context.Request.ContentLength > 0 &&
+                    (method.Equals("POST", StringComparison.OrdinalIgnoreCase) ||
                      method.Equals("PUT", StringComparison.OrdinalIgnoreCase)))
                 {
                     context.Request.EnableBuffering();
@@ -225,7 +236,7 @@ namespace Fastdotnet.WebApi.Middleware
                 // 方案 1：使用固定的密钥（适合内部系统）
                 // var secretKey = "your-secret-key-here";
                 // var expectedSignature = ComputeHmacSha256(signContent, secretKey);
-                
+
                 // 方案 2：从缓存获取每个客户端的密钥（推荐）
                 var clientSecretKey = await GetClientSecretKeyAsync(clientIp, cacheService);
                 if (string.IsNullOrEmpty(clientSecretKey))
@@ -234,7 +245,7 @@ namespace Fastdotnet.WebApi.Middleware
                     _logger.LogWarning("未找到客户端密钥：IP={IP}", clientIp);
                     return false;
                 }
-                
+
                 var expectedSignature = ComputeHmacSha256(signContent, clientSecretKey);
 
                 return providedSignature.Equals(expectedSignature, StringComparison.OrdinalIgnoreCase);
@@ -253,21 +264,21 @@ namespace Fastdotnet.WebApi.Middleware
         {
             var cacheKey = $"client_secret:{clientIp}";
             var secretKey = await cacheService.GetAsync<string>(cacheKey);
-            
+
             if (string.IsNullOrEmpty(secretKey))
             {
                 // TODO: 这里可以从数据库或配置文件中加载客户端密钥
                 // 示例：返回一个固定密钥（实际应该根据客户端 IP 或其他标识获取）
                 // 建议为每个客户端生成独立的密钥
                 secretKey = "default-secret-key-change-in-production";
-                
+
                 // 缓存起来
                 await cacheService.SetAsync(cacheKey, secretKey, new HybridCacheEntryOptions
                 {
                     Expiration = TimeSpan.FromHours(24)
                 });
             }
-            
+
             return secretKey;
         }
 

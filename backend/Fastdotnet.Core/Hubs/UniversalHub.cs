@@ -5,6 +5,7 @@ namespace Fastdotnet.Core.Hubs
     /// <summary>
     /// 通用SignalR Hub，支持公共访问和鉴权访问，以及插件功能
     /// </summary>
+    [SkipAntiReplayAttribute]
     public class UniversalHub : Hub
     {
         // 存储已鉴权的连接
