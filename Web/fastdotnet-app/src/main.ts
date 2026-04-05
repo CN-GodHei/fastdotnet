@@ -101,7 +101,7 @@ async function initializePluginSystem() {
 let qiankunStarted = false;
 export async function startQiankun() {
   // 初始化插件系统
-  initializePluginSystem();
+//   initializePluginSystem();
   // 检查是否有 token，如果没有则不启动 qiankun
     const token = Session.get('token');
     if (!token) {
