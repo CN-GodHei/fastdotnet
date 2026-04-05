@@ -90,8 +90,8 @@ const router = useRouter();
 const state = reactive({
 	isShowPassword: false,
 	ruleForm: {
-		userName: 'superadmin', // 默认用户名
-		password: '123456', // 默认密码
+		userName: import.meta.env.DEV ? 'superadmin' : '', // 开发环境默认用户名
+		password: import.meta.env.DEV ? '123456' : '', // 开发环境默认密码
 		code: '', // 验证码
 	},
 	loading: {
