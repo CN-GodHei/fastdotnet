@@ -24,24 +24,35 @@ namespace Fastdotnet.WebApi.Middleware
 
         public async Task InvokeAsync(HttpContext context, IHybridCacheService cacheService)
         {
-#if DEBUG
-            await _next(context);
-            return;
-#endif
+//#if DEBUG
+//            await _next(context);
+//            return;
+//#endif
             // 跳过特定路径（如登录、获取公钥等不需要防重放的接口）
             if (ShouldSkipAntiReplay(context))
             {
                 await _next(context);
                 return;
             }
-            //特殊节点跳过，比如signalr的握手，无法手动标识跳过的属性
+            //特殊节点跳过,比如signalr的握手,无法手动标识跳过的属性
             string[] specialPath = ["negotiate"];
-            
+                        
             // 检查当前请求路径是否包含特殊路径
             var requestPath = context.Request.Path.Value?.ToLowerInvariant();
             if (!string.IsNullOrEmpty(requestPath) && specialPath.Any(path => requestPath.Contains(path)))
             {
-                // _logger.LogDebug("跳过防重放验证（特殊路径）: {Path}", context.Request.Path);
+                // _logger.LogDebug("跳过防重放验证(特殊路径): {Path}", context.Request.Path);
+                await _next(context);
+                return;
+            }
+            
+            // 跳过插件静态资源文件(如 /plugins/{pluginId}/app/*)
+            // 注意:插件API接口路径为 /api/plugins/...,需要防重放保护
+            if (!string.IsNullOrEmpty(requestPath) && 
+                requestPath.StartsWith("/plugins/", StringComparison.OrdinalIgnoreCase) &&
+                !requestPath.StartsWith("/api/plugins/", StringComparison.OrdinalIgnoreCase))
+            {
+                // _logger.LogDebug("跳过防重放验证(插件静态资源): {Path}", context.Request.Path);
                 await _next(context);
                 return;
             }
