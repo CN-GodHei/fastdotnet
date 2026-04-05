@@ -1,0 +1,52 @@
+MIT License
+
+Copyright (c) 2026 Fastdotnet Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+### Fastdotnet 插件使用授权规范
+
+Fastdotnet 框架基座采用上述 MIT 许可证，您可以免费使用、修改和分发。但通过官方插件商城获取的插件受以下附加条款约束：
+
+1. **免费插件**：
+   - 遵循 MIT 许可证或插件作者指定的开源协议。
+   - 允许在个人或商业项目中自由使用。
+
+2. **付费插件**：
+   付费插件的使用权取决于您购买的授权类型：
+
+   - **标准授权 (Standard License)**：
+     - 仅限在 **一台** 物理服务器或虚拟实例上部署和使用。
+     - 授权与特定的服务器环境绑定，不可随意迁移。
+     - 适用于单节点生产环境或开发测试环境。
+
+   - **高级授权 (Premium/Enterprise License)**：
+     - **不限制** 服务器数量。
+     - 允许在任意数量的服务器、集群或云环境中部署。
+     - 适用于大规模分布式系统或多租户 SaaS 平台。
+
+3. **通用条款**：
+   - 所有插件的知识产权归原作者或 Fastdotnet 官方所有。
+   - 禁止对付费插件进行反编译、逆向工程、破解或绕过授权验证机制。
+   - 禁止将付费插件以独立形式再次分发、转售或作为开源项目的一部分公开。
+   - 违反本授权规范将导致授权立即终止，并可能承担相应的法律责任。
+
+如需购买插件授权或咨询企业级合作，请访问 Fastdotnet 官方插件商城。
