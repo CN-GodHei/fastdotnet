@@ -14,7 +14,7 @@
 								<br />
 								<div>
 									4、 <a href="https://gitee.com/q7but" target="_black">感谢@q7but</a>、
-									<a href="https://gitee.com/lyt-top/vue-next-admin/pulls/22/files" target="_black">!22 add 添加自定义 tagVIewName 拓展,支持国际化</a>
+									<a href="/pulls/22/files" target="_black">!22 add 添加自定义 tagVIewName 拓展,支持国际化</a>
 								</div>
 							</template>
 						</el-alert>

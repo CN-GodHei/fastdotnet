@@ -40,12 +40,12 @@ export async function initBackEndControlRoutes() {
 	// 无 token 停止执行下一步
 	if (!Session.get('token')) return false;
 	// 触发初始化用户信息 pinia
-	// https://gitee.com/lyt-top/vue-next-admin/issues/I5F1HP
+	// /issues/I5F1HP
 	await useUserInfo().setUserInfos();
 	// 获取路由菜单数据
 	const res = await getBackEndControlRoutes();
 	// 无登录权限时，添加判断
-	// https://gitee.com/lyt-top/vue-next-admin/issues/I64HVO
+	// /issues/I64HVO
 	if (res.data.length <= 0) return Promise.resolve(true);
 	// 存储接口原始路由（未处理component），根据需求选择使用
 	useRequestOldRoutes().setRequestOldRoutes(JSON.parse(JSON.stringify(res.data)));
@@ -120,8 +120,6 @@ export async function getBackEndControlRoutes() {
 		const menuTreeData = await getApiAppMenusTree();
 		//console.log('后端返回的菜单数据 (已处理):', menuTreeData); // 添加日志查看结构
 
-		// 直接返回，包装成 { data: ... } 的格式以匹配 vue-next-admin 的预期
-		// vue-next-admin 的后续逻辑会使用返回对象的 .data 属性
 		return { data: menuTreeData };
 	} catch (error) {
 		console.error('获取后端菜单失败:', error);
@@ -157,7 +155,6 @@ export function backEndComponent(routes: any) {
 			name: item.Name || item.Title || `micro-app-${item.PluginId}`, // 使用后端返回的 Name 或 Title 作为路由 name
 			path: item.Path, // 假设后端 Path 对应前端 path
 			// component 处理
-			// item.component 是 vue-next-admin 原有的逻辑，用于处理动态导入
 			// 如果后端没有提供 Component 字段，可能需要一个默认值或处理逻辑
 			// 这里先保留原有逻辑，但要确保 item.Component (如果存在) 被正确处理
 			component: item.component, // 保留原有动态导入逻辑的结果
@@ -223,7 +220,6 @@ export function backEndComponent(routes: any) {
 			route.children = backEndComponent(route.children);
 		}
 
-		// 4. 如果有其他 vue-next-admin 特有的处理逻辑，可以在这里添加
 		// 例如处理 redirect, alias 等
 
 		return route;

@@ -83,9 +83,9 @@ onBeforeMount(() => {
 onMounted(() => {
 	getIframeListRoutes();
 	//console.log("onMounted - route:", route.name, "meta:", route.meta);
-	// https://gitee.com/lyt-top/vue-next-admin/issues/I58U75
-	// https://gitee.com/lyt-top/vue-next-admin/issues/I59RXK
-	// https://gitee.com/lyt-top/vue-next-admin/pulls/40
+	// /issues/I58U75
+	// /issues/I59RXK
+	// /pulls/40
 	nextTick(() => {
 		setTimeout(() => {
 			if (themeConfig.value.isCacheTagsView) {

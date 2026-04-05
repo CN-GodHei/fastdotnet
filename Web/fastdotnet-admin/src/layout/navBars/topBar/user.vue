@@ -189,7 +189,7 @@ const onHandleCommandClick = (path: string) => {
 			})
 			.catch(() => {});
 	} else if (path === 'wareHouse') {
-		window.open('https://gitee.com/lyt-top/vue-next-admin');
+		window.open('');
 	} else {
 		router.push(path);
 	}

@@ -97,27 +97,27 @@ namespace Fastdotnet.Core.Entities.Sys
         public string? Component { get; set; }
 
         /// <summary>
-        /// 是否在导航中隐藏 (对应 vue-next-admin 的 meta.isHide)
+        /// 是否在导航中隐藏 (meta.isHide)
         /// </summary>
-        [SugarColumn(ColumnName = "is_hide", ColumnDescription = "是否在导航中隐藏 (对应 vue-next-admin 的 meta.isHide)")]
+        [SugarColumn(ColumnName = "is_hide", ColumnDescription = "是否在导航中隐藏 (对应  meta.isHide)")]
         public bool IsHide { get; set; } = false;
 
         /// <summary>
-        /// 是否缓存页面 (对应 vue-next-admin 的 meta.isKeepAlive)
+        /// 是否缓存页面 (meta.isKeepAlive)
         /// </summary>
-        [SugarColumn(ColumnName = "is_keep_alive", ColumnDescription = "是否缓存页面 (对应 vue-next-admin 的 meta.isKeepAlive)")]
+        [SugarColumn(ColumnName = "is_keep_alive", ColumnDescription = "是否缓存页面 (对应  meta.isKeepAlive)")]
         public bool IsKeepAlive { get; set; } = true;
 
         /// <summary>
-        /// 是否固定标签页 (对应 vue-next-admin 的 meta.isAffix)
+        /// 是否固定标签页 ( meta.isAffix)
         /// </summary>
-        [SugarColumn(ColumnName = "is_affix", ColumnDescription = "是否固定标签页 (对应 vue-next-admin 的 meta.isAffix)")]
+        [SugarColumn(ColumnName = "is_affix", ColumnDescription = "是否固定标签页 ( meta.isAffix)")]
         public bool IsAffix { get; set; } = false;
 
         /// <summary>
-        /// 是否以内嵌 iframe 打开 (对应 vue-next-admin 的 meta.isIframe)
+        /// 是否以内嵌 iframe 打开 ( meta.isIframe)
         /// </summary>
-        [SugarColumn(ColumnName = "is_iframe", ColumnDescription = "是否以内嵌 iframe 打开 (对应 vue-next-admin 的 meta.isIframe)")]
+        [SugarColumn(ColumnName = "is_iframe", ColumnDescription = "是否以内嵌 iframe 打开 ( meta.isIframe)")]
         public bool IsIframe { get; set; } = false;
         
         [SugarColumn(ColumnName = "is_link", ColumnDescription = "是否为链接")]

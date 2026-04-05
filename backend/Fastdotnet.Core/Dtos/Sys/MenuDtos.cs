@@ -29,7 +29,6 @@ namespace Fastdotnet.Core.Dtos.Sys
         public bool IsEnabled { get; set; }
         public string PermissionCode { get; set; }
 
-        // 新增字段 - 用于对接 vue-next-admin
         public string? Component { get; set; }
         public string? PluginId { get; set; }
         public bool IsHide { get; set; }
@@ -66,7 +65,6 @@ namespace Fastdotnet.Core.Dtos.Sys
         public bool IsEnabled { get; set; } = true;
         public string PermissionCode { get; set; }
 
-        // 新增字段 - 用于对接 vue-next-admin
         public string? Component { get; set; }
         public bool IsHide { get; set; } = false;
         public bool IsKeepAlive { get; set; } = true;
@@ -96,7 +94,6 @@ namespace Fastdotnet.Core.Dtos.Sys
         public bool IsEnabled { get; set; }
         public string PermissionCode { get; set; }
 
-        // 新增字段 - 用于对接 vue-next-admin
         public string? Component { get; set; }
         public bool IsHide { get; set; }
         public bool IsKeepAlive { get; set; }
