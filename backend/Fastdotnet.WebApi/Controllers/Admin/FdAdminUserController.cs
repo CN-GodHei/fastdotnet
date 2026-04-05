@@ -1,6 +1,7 @@
 
 using Fastdotnet.Core.Dtos;
 using Fastdotnet.Core.Dtos.Admin.Users;
+using Fastdotnet.Service.IService.Sys;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
@@ -11,16 +12,19 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         private readonly IAdminUserService _adminUserService;
         private readonly ICurrentUser _currentUser;
         private readonly IBaseService<FdAdminUser, string> _service;
+        private readonly IPasswordService _passwordService;
 
         public FdAdminUserController(
             IAdminUserService adminUserService,
             IBaseService<FdAdminUser, string> service,
             IMapper mapper,
-            ICurrentUser currentUser) : base(service, mapper)
+            ICurrentUser currentUser,
+            IPasswordService passwordService) : base(service, mapper)
         {
             _adminUserService = adminUserService;
             _service = service;
             _currentUser = currentUser;
+            _passwordService = passwordService;
         }
 
         /// <summary>
@@ -144,14 +148,14 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             }
 
             // 获取当前用户信息
-            var user = await _service.GetFirstAsync(u => u.Id == userId&&u.Password==dto.Password);
+            var user = await _service.GetByIdAsync(userId);
             if (user == null)
             {
                 return false;
             }
 
-            // 验证密码
-            bool isValid = user.Password == dto.Password;
+            // 使用密码服务验证密码
+            bool isValid = await _passwordService.VerifyPasswordAsync(dto.Password, user.Password);
             
             return isValid;
         }

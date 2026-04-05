@@ -1,6 +1,7 @@
 ﻿using Fastdotnet.Core.Dtos.Admin.Users;
 using Fastdotnet.Core.Dtos.App;
 using Fastdotnet.Service.IService.App;
+using Fastdotnet.Service.IService.Sys;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 
 namespace Fastdotnet.WebApi.Controllers.App
@@ -11,17 +12,19 @@ namespace Fastdotnet.WebApi.Controllers.App
     public class FdAppUserController 
         : AppGenericDtoControllerBase<FdAppUser, CreateFdAppUserDto, UpdateFdAppUserDto, FdAppUserDto>
     {
-        public FdAppUserController(IBaseService<FdAppUser, string> service, IMapper mapper, ICurrentUser currentUser, IAppUserService appUserService) : base(service, mapper, currentUser)
+        public FdAppUserController(IBaseService<FdAppUser, string> service, IMapper mapper, ICurrentUser currentUser, IAppUserService appUserService, IPasswordService passwordService) : base(service, mapper, currentUser)
         {
             _service = service;
             _mapper = mapper;
             _currentUser = currentUser;
             _appUserService = appUserService;
+            _passwordService = passwordService;
         }
         private readonly IBaseService<FdAppUser, string> _service;
         private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
         private readonly IAppUserService _appUserService;
+        private readonly IPasswordService _passwordService;
         //public  FdAppUserController(IBaseService<FdAppUser, string> service, IMapper mapper, ICurrentUser currentUser) 
         //{
         //    _service = service;
@@ -72,14 +75,14 @@ namespace Fastdotnet.WebApi.Controllers.App
             }
 
             // 获取当前用户信息
-            var user = await _service.GetFirstAsync(u => u.Id == userId && u.Password == dto.Password);
+            var user = await _service.GetByIdAsync(userId);
             if (user == null)
             {
                 return false;
             }
 
-            // 验证密码
-            bool isValid = user.Password == dto.Password;
+            // 使用密码服务验证密码
+            bool isValid = await _passwordService.VerifyPasswordAsync(dto.Password, user.Password);
 
             return isValid;
         }
