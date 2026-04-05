@@ -128,12 +128,9 @@ export async function startQiankun() {
             if (isDevelopment) {
                 // 在开发环境中，可以为特定插件ID指定本地开发服务器入口
                 if (pluginId === '这是你开发时的插件Id，为了避免重复编译才能测试，你可以在这里指定本地开发服务器入口') {
-                    return '//localhost:8082';
+                    return 'http://localhost:8099/index.html';//换成自己的本地开发服务器入口
                 }
-                // 添加富文本编辑器插件的本地开发服务器入口
-                if (pluginId === 'RichTextEditor') {
-                    return '//localhost:8090';
-                }
+
                 // 可以为更多插件添加调试入口
             }
             return null; // 如果没有匹配或者不是开发环境，则返回 null
