@@ -102,7 +102,7 @@ export async function deleteApiFdAppUserBatch(body: string[], options?: { [key: 
 }
 /** 此处后端没有提供注释 PUT /api/FdAppUser/batch/updatebycondition */
 export async function putApiFdAppUserBatchUpdatebycondition(
-	body: APIModel.UpdateFdAppUserDtoBatchUpdateByConditionDto,
+	body: APIModel.BatchUpdateByConditionDto1UpdateFdAppUserDto,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/FdAppUser/batch/updatebycondition', {

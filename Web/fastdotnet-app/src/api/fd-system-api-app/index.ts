@@ -7,6 +7,7 @@ import * as AppMenus from './AppMenus';
 import * as Captcha from './Captcha';
 import * as FdAppUser from './FdAppUser';
 import * as FdSystemInfoConfig from './FdSystemInfoConfig';
+import * as Health from './Health';
 import * as Plugin from './Plugin';
 import * as Storage from './Storage';
 import * as System from './System';
@@ -17,6 +18,7 @@ export default {
 	Captcha,
 	FdAppUser,
 	FdSystemInfoConfig,
+	Health,
 	Plugin,
 	Storage,
 	System,
