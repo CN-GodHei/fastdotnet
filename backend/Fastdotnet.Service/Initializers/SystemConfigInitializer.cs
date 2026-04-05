@@ -178,19 +178,39 @@ namespace Fastdotnet.Service.Initializers
     new SystemInfoConfig { Belong=SystemCategory.App, Name = "默认全局组件大小", Code = "globalComponentSize", Value = "small", Description = "组件默认尺寸，可选值：large / default / small", IsSystem = true }
 };
             configsadmin.AddRange(configsApp);
-            string CombineKey(string code, string belong) => $"{code}|{belong}";
+            
+            // 分别提取 Code 和 Belong 的组合，避免字符串拼接导致的 collation 冲突
+            var codeBelongPairs = configsadmin
+                .Select(c => new { c.Code, BelongValue = (int)c.Belong })
+                .ToList();
 
-            var keysToCheck = configsadmin
-                .Select(c => c.Code + "|" + ((int)c.Belong).ToString())
-                .ToHashSet();
+            // 分批查询已存在的配置（避免 IN 语句过长）
+            var batchSize = 100;
+            var existing = new List<SystemInfoConfig>();
+            
+            for (int i = 0; i < codeBelongPairs.Count; i += batchSize)
+            {
+                var batch = codeBelongPairs.Skip(i).Take(batchSize).ToList();
+                var codes = batch.Select(p => p.Code).ToList();
+                var belongValues = batch.Select(p => p.BelongValue).ToList();
+                
+                // 使用 OR 条件查询，避免 collation 冲突
+                var batchExisting = await _systemConfigRepository.GetListAsync(m =>
+                    codes.Contains(m.Code) && belongValues.Contains((int)m.Belong)
+                );
+                
+                // 精确过滤，确保只保留完全匹配的项
+                var batchKeys = batch.Select(p => $"{p.Code}|{p.BelongValue}").ToHashSet();
+                var filtered = batchExisting.Where(m => 
+                    batchKeys.Contains($"{m.Code}|{(int)m.Belong}")
+                ).ToList();
+                
+                existing.AddRange(filtered);
+            }
 
-            var existing = await _systemConfigRepository.GetListAsync(m =>
-                keysToCheck.Contains(m.Code + "|" + ((int)m.Belong).ToString())
-            );
+            var existingKeys = existing.Select(m => $"{m.Code}|{(int)m.Belong}").ToHashSet();
 
-            var existingKeys = existing.Select(m => CombineKey(m.Code, ((int)m.Belong).ToString())).ToHashSet();
-
-            var toInsert = configsadmin.Where(c => !existingKeys.Contains(CombineKey(c.Code, ((int)c.Belong).ToString()))).ToList();
+            var toInsert = configsadmin.Where(c => !existingKeys.Contains($"{c.Code}|{(int)c.Belong}")).ToList();
             if (toInsert.Any())
             {
                 await _systemConfigRepository.InsertRangeAsync(toInsert);
