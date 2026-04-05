@@ -19,7 +19,6 @@ global using Fastdotnet.Core.IService.Sys;
 global using Fastdotnet.Core.Middleware;
 global using Fastdotnet.Core.Service;
 global using Fastdotnet.Plugin.Contracts;
-global using Fastdotnet.Plugin.Contracts.Extensibility.Users;
 global using Fastdotnet.Plugin.Contracts.Metrics;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Builder;

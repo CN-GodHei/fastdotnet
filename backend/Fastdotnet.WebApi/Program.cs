@@ -1,6 +1,5 @@
 using Autofac.Core;
 using Fastdotnet.Core.Service.Sys;
-using Fastdotnet.Plugin.Contracts;
 using Fastdotnet.Service.IService.App;
 using Fastdotnet.Service.IService.Sys;
 using Fastdotnet.Service.Service.Admin;

@@ -5,6 +5,20 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Extensibility\**" />
+    <EmbeddedResource Remove="Extensibility\**" />
+    <None Remove="Extensibility\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="IPermissionProvider.cs" />
+    <Compile Remove="IStorageContext.cs" />
+    <Compile Remove="PluginContext.cs" />
+    <Compile Remove="PluginInfo.cs" />
+    <Compile Remove="PluginInfoCache.cs" />
+  </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Autofac" />
 	</ItemGroup>

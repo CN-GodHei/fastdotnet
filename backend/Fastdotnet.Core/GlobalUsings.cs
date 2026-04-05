@@ -21,8 +21,6 @@ global using Fastdotnet.Core.Service.Sys;
 global using Fastdotnet.Core.Service.Sys;
 global using Fastdotnet.Core.Utils;
 global using Fastdotnet.Core.Utils.Extensions;
-global using Fastdotnet.Plugin.Contracts;
-global using Fastdotnet.Plugin.Contracts.Extensibility.Users;
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;

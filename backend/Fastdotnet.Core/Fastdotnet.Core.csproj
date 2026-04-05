@@ -39,8 +39,4 @@
 	  <PackageReference Include="Yitter.IdGenerator" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" />
-  </ItemGroup>
-
 </Project>

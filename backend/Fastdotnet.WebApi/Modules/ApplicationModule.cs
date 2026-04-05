@@ -1,7 +1,5 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Fastdotnet.Core.IService;
-using Fastdotnet.Core.IService.Sys;
 using Fastdotnet.Core.Service.App;
 using Fastdotnet.Core.Service.Sys;
 using Microsoft.Extensions.Configuration;

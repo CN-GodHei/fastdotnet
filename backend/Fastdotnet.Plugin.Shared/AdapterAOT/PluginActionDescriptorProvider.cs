@@ -1,3 +1,4 @@
+using Fastdotnet.Core.Plugin;
 
 namespace Fastdotnet.Plugin.Shared.AdapterAOT
 {

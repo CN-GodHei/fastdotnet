@@ -1,4 +1,3 @@
-using Fastdotnet.Plugin.Contracts;
 using System.Collections.Generic;
 
 namespace PluginA

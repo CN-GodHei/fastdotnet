@@ -1,3 +1,5 @@
+using Fastdotnet.Core.Extensibility.Users;
+
 namespace Fastdotnet.Core.Service.App;
 
 public class FdAppUserService : IFdAppUserService

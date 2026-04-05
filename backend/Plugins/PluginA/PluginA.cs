@@ -6,18 +6,17 @@ using Microsoft.Extensions.DependencyInjection;
 using PluginA.Middleware;
 // This using statement is necessary to find the extension method 'GetService'.
 using Microsoft.Extensions.DependencyInjection;
-using Fastdotnet.Plugin.Contracts;
 using PluginA.IService;
 using PluginA.Initializers;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Fastdotnet.Plugin.Contracts.Extensibility.Users;
 using Fastdotnet.Core.Initializers;
 using Fastdotnet.Plugin.Contracts.Metrics;
 using PluginA.EventHandlers;
 using PluginA.Services;
 using PluginA.Contexts;
+using Fastdotnet.Core.Extensibility.Users;
 
 // The namespace for the WebApi project must be included to find the DynamicMiddlewareRegistry.
 

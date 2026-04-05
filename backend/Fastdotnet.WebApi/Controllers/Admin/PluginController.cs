@@ -1,6 +1,6 @@
 using Fastdotnet.Core.Dtos;
-using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Enum;
+using Fastdotnet.Core.Plugin;
 using System.ComponentModel.DataAnnotations;
 
 namespace Fastdotnet.WebApi.Controllers.Admin

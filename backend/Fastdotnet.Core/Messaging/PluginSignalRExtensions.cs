@@ -1,6 +1,6 @@
 using Fastdotnet.Core.Hubs;
 using Fastdotnet.Core.Messaging;
-using Fastdotnet.Plugin.Contracts;
+using Fastdotnet.Core.Plugin;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Fastdotnet.Core.Messaging

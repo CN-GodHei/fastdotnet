@@ -1,6 +1,7 @@
 ﻿
 
 using Fastdotnet.Core.Dtos.Sys;
+using Fastdotnet.Core.Plugin;
 using Microsoft.AspNetCore.Http;
 
 namespace Fastdotnet.Plugin.Shared.AdapterAOT

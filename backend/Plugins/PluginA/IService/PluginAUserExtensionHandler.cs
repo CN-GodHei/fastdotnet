@@ -1,12 +1,11 @@
 using Fastdotnet.Core.Entities.App;
-using Fastdotnet.Plugin.Contracts;
-using Fastdotnet.Plugin.Contracts.Extensibility.Users;
 using PluginA.Entities;
 using SqlSugar;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text.Json;
+using Fastdotnet.Core.Extensibility.Users;
 
 namespace PluginA.IService
 {
