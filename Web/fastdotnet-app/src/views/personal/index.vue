@@ -186,7 +186,67 @@
 <script setup lang="ts" name="personal">
 import { reactive, computed } from 'vue';
 import { formatAxis } from '@/utils/formatTime';
-import { newsInfoList, recommendList } from './mock';
+
+// 消息通知列表数据
+const newsInfoList = [
+	{
+		title: '【系统通知】系统将于今晚22:00进行例行维护',
+		date: '2024-01-15',
+		link: 'https://www.example.com/news/1',
+	},
+	{
+		title: '【功能更新】新增用户权限管理模块',
+		date: '2024-01-14',
+		link: 'https://www.example.com/news/2',
+	},
+	{
+		title: '【安全提醒】请及时修改您的登录密码',
+		date: '2024-01-13',
+		link: 'https://www.example.com/news/3',
+	},
+	{
+		title: '【活动通知】参加开发者大会赢取精美礼品',
+		date: '2024-01-12',
+		link: 'https://www.example.com/news/4',
+	},
+	{
+		title: '【版本升级】系统已升级至最新版本v2.0',
+		date: '2024-01-11',
+		link: 'https://www.example.com/news/5',
+	},
+];
+
+// 营销推荐列表数据
+const recommendList = [
+	{
+		icon: 'iconfont icon-yangan',
+		title: '仪表盘',
+		msg: '实时监控数据展示',
+		bg: '#07c86e',
+		iconColor: '#ffffff',
+	},
+	{
+		icon: 'iconfont icon-wenben',
+		title: '文本编辑',
+		msg: '富文本编辑器功能',
+		bg: '#ff9c6e',
+		iconColor: '#ffffff',
+	},
+	{
+		icon: 'iconfont icon-shuju',
+		title: '数据统计',
+		msg: '多维度数据分析',
+		bg: '#69c0ff',
+		iconColor: '#ffffff',
+	},
+	{
+		icon: 'iconfont icon-zhongduancanshuchaxun',
+		title: '终端查询',
+		msg: '快速定位问题源头',
+		bg: '#b37feb',
+		iconColor: '#ffffff',
+	},
+];
 
 // 定义变量内容
 const state = reactive<PersonalState>({
