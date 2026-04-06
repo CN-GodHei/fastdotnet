@@ -13,7 +13,6 @@ namespace Fastdotnet.Service.Initializers
         private readonly IRepository<FdRole> _roleRepository;
         private readonly IRepository<FdAdminUser> _adminUserRepository;
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
-        private readonly IFdRoleInitializerService _fdRoleInitializer;
         private readonly IService.Sys.IPasswordService _passwordService;
 
         public AdminUserInitializer(
@@ -22,7 +21,6 @@ namespace Fastdotnet.Service.Initializers
             IRepository<FdRole> roleRepository,
             IRepository<FdAdminUser> adminUserRepository,
             IRepository<FdAdminUserRole> adminUserRoleRepository
-            ,IFdRoleInitializerService fdRoleInitializer
             ,IService.Sys.IPasswordService passwordService
             )
         {
@@ -31,7 +29,6 @@ namespace Fastdotnet.Service.Initializers
             _roleRepository = roleRepository;
             _adminUserRepository = adminUserRepository;
             _adminUserRoleRepository = adminUserRoleRepository;
-            _fdRoleInitializer = fdRoleInitializer;
             _passwordService = passwordService;
         }
 
@@ -45,7 +42,6 @@ namespace Fastdotnet.Service.Initializers
             //_logger.LogInformation("Start: Initializing Admin User and Super Admin Role...");
 
             // 1. 确保超级管理员角色存在
-            await _fdRoleInitializer.RoleInitializer();
             const string superAdminRoleCode = "SUPER_ADMIN";
             var superAdminRole = await _roleRepository.GetFirstAsync(r => r.Code == superAdminRoleCode);
 

@@ -13,13 +13,11 @@ namespace Fastdotnet.Service.Initializers
         private readonly IRepository<FdAppUserRole> _UserRoleRepository;
         private readonly IRepository<FdRole> _fdroleRepository;
         private readonly IRepository<FdRoleMenu> _fdroleMenuRepository;
-        private readonly IFdRoleInitializerService _fdRoleInitializer;
         private readonly IService.Sys.IPasswordService _passwordService;
         private readonly IWebHostEnvironment _environment;
 
         public FdAppUserInitializer(IRepository<FdAppUser> Repository, IRepository<FdAppUserRole> userRoleRepository,
             IRepository<FdRole> fdroleRepository, IRepository<FdRoleMenu> fdroleMenuRepository
-            ,IFdRoleInitializerService fdRoleInitializer
             ,IService.Sys.IPasswordService passwordService
             ,IWebHostEnvironment environment
 
@@ -29,7 +27,6 @@ namespace Fastdotnet.Service.Initializers
             _UserRoleRepository = userRoleRepository;
             _fdroleRepository = fdroleRepository;
             _fdroleMenuRepository = fdroleMenuRepository;
-            _fdRoleInitializer = fdRoleInitializer;
             _passwordService = passwordService;
             _environment = environment;
         }

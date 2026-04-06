@@ -129,7 +129,7 @@ builder.Services.AddScoped<IFdNationalStandardItemService, FdNationalStandardIte
 //builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 //builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 //builder.Services.AddScoped(typeof(IBaseService<,>), typeof(BaseService<,>));
-builder.Services.AddScoped<IFdRoleInitializerService, FdRoleInitializerService>();
+//builder.Services.AddScoped<IFdRoleInitializerService, FdRoleInitializerService>();
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IAppUserService, AppUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();

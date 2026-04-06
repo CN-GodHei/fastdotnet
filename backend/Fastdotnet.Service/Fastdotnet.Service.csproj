@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Remove="Initializers\FdDictDataInitializer.cs" />
     <Compile Remove="Initializers\FdDictTypeInitializer.cs" />
+    <Compile Remove="IService\Sys\IFdRoleInitializerService.cs" />
   </ItemGroup>
 
   <ItemGroup>

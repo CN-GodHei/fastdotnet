@@ -4,17 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Fastdotnet.Service.Service.Sys
+namespace Fastdotnet.Service.Initializers
 {
-    public class FdRoleInitializerService : IFdRoleInitializerService
+    public class FdRoleInitializer : IApplicationInitializer
+    //: IFdRoleInitializerService
     {
         private readonly IRepository<FdRole> _Repository;
 
-        public FdRoleInitializerService(IRepository<FdRole> Repository)
+        public FdRoleInitializer(IRepository<FdRole> Repository)
         {
             _Repository = Repository;
         }
-        public async Task RoleInitializer()
+        public int Order = 1000;
+        public async Task InitializeAsync()
         {
             var entitys = new List<FdRole>
             {
