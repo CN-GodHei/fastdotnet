@@ -76,4 +76,28 @@ namespace Fastdotnet.Core.Dtos.Sys
 
         public bool EnableSsl { get; set; }
     }
+
+    /// <summary>
+    /// 测试发送邮件 - 请求DTO
+    /// </summary>
+    public class TestSendEmailDto
+    {
+        /// <summary>
+        /// 收件人邮箱
+        /// </summary>
+        [Required]
+        [EmailAddress]
+        public string ToEmail { get; set; }
+
+        /// <summary>
+        /// 邮件主题
+        /// </summary>
+        [StringLength(200)]
+        public string Subject { get; set; } = "测试邮件";
+
+        /// <summary>
+        /// 邮件内容
+        /// </summary>
+        public string Body { get; set; } = "这是一封测试邮件，用于验证邮件配置是否正确。";
+    }
 }

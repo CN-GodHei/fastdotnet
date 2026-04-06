@@ -8,8 +8,10 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     [Authorize]
     public class FdEmailConfigController : GenericDtoControllerBase<EmailConfig, FdCreateEmailConfigDto, FdUpdateEmailConfigDto, FdEmailConfigDto>
     {
-        public FdEmailConfigController(IBaseService<EmailConfig, string> service, IMapper mapper) : base(service, mapper)
+        private readonly IEmailService _emailService;
+        public FdEmailConfigController(IBaseService<EmailConfig, string> service, IMapper mapper, IEmailService emailService) : base(service, mapper)
         {
+            _emailService = emailService;
         }
 
         /// <summary>
@@ -42,6 +44,33 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             var result = await _service.UpdateAsync(existing);
             return _mapper.Map<FdEmailConfigDto>(result);
         }
+
+        /// <summary>
+        /// 测试发送邮件
+        /// </summary>
+        [HttpPost("TestSend")]
+        public async Task<bool> TestSend(TestSendEmailDto dto)
+        {
+            // 获取当前邮件配置
+            var config = await _service.GetFirstAsync(e => true);
+            if (config == null)
+            {
+                throw new BusinessException("邮件配置不存在，请先配置邮件服务。");
+            }
+
+            try
+            {
+                // 使用配置的邮件服务发送测试邮件
+                await _emailService.SendEmailAsync(dto.ToEmail, dto.Subject, dto.Body);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException($"邮件发送失败: {ex.Message}");
+            }
+        }
+
+
 
         #region === 禁用通用接口 ===
 
