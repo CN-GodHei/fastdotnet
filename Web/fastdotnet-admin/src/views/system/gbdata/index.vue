@@ -47,7 +47,7 @@
 									</el-tag>
 								</template>
 							</el-table-column>
-							<el-table-column label="操作" width="120" fixed="right" align="center">
+							<el-table-column label="操作" width="150" fixed="right" align="center">
 								<template #default="scope">
 									<el-button icon="Edit" size="small" text type="primary" @click.stop="openStandardDialog(scope.row)">编辑</el-button>
 									<el-button icon="Delete" size="small" text type="danger" @click.stop="handleStandardDelete(scope.row)">删除</el-button>
@@ -151,7 +151,7 @@
 									</el-tag>
 								</template>
 							</el-table-column>
-							<el-table-column label="操作" width="120" fixed="right" align="center">
+							<el-table-column label="操作" width="150" fixed="right" align="center">
 								<template #default="scope">
 									<el-button icon="Edit" size="small" text type="primary" @click.stop="openItemDialog(scope.row)">编辑</el-button>
 									<el-button icon="Delete" size="small" text type="danger" @click.stop="handleItemDelete(scope.row)">删除</el-button>
