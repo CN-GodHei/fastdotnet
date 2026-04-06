@@ -2,6 +2,8 @@
 using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Core.Utils;
 using Fastdotnet.Service.IService.Sys;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Fastdotnet.Service.Initializers
 {
@@ -13,11 +15,13 @@ namespace Fastdotnet.Service.Initializers
         private readonly IRepository<FdRoleMenu> _fdroleMenuRepository;
         private readonly IFdRoleInitializerService _fdRoleInitializer;
         private readonly IService.Sys.IPasswordService _passwordService;
+        private readonly IWebHostEnvironment _environment;
 
         public FdAppUserInitializer(IRepository<FdAppUser> Repository, IRepository<FdAppUserRole> userRoleRepository,
             IRepository<FdRole> fdroleRepository, IRepository<FdRoleMenu> fdroleMenuRepository
             ,IFdRoleInitializerService fdRoleInitializer
             ,IService.Sys.IPasswordService passwordService
+            ,IWebHostEnvironment environment
 
             )
         {
@@ -27,6 +31,7 @@ namespace Fastdotnet.Service.Initializers
             _fdroleMenuRepository = fdroleMenuRepository;
             _fdRoleInitializer = fdRoleInitializer;
             _passwordService = passwordService;
+            _environment = environment;
         }
 
         /// <summary>
@@ -36,6 +41,12 @@ namespace Fastdotnet.Service.Initializers
 
         public async Task InitializeAsync()
         {
+            // 生产环境不执行初始化
+            if (_environment.IsProduction())
+            {
+                return;
+            }
+            
             //if (await _Repository.ExistsAsync(a => a.Id != null))
             //{
             //    return;
