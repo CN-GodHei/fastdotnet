@@ -6,7 +6,7 @@
   <ItemGroup>
     <PackageVersion Include="AutoMapper" Version="14.0.0" />
     <PackageVersion Include="BouncyCastle.Cryptography" Version="2.6.2" />
-    <PackageVersion Include="Fastdotnet.Plugin.Core" Version="1.0.15" />
+    <PackageVersion Include="Fastdotnet.Plugin.Core" Version="1.0.16" />
     <PackageVersion Include="Lazy.Captcha.Core" Version="2.2.2" />
     <PackageVersion Include="MailKit" Version="4.13.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication" Version="2.3.0" />
