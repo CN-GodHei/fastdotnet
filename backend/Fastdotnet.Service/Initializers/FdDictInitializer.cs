@@ -246,6 +246,26 @@ namespace Fastdotnet.Service.Initializers
                     }
                 },
                 
+                // STORAGE_CONFIG: 存储配置
+                new DictTypeAndData
+                {
+                    fdDictType = new FdDictType
+                    {
+                        Id = "11921994044146711",
+                        Name = "存储配置",
+                        Code = "STORAGE_CONFIG",
+                        SysFlag = YesNoEnum.Y,
+                        OrderNo = 203,
+                        Remark = "文件存储相关配置",
+                        Status = StatusEnum.Enable
+                    },
+                    fdDictData = new List<FdDictData>
+                    {
+                        // 控制本地存储返回内网还是外网链接：inner(内网) 或 outer(外网)
+                        new FdDictData{ Id="12458431967462408", DictTypeId="11921994044146711", DictTypeCode="STORAGE_CONFIG", Code="LocalStorageLinkType", Label="本地存储链接类型", Value="outer", ValueType=DictValueType.String, OrderNo=1, Remark="本地存储返回链接类型：inner(内网) 或 outer(外网)", Status=StatusEnum.Enable },
+                    }
+                },
+                
                 // PASSWORD_CONFIG: 密码加密配置
                 new DictTypeAndData
                 {

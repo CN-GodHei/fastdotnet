@@ -39,8 +39,12 @@ namespace Fastdotnet.Core.Service.Sys
 
             // 返回访问URL
             var relativePath = Path.Combine(bucketName ?? _options.DefaultBucket, uniqueFileName).Replace('\\', '/');
-            var siteDomain = await _service.GetFirstAsync(w => w.Code == "CODE_09_01");
-            return $"{siteDomain.Value}{_options.BaseUrl}/{relativePath}";
+            // 读取配置决定使用内网还是外网域名
+            var linkType = await _service.GetFirstAsync(w => w.Code == "LocalStorageLinkType");
+            var domainCode = linkType?.Value == "outer" ? "CODE_09_02" : "CODE_09_01";
+            var siteDomain = await _service.GetFirstAsync(w => w.Code == domainCode);
+
+            return $"{siteDomain?.Value}{_options.BaseUrl}/{relativePath}";
         }
 
         public async Task<byte[]> DownloadAsync(string fileName, string? bucketName = null)
@@ -73,7 +77,12 @@ namespace Fastdotnet.Core.Service.Sys
         public async Task<string> GetFileUrlAsync(string fileName, string? bucketName = null)
         {
             var relativePath = Path.Combine(bucketName ?? _options.DefaultBucket, fileName).Replace('\\', '/');
-            return $"{_options.BaseUrl}/{relativePath}";
+            // 读取配置决定使用内网还是外网域名
+            var linkType = await _service.GetFirstAsync(w => w.Code == "LocalStorageLinkType");
+            var domainCode = linkType?.Value == "outer" ? "CODE_09_02" : "CODE_09_01";
+            var siteDomain = await _service.GetFirstAsync(w => w.Code == domainCode);
+            
+            return $"{siteDomain?.Value}{_options.BaseUrl}/{relativePath}";
         }
 
         public string StorageType => "local";
