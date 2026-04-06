@@ -102,7 +102,7 @@ export async function deleteApiAdminFdMenuBatch(body: string[], options?: { [key
 }
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdMenu/batch/updatebycondition */
 export async function putApiAdminFdMenuBatchUpdatebycondition(
-	body: APIModel.UpdateFdMenuDtoBatchUpdateByConditionDto,
+	body: APIModel.BatchUpdateByConditionDto1UpdateFdMenuDto,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdMenu/batch/updatebycondition', {
@@ -215,7 +215,10 @@ export async function putApiAdminFdMenuRecyclebinIdRestore(
 	});
 }
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdMenu/recyclebin/permanent */
-export async function postApiAdminFdMenuRecyclebinPermanent(body: APIModel.FdMenuBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiAdminFdMenuRecyclebinPermanent(
+	body: APIModel.Expression1Func2FdMenu_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
+	options?: { [key: string]: any }
+) {
 	return request<number>('/api/admin/FdMenu/recyclebin/permanent', {
 		method: 'POST',
 		headers: {
@@ -226,7 +229,10 @@ export async function postApiAdminFdMenuRecyclebinPermanent(body: APIModel.FdMen
 	});
 }
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdMenu/recyclebin/restore */
-export async function postApiAdminFdMenuRecyclebinRestore(body: APIModel.FdMenuBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiAdminFdMenuRecyclebinRestore(
+	body: APIModel.Expression1Func2FdMenu_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
+	options?: { [key: string]: any }
+) {
 	return request<number>('/api/admin/FdMenu/recyclebin/restore', {
 		method: 'POST',
 		headers: {

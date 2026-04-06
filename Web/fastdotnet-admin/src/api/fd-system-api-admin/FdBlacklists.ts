@@ -102,7 +102,7 @@ export async function deleteApiAdminFdBlacklistsBatch(body: string[], options?: 
 }
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdBlacklists/batch/updatebycondition */
 export async function putApiAdminFdBlacklistsBatchUpdatebycondition(
-	body: APIModel.UpdateFdBlacklistDtoBatchUpdateByConditionDto,
+	body: APIModel.BatchUpdateByConditionDto1UpdateFdBlacklistDto,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdBlacklists/batch/updatebycondition', {
@@ -215,7 +215,10 @@ export async function putApiAdminFdBlacklistsRecyclebinIdRestore(
 	});
 }
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdBlacklists/recyclebin/permanent */
-export async function postApiAdminFdBlacklistsRecyclebinPermanent(body: APIModel.FdBlacklistBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiAdminFdBlacklistsRecyclebinPermanent(
+	body: APIModel.Expression1Func2FdBlacklist_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
+	options?: { [key: string]: any }
+) {
 	return request<number>('/api/admin/FdBlacklists/recyclebin/permanent', {
 		method: 'POST',
 		headers: {
@@ -226,7 +229,10 @@ export async function postApiAdminFdBlacklistsRecyclebinPermanent(body: APIModel
 	});
 }
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdBlacklists/recyclebin/restore */
-export async function postApiAdminFdBlacklistsRecyclebinRestore(body: APIModel.FdBlacklistBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiAdminFdBlacklistsRecyclebinRestore(
+	body: APIModel.Expression1Func2FdBlacklist_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
+	options?: { [key: string]: any }
+) {
 	return request<number>('/api/admin/FdBlacklists/recyclebin/restore', {
 		method: 'POST',
 		headers: {

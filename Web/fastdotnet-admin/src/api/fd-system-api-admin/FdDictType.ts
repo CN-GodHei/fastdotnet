@@ -102,7 +102,7 @@ export async function deleteApiAdminFdDictTypeBatch(body: string[], options?: { 
 }
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdDictType/batch/updatebycondition */
 export async function putApiAdminFdDictTypeBatchUpdatebycondition(
-	body: APIModel.UpdateFdDictTypeDtoBatchUpdateByConditionDto,
+	body: APIModel.BatchUpdateByConditionDto1UpdateFdDictTypeDto,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdDictType/batch/updatebycondition', {
@@ -201,7 +201,10 @@ export async function putApiAdminFdDictTypeRecyclebinIdRestore(
 	});
 }
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdDictType/recyclebin/permanent */
-export async function postApiAdminFdDictTypeRecyclebinPermanent(body: APIModel.FdDictTypeBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiAdminFdDictTypeRecyclebinPermanent(
+	body: APIModel.Expression1Func2FdDictType_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
+	options?: { [key: string]: any }
+) {
 	return request<number>('/api/admin/FdDictType/recyclebin/permanent', {
 		method: 'POST',
 		headers: {
@@ -212,7 +215,10 @@ export async function postApiAdminFdDictTypeRecyclebinPermanent(body: APIModel.F
 	});
 }
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdDictType/recyclebin/restore */
-export async function postApiAdminFdDictTypeRecyclebinRestore(body: APIModel.FdDictTypeBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiAdminFdDictTypeRecyclebinRestore(
+	body: APIModel.Expression1Func2FdDictType_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
+	options?: { [key: string]: any }
+) {
 	return request<number>('/api/admin/FdDictType/recyclebin/restore', {
 		method: 'POST',
 		headers: {

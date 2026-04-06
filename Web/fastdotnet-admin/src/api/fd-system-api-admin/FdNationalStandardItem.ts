@@ -102,7 +102,7 @@ export async function deleteApiFdNationalStandardItemBatch(body: string[], optio
 }
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/FdNationalStandardItem/batch/updatebycondition */
 export async function putApiFdNationalStandardItemBatchUpdatebycondition(
-	body: APIModel.UpdateFdNationalStandardItemDtoBatchUpdateByConditionDto,
+	body: APIModel.BatchUpdateByConditionDto1UpdateFdNationalStandardItemDto,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/FdNationalStandardItem/batch/updatebycondition', {
@@ -202,7 +202,7 @@ export async function putApiFdNationalStandardItemRecyclebinIdRestore(
 }
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/FdNationalStandardItem/recyclebin/permanent */
 export async function postApiFdNationalStandardItemRecyclebinPermanent(
-	body: APIModel.FdNationalStandardItemBooleanFuncExpression,
+	body: APIModel.Expression1Func2FdNationalStandardItem_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/FdNationalStandardItem/recyclebin/permanent', {
@@ -216,7 +216,7 @@ export async function postApiFdNationalStandardItemRecyclebinPermanent(
 }
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/FdNationalStandardItem/recyclebin/restore */
 export async function postApiFdNationalStandardItemRecyclebinRestore(
-	body: APIModel.FdNationalStandardItemBooleanFuncExpression,
+	body: APIModel.Expression1Func2FdNationalStandardItem_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/FdNationalStandardItem/recyclebin/restore', {

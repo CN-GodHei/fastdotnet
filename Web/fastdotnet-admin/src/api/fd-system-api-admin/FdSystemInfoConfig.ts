@@ -102,7 +102,7 @@ export async function deleteApiAdminFdSystemInfoConfigBatch(body: string[], opti
 }
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdSystemInfoConfig/batch/updatebycondition */
 export async function putApiAdminFdSystemInfoConfigBatchUpdatebycondition(
-	body: APIModel.UpdateFdSystemInfoConfigDtoBatchUpdateByConditionDto,
+	body: APIModel.BatchUpdateByConditionDto1UpdateFdSystemInfoConfigDto,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdSystemInfoConfig/batch/updatebycondition', {
@@ -216,7 +216,7 @@ export async function putApiAdminFdSystemInfoConfigRecyclebinIdRestore(
 }
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdSystemInfoConfig/recyclebin/permanent */
 export async function postApiAdminFdSystemInfoConfigRecyclebinPermanent(
-	body: APIModel.SystemInfoConfigBooleanFuncExpression,
+	body: APIModel.Expression1Func2SystemInfoConfig_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdSystemInfoConfig/recyclebin/permanent', {
@@ -230,7 +230,7 @@ export async function postApiAdminFdSystemInfoConfigRecyclebinPermanent(
 }
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdSystemInfoConfig/recyclebin/restore */
 export async function postApiAdminFdSystemInfoConfigRecyclebinRestore(
-	body: APIModel.SystemInfoConfigBooleanFuncExpression,
+	body: APIModel.Expression1Func2SystemInfoConfig_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdSystemInfoConfig/recyclebin/restore', {

@@ -102,7 +102,7 @@ export async function deleteApiCodeGenConfigBatch(body: string[], options?: { [k
 }
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/CodeGenConfig/batch/updatebycondition */
 export async function putApiCodeGenConfigBatchUpdatebycondition(
-	body: APIModel.UpdateFdCodeGenConfigDtoBatchUpdateByConditionDto,
+	body: APIModel.BatchUpdateByConditionDto1UpdateFdCodeGenConfigDto,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/CodeGenConfig/batch/updatebycondition', {
@@ -201,7 +201,10 @@ export async function putApiCodeGenConfigRecyclebinIdRestore(
 	});
 }
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/CodeGenConfig/recyclebin/permanent */
-export async function postApiCodeGenConfigRecyclebinPermanent(body: APIModel.FdCodeGenConfigBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiCodeGenConfigRecyclebinPermanent(
+	body: APIModel.Expression1Func2FdCodeGenConfig_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
+	options?: { [key: string]: any }
+) {
 	return request<number>('/api/CodeGenConfig/recyclebin/permanent', {
 		method: 'POST',
 		headers: {
@@ -212,7 +215,10 @@ export async function postApiCodeGenConfigRecyclebinPermanent(body: APIModel.FdC
 	});
 }
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/CodeGenConfig/recyclebin/restore */
-export async function postApiCodeGenConfigRecyclebinRestore(body: APIModel.FdCodeGenConfigBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiCodeGenConfigRecyclebinRestore(
+	body: APIModel.Expression1Func2FdCodeGenConfig_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
+	options?: { [key: string]: any }
+) {
 	return request<number>('/api/CodeGenConfig/recyclebin/restore', {
 		method: 'POST',
 		headers: {

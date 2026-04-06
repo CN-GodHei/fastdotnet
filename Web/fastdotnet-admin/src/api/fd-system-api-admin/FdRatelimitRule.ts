@@ -102,7 +102,7 @@ export async function deleteApiAdminFdRatelimitRuleBatch(body: string[], options
 }
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdRatelimitRule/batch/updatebycondition */
 export async function putApiAdminFdRatelimitRuleBatchUpdatebycondition(
-	body: APIModel.UpdateFdRateLimitRuleDtoBatchUpdateByConditionDto,
+	body: APIModel.BatchUpdateByConditionDto1UpdateFdRateLimitRuleDto,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdRatelimitRule/batch/updatebycondition', {
@@ -231,7 +231,7 @@ export async function putApiAdminFdRatelimitRuleRecyclebinIdRestore(
 }
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdRatelimitRule/recyclebin/permanent */
 export async function postApiAdminFdRatelimitRuleRecyclebinPermanent(
-	body: APIModel.FdRateLimitRuleBooleanFuncExpression,
+	body: APIModel.Expression1Func2FdRateLimitRule_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdRatelimitRule/recyclebin/permanent', {
@@ -245,7 +245,7 @@ export async function postApiAdminFdRatelimitRuleRecyclebinPermanent(
 }
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdRatelimitRule/recyclebin/restore */
 export async function postApiAdminFdRatelimitRuleRecyclebinRestore(
-	body: APIModel.FdRateLimitRuleBooleanFuncExpression,
+	body: APIModel.Expression1Func2FdRateLimitRule_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdRatelimitRule/recyclebin/restore', {

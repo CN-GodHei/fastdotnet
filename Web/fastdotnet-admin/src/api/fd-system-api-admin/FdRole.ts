@@ -154,7 +154,7 @@ export async function deleteApiAdminFdRoleBatch(body: string[], options?: { [key
 }
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdRole/batch/updatebycondition */
 export async function putApiAdminFdRoleBatchUpdatebycondition(
-	body: APIModel.UpdateFdRoleDtoBatchUpdateByConditionDto,
+	body: APIModel.BatchUpdateByConditionDto1UpdateFdRoleDto,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdRole/batch/updatebycondition', {
@@ -253,7 +253,10 @@ export async function putApiAdminFdRoleRecyclebinIdRestore(
 	});
 }
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdRole/recyclebin/permanent */
-export async function postApiAdminFdRoleRecyclebinPermanent(body: APIModel.FdRoleBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiAdminFdRoleRecyclebinPermanent(
+	body: APIModel.Expression1Func2FdRole_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
+	options?: { [key: string]: any }
+) {
 	return request<number>('/api/admin/FdRole/recyclebin/permanent', {
 		method: 'POST',
 		headers: {
@@ -264,7 +267,10 @@ export async function postApiAdminFdRoleRecyclebinPermanent(body: APIModel.FdRol
 	});
 }
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdRole/recyclebin/restore */
-export async function postApiAdminFdRoleRecyclebinRestore(body: APIModel.FdRoleBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiAdminFdRoleRecyclebinRestore(
+	body: APIModel.Expression1Func2FdRole_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
+	options?: { [key: string]: any }
+) {
 	return request<number>('/api/admin/FdRole/recyclebin/restore', {
 		method: 'POST',
 		headers: {

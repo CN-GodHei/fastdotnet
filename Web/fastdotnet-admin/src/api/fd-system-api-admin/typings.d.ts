@@ -8,14 +8,20 @@ declare namespace APIModel {
 		Msg?: string;
 	};
 
+	type ApiResult1Boolean = {
+		Data?: boolean;
+		Code?: number;
+		Msg?: string;
+	};
+
 	type AppMarketplacePluginDto = {
 		Id?: string;
 		Name?: string;
 		Author?: string;
 		Category?: string;
 		SupportedLicenseMode?: SupportedLicenseModeDto;
-		Price_SingleServer?: number;
-		Price_MultiServer?: number;
+		PriceSingleServer?: number;
+		PriceMultiServer?: number;
 		IsFree?: boolean;
 		DocumentationUrl?: string;
 		PurchaseStatus?: string;
@@ -27,11 +33,6 @@ declare namespace APIModel {
 		DownloadCount?: number;
 	};
 
-	type AppMarketplacePluginDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: AppMarketplacePluginDto[];
-	};
-
 	type AppMarketplacePluginGetByIdDto = {
 		Id?: string;
 		Name?: string;
@@ -39,8 +40,8 @@ declare namespace APIModel {
 		Author?: string;
 		Category?: string;
 		SupportedLicenseMode?: SupportedLicenseModeDto;
-		Price_SingleServer?: number;
-		Price_MultiServer?: number;
+		PriceSingleServer?: number;
+		PriceMultiServer?: number;
 		IsFree?: boolean;
 		DocumentationUrl?: string;
 		PurchaseStatus?: string;
@@ -71,10 +72,144 @@ declare namespace APIModel {
 		RoleIds?: string[];
 	};
 
-	type BooleanApiResult = {
-		Data?: boolean;
-		Code?: number;
-		Msg?: string;
+	type BatchUpdateByConditionDto1FdUpdateEmailConfigDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: FdUpdateEmailConfigDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateCodeGenDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateCodeGenDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdAdminUserDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdAdminUserDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdAdminUserRoleDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdAdminUserRoleDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdAppUserDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdAppUserDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdAppUserRoleDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdAppUserRoleDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdBlacklistDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdBlacklistDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdCodeGenConfigDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdCodeGenConfigDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdDictDataDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdDictDataDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdDictTypeDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdDictTypeDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdFdMenuButtonDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdFdMenuButtonDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdMenuDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdMenuDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdNationalStandardDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdNationalStandardDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdNationalStandardItemDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdNationalStandardItemDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdPermissionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdPermissionDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdRateLimitRuleDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdRateLimitRuleDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdRoleDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdRoleDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateFdSystemInfoConfigDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateFdSystemInfoConfigDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateGiftRecordDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateGiftRecordDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateMkActivitiesDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateMkActivitiesDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateMkInvitationsDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateMkInvitationsDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateMkMarketplacePluginsDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateMkMarketplacePluginsDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateMkUseractivityrecordsDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateMkUseractivityrecordsDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateMkUserServeInfoDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateMkUserServeInfoDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateOnlinePaymentDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateOnlinePaymentDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdatePointRedemptionDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdatePointRedemptionDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateUserPluginActivationDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateUserPluginActivationDto;
+	};
+
+	type BatchUpdateByConditionDto1UpdateUserPluginPurchaseDto = {
+		Query?: PageQueryByConditionDto;
+		Dto?: UpdateUserPluginPurchaseDto;
 	};
 
 	type CheckRegistrUserNameDto = {
@@ -95,11 +230,6 @@ declare namespace APIModel {
 		PrintType?: string;
 		PrintName?: string;
 		TableUniqueList?: TableUniqueConfigDto[];
-	};
-
-	type CodeGenConfigDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: CodeGenConfigDto[];
 	};
 
 	type ColumnInfoDto = {
@@ -347,6 +477,9 @@ declare namespace APIModel {
 		IsActive?: boolean;
 		IsFree?: boolean;
 		IconUrl?: string;
+		PriceSingleServer?: number;
+		PriceMultiServer?: number;
+		DocumentationUrl?: string;
 	};
 
 	type CreateMkUseractivityrecordsDto = {
@@ -372,12 +505,20 @@ declare namespace APIModel {
 		PaidTime?: string;
 	};
 
-	type CreatePaymentRequest = {
+	type CreateOrderRequest = {
+		PluginId: string;
+		LicenseType: LicenseType;
+	};
+
+	type CreateOrderResult = {
+		IsNeedPay?: boolean;
 		OrderId?: string;
+		UserId?: string;
 		Amount?: number;
+		Description?: string;
 		Subject?: string;
 		NotifyUrl?: string;
-		PaymentMethod?: PaymentMethod;
+		ExtraData?: Record<string, any>;
 	};
 
 	type CreatePointRedemptionDto = {
@@ -605,17 +746,6 @@ declare namespace APIModel {
 		Version: string;
 	};
 
-	type EmailConfigBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type ExampleRequest = {
 		Data?: string;
 		Token?: string;
@@ -630,6 +760,292 @@ declare namespace APIModel {
 	type Expression = {
 		NodeType?: ExpressionType;
 		Type?: string;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2EmailConfig_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdAdminUser_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdAdminUserRole_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdAppUserRole_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdBlacklist_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdCodeGen_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdCodeGenConfig_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdDictData_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdDictType_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdMenu_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdMenuButton_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdNationalStandard_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdNationalStandardItem_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdPermission_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdRateLimitRule_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2FdRole_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2GiftRecord_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2MkActivities_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2MkInvitations_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2MkMarketplacePlugins_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2MkUseractivityrecords_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2OnlinePayment_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2PointRedemption_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2SystemInfoConfig_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2UserPluginActivation_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
+		CanReduce?: boolean;
+	};
+
+	type Expression1Func2UserPluginPurchase_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
+		Type?: string;
+		NodeType?: ExpressionType;
+		Parameters?: ParameterExpression[];
+		Name?: string;
+		Body?: Expression;
+		ReturnType?: string;
+		TailCall?: boolean;
 		CanReduce?: boolean;
 	};
 
@@ -720,17 +1136,6 @@ declare namespace APIModel {
 		| 83
 		| 84;
 
-	type FdAdminUserBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type FdAdminUserDto = {
 		Id?: string;
 		Username?: string;
@@ -746,31 +1151,10 @@ declare namespace APIModel {
 		Buttons?: string[];
 	};
 
-	type FdAdminUserDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdAdminUserDto[];
-	};
-
-	type FdAdminUserRoleBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type FdAdminUserRoleDto = {
 		Id?: string;
 		AdminUserId?: string;
 		RoleId?: string;
-	};
-
-	type FdAdminUserRoleDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdAdminUserRoleDto[];
 	};
 
 	type FdAppUserDto = {
@@ -785,42 +1169,10 @@ declare namespace APIModel {
 		Buttons?: string[];
 	};
 
-	type FdAppUserDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdAppUserDto[];
-	};
-
-	type FdAppUserRoleBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type FdAppUserRoleDto = {
 		Id?: string;
 		AppUserId?: string;
 		RoleId?: string;
-	};
-
-	type FdAppUserRoleDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdAppUserRoleDto[];
-	};
-
-	type FdBlacklistBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
 	};
 
 	type FdBlacklistDto = {
@@ -832,33 +1184,6 @@ declare namespace APIModel {
 		IsSystem?: boolean;
 		CreatedAt?: string;
 		UpdateTime?: string;
-	};
-
-	type FdBlacklistDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdBlacklistDto[];
-	};
-
-	type FdCodeGenBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type FdCodeGenConfigBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
 	};
 
 	type FdCodeGenConfigDto = {
@@ -894,11 +1219,6 @@ declare namespace APIModel {
 		ForeignKeyConfig?: ForeignKeyConfigModel;
 	};
 
-	type FdCodeGenConfigDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdCodeGenConfigDto[];
-	};
-
 	type FdCreateEmailConfigDto = {
 		Host: string;
 		Port: number;
@@ -907,17 +1227,6 @@ declare namespace APIModel {
 		SenderEmail: string;
 		SenderName: string;
 		EnableSsl?: boolean;
-	};
-
-	type FdDictDataBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
 	};
 
 	type FdDictDataDto = {
@@ -941,22 +1250,6 @@ declare namespace APIModel {
 		Children?: FdDictDataDto[];
 	};
 
-	type FdDictDataDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdDictDataDto[];
-	};
-
-	type FdDictTypeBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type FdDictTypeDto = {
 		Id?: string;
 		Name?: string;
@@ -967,11 +1260,6 @@ declare namespace APIModel {
 		SysFlag?: number;
 		PluginSysFlag?: number;
 		PluginId?: string;
-	};
-
-	type FdDictTypeDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdDictTypeDto[];
 	};
 
 	type FdEmailConfigDto = {
@@ -985,33 +1273,6 @@ declare namespace APIModel {
 		EnableSsl?: boolean;
 	};
 
-	type FdEmailConfigDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdEmailConfigDto[];
-	};
-
-	type FdMenuBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type FdMenuButtonBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type FdMenuButtonDto = {
 		Id?: string;
 		Name?: string;
@@ -1023,11 +1284,6 @@ declare namespace APIModel {
 		Sort?: number;
 		PermissionCode?: string;
 		IsEnabled?: boolean;
-	};
-
-	type FdMenuButtonDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdMenuButtonDto[];
 	};
 
 	type FdMenuDto = {
@@ -1063,11 +1319,6 @@ declare namespace APIModel {
 		Deleter?: UserRefDto;
 	};
 
-	type FdMenuDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdMenuDto[];
-	};
-
 	type FdNationalStandard = {
 		StandardCode?: string;
 		StandardName?: string;
@@ -1085,17 +1336,6 @@ declare namespace APIModel {
 		UpdatedAt?: string;
 		IsDeleted?: boolean;
 		DeletedAt?: string;
-	};
-
-	type FdNationalStandardBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
 	};
 
 	type FdNationalStandardDetailDto = {
@@ -1124,11 +1364,6 @@ declare namespace APIModel {
 		TotalItems?: number;
 	};
 
-	type FdNationalStandardDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdNationalStandardDto[];
-	};
-
 	type FdNationalStandardItem = {
 		StandardId?: string;
 		ItemCode?: string;
@@ -1146,17 +1381,6 @@ declare namespace APIModel {
 		DeletedAt?: string;
 	};
 
-	type FdNationalStandardItemBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type FdNationalStandardItemDto = {
 		Id?: string;
 		StandardId?: string;
@@ -1170,27 +1394,6 @@ declare namespace APIModel {
 		Children?: FdNationalStandardItemDto[];
 	};
 
-	type FdNationalStandardItemDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdNationalStandardItemDto[];
-	};
-
-	type FdNationalStandardItemDtoTreeModel = {
-		TreeData?: FdNationalStandardItemDto[];
-		Total?: number;
-	};
-
-	type FdPermissionBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type FdPermissionDto = {
 		Id?: string;
 		Name?: string;
@@ -1201,22 +1404,6 @@ declare namespace APIModel {
 		Category?: string;
 		CreatedAt?: string;
 		UpdatedAt?: string;
-	};
-
-	type FdPermissionDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdPermissionDto[];
-	};
-
-	type FdRateLimitRuleBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
 	};
 
 	type FdRateLimitRuleDto = {
@@ -1232,22 +1419,6 @@ declare namespace APIModel {
 		IsDeleted?: boolean;
 	};
 
-	type FdRateLimitRuleDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdRateLimitRuleDto[];
-	};
-
-	type FdRoleBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type FdRoleDto = {
 		Id?: string;
 		Name?: string;
@@ -1257,11 +1428,6 @@ declare namespace APIModel {
 		IsSystem?: boolean;
 		CreatedAt?: string;
 		IsDefault?: boolean;
-	};
-
-	type FdRoleDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdRoleDto[];
 	};
 
 	type FdSystemInfoConfigDto = {
@@ -1275,11 +1441,6 @@ declare namespace APIModel {
 		UpdatedAt?: string;
 	};
 
-	type FdSystemInfoConfigDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: FdSystemInfoConfigDto[];
-	};
-
 	type FdUpdateEmailConfigDto = {
 		Host: string;
 		Port: number;
@@ -1290,10 +1451,6 @@ declare namespace APIModel {
 		EnableSsl?: boolean;
 	};
 
-	type FdUpdateEmailConfigDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: FdUpdateEmailConfigDto;
-	};
 
 	type ForeignKeyConfigModel = {
 		FkConfigId?: string;
@@ -1775,17 +1932,6 @@ declare namespace APIModel {
 		DeletedAt?: string;
 	};
 
-	type GiftRecordBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type GiftRecordDto = {
 		Id?: string;
 		PurchaseId?: number;
@@ -1794,11 +1940,6 @@ declare namespace APIModel {
 		GivenTime?: string;
 		CreateTime?: string;
 		UpdateTime?: string;
-	};
-
-	type GiftRecordDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: GiftRecordDto[];
 	};
 
 	type HealthStatus = {
@@ -1873,17 +2014,6 @@ declare namespace APIModel {
 
 	type MenuType = 0 | 1;
 
-	type MkActivitiesBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type MkActivitiesDto = {
 		Name?: string;
 		Type?: string;
@@ -1893,32 +2023,11 @@ declare namespace APIModel {
 		Isactive?: boolean;
 	};
 
-	type MkActivitiesDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: MkActivitiesDto[];
-	};
-
-	type MkInvitationsBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type MkInvitationsDto = {
 		Inviterid?: string;
 		Inviteeid?: string;
 		Activityid?: string;
 		Status?: string;
-	};
-
-	type MkInvitationsDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: MkInvitationsDto[];
 	};
 
 	type MkMarketplacePlugins = {
@@ -1932,6 +2041,9 @@ declare namespace APIModel {
 		IsActive?: boolean;
 		IsFree?: boolean;
 		DownloadCount?: number;
+		PriceSingleServer?: number;
+		PriceMultiServer?: number;
+		DocumentationUrl?: string;
 		Versions?: MkMarketplacePluginVersions[];
 		Purchases?: UserPluginPurchase[];
 		Activations?: UserPluginActivation[];
@@ -1945,17 +2057,6 @@ declare namespace APIModel {
 		DeletedAt?: string;
 	};
 
-	type MkMarketplacePluginsBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type MkMarketplacePluginsDto = {
 		Name?: string;
 		SubTitle?: string;
@@ -1967,27 +2068,17 @@ declare namespace APIModel {
 		IsFree?: boolean;
 		DownloadCount?: number;
 		IconUrl?: string;
-	};
-
-	type MkMarketplacePluginsDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: MkMarketplacePluginsDto[];
-	};
-
-	type MkMarketplacePluginsPageResult = {
-		PageInfo?: PageInfo;
-		Items?: MkMarketplacePlugins[];
+		PriceSingleServer?: number;
+		PriceMultiServer?: number;
+		DocumentationUrl?: string;
 	};
 
 	type MkMarketplacePluginVersions = {
 		PluginId?: string;
 		Version?: string;
 		DownloadUrl?: string;
-		DocumentationUrl?: string;
 		ReleaseNotes?: string;
 		IsActive?: boolean;
-		Price_SingleServer?: number;
-		Price_MultiServer?: number;
 		Plugin?: MkMarketplacePlugins;
 		CreatedBy?: string;
 		UpdatedBy?: string;
@@ -2007,22 +2098,10 @@ declare namespace APIModel {
 		DocumentationUrl?: string;
 		ReleaseNotes?: string;
 		IsActive?: boolean;
-		PriceSingleServer?: number;
-		PriceMultiServer?: number;
+		CreatedAt?: string;
 		CreatedBy?: string;
 		UpdatedBy?: string;
 		DeletedBy?: string;
-	};
-
-	type MkUseractivityrecordsBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
 	};
 
 	type MkUseractivityrecordsDto = {
@@ -2033,20 +2112,10 @@ declare namespace APIModel {
 		Rewarddata?: string;
 	};
 
-	type MkUseractivityrecordsDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: MkUseractivityrecordsDto[];
-	};
-
 	type MkUserServeInfoDto = {
 		UserId?: string;
 		MachineFingerprint?: string;
 		MachineName?: string;
-	};
-
-	type MkUserServeInfoDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: MkUserServeInfoDto[];
 	};
 
 	type OnlinePayment = {
@@ -2069,17 +2138,6 @@ declare namespace APIModel {
 		DeletedAt?: string;
 	};
 
-	type OnlinePaymentBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type OnlinePaymentChannel = 0 | 1 | 2 | 3 | 4;
 
 	type OnlinePaymentChannelDto = 0 | 1 | 2 | 3 | 4;
@@ -2094,11 +2152,6 @@ declare namespace APIModel {
 		PaidTime?: string;
 		CreateTime?: string;
 		UpdateTime?: string;
-	};
-
-	type OnlinePaymentDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: OnlinePaymentDto[];
 	};
 
 	type PageInfo = {
@@ -2117,6 +2170,161 @@ declare namespace APIModel {
 		QueryParameters?: any[];
 	};
 
+	type PageResult1AppMarketplacePluginDto = {
+		PageInfo?: PageInfo;
+		Items?: AppMarketplacePluginDto[];
+	};
+
+	type PageResult1CodeGenConfigDto = {
+		PageInfo?: PageInfo;
+		Items?: CodeGenConfigDto[];
+	};
+
+	type PageResult1FdAdminUserDto = {
+		PageInfo?: PageInfo;
+		Items?: FdAdminUserDto[];
+	};
+
+	type PageResult1FdAdminUserRoleDto = {
+		PageInfo?: PageInfo;
+		Items?: FdAdminUserRoleDto[];
+	};
+
+	type PageResult1FdAppUserDto = {
+		PageInfo?: PageInfo;
+		Items?: FdAppUserDto[];
+	};
+
+	type PageResult1FdAppUserRoleDto = {
+		PageInfo?: PageInfo;
+		Items?: FdAppUserRoleDto[];
+	};
+
+	type PageResult1FdBlacklistDto = {
+		PageInfo?: PageInfo;
+		Items?: FdBlacklistDto[];
+	};
+
+	type PageResult1FdCodeGenConfigDto = {
+		PageInfo?: PageInfo;
+		Items?: FdCodeGenConfigDto[];
+	};
+
+	type PageResult1FdDictDataDto = {
+		PageInfo?: PageInfo;
+		Items?: FdDictDataDto[];
+	};
+
+	type PageResult1FdDictTypeDto = {
+		PageInfo?: PageInfo;
+		Items?: FdDictTypeDto[];
+	};
+
+	type PageResult1FdEmailConfigDto = {
+		PageInfo?: PageInfo;
+		Items?: FdEmailConfigDto[];
+	};
+
+	type PageResult1FdMenuButtonDto = {
+		PageInfo?: PageInfo;
+		Items?: FdMenuButtonDto[];
+	};
+
+	type PageResult1FdMenuDto = {
+		PageInfo?: PageInfo;
+		Items?: FdMenuDto[];
+	};
+
+	type PageResult1FdNationalStandardDto = {
+		PageInfo?: PageInfo;
+		Items?: FdNationalStandardDto[];
+	};
+
+	type PageResult1FdNationalStandardItemDto = {
+		PageInfo?: PageInfo;
+		Items?: FdNationalStandardItemDto[];
+	};
+
+	type PageResult1FdPermissionDto = {
+		PageInfo?: PageInfo;
+		Items?: FdPermissionDto[];
+	};
+
+	type PageResult1FdRateLimitRuleDto = {
+		PageInfo?: PageInfo;
+		Items?: FdRateLimitRuleDto[];
+	};
+
+	type PageResult1FdRoleDto = {
+		PageInfo?: PageInfo;
+		Items?: FdRoleDto[];
+	};
+
+	type PageResult1FdSystemInfoConfigDto = {
+		PageInfo?: PageInfo;
+		Items?: FdSystemInfoConfigDto[];
+	};
+
+	type PageResult1GiftRecordDto = {
+		PageInfo?: PageInfo;
+		Items?: GiftRecordDto[];
+	};
+
+	type PageResult1MkActivitiesDto = {
+		PageInfo?: PageInfo;
+		Items?: MkActivitiesDto[];
+	};
+
+	type PageResult1MkInvitationsDto = {
+		PageInfo?: PageInfo;
+		Items?: MkInvitationsDto[];
+	};
+
+	type PageResult1MkMarketplacePlugins = {
+		PageInfo?: PageInfo;
+		Items?: MkMarketplacePlugins[];
+	};
+
+	type PageResult1MkMarketplacePluginsDto = {
+		PageInfo?: PageInfo;
+		Items?: MkMarketplacePluginsDto[];
+	};
+
+	type PageResult1MkUseractivityrecordsDto = {
+		PageInfo?: PageInfo;
+		Items?: MkUseractivityrecordsDto[];
+	};
+
+	type PageResult1MkUserServeInfoDto = {
+		PageInfo?: PageInfo;
+		Items?: MkUserServeInfoDto[];
+	};
+
+	type PageResult1OnlinePaymentDto = {
+		PageInfo?: PageInfo;
+		Items?: OnlinePaymentDto[];
+	};
+
+	type PageResult1PaymentRecord = {
+		PageInfo?: PageInfo;
+		Items?: PaymentRecord[];
+	};
+
+	type PageResult1PointRedemptionDto = {
+		PageInfo?: PageInfo;
+		Items?: PointRedemptionDto[];
+	};
+
+	type PageResult1UserPluginActivationDto = {
+		PageInfo?: PageInfo;
+		Items?: UserPluginActivationDto[];
+	};
+
+	type PageResult1UserPluginPurchaseDto = {
+		PageInfo?: PageInfo;
+		Items?: UserPluginPurchaseDto[];
+	};
+
 	type ParameterExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -2129,10 +2337,31 @@ declare namespace APIModel {
 		OrderId?: string;
 		Amount?: number;
 		Description?: string;
-		NotifyUrl?: string;
 	};
 
-	type PaymentMethod = 0 | 1;
+	type PaymentMethod = 0 | 1 | 2;
+
+	type PaymentRecord = {
+		OrderId?: string;
+		UserId?: string;
+		TransactionId?: string;
+		PaymentMethod?: PaymentMethod;
+		Amount?: number;
+		Status?: PaymentStatus;
+		Description?: string;
+		Subject?: string;
+		NotifyUrl?: string;
+		PaidAt?: string;
+		FailReason?: string;
+		ExtraData?: string;
+		Id?: string;
+		CreatedAt?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+		DeletedAt?: string;
+	};
+
+	type PaymentStatus = 0 | 1 | 2 | 3;
 
 	type PluginConfigurationGetRawJsonDto = {
 		ExistRocord?: boolean;
@@ -2168,28 +2397,12 @@ declare namespace APIModel {
 		DeletedAt?: string;
 	};
 
-	type PointRedemptionBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type PointRedemptionDto = {
 		Id?: string;
 		PurchaseId?: number;
 		PointsUsed?: number;
 		UserId?: string;
 		RedeemedTime?: string;
-	};
-
-	type PointRedemptionDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: PointRedemptionDto[];
 	};
 
 	type postApiAdminFdAdminUserIdResetPasswordParams = {
@@ -2232,14 +2445,7 @@ declare namespace APIModel {
 		bucketName?: string;
 	};
 
-	type PreCreateRequest = {
-		OrderId?: string;
-		Amount?: number;
-		Subject?: string;
-		NotifyUrl?: string;
-	};
-
-	type PurchaseStatus = 0 | 1 | 2;
+	type PurchaseStatus = 0 | 1 | 2 | 3;
 
 	type PurchaseStatusDto = 0 | 1 | 2;
 
@@ -2431,6 +2637,12 @@ declare namespace APIModel {
 		NewPassword: string;
 	};
 
+	type RevokedLicenseDto = {
+		PluginId: string;
+		UninstallCode: string;
+		MachineFingerprint: string;
+	};
+
 	type SendRegistrationCodeDto = {
 		Email: string;
 	};
@@ -2459,17 +2671,6 @@ declare namespace APIModel {
 
 	type SystemCategory = 0 | 1;
 
-	type SystemInfoConfigBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type TableInfoDto = {
 		TableName?: string;
 		EntityName?: string;
@@ -2481,16 +2682,26 @@ declare namespace APIModel {
 		Message?: string;
 	};
 
+	type TestSendEmailDto = {
+		ToEmail: string;
+		Subject?: string;
+		Body?: string;
+	};
+
+	type TreeModel1FdNationalStandardItemDto = {
+		TreeData?: FdNationalStandardItemDto[];
+		Total?: number;
+	};
+
+	type UnifiedPayDto = {
+		OrderId: string;
+		PaymentMethod: PaymentMethod;
+	};
+
 	type UninstallResDto = {
 		Result?: boolean;
 		Offline?: boolean;
 		UninstallCode?: string;
-	};
-
-	type UninstallResDtoApiResult = {
-		Data?: UninstallResDto;
-		Code?: number;
-		Msg?: string;
 	};
 
 	type UnlockDto = {
@@ -2512,11 +2723,6 @@ declare namespace APIModel {
 		TableUniqueList?: TableUniqueConfigDto[];
 	};
 
-	type UpdateCodeGenDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateCodeGenDto;
-	};
-
 	type UpdateDescriptionDto = {
 		Id: string;
 		Description?: string;
@@ -2530,19 +2736,9 @@ declare namespace APIModel {
 		Avatar?: string;
 	};
 
-	type UpdateFdAdminUserDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdAdminUserDto;
-	};
-
 	type UpdateFdAdminUserRoleDto = {
 		AdminUserId?: string;
 		RoleId?: string;
-	};
-
-	type UpdateFdAdminUserRoleDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdAdminUserRoleDto;
 	};
 
 	type UpdateFdAppUserDto = {
@@ -2555,19 +2751,9 @@ declare namespace APIModel {
 		Status?: number;
 	};
 
-	type UpdateFdAppUserDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdAppUserDto;
-	};
-
 	type UpdateFdAppUserRoleDto = {
 		AppUserId?: string;
 		RoleId?: string;
-	};
-
-	type UpdateFdAppUserRoleDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdAppUserRoleDto;
 	};
 
 	type UpdateFdBlacklistDto = {
@@ -2575,11 +2761,6 @@ declare namespace APIModel {
 		Value: string;
 		Reason?: string;
 		ExpiredAt?: string;
-	};
-
-	type UpdateFdBlacklistDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdBlacklistDto;
 	};
 
 	type UpdateFdCodeGenConfigDto = {
@@ -2613,11 +2794,6 @@ declare namespace APIModel {
 		EnableMask?: boolean;
 	};
 
-	type UpdateFdCodeGenConfigDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdCodeGenConfigDto;
-	};
-
 	type UpdateFdDictDataDto = {
 		Id: string;
 		DictTypeId?: string;
@@ -2638,11 +2814,6 @@ declare namespace APIModel {
 		Status?: number;
 	};
 
-	type UpdateFdDictDataDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdDictDataDto;
-	};
-
 	type UpdateFdDictTypeDto = {
 		Id?: string;
 		Name?: string;
@@ -2655,11 +2826,6 @@ declare namespace APIModel {
 		PluginId?: string;
 	};
 
-	type UpdateFdDictTypeDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdDictTypeDto;
-	};
-
 	type UpdateFdFdMenuButtonDto = {
 		Name?: string;
 		Code?: string;
@@ -2670,11 +2836,6 @@ declare namespace APIModel {
 		Sort?: number;
 		PermissionCode?: string;
 		IsEnabled?: boolean;
-	};
-
-	type UpdateFdFdMenuButtonDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdFdMenuButtonDto;
 	};
 
 	type UpdateFdMenuDto = {
@@ -2704,11 +2865,6 @@ declare namespace APIModel {
 		SupportMobile?: boolean;
 	};
 
-	type UpdateFdMenuDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdMenuDto;
-	};
-
 	type UpdateFdNationalStandardDto = {
 		StandardCode?: string;
 		StandardName?: string;
@@ -2722,11 +2878,6 @@ declare namespace APIModel {
 		TotalItems?: number;
 	};
 
-	type UpdateFdNationalStandardDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdNationalStandardDto;
-	};
-
 	type UpdateFdNationalStandardItemDto = {
 		StandardId?: string;
 		ItemCode?: string;
@@ -2736,11 +2887,6 @@ declare namespace APIModel {
 		Level?: number;
 		Sort?: number;
 		Status?: boolean;
-	};
-
-	type UpdateFdNationalStandardItemDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdNationalStandardItemDto;
 	};
 
 	type UpdateFdPermissionDto = {
@@ -2753,11 +2899,6 @@ declare namespace APIModel {
 		Category?: string;
 	};
 
-	type UpdateFdPermissionDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdPermissionDto;
-	};
-
 	type UpdateFdRateLimitRuleDto = {
 		Type: string;
 		Key: string;
@@ -2766,19 +2907,9 @@ declare namespace APIModel {
 		Description?: string;
 	};
 
-	type UpdateFdRateLimitRuleDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdRateLimitRuleDto;
-	};
-
 	type UpdateFdRoleDto = {
 		Name: string;
 		Description?: string;
-	};
-
-	type UpdateFdRoleDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdRoleDto;
 	};
 
 	type UpdateFdSystemInfoConfigDto = {
@@ -2790,22 +2921,12 @@ declare namespace APIModel {
 		IsSystem?: boolean;
 	};
 
-	type UpdateFdSystemInfoConfigDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateFdSystemInfoConfigDto;
-	};
-
 	type UpdateGiftRecordDto = {
 		Id?: string;
 		PurchaseId?: number;
 		Reason?: string;
 		GivenBy?: string;
 		GivenTime?: string;
-	};
-
-	type UpdateGiftRecordDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateGiftRecordDto;
 	};
 
 	type UpdateMkActivitiesDto = {
@@ -2817,21 +2938,11 @@ declare namespace APIModel {
 		Isactive?: boolean;
 	};
 
-	type UpdateMkActivitiesDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMkActivitiesDto;
-	};
-
 	type UpdateMkInvitationsDto = {
 		Inviterid?: string;
 		Inviteeid?: string;
 		Activityid?: string;
 		Status?: string;
-	};
-
-	type UpdateMkInvitationsDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMkInvitationsDto;
 	};
 
 	type UpdateMkMarketplacePluginsDto = {
@@ -2843,11 +2954,9 @@ declare namespace APIModel {
 		IsActive?: boolean;
 		IsFree?: boolean;
 		IconUrl?: string;
-	};
-
-	type UpdateMkMarketplacePluginsDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMkMarketplacePluginsDto;
+		PriceSingleServer?: number;
+		PriceMultiServer?: number;
+		DocumentationUrl?: string;
 	};
 
 	type UpdateMkMarketplacePluginVersionsDto = {
@@ -2858,8 +2967,6 @@ declare namespace APIModel {
 		DocumentationUrl?: string;
 		ReleaseNotes?: string;
 		IsActive?: boolean;
-		PriceSingleServer?: number;
-		PriceMultiServer?: number;
 		CreatedBy?: string;
 		UpdatedBy?: string;
 		DeletedBy?: string;
@@ -2873,20 +2980,10 @@ declare namespace APIModel {
 		Rewarddata?: string;
 	};
 
-	type UpdateMkUseractivityrecordsDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMkUseractivityrecordsDto;
-	};
-
 	type UpdateMkUserServeInfoDto = {
 		UserId?: string;
 		MachineFingerprint?: string;
 		MachineName?: string;
-	};
-
-	type UpdateMkUserServeInfoDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMkUserServeInfoDto;
 	};
 
 	type UpdateOnlinePaymentDto = {
@@ -2897,11 +2994,6 @@ declare namespace APIModel {
 		ThirdPartyData?: string;
 		CallbackData?: string;
 		PaidTime?: string;
-	};
-
-	type UpdateOnlinePaymentDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateOnlinePaymentDto;
 	};
 
 	type UpdatePluginLicenseOnlineDto = {
@@ -2915,11 +3007,6 @@ declare namespace APIModel {
 		PointsUsed?: number;
 		UserId?: string;
 		RedeemedTime?: string;
-	};
-
-	type UpdatePointRedemptionDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdatePointRedemptionDto;
 	};
 
 	type UpdateUserPluginActivationDto = {
@@ -2939,11 +3026,6 @@ declare namespace APIModel {
 		Notes?: string;
 	};
 
-	type UpdateUserPluginActivationDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateUserPluginActivationDto;
-	};
-
 	type UpdateUserPluginPurchaseDto = {
 		Id?: string;
 		UserId?: string;
@@ -2958,11 +3040,6 @@ declare namespace APIModel {
 		IsLifetime?: boolean;
 		Status?: PurchaseStatusDto;
 		Notes?: string;
-	};
-
-	type UpdateUserPluginPurchaseDtoBatchUpdateByConditionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateUserPluginPurchaseDto;
 	};
 
 	type UpdateVersionRequest = {
@@ -3017,17 +3094,6 @@ declare namespace APIModel {
 		DeletedAt?: string;
 	};
 
-	type UserPluginActivationBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type UserPluginActivationDto = {
 		Id?: string;
 		PurchaseId?: number;
@@ -3046,11 +3112,6 @@ declare namespace APIModel {
 		CreateTime?: string;
 		UpdateTime?: string;
 		IsOffline?: boolean;
-	};
-
-	type UserPluginActivationDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: UserPluginActivationDto[];
 	};
 
 	type UserPluginPurchase = {
@@ -3083,17 +3144,6 @@ declare namespace APIModel {
 		DeletedAt?: string;
 	};
 
-	type UserPluginPurchaseBooleanFuncExpression = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type UserPluginPurchaseDto = {
 		Id?: string;
 		UserId?: string;
@@ -3110,11 +3160,6 @@ declare namespace APIModel {
 		Notes?: string;
 		CreateTime?: string;
 		UpdateTime?: string;
-	};
-
-	type UserPluginPurchaseDtoPageResult = {
-		PageInfo?: PageInfo;
-		Items?: UserPluginPurchaseDto[];
 	};
 
 	type UserRefDto = {

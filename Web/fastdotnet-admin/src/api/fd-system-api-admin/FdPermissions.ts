@@ -102,7 +102,7 @@ export async function deleteApiAdminFdPermissionsBatch(body: string[], options?:
 }
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdPermissions/batch/updatebycondition */
 export async function putApiAdminFdPermissionsBatchUpdatebycondition(
-	body: APIModel.UpdateFdPermissionDtoBatchUpdateByConditionDto,
+	body: APIModel.BatchUpdateByConditionDto1UpdateFdPermissionDto,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdPermissions/batch/updatebycondition', {
@@ -202,7 +202,7 @@ export async function putApiAdminFdPermissionsRecyclebinIdRestore(
 }
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdPermissions/recyclebin/permanent */
 export async function postApiAdminFdPermissionsRecyclebinPermanent(
-	body: APIModel.FdPermissionBooleanFuncExpression,
+	body: APIModel.Expression1Func2FdPermission_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdPermissions/recyclebin/permanent', {
@@ -215,7 +215,10 @@ export async function postApiAdminFdPermissionsRecyclebinPermanent(
 	});
 }
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdPermissions/recyclebin/restore */
-export async function postApiAdminFdPermissionsRecyclebinRestore(body: APIModel.FdPermissionBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiAdminFdPermissionsRecyclebinRestore(
+	body: APIModel.Expression1Func2FdPermission_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
+	options?: { [key: string]: any }
+) {
 	return request<number>('/api/admin/FdPermissions/recyclebin/restore', {
 		method: 'POST',
 		headers: {

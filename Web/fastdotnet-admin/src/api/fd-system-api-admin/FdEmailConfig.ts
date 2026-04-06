@@ -56,7 +56,7 @@ export async function deleteApiAdminFdEmailConfigBatch(body: string[], options?:
 }
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdEmailConfig/batch/updatebycondition */
 export async function putApiAdminFdEmailConfigBatchUpdatebycondition(
-	body: APIModel.FdUpdateEmailConfigDtoBatchUpdateByConditionDto,
+	body: APIModel.BatchUpdateByConditionDto1FdUpdateEmailConfigDto,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdEmailConfig/batch/updatebycondition', {
@@ -163,7 +163,7 @@ export async function putApiAdminFdEmailConfigRecyclebinIdRestore(
 }
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdEmailConfig/recyclebin/permanent */
 export async function postApiAdminFdEmailConfigRecyclebinPermanent(
-	body: APIModel.EmailConfigBooleanFuncExpression,
+	body: APIModel.Expression1Func2EmailConfig_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
 	return request<number>('/api/admin/FdEmailConfig/recyclebin/permanent', {
@@ -176,7 +176,10 @@ export async function postApiAdminFdEmailConfigRecyclebinPermanent(
 	});
 }
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdEmailConfig/recyclebin/restore */
-export async function postApiAdminFdEmailConfigRecyclebinRestore(body: APIModel.EmailConfigBooleanFuncExpression, options?: { [key: string]: any }) {
+export async function postApiAdminFdEmailConfigRecyclebinRestore(
+	body: APIModel.Expression1Func2EmailConfig_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
+	options?: { [key: string]: any }
+) {
 	return request<number>('/api/admin/FdEmailConfig/recyclebin/restore', {
 		method: 'POST',
 		headers: {
@@ -192,6 +195,17 @@ export async function postApiAdminFdEmailConfigRecyclebinSearch(body: APIModel.P
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
+		},
+		data: body,
+		...(options || {}),
+	});
+}
+/** 测试发送邮件 POST /api/admin/FdEmailConfig/TestSend */
+export async function postApiAdminFdEmailConfigTestSend(body: APIModel.TestSendEmailDto, options?: { [key: string]: any }) {
+	return request<boolean>('/api/admin/FdEmailConfig/TestSend', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json-patch+json',
 		},
 		data: body,
 		...(options || {}),
