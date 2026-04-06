@@ -299,14 +299,19 @@ const handleOnlineLicense = async () => {
     onlineSubmitting.value = true
     
     // 调用在线授权 API，使用商城 Token 进行授权
-    await postApiPluginUpdatePluginLicenseOnline({
+    const response = await postApiPluginUpdatePluginLicenseOnline({
       Token: token,      // 使用商城的 Token
       PluginId: props.pluginId
     })
     
-    ElMessage.success('在线授权成功')
-    dialogVisible.value = false
-    emit('save-success')
+    // 检查返回值，true 表示授权成功
+    if (response === true) {
+      ElMessage.success('在线授权成功')
+      dialogVisible.value = false
+      emit('save-success')
+    } else {
+      ElMessage.error('在线授权失败')
+    }
   } catch (error: any) {
     ElMessage.error('在线授权失败：' + (error.message || '未知错误'))
   } finally {
