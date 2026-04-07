@@ -1,4 +1,5 @@
 using Autofac.Core;
+using Fastdotnet.Core.Extensions;
 using Fastdotnet.Core.Service.Sys;
 using Fastdotnet.Service.IService.App;
 using Fastdotnet.Service.IService.Sys;
@@ -60,6 +61,11 @@ builder.Services.AddSwaggerGenNewtonsoftSupport(); // ✅ Swagger启用 Newtonso
 
 builder.Services.AddSingleton<IActionDescriptorChangeProvider>(ActionDescriptorChangeProvider.Instance);
 builder.Services.AddSingleton<DynamicMiddlewareRegistry>();
+builder.Services.AddSingleton<Fastdotnet.Core.Plugin.PluginBranchRegistry>();
+
+// 注册插件反代网关注册表（逃生舱专用）
+builder.Services.AddSingleton<Fastdotnet.Core.Plugin.PluginReverseProxyRegistry>();
+builder.Services.AddHttpForwarder();
 builder.Services.AddSqlSugar(builder.Configuration);
 
 // 注册 HttpContextAccessor 和 CurrentUser 服务
@@ -235,6 +241,11 @@ if (app.Environment.IsDevelopment())
 //app.UseHttpsRedirection();
 app.UseRouting(); // 添加路由中间件
 app.UseMiddleware<RequestIdMiddleware>();
+
+// 🌟 启用插件逃生舱（微主机代理转发中间件）
+// 必须放在防重放/加密中间件之前，以避免拦截第三方库（如 Elsa前端）的常规通讯
+app.UseMiddleware<PluginReverseProxyMiddleware>();
+
 // 注册防重放攻击中间件（在认证之前执行）
 app.UseMiddleware<AntiReplayMiddleware>();
 // 注册加密解密中间件
@@ -252,7 +263,8 @@ app.UseMiddleware<RateLimitMiddleware>();
 
 app.UseMiddleware<DynamicMiddlewareDispatcher>();
 
-
+// 启用插件分支网关 - 允许插件动态注册请求处理管道
+app.UsePluginBranchGate();
 app.UseAuthentication();
 app.UseAuthorization();
 // 👇 启用优雅停机

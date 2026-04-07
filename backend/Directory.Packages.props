@@ -40,5 +40,6 @@
     <PackageVersion Include="System.Runtime.InteropServices" Version="4.3.0" />
     <PackageVersion Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
     <PackageVersion Include="System.Diagnostics.Debug" Version="4.3.0" />
+    <PackageVersion Include="Yarp.ReverseProxy" Version="2.2.0" />
   </ItemGroup>
 </Project>
