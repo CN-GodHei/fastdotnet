@@ -84,19 +84,7 @@ if (oidcSettings.Enabled)
 {
     builder.Services.Configure<OidcSettings>(builder.Configuration.GetSection("OidcSettings"));
 
-    // 注册 OidcDbContext（使用 SQLite 存储 OIDC 数据）
-    builder.Services.AddDbContext<OidcDbContext>(options =>
-    {
-        // 使用 SQLite 数据库存储 OpenIddict 数据
-        var dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", "oidc.db");
-        Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
-        options.UseSqlite($"Data Source={dbPath}");
-        
-        // 注册 OpenIddict 实体
-        options.UseOpenIddict();
-    });
-
-    // 注册 OpenIddict 服务
+    // 注册 OpenIddict 服务（使用 SqlSugar Store）
     builder.Services.AddOpenIddict()
         .AddCore(options =>
         {

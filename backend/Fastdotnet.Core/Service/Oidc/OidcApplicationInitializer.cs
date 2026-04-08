@@ -46,19 +46,8 @@ namespace Fastdotnet.Core.Service.Oidc
 
             _logger.LogInformation("开始初始化 OIDC 应用和客户端...");
 
-            // 确保数据库表已创建
-            try
-            {
-                using var scope = _serviceProvider.CreateScope();
-                var dbContext = scope.ServiceProvider.GetRequiredService<OidcDbContext>();
-                await dbContext.Database.EnsureCreatedAsync();
-                _logger.LogInformation("OIDC 数据库表检查完成");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "创建 OIDC 数据库表时出错");
-                return;
-            }
+            // 使用 SqlSugar Store，数据库表由 SqlSugar 自动创建
+            _logger.LogInformation("OIDC 数据库表将由 SqlSugar 自动管理");
 
             // 注册 Elsa Workflows 作为 OIDC 客户端
             await RegisterElsaClientAsync(applicationManager);
