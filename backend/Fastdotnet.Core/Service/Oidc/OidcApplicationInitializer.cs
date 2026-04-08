@@ -104,16 +104,17 @@ namespace Fastdotnet.Core.Service.Oidc
                 },
                 RedirectUris =
                 {
-                    // Elsa Studio 的回调地址（根据实际部署地址修改）
-                    new Uri("http://localhost:5000/signin-oidc"),
-                    new Uri("https://localhost:5001/signin-oidc"),
-                    // 如果是前端分离架构，添加前端地址
-                    // new Uri("http://localhost:3000/callback"),
+                    // Elsa Studio 的回调地址（通过反向代理访问）
+                    new Uri("http://localhost:18889/fdelsa/signin-oidc"),
+                    new Uri("https://localhost:18889/fdelsa/signin-oidc"),
+                    // 如果是直接访问（非代理），添加直连地址
+                    // new Uri("http://localhost:5000/signin-oidc"),
+                    // new Uri("https://localhost:5001/signin-oidc"),
                 },
                 PostLogoutRedirectUris =
                 {
-                    new Uri("http://localhost:5000/signout-callback-oidc"),
-                    new Uri("https://localhost:5001/signout-callback-oidc"),
+                    new Uri("http://localhost:18889/fdelsa/signout-callback-oidc"),
+                    new Uri("https://localhost:18889/fdelsa/signout-callback-oidc"),
                 }
             };
 
