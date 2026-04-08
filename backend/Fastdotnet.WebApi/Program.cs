@@ -135,7 +135,7 @@ if (oidcSettings.Enabled)
         });
 
     // 注册 OIDC 应用初始化器（仅在 OIDC 启用时注册）
-    builder.Services.AddScoped<IApplicationInitializer, Fastdotnet.Core.Service.Oidc.OidcApplicationInitializer>();
+    // builder.Services.AddScoped<IApplicationInitializer, Fastdotnet.Core.Service.Oidc.OidcApplicationInitializer>();
 
     Console.WriteLine("✅ OIDC/OAuth2 Identity Provider 已启用");
 }
