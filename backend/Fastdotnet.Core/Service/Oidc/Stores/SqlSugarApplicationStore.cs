@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Fastdotnet.Core.Entities.Oidc;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Fastdotnet.Core.Service.Oidc.Stores
 {
@@ -29,243 +30,124 @@ namespace Fastdotnet.Core.Service.Oidc.Stores
             _logger = logger;
         }
 
-        /// <summary>
-        /// 获取实体类型
-        /// </summary>
-        public Type Type => typeof(OidcApplication);
+        public ValueTask<long> CountAsync(CancellationToken cancellationToken)
+            => new(_db.Queryable<OidcApplication>().Count());
 
-        /// <summary>
-        /// 计算并发令牌
-        /// </summary>
-        public string? GetConcurrencyToken(object application)
+        public ValueTask<long> CountAsync<TResult>(Func<IQueryable<OidcApplication>, IQueryable<TResult>> query, CancellationToken cancellationToken)
         {
-            if (application is OidcApplication app)
-                return app.ConcurrencyToken;
-            return null;
+            var result = query(_db.Queryable<OidcApplication>());
+            return new ValueTask<long>(result.Count());
         }
 
-        /// <summary>
-        /// 设置并发令牌
-        /// </summary>
-        public ValueTask SetConcurrencyTokenAsync(object application, string? token, CancellationToken cancellationToken = default)
+        public async ValueTask CreateAsync(OidcApplication application, CancellationToken cancellationToken)
         {
-            if (application is OidcApplication app)
-                app.ConcurrencyToken = token;
-            return ValueTask.CompletedTask;
+            application.Id = Guid.NewGuid().ToString("N");
+            await _db.Insertable(application).ExecuteCommandAsync();
+            _logger.LogDebug("创建 OIDC 应用: {Id}, ClientId: {ClientId}", application.Id, application.ClientId);
         }
 
-        /// <summary>
-        /// 获取应用 ID
-        /// </summary>
-        public string? GetId(object application)
+        public async ValueTask DeleteAsync(OidcApplication application, CancellationToken cancellationToken)
         {
-            return application is OidcApplication app ? app.Id : null;
+            await _db.Deleteable<OidcApplication>().Where(a => a.Id == application.Id).ExecuteCommandAsync();
+            _logger.LogDebug("删除 OIDC 应用: {Id}", application.Id);
         }
 
-        /// <summary>
-        /// 获取客户端 ID
-        /// </summary>
-        public ValueTask<string?> GetClientIdAsync(object application, CancellationToken cancellationToken = default)
+        public async ValueTask<OidcApplication?> FindByIdAsync(string identifier, CancellationToken cancellationToken)
         {
-            return new ValueTask<string?>(application is OidcApplication app ? app.ClientId : null);
+            return await _db.Queryable<OidcApplication>()
+                .Where(a => a.Id == identifier)
+                .FirstAsync();
         }
 
-        /// <summary>
-        /// 设置客户端 ID
-        /// </summary>
-        public ValueTask SetClientIdAsync(object application, string? clientId, CancellationToken cancellationToken = default)
+        public async ValueTask<OidcApplication?> FindByClientIdAsync(string identifier, CancellationToken cancellationToken)
         {
-            if (application is OidcApplication app)
-                app.ClientId = clientId;
-            return ValueTask.CompletedTask;
+            return await _db.Queryable<OidcApplication>()
+                .Where(a => a.ClientId == identifier)
+                .FirstAsync();
         }
 
-        /// <summary>
-        /// 获取客户端密钥
-        /// </summary>
-        public ValueTask<string?> GetClientSecretAsync(object application, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<OidcApplication> FindByPostLogoutRedirectUriAsync(string uri, CancellationToken cancellationToken)
         {
-            return new ValueTask<string?>(application is OidcApplication app ? app.ClientSecret : null);
+            var list = _db.Queryable<OidcApplication>()
+                .Where(a => a.PostLogoutRedirectUris != null && a.PostLogoutRedirectUris.Contains(uri))
+                .ToList();
+            return list.ToAsyncEnumerable();
         }
 
-        /// <summary>
-        /// 设置客户端密钥
-        /// </summary>
-        public ValueTask SetClientSecretAsync(object application, string? secret, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<OidcApplication> FindByRedirectUriAsync(string uri, CancellationToken cancellationToken)
         {
-            if (application is OidcApplication app)
-                app.ClientSecret = secret;
-            return ValueTask.CompletedTask;
+            var list = _db.Queryable<OidcApplication>()
+                .Where(a => a.RedirectUris != null && a.RedirectUris.Contains(uri))
+                .ToList();
+            return list.ToAsyncEnumerable();
         }
 
-        /// <summary>
-        /// 获取客户端类型
-        /// </summary>
-        public ValueTask<string?> GetClientTypeAsync(object application, CancellationToken cancellationToken = default)
+        public ValueTask<string?> GetApplicationTypeAsync(OidcApplication application, CancellationToken cancellationToken)
+            => new(application.ApplicationType);
+
+        public ValueTask<TResult?> GetAsync<TState, TResult>(Func<IQueryable<OidcApplication>, TState, IQueryable<TResult>> query, TState state, CancellationToken cancellationToken)
         {
-            return new ValueTask<string?>(application is OidcApplication app ? app.ClientType : null);
+            var result = query(_db.Queryable<OidcApplication>(), state).FirstOrDefault();
+            return new ValueTask<TResult?>(result);
         }
 
-        /// <summary>
-        /// 设置客户端类型
-        /// </summary>
-        public ValueTask SetClientTypeAsync(object application, string? type, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app)
-                app.ClientType = type;
-            return ValueTask.CompletedTask;
-        }
+        public ValueTask<string?> GetClientIdAsync(OidcApplication application, CancellationToken cancellationToken)
+            => new(application.ClientId);
 
-        /// <summary>
-        /// 获取同意类型
-        /// </summary>
-        public ValueTask<string?> GetConsentTypeAsync(object application, CancellationToken cancellationToken = default)
-        {
-            return new ValueTask<string?>(application is OidcApplication app ? app.ConsentType : null);
-        }
+        public ValueTask<string?> GetClientSecretAsync(OidcApplication application, CancellationToken cancellationToken)
+            => new(application.ClientSecret);
 
-        /// <summary>
-        /// 设置同意类型
-        /// </summary>
-        public ValueTask SetConsentTypeAsync(object application, string? type, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app)
-                app.ConsentType = type;
-            return ValueTask.CompletedTask;
-        }
+        public ValueTask<string?> GetClientTypeAsync(OidcApplication application, CancellationToken cancellationToken)
+            => new(application.ClientType);
 
-        /// <summary>
-        /// 获取显示名称
-        /// </summary>
-        public ValueTask<string?> GetDisplayNameAsync(object application, CancellationToken cancellationToken = default)
-        {
-            return new ValueTask<string?>(application is OidcApplication app ? app.DisplayName : null);
-        }
+        public ValueTask<string?> GetConsentTypeAsync(OidcApplication application, CancellationToken cancellationToken)
+            => new(application.ConsentType);
 
-        /// <summary>
-        /// 设置显示名称
-        /// </summary>
-        public ValueTask SetDisplayNameAsync(object application, string? name, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app)
-                app.DisplayName = name;
-            return ValueTask.CompletedTask;
-        }
+        public ValueTask<string?> GetDisplayNameAsync(OidcApplication application, CancellationToken cancellationToken)
+            => new(application.DisplayName);
 
-        /// <summary>
-        /// 获取显示名称（多语言）
-        /// </summary>
-        public ValueTask<ImmutableDictionary<CultureInfo, string>> GetDisplayNamesAsync(object application, CancellationToken cancellationToken = default)
+        public ValueTask<ImmutableDictionary<CultureInfo, string>> GetDisplayNamesAsync(OidcApplication application, CancellationToken cancellationToken)
         {
-            if (application is OidcApplication app && !string.IsNullOrEmpty(app.DisplayNames))
+            if (!string.IsNullOrEmpty(application.DisplayNames))
             {
                 try
                 {
-                    var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(app.DisplayNames);
-                    if (dict != null)
-                    {
-                        var result = dict.ToDictionary(
-                            k => CultureInfo.GetCultureInfo(k.Key),
-                            v => v.Value);
-                        return new ValueTask<ImmutableDictionary<CultureInfo, string>>(result.ToImmutableDictionary());
-                    }
+                    var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(application.DisplayNames);
+                    var result = dict?.ToDictionary(
+                        kvp => CultureInfo.GetCultureInfo(kvp.Key),
+                        kvp => kvp.Value
+                    ) ?? new Dictionary<CultureInfo, string>();
+                    return new ValueTask<ImmutableDictionary<CultureInfo, string>>(result.ToImmutableDictionary());
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(ex, "反序列化 DisplayNames 失败");
-                }
+                catch { }
             }
             return new ValueTask<ImmutableDictionary<CultureInfo, string>>(ImmutableDictionary<CultureInfo, string>.Empty);
         }
 
-        /// <summary>
-        /// 设置显示名称（多语言）
-        /// </summary>
-        public ValueTask SetDisplayNamesAsync(object application, ImmutableDictionary<CultureInfo, string> names, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app)
-            {
-                var dict = names.ToDictionary(k => k.Key.Name, v => v.Value);
-                app.DisplayNames = JsonSerializer.Serialize(dict);
-            }
-            return ValueTask.CompletedTask;
-        }
+        public ValueTask<string?> GetIdAsync(OidcApplication application, CancellationToken cancellationToken)
+            => new(application.Id);
 
-        /// <summary>
-        /// 根据客户端 ID 查找应用
-        /// </summary>
-        public async ValueTask<object?> FindByClientIdAsync(string clientId, CancellationToken cancellationToken = default)
+        public ValueTask<Microsoft.IdentityModel.Tokens.JsonWebKeySet?> GetJsonWebKeySetAsync(OidcApplication application, CancellationToken cancellationToken)
         {
-            var app = await _db.Queryable<OidcApplication>()
-                .Where(a => a.ClientId == clientId)
-                .FirstAsync();
-            return app;
-        }
-
-        /// <summary>
-        /// 根据 ID 查找应用
-        /// </summary>
-        public async ValueTask<object?> FindByIdAsync(string id, CancellationToken cancellationToken = default)
-        {
-            var app = await _db.Queryable<OidcApplication>()
-                .Where(a => a.Id == id)
-                .FirstAsync();
-            return app;
-        }
-
-        /// <summary>
-        /// 创建应用
-        /// </summary>
-        public async ValueTask CreateAsync(object application, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app)
-            {
-                app.Id = Guid.NewGuid().ToString("N");
-                await _db.Insertable(app).ExecuteCommandAsync();
-                _logger.LogInformation("创建 OIDC 应用: {ClientId}", app.ClientId);
-            }
-        }
-
-        /// <summary>
-        /// 删除应用
-        /// </summary>
-        public async ValueTask DeleteAsync(object application, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app)
-            {
-                await _db.Deleteable<OidcApplication>().Where(a => a.Id == app.Id).ExecuteCommandAsync();
-                _logger.LogInformation("删除 OIDC 应用: {ClientId}", app.ClientId);
-            }
-        }
-
-        /// <summary>
-        /// 更新应用
-        /// </summary>
-        public async ValueTask UpdateAsync(object application, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app)
-            {
-                await _db.Updateable(app).ExecuteCommandAsync();
-            }
-        }
-
-        // 其他方法的默认实现（返回空或抛出 NotImplementedException）
-        public ValueTask<string?> GetApplicationTypeAsync(object application, CancellationToken cancellationToken = default)
-            => new ValueTask<string?>(application is OidcApplication app ? app.ApplicationType : null);
-
-        public ValueTask SetApplicationTypeAsync(object application, string? type, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app) app.ApplicationType = type;
-            return ValueTask.CompletedTask;
-        }
-
-        public ValueTask<ImmutableArray<string>> GetPermissionsAsync(object application, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app && !string.IsNullOrEmpty(app.Permissions))
+            if (!string.IsNullOrEmpty(application.Jwks))
             {
                 try
                 {
-                    var permissions = JsonSerializer.Deserialize<List<string>>(app.Permissions);
+                    var jwks = new Microsoft.IdentityModel.Tokens.JsonWebKeySet(application.Jwks);
+                    return new ValueTask<Microsoft.IdentityModel.Tokens.JsonWebKeySet?>(jwks);
+                }
+                catch { }
+            }
+            return new ValueTask<Microsoft.IdentityModel.Tokens.JsonWebKeySet?>(null);
+        }
+
+        public ValueTask<ImmutableArray<string>> GetPermissionsAsync(OidcApplication application, CancellationToken cancellationToken)
+        {
+            if (!string.IsNullOrEmpty(application.Permissions))
+            {
+                try
+                {
+                    var permissions = JsonSerializer.Deserialize<List<string>>(application.Permissions);
                     return new ValueTask<ImmutableArray<string>>(permissions?.ToImmutableArray() ?? ImmutableArray<string>.Empty);
                 }
                 catch { }
@@ -273,20 +155,13 @@ namespace Fastdotnet.Core.Service.Oidc.Stores
             return new ValueTask<ImmutableArray<string>>(ImmutableArray<string>.Empty);
         }
 
-        public ValueTask SetPermissionsAsync(object application, ImmutableArray<string> permissions, CancellationToken cancellationToken = default)
+        public ValueTask<ImmutableArray<string>> GetPostLogoutRedirectUrisAsync(OidcApplication application, CancellationToken cancellationToken)
         {
-            if (application is OidcApplication app)
-                app.Permissions = JsonSerializer.Serialize(permissions.ToArray());
-            return ValueTask.CompletedTask;
-        }
-
-        public ValueTask<ImmutableArray<string>> GetPostLogoutRedirectUrisAsync(object application, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app && !string.IsNullOrEmpty(app.PostLogoutRedirectUris))
+            if (!string.IsNullOrEmpty(application.PostLogoutRedirectUris))
             {
                 try
                 {
-                    var uris = JsonSerializer.Deserialize<List<string>>(app.PostLogoutRedirectUris);
+                    var uris = JsonSerializer.Deserialize<List<string>>(application.PostLogoutRedirectUris);
                     return new ValueTask<ImmutableArray<string>>(uris?.ToImmutableArray() ?? ImmutableArray<string>.Empty);
                 }
                 catch { }
@@ -294,20 +169,27 @@ namespace Fastdotnet.Core.Service.Oidc.Stores
             return new ValueTask<ImmutableArray<string>>(ImmutableArray<string>.Empty);
         }
 
-        public ValueTask SetPostLogoutRedirectUrisAsync(object application, ImmutableArray<string> uris, CancellationToken cancellationToken = default)
+        public ValueTask<ImmutableDictionary<string, JsonElement>> GetPropertiesAsync(OidcApplication application, CancellationToken cancellationToken)
         {
-            if (application is OidcApplication app)
-                app.PostLogoutRedirectUris = JsonSerializer.Serialize(uris.ToArray());
-            return ValueTask.CompletedTask;
-        }
-
-        public ValueTask<ImmutableArray<string>> GetRedirectUrisAsync(object application, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app && !string.IsNullOrEmpty(app.RedirectUris))
+            if (!string.IsNullOrEmpty(application.Properties))
             {
                 try
                 {
-                    var uris = JsonSerializer.Deserialize<List<string>>(app.RedirectUris);
+                    var dict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(application.Properties);
+                    return new ValueTask<ImmutableDictionary<string, JsonElement>>(dict?.ToImmutableDictionary() ?? ImmutableDictionary<string, JsonElement>.Empty);
+                }
+                catch { }
+            }
+            return new ValueTask<ImmutableDictionary<string, JsonElement>>(ImmutableDictionary<string, JsonElement>.Empty);
+        }
+
+        public ValueTask<ImmutableArray<string>> GetRedirectUrisAsync(OidcApplication application, CancellationToken cancellationToken)
+        {
+            if (!string.IsNullOrEmpty(application.RedirectUris))
+            {
+                try
+                {
+                    var uris = JsonSerializer.Deserialize<List<string>>(application.RedirectUris);
                     return new ValueTask<ImmutableArray<string>>(uris?.ToImmutableArray() ?? ImmutableArray<string>.Empty);
                 }
                 catch { }
@@ -315,135 +197,140 @@ namespace Fastdotnet.Core.Service.Oidc.Stores
             return new ValueTask<ImmutableArray<string>>(ImmutableArray<string>.Empty);
         }
 
-        public ValueTask SetRedirectUrisAsync(object application, ImmutableArray<string> uris, CancellationToken cancellationToken = default)
+        public ValueTask<ImmutableArray<string>> GetRequirementsAsync(OidcApplication application, CancellationToken cancellationToken)
         {
-            if (application is OidcApplication app)
-                app.RedirectUris = JsonSerializer.Serialize(uris.ToArray());
-            return ValueTask.CompletedTask;
-        }
-
-        public ValueTask<ImmutableDictionary<string, JsonElement>> GetPropertiesAsync(object application, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app && !string.IsNullOrEmpty(app.Properties))
+            if (!string.IsNullOrEmpty(application.Requirements))
             {
                 try
                 {
-                    var dict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(app.Properties);
-                    return new ValueTask<ImmutableDictionary<string, JsonElement>>(dict?.ToImmutableDictionary() ?? ImmutableDictionary<string, JsonElement>.Empty);
-                }
-                catch { }
-            }
-            return new ValueTask<ImmutableDictionary<string, JsonElement>>(ImmutableDictionary<string, JsonElement>.Empty);
-        }
-
-        public ValueTask SetPropertiesAsync(object application, ImmutableDictionary<string, JsonElement> properties, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app)
-                app.Properties = JsonSerializer.Serialize(properties.ToDictionary(k => k.Key, v => v.Value));
-            return ValueTask.CompletedTask;
-        }
-
-        public ValueTask<ImmutableArray<string>> GetRequirementsAsync(object application, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app && !string.IsNullOrEmpty(app.Requirements))
-            {
-                try
-                {
-                    var reqs = JsonSerializer.Deserialize<List<string>>(app.Requirements);
-                    return new ValueTask<ImmutableArray<string>>(reqs?.ToImmutableArray() ?? ImmutableArray<string>.Empty);
+                    var requirements = JsonSerializer.Deserialize<List<string>>(application.Requirements);
+                    return new ValueTask<ImmutableArray<string>>(requirements?.ToImmutableArray() ?? ImmutableArray<string>.Empty);
                 }
                 catch { }
             }
             return new ValueTask<ImmutableArray<string>>(ImmutableArray<string>.Empty);
         }
 
-        public ValueTask SetRequirementsAsync(object application, ImmutableArray<string> requirements, CancellationToken cancellationToken = default)
+        public ValueTask<ImmutableDictionary<string, string>> GetSettingsAsync(OidcApplication application, CancellationToken cancellationToken)
         {
-            if (application is OidcApplication app)
-                app.Requirements = JsonSerializer.Serialize(requirements.ToArray());
-            return ValueTask.CompletedTask;
-        }
-
-        public ValueTask<JsonElement?> GetJsonWebKeySetAsync(object application, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app && !string.IsNullOrEmpty(app.JsonWebKeySet))
+            if (!string.IsNullOrEmpty(application.Settings))
             {
                 try
                 {
-                    var jwks = JsonSerializer.Deserialize<JsonElement>(app.JsonWebKeySet);
-                    return new ValueTask<JsonElement?>(jwks);
+                    var settings = JsonSerializer.Deserialize<Dictionary<string, string>>(application.Settings);
+                    return new ValueTask<ImmutableDictionary<string, string>>(settings?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty);
                 }
                 catch { }
             }
-            return new ValueTask<JsonElement?>(null);
+            return new ValueTask<ImmutableDictionary<string, string>>(ImmutableDictionary<string, string>.Empty);
         }
 
-        public ValueTask SetJsonWebKeySetAsync(object application, JsonElement? element, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app)
-                app.JsonWebKeySet = element.HasValue ? JsonSerializer.Serialize(element.Value) : null;
-            return ValueTask.CompletedTask;
-        }
+        public ValueTask<OidcApplication> InstantiateAsync(CancellationToken cancellationToken)
+            => new(new OidcApplication());
 
-        public ValueTask<ImmutableDictionary<string, JsonElement>> GetSettingsAsync(object application, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app && !string.IsNullOrEmpty(app.Settings))
-            {
-                try
-                {
-                    var dict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(app.Settings);
-                    return new ValueTask<ImmutableDictionary<string, JsonElement>>(dict?.ToImmutableDictionary() ?? ImmutableDictionary<string, JsonElement>.Empty);
-                }
-                catch { }
-            }
-            return new ValueTask<ImmutableDictionary<string, JsonElement>>(ImmutableDictionary<string, JsonElement>.Empty);
-        }
-
-        public ValueTask SetSettingsAsync(object application, ImmutableDictionary<string, JsonElement> settings, CancellationToken cancellationToken = default)
-        {
-            if (application is OidcApplication app)
-                app.Settings = JsonSerializer.Serialize(settings.ToDictionary(k => k.Key, v => v.Value));
-            return ValueTask.CompletedTask;
-        }
-
-        public ValueTask<long> CountAsync(CancellationToken cancellationToken = default)
-        {
-            var count = _db.Queryable<OidcApplication>().Count();
-            return new ValueTask<long>(count);
-        }
-
-        public ValueTask<long> CountByAsync(string parameter, CancellationToken cancellationToken = default)
-        {
-            var count = _db.Queryable<OidcApplication>()
-                .Where(a => a.ClientId == parameter || a.DisplayName == parameter)
-                .Count();
-            return new ValueTask<long>(count);
-        }
-
-        public IAsyncEnumerable<object> ListAsync(int? count, int? offset, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<OidcApplication> ListAsync(int? count, int? offset, CancellationToken cancellationToken)
         {
             var query = _db.Queryable<OidcApplication>();
-            if (offset.HasValue)
-                query = query.Skip(offset.Value);
-            if (count.HasValue)
-                query = query.Take(count.Value);
-            
-            var apps = query.ToList();
-            return apps.ToAsyncEnumerable();
+            if (offset.HasValue) query = query.Skip(offset.Value);
+            if (count.HasValue) query = query.Take(count.Value);
+            return query.ToList().ToAsyncEnumerable();
         }
 
-        public IAsyncEnumerable<object> ListByAsync(string parameter, int? count, int? offset, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<TResult> ListAsync<TState, TResult>(Func<IQueryable<OidcApplication>, TState, IQueryable<TResult>> query, TState state, CancellationToken cancellationToken)
         {
-            var query = _db.Queryable<OidcApplication>()
-                .Where(a => a.ClientId == parameter || a.DisplayName == parameter);
-            
-            if (offset.HasValue)
-                query = query.Skip(offset.Value);
-            if (count.HasValue)
-                query = query.Take(count.Value);
-            
-            var apps = query.ToList();
-            return apps.ToAsyncEnumerable();
+            var result = query(_db.Queryable<OidcApplication>(), state).ToList();
+            return result.ToAsyncEnumerable();
+        }
+
+        public ValueTask SetApplicationTypeAsync(OidcApplication application, string? type, CancellationToken cancellationToken)
+        {
+            application.ApplicationType = type;
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetClientIdAsync(OidcApplication application, string? identifier, CancellationToken cancellationToken)
+        {
+            application.ClientId = identifier;
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetClientSecretAsync(OidcApplication application, string? secret, CancellationToken cancellationToken)
+        {
+            application.ClientSecret = secret;
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetClientTypeAsync(OidcApplication application, string? type, CancellationToken cancellationToken)
+        {
+            application.ClientType = type;
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetConsentTypeAsync(OidcApplication application, string? type, CancellationToken cancellationToken)
+        {
+            application.ConsentType = type;
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetDisplayNameAsync(OidcApplication application, string? name, CancellationToken cancellationToken)
+        {
+            application.DisplayName = name;
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetDisplayNamesAsync(OidcApplication application, ImmutableDictionary<CultureInfo, string> names, CancellationToken cancellationToken)
+        {
+            var dict = names.ToDictionary(kvp => kvp.Key.Name, kvp => kvp.Value);
+            application.DisplayNames = JsonSerializer.Serialize(dict);
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetJsonWebKeySetAsync(OidcApplication application, Microsoft.IdentityModel.Tokens.JsonWebKeySet? set, CancellationToken cancellationToken)
+        {
+            application.Jwks = set?.WriteToJson();
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetPermissionsAsync(OidcApplication application, ImmutableArray<string> permissions, CancellationToken cancellationToken)
+        {
+            application.Permissions = JsonSerializer.Serialize(permissions.ToArray());
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetPostLogoutRedirectUrisAsync(OidcApplication application, ImmutableArray<string> uris, CancellationToken cancellationToken)
+        {
+            application.PostLogoutRedirectUris = JsonSerializer.Serialize(uris.ToArray());
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetPropertiesAsync(OidcApplication application, ImmutableDictionary<string, JsonElement> properties, CancellationToken cancellationToken)
+        {
+            application.Properties = JsonSerializer.Serialize(properties.ToDictionary(k => k.Key, v => v.Value));
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetRedirectUrisAsync(OidcApplication application, ImmutableArray<string> uris, CancellationToken cancellationToken)
+        {
+            application.RedirectUris = JsonSerializer.Serialize(uris.ToArray());
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetRequirementsAsync(OidcApplication application, ImmutableArray<string> requirements, CancellationToken cancellationToken)
+        {
+            application.Requirements = JsonSerializer.Serialize(requirements.ToArray());
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask SetSettingsAsync(OidcApplication application, ImmutableDictionary<string, string> settings, CancellationToken cancellationToken)
+        {
+            application.Settings = JsonSerializer.Serialize(settings.ToDictionary(k => k.Key, v => v.Value));
+            return ValueTask.CompletedTask;
+        }
+
+        public async ValueTask UpdateAsync(OidcApplication application, CancellationToken cancellationToken)
+        {
+            await _db.Updateable(application).ExecuteCommandAsync();
+            _logger.LogDebug("更新 OIDC 应用: {Id}", application.Id);
         }
     }
 }
