@@ -103,10 +103,7 @@ if (oidcSettings.Enabled)
         .AddCore(options =>
         {
             // 使用 SqlSugar 存储 OpenIddict 数据
-            options.ReplaceApplicationStore<OpenIddictSqlSugarApplication, OpenIddictSqlSugarApplicationStore>()
-                   .ReplaceAuthorizationStore<OpenIddictSqlSugarAuthorization, OpenIddictSqlSugarAuthorizationStore>()
-                   .ReplaceScopeStore<OpenIddictSqlSugarScope, OpenIddictSqlSugarScopeStore>()
-                   .ReplaceTokenStore<OpenIddictSqlSugarToken, OpenIddictSqlSugarTokenStore>();
+            options.UseSqlSugar();
         })
         .AddServer(options =>
         {
