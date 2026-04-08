@@ -90,7 +90,7 @@ public class OpenIddictSqlSugarToken
     /// <summary>
     /// 获取或设置与当前令牌关联的主题
     /// </summary>
-    [SugarColumn(Length = 400, IsNullable = true)]
+    [SugarColumn(Length = 100, IsNullable = true)]
     public virtual string? Subject { get; set; }
 
     /// <summary>
