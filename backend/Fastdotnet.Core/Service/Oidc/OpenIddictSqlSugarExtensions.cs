@@ -1,6 +1,7 @@
 using Fastdotnet.Core.Entities.Oidc;
 using Fastdotnet.Core.Service.Oidc.Stores;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using OpenIddict.Abstractions;
 
 namespace Fastdotnet.Core.Service.Oidc;
@@ -29,13 +30,13 @@ public static class OpenIddictSqlSugarExtensions
                .ReplaceTokenStore<OpenIddictSqlSugarToken, OpenIddictSqlSugarTokenStore>();
 
         // 重要：替换 Manager 注册，否则会使用默认的抛出异常的工厂
-        builder.Services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Scoped<OpenIddict.Abstractions.IOpenIddictApplicationManager>(provider =>
+        builder.Services.Replace(ServiceDescriptor.Scoped<IOpenIddictApplicationManager>(provider =>
             provider.GetRequiredService<OpenIddict.Core.OpenIddictApplicationManager<OpenIddictSqlSugarApplication>>()));
-        builder.Services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Scoped<OpenIddict.Abstractions.IOpenIddictAuthorizationManager>(provider =>
+        builder.Services.Replace(ServiceDescriptor.Scoped<IOpenIddictAuthorizationManager>(provider =>
             provider.GetRequiredService<OpenIddict.Core.OpenIddictAuthorizationManager<OpenIddictSqlSugarAuthorization>>()));
-        builder.Services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Scoped<OpenIddict.Abstractions.IOpenIddictScopeManager>(provider =>
+        builder.Services.Replace(ServiceDescriptor.Scoped<IOpenIddictScopeManager>(provider =>
             provider.GetRequiredService<OpenIddict.Core.OpenIddictScopeManager<OpenIddictSqlSugarScope>>()));
-        builder.Services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Scoped<OpenIddict.Abstractions.IOpenIddictTokenManager>(provider =>
+        builder.Services.Replace(ServiceDescriptor.Scoped<IOpenIddictTokenManager>(provider =>
             provider.GetRequiredService<OpenIddict.Core.OpenIddictTokenManager<OpenIddictSqlSugarToken>>()));
 
         // 配置选项
