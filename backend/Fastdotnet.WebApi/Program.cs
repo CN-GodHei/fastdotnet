@@ -1,16 +1,19 @@
 using Autofac.Core;
+using Fastdotnet.Core.Data;
+using Fastdotnet.Core.Entities.Oidc;
 using Fastdotnet.Core.Extensions;
+using Fastdotnet.Core.Service.Oidc;
+using Fastdotnet.Core.Service.Oidc.Stores;
 using Fastdotnet.Core.Service.Sys;
+using Fastdotnet.Core.Settings;
 using Fastdotnet.Service.IService.App;
 using Fastdotnet.Service.IService.Sys;
 using Fastdotnet.Service.Service.Admin;
 using Fastdotnet.Service.Service.App;
 using Fastdotnet.Service.Service.Sys;
-using System.IdentityModel.Tokens.Jwt;
-using Fastdotnet.Core.Settings;
-using Fastdotnet.Core.Service.Oidc;
-using Fastdotnet.Core.Data;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 // 可选：延长停机超时时间
@@ -99,9 +102,11 @@ if (oidcSettings.Enabled)
     builder.Services.AddOpenIddict()
         .AddCore(options =>
         {
-            // 使用 Entity Framework Core 存储 OpenIddict 数据
-            options.UseEntityFrameworkCore()
-                   .UseDbContext<OidcDbContext>();
+            // 使用 SqlSugar 存储 OpenIddict 数据
+            options.ReplaceApplicationStore<OpenIddictSqlSugarApplication, OpenIddictSqlSugarApplicationStore>()
+                   .ReplaceAuthorizationStore<OpenIddictSqlSugarAuthorization, OpenIddictSqlSugarAuthorizationStore>()
+                   .ReplaceScopeStore<OpenIddictSqlSugarScope, OpenIddictSqlSugarScopeStore>()
+                   .ReplaceTokenStore<OpenIddictSqlSugarToken, OpenIddictSqlSugarTokenStore>();
         })
         .AddServer(options =>
         {
