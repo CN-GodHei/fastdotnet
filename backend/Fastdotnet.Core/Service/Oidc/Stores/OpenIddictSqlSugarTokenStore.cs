@@ -95,7 +95,7 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
         }
 
         // 初始化 ConcurrencyToken（乐观锁版本号）
-        token.ConcurrencyToken = Guid.NewGuid().ToString();
+        token.ConcurrencyToken = Guid.NewGuid();
 
         await Context.Insertable(token).ExecuteCommandAsync();
     }
