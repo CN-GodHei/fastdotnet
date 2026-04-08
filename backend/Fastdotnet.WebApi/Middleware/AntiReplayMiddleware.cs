@@ -1,3 +1,4 @@
+using Fastdotnet.Core.Plugin;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Caching.Hybrid;
 using NetTaste;
@@ -22,7 +23,7 @@ namespace Fastdotnet.WebApi.Middleware
             _logger = logger;
         }
 
-        public async Task InvokeAsync(HttpContext context, IHybridCacheService cacheService)
+        public async Task InvokeAsync(HttpContext context, IHybridCacheService cacheService, PluginReverseProxyRegistry proxyRegistry)
         {
 //#if DEBUG
 //            await _next(context);
@@ -53,6 +54,15 @@ namespace Fastdotnet.WebApi.Middleware
                 !requestPath.StartsWith("/api/plugins/", StringComparison.OrdinalIgnoreCase))
             {
                 // _logger.LogDebug("跳过防重放验证(插件静态资源): {Path}", context.Request.Path);
+                await _next(context);
+                return;
+            }
+
+            // 跳过被反向代理的路径（如插件微主机代理 /fdelsa/*）
+            // 这些请求会被转发到内部微主机，由微主机自己处理认证和授权
+            if (proxyRegistry != null && proxyRegistry.TryGetMatch(context.Request.Path.ToString(), out _, out _))
+            {
+                // _logger.LogDebug("跳过防重放验证(反向代理路径): {Path}", context.Request.Path);
                 await _next(context);
                 return;
             }
