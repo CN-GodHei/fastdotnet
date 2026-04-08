@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -38,9 +38,14 @@
 	  <PackageReference Include="System.Linq.Dynamic.Core" />
 	  <PackageReference Include="Yitter.IdGenerator" />
 	  <PackageReference Include="Yarp.ReverseProxy" />
+	  <PackageReference Include="OpenIddict.Abstractions" />
+	  <PackageReference Include="OpenIddict.Core" />
 	  <!-- OpenIddict for OIDC/OAuth2 -->
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
-	  <PackageReference Include="OpenIddict.EntityFrameworkCore" />
+	  <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
   </ItemGroup>
 
 </Project>
