@@ -74,6 +74,24 @@ public static class OpenIddictConfigurationExtensions
         // 注册 OIDC 应用初始化器
         // services.AddScoped<Fastdotnet.Core.Initializers.IApplicationInitializer, 
         //     Fastdotnet.Core.Service.Oidc.OidcApplicationInitializer>();
+
+        // 配置 OIDC Cookie 认证（用于授权端点的用户会话）
+        services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = "Identity.Application";
+        })
+        .AddCookie("Identity.Application", options =>
+        {
+            options.Cookie.Name = ".Fastdotnet.OIDC";
+            options.ExpireTimeSpan = TimeSpan.FromHours(8);
+            options.SlidingExpiration = true;
+            
+            // 开发环境：使用简单的登录页面
+            // 生产环境：可以重定向到 Vue 前端登录页
+            options.LoginPath = "/oidc/login";
+            options.LogoutPath = "/oidc/logout";
+            options.AccessDeniedPath = "/oidc/access-denied";
+        });
     }
 
     /// <summary>
