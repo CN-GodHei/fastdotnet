@@ -15,6 +15,9 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
     /// </summary>
     [ApiController]
     [Route("oidc")]
+    [AllowAnonymous]
+    [SkipAntiReplay]
+    [ApiUsageScope(ApiUsageScopeEnum.Both)]
     public class OidcLoginController : Controller
     {
         private readonly ISqlSugarClient _db;
@@ -30,6 +33,9 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
         /// OIDC 登录页面（GET）
         /// </summary>
         [HttpGet("login")]
+        [AllowAnonymous]
+        [SkipAntiReplay]
+        [ApiUsageScope(ApiUsageScopeEnum.Both)]
         public IActionResult Login(string? returnUrl = null)
         {
             // 如果已经登录，直接重定向
@@ -157,6 +163,9 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
         /// OIDC 登录处理（POST）
         /// </summary>
         [HttpPost("login")]
+        [AllowAnonymous]
+        [SkipAntiReplay]
+        [ApiUsageScope(ApiUsageScopeEnum.Both)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginDto model, string? returnUrl = null)
         {
@@ -239,6 +248,9 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
         /// 访问被拒绝页面
         /// </summary>
         [HttpGet("access-denied")]
+        [AllowAnonymous]
+        [SkipAntiReplay]
+        [ApiUsageScope(ApiUsageScopeEnum.Both)]
         public IActionResult AccessDenied()
         {
             return Content("<h1>访问被拒绝</h1><p>您没有权限访问此资源。</p>", "text/html; charset=utf-8");

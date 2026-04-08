@@ -78,13 +78,13 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
             // 如果用户未认证，重定向到登录页面
             if (!User.Identity?.IsAuthenticated ?? true)
             {
-                // 返回 401，前端应重定向到登录页面
+                // 使用 Cookie 认证方案触发登录重定向
                 return Challenge(
-                    authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                    properties: new AuthenticationProperties(new Dictionary<string, string?>
+                    authenticationSchemes: "Identity.Application",
+                    properties: new AuthenticationProperties
                     {
-                        [OpenIddictServerAspNetCoreConstants.Properties.Scope] = request.Scope,
-                    }));
+                        RedirectUri = HttpContext.Request.Path + HttpContext.Request.QueryString
+                    });
             }
 
             // 创建认证票据
