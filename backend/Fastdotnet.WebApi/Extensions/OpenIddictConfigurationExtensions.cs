@@ -2,6 +2,7 @@ using Fastdotnet.Core.Entities.Oidc;
 using Fastdotnet.Core.Service.Oidc;
 using Fastdotnet.Core.Service.Oidc.Stores;
 using Fastdotnet.Core.Settings;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using OpenIddict.Abstractions;
 
@@ -60,9 +61,7 @@ public static class OpenIddictConfigurationExtensions
                 options.UseAspNetCore()
                        .EnableStatusCodePagesIntegration()
                        .EnableAuthorizationEndpointPassthrough()
-                       .EnableTokenEndpointPassthrough()
-                       .EnableIntrospectionEndpointPassthrough()
-                       .EnableRevocationEndpointPassthrough();
+                       .EnableTokenEndpointPassthrough();
             })
             .AddValidation(options =>
             {
