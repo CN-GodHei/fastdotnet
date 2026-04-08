@@ -72,8 +72,8 @@ public static class OpenIddictConfigurationExtensions
             });
 
         // 注册 OIDC 应用初始化器
-        services.AddScoped<Fastdotnet.Core.Initializers.IApplicationInitializer, 
-            Fastdotnet.Core.Service.Oidc.OidcApplicationInitializer>();
+        // services.AddScoped<Fastdotnet.Core.Initializers.IApplicationInitializer, 
+        //     Fastdotnet.Core.Service.Oidc.OidcApplicationInitializer>();
     }
 
     /// <summary>
