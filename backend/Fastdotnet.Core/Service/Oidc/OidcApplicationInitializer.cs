@@ -86,10 +86,10 @@ namespace Fastdotnet.Core.Service.Oidc
                     OpenIddictConstants.Permissions.ResponseTypes.Code,
 
                     // 允许的作用域
-                    OpenIddictConstants.Permissions.Scopes.OpenId,
-                    OpenIddictConstants.Permissions.Scopes.Profile,
-                    OpenIddictConstants.Permissions.Scopes.Email,
-                    OpenIddictConstants.Permissions.Scopes.Roles,
+                    OpenIddictConstants.Permissions.Prefixes.Scope + OpenIddictConstants.Scopes.OpenId,
+                    OpenIddictConstants.Permissions.Prefixes.Scope + OpenIddictConstants.Scopes.Profile,
+                    OpenIddictConstants.Permissions.Prefixes.Scope + OpenIddictConstants.Scopes.Email,
+                    OpenIddictConstants.Permissions.Prefixes.Scope + OpenIddictConstants.Scopes.Roles,
                     OpenIddictConstants.Permissions.Prefixes.Scope + "offline_access",
 
                     // 允许的端点
