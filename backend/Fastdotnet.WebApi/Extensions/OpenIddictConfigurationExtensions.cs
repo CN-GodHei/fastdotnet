@@ -61,7 +61,8 @@ public static class OpenIddictConfigurationExtensions
                 options.UseAspNetCore()
                        .EnableStatusCodePagesIntegration()
                        .EnableAuthorizationEndpointPassthrough()
-                       .EnableTokenEndpointPassthrough();
+                       .EnableTokenEndpointPassthrough()
+                       .DisableTransportSecurityRequirement(); // 开发环境禁用 HTTPS 要求
             })
             .AddValidation(options =>
             {
