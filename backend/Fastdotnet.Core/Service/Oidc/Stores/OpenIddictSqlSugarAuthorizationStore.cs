@@ -94,6 +94,9 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
             throw new ArgumentNullException(nameof(authorization));
         }
 
+        // 初始化 ConcurrencyToken（乐观锁版本号）
+        authorization.ConcurrencyToken = Guid.NewGuid().ToString();
+
         await Context.Insertable(authorization).ExecuteCommandAsync();
 
     }

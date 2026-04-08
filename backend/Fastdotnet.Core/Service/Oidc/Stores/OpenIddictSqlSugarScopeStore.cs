@@ -77,6 +77,9 @@ public class OpenIddictSqlSugarScopeStore : IOpenIddictScopeStore<OpenIddictSqlS
             throw new ArgumentNullException(nameof(scope));
         }
 
+        // 初始化 ConcurrencyToken（乐观锁版本号）
+        scope.ConcurrencyToken = Guid.NewGuid().ToString();
+
         await Context.Insertable(scope).ExecuteCommandAsync();
     }
 
