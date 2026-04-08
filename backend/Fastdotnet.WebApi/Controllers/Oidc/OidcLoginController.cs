@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Fastdotnet.Service.IService;
+using Fastdotnet.Service.IService.Sys;
 using Fastdotnet.Core.Dtos.Auth;
 using Fastdotnet.Core.Entities.Admin;
 using SqlSugar;
@@ -14,7 +15,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
     /// </summary>
     [ApiController]
     [Route("oidc")]
-    public class OidcLoginController : ControllerBase
+    public class OidcLoginController : Controller
     {
         private readonly ISqlSugarClient _db;
         private readonly IPasswordService _passwordService;
@@ -179,7 +180,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                 }
 
                 // 验证密码
-                var isValid = await _passwordService.VerifyPasswordAsync(model.Password, user.PasswordHash);
+                var isValid = await _passwordService.VerifyPasswordAsync(model.Password, user.Password);
                 if (!isValid)
                 {
                     TempData["Error"] = "用户名或密码错误";
