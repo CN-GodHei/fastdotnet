@@ -27,19 +27,19 @@ public class OpenIddictSqlSugarToken
     /// <summary>
     /// 获取或设置与当前令牌关联的应用程序
     /// </summary>
-    [Navigate(NavigateType.ManyToOne,nameof(ApplicationId), nameof(OpenIddictSqlSugarApplication.Id))]
+    [Navigate(NavigateType.ManyToOne, nameof(ApplicationId), nameof(OpenIddictSqlSugarApplication.Id))]
     public virtual OpenIddictSqlSugarApplication? Application { get; set; }
 
     /// <summary>
     /// 获取或设置与当前令牌关联的授权
     /// </summary>
-    [Navigate(NavigateType.ManyToOne,nameof(AuthorizationId), nameof(OpenIddictSqlSugarAuthorization.Id))]
+    [Navigate(NavigateType.ManyToOne, nameof(AuthorizationId), nameof(OpenIddictSqlSugarAuthorization.Id))]
     public virtual OpenIddictSqlSugarAuthorization? Authorization { get; set; }
 
     /// <summary>
     /// 获取或设置并发令牌（用于乐观锁）
     /// </summary>
-    [SugarColumn(IsEnableUpdateVersionValidation = true,IsNullable = true)]
+    [SugarColumn(IsEnableUpdateVersionValidation = true, IsNullable = true)]
     public virtual Guid ConcurrencyToken { get; set; }
 
     /// <summary>
@@ -58,7 +58,7 @@ public class OpenIddictSqlSugarToken
     /// 获取或设置当前令牌的载荷数据（如果适用）
     /// 注意：此属性仅用于引用令牌，并可能出于安全原因进行加密
     /// </summary>
-    [SugarColumn(IsNullable = true)]
+    [SugarColumn(IsNullable = true, ColumnDataType = "text")]
     public virtual string? Payload { get; set; }
 
     /// <summary>
@@ -96,7 +96,7 @@ public class OpenIddictSqlSugarToken
     /// <summary>
     /// 获取或设置当前令牌的类型
     /// </summary>
-    [SugarColumn(Length = 50, IsNullable = true)]
+    [SugarColumn(Length = 100, IsNullable = true)]
     public virtual string? Type { get; set; }
 
     /// <summary>

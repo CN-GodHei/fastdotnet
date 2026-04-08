@@ -69,7 +69,7 @@ public class OpenIddictSqlSugarAuthorization
     /// <summary>
     /// 获取或设置当前授权的类型
     /// </summary>
-    [SugarColumn(Length = 50, IsNullable = true)]
+    [SugarColumn(Length = 100, IsNullable = true)]
     public virtual string? Type { get; set; }
 
     /// <summary>

@@ -17,6 +17,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
     [Route("oidc")]
     [AllowAnonymous]
     [SkipAntiReplay]
+    [SkipGlobalResult]  // 跳过全局结果过滤器，直接返回 HTML
     [ApiUsageScope(ApiUsageScopeEnum.Both)]
     public class OidcLoginController : Controller
     {
@@ -36,7 +37,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
         [AllowAnonymous]
         [SkipAntiReplay]
         [ApiUsageScope(ApiUsageScopeEnum.Both)]
-        public IActionResult Login(string? returnUrl = null)
+        public IActionResult Login(string? returnUrl = null, string? error = null)
         {
             // 如果已经登录，直接重定向
             if (User.Identity?.IsAuthenticated == true)
@@ -44,117 +45,23 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                 return Redirect(returnUrl ?? "/");
             }
 
-            // 返回简单的 HTML 登录表单
+            // 返回简单的 HTML 登录表单（测试用）
+            var returnUrlValue = returnUrl ?? "none";
+            var formAction = returnUrl != null ? $"/oidc/login?returnUrl={Uri.EscapeDataString(returnUrl)}" : "/oidc/login";
+            var errorHtml = error != null ? $"<p style='color:red;'>Error: {error}</p>" : "";
             var html = $@"<!DOCTYPE html>
-<html lang=""zh-CN"">
-<head>
-    <meta charset=""UTF-8"">
-    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-    <title>Fastdotnet OIDC 登录</title>
-    <style>
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{ 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }}
-        .login-container {{
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            width: 100%;
-            max-width: 400px;
-        }}
-        h1 {{
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 24px;
-        }}
-        .form-group {{
-            margin-bottom: 20px;
-        }}
-        label {{
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
-        }}
-        input[type=""text""],
-        input[type=""password""] {{
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e1e1;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }}
-        input[type=""text""]:focus,
-        input[type=""password""]:focus {{
-            outline: none;
-            border-color: #667eea;
-        }}
-        button {{
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }}
-        button:hover {{
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }}
-        button:active {{
-            transform: translateY(0);
-        }}
-        .error {{
-            background: #fee;
-            color: #c33;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            text-align: center;
-        }}
-        .info {{
-            text-align: center;
-            margin-top: 20px;
-            color: #999;
-            font-size: 12px;
-        }}
-    </style>
-</head>
+<html><head><title>OIDC Login</title></head>
 <body>
-    <div class=""login-container"">
-        <h1>🔐 Fastdotnet OIDC 登录</h1>
-        {(TempData["Error"] != null ? $@"<div class=""error"">{TempData["Error"]}</div>" : "")}
-        <form method=""post"" action=""/oidc/login{(returnUrl != null ? $"?returnUrl={returnUrl}" : "")}"">
-            <div class=""form-group"">
-                <label for=""username"">用户名</label>
-                <input type=""text"" id=""username"" name=""username"" required autofocus placeholder=""请输入用户名"">
-            </div>
-            <div class=""form-group"">
-                <label for=""password"">密码</label>
-                <input type=""password"" id=""password"" name=""password"" required placeholder=""请输入密码"">
-            </div>
-            <button type=""submit"">登 录</button>
-        </form>
-        <div class=""info"">
-            <p>这是 OIDC 授权登录页面</p>
-            <p>登录后将自动完成授权</p>
-        </div>
-    </div>
-</body>
-</html>";
+<h1>OIDC Login Test</h1>
+{errorHtml}
+<p>This is a test login page.</p>
+<p>Return URL: {returnUrlValue}</p>
+<form method='post' action='{formAction}'>
+    <input type='text' name='username' placeholder='Username' required><br>
+    <input type='password' name='password' placeholder='Password' required><br>
+    <button type='submit'>Login</button>
+</form>
+</body></html>";
 
             return Content(html, "text/html; charset=utf-8");
         }
@@ -165,14 +72,14 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
         [HttpPost("login")]
         [AllowAnonymous]
         [SkipAntiReplay]
+        [SkipGlobalResult]
         [ApiUsageScope(ApiUsageScopeEnum.Both)]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginDto model, string? returnUrl = null)
+        [Consumes("application/x-www-form-urlencoded")]
+        public async Task<IActionResult> Login([FromForm] LoginDto model, string? returnUrl = null)
         {
             if (string.IsNullOrEmpty(model.Username) || string.IsNullOrEmpty(model.Password))
             {
-                TempData["Error"] = "用户名和密码不能为空";
-                return RedirectToAction(nameof(Login), new { returnUrl });
+                return RedirectToAction(nameof(Login), new { returnUrl, error = "用户名和密码不能为空" });
             }
 
             try
@@ -184,16 +91,14 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
 
                 if (user == null)
                 {
-                    TempData["Error"] = "用户名或密码错误";
-                    return RedirectToAction(nameof(Login), new { returnUrl });
+                    return RedirectToAction(nameof(Login), new { returnUrl, error = "用户名或密码错误" });
                 }
 
                 // 验证密码
                 var isValid = await _passwordService.VerifyPasswordAsync(model.Password, user.Password);
                 if (!isValid)
                 {
-                    TempData["Error"] = "用户名或密码错误";
-                    return RedirectToAction(nameof(Login), new { returnUrl });
+                    return RedirectToAction(nameof(Login), new { returnUrl, error = "用户名或密码错误" });
                 }
 
                 // 创建 Claims
@@ -204,14 +109,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                     new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
                 };
 
-                // TODO: 添加角色（需要查询用户角色）
-                // var roles = await GetUserRolesAsync(user.Id);
-                // foreach (var role in roles)
-                // {
-                //     claims.Add(new Claim(ClaimTypes.Role, role));
-                // }
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsIdentity = new ClaimsIdentity(claims, "Identity.Application");
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                 // 签署 Cookie
@@ -224,13 +122,40 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                         ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
                     });
 
+                // 调试：输出 Cookie 信息
+                Console.WriteLine($"[OIDC Login] User '{user.Username}' logged in successfully.");
+                Console.WriteLine($"[OIDC Login] SignInAsync completed.");
+                
+                // 检查响应头中是否有 Set-Cookie
+                var setCookieHeader = HttpContext.Response.Headers["Set-Cookie"];
+                if (setCookieHeader.Count > 0)
+                {
+                    Console.WriteLine($"[OIDC Login] Set-Cookie header present: {setCookieHeader.Count} cookie(s)");
+                    foreach (var cookie in setCookieHeader)
+                    {
+                        // 只显示 Cookie 名称，不显示完整值
+                        var cookieName = cookie?.Split('=')[0] ?? "unknown";
+                        Console.WriteLine($"[OIDC Login]   - Cookie: {cookieName}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"[OIDC Login] WARNING: No Set-Cookie header in response!");
+                }
+
                 // 重定向回 OIDC 授权端点
-                return Redirect(returnUrl ?? "/");
+                if (string.IsNullOrEmpty(returnUrl))
+                {
+                    Console.WriteLine("[OIDC Login] WARNING: returnUrl is empty!");
+                    return Redirect("/");
+                }
+                
+                Console.WriteLine($"[OIDC Login] Redirecting to: {returnUrl}");
+                return Redirect(returnUrl);
             }
             catch (Exception ex)
             {
-                TempData["Error"] = $"登录失败：{ex.Message}";
-                return RedirectToAction(nameof(Login), new { returnUrl });
+                return RedirectToAction(nameof(Login), new { returnUrl, error = $"登录失败：{ex.Message}" });
             }
         }
 

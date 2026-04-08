@@ -62,6 +62,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
         [HttpGet("~/connect/authorize")]
         [HttpPost("~/connect/authorize")]
         [IgnoreAntiforgeryToken]
+        [AllowAnonymous]
         public async Task<IActionResult> Authorize()
         {
             var request = HttpContext.GetOpenIddictServerRequest() ??
@@ -75,43 +76,53 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
             var application = await applicationManager.FindByClientIdAsync(request.ClientId) ??
                 throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
 
-            // 如果用户未认证，重定向到登录页面
-            if (!User.Identity?.IsAuthenticated ?? true)
+            // 调试：输出当前请求的认证信息
+            Console.WriteLine($"[OIDC Authorize] Request URL: {HttpContext.Request.Path}{HttpContext.Request.QueryString}");
+            Console.WriteLine($"[OIDC Authorize] User.Identity?.IsAuthenticated (default): {User.Identity?.IsAuthenticated}");
+            
+            // 明确检查 Cookie 认证状态（使用 "Identity.Application" 方案）
+            var cookieAuthResult = await HttpContext.AuthenticateAsync("Identity.Application");
+            var isAuthenticated = cookieAuthResult.Succeeded && cookieAuthResult.Principal != null;
+            
+            Console.WriteLine($"[OIDC Authorize] Cookie Auth Result - Succeeded: {cookieAuthResult.Succeeded}, IsAuthenticated: {isAuthenticated}");
+            
+            if (!isAuthenticated)
             {
-                // 使用 Cookie 认证方案触发登录重定向
-                return Challenge(
-                    authenticationSchemes: "Identity.Application",
-                    properties: new AuthenticationProperties
-                    {
-                        RedirectUri = HttpContext.Request.Path + HttpContext.Request.QueryString
-                    });
+                // 直接重定向到登录页面，并携带 returnUrl
+                var returnUrl = $"/connect/authorize{HttpContext.Request.QueryString}";
+                Console.WriteLine($"[OIDC Authorize] User not authenticated, redirecting to login with returnUrl: {returnUrl}");
+                return Redirect($"/oidc/login?returnUrl={Uri.EscapeDataString(returnUrl)}");
             }
+            
+            Console.WriteLine($"[OIDC Authorize] User authenticated, proceeding with authorization");
 
             // 创建认证票据
             var claims = new List<Claim>
             {
                 // 添加主题标识符（sub claim）
-                new Claim(Claims.Subject, User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
-                                              User.FindFirst("nameid")?.Value ?? 
+                new Claim(Claims.Subject, cookieAuthResult.Principal!.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
+                                              cookieAuthResult.Principal.FindFirst("nameid")?.Value ?? 
                                               throw new InvalidOperationException("Subject identifier not found.")),
                 
                 // 添加用户名
-                new Claim(Claims.Name, User.Identity?.Name ?? string.Empty),
+                new Claim(Claims.Name, cookieAuthResult.Principal.Identity?.Name ?? string.Empty),
             };
 
             // 添加角色信息
-            var roles = User.FindAll(ClaimTypes.Role).Select(r => r.Value);
+            var roles = cookieAuthResult.Principal.FindAll(ClaimTypes.Role).Select(r => r.Value);
             foreach (var role in roles)
             {
                 claims.Add(new Claim(Claims.Role, role));
             }
 
             // 添加邮箱（如果有）
-            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var email = cookieAuthResult.Principal.FindFirst(ClaimTypes.Email)?.Value;
             if (!string.IsNullOrEmpty(email))
             {
                 claims.Add(new Claim(Claims.Email, email));
             }
+
+            Console.WriteLine($"[OIDC Authorize] Creating authentication ticket for user: {claims.First(c => c.Type == Claims.Name).Value}");
 
             var claimsIdentity = new ClaimsIdentity(claims, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
@@ -131,12 +142,53 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
         [Produces("application/json")]
         public async Task<IActionResult> Exchange()
         {
+            Console.WriteLine($"[OIDC Token] ===== REQUEST RECEIVED =====");
+            Console.WriteLine($"[OIDC Token] Method: {HttpContext.Request.Method}");
+            Console.WriteLine($"[OIDC Token] Path: {HttpContext.Request.Path}");
+            
             var request = HttpContext.GetOpenIddictServerRequest() ??
                 throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
-            if (request.IsAuthorizationCodeGrantType() || request.IsRefreshTokenGrantType())
+            Console.WriteLine($"[OIDC Token] Grant Type: {request.GrantType}");
+            Console.WriteLine($"[OIDC Token] Client ID: {request.ClientId}");
+            Console.WriteLine($"[OIDC Token] Redirect URI: {request.RedirectUri}");
+            if (request.IsAuthorizationCodeGrantType())
             {
-                // 检索身份验证结果以提取用户标识及其属性
+                Console.WriteLine($"[OIDC Token] Code: [REDACTED]");
+                Console.WriteLine($"[OIDC Token] Code Verifier: [REDACTED]");
+            }
+
+            if (request.IsAuthorizationCodeGrantType())
+            {
+                // 授权码流程：OpenIddict 已经验证了授权码，我们只需要检索结果
+                var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+
+                if (result?.Principal == null)
+                {
+                    Console.WriteLine("[OIDC Token] ERROR: Authentication result is null or principal is missing");
+                    return Forbid(
+                        authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+                        properties: new AuthenticationProperties(new Dictionary<string, string?>
+                        {
+                            [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
+                            [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The authorization code is invalid or has expired."
+                        }));
+                }
+
+                Console.WriteLine($"[OIDC Token] User authenticated: {result.Principal.Identity?.Name}");
+
+                // 创建新的认证票据
+                var claimsPrincipal = result.Principal;
+                
+                // 设置作用域（从 request 中获取）
+                claimsPrincipal.SetScopes(request.GetScopes());
+
+                Console.WriteLine($"[OIDC Token] Creating tokens for user: {claimsPrincipal.Identity?.Name}");
+                return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            }
+            else if (request.IsRefreshTokenGrantType())
+            {
+                // 刷新令牌流程
                 var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
                 if (result?.Principal == null)
@@ -146,23 +198,17 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                         properties: new AuthenticationProperties(new Dictionary<string, string?>
                         {
                             [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
-                            [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The token is no longer valid."
+                            [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The refresh token is invalid or has expired."
                         }));
                 }
 
-                // 确保用户仍然是有效的
-                // TODO: 根据实际需求验证用户状态
-
-                // 创建新的认证票据
                 var claimsPrincipal = result.Principal;
-                
-                // 设置作用域（从 request 中获取）
                 claimsPrincipal.SetScopes(request.GetScopes());
 
                 return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
 
-            throw new InvalidOperationException("The specified grant type is not supported.");
+            throw new InvalidOperationException($"The specified grant type '{request.GrantType}' is not supported.");
         }
 
         /// <summary>

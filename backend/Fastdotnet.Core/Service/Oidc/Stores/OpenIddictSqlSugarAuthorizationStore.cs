@@ -94,11 +94,32 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
             throw new ArgumentNullException(nameof(authorization));
         }
 
+        // 如果 Id 为空，生成新的 GUID
+        if (authorization.Id == Guid.Empty)
+        {
+            authorization.Id = Guid.NewGuid();
+            Console.WriteLine($"[OIDC Store]   ⚠️ Generated new Id: {authorization.Id}");
+        }
+
+        // 调试：输出授权信息
+        Console.WriteLine($"[OIDC Store] Creating Authorization:");
+        Console.WriteLine($"[OIDC Store]   Id: {authorization.Id}");
+        Console.WriteLine($"[OIDC Store]   ApplicationId: {authorization.ApplicationId}");
+        Console.WriteLine($"[OIDC Store]   Subject: {authorization.Subject}");
+        Console.WriteLine($"[OIDC Store]   Type: {authorization.Type}");
+        Console.WriteLine($"[OIDC Store]   Status: {authorization.Status}");
+        
+        if (authorization.ApplicationId == Guid.Empty)
+        {
+            Console.WriteLine($"[OIDC Store]   ⚠️ WARNING: ApplicationId is empty!");
+        }
+
         // 初始化 ConcurrencyToken（乐观锁版本号）
         authorization.ConcurrencyToken = Guid.NewGuid().ToString();
 
         await Context.Insertable(authorization).ExecuteCommandAsync();
-
+        
+        Console.WriteLine($"[OIDC Store]   ✅ Authorization created successfully");
     }
 
     /// <inheritdoc/>
@@ -134,12 +155,23 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
         string? status, string? type,
         ImmutableArray<string>? scopes, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
+        // 如果指定了 client，需要先查询 ApplicationId
+        Guid? applicationId = null;
+        if (!string.IsNullOrEmpty(client))
+        {
+            var app = await Applications.Where(a => a.ClientId == client).Select(a => new { a.Id }).FirstAsync();
+            if (app == null)
+            {
+                yield break;
+            }
+            applicationId = app.Id;
+        }
 
-        var authorizations = await Authorizations.Includes(authorization => authorization.Application)
-            .WhereIF(!string.IsNullOrEmpty(subject),x => x.Subject == subject)
-            .WhereIF(!string.IsNullOrEmpty(client),x => x.Application!.ClientId == client)
-            .WhereIF(!string.IsNullOrEmpty(status),x => x.Status == status)
-            .WhereIF(!string.IsNullOrEmpty(type),x => x.Type == type)
+        var authorizations = await Authorizations
+            .WhereIF(!string.IsNullOrEmpty(subject), x => x.Subject == subject)
+            .WhereIF(applicationId.HasValue, x => x.ApplicationId == applicationId)
+            .WhereIF(!string.IsNullOrEmpty(status), x => x.Status == status)
+            .WhereIF(!string.IsNullOrEmpty(type), x => x.Type == type)
             .ToListAsync(cancellationToken);
 
         foreach (var authorization in authorizations)
@@ -162,8 +194,8 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
             throw new ArgumentException(nameof(identifier));
         }
 
-        var collection = await Authorizations.InnerJoin(Applications, (authorization, application) => authorization.Application!.Id == application.Id)
-            .Where((x, y) => y.Id.ToString() == identifier)
+        var collection = await Authorizations
+            .Where(x => x.ApplicationId == Guid.Parse(identifier))
             .ToListAsync(cancellationToken);
 
         foreach (var item in collection)
@@ -181,9 +213,30 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
             throw new ArgumentException(nameof(identifier));
         }
 
-        var authorization = await Authorizations.Where(x => x.Id.ToString() == identifier).FirstAsync(cancellationToken);
-        return authorization;
+        // 调试：输出查找的 ID
+        Console.WriteLine($"[OIDC Store] FindByIdAsync called with identifier: {identifier}");
 
+        // 尝试将 identifier 解析为 Guid
+        if (Guid.TryParse(identifier, out var guid))
+        {
+            var authorization = await Authorizations.Where(x => x.Id == guid).FirstAsync(cancellationToken);
+            
+            if (authorization != null)
+            {
+                Console.WriteLine($"[OIDC Store]   ✅ Found authorization: {authorization.Id}");
+            }
+            else
+            {
+                Console.WriteLine($"[OIDC Store]   ❌ Authorization not found in database!");
+            }
+            
+            return authorization;
+        }
+        else
+        {
+            Console.WriteLine($"[OIDC Store]   ❌ Failed to parse identifier as Guid!");
+            return null;
+        }
     }
 
     /// <inheritdoc/>
@@ -195,7 +248,7 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
             throw new ArgumentException(nameof(subject));
         }
 
-        var authorization = await Authorizations.Includes(x => x.Application)
+        var authorization = await Authorizations
             .Where(x => x.Subject == subject)
             .ToListAsync(cancellationToken);
 
@@ -214,12 +267,19 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
             throw new ArgumentNullException(nameof(authorization));
         }
 
-        var result = await Authorizations.Includes(x => x.Application)
-        .Where(x => x.Id == authorization.Id)
-        .FirstAsync();
+        // 如果 Application 导航属性已加载，直接返回
+        if (authorization.Application != null)
+        {
+            return authorization.Application.Id.ToString();
+        }
 
-        return result.Application!.Id.ToString();
+        // 否则从数据库查询
+        var result = await Authorizations
+            .Where(x => x.Id == authorization.Id)
+            .Select(x => new { x.ApplicationId })
+            .FirstAsync();
 
+        return result?.ApplicationId.ToString();
     }
 
     /// <inheritdoc/>
@@ -476,10 +536,21 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
     /// <inheritdoc/>
     public virtual async ValueTask<long> RevokeAsync(string? subject, string? client, string? status, string? type, CancellationToken cancellationToken)
     {
+        // 如果指定了 client，需要先查询 ApplicationId
+        Guid? applicationId = null;
+        if (!string.IsNullOrEmpty(client))
+        {
+            var app = await Applications.Where(a => a.ClientId == client).Select(a => new { a.Id }).FirstAsync();
+            if (app == null)
+            {
+                return 0;
+            }
+            applicationId = app.Id;
+        }
 
-        var updateData = await Authorizations.Includes(x => x.Application)
+        var updateData = await Authorizations
                 .WhereIF(!string.IsNullOrEmpty(subject), x => x.Subject == subject)
-                .WhereIF(!string.IsNullOrEmpty(client), x => x.Application!.ClientId == client)
+                .WhereIF(applicationId.HasValue, x => x.ApplicationId == applicationId)
                 .WhereIF(!string.IsNullOrEmpty(status), x => x.Status == status)
                 .WhereIF(!string.IsNullOrEmpty(type), x => x.Type == type)
                 .ToListAsync();
@@ -501,8 +572,8 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
             throw new ArgumentException("标识符不能为空或 null。", nameof(identifier));
         }
 
-        var updateDate = await Authorizations.Includes(x => x.Application)
-                .Where(x => x.Application!.Id == Guid.Parse(identifier))
+        var updateDate = await Authorizations
+                .Where(x => x.ApplicationId == Guid.Parse(identifier))
                 .ToListAsync(cancellationToken);
 
         foreach (var update in updateDate)
@@ -545,10 +616,13 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
 
         if (!string.IsNullOrEmpty(identifier))
         {
-            authorization.Application = await Applications.Where(x => x.Id == Guid.Parse(identifier)).FirstAsync();
+            // 同时设置 ApplicationId 字段和 Application 导航属性
+            authorization.ApplicationId = Guid.Parse(identifier);
+            authorization.Application = await Applications.Where(x => x.Id == authorization.ApplicationId).FirstAsync();
         }
         else
         {
+            authorization.ApplicationId = Guid.Empty;
             authorization.Application = null;
         }
     }

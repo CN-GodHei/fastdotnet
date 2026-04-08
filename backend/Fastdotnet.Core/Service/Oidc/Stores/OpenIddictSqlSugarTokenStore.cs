@@ -627,6 +627,8 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             // Convert the identifier to the appropriate type (e.g., Guid).
             var key = Guid.Parse(identifier);
 
+            // 同时设置 ApplicationId 字段和 Application 导航属性
+            token.ApplicationId = key;
             // Find the application by its ID.
             token.Application = await Applications
                 .Where(x => x.Id == key)
@@ -634,6 +636,7 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
         }
         else
         {
+            token.ApplicationId = Guid.Empty;
             token.Application = null;
         }
     }
@@ -651,6 +654,8 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             // Convert the identifier to the appropriate type (e.g., Guid).
             var key = Guid.Parse(identifier);
 
+            // 同时设置 AuthorizationId 字段和 Authorization 导航属性
+            token.AuthorizationId = key;
             // Find the authorization by its ID.
             token.Authorization = await Authorizations
                 .Where(x => x.Id == key)
@@ -659,6 +664,7 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
         else
         {
             // If the identifier is null, set the authorization to null.
+            token.AuthorizationId = Guid.Empty;
             token.Authorization = null;
         }
     }

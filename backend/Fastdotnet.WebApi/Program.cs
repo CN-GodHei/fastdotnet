@@ -10,12 +10,23 @@ using Fastdotnet.Service.IService.Sys;
 using Fastdotnet.Service.Service.Admin;
 using Fastdotnet.Service.Service.App;
 using Fastdotnet.Service.Service.Sys;
+using Microsoft.AspNetCore.DataProtection;
 using System.IdentityModel.Tokens.Jwt;
 using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 // 可选：延长停机超时时间
 builder.Host.ConfigureHostOptions(o => o.ShutdownTimeout = TimeSpan.FromMinutes(2));
+
+// === 关键修复：配置固定的 Data Protection 密钥 ===
+// OpenIddict 使用 Data Protection API 加密授权码
+// 如果每次重启都生成新的密钥，旧的授权码就无法解密
+var dataProtectionKeysPath = Path.Combine(AppContext.BaseDirectory, "DataProtection-Keys");
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysPath))
+    .SetApplicationName("Fastdotnet.OIDC");
+Console.WriteLine($"[DataProtection] Using fixed keys path: {dataProtectionKeysPath}");
+
 var options = new IdGeneratorOptions(0001);
 // options.WorkerIdBitLength = 10; // 默认值6，限定 WorkerId 最大值为2^6-1，即默认最多支持64个节点。
 options.SeqBitLength = 10; // 默认值6，限制每毫秒生成的ID个数。若生成速度超过5万个/秒，建议加大 SeqBitLength 到 10。
@@ -231,6 +242,12 @@ app.UseMiddleware<DynamicMiddlewareDispatcher>();
 
 // 启用插件分支网关 - 允许插件动态注册请求处理管道
 app.UsePluginBranchGate();
+
+// OIDC 调试中间件（仅在开发环境启用）
+if (app.Environment.IsDevelopment())
+{
+    app.UseMiddleware<Fastdotnet.WebApi.Middleware.OidcDebugMiddleware>();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Fastdotnet.Core.Entities.Oidc;
 using Fastdotnet.Core.Service.Oidc;
 using Fastdotnet.Core.Service.Oidc.Stores;
@@ -53,9 +54,24 @@ public static class OpenIddictConfigurationExtensions
                     OpenIddictConstants.Scopes.Email,
                     OpenIddictConstants.Scopes.Roles);
 
-                // 注册签名和加密证书（开发环境使用临时证书）
-                options.AddDevelopmentEncryptionCertificate()
-                       .AddDevelopmentSigningCertificate();
+                // 注册签名和加密证书
+                // 开发环境使用固定证书，避免重启后证书变化导致授权码解密失败
+                var certPath = Path.Combine(AppContext.BaseDirectory, "oidc-dev-cert.pfx");
+                if (File.Exists(certPath))
+                {
+                    var certificate = new X509Certificate2(certPath, "dev-cert-password",
+                        X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
+                    options.AddEncryptionCertificate(certificate)
+                           .AddSigningCertificate(certificate);
+                    Console.WriteLine($"[OIDC] ✅ Using fixed development certificate from: {certPath}");
+                }
+                else
+                {
+                    // 如果证书不存在，回退到动态生成的证书
+                    options.AddDevelopmentEncryptionCertificate()
+                           .AddDevelopmentSigningCertificate();
+                    Console.WriteLine("[OIDC] ❌ WARNING: Fixed certificate not found, using dynamic development certificate");
+                }
 
                 // 注册 ASP.NET Core 宿主并配置选项
                 options.UseAspNetCore()
