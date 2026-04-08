@@ -38,6 +38,9 @@
 	  <PackageReference Include="System.Linq.Dynamic.Core" />
 	  <PackageReference Include="Yitter.IdGenerator" />
 	  <PackageReference Include="Yarp.ReverseProxy" />
+	  <!-- OpenIddict for OIDC/OAuth2 -->
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+	  <PackageReference Include="OpenIddict.EntityFrameworkCore" />
   </ItemGroup>
 
 </Project>

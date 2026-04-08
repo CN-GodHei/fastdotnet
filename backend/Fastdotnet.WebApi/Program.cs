@@ -7,6 +7,10 @@ using Fastdotnet.Service.Service.Admin;
 using Fastdotnet.Service.Service.App;
 using Fastdotnet.Service.Service.Sys;
 using System.IdentityModel.Tokens.Jwt;
+using Fastdotnet.Core.Settings;
+using Fastdotnet.Core.Service.Oidc;
+using Fastdotnet.Core.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 // 可选：延长停机超时时间
@@ -72,6 +76,88 @@ builder.Services.AddSqlSugar(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
+// 配置 OIDC/OAuth2 Identity Provider（OpenIddict）
+var oidcSettings = builder.Configuration.GetSection("OidcSettings").Get<OidcSettings>() ?? new OidcSettings();
+if (oidcSettings.Enabled)
+{
+    builder.Services.Configure<OidcSettings>(builder.Configuration.GetSection("OidcSettings"));
+
+    // 注册 OidcDbContext（使用 SQLite 存储 OIDC 数据）
+    builder.Services.AddDbContext<OidcDbContext>(options =>
+    {
+        // 使用 SQLite 数据库存储 OpenIddict 数据
+        var dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", "oidc.db");
+        Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
+        options.UseSqlite($"Data Source={dbPath}");
+        
+        // 注册 OpenIddict 实体
+        options.UseOpenIddict();
+    });
+
+    // 注册 OpenIddict 服务
+    builder.Services.AddOpenIddict()
+        .AddCore(options =>
+        {
+            // 使用 Entity Framework Core 存储 OpenIddict 数据
+            options.UseEntityFrameworkCore()
+                   .UseDbContext<OidcDbContext>();
+        })
+        .AddServer(options =>
+        {
+            // 启用授权端点和令牌端点
+            options.SetAuthorizationEndpointUris("connect/authorize")
+                   .SetTokenEndpointUris("connect/token")
+                   .SetIntrospectionEndpointUris("connect/introspect")
+                   .SetRevocationEndpointUris("connect/revoke");
+
+            // 允许授权码流和刷新令牌流
+            options.AllowAuthorizationCodeFlow()
+                   .AllowRefreshTokenFlow();
+
+            // 注册作用域
+            options.RegisterScopes(
+                OpenIddictConstants.Scopes.OpenId,
+                OpenIddictConstants.Scopes.Profile,
+                OpenIddictConstants.Scopes.Email,
+                OpenIddictConstants.Scopes.Roles);
+
+            // 注册签名和加密证书（开发环境使用临时证书）
+            options.AddDevelopmentEncryptionCertificate()
+                   .AddDevelopmentSigningCertificate();
+
+            // 注册 ASP.NET Core 宿主并配置选项
+            options.UseAspNetCore()
+                   .EnableStatusCodePagesIntegration()
+                   .EnableAuthorizationEndpointPassthrough()
+                   .EnableTokenEndpointPassthrough();
+
+            // 禁用 HTTPS 要求（仅开发环境）
+            if (!oidcSettings.RequireHttpsMetadata && builder.Environment.IsDevelopment())
+            {
+                // 注意：DisableTransportSecurityRequirement 在 UseAspNetCore() 之后调用
+                // 这里通过配置实现
+            }
+        })
+        .AddValidation(options =>
+        {
+            // 使用本地服务器验证令牌
+            options.UseLocalServer();
+            options.UseAspNetCore();
+        });
+
+    // 注册 OIDC 应用初始化器（仅在 OIDC 启用时注册）
+    builder.Services.AddScoped<IApplicationInitializer, Fastdotnet.Core.Service.Oidc.OidcApplicationInitializer>();
+
+    Console.WriteLine("✅ OIDC/OAuth2 Identity Provider 已启用");
+}
+else
+{
+    Console.WriteLine("ℹ️ OIDC/OAuth2 Identity Provider 未启用（可在 appsettings.json 中配置 OidcSettings:Enabled=true 启用）");
+    
+    // 当 OIDC 未启用时，注册一个空的 AuthorizationController 以避免路由冲突
+    // 或者我们可以简单地不注册任何 OIDC 相关的服务
+}
 
 // 添加认证和授权
 builder.Services.AddAuthentication(options =>
@@ -265,6 +351,7 @@ app.UseMiddleware<DynamicMiddlewareDispatcher>();
 
 // 启用插件分支网关 - 允许插件动态注册请求处理管道
 app.UsePluginBranchGate();
+
 app.UseAuthentication();
 app.UseAuthorization();
 // 👇 启用优雅停机

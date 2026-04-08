@@ -88,3 +88,5 @@ global using Fastdotnet.Core.Dtos.Common;
 global using Fastdotnet.Core.Dtos;
 global using Fastdotnet.Core.Enum;
 global using Fastdotnet.Core.IService.Sys;
+// OpenIddict for OIDC/OAuth2 (don't use static import to avoid conflicts)
+global using OpenIddict.Abstractions;
