@@ -79,6 +79,7 @@ public static class OpenIddictConfigurationExtensions
         services.AddAuthentication(options =>
         {
             options.DefaultScheme = "Identity.Application";
+            options.DefaultChallengeScheme = "Identity.Application";
         })
         .AddCookie("Identity.Application", options =>
         {
@@ -91,6 +92,13 @@ public static class OpenIddictConfigurationExtensions
             options.LoginPath = "/oidc/login";
             options.LogoutPath = "/oidc/logout";
             options.AccessDeniedPath = "/oidc/access-denied";
+            
+            // 确保 Challenge 时正确重定向
+            options.Events.OnRedirectToLogin = context =>
+            {
+                context.Response.Redirect(context.RedirectUri);
+                return Task.CompletedTask;
+            };
         });
     }
 
