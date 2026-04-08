@@ -11,7 +11,7 @@ namespace Fastdotnet.Core.Entities.Oidc;
 /// <summary>
 /// OpenIddict 作用域实体
 /// </summary>
-[SugarTable("OpenIddictScopes")]
+[SugarTable("oidc_Scopes")]
 [SugarIndex("Index_OpenIddictScopes_Name", nameof(Name), OrderByType.Asc, true)]
 public class OpenIddictSqlSugarScope
 {

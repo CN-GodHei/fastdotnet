@@ -3,7 +3,6 @@ using OpenIddict.Abstractions;
 using Fastdotnet.Core.Settings;
 using Microsoft.Extensions.Logging;
 using Fastdotnet.Core.Initializers;
-using Fastdotnet.Core.Data;
 
 namespace Fastdotnet.Core.Service.Oidc
 {

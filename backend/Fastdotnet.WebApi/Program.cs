@@ -1,5 +1,4 @@
 using Autofac.Core;
-using Fastdotnet.Core.Data;
 using Fastdotnet.Core.Entities.Oidc;
 using Fastdotnet.Core.Extensions;
 using Fastdotnet.Core.Service.Oidc;
@@ -11,7 +10,6 @@ using Fastdotnet.Service.IService.Sys;
 using Fastdotnet.Service.Service.Admin;
 using Fastdotnet.Service.Service.App;
 using Fastdotnet.Service.Service.Sys;
-using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using static System.Net.Mime.MediaTypeNames;
 

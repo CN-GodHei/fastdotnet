@@ -38,7 +38,7 @@
     <PackageReference Include="Yitter.IdGenerator" />
     <!-- OpenIddict for OIDC/OAuth2 Identity Provider -->
     <PackageReference Include="OpenIddict.AspNetCore" />
-    <PackageReference Include="OpenIddict.EntityFrameworkCore" />
+    <!--<PackageReference Include="OpenIddict.EntityFrameworkCore" />-->
   </ItemGroup>
 
   <ItemGroup>

@@ -14,7 +14,7 @@ namespace Fastdotnet.Core.Entities.Oidc;
 /// OpenIddict 授权实体
 /// </summary>
 [DebuggerDisplay("Id = {Id.ToString(),nq} ; Subject = {Subject,nq} ; Type = {Type,nq} ; Status = {Status,nq}")]
-[SugarTable("OpenIddictAuthorizations")]
+[SugarTable("oidc_Authorizations")]
 [SugarIndex("Index_ApplicationId_Status_Subject_Type", [nameof(ApplicationId),nameof(Status),nameof(Subject),nameof(Type)]
 , [OrderByType.Asc,OrderByType.Asc,OrderByType.Asc,OrderByType.Asc])]
 public class OpenIddictSqlSugarAuthorization

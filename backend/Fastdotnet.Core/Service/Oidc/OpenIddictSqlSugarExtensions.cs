@@ -1,8 +1,6 @@
 using Fastdotnet.Core.Entities.Oidc;
-using Fastdotnet.Core.Service.Oidc.Resolvers;
 using Fastdotnet.Core.Service.Oidc.Stores;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using OpenIddict.Abstractions;
 
 namespace Fastdotnet.Core.Service.Oidc;
@@ -13,7 +11,7 @@ namespace Fastdotnet.Core.Service.Oidc;
 public static class OpenIddictSqlSugarExtensions
 {
     /// <summary>
-    /// 使用 SqlSugar Store 配置 OpenIddict
+    /// 使用 SqlSugar Store 配置 OpenIddict（适用于 OpenIddict 7.x）
     /// </summary>
     /// <param name="builder">OpenIddict 构建器</param>
     /// <returns>OpenIddict 构建器</returns>
@@ -24,23 +22,11 @@ public static class OpenIddictSqlSugarExtensions
             throw new ArgumentNullException(nameof(builder));
         }
 
-        // 设置默认实体类型
-        builder.SetDefaultApplicationEntity<OpenIddictSqlSugarApplication>()
-               .SetDefaultAuthorizationEntity<OpenIddictSqlSugarAuthorization>()
-               .SetDefaultTokenEntity<OpenIddictSqlSugarToken>()
-               .SetDefaultScopeEntity<OpenIddictSqlSugarScope>();
-
-        // 替换 Store Resolver
-        builder.ReplaceApplicationStoreResolver<OpenIddictSqlSugarApplicationStoreResolver>(ServiceLifetime.Singleton)
-               .ReplaceAuthorizationStoreResolver<OpenIddictSqlSugarAuthorizationStoreResolver>(ServiceLifetime.Singleton)
-               .ReplaceTokenStoreResolver<OpenIddictSqlSugarTokenStoreResolver>(ServiceLifetime.Singleton)
-               .ReplaceScopeStoreResolver<OpenIddictSqlSugarScopeStoreResolver>(ServiceLifetime.Singleton);
-
-        // 注册 Store 实现
-        builder.Services.TryAddScoped(typeof(OpenIddictSqlSugarApplicationStore));
-        builder.Services.TryAddScoped(typeof(OpenIddictSqlSugarAuthorizationStore));
-        builder.Services.TryAddScoped(typeof(OpenIddictSqlSugarTokenStore));
-        builder.Services.TryAddScoped(typeof(OpenIddictSqlSugarScopeStore));
+        // 在 OpenIddict 7.x 中，直接替换 Store 并设置默认实体类型
+        builder.ReplaceApplicationStore<OpenIddictSqlSugarApplication, OpenIddictSqlSugarApplicationStore>()
+               .ReplaceAuthorizationStore<OpenIddictSqlSugarAuthorization, OpenIddictSqlSugarAuthorizationStore>()
+               .ReplaceScopeStore<OpenIddictSqlSugarScope, OpenIddictSqlSugarScopeStore>()
+               .ReplaceTokenStore<OpenIddictSqlSugarToken, OpenIddictSqlSugarTokenStore>();
 
         // 配置选项
         builder.Services.AddOptions<OpenIddictSqlSugarOptions>();

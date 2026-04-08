@@ -9,7 +9,6 @@ using Fastdotnet.Core.Entities.Oidc;
 using Fastdotnet.Core.Service.Oidc.Stores;
 using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Abstractions;
-
 namespace Fastdotnet.Core.Service.Oidc.Resolvers;
 
 /// <summary>

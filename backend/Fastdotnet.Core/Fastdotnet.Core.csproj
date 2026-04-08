@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -20,6 +20,7 @@
     <Compile Remove="Initializers\PermissionSyncInitializer.cs" />
     <Compile Remove="Plugin\IPlugin.cs" />
     <Compile Remove="Plugin\PluginConfig.cs" />
+    <Compile Remove="Service\Oidc\OidcApplicationInitializer.cs" />
     <Compile Remove="Utils\EncryptionService.cs" />
   </ItemGroup>
 
@@ -38,9 +39,13 @@
 	  <PackageReference Include="System.Linq.Dynamic.Core" />
 	  <PackageReference Include="Yitter.IdGenerator" />
 	  <PackageReference Include="Yarp.ReverseProxy" />
+	  <PackageReference Include="OpenIddict.Abstractions" />
 	  <!-- OpenIddict for OIDC/OAuth2 -->
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
-	  <PackageReference Include="OpenIddict.EntityFrameworkCore" />
+	  <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
   </ItemGroup>
 
 </Project>

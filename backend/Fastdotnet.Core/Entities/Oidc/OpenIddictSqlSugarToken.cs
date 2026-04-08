@@ -11,7 +11,7 @@ namespace Fastdotnet.Core.Entities.Oidc;
 /// <summary>
 /// OpenIddict 令牌实体
 /// </summary>
-[SugarTable("OpenIddictTokens")]
+[SugarTable("oidc_Tokens")]
 [SugarIndex("Index_OpenIddictTokens_ReferenceId", nameof(ReferenceId), OrderByType.Asc, true)]
 [SugarIndex("Index_OpenIddictTokens_ApplicationId_Status_Subject_Type",
     new[] { nameof(ApplicationId), nameof(Status), nameof(Subject), nameof(Type) },
