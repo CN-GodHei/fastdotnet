@@ -135,3 +135,5 @@ wwwroot
 *.zip
 *.7z
 *.rar
+elsa_compatibility.db-shm
+elsa_compatibility.db-wal
