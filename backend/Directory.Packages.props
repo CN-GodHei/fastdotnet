@@ -44,6 +44,7 @@
     <!-- OpenIddict for OIDC/OAuth2 -->
     <PackageVersion Include="OpenIddict.AspNetCore" Version="7.4.0" />
     <PackageVersion Include="OpenIddict.Abstractions" Version="7.4.0" />
+    <PackageVersion Include="OpenIddict.Core" Version="7.4.0" />
 
   </ItemGroup>
 </Project>

@@ -20,7 +20,6 @@
     <Compile Remove="Initializers\PermissionSyncInitializer.cs" />
     <Compile Remove="Plugin\IPlugin.cs" />
     <Compile Remove="Plugin\PluginConfig.cs" />
-    <Compile Remove="Service\Oidc\OidcApplicationInitializer.cs" />
     <Compile Remove="Utils\EncryptionService.cs" />
   </ItemGroup>
 
@@ -40,6 +39,7 @@
 	  <PackageReference Include="Yitter.IdGenerator" />
 	  <PackageReference Include="Yarp.ReverseProxy" />
 	  <PackageReference Include="OpenIddict.Abstractions" />
+	  <PackageReference Include="OpenIddict.Core" />
 	  <!-- OpenIddict for OIDC/OAuth2 -->
 	  <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />-->
   </ItemGroup>
