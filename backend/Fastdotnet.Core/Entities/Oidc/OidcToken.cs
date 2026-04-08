@@ -37,13 +37,13 @@ namespace Fastdotnet.Core.Entities.Oidc
         /// 创建时间
         /// </summary>
         [SugarColumn(IsNullable = true)]
-        public DateTime? CreationDate { get; set; }
+        public DateTimeOffset? CreationDate { get; set; }
 
         /// <summary>
         /// 过期时间
         /// </summary>
         [SugarColumn(IsNullable = true)]
-        public DateTime? ExpirationDate { get; set; }
+        public DateTimeOffset? ExpirationDate { get; set; }
 
         /// <summary>
         /// 载荷数据
@@ -61,7 +61,7 @@ namespace Fastdotnet.Core.Entities.Oidc
         /// 赎回时间
         /// </summary>
         [SugarColumn(IsNullable = true)]
-        public DateTime? RedemptionDate { get; set; }
+        public DateTimeOffset? RedemptionDate { get; set; }
 
         /// <summary>
         /// 引用 ID（唯一）

@@ -31,7 +31,7 @@ namespace Fastdotnet.Core.Entities.Oidc
         /// 创建时间
         /// </summary>
         [SugarColumn(IsNullable = true)]
-        public DateTime? CreationDate { get; set; }
+        public DateTimeOffset? CreationDate { get; set; }
 
         /// <summary>
         /// 自定义属性（JSON 格式）
