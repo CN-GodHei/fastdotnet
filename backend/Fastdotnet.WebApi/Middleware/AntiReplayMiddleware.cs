@@ -179,6 +179,24 @@ namespace Fastdotnet.WebApi.Middleware
                 return true;
             }
 
+            // 跳过 OIDC Discovery 端点（公开配置信息）
+            var path = context.Request.Path.Value?.ToLowerInvariant();
+            if (path != null && path.StartsWith("/.well-known/"))
+            {
+                return true;
+            }
+
+            // 跳过 OIDC 授权和令牌端点（这些端点有自己的安全机制）
+            if (path != null && (path.StartsWith("/connect/authorize") || 
+                                 path.StartsWith("/connect/token") ||
+                                 path.StartsWith("/connect/userinfo") ||
+                                 path.StartsWith("/connect/introspect") ||
+                                 path.StartsWith("/connect/revoke") ||
+                                 path.StartsWith("/connect/logout")))
+            {
+                return true;
+            }
+
             // 检查当前路由的 ActionDescriptor 是否有 SkipAntiReplayAttribute 标记
             var endpoint = context.GetEndpoint();
             if (endpoint != null)
