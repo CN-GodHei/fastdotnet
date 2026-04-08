@@ -22,11 +22,21 @@ public static class OpenIddictSqlSugarExtensions
             throw new ArgumentNullException(nameof(builder));
         }
 
-        // 在 OpenIddict 7.x 中，直接替换 Store 并设置默认实体类型
+        // 替换 Store 实现
         builder.ReplaceApplicationStore<OpenIddictSqlSugarApplication, OpenIddictSqlSugarApplicationStore>()
                .ReplaceAuthorizationStore<OpenIddictSqlSugarAuthorization, OpenIddictSqlSugarAuthorizationStore>()
                .ReplaceScopeStore<OpenIddictSqlSugarScope, OpenIddictSqlSugarScopeStore>()
                .ReplaceTokenStore<OpenIddictSqlSugarToken, OpenIddictSqlSugarTokenStore>();
+
+        // 重要：替换 Manager 注册，否则会使用默认的抛出异常的工厂
+        builder.Services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Scoped<OpenIddict.Abstractions.IOpenIddictApplicationManager>(provider =>
+            provider.GetRequiredService<OpenIddict.Core.OpenIddictApplicationManager<OpenIddictSqlSugarApplication>>()));
+        builder.Services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Scoped<OpenIddict.Abstractions.IOpenIddictAuthorizationManager>(provider =>
+            provider.GetRequiredService<OpenIddict.Core.OpenIddictAuthorizationManager<OpenIddictSqlSugarAuthorization>>()));
+        builder.Services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Scoped<OpenIddict.Abstractions.IOpenIddictScopeManager>(provider =>
+            provider.GetRequiredService<OpenIddict.Core.OpenIddictScopeManager<OpenIddictSqlSugarScope>>()));
+        builder.Services.Replace(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Scoped<OpenIddict.Abstractions.IOpenIddictTokenManager>(provider =>
+            provider.GetRequiredService<OpenIddict.Core.OpenIddictTokenManager<OpenIddictSqlSugarToken>>()));
 
         // 配置选项
         builder.Services.AddOptions<OpenIddictSqlSugarOptions>();
