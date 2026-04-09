@@ -37,6 +37,11 @@ public static class OpenIddictConfigurationExtensions
             })
             .AddServer(options =>
             {
+                // 设置 Token 生命周期
+                options.SetAccessTokenLifetime(TimeSpan.FromMinutes(oidcSettings.AccessTokenLifetime))
+                       .SetRefreshTokenLifetime(TimeSpan.FromDays(oidcSettings.RefreshTokenLifetime))
+                       .SetIdentityTokenLifetime(TimeSpan.FromMinutes(oidcSettings.IdTokenLifetime));
+
                 // 启用授权端点和令牌端点
                 options.SetAuthorizationEndpointUris("connect/authorize")
                        .SetTokenEndpointUris("connect/token")
@@ -46,6 +51,12 @@ public static class OpenIddictConfigurationExtensions
                 // 允许授权码流和刷新令牌流
                 options.AllowAuthorizationCodeFlow()
                        .AllowRefreshTokenFlow();
+
+                // 根据配置要求 PKCE
+                if (oidcSettings.RequirePkce)
+                {
+                    options.RequireProofKeyForCodeExchange();
+                }
 
                 // 注册作用域
                 options.RegisterScopes(
@@ -109,9 +120,14 @@ public static class OpenIddictConfigurationExtensions
             options.LogoutPath = "/oidc/logout";
             options.AccessDeniedPath = "/oidc/access-denied";
             
-            // 确保 Challenge 时正确重定向
+            // 确保 Challenge 时正确重定向到登录页
             options.Events.OnRedirectToLogin = context =>
             {
+                // 如果是 OIDC 授权请求，不要拦截，让 OpenIddict 处理
+                if (context.Request.Path.StartsWithSegments("/connect"))
+                {
+                    return Task.CompletedTask;
+                }
                 context.Response.Redirect(context.RedirectUri);
                 return Task.CompletedTask;
             };

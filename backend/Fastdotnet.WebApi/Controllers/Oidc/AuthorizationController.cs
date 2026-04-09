@@ -130,6 +130,20 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
             // 设置作用域
             claimsPrincipal.SetScopes(request.GetScopes());
 
+            // 设置 Claims Destinations
+            foreach (var claim in claimsPrincipal.Claims)
+            {
+                var destinations = new List<string> { Destinations.AccessToken };
+                if (claim.Type == Claims.Subject || 
+                    (claim.Type == Claims.Name && claimsPrincipal.HasScope(Scopes.Profile)) ||
+                    (claim.Type == Claims.Email && claimsPrincipal.HasScope(Scopes.Email)) ||
+                    (claim.Type == Claims.Role && claimsPrincipal.HasScope(Scopes.Roles)))
+                {
+                    destinations.Add(Destinations.IdentityToken);
+                }
+                claim.SetDestinations(destinations);
+            }
+
             // 签署认证票据
             return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
@@ -140,6 +154,8 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
         /// </summary>
         [HttpPost("~/connect/token")]
         [Produces("application/json")]
+        [AllowAnonymous]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Exchange()
         {
             Console.WriteLine($"[OIDC Token] ===== REQUEST RECEIVED =====");
@@ -179,9 +195,20 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
 
                 // 创建新的认证票据
                 var claimsPrincipal = result.Principal;
-                
-                // 设置作用域（从 request 中获取）
-                claimsPrincipal.SetScopes(request.GetScopes());
+
+                // 设置 Claims Destinations
+                foreach (var claim in claimsPrincipal.Claims)
+                {
+                    var destinations = new List<string> { Destinations.AccessToken };
+                    if (claim.Type == Claims.Subject || 
+                        (claim.Type == Claims.Name && claimsPrincipal.HasScope(Scopes.Profile)) ||
+                        (claim.Type == Claims.Email && claimsPrincipal.HasScope(Scopes.Email)) ||
+                        (claim.Type == Claims.Role && claimsPrincipal.HasScope(Scopes.Roles)))
+                    {
+                        destinations.Add(Destinations.IdentityToken);
+                    }
+                    claim.SetDestinations(destinations);
+                }
 
                 Console.WriteLine($"[OIDC Token] Creating tokens for user: {claimsPrincipal.Identity?.Name}");
                 return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
@@ -203,7 +230,19 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                 }
 
                 var claimsPrincipal = result.Principal;
-                claimsPrincipal.SetScopes(request.GetScopes());
+
+                foreach (var claim in claimsPrincipal.Claims)
+                {
+                    var destinations = new List<string> { Destinations.AccessToken };
+                    if (claim.Type == Claims.Subject || 
+                        (claim.Type == Claims.Name && claimsPrincipal.HasScope(Scopes.Profile)) ||
+                        (claim.Type == Claims.Email && claimsPrincipal.HasScope(Scopes.Email)) ||
+                        (claim.Type == Claims.Role && claimsPrincipal.HasScope(Scopes.Roles)))
+                    {
+                        destinations.Add(Destinations.IdentityToken);
+                    }
+                    claim.SetDestinations(destinations);
+                }
 
                 return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }

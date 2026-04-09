@@ -267,9 +267,12 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
             throw new ArgumentNullException(nameof(authorization));
         }
 
+        Console.WriteLine($"[OIDC AuthorizationStore] GetApplicationIdAsync called: Id={authorization.Id}, ApplicationId={authorization.ApplicationId}");
+
         // 如果 Application 导航属性已加载，直接返回
         if (authorization.Application != null)
         {
+            Console.WriteLine($"[OIDC AuthorizationStore]   Application already loaded: {authorization.Application.Id}");
             return authorization.Application.Id.ToString();
         }
 
@@ -279,6 +282,7 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
             .Select(x => new { x.ApplicationId })
             .FirstAsync();
 
+        Console.WriteLine($"[OIDC AuthorizationStore]   Queried ApplicationId: {result?.ApplicationId}");
         return result?.ApplicationId.ToString();
     }
 
@@ -292,11 +296,26 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
             throw new ArgumentNullException(nameof(query));
         }
 
+        Console.WriteLine($"[OIDC AuthorizationStore] GetAsync called");
+
         var collection = await Authorizations.Includes(authorization => authorization.Application).ToListAsync();
+
+        Console.WriteLine($"[OIDC AuthorizationStore]   Loaded {collection.Count} authorizations");
 
         var queryableAuthorizations = collection.AsQueryable();
 
-        return query(queryableAuthorizations, state).FirstOrDefault();
+        var result = query(queryableAuthorizations, state).FirstOrDefault();
+
+        if (result != null)
+        {
+            Console.WriteLine($"[OIDC AuthorizationStore]   ✅ Query returned a result");
+        }
+        else
+        {
+            Console.WriteLine($"[OIDC AuthorizationStore]   ❌ Query returned no result!");
+        }
+
+        return result;
     }
 
     /// <inheritdoc/>
@@ -410,6 +429,7 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
             throw new ArgumentNullException(nameof(authorization));
         }
 
+        Console.WriteLine($"[OIDC AuthorizationStore] GetStatusAsync called: Id={authorization.Id}, Status={authorization.Status}");
         return new(authorization.Status);
     }
 
@@ -421,6 +441,7 @@ public class OpenIddictSqlSugarAuthorizationStore : IOpenIddictAuthorizationStor
             throw new ArgumentNullException(nameof(authorization));
         }
 
+        Console.WriteLine($"[OIDC AuthorizationStore] GetSubjectAsync called: Id={authorization.Id}, Subject={authorization.Subject}");
         return new(authorization.Subject);
     }
 

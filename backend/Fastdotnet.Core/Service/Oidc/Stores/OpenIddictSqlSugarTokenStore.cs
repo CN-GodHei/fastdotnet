@@ -94,10 +94,39 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             throw new ArgumentNullException(nameof(token));
         }
 
+        Console.WriteLine($"[OIDC TokenStore] CreateAsync called:");
+        Console.WriteLine($"[OIDC TokenStore]   Type={token.Type}, Status={token.Status}");
+        Console.WriteLine($"[OIDC TokenStore]   ReferenceId={token.ReferenceId}");
+        Console.WriteLine($"[OIDC TokenStore]   ApplicationId={token.ApplicationId}, AuthorizationId={token.AuthorizationId}");
+
         // 初始化 ConcurrencyToken（乐观锁版本号）
         token.ConcurrencyToken = Guid.NewGuid();
 
+        // 【关键修复】如果 ReferenceId 为空，生成一个
+        // OpenIddict 可能会在后续调用 SetReferenceIdAsync 来更新这个值
+        if (string.IsNullOrEmpty(token.ReferenceId))
+        {
+            Console.WriteLine($"[OIDC TokenStore]   ⚠️ ReferenceId is empty, generating one...");
+            // 生成一个 Base64URL 编码的随机字符串作为 ReferenceId
+            var bytes = new byte[32];
+            using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(bytes);
+            }
+            token.ReferenceId = Convert.ToBase64String(bytes)
+                .Replace("+", "-")
+                .Replace("/", "_")
+                .TrimEnd('=');
+            Console.WriteLine($"[OIDC TokenStore]   Generated ReferenceId: {token.ReferenceId}");
+        }
+        else
+        {
+            Console.WriteLine($"[OIDC TokenStore]   Using existing ReferenceId: {token.ReferenceId}");
+        }
+
         await Context.Insertable(token).ExecuteCommandAsync();
+
+        Console.WriteLine($"[OIDC TokenStore]   ✅ Token created successfully with ReferenceId: {token.ReferenceId}");
     }
 
     /// <inheritdoc/>
@@ -223,14 +252,104 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             throw new ArgumentException("The identifier cannot be null or empty.", nameof(identifier));
         }
 
-        // 使用 SqlSugar 的 Includes 方法来加载关联实体
-        var token = await Tokens
-            .Includes(token => token.Application)
-            .Includes(token => token.Authorization)
-            .Where(token => token.ReferenceId == identifier)
-            .FirstAsync(cancellationToken);
+        Console.WriteLine($"[OIDC TokenStore] FindByReferenceIdAsync called with identifier: {identifier}");
+        Console.WriteLine($"[OIDC TokenStore]   DEBUG: identifier length: {identifier?.Length}, first 20 chars: {identifier?.Substring(0, Math.Min(20, identifier.Length))}");
 
-        return token;
+        try
+        {
+            // 调试：先检查数据库中所有 token 的 ReferenceId
+            var dbTokens = await Tokens.Select(t => new { t.Id, t.ReferenceId, t.Type }).ToListAsync(cancellationToken);
+            Console.WriteLine($"[OIDC TokenStore]   DEBUG: Total tokens in DB: {dbTokens.Count}");
+            foreach (var t in dbTokens.Take(10))
+            {
+                Console.WriteLine($"[OIDC TokenStore]   DEBUG: DB Token Id={t.Id}, ReferenceId='{t.ReferenceId}', Type={t.Type}");
+                // 检查是否有匹配的 ReferenceId
+                if (t.ReferenceId == identifier)
+                {
+                    Console.WriteLine($"[OIDC TokenStore]   DEBUG: ✅ Found MATCHING ReferenceId in DB!");
+                }
+            }
+
+            // 使用 SqlSugar 的 Includes 方法来加载关联实体
+            // 首先使用 ReferenceId 查找 token
+            var token = await Tokens
+                .Where(token => token.ReferenceId == identifier)
+                .FirstAsync(cancellationToken);
+
+            if (token != null)
+            {
+                // 单独加载 Application（如果需要）
+                if (token.ApplicationId.HasValue && token.Application == null)
+                {
+                    token.Application = await Applications
+                        .Where(a => a.Id == token.ApplicationId.Value)
+                        .FirstAsync(cancellationToken);
+                }
+
+                // 单独加载 Authorization（如果需要）
+                if (token.AuthorizationId.HasValue && token.Authorization == null)
+                {
+                    token.Authorization = await Authorizations
+                        .Where(a => a.Id == token.AuthorizationId.Value)
+                        .FirstAsync(cancellationToken);
+                }
+
+                Console.WriteLine($"[OIDC TokenStore]   ✅ Found token: Id={token.Id}, Type={token.Type}, Status={token.Status}");
+                Console.WriteLine($"[OIDC TokenStore]   ApplicationId={token.ApplicationId}, AuthorizationId={token.AuthorizationId}");
+                Console.WriteLine($"[OIDC TokenStore]   CreationDate={token.CreationDate}, ExpirationDate={token.ExpirationDate}");
+                Console.WriteLine($"[OIDC TokenStore]   RedemptionDate={token.RedemptionDate}, ReferenceId={token.ReferenceId}");
+
+                // 调试：验证 Authorization 状态
+                if (token.Authorization != null)
+                {
+                    Console.WriteLine($"[OIDC TokenStore]   Authorization Status={token.Authorization.Status}, Type={token.Authorization.Type}");
+                    Console.WriteLine($"[OIDC TokenStore]   Authorization Subject={token.Authorization.Subject}, ApplicationId={token.Authorization.ApplicationId}");
+                }
+                else
+                {
+                    Console.WriteLine($"[OIDC TokenStore]   ⚠️ Authorization is NULL!");
+                }
+
+                // 调试：检查 Token 是否过期
+                if (token.ExpirationDate.HasValue && token.ExpirationDate.Value < DateTime.UtcNow)
+                {
+                    Console.WriteLine($"[OIDC TokenStore]   ⚠️ Token is EXPIRED!");
+                }
+
+                // 调试：检查 Token 是否已被使用
+                if (token.RedemptionDate.HasValue)
+                {
+                    Console.WriteLine($"[OIDC TokenStore]   ⚠️ Token has already been redeemed!");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"[OIDC TokenStore]   ❌ Token NOT FOUND! Searching with ReferenceId: {identifier}");
+                // 调试：尝试查找所有包含此 ReferenceId 前缀的 token
+                var allTokens = await Tokens
+                    .Where(t => t.ReferenceId != null && t.ReferenceId.Contains(identifier.Substring(0, Math.Min(10, identifier.Length))))
+                    .ToListAsync(cancellationToken);
+                Console.WriteLine($"[OIDC TokenStore]   Debug: Found {allTokens.Count} tokens with similar ReferenceId prefix");
+                foreach (var t in allTokens.Take(5))
+                {
+                    Console.WriteLine($"[OIDC TokenStore]   Debug token: ReferenceId={t.ReferenceId}, Status={t.Status}, Type={t.Type}");
+                }
+
+                // 调试：查找所有 ReferenceId 为空的 token
+                var emptyRefTokens = await Tokens.Where(t => t.ReferenceId == null || t.ReferenceId == "").ToListAsync(cancellationToken);
+                if (emptyRefTokens.Any())
+                {
+                    Console.WriteLine($"[OIDC TokenStore]   ⚠️ Found {emptyRefTokens.Count} tokens with empty ReferenceId!");
+                }
+            }
+
+            return token;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[OIDC TokenStore]   ❌ Error finding token: {ex.Message}");
+            throw;
+        }
     }
 
     /// <inheritdoc/>
@@ -264,6 +383,8 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             throw new ArgumentNullException(nameof(token));
         }
 
+        Console.WriteLine($"[OIDC TokenStore] GetApplicationIdAsync called: ApplicationId={token.ApplicationId}");
+
         if (token.Application is null)
         {
 
@@ -277,9 +398,11 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
 
         if (token.Application is null)
         {
+            Console.WriteLine($"[OIDC TokenStore]   Application is NULL!");
             return null;
         }
 
+        Console.WriteLine($"[OIDC TokenStore]   Returning ApplicationId: {token.Application.Id}");
         return token.Application.Id.ToString();
     }
 
@@ -293,11 +416,44 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             throw new ArgumentNullException(nameof(query));
         }
 
-        var tokens = await Tokens.Includes(token => token.Application)
-                                 .Includes(token => token.Authorization)
-                                 .ToListAsync(cancellationToken);
+        Console.WriteLine($"[OIDC TokenStore] GetAsync called, loading tokens...");
 
-        return query(tokens.AsQueryable(), state).FirstOrDefault();
+        try
+        {
+            // 先检查数据库中有多少 token
+            var totalCount = await Tokens.CountAsync(cancellationToken);
+            Console.WriteLine($"[OIDC TokenStore]   Total tokens in DB: {totalCount}");
+
+            var tokens = await Tokens.Includes(token => token.Application)
+                                     .Includes(token => token.Authorization)
+                                     .ToListAsync(cancellationToken);
+
+            Console.WriteLine($"[OIDC TokenStore]   Loaded {tokens.Count} tokens");
+
+            // 打印所有 token 的 ReferenceId（调试用）
+            foreach (var t in tokens.Where(t => t.ReferenceId != null).Take(5))
+            {
+                Console.WriteLine($"[OIDC TokenStore]   Token: ReferenceId={t.ReferenceId}, Status={t.Status}, Type={t.Type}");
+            }
+
+            var result = query(tokens.AsQueryable(), state).FirstOrDefault();
+            
+            if (result != null)
+            {
+                Console.WriteLine($"[OIDC TokenStore]   ✅ Query returned a result");
+            }
+            else
+            {
+                Console.WriteLine($"[OIDC TokenStore]   ❌ Query returned no result!");
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[OIDC TokenStore]   ❌ GetAsync error: {ex.Message}");
+            throw;
+        }
     }
 
     /// <inheritdoc/>
@@ -308,8 +464,11 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             throw new ArgumentNullException(nameof(token), "token 参数不能为 null。");
         }
 
+        Console.WriteLine($"[OIDC TokenStore] GetAuthorizationIdAsync called: AuthorizationId={token.AuthorizationId}");
+
         if (token.Authorization is null)
         {
+            Console.WriteLine($"[OIDC TokenStore]   Loading Authorization from database...");
             var authorization = await Authorizations.Where(a => a.Id == token.AuthorizationId)
                 .FirstAsync(cancellationToken);
 
@@ -318,9 +477,11 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
 
         if (token.Authorization is null)
         {
+            Console.WriteLine($"[OIDC TokenStore]   Authorization is NULL!");
             return null;
         }
 
+        Console.WriteLine($"[OIDC TokenStore]   Returning AuthorizationId: {token.Authorization.Id}");
         return token.Authorization.Id.ToString(); // 直接将 Guid 转换为字符串
     }
 
@@ -332,7 +493,12 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             throw new ArgumentNullException(nameof(token));
         }
 
-        return new(token.CreationDate?.ToUniversalTime());
+        if (token.CreationDate is null)
+        {
+            return new(result: null);
+        }
+
+        return new(DateTime.SpecifyKind(token.CreationDate.Value, DateTimeKind.Utc));
     }
 
     /// <inheritdoc/>
@@ -343,7 +509,12 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             throw new ArgumentNullException(nameof(token));
         }
 
-        return new(token.ExpirationDate?.ToUniversalTime());
+        if (token.ExpirationDate is null)
+        {
+            return new(result: null);
+        }
+
+        return new(DateTime.SpecifyKind(token.ExpirationDate.Value, DateTimeKind.Utc));
     }
 
     /// <inheritdoc/>
@@ -409,7 +580,12 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             throw new ArgumentNullException(nameof(token));
         }
 
-        return new(token.RedemptionDate?.ToUniversalTime());
+        if (token.RedemptionDate is null)
+        {
+            return new(result: null);
+        }
+
+        return new(DateTime.SpecifyKind(token.RedemptionDate.Value, DateTimeKind.Utc));
     }
 
     /// <inheritdoc/>
@@ -420,6 +596,7 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             throw new ArgumentNullException(nameof(token));
         }
 
+        Console.WriteLine($"[OIDC TokenStore] GetReferenceIdAsync called: returning '{token.ReferenceId}'");
         return new(token.ReferenceId);
     }
 
@@ -755,6 +932,7 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             throw new ArgumentNullException(nameof(token));
         }
 
+        Console.WriteLine($"[OIDC TokenStore] SetRedemptionDateAsync called: oldValue={token.RedemptionDate}, newValue={date?.UtcDateTime}");
         token.RedemptionDate = date?.UtcDateTime;
 
         return default;
@@ -768,8 +946,18 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             throw new ArgumentNullException(nameof(token));
         }
 
-        token.ReferenceId = identifier;
-
+        var oldValue = token.ReferenceId;
+        Console.WriteLine($"[OIDC TokenStore] SetReferenceIdAsync called: oldValue='{oldValue}', newValue='{identifier}'");
+        
+        // 【关键修复】始终更新 ReferenceId
+        // OpenIddict 在 Protected Token 模式下会使用 ReferenceId 作为内部标识符
+        // 授权码是经过加密的 ReferenceId，解密后得到这个内部标识符用于查找 token
+        if (!string.IsNullOrEmpty(identifier))
+        {
+            token.ReferenceId = identifier;
+            Console.WriteLine($"[OIDC TokenStore]   Updated ReferenceId to: {identifier}");
+        }
+        
         return default;
     }
 
@@ -781,6 +969,7 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             throw new ArgumentNullException(nameof(token));
         }
 
+        Console.WriteLine($"[OIDC TokenStore] SetStatusAsync called: oldValue={token.Status}, newValue={status}");
         token.Status = status;
 
         return default;
@@ -820,7 +1009,24 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
             throw new ArgumentNullException(nameof(token));
         }
 
+        Console.WriteLine($"[OIDC TokenStore] UpdateAsync called: Id={token.Id}, ReferenceId={token.ReferenceId}, Status={token.Status}");
+        
+        // 调试：打印所有字段的当前值
+        Console.WriteLine($"[OIDC TokenStore]   ApplicationId={token.ApplicationId}, AuthorizationId={token.AuthorizationId}");
+        Console.WriteLine($"[OIDC TokenStore]   Type={token.Type}, Subject={token.Subject}");
+        Console.WriteLine($"[OIDC TokenStore]   CreationDate={token.CreationDate}, ExpirationDate={token.ExpirationDate}");
+        Console.WriteLine($"[OIDC TokenStore]   RedemptionDate={token.RedemptionDate}, ConcurrencyToken={token.ConcurrencyToken}");
+
         await Context.Updateable(token).ExecuteCommandAsync(cancellationToken);
+        
+        Console.WriteLine($"[OIDC TokenStore]   ✅ Token updated successfully");
+        
+        // 验证：重新从数据库读取，确认更新成功
+        var verifyToken = await Tokens.Where(t => t.Id == token.Id).FirstAsync(cancellationToken);
+        if (verifyToken != null)
+        {
+            Console.WriteLine($"[OIDC TokenStore]   Verification: DB ReferenceId={verifyToken.ReferenceId}");
+        }
 
     }
 
