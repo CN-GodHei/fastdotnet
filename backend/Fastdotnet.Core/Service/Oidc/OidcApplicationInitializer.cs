@@ -1,8 +1,9 @@
-using Microsoft.Extensions.Options;
-using OpenIddict.Abstractions;
+using Fastdotnet.Core.Initializers;
 using Fastdotnet.Core.Settings;
 using Microsoft.Extensions.Logging;
-using Fastdotnet.Core.Initializers;
+using Microsoft.Extensions.Options;
+using OpenIddict.Abstractions;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Fastdotnet.Core.Service.Oidc
 {
@@ -49,10 +50,43 @@ namespace Fastdotnet.Core.Service.Oidc
             // 使用 SqlSugar Store，数据库表由 SqlSugar 自动创建
             _logger.LogInformation("OIDC 数据库表将由 SqlSugar 自动管理");
 
+            // 注册 OIDC Scopes（必须在使用前注册）
+            await RegisterScopesAsync();
+
             // 注册 Elsa Workflows 作为 OIDC 客户端
             await RegisterElsaClientAsync(applicationManager);
 
             _logger.LogInformation("OIDC 应用初始化完成");
+        }
+
+        /// <summary>
+        /// 注册 OIDC Scopes（服务端必须预先注册）
+        /// </summary>
+        private async Task RegisterScopesAsync()
+        {
+            var scopeManager = _serviceProvider.GetService<IOpenIddictScopeManager>();
+            if (scopeManager == null)
+            {
+                _logger.LogWarning("IOpenIddictScopeManager 未注册，跳过 Scope 注册");
+                return;
+            }
+
+            var scopes = new[] { "fastdotnet-api" };
+            foreach (var scopeName in scopes)
+            {
+                if (await scopeManager.FindByNameAsync(scopeName) == null)
+                {
+                    var descriptor = new OpenIddictScopeDescriptor
+                    {
+                        Name = scopeName,
+                        DisplayName = scopeName,
+                        Resources = { "fastdotnet-api" }
+                    };
+
+                    await scopeManager.CreateAsync(descriptor);
+                    _logger.LogInformation("已注册 OIDC Scope: {ScopeName}", scopeName);
+                }
+            }
         }
 
         /// <summary>
@@ -74,7 +108,12 @@ namespace Fastdotnet.Core.Service.Oidc
             var descriptor = new OpenIddictApplicationDescriptor
             {
                 ClientId = clientId,
-                ClientSecret = "elsa-secret-key-change-in-production", // 生产环境应使用强密码
+                //ClientSecret = "elsa-secret-key-change-in-production", // 生产环境应使用强密码
+                                                                       // 关键点：设置为 public。不要设置为 confidential（机密型）。
+                ClientType = ClientTypes.Public,
+
+                // 建议设置为 explicit，这样用户登录后会弹出一个“是否允许该应用访问”的确认页面
+                ConsentType = ConsentTypes.Explicit,
                 DisplayName = "Elsa Workflows",
                 Permissions =
                 {
@@ -91,6 +130,7 @@ namespace Fastdotnet.Core.Service.Oidc
                     OpenIddictConstants.Permissions.Prefixes.Scope + OpenIddictConstants.Scopes.Email,
                     OpenIddictConstants.Permissions.Prefixes.Scope + OpenIddictConstants.Scopes.Roles,
                     OpenIddictConstants.Permissions.Prefixes.Scope + "offline_access",
+                    OpenIddictConstants.Permissions.Prefixes.Scope + "fastdotnet-api", // Elsa API 访问权限
 
                     // 允许的端点
                     OpenIddictConstants.Permissions.Endpoints.Authorization,
@@ -105,17 +145,22 @@ namespace Fastdotnet.Core.Service.Oidc
                 },
                 RedirectUris =
                 {
-                    // Elsa Studio 的回调地址（通过反向代理访问）
+                    // Elsa Studio 的回调地址（通过反向代理访问 - 后端 OIDC 模式）
                     new Uri("http://localhost:18889/fdelsa/signin-oidc"),
                     new Uri("https://localhost:18889/fdelsa/signin-oidc"),
-                    // 如果是直接访问（非代理），添加直连地址
-                    // new Uri("http://localhost:5000/signin-oidc"),
-                    // new Uri("https://localhost:5001/signin-oidc"),
+                    
+                    // Elsa Studio Blazor WASM 的回调地址（前端直接 OIDC 模式）
+                    new Uri("http://localhost:5000/authentication/login-callback"),
+                    new Uri("https://localhost:5001/authentication/login-callback"),
                 },
                 PostLogoutRedirectUris =
                 {
                     new Uri("http://localhost:18889/fdelsa/signout-callback-oidc"),
                     new Uri("https://localhost:18889/fdelsa/signout-callback-oidc"),
+                    
+                    // Elsa Studio Blazor WASM 登出回调
+                    new Uri("http://localhost:5000/"),
+                    new Uri("https://localhost:5001/"),
                 }
             };
 

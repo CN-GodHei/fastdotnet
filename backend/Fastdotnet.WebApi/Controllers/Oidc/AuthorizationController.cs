@@ -88,6 +88,20 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
             
             if (!isAuthenticated)
             {
+                // 检查是否是 prompt=none 请求（静默认证）
+                if (request.HasPromptValue(PromptValues.None))
+                {
+                    // 对于 prompt=none，如果用户未登录，必须返回错误而不是重定向到登录页
+                    Console.WriteLine($"[OIDC Authorize] prompt=none but user not authenticated, returning error");
+                    return Forbid(
+                        authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+                        properties: new AuthenticationProperties(new Dictionary<string, string?>
+                        {
+                            [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.LoginRequired,
+                            [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is not logged in."
+                        }));
+                }
+                
                 // 直接重定向到登录页面，并携带 returnUrl
                 var returnUrl = $"/connect/authorize{HttpContext.Request.QueryString}";
                 Console.WriteLine($"[OIDC Authorize] User not authenticated, redirecting to login with returnUrl: {returnUrl}");
@@ -196,6 +210,15 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                 // 创建新的认证票据
                 var claimsPrincipal = result.Principal;
 
+                // 显式设置 Audience 为客户端 ID
+                // 1. 设置 Access Token 的受众为你的 API 标识
+                // 这里的字符串应该对应你在 Elsa 配置中预期的 API 受众
+                //claimsPrincipal.SetAudiences("fastdotnet-api");
+                claimsPrincipal.SetAudiences(new[] { "elsa-workflows", "fastdotnet-api" });
+                // 2. 设置 ID Token 的展示者（可选，增加兼容性）
+                claimsPrincipal.SetPresenters("elsa-workflows");
+                claimsPrincipal.AddClaim(OpenIddictConstants.Claims.Role, "admin");
+                claimsPrincipal.SetCreationDate(DateTimeOffset.UtcNow.AddMinutes(-5));
                 // 设置 Claims Destinations
                 foreach (var claim in claimsPrincipal.Claims)
                 {
@@ -207,7 +230,8 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                     {
                         destinations.Add(Destinations.IdentityToken);
                     }
-                    claim.SetDestinations(destinations);
+                    //claim.SetDestinations(destinations);
+                    claim.SetDestinations(Destinations.AccessToken, Destinations.IdentityToken);
                 }
 
                 Console.WriteLine($"[OIDC Token] Creating tokens for user: {claimsPrincipal.Identity?.Name}");

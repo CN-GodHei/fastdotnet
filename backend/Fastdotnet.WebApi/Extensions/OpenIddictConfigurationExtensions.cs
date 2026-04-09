@@ -20,7 +20,7 @@ public static class OpenIddictConfigurationExtensions
     public static void AddOpenIddictServices(this IServiceCollection services, IConfiguration configuration)
     {
         var oidcSettings = configuration.GetSection("OidcSettings").Get<OidcSettings>() ?? new OidcSettings();
-        
+
         if (!oidcSettings.Enabled)
         {
             return;
@@ -37,36 +37,40 @@ public static class OpenIddictConfigurationExtensions
             })
             .AddServer(options =>
             {
-                // 设置 Token 生命周期
+                // 1. 设置 Token 生命周期
                 options.SetAccessTokenLifetime(TimeSpan.FromMinutes(oidcSettings.AccessTokenLifetime))
                        .SetRefreshTokenLifetime(TimeSpan.FromDays(oidcSettings.RefreshTokenLifetime))
                        .SetIdentityTokenLifetime(TimeSpan.FromMinutes(oidcSettings.IdTokenLifetime));
 
-                // 启用授权端点和令牌端点
+                // 2. 启用端点
                 options.SetAuthorizationEndpointUris("connect/authorize")
                        .SetTokenEndpointUris("connect/token")
                        .SetIntrospectionEndpointUris("connect/introspect")
                        .SetRevocationEndpointUris("connect/revoke");
 
-                // 允许授权码流和刷新令牌流
+                // 3. 允许流
                 options.AllowAuthorizationCodeFlow()
                        .AllowRefreshTokenFlow();
 
-                // 根据配置要求 PKCE
+                // 4. PKCE 要求
                 if (oidcSettings.RequirePkce)
                 {
                     options.RequireProofKeyForCodeExchange();
                 }
 
-                // 注册作用域
+                // 5. 【关键修改】禁用 Access Token 加密
+                // 这会让 Access Token 变成普通的 JWT，Blazor 客户端才能读取里面的 Scopes
+                options.DisableAccessTokenEncryption();
+
+                // 6. 注册作用域
                 options.RegisterScopes(
                     OpenIddictConstants.Scopes.OpenId,
                     OpenIddictConstants.Scopes.Profile,
                     OpenIddictConstants.Scopes.Email,
-                    OpenIddictConstants.Scopes.Roles);
+                    OpenIddictConstants.Scopes.Roles,
+                    "fastdotnet-api");
 
-                // 注册签名和加密证书
-                // 开发环境使用固定证书，避免重启后证书变化导致授权码解密失败
+                // 7. 证书配置
                 var certPath = Path.Combine(AppContext.BaseDirectory, "oidc-dev-cert.pfx");
                 if (File.Exists(certPath))
                 {
@@ -78,18 +82,17 @@ public static class OpenIddictConfigurationExtensions
                 }
                 else
                 {
-                    // 如果证书不存在，回退到动态生成的证书
                     options.AddDevelopmentEncryptionCertificate()
                            .AddDevelopmentSigningCertificate();
                     Console.WriteLine("[OIDC] ❌ WARNING: Fixed certificate not found, using dynamic development certificate");
                 }
 
-                // 注册 ASP.NET Core 宿主并配置选项
+                // 8. 注册 ASP.NET Core 宿主
                 options.UseAspNetCore()
                        .EnableStatusCodePagesIntegration()
                        .EnableAuthorizationEndpointPassthrough()
                        .EnableTokenEndpointPassthrough()
-                       .DisableTransportSecurityRequirement(); // 开发环境禁用 HTTPS 要求
+                       .DisableTransportSecurityRequirement();
             })
             .AddValidation(options =>
             {
@@ -113,13 +116,13 @@ public static class OpenIddictConfigurationExtensions
             options.Cookie.Name = ".Fastdotnet.OIDC";
             options.ExpireTimeSpan = TimeSpan.FromHours(8);
             options.SlidingExpiration = true;
-            
+
             // 开发环境：使用简单的登录页面
             // 生产环境：可以重定向到 Vue 前端登录页
             options.LoginPath = "/oidc/login";
             options.LogoutPath = "/oidc/logout";
             options.AccessDeniedPath = "/oidc/access-denied";
-            
+
             // 确保 Challenge 时正确重定向到登录页
             options.Events.OnRedirectToLogin = context =>
             {
@@ -146,9 +149,9 @@ public static class OpenIddictConfigurationExtensions
         })
         .AddJwtBearer(options =>
         {
-            var jwtSettings = configuration.GetSection("JwtSettings").Get<Fastdotnet.Core.Settings.JwtSettings>() 
+            var jwtSettings = configuration.GetSection("JwtSettings").Get<Fastdotnet.Core.Settings.JwtSettings>()
                 ?? throw new InvalidOperationException("JwtSettings not configured.");
-            
+
             options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
             {
                 ValidateIssuer = true,
@@ -159,26 +162,26 @@ public static class OpenIddictConfigurationExtensions
                 ValidAudience = jwtSettings.Audience,
                 IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
                     System.Text.Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-                
+
                 // 配置 Claim 类型映射，确保 SignalR 能正确识别用户 ID
                 NameClaimType = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.NameId,
                 RoleClaimType = System.Security.Claims.ClaimTypes.Role
             };
-            
+
             // 处理 SignalR 的 Token 传递（从 Query String 读取）
             options.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents
             {
                 OnMessageReceived = context =>
                 {
                     var accessToken = context.Request.Query["access_token"];
-                    
+
                     // 如果请求路径是 SignalR Hub，则从 Query String 读取 Token
                     var path = context.HttpContext.Request.Path;
                     if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/universalhub"))
                     {
                         context.Token = accessToken;
                     }
-                    
+
                     return System.Threading.Tasks.Task.CompletedTask;
                 }
             };
