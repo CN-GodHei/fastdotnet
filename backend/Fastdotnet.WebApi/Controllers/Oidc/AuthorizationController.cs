@@ -110,6 +110,53 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
             
             Console.WriteLine($"[OIDC Authorize] User authenticated, proceeding with authorization");
 
+            // 检查是否需要用户同意 (Consent)
+            // 这里简化处理：如果应用要求 Explicit 同意且未携带同意标识，则显示同意页
+            var consentType = await applicationManager.GetConsentTypeAsync(application);
+            
+            if (consentType == OpenIddict.Abstractions.OpenIddictConstants.ConsentTypes.Explicit && !request.HasPromptValue(OpenIddict.Abstractions.OpenIddictConstants.PromptValues.None))
+            {
+                // 构造同意页 HTML
+                var appName = await applicationManager.GetDisplayNameAsync(application) ?? request.ClientId;
+                var scopes = string.Join(", ", request.GetScopes());
+                var consentHtml = $@"<!DOCTYPE html>
+<html lang=""zh-CN"">
+<head>
+    <meta charset=""UTF-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>授权确认 - Fastdotnet OIDC</title>
+    <style>
+        :root {{ --primary: #4f46e5; --bg: #f3f4f6; }}
+        body {{ display: flex; justify-content: center; align-items: center; min-height: 100vh; background: var(--bg); font-family: sans-serif; }}
+        .card {{ background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 450px; width: 100%; text-align: center; }}
+        h2 {{ color: #111827; margin-bottom: 1rem; }}
+        p {{ color: #4b5563; margin-bottom: 1.5rem; line-height: 1.6; }}
+        .scopes {{ background: #f9fafb; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; text-align: left; font-size: 0.9rem; color: #374151; }}
+        .actions {{ display: flex; gap: 1rem; }}
+        button {{ flex: 1; padding: 0.75rem; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }}
+        .btn-allow {{ background: var(--primary); color: white; }}
+        .btn-allow:hover {{ background: #4338ca; }}
+        .btn-deny {{ background: #e5e7eb; color: #374151; }}
+        .btn-deny:hover {{ background: #d1d5db; }}
+    </style>
+</head>
+<body>
+    <div class=""card"">
+        <h2>授权请求</h2>
+        <p><strong>{System.Net.WebUtility.HtmlEncode(appName)}</strong> 申请访问您的以下信息：</p>
+        <div class=""scopes"">{System.Net.WebUtility.HtmlEncode(scopes)}</div>
+        <form method=""post"" action=""/connect/authorize{HttpContext.Request.QueryString}"">
+            <div class=""actions"">
+                <button type=""submit"" name=""button"" value=""deny"" class=""btn-deny"">拒绝</button>
+                <button type=""submit"" name=""button"" value=""allow"" class=""btn-allow"">允许</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>";
+                return Content(consentHtml, "text/html; charset=utf-8");
+            }
+
             // 创建认证票据
             var claims = new List<Claim>
             {
