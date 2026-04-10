@@ -102,11 +102,14 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
         // 初始化 ConcurrencyToken（乐观锁版本号）
         token.ConcurrencyToken = Guid.NewGuid();
 
-        // 【关键修复】如果 ReferenceId 为空，生成一个
-        // OpenIddict 可能会在后续调用 SetReferenceIdAsync 来更新这个值
-        if (string.IsNullOrEmpty(token.ReferenceId))
+        // 【关键修复】只为 authorization_code 和 refresh_token 生成 ReferenceId
+        // access_token 和 id_token 应该是自包含的 JWT，不需要 ReferenceId
+        var isAuthorizationCode = token.Type == "urn:openiddict:params:oauth:token-type:authorization_code";
+        var isRefreshToken = token.Type == "urn:openiddict:params:oauth:token-type:refresh_token";
+        
+        if ((isAuthorizationCode || isRefreshToken) && string.IsNullOrEmpty(token.ReferenceId))
         {
-            Console.WriteLine($"[OIDC TokenStore]   ⚠️ ReferenceId is empty, generating one...");
+            Console.WriteLine($"[OIDC TokenStore]   ⚠️ ReferenceId is empty for {token.Type}, generating one...");
             // 生成一个 Base64URL 编码的随机字符串作为 ReferenceId
             var bytes = new byte[32];
             using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
@@ -119,9 +122,13 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
                 .TrimEnd('=');
             Console.WriteLine($"[OIDC TokenStore]   Generated ReferenceId: {token.ReferenceId}");
         }
-        else
+        else if (!string.IsNullOrEmpty(token.ReferenceId))
         {
             Console.WriteLine($"[OIDC TokenStore]   Using existing ReferenceId: {token.ReferenceId}");
+        }
+        else
+        {
+            Console.WriteLine($"[OIDC TokenStore]   ℹ️ No ReferenceId needed for {token.Type} (self-contained JWT)");
         }
 
         await Context.Insertable(token).ExecuteCommandAsync();
