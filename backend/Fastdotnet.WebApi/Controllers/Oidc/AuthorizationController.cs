@@ -11,6 +11,7 @@ using Fastdotnet.Service.IService.Sys;
 using Microsoft.Extensions.Options;
 using Fastdotnet.Core.Settings;
 using Fastdotnet.Core.Dtos.Auth;
+using OpenIddict.Validation.AspNetCore;
 
 namespace Fastdotnet.WebApi.Controllers.Oidc
 {
@@ -348,6 +349,40 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
             }
 
             throw new InvalidOperationException($"The specified grant type '{request.GrantType}' is not supported.");
+        }
+
+        /// <summary>
+        /// OIDC 用户信息端点 (Standard UserInfo Endpoint)
+        /// GET /connect/userinfo
+        /// </summary>
+        [HttpGet("~/connect/userinfo")]
+        [HttpPost("~/connect/userinfo")]
+        [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+        [Produces("application/json")]
+        public async Task<IActionResult> Userinfo()
+        {
+            var principal = await HttpContext.AuthenticateAsync(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+            
+            // 获取当前登录的用户名或 ID
+            var username = principal.Principal?.Identity?.Name;
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized();
+            }
+
+            // 这里可以根据 username 从数据库查询更详细的用户信息
+            // 示例：返回符合 OIDC 标准的 Claims
+            var claims = new Dictionary<string, object>
+            {
+                // sub (Subject) 是必须的，且必须与 ID Token 中的 sub 一致
+                [OpenIddictConstants.Claims.Subject] = username,
+                [OpenIddictConstants.Claims.Name] = username,
+                // 如果有邮箱 Scope，可以添加：
+                // [OpenIddictConstants.Claims.Email] = user.Email,
+                // [OpenIddictConstants.Claims.EmailVerified] = true
+            };
+
+            return Ok(claims);
         }
 
         /// <summary>

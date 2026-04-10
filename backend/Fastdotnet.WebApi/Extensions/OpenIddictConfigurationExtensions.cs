@@ -46,11 +46,13 @@ public static class OpenIddictConfigurationExtensions
                 options.SetAuthorizationEndpointUris("connect/authorize")
                        .SetTokenEndpointUris("connect/token")
                        .SetIntrospectionEndpointUris("connect/introspect")
-                       .SetRevocationEndpointUris("connect/revoke");
+                       .SetRevocationEndpointUris("connect/revoke")
+                       .SetUserInfoEndpointUris("connect/userinfo"); // 显式声明 UserInfo 端点
 
                 // 3. 允许流
                 options.AllowAuthorizationCodeFlow()
-                       .AllowRefreshTokenFlow();
+                       .AllowRefreshTokenFlow()
+                       .AllowClientCredentialsFlow(); // 允许机器对机器的 API 调用
 
                 // 4. PKCE 要求
                 if (oidcSettings.RequirePkce)
