@@ -23,6 +23,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
     [ApiController]
     [Route("connect")]
     [SkipAntiReplayAttribute]
+    [SkipGlobalResult]
     public class AuthorizationController : ControllerBase
     {
         private readonly IServiceProvider _serviceProvider;
@@ -114,9 +115,14 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
             // 这里简化处理：如果应用要求 Explicit 同意且未携带同意标识，则显示同意页
             var consentType = await applicationManager.GetConsentTypeAsync(application);
             
-            if (consentType == OpenIddict.Abstractions.OpenIddictConstants.ConsentTypes.Explicit && !request.HasPromptValue(OpenIddict.Abstractions.OpenIddictConstants.PromptValues.None))
+            // 检查是否已经用户同意过（通过 URL 参数标记）
+            var consentGiven = HttpContext.Request.Query["consent_given"].ToString() == "true";
+            
+            if (consentType == OpenIddict.Abstractions.OpenIddictConstants.ConsentTypes.Explicit && 
+                !request.HasPromptValue(OpenIddict.Abstractions.OpenIddictConstants.PromptValues.None) &&
+                !consentGiven)
             {
-                // 构造同意页 HTML
+                // 构造同意页 HTML，使用 JavaScript 处理
                 var appName = await applicationManager.GetDisplayNameAsync(application) ?? request.ClientId;
                 var scopes = string.Join(", ", request.GetScopes());
                 var consentHtml = $@"<!DOCTYPE html>
@@ -145,13 +151,36 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
         <h2>授权请求</h2>
         <p><strong>{System.Net.WebUtility.HtmlEncode(appName)}</strong> 申请访问您的以下信息：</p>
         <div class=""scopes"">{System.Net.WebUtility.HtmlEncode(scopes)}</div>
-        <form method=""post"" action=""/connect/authorize{HttpContext.Request.QueryString}"">
-            <div class=""actions"">
-                <button type=""submit"" name=""button"" value=""deny"" class=""btn-deny"">拒绝</button>
-                <button type=""submit"" name=""button"" value=""allow"" class=""btn-allow"">允许</button>
-            </div>
-        </form>
+        <div class=""actions"">
+            <button onclick=""handleDeny()"" class=""btn-deny"">拒绝</button>
+            <button onclick=""handleAllow()"" class=""btn-allow"">允许</button>
+        </div>
     </div>
+    <script>
+        function handleAllow() {{
+            // 用户允许，添加 consent_given 参数并重新加载
+            const url = new URL(window.location.href);
+            url.searchParams.set('consent_given', 'true');
+            window.location.href = url.toString();
+        }}
+        
+        function handleDeny() {{
+            // 用户拒绝，重定向到回调地址
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectUri = urlParams.get('redirect_uri');
+            const state = urlParams.get('state');
+            
+            if (redirectUri) {{
+                let errorUrl = redirectUri + '?error=access_denied&error_description=User+denied+the+consent';
+                if (state) {{
+                    errorUrl += '&state=' + encodeURIComponent(state);
+                }}
+                window.location.href = errorUrl;
+            }} else {{
+                alert('授权请求无效');
+            }}
+        }}
+    </script>
 </body>
 </html>";
                 return Content(consentHtml, "text/html; charset=utf-8");

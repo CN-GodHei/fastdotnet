@@ -15,6 +15,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc;
 [Route("oidc")]
 [Authorize] // 必须先登录
 [SkipAntiReplayAttribute]
+[SkipGlobalResult]
 public class ConsentController : Controller
 {
     private readonly IOpenIddictApplicationManager _applicationManager;
