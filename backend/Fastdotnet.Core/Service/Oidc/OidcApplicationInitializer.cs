@@ -97,9 +97,37 @@ namespace Fastdotnet.Core.Service.Oidc
             const string clientId = "elsa-workflows";
             
             // 检查是否已存在
-            if (await applicationManager.FindByClientIdAsync(clientId) != null)
+            var existingApp = await applicationManager.FindByClientIdAsync(clientId);
+            if (existingApp != null)
             {
-                _logger.LogInformation("Elsa OIDC 客户端已存在，跳过注册");
+                _logger.LogInformation("Elsa OIDC 客户端已存在，更新配置...");
+                
+                // 获取现有的 descriptor 并更新 RedirectUris
+                var updateDescriptor = new OpenIddictApplicationDescriptor();
+                await applicationManager.PopulateAsync(updateDescriptor, existingApp);
+                
+                // 清除旧的 RedirectUris
+                updateDescriptor.RedirectUris.Clear();
+                updateDescriptor.PostLogoutRedirectUris.Clear();
+                
+                // 添加新的 RedirectUris
+                updateDescriptor.RedirectUris.Add(new Uri("http://localhost:18889/fdelsa/signin-oidc"));
+                updateDescriptor.RedirectUris.Add(new Uri("https://localhost:18889/fdelsa/signin-oidc"));
+                updateDescriptor.RedirectUris.Add(new Uri("http://localhost:5000/authentication/login-callback"));
+                updateDescriptor.RedirectUris.Add(new Uri("https://localhost:5000/authentication/login-callback"));
+                updateDescriptor.RedirectUris.Add(new Uri("http://localhost:5001/authentication/login-callback"));
+                updateDescriptor.RedirectUris.Add(new Uri("https://localhost:5001/authentication/login-callback"));
+                
+                // 添加新的 PostLogoutRedirectUris
+                updateDescriptor.PostLogoutRedirectUris.Add(new Uri("http://localhost:18889/fdelsa/signout-callback-oidc"));
+                updateDescriptor.PostLogoutRedirectUris.Add(new Uri("https://localhost:18889/fdelsa/signout-callback-oidc"));
+                updateDescriptor.PostLogoutRedirectUris.Add(new Uri("http://localhost:5000/"));
+                updateDescriptor.PostLogoutRedirectUris.Add(new Uri("https://localhost:5000/"));
+                updateDescriptor.PostLogoutRedirectUris.Add(new Uri("http://localhost:5001/"));
+                updateDescriptor.PostLogoutRedirectUris.Add(new Uri("https://localhost:5001/"));
+                
+                await applicationManager.UpdateAsync(existingApp, updateDescriptor);
+                _logger.LogInformation("Elsa OIDC 客户端配置已更新");
                 return;
             }
 
@@ -151,6 +179,10 @@ namespace Fastdotnet.Core.Service.Oidc
                     
                     // Elsa Studio Blazor WASM 的回调地址（前端直接 OIDC 模式）
                     new Uri("http://localhost:5000/authentication/login-callback"),
+                    new Uri("https://localhost:5000/authentication/login-callback"),
+                    
+                    // OIDC 测试项目的回调地址
+                    new Uri("http://localhost:5001/authentication/login-callback"),
                     new Uri("https://localhost:5001/authentication/login-callback"),
                 },
                 PostLogoutRedirectUris =
