@@ -5,10 +5,12 @@ using Fastdotnet.Core.Service.Oidc;
 using Fastdotnet.Core.Service.Oidc.Stores;
 using Fastdotnet.Core.Service.Sys;
 using Fastdotnet.Core.Settings;
+using Fastdotnet.Service.IService;
 using Fastdotnet.Service.IService.App;
 using Fastdotnet.Service.IService.Sys;
 using Fastdotnet.Service.Service.Admin;
 using Fastdotnet.Service.Service.App;
+using Fastdotnet.Service.Service;
 using Fastdotnet.Service.Service.Sys;
 using Microsoft.AspNetCore.DataProtection;
 using System.IdentityModel.Tokens.Jwt;
@@ -157,6 +159,7 @@ builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProv
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<ICodeGenConfigService, CodeGenConfigService>();
+builder.Services.AddScoped<IOidcAppService, OidcAppService>();
 
 // 扫描并注册所有 IStartupTask 实现
 builder.Services.Scan(scan => scan

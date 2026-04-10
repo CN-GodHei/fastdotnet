@@ -3,6 +3,7 @@
 // API 更新时间：
 // API 唯一标识：
 import * as Auth from './Auth';
+import * as Authorization from './Authorization';
 import * as Captcha from './Captcha';
 import * as CodeGen from './CodeGen';
 import * as CodeGenConfig from './CodeGenConfig';
@@ -24,6 +25,8 @@ import * as FdRatelimitRule from './FdRatelimitRule';
 import * as FdRole from './FdRole';
 import * as FdSystemInfoConfig from './FdSystemInfoConfig';
 import * as Health from './Health';
+import * as OidcApp from './OidcApp';
+import * as OidcLogin from './OidcLogin';
 import * as Plugin from './Plugin';
 import * as PluginConfiguration from './PluginConfiguration';
 import * as Storage from './Storage';
@@ -31,6 +34,7 @@ import * as System from './System';
 import * as TestScope from './TestScope';
 export default {
 	Auth,
+	Authorization,
 	Captcha,
 	CodeGen,
 	CodeGenConfig,
@@ -52,6 +56,8 @@ export default {
 	FdRole,
 	FdSystemInfoConfig,
 	Health,
+	OidcApp,
+	OidcLogin,
 	Plugin,
 	PluginConfiguration,
 	Storage,
