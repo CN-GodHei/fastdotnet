@@ -1,26 +1,34 @@
-
 namespace Fastdotnet.Core.Middleware
 {
     public class PluginStaticFileProviderRegistry
     {
         private readonly ConcurrentDictionary<string, IFileProvider> _providers = new ConcurrentDictionary<string, IFileProvider>(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> _spaFallbackPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        public void Register(string requestPath, string physicalPath)
+        /// <summary>
+        /// 注册静态文件路径
+        /// </summary>
+        /// <param name="requestPath">请求路径前缀，如 /plugins/myplugin/admin</param>
+        /// <param name="physicalPath">物理路径</param>
+        /// <param name="enableSpaFallback">是否启用 SPA 回退（文件不存在时返回 index.html）</param>
+        public void Register(string requestPath, string physicalPath, bool enableSpaFallback = false)
         {
             if (Directory.Exists(physicalPath))
             {
                 var fileProvider = new PhysicalFileProvider(physicalPath);
                 _providers[requestPath] = fileProvider;
-                //Console.WriteLine($"Plugin static files registered. Request path: {requestPath}, Physical path: {physicalPath}");
+                
+                if (enableSpaFallback)
+                {
+                    _spaFallbackPaths.Add(requestPath.ToLowerInvariant());
+                }
             }
         }
 
         public void Unregister(string requestPath)
         {
-            if (_providers.TryRemove(requestPath, out _))
-            {
-                //Console.WriteLine($"Plugin static files unregistered. Request path: {requestPath}");
-            }
+            _providers.TryRemove(requestPath, out _);
+            _spaFallbackPaths.Remove(requestPath.ToLowerInvariant());
         }
 
         public IFileProvider? GetProvider(string requestPath)
@@ -45,6 +53,14 @@ namespace Fastdotnet.Core.Middleware
                 .Where(prefix => requestPath.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
                 .OrderByDescending(prefix => prefix.Length)
                 .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 检查指定路径是否启用了 SPA 回退
+        /// </summary>
+        public bool IsSpaFallbackEnabled(string requestPath)
+        {
+            return _spaFallbackPaths.Contains(requestPath.ToLowerInvariant());
         }
     }
 }
