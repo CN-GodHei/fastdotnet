@@ -23,15 +23,31 @@ public class RequestIdMiddleware
         // 设置到上下文
         RequestIdManager.CurrentRequestId = requestId;
 
-        // 回写 RequestID 到响应头
-        context.Response.Headers[REQUEST_ID_HEADER] = requestId;
+        // 立即设置 RequestId 到响应头（在响应开始前）
+        try
+        {
+            context.Response.Headers[REQUEST_ID_HEADER] = requestId;
+        }
+        catch (ObjectDisposedException)
+        {
+            // 如果响应已经 disposed，忽略此错误
+        }
 
+        // 在响应开始时设置时间戳
         context.Response.OnStarting(() =>
         {
-            var timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
-            context.Response.Headers[SERVER_TIMESTAMP_HEADER] = timestamp;
+            try
+            {
+                var timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
+                context.Response.Headers[SERVER_TIMESTAMP_HEADER] = timestamp;
+            }
+            catch (InvalidOperationException)
+            {
+                // 如果响应已经开始发送，Headers 变为只读，忽略此错误
+            }
             return Task.CompletedTask;
         });
+        
         try
         {
             await _next(context);
