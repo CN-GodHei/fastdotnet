@@ -158,34 +158,34 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                     });
 
                 // 调试：输出 Cookie 信息
-                Console.WriteLine($"[OIDC Login] User '{user.Username}' logged in successfully.");
-                Console.WriteLine($"[OIDC Login] SignInAsync completed.");
+                //Console..WriteLine($"[OIDC Login] User '{user.Username}' logged in successfully.");
+                //Console..WriteLine($"[OIDC Login] SignInAsync completed.");
                 
                 // 检查响应头中是否有 Set-Cookie
                 var setCookieHeader = HttpContext.Response.Headers["Set-Cookie"];
                 if (setCookieHeader.Count > 0)
                 {
-                    Console.WriteLine($"[OIDC Login] Set-Cookie header present: {setCookieHeader.Count} cookie(s)");
+                    //Console..WriteLine($"[OIDC Login] Set-Cookie header present: {setCookieHeader.Count} cookie(s)");
                     foreach (var cookie in setCookieHeader)
                     {
                         // 只显示 Cookie 名称，不显示完整值
                         var cookieName = cookie?.Split('=')[0] ?? "unknown";
-                        Console.WriteLine($"[OIDC Login]   - Cookie: {cookieName}");
+                        //Console..WriteLine($"[OIDC Login]   - Cookie: {cookieName}");
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"[OIDC Login] WARNING: No Set-Cookie header in response!");
+                    //Console..WriteLine($"[OIDC Login] WARNING: No Set-Cookie header in response!");
                 }
 
                 // 重定向回 OIDC 授权端点
                 if (string.IsNullOrEmpty(returnUrl))
                 {
-                    Console.WriteLine("[OIDC Login] WARNING: returnUrl is empty!");
+                    //Console..WriteLine("[OIDC Login] WARNING: returnUrl is empty!");
                     return Redirect("/");
                 }
                 
-                Console.WriteLine($"[OIDC Login] Redirecting to: {returnUrl}");
+                //Console..WriteLine($"[OIDC Login] Redirecting to: {returnUrl}");
                 return Redirect(returnUrl);
             }
             catch (Exception ex)

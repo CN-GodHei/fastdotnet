@@ -80,13 +80,13 @@ public static class OpenIddictConfigurationExtensions
                         X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
                     options.AddEncryptionCertificate(certificate)
                            .AddSigningCertificate(certificate);
-                    Console.WriteLine($"[OIDC] ✅ Using fixed development certificate from: {certPath}");
+                    //Console..WriteLine($"[OIDC] ✅ Using fixed development certificate from: {certPath}");
                 }
                 else
                 {
                     options.AddDevelopmentEncryptionCertificate()
                            .AddDevelopmentSigningCertificate();
-                    Console.WriteLine("[OIDC] ❌ WARNING: Fixed certificate not found, using dynamic development certificate");
+                    //Console..WriteLine("[OIDC] ❌ WARNING: Fixed certificate not found, using dynamic development certificate");
                 }
 
                 // 8. 注册 ASP.NET Core 宿主

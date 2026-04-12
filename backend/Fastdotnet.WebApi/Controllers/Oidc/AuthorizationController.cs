@@ -79,14 +79,14 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                 throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
 
             // 调试：输出当前请求的认证信息
-            Console.WriteLine($"[OIDC Authorize] Request URL: {HttpContext.Request.Path}{HttpContext.Request.QueryString}");
-            Console.WriteLine($"[OIDC Authorize] User.Identity?.IsAuthenticated (default): {User.Identity?.IsAuthenticated}");
+            //Console.WriteLine($"[OIDC Authorize] Request URL: {HttpContext.Request.Path}{HttpContext.Request.QueryString}");
+            //Console.WriteLine($"[OIDC Authorize] User.Identity?.IsAuthenticated (default): {User.Identity?.IsAuthenticated}");
             
             // 明确检查 Cookie 认证状态（使用 "Identity.Application" 方案）
             var cookieAuthResult = await HttpContext.AuthenticateAsync("Identity.Application");
             var isAuthenticated = cookieAuthResult.Succeeded && cookieAuthResult.Principal != null;
             
-            Console.WriteLine($"[OIDC Authorize] Cookie Auth Result - Succeeded: {cookieAuthResult.Succeeded}, IsAuthenticated: {isAuthenticated}");
+            //Console.WriteLine($"[OIDC Authorize] Cookie Auth Result - Succeeded: {cookieAuthResult.Succeeded}, IsAuthenticated: {isAuthenticated}");
             
             if (!isAuthenticated)
             {
@@ -94,7 +94,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                 if (request.HasPromptValue(PromptValues.None))
                 {
                     // 对于 prompt=none，如果用户未登录，必须返回错误而不是重定向到登录页
-                    Console.WriteLine($"[OIDC Authorize] prompt=none but user not authenticated, returning error");
+                    //Console.WriteLine($"[OIDC Authorize] prompt=none but user not authenticated, returning error");
                     return Forbid(
                         authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
                         properties: new AuthenticationProperties(new Dictionary<string, string?>
@@ -106,11 +106,11 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                 
                 // 直接重定向到登录页面，并携带 returnUrl
                 var returnUrl = $"/connect/authorize{HttpContext.Request.QueryString}";
-                Console.WriteLine($"[OIDC Authorize] User not authenticated, redirecting to login with returnUrl: {returnUrl}");
+                //Console.WriteLine($"[OIDC Authorize] User not authenticated, redirecting to login with returnUrl: {returnUrl}");
                 return Redirect($"/oidc/login?returnUrl={Uri.EscapeDataString(returnUrl)}");
             }
             
-            Console.WriteLine($"[OIDC Authorize] User authenticated, proceeding with authorization");
+            //Console.WriteLine($"[OIDC Authorize] User authenticated, proceeding with authorization");
 
             // 检查是否需要用户同意 (Consent)
             // 这里简化处理：如果应用要求 Explicit 同意且未携带同意标识，则显示同意页
@@ -213,7 +213,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                 claims.Add(new Claim(Claims.Email, email));
             }
 
-            Console.WriteLine($"[OIDC Authorize] Creating authentication ticket for user: {claims.First(c => c.Type == Claims.Name).Value}");
+            //Console.WriteLine($"[OIDC Authorize] Creating authentication ticket for user: {claims.First(c => c.Type == Claims.Name).Value}");
 
             var claimsIdentity = new ClaimsIdentity(claims, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
@@ -249,20 +249,20 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Exchange()
         {
-            Console.WriteLine($"[OIDC Token] ===== REQUEST RECEIVED =====");
-            Console.WriteLine($"[OIDC Token] Method: {HttpContext.Request.Method}");
-            Console.WriteLine($"[OIDC Token] Path: {HttpContext.Request.Path}");
+            //Console.WriteLine($"[OIDC Token] ===== REQUEST RECEIVED =====");
+            //Console.WriteLine($"[OIDC Token] Method: {HttpContext.Request.Method}");
+            //Console.WriteLine($"[OIDC Token] Path: {HttpContext.Request.Path}");
             
             var request = HttpContext.GetOpenIddictServerRequest() ??
                 throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
-            Console.WriteLine($"[OIDC Token] Grant Type: {request.GrantType}");
-            Console.WriteLine($"[OIDC Token] Client ID: {request.ClientId}");
-            Console.WriteLine($"[OIDC Token] Redirect URI: {request.RedirectUri}");
+            //Console.WriteLine($"[OIDC Token] Grant Type: {request.GrantType}");
+            //Console.WriteLine($"[OIDC Token] Client ID: {request.ClientId}");
+            //Console.WriteLine($"[OIDC Token] Redirect URI: {request.RedirectUri}");
             if (request.IsAuthorizationCodeGrantType())
             {
-                Console.WriteLine($"[OIDC Token] Code: [REDACTED]");
-                Console.WriteLine($"[OIDC Token] Code Verifier: [REDACTED]");
+                //Console.WriteLine($"[OIDC Token] Code: [REDACTED]");
+                //Console.WriteLine($"[OIDC Token] Code Verifier: [REDACTED]");
             }
 
             if (request.IsAuthorizationCodeGrantType())
@@ -272,7 +272,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
 
                 if (result?.Principal == null)
                 {
-                    Console.WriteLine("[OIDC Token] ERROR: Authentication result is null or principal is missing");
+                    //Console.WriteLine("[OIDC Token] ERROR: Authentication result is null or principal is missing");
                     return Forbid(
                         authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
                         properties: new AuthenticationProperties(new Dictionary<string, string?>
@@ -282,7 +282,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                         }));
                 }
 
-                Console.WriteLine($"[OIDC Token] User authenticated: {result.Principal.Identity?.Name}");
+                //Console.WriteLine($"[OIDC Token] User authenticated: {result.Principal.Identity?.Name}");
 
                 // 创建新的认证票据
                 var claimsPrincipal = result.Principal;
@@ -311,7 +311,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                     claim.SetDestinations(Destinations.AccessToken, Destinations.IdentityToken);
                 }
 
-                Console.WriteLine($"[OIDC Token] Creating tokens for user: {claimsPrincipal.Identity?.Name}");
+                //Console.WriteLine($"[OIDC Token] Creating tokens for user: {claimsPrincipal.Identity?.Name}");
                 return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
             else if (request.IsRefreshTokenGrantType())
