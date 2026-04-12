@@ -93,7 +93,7 @@ const sendTokenToIframe = (iframe: HTMLIFrameElement) => {
 		// 发送 token 到 iframe
 		iframe.contentWindow.postMessage(
 			{
-				type: 'FASTADMIN_TOKEN',
+				type: 'FASTDOTNET_TOKEN',
 				data: {
 					token: token,
 					timestamp: Date.now()
