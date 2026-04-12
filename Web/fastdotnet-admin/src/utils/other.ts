@@ -171,8 +171,13 @@ export function handleEmpty(list: EmptyArrayType) {
 export function handleOpenLink(val: RouteItem) {
 	const { origin, pathname } = window.location;
 	router.push(val.path);
-	if (verifyUrl(<string>val.meta?.isLink)) window.open(val.meta?.isLink);
-	else window.open(`${origin}${pathname}#${val.meta?.isLink}`);
+	const isLink = <string>val.meta?.isLink;
+	// 判断是否为绝对 URL（以 http:// 或 https:// 开头）
+	if (isLink && (isLink.startsWith('http://') || isLink.startsWith('https://'))) {
+		window.open(isLink);
+	} else if (isLink) {
+		window.open(`${origin}${pathname}#${isLink}`);
+	}
 }
 
 /**
