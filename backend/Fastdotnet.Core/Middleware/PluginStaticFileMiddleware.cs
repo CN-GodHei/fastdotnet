@@ -79,6 +79,10 @@ namespace Fastdotnet.Core.Middleware
 
             context.Response.ContentType = contentType;
             
+            // 允许 iframe 嵌入（关键！）
+            context.Response.Headers["X-Frame-Options"] = "ALLOWALL";
+            context.Response.Headers["Content-Security-Policy"] = "frame-ancestors *";
+            
             await context.Response.SendFileAsync(fileInfo);
         }
     }

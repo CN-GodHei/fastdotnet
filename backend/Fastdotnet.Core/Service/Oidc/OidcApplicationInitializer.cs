@@ -120,6 +120,9 @@ namespace Fastdotnet.Core.Service.Oidc
                 // 插件路径的 redirect_uri（Elsa Studio Blazor WASM 作为插件部署）
                 updateDescriptor.RedirectUris.Add(new Uri("http://localhost:18889/plugins/11365281228127623/publish/authentication/login-callback"));
                 updateDescriptor.RedirectUris.Add(new Uri("https://localhost:18889/plugins/11365281228127623/publish/authentication/login-callback"));
+                // 远程访问的 redirect_uri
+                updateDescriptor.RedirectUris.Add(new Uri("http://100.118.249.35:18888/plugins/11365281228127623/publish/authentication/login-callback"));
+                updateDescriptor.RedirectUris.Add(new Uri("https://100.118.249.35:18888/plugins/11365281228127623/publish/authentication/login-callback"));
                 // 添加新的 PostLogoutRedirectUris
                 updateDescriptor.PostLogoutRedirectUris.Add(new Uri("http://localhost:18889/fdelsa/signout-callback-oidc"));
                 updateDescriptor.PostLogoutRedirectUris.Add(new Uri("https://localhost:18889/fdelsa/signout-callback-oidc"));
@@ -192,6 +195,10 @@ namespace Fastdotnet.Core.Service.Oidc
                     // 插件路径的 redirect_uri（Elsa Studio Blazor WASM 作为插件部署）
                     new Uri("http://localhost:18889/plugins/11365281228127623/publish/authentication/login-callback"),
                     new Uri("https://localhost:18889/plugins/11365281228127623/publish/authentication/login-callback"),
+                    
+                    // 远程访问的 redirect_uri
+                    new Uri("http://100.118.249.35:18888/plugins/11365281228127623/publish/authentication/login-callback"),
+                    new Uri("https://100.118.249.35:18888/plugins/11365281228127623/publish/authentication/login-callback"),
                 },
                 PostLogoutRedirectUris =
                 {
