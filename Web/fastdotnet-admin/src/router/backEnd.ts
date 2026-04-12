@@ -167,6 +167,7 @@ export function backEndComponent(routes: any) {
 				isKeepAlive: item.IsKeepAlive !== undefined ? item.IsKeepAlive : true,
 				isAffix: item.IsAffix !== undefined ? item.IsAffix : false,
 				isIframe: item.IsIframe !== undefined ? item.IsIframe : false,
+				isLink: (item.IsIframe || item.IsLink || item.isLink) ? (item.ExternalUrl || '') : '',
 				// 传递微应用相关标识
 				isFdMicroApp: item.IsFdMicroApp || false,
 				pluginId: item.PluginId, // 添加 PluginId 到 meta
@@ -194,10 +195,15 @@ export function backEndComponent(routes: any) {
 		// 2. 处理 component (优先使用后端提供的 Component 字段)
 		// 特殊处理微应用菜单项
 		if (item.IsFdMicroApp) {
-			//console.log("Setting micro app component for menu:", item.Name, item.Path); // Log when setting micro app component
 			// 为微应用菜单项设置特殊的 component
 			// 这个 component 将负责加载对应的 qiankun 微应用
 			route.component = () => import('@/layout/routerView/parent.vue');
+		} else if (item.IsIframe && item.ExternalUrl) {
+			// 内嵌 iframe 类型，使用 parent.vue 作为组件（内部会渲染 iframes.vue）
+			route.component = () => import('@/layout/routerView/parent.vue');
+		} else if ((item.IsLink || item.isLink) && item.ExternalUrl) {
+			// 外链类型（非内嵌），使用 link.vue 作为组件（显示提示页面）
+			route.component = () => import('@/layout/routerView/link.vue');
 		} else if (item.Component) {
 			// 如果后端提供了 Component 路径，则生成动态导入
 			// 假设后端 Component 存储的是相对路径，例如 "home/index.vue"

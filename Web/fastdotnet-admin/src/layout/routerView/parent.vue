@@ -1,5 +1,5 @@
 <template>
-	<div class="layout-parent">
+	<div class="layout-parent" style="height: 100% !important; min-height: 100%;">
 		<router-view v-slot="{ Component }">
 			<transition :name="setTransitionName" mode="out-in">
 				<keep-alive :include="getKeepAliveNames">
@@ -57,10 +57,16 @@ const isMicroAppPage = computed(() => {
 });
 // 获取 iframe 组件列表(未进行渲染)
 const getIframeListRoutes = async () => {
+	state.iframeList = []; // 清空旧数据
 	router.getRoutes().forEach((v) => {
 		if (v.meta.isIframe) {
-			v.meta.isIframeOpen = false;
-			v.meta.loading = true;
+			// 不要在这里设置 isIframeOpen = false，让 iframes.vue 的 watch 来控制
+			if (v.meta.isIframeOpen === undefined) {
+				v.meta.isIframeOpen = false;
+			}
+			if (v.meta.loading === undefined) {
+				v.meta.loading = true;
+			}
 			state.iframeList.push({ ...v } as RouteItem);
 		}
 	});

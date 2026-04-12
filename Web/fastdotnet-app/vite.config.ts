@@ -36,6 +36,11 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 					ws: true,
 					changeOrigin: true,
 				},
+				// 代理插件静态文件到后端
+				'/plugins/': {
+					target: env.VITE_API_URL,
+					changeOrigin: true,
+				},
 			},
 		},
 		build: {
@@ -55,7 +60,7 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 				...(JSON.parse(env.VITE_OPEN_CDN) ? { external: buildConfig.external } : {}),
 			},
 		},
-		css: { preprocessorOptions: { css: { charset: false } } },
+		css: { preprocessorOptions: { scss: { charset: false }, less: { charset: false } } },
 		define: {
 			__VUE_I18N_LEGACY_API__: JSON.stringify(false),
 			__VUE_I18N_FULL_INSTALL__: JSON.stringify(false),
