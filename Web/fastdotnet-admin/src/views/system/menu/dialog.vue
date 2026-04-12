@@ -176,7 +176,7 @@
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 								<el-form-item label="是否外链">
-									<el-radio-group v-model="state.ruleForm.isLink" :disabled="state.ruleForm.IsIframe">
+									<el-radio-group v-model="state.ruleForm.isLink" @change="onSelectLinkChange" :disabled="state.ruleForm.IsIframe">
 										<el-radio :label="true">是</el-radio>
 										<el-radio :label="false">否</el-radio>
 									</el-radio-group>
@@ -184,7 +184,7 @@
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 								<el-form-item label="是否内嵌">
-									<el-radio-group v-model="state.ruleForm.IsIframe" @change="onSelectIframeChange">
+									<el-radio-group v-model="state.ruleForm.IsIframe" @change="onSelectIframeChange" :disabled="state.ruleForm.isLink">
 										<el-radio :label="true">是</el-radio>
 										<el-radio :label="false">否</el-radio>
 									</el-radio-group>
@@ -387,10 +387,19 @@ const openDialog = async (type: string, row?: APIModel.FdMenuDto, belong?: numbe
 const closeDialog = () => {
 	state.dialog.isShowDialog = false;
 };
-// 是否内嵌下拉改变
+// 外链选择改变
+const onSelectLinkChange = () => {
+	if (state.ruleForm.isLink) {
+		// 如果选择外链，则取消内嵌
+		state.ruleForm.IsIframe = false;
+	}
+};
+// 内嵌选择改变
 const onSelectIframeChange = () => {
-	if (state.ruleForm.IsIframe) state.ruleForm.isLink = true;
-	else state.ruleForm.isLink = false;
+	if (state.ruleForm.IsIframe) {
+		// 如果选择内嵌，则取消外链
+		state.ruleForm.isLink = false;
+	}
 };
 // 取消
 const onCancel = () => {
