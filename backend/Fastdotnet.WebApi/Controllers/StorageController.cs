@@ -34,6 +34,8 @@ namespace Fastdotnet.WebApi.Controllers
         /// <returns>上传结果</returns>
         [HttpPost("upload")]
         [AllowAnonymous]
+        // 为该接口单独设置 200 MB 的限制
+        [RequestSizeLimit(209715200)]
         public async Task<ActionResult<string>> UploadAsync(IFormFile file, string? bucketName = null)
         {
             if (file == null || file.Length == 0)
