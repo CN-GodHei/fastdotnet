@@ -1,17 +1,18 @@
 using Autofac.Core;
 using Fastdotnet.Core.Entities.Oidc;
 using Fastdotnet.Core.Extensions;
+using Fastdotnet.Core.Options;
 using Fastdotnet.Core.Service.Oidc;
 using Fastdotnet.Core.Service.Oidc.Stores;
 using Fastdotnet.Core.Service.Sys;
-using Fastdotnet.Core.Settings;
 using Fastdotnet.Service.IService;
 using Fastdotnet.Service.IService.App;
 using Fastdotnet.Service.IService.Sys;
+using Fastdotnet.Service.Service;
 using Fastdotnet.Service.Service.Admin;
 using Fastdotnet.Service.Service.App;
-using Fastdotnet.Service.Service;
 using Fastdotnet.Service.Service.Sys;
+using Fastdotnet.WebApi.Providers;
 using Microsoft.AspNetCore.DataProtection;
 using System.IdentityModel.Tokens.Jwt;
 using static System.Net.Mime.MediaTypeNames;
@@ -19,6 +20,7 @@ using static System.Net.Mime.MediaTypeNames;
 var builder = WebApplication.CreateBuilder(args);
 // 可选：延长停机超时时间
 builder.Host.ConfigureHostOptions(o => o.ShutdownTimeout = TimeSpan.FromMinutes(2));
+builder.Services.Configure<AppSettings>(builder.Configuration);
 
 // === 关键修复：配置固定的 Data Protection 密钥 ===
 // OpenIddict 使用 Data Protection API 加密授权码
@@ -263,8 +265,16 @@ app.UseEndpoints(endpoints =>
     endpoints.MapHub<UniversalHub>("/universalhub");
 });
 
+// 注册主程序的 SignalR 方法
+var httpContextAccessor = app.Services.GetRequiredService<Microsoft.AspNetCore.Http.IHttpContextAccessor>();
+var systemProvider = new Fastdotnet.WebApi.Providers.SystemSignalRProvider(httpContextAccessor);
+Fastdotnet.Core.Hubs.PluginMethodRegistry.RegisterPlugin(systemProvider);
+Console.WriteLine($"[Program] System 插件 SignalR 方法已注册");
+
 // 5. 应用程序启动后执行启动任务
 app.RunStartupTasks();
 
 // 6. 运行应用
-app.Run("http://*:18889");
+var appSettings = app.Services.GetRequiredService<IOptions<AppSettings>>().Value;
+var urls = appSettings.Kestrel?.Endpoints?.Http?.Url ?? "http://*:18889";
+app.Run(urls);

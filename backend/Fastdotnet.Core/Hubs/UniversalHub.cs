@@ -1,4 +1,6 @@
-﻿
+﻿using System.Collections.Concurrent;
+using Microsoft.AspNetCore.SignalR;
+using System.Text.Json;
 
 namespace Fastdotnet.Core.Hubs
 {
@@ -116,23 +118,73 @@ namespace Fastdotnet.Core.Hubs
         }
 
         /// <summary>
-        /// 插件特定的方法 - 调用插件方法
+        /// 插件特定的方法 - 调用插件方法（通用代理）
         /// </summary>
         /// <param name="pluginId">插件ID</param>
         /// <param name="methodName">方法名称</param>
-        /// <param name="args">参数</param>
-        /// <returns></returns>
-        public async Task InvokePluginMethod(string pluginId, string methodName, object[] args)
+        /// <param name="args">参数（JSON 数组）</param>
+        /// <returns>方法返回值</returns>
+        public async Task<object?> InvokePluginMethod(string pluginId, string methodName, JsonElement args)
         {
-            // 这里可以实现插件特定的逻辑
-            // 例如，通过某种机制调用插件注册的特定方法
-            await Clients.Caller.SendAsync("pluginMethodInvoked", new
+            try
             {
-                PluginId = pluginId,
-                MethodName = methodName,
-                Args = args,
-                Timestamp = DateTime.Now
-            });
+                Console.WriteLine($"[SignalR] 调用插件方法: {pluginId}.{methodName}");
+                Console.WriteLine($"[SignalR] 原始参数: {args.GetRawText()}");
+                
+                // 将 JsonElement 转换为 object[]
+                object[]? argsArray = null;
+                if (args.ValueKind == JsonValueKind.Array)
+                {
+                    var list = new List<object>();
+                    foreach (var item in args.EnumerateArray())
+                    {
+                        list.Add(ConvertJsonElementToObject(item));
+                    }
+                    argsArray = list.ToArray();
+                }
+                else if (args.ValueKind != JsonValueKind.Null && args.ValueKind != JsonValueKind.Undefined)
+                {
+                    argsArray = new object[] { ConvertJsonElementToObject(args) };
+                }
+                
+                Console.WriteLine($"[SignalR] 转换后的参数数量: {argsArray?.Length ?? 0}");
+                
+                // 通过 PluginMethodRegistry 调用插件注册的方法
+                var result = await PluginMethodRegistry.InvokeMethod(pluginId, methodName, argsArray ?? Array.Empty<object>());
+                
+                Console.WriteLine($"[SignalR] 调用成功: {pluginId}.{methodName}");
+                return result;
+            }
+            catch (InvalidOperationException ex)
+            {
+                // 方法未注册
+                Console.WriteLine($"[SignalR] 方法未注册: {pluginId}.{methodName} - {ex.Message}");
+                throw new HubException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // 其他错误
+                Console.WriteLine($"[SignalR] 调用失败: {pluginId}.{methodName} - {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+                throw new HubException($"调用插件 {pluginId} 的方法 {methodName} 失败: {ex.Message}");
+            }
+        }
+        
+        /// <summary>
+        /// 将 JsonElement 转换为 object
+        /// </summary>
+        private static object? ConvertJsonElementToObject(JsonElement element)
+        {
+            return element.ValueKind switch
+            {
+                JsonValueKind.String => element.GetString(),
+                JsonValueKind.Number => element.TryGetInt64(out var l) ? l : element.GetDouble(),
+                JsonValueKind.True => true,
+                JsonValueKind.False => false,
+                JsonValueKind.Null => null,
+                JsonValueKind.Object => element,
+                JsonValueKind.Array => element,
+                _ => element.ToString()
+            };
         }
 
         /// <summary>
