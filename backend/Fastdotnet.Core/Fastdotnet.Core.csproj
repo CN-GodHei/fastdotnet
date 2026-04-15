@@ -17,9 +17,12 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\GenericControllerBase.cs" />
+    <Compile Remove="Dtos\CacheSettings.cs" />
     <Compile Remove="Initializers\PermissionSyncInitializer.cs" />
     <Compile Remove="Plugin\IPlugin.cs" />
     <Compile Remove="Plugin\PluginConfig.cs" />
+    <Compile Remove="Settings\JwtSettings.cs" />
+    <Compile Remove="Settings\OidcSettings.cs" />
     <Compile Remove="Utils\EncryptionService.cs" />
   </ItemGroup>
 
@@ -46,6 +49,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Settings\" />
   </ItemGroup>
 
 </Project>
