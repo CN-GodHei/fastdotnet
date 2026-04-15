@@ -30,10 +30,10 @@ namespace Fastdotnet.Core.Service.Sys
                     {
                         var scopeFactory = _serviceProvider.GetService<IServiceScopeFactory>();
                         using var scope = scopeFactory.CreateScope();
-                        
+
                         // 尝试获取默认的本地存储服务实现（LocalStorageService）
                         var localStorageService = scope.ServiceProvider.GetService<LocalStorageService>();
-                        
+
                         if (localStorageService != null)
                         {
                             // 如果存在LocalStorageService实例，使用它
@@ -43,7 +43,7 @@ namespace Fastdotnet.Core.Service.Sys
                         {
                             // 否则获取当前注册的IStorageService实现（可能是插件提供的）
                             var service = scope.ServiceProvider.GetService<IStorageService>();
-                            
+
                             // 确保获取到的不是StorageServiceProxy自身
                             if (service != null && !(service is StorageServiceProxy))
                             {
@@ -52,7 +52,7 @@ namespace Fastdotnet.Core.Service.Sys
                             else
                             {
                                 // 如果还是获取不到合适的实现，通过DI容器创建LocalStorageService
-                                 localStorageService = scope.ServiceProvider.GetService<LocalStorageService>();
+                                localStorageService = scope.ServiceProvider.GetService<LocalStorageService>();
                                 if (localStorageService != null)
                                 {
                                     _currentStorageService = localStorageService;
@@ -67,7 +67,7 @@ namespace Fastdotnet.Core.Service.Sys
                     }
                 }
             }
-            
+
             return _currentStorageService;
         }
 
@@ -78,12 +78,17 @@ namespace Fastdotnet.Core.Service.Sys
             return await service.UploadAsync(fileStream, fileName, bucketName);
         }
 
-        public async Task<byte[]> DownloadAsync(string fileName, string? bucketName = null)
+        //public async Task<byte[]> DownloadAsync(string fileName, string? bucketName = null)
+        //{
+        //    var service = GetCurrentStorageService();
+        //    return await service.DownloadAsync(fileName, bucketName);
+        //}
+
+        public async Task<(Stream stream, long length)> OpenReadAsync(string fileName, string? bucketName = null)
         {
             var service = GetCurrentStorageService();
-            return await service.DownloadAsync(fileName, bucketName);
+            return await service.OpenReadAsync(fileName, bucketName);
         }
-
         public async Task<bool> DeleteAsync(string fileName, string? bucketName = null)
         {
             var service = GetCurrentStorageService();
@@ -144,10 +149,10 @@ namespace Fastdotnet.Core.Service.Sys
             {
                 var scopeFactory = _serviceProvider.GetService<IServiceScopeFactory>();
                 using var scope = scopeFactory.CreateScope();
-                
+
                 // 尝试获取默认的本地存储服务实现
                 var defaultStorageService = scope.ServiceProvider.GetService<LocalStorageService>();
-                
+
                 if (defaultStorageService != null)
                 {
                     _currentStorageService = defaultStorageService;
@@ -156,7 +161,7 @@ namespace Fastdotnet.Core.Service.Sys
                 {
                     // 获取当前注册的IStorageService实现（可能是插件提供的）
                     var service = scope.ServiceProvider.GetService<IStorageService>();
-                    
+
                     // 确保获取到的不是StorageServiceProxy自身
                     if (service != null && !(service is StorageServiceProxy))
                     {

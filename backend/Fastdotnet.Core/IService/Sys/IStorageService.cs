@@ -23,8 +23,15 @@ namespace Fastdotnet.Core.IService.Sys
         /// <param name="fileName">文件名</param>
         /// <param name="bucketName">存储桶名称（可选）</param>
         /// <returns>文件字节数组</returns>
-        Task<byte[]> DownloadAsync(string fileName, string? bucketName = null);
+        //Task<byte[]> DownloadAsync(string fileName, string? bucketName = null);
 
+        /// <summary>
+        /// 下载文件:以流的方式读取文件
+        /// </summary>
+        /// <param name="fileName">文件名</param>
+        /// <param name="bucketName">存储桶名称</param>
+        /// <returns>包含文件流和文件长度的元组</returns>
+        Task<(Stream stream, long length)> OpenReadAsync(string fileName, string? bucketName = null);
         /// <summary>
         /// 删除文件
         /// </summary>

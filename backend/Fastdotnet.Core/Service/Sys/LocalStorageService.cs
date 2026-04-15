@@ -1,6 +1,7 @@
 
 using Fastdotnet.Core.Dtos.Storage;
 using Fastdotnet.Core.Entities.Sys;
+using Fastdotnet.Core.Options;
 
 namespace Fastdotnet.Core.Service.Sys
 {
@@ -47,7 +48,20 @@ namespace Fastdotnet.Core.Service.Sys
             return $"{siteDomain?.Value}{_options.BaseUrl}/{relativePath}";
         }
 
-        public async Task<byte[]> DownloadAsync(string fileName, string? bucketName = null)
+        //public async Task<byte[]> DownloadAsync(string fileName, string? bucketName = null)
+        //{
+        //    var directory = Path.Combine(_options.LocalStoragePath, bucketName ?? _options.DefaultBucket);
+        //    var filePath = Path.Combine(directory, fileName);
+
+        //    if (!File.Exists(filePath))
+        //    {
+        //        throw new FileNotFoundException($"File not found: {filePath}");
+        //    }
+
+        //    return await File.ReadAllBytesAsync(filePath);
+        //}
+
+        public async Task<(Stream stream, long length)> OpenReadAsync(string fileName, string? bucketName = null)
         {
             var directory = Path.Combine(_options.LocalStoragePath, bucketName ?? _options.DefaultBucket);
             var filePath = Path.Combine(directory, fileName);
@@ -57,7 +71,16 @@ namespace Fastdotnet.Core.Service.Sys
                 throw new FileNotFoundException($"File not found: {filePath}");
             }
 
-            return await File.ReadAllBytesAsync(filePath);
+            // 打开文件流
+            var stream = new FileStream(
+                filePath,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read,
+                bufferSize: 4096,
+                useAsync: true); // 关键：useAsync: true 确保不会阻塞线程
+
+            return (stream, stream.Length);
         }
 
         public async Task<bool> DeleteAsync(string fileName, string? bucketName = null)
@@ -92,26 +115,5 @@ namespace Fastdotnet.Core.Service.Sys
             // 本地存储不支持前端直传，抛出异常表示不支持
             throw new NotImplementedException("本地存储不支持前端直传，应使用后端代理上传");
         }
-    }
-
-    /// <summary>
-    /// 本地存储配置选项
-    /// </summary>
-    public class StorageOptions
-    {
-        /// <summary>
-        /// 本地存储路径
-        /// </summary>
-        public string LocalStoragePath { get; set; } = "wwwroot/uploads";
-
-        /// <summary>
-        /// 基础URL
-        /// </summary>
-        public string BaseUrl { get; set; } = "/uploads";
-
-        /// <summary>
-        /// 默认存储桶
-        /// </summary>
-        public string DefaultBucket { get; set; } = "default";
     }
 }

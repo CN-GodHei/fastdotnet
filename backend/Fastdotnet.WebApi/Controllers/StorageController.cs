@@ -1,5 +1,6 @@
 using Fastdotnet.Core.Dtos.Storage;
 using Fastdotnet.Core.IService.Sys;
+using Fastdotnet.Core.Options;
 using Fastdotnet.Core.Service.Sys;
 using Microsoft.AspNetCore.StaticFiles;
 
@@ -56,22 +57,54 @@ namespace Fastdotnet.WebApi.Controllers
         /// <param name="bucketName">存储桶名称（可选）</param>
         /// <returns>文件内容</returns>
         [HttpGet("download/{fileName}")]
-        public async Task<ActionResult> DownloadAsync(string fileName, string? bucketName = null)
+        //public async Task<ActionResult> DownloadAsync(string fileName, string? bucketName = null)
+        //{
+        //    try
+        //    {
+        //        var fileData = await _storageService.DownloadAsync(fileName, bucketName);
+        //        var fileExtension = global::System.IO.Path.GetExtension(fileName);
+        //        var contentType = GetContentType(fileExtension);
+
+        //        return File(fileData, contentType);
+        //    }
+        //    catch (global::System.IO.FileNotFoundException)
+        //    {
+        //        return NotFound("文件不存在");
+        //    }
+        //}
+        [HttpGet("download/{fileName}")]
+        public async Task<IActionResult> DownloadAsync(string fileName, string? bucketName = null)
         {
             try
             {
-                var fileData = await _storageService.DownloadAsync(fileName, bucketName);
-                var fileExtension = global::System.IO.Path.GetExtension(fileName);
+                var fileExtension = Path.GetExtension(fileName);
                 var contentType = GetContentType(fileExtension);
 
-                return File(fileData, contentType);
+                // 获取流，而不是获取字节数组
+                var (stream, length) = await _storageService.OpenReadAsync(fileName, bucketName);
+
+                if (stream == null) return NotFound("文件不存在");
+
+                // ✅ 设置响应头，告诉浏览器这是一个文件下载
+                HttpContext.Response.Headers.Append("Content-Disposition", $"attachment; filename=\"{fileName}\"");
+
+                // ✅ 返回流式结果
+                // 这会让 ASP.NET Core 建立一个管道，直接从磁盘流向网卡
+                // 内存占用仅为几 KB（缓冲区大小）
+                return new FileStreamResult(stream, contentType)
+                {
+                    EnableRangeProcessing = true // 允许前端进行范围请求（如断点续传）
+                };
             }
-            catch (global::System.IO.FileNotFoundException)
+            catch (FileNotFoundException)
             {
                 return NotFound("文件不存在");
             }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "下载失败");
+            }
         }
-
         /// <summary>
         /// 删除文件
         /// </summary>
