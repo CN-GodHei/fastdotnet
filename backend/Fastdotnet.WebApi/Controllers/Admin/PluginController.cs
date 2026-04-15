@@ -12,14 +12,15 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     {
         private readonly IPluginLoadService _pluginLoadService;
         private readonly ILogger<PluginController> _logger;
-
-        public PluginController(IPluginLoadService pluginLoadService, ILogger<PluginController> logger)
+        private readonly ICurrentUser _currentUser;
+        public PluginController(IPluginLoadService pluginLoadService, ILogger<PluginController> logger, ICurrentUser currentUser)
         {
             _pluginLoadService = pluginLoadService;
             _logger = logger;
+            _currentUser = currentUser;
         }
         /// <summary>
-        /// 从URL下载并加载插件
+        /// 从 URL 下载并加载插件
         /// </summary>
         /// <param name="pluginUrl">插件下载地址</param>
         /// <returns>加载结果</returns>
@@ -27,7 +28,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public async Task<ApiResult> LoadPlugin([FromBody] DownloadPluginDto dto)
         {
             dto.IsValid();
-            return await _pluginLoadService.InstallPlugin(dto.PluginId, dto.Version, dto.Token);
+            return await _pluginLoadService.InstallPlugin(dto.PluginId, dto.Version, dto.Token, _currentUser.Id);
         }
 
         /// <summary>
