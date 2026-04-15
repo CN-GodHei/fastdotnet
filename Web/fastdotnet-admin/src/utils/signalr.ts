@@ -11,9 +11,9 @@ class BaseSignalRManager {
     async initialize(accessToken: string | null = null): Promise<void> {
         if (this.isInitialized) return;
 
-        // 创建基础SignalR连接（不指定具体Hub）
+        // 创建基础SignalR连接（使用 universalhub）
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl("/api/signalr", {
+            .withUrl(`${import.meta.env.VITE_API_URL}/universalhub`, {
                 accessTokenFactory: () => accessToken || Session.get('token') || ''
             })
             .build();
@@ -60,7 +60,7 @@ class BaseSignalRManager {
             // 重新创建连接以更新令牌
             this.connection.stop().then(() => {
                 this.connection = new signalR.HubConnectionBuilder()
-                    .withUrl("/api/signalr", {
+                    .withUrl(`${import.meta.env.VITE_API_URL}/universalhub`, {
                         accessTokenFactory: () => token
                     })
                     .build();
