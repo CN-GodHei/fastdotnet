@@ -36,6 +36,12 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 					ws: true,
 					changeOrigin: true,
 				},
+				// SignalR negotiate 和 WebSocket 连接
+				'/api/universalhub': {
+					target: env.VITE_API_URL,
+					ws: true,
+					changeOrigin: true,
+				},
 				// 代理插件静态文件到后端
 				'/plugins/': {
 					target: env.VITE_API_URL,
