@@ -24,7 +24,6 @@
     <PackageReference Include="Autofac" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" />
     <PackageReference Include="AutoMapper" />
-    <PackageReference Include="Fastdotnet.Plugin.Core" />
     <PackageReference Include="Lazy.Captcha.Core" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
@@ -39,6 +38,8 @@
     <!-- OpenIddict for OIDC/OAuth2 Identity Provider -->
     <PackageReference Include="OpenIddict.AspNetCore" />
     <!--<PackageReference Include="OpenIddict.EntityFrameworkCore" />-->
+    <!-- Yarp ReverseProxy for plugin proxy -->
+    <PackageReference Include="Yarp.ReverseProxy" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,10 +53,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\Fastdotnet.Core\Plugin\DefaultPluginConfig.json">
-      <Link>DefaultPluginConfig.json</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <!-- 确保 Swagger 静态文件被发布 -->
     <Content Include="$(NuGetPackageRoot)swashbuckle.aspnetcore\**\swagger-ui\**" LinkBase="swagger" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
@@ -71,6 +68,12 @@
   <ItemGroup>
     <Folder Include="Middleware\Authentication\" />
     <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Fastdotnet.Plugin.Core">
+      <HintPath>..\..\..\fastdotnet.-plugin.-core\Fastdotnet.Plugin.Core\bin\Debug\net10.0\Fastdotnet.Plugin.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <!--
