@@ -58,9 +58,9 @@
             <el-table-column type="selection" width="55" />
             <el-table-column prop="id" label="插件 ID" show-overflow-tooltip></el-table-column>
             <el-table-column prop="name" label="插件名称" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="version" label="版本" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="version" width="80" label="版本" show-overflow-tooltip></el-table-column>
             <el-table-column prop="description" label="描述" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="enabled" label="是否启用" show-overflow-tooltip>
+            <el-table-column prop="enabled" width="80" label="启用" show-overflow-tooltip>
               <template #default="scope">
                 <el-tag type="success" v-if="scope.row.enabled">已启用</el-tag>
                 <el-tag type="info" v-else>未启用</el-tag>

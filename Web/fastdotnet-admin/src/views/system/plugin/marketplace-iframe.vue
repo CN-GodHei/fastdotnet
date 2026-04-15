@@ -65,15 +65,51 @@
         </div>
       </el-card>
     </div>
+
+    <!-- 插件安装进度对话框 -->
+    <el-dialog 
+      v-model="progressDialogVisible" 
+      title="插件安装进度" 
+      width="500px"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <div class="simple-progress">
+        <!-- 进度条 -->
+        <el-progress 
+          :percentage="currentProgress.progress" 
+          :status="getProgressStatus(currentProgress.progress)"
+          :stroke-width="24"
+        />
+        
+        <!-- 简单信息 -->
+        <div class="progress-info mt15">
+          <p class="info-text">{{ currentProgress.message || '正在安装...' }}</p>
+          <p class="info-percent">{{ currentProgress.progress }}%</p>
+        </div>
+      </div>
+
+      <template #footer>
+        <el-button @click="cancelInstallation" type="warning" plain v-if="currentProgress.progress < 100">
+          取消安装
+        </el-button>
+        <el-button @click="closeProgressDialog" v-if="currentProgress.progress === 100" type="primary">
+          完成
+        </el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts" name="pluginMarketplaceIframe">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Loading, Refresh, InfoFilled, Link } from '@element-plus/icons-vue'
 import { getApiPluginScan, postApiPluginLoad, postApiPluginSetAuthCode } from '@/api/fd-system-api-admin/Plugin'
 import { usePluginStore } from '@/stores/plugin'
+import { baseSignalRManager } from '@/utils/signalr'
+import * as signalR from '@microsoft/signalr'
+import { Session } from '@/utils/storage'
 
 // 定义事件发射器
 const emit = defineEmits<{
@@ -98,8 +134,25 @@ const errorTime = ref('')
 const canGoBack = ref(false)
 const canGoForward = ref(false)
 
+// 插件安装进度状态
+const progressDialogVisible = ref(false)
+const currentProgress = ref<any>({
+  pluginId: '',
+  pluginName: '',
+  stage: '',
+  progress: 0,
+  message: '',
+  startTime: '',
+  timestamp: ''
+})
+const progressHistory = ref<any[]>([])
+
+// 防止重复提示的标志
+const hasShownFailedMessage = ref(false)
+
 // iframe 源地址 - 指向我们新创建的插件管理页面
-const iframeSrc = ref('https://fastdotnet.top/plugin-manager/embedded?layout=none') // 指向 Nuxt 项目的插件管理页面
+// const iframeSrc = ref('https://fastdotnet.top/plugin-manager/embedded?layout=none') // 指向 Nuxt 项目的插件管理页面
+const iframeSrc = ref('http://localhost:3000/plugin-manager/embedded?layout=none') // 指向 Nuxt 项目的插件管理页面
 
 // 记录开始加载时间
 const loadStartTime = ref<number>(0)
@@ -149,7 +202,7 @@ const handleLoadFailure = (errorMsg: string) => {
 
 // iframe 加载失败事件（这个事件在连接被拒绝时不会触发，需要靠超时检测）
 const onIframeError = (event: Event) => {
-  console.error('插件商城 iframe 加载失败:', event)
+  // console.error('插件商城 iframe 加载失败:', event)
   handleLoadFailure('iframe 加载错误')
 }
 
@@ -173,7 +226,7 @@ const retryLoad = async () => {
     iframeSrc.value = currentSrc
     // 注意：不需要重新设置定时器，因为 iframe 重新加载后会再次触发 onIframeLoad 和发送 IFRAME_LOADED 消息
   } catch (error: any) {
-    console.error('重试加载失败:', error)
+    // console.error('重试加载失败:', error)
     ElMessage.error('重试失败：' + (error.message || '未知错误'))
     handleLoadFailure(error.message || '重试失败')
   } finally {
@@ -202,7 +255,7 @@ const updateNavigationState = () => {
     }
   } catch (e) {
     // 忽略跨域错误
-    console.warn('无法获取iframe导航状态:', e)
+    // console.warn('无法获取iframe导航状态:', e)
   }
 }
 
@@ -226,7 +279,7 @@ const sendInitialData = () => {
       })
     }
   } catch (e) {
-    console.error('发送初始数据到iframe失败:', e)
+    // console.error('发送初始数据到iframe失败:', e)
   }
 }
 
@@ -269,46 +322,338 @@ const handleMessage = (event: MessageEvent) => {
       // console.log('未知消息类型:', type)
     }
   } catch (e) {
-    console.error('处理 iframe 消息失败:', e)
+    // console.error('处理 iframe 消息失败:', e)
   }
 }
 
 // 处理安装插件请求
 const handleInstallPlugin = async (data: any) => {
   const { pluginId, pluginName, token, Version } = data
+  
+  // 初始化 SignalR 监听器以接收进度通知
+  await initializeSignalRListener()
+  
+  // 初始化进度状态（设置正确的 pluginId）
+  currentProgress.value = {
+    pluginId,
+    pluginName,
+    stage: '',
+    progress: 0,
+    message: '准备开始安装...',
+    startTime: new Date().toISOString(),
+    timestamp: new Date().toISOString()
+  }
+  progressDialogVisible.value = true
+  
   try {
-    // TODO: 调用主应用的后端 API 进行安装
-    // 这里应该调用实际的安装接口
-    // console.log('收到安装插件请求:', pluginId, pluginName,token)
+    // 调用后端 API，立即返回（后台执行）
+    const result = await postApiPluginLoad(data)
+    
+    // 记录安装状态到 localStorage
+    localStorage.setItem('plugin_installing', JSON.stringify({
+      pluginId,
+      pluginName,
+      startTime: new Date().toISOString(),
+      status: 'installing'
+    }))
+    
+    // 显示提示信息
+    // ElMessage.info(result.Msg || '插件安装任务已启动，请等待进度更新...')
+    
+    // 注意：不在此处发送结果，等待 SignalR 推送最终结果
+  } catch (error: any) {
+    // console.error('启动安装任务失败:', error)
+    ElMessage.error('启动安装任务失败：' + (error.message || '未知错误'))
+    // 清除安装状态
+    localStorage.removeItem('plugin_installing')
+    closeProgressDialog()
+  }
+}
 
-    // 模拟安装过程（替换为实际的 API 调用）
-    // await new Promise(resolve => setTimeout(resolve, 2000))
-    await postApiPluginLoad(data);
-    // 发送安装成功结果回 iframe
+// 初始化 SignalR 监听器
+const initializeSignalRListener = async () => {
+  // 检查当前连接状态
+  let state = baseSignalRManager.getConnectionState()
+  // console.log('SignalR 初始连接状态:', state)
+  
+  // 如果未连接，尝试重新连接
+  if (state !== signalR.HubConnectionState.Connected) {
+    // console.warn('SignalR 未连接，尝试重新连接...')
+    try {
+      await baseSignalRManager.initialize()
+      state = baseSignalRManager.getConnectionState()
+      // console.log('SignalR 重新连接成功，当前状态:', state)
+    } catch (error) {
+      // console.error('SignalR 重新连接失败:', error)
+      ElMessage.warning('无法建立实时连接，将不会显示安装进度')
+      return
+    }
+  }
+  
+  // 确保连接成功后再注册监听器
+  if (state === signalR.HubConnectionState.Connected) {
+    // 监听插件安装进度（使用标准 PluginMessage 格式）
+    baseSignalRManager.on('pluginMessage', (message: any) => {
+      // console.log('✅ 父窗口收到 pluginMessage:', message)
+      // console.log('  - MessageType:', message.MessageType)
+      // console.log('  - Data:', message.data)
+      
+      // 处理进度更新消息
+      if (message.messageType === 'progress_update') {
+        // console.log('📊 收到进度更新，显示进度对话框')
+        handleProgressUpdate(message)
+      }
+      
+      // 处理安装完成消息
+      if (message.messageType === 'install_completed') {
+        // console.log('✅ 收到安装完成消息')
+        handleInstallCompleted(message)
+      }
+      
+      // 处理安装失败消息
+      if (message.messageType === 'install_failed') {
+        // console.log('❌ 收到安装失败消息')
+        handleInstallFailed(message)
+      }
+    })
+    
+    // console.log('✅ SignalR 监听器已注册')
+  } else {
+    // console.error('SignalR 连接状态异常:', state)
+  }
+}
+
+// 处理进度更新
+const handleProgressUpdate = (message: any) => {
+  const data = message.data || {}
+  
+  // 如果是第一条消息，记录开始时间
+  if (!currentProgress.value.startTime) {
+    currentProgress.value.startTime = message.timestamp || new Date().toISOString()
+  }
+  
+  // 更新当前进度（保留原有的 pluginId，因为 message.pluginId 是发送者 "System"）
+  currentProgress.value = {
+    pluginId: currentProgress.value.pluginId || data.pluginId || '',  // 优先使用已有的 pluginId
+    pluginName: data.pluginName || message.pluginName || '',
+    stage: data.stage || '',
+    progress: data.percentage || data.current || 0,
+    message: data.description || data.message || '',
+    startTime: currentProgress.value.startTime,
+    timestamp: message.timestamp || new Date().toISOString()
+  }
+  
+  // 添加到历史记录
+  progressHistory.value.unshift({
+    ...currentProgress.value,
+    timestamp: message.timestamp || new Date().toISOString()
+  })
+  
+  // 显示进度对话框
+  progressDialogVisible.value = true
+  
+  // 如果进度达到100%，提示用户并通知 iframe
+  if (data.percentage === 100 || data.isCompleted) {
+    ElMessage.success('插件安装完成！')
+    
+    // 通知 iframe 安装成功
     if (marketplaceIframe.value?.contentWindow) {
       marketplaceIframe.value.contentWindow.postMessage({
         type: 'INSTALL_PLUGIN_RESULT',
         data: {
           success: true,
-          pluginId,
-          pluginName
-        }
-      }, '*')
-    }
-  } catch (error: any) {
-    // 发送安装失败结果回 iframe
-    if (marketplaceIframe.value?.contentWindow) {
-      marketplaceIframe.value.contentWindow.postMessage({
-        type: 'INSTALL_PLUGIN_RESULT',
-        data: {
-          success: false,
-          pluginId,
-          error: error.message || '安装失败'
+          pluginId: currentProgress.value.pluginId,
+          pluginName: currentProgress.value.pluginName
         }
       }, '*')
     }
   }
 }
+
+// 关闭进度对话框
+const closeProgressDialog = () => {
+  progressDialogVisible.value = false
+  // 重置状态
+  currentProgress.value = {
+    pluginId: '',
+    pluginName: '',
+    stage: '',
+    progress: 0,
+    message: '',
+    startTime: '',
+    timestamp: ''
+  }
+  progressHistory.value = []
+}
+
+// 取消安装
+const cancelInstallation = async () => {
+  try {
+    // console.log('[取消安装] currentProgress.value:', currentProgress.value)
+    // console.log('[取消安装] pluginId:', currentProgress.value.pluginId)
+    
+    const result = await baseSignalRManager.invokeHubMethod(
+      'UniversalHub',
+      'InvokePluginMethod',
+      'System',
+      'CancelPluginInstallation',
+      [currentProgress.value.pluginId]
+    )
+    
+    // console.log('[取消安装] 返回结果:', result)
+    
+    if (result?.success) {
+      ElMessage.success(result.message || '已请求取消安装')
+    localStorage.removeItem('plugin_installing')
+
+      // 关闭进度对话框
+      closeProgressDialog()
+    } else {
+      ElMessage.error(result?.message || '取消失败')
+    }
+  } catch (error) {
+    // console.error('取消安装失败:', error)
+    ElMessage.error('取消安装失败')
+  }
+}
+
+// 强制关闭安装
+const forceCloseInstall = () => {
+  ElMessage.warning('已强制关闭安装进度窗口，但后台安装任务可能仍在运行')
+  
+  // 清除 localStorage 中的安装状态
+  localStorage.removeItem('plugin_installing')
+  
+  // 关闭对话框
+  closeProgressDialog()
+}
+
+// 处理安装完成消息
+const handleInstallCompleted = (message: any) => {
+  const data = message.data || {}
+  
+  if (data.success) {
+    ElMessage.success(data.message || '插件安装成功！')
+    
+    // 更新进度为100%
+    currentProgress.value.progress = 100
+    currentProgress.value.message = data.message || '安装完成'
+    progressDialogVisible.value = true
+    
+    // 清除安装状态
+    localStorage.removeItem('plugin_installing')
+    
+    // 通知 iframe
+    if (marketplaceIframe.value?.contentWindow) {
+      marketplaceIframe.value.contentWindow.postMessage({
+        type: 'INSTALL_PLUGIN_RESULT',
+        data: {
+          success: true,
+          pluginId: data.pluginId
+        }
+      }, '*')
+    }
+  } else {
+    // 安装失败时不显示提示，由 handleInstallFailed 统一处理
+    progressDialogVisible.value = false
+    localStorage.removeItem('plugin_installing')
+  }
+}
+
+// 处理安装失败消息
+const handleInstallFailed = (message: any) => {
+  const data = message.data || {}
+  
+  // 防止重复提示
+  if (!hasShownFailedMessage.value) {
+    hasShownFailedMessage.value = true
+    ElMessage.error(data.error || '插件安装失败')
+  }
+  
+  progressDialogVisible.value = false
+  
+  // 清除安装状态
+  localStorage.removeItem('plugin_installing')
+  
+  // 通知 iframe
+  if (marketplaceIframe.value?.contentWindow) {
+    marketplaceIframe.value.contentWindow.postMessage({
+      type: 'INSTALL_PLUGIN_RESULT',
+      data: {
+        success: false,
+        pluginId: data.pluginId,
+        error: data.error
+      }
+    }, '*')
+  }
+  
+  // 重置标志（延迟2秒后允许下次提示）
+  setTimeout(() => {
+    hasShownFailedMessage.value = false
+  }, 2000)
+}
+
+// 辅助函数：获取进度条状态
+const getProgressStatus = (progress: number) => {
+  if (progress === 100) return 'success'
+  if (progress < 30) return 'exception'
+  if (progress < 70) return 'warning'
+  return undefined
+}
+
+// 辅助函数：获取阶段标签类型
+const getStageTagType = (stage: string) => {
+  const stageMap: Record<string, string> = {
+    'downloading': 'primary',
+    'verifying': 'warning',
+    'extracting': 'info',
+    'installing': 'success',
+    'completed': 'success',
+    'failed': 'danger'
+  }
+  return stageMap[stage] || 'info'
+}
+
+// 辅助函数：获取阶段文本
+const getStageText = (stage: string) => {
+  const stageMap: Record<string, string> = {
+    'downloading': '下载中',
+    'verifying': '验证中',
+    'extracting': '解压中',
+    'installing': '安装中',
+    'completed': '已完成',
+    'failed': '失败'
+  }
+  return stageMap[stage] || stage
+}
+
+// 辅助函数：格式化时间
+const formatTime = (timeStr: string) => {
+  if (!timeStr) return '-'
+  try {
+    const date = new Date(timeStr)
+    return date.toLocaleTimeString('zh-CN', { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit' 
+    })
+  } catch {
+    return timeStr
+  }
+}
+
+// 辅助函数：获取时间轴项类型
+const getTimelineItemType = (progress: number) => {
+  if (progress === 100) return 'success'
+  if (progress < 50) return 'primary'
+  return 'warning'
+}
+
+// 组件卸载时清理 SignalR 监听器
+onBeforeUnmount(() => {
+  // 移除 pluginMessage 监听器
+  baseSignalRManager.off('pluginMessage', () => {})
+})
 
 // 处理来自插件商城的插件操作请求
 const handlePluginAction = (data: any) => {
@@ -337,7 +682,7 @@ const handleLoginSuccess = async (data: any) => {
 
     // console.log('插件商城授权信息已保存')
   } catch (error) {
-    console.error('处理登录成功消息失败:', error)
+    // console.error('处理登录成功消息失败:', error)
   }
 }
 
@@ -355,12 +700,12 @@ const sendInstalledPlugins = () => {
       }, '*') // 生产环境中应指定确切的origin
     }
   }).catch(error => {
-    console.error('获取已安装插件列表失败:', error)
+    // console.error('获取已安装插件列表失败:', error)
   })
 }
 
 // 组件挂载时添加事件监听
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener('message', handleMessage)
   loadStartTime.value = Date.now()
 
@@ -370,7 +715,74 @@ onMounted(() => {
       handleLoadFailure('加载超时（超过 10 秒）')
     }
   }, 10000)
+  
+  // 检查是否有正在进行的安装任务
+  await checkAndRestoreInstallingState()
 })
+
+// 检查并恢复安装状态
+const checkAndRestoreInstallingState = async () => {
+  try {
+    const installingData = localStorage.getItem('plugin_installing')
+    if (installingData) {
+      const installInfo = JSON.parse(installingData)
+      // console.log('检测到正在进行的安装任务:', installInfo)
+      
+      // 先初始化 SignalR 监听器并等待完成
+      await initializeSignalRListener()
+      
+      // 通过 SignalR 查询任务是否还在运行
+      let isStillInstalling = false
+      try {
+        isStillInstalling = await baseSignalRManager.invokeHubMethod(
+          'UniversalHub',
+          'InvokePluginMethod',
+          'System',  // 插件ID
+          'CheckPluginInstalling',  // 方法名
+          [installInfo.pluginId]  // 参数数组
+        )
+        // console.log('任务状态检查结果:', isStillInstalling)
+      } catch (error) {
+        // console.error('查询任务状态失败:', error)
+      }
+      
+      if (isStillInstalling) {
+        // console.log('[恢复安装状态] 任务还在运行，准备显示弹窗')
+        // console.log('[恢复安装状态] installInfo:', installInfo)
+        
+        // 任务还在运行，显示进度对话框
+        currentProgress.value = {
+          pluginId: installInfo.pluginId || '',
+          pluginName: installInfo.pluginName || '',
+          stage: '',
+          progress: 0,
+          message: '页面刷新，等待安装进度更新...',
+          startTime: installInfo.startTime || new Date().toISOString(),
+          timestamp: new Date().toISOString()
+        }
+        
+        // console.log('[恢复安装状态] currentProgress:', currentProgress.value)
+        
+        // 使用 nextTick 确保 DOM 更新
+        await nextTick()
+        progressDialogVisible.value = true
+        // console.log('[恢复安装状态] progressDialogVisible 设置为:', progressDialogVisible.value)
+        
+        ElMessage.info(`检测到插件 ${installInfo.pluginName} 正在安装中...`)
+      } else {
+        // 任务已结束，清除本地状态
+        // console.log('任务已结束，清除本地状态')
+        localStorage.removeItem('plugin_installing')
+        ElMessage.info('安装任务已结束')
+      }
+    } else {
+      // console.log('未检测到进行中的安装任务')
+    }
+  } catch (error) {
+    // console.error('恢复安装状态失败:', error)
+    localStorage.removeItem('plugin_installing')
+  }
+}
 
 // 组件卸载时移除事件监听和定时器
 onBeforeUnmount(() => {
@@ -427,6 +839,28 @@ onBeforeUnmount(() => {
           font-size: 14px;
         }
       }
+    }
+  }
+}
+
+// 简洁进度对话框样式
+.simple-progress {
+  padding: 20px 10px;
+  
+  .progress-info {
+    text-align: center;
+    
+    .info-text {
+      font-size: 14px;
+      color: #606266;
+      margin: 0 0 8px 0;
+    }
+    
+    .info-percent {
+      font-size: 24px;
+      font-weight: bold;
+      color: #409eff;
+      margin: 0;
     }
   }
 }

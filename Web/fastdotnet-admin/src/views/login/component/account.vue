@@ -79,6 +79,7 @@ import { NextLoading } from '@/utils/loading';
 // 引入适配的登录 API
 import { postApiAuthAdminLogin } from '@/api/fd-system-api-admin/auth';
 import { startQiankun } from '@/main';
+import { baseSignalRManager } from '@/utils/signalr';
 
 // 定义变量内容
 const { t } = useI18n();
@@ -184,6 +185,14 @@ const onSignIn = async () => {
 			// //console.log('Login Success - Token Set to Cookie:', token);
 			// 存储用户名用于模拟用户信息获取（实际项目中可能由后端返回或通过 token 解析）
 			Cookies.set('userName', state.ruleForm.userName);
+
+			// 初始化 SignalR 连接
+			try {
+				await baseSignalRManager.initialize(token);
+			} catch (error) {
+				console.error('SignalR 初始化失败:', error);
+				// SignalR 初始化失败不影响登录流程
+			}
 
 			// 3. 初始化路由权限
 			if (!themeConfig.value.isRequestRoutes) {
