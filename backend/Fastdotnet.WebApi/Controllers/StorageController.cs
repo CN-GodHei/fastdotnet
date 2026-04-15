@@ -56,7 +56,7 @@ namespace Fastdotnet.WebApi.Controllers
         /// <param name="fileName">文件名</param>
         /// <param name="bucketName">存储桶名称（可选）</param>
         /// <returns>文件内容</returns>
-        [HttpGet("download/{fileName}")]
+        // [HttpGet("download/{fileName}")]
         //public async Task<ActionResult> DownloadAsync(string fileName, string? bucketName = null)
         //{
         //    try
