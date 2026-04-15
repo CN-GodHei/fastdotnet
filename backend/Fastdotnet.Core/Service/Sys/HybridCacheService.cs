@@ -1,3 +1,5 @@
+using Fastdotnet.Core.Options;
+
 namespace Fastdotnet.Core.Service.Sys
 {
     /// <summary>

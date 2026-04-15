@@ -18,7 +18,6 @@ global using Fastdotnet.Core.Exceptions;
 global using Fastdotnet.Core.Extensions;
 global using Fastdotnet.Core.Initializers;
 global using Fastdotnet.Core.IService;
-global using Fastdotnet.Core.Settings;
 global using Fastdotnet.Core.Utils;
 global using Fastdotnet.Service.IService;
 global using Fastdotnet.Service.IService.Admin;

@@ -9,9 +9,9 @@ using Fastdotnet.Core.Entities.Admin;
 using Fastdotnet.Core.Entities.App;
 using Fastdotnet.Service.IService.Sys;
 using Microsoft.Extensions.Options;
-using Fastdotnet.Core.Settings;
 using Fastdotnet.Core.Dtos.Auth;
 using OpenIddict.Validation.AspNetCore;
+using Fastdotnet.Core.Options;
 
 namespace Fastdotnet.WebApi.Controllers.Oidc
 {

@@ -1,8 +1,8 @@
 using System.Security.Cryptography.X509Certificates;
 using Fastdotnet.Core.Entities.Oidc;
+using Fastdotnet.Core.Options;
 using Fastdotnet.Core.Service.Oidc;
 using Fastdotnet.Core.Service.Oidc.Stores;
-using Fastdotnet.Core.Settings;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using OpenIddict.Abstractions;
@@ -151,7 +151,7 @@ public static class OpenIddictConfigurationExtensions
         })
         .AddJwtBearer(options =>
         {
-            var jwtSettings = configuration.GetSection("JwtSettings").Get<Fastdotnet.Core.Settings.JwtSettings>()
+            var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>()
                 ?? throw new InvalidOperationException("JwtSettings not configured.");
 
             options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters

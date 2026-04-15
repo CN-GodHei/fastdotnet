@@ -1,5 +1,6 @@
 
 using Fastdotnet.Core.Entities.Sys;
+using Fastdotnet.Core.Options;
 using Fastdotnet.Core.Utils;
 
 namespace Fastdotnet.Service.Service
