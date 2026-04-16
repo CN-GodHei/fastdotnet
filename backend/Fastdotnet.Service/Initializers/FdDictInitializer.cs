@@ -290,6 +290,26 @@ namespace Fastdotnet.Service.Initializers
                         new FdDictData{ Id="11921994044146658", DictTypeId="11921994044146610", DictTypeCode="PASSWORD_CONFIG", Code="DefaultUserPassword", Label="默认用户密码", Value="123456", ValueType=DictValueType.String, OrderNo=3, Remark="新用户初始化或批量导入时的默认密码。系统会自动对此密码进行哈希处理后存储。建议首次登录后立即修改", Status=StatusEnum.Enable },
                     }
                 },
+                //用户相关配置
+                new DictTypeAndData
+                {
+                    fdDictType = new FdDictType
+                    {
+                        Id = "12725437239198726",
+                        Name = "用户相关配置",
+                        Code = "CODE_10",
+                        SysFlag = YesNoEnum.Y,
+                        OrderNo = 201,
+                        Remark = "用户相关配置",
+                        Status = StatusEnum.Enable
+                    },
+                    fdDictData = new List<FdDictData>
+                    {
+                        new FdDictData{ Id="12725437239133189", DictTypeId="12725437239198726", DictTypeCode="CODE_10", Code="CODE_10_01", Label="账号长度最小限制", Value="6", ValueType=DictValueType.String, OrderNo=105, Remark="最短用户名长度", Status=StatusEnum.Enable },
+                        new FdDictData{ Id="12725437239198725", DictTypeId="12725437239198726", DictTypeCode="CODE_10", Code="CODE_10_02", Label="账号长度最大限制", Value="15", ValueType=DictValueType.String, OrderNo=106, Remark="最长用户名长度", Status=StatusEnum.Enable },
+                        new FdDictData{ Id="12721271026222085", DictTypeId="12725437239198726", DictTypeCode="CODE_10", Code="CODE_10_03", Label="密码强度正则", Value="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z0-9]).{10,20}$", ValueType=DictValueType.String, OrderNo=106, Remark="必须包含大小写字母、数字、特殊符号，长度10-20位", Status=StatusEnum.Enable },
+                    }
+                },
             };
 
             // 调用服务保存字典数据

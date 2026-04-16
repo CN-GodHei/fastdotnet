@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Fastdotnet.Core.Service.App;
 using Fastdotnet.Core.Service.Sys;
+using Fastdotnet.Service.IService.Sys;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SqlSugar;
@@ -77,6 +78,8 @@ public class ApplicationModule : Module
 
         //插件配置
         containerBuilder.RegisterType<PluginConfigurationService>().As<IPluginConfigurationService>().InstancePerLifetimeScope();
+
+        containerBuilder.RegisterType<FdDictDataService>().As<IFdDictDataService>().InstancePerLifetimeScope();
 
         // 注册密码服务
         containerBuilder.RegisterType<Fastdotnet.Service.Service.Sys.PasswordService>()
