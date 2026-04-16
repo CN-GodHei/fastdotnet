@@ -308,6 +308,7 @@ namespace Fastdotnet.Service.Initializers
                         new FdDictData{ Id="12725437239133189", DictTypeId="12725437239198726", DictTypeCode="CODE_10", Code="CODE_10_01", Label="账号长度最小限制", Value="6", ValueType=DictValueType.String, OrderNo=105, Remark="最短用户名长度", Status=StatusEnum.Enable },
                         new FdDictData{ Id="12725437239198725", DictTypeId="12725437239198726", DictTypeCode="CODE_10", Code="CODE_10_02", Label="账号长度最大限制", Value="15", ValueType=DictValueType.String, OrderNo=106, Remark="最长用户名长度", Status=StatusEnum.Enable },
                         new FdDictData{ Id="12721271026222085", DictTypeId="12725437239198726", DictTypeCode="CODE_10", Code="CODE_10_03", Label="密码强度正则", Value="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z0-9]).{10,20}$", ValueType=DictValueType.String, OrderNo=106, Remark="必须包含大小写字母、数字、特殊符号，长度10-20位", Status=StatusEnum.Enable },
+                        new FdDictData{ Id="12721215122441221", DictTypeId="12725437239198726", DictTypeCode="CODE_10", Code="CODE_10_04", Label="用户名正则", Value="^[a-z][a-z0-9]{5,14}$", ValueType=DictValueType.String, OrderNo=106, Remark="必须以字母开头，仅包含小写字母或数字，总长度6-15位", Status=StatusEnum.Enable },
                     }
                 },
             };
