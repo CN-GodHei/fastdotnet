@@ -241,7 +241,7 @@
 </template>
 
 <script setup lang="ts" name="systemPlugin">
-import { ref, onMounted, defineAsyncComponent, onUnmounted } from 'vue'
+import { ref, onMounted, defineAsyncComponent, onUnmounted, nextTick } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { CopyDocument,UploadFilled,Link } from '@element-plus/icons-vue'
 // 导入插件相关的 API
@@ -616,8 +616,13 @@ const handleLicenseSaveSuccess = () => {
 
 // 处理选项卡切换
 const handleTabChange = (tabName: string) => {
-  if (tabName === 'marketplace') {
-    // 切换到插件市场时，可以做一些初始化工作
+  if (tabName === 'marketplace-iframe') {
+    // 切换到插件市场时，向 iframe 发送已安装插件列表
+    nextTick(() => {
+      if (marketplaceIframeRef.value) {
+        marketplaceIframeRef.value.sendInstalledPlugins()
+      }
+    })
   } else if (tabName === 'installed') {
     // 切换回已安装插件时，刷新列表
     getPluginList()
