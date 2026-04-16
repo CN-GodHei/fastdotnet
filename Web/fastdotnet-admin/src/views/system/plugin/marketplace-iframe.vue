@@ -149,6 +149,10 @@ const progressHistory = ref<any[]>([])
 
 // 防止重复提示的标志
 const hasShownFailedMessage = ref(false)
+const hasShownSuccessMessage = ref(false)
+
+// SignalR 监听器函数引用（用于防止重复注册）
+let pluginMessageHandler: ((message: any) => void) | null = null
 
 // iframe 源地址 - 指向我们新创建的插件管理页面
 // const iframeSrc = ref('https://fastdotnet.top/plugin-manager/embedded?layout=none') // 指向 Nuxt 项目的插件管理页面
@@ -392,8 +396,14 @@ const initializeSignalRListener = async () => {
   
   // 确保连接成功后再注册监听器
   if (state === signalR.HubConnectionState.Connected) {
-    // 监听插件安装进度（使用标准 PluginMessage 格式）
-    baseSignalRManager.on('pluginMessage', (message: any) => {
+    // 如果已有监听器，先移除旧的（防止重复注册）
+    if (pluginMessageHandler) {
+      baseSignalRManager.off('pluginMessage', pluginMessageHandler)
+      // console.log('✅ 已移除旧的 SignalR 监听器')
+    }
+    
+    // 创建新的监听器函数
+    pluginMessageHandler = (message: any) => {
       // console.log('✅ 父窗口收到 pluginMessage:', message)
       // console.log('  - MessageType:', message.MessageType)
       // console.log('  - Data:', message.data)
@@ -415,8 +425,10 @@ const initializeSignalRListener = async () => {
         // console.log('❌ 收到安装失败消息')
         handleInstallFailed(message)
       }
-    })
+    }
     
+    // 注册新的监听器
+    baseSignalRManager.on('pluginMessage', pluginMessageHandler)
     // console.log('✅ SignalR 监听器已注册')
   } else {
     // console.error('SignalR 连接状态异常:', state)
@@ -452,22 +464,8 @@ const handleProgressUpdate = (message: any) => {
   // 显示进度对话框
   progressDialogVisible.value = true
   
-  // 如果进度达到100%，提示用户并通知 iframe
-  if (data.percentage === 100 || data.isCompleted) {
-    ElMessage.success('插件安装完成！')
-    
-    // 通知 iframe 安装成功
-    if (marketplaceIframe.value?.contentWindow) {
-      marketplaceIframe.value.contentWindow.postMessage({
-        type: 'INSTALL_PLUGIN_RESULT',
-        data: {
-          success: true,
-          pluginId: currentProgress.value.pluginId,
-          pluginName: currentProgress.value.pluginName
-        }
-      }, '*')
-    }
-  }
+  // 注意：不在这里显示成功消息，统一由 handleInstallCompleted 处理
+  // 避免重复提示（进度100%和install_completed都会触发）
 }
 
 // 关闭进度对话框
@@ -533,7 +531,11 @@ const handleInstallCompleted = (message: any) => {
   const data = message.data || {}
   
   if (data.success) {
-    ElMessage.success(data.message || '插件安装成功！')
+    // 防止重复提示
+    if (!hasShownSuccessMessage.value) {
+      hasShownSuccessMessage.value = true
+      ElMessage.success(data.message || '插件安装成功！')
+    }
     
     // 更新进度为100%
     currentProgress.value.progress = 100
@@ -553,6 +555,11 @@ const handleInstallCompleted = (message: any) => {
         }
       }, '*')
     }
+    
+    // 重置标志（延迟2秒后允许下次提示）
+    setTimeout(() => {
+      hasShownSuccessMessage.value = false
+    }, 2000)
   } else {
     // 安装失败时不显示提示，由 handleInstallFailed 统一处理
     progressDialogVisible.value = false
