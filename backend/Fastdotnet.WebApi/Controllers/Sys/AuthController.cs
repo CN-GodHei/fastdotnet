@@ -4,6 +4,7 @@ using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Service.Sys;
 using Fastdotnet.Core.Attributes;
 using Fastdotnet.Core.Entities.Sys;
+using Fastdotnet.Service.IService.Sys;
 
 namespace Fastdotnet.WebApi.Controllers.Sys
 {
@@ -22,9 +23,10 @@ namespace Fastdotnet.WebApi.Controllers.Sys
         private readonly ICurrentUser _currentUser;
         private readonly IRepository<SystemInfoConfig> _systemConfigRepository;
         private readonly IRepository<FdAppUser> _appuserRepository;
+        private readonly IFdDictDataService _dictDataService;
 
         public AuthController(IAuthService authService, IVerificationCodeManager verificationCodeManager, ICaptcha captcha,
-            IRepository<SystemInfoConfig> systemConfigRepository, ICurrentUser currentUser, IRepository<FdAppUser> appuserRepository)
+            IRepository<SystemInfoConfig> systemConfigRepository, ICurrentUser currentUser, IRepository<FdAppUser> appuserRepository, IFdDictDataService dictDataService)
         {
             _authService = authService;
             _verificationCodeManager = verificationCodeManager;
@@ -32,6 +34,7 @@ namespace Fastdotnet.WebApi.Controllers.Sys
             _systemConfigRepository = systemConfigRepository;
             _currentUser = currentUser;
             _appuserRepository = appuserRepository;
+            _dictDataService = dictDataService;
         }
 
         /// <summary>
@@ -139,9 +142,10 @@ namespace Fastdotnet.WebApi.Controllers.Sys
             var userex = await _appuserRepository.GetFirstAsync(w => w.Email == dto.Email);
             if (userex != null)
             {
-                result.Msg = "该邮箱已注册!";
-                result.Data = false;
-                return result;
+                throw new BusinessException("该邮箱已注册");
+                //result.Msg = "该邮箱已注册!";
+                //result.Data = false;
+                //return result;
             }
             // 调用通用验证码服务，不指定业务码，使用默认策略
             await _verificationCodeManager.SendCodeAsync(dto.Email, "UserRegister");
@@ -157,14 +161,14 @@ namespace Fastdotnet.WebApi.Controllers.Sys
             dto.IsValid();
             ApiResult<bool> result = new ApiResult<bool>();
             var userex = await _appuserRepository.GetFirstAsync(w => w.Username == dto.Username);
-            if (userex != null)
+            if (userex == null)
             {
                 result.Msg = "未存在";
-                result.Data = true;
+                result.Data = false;
                 return result;
             }
             result.Msg = "已存在";
-            result.Data = false;
+            result.Data = true;
             return result;
         }
 
@@ -176,9 +180,71 @@ namespace Fastdotnet.WebApi.Controllers.Sys
         public async Task<ApiResult<bool>> AppRegister([FromBody] AppRegisterDto dto)
         {
             ApiResult<bool> result = new ApiResult<bool>();
-            result.Msg = "注册成功";
-            result.Data = true;
+            
+            // 验证 DTO
             dto.IsValid();
+            
+            // 获取用户配置进行验证
+            var userConfig = await _dictDataService.GetUserConfig();
+            
+            // 验证用户名
+            var usernameMinLength = 6;
+            var usernameMaxLength = 15;
+            string? usernameRegex = null;
+            var usernameRemark = "请按照要求设置用户名";
+            
+            var usernameMinConfig = userConfig.FirstOrDefault(c => c.Code == "CODE_10_01");
+            if (usernameMinConfig != null && int.TryParse(usernameMinConfig.Value, out int minLen))
+                usernameMinLength = minLen;
+                
+            var usernameMaxConfig = userConfig.FirstOrDefault(c => c.Code == "CODE_10_02");
+            if (usernameMaxConfig != null && int.TryParse(usernameMaxConfig.Value, out int maxLen))
+                usernameMaxLength = maxLen;
+                
+            var usernameRegexConfig = userConfig.FirstOrDefault(c => c.Code == "CODE_10_04");
+            if (usernameRegexConfig != null)
+            {
+                if (!string.IsNullOrEmpty(usernameRegexConfig.Value))
+                    usernameRegex = usernameRegexConfig.Value;
+                if (!string.IsNullOrEmpty(usernameRegexConfig.Remark))
+                    usernameRemark = usernameRegexConfig.Remark;
+            }
+            
+            // 验证用户名长度
+            if (dto.Username.Length < usernameMinLength || dto.Username.Length > usernameMaxLength)
+            {
+                result.Msg = $"用户名长度必须在{usernameMinLength}-{usernameMaxLength}位之间";
+                result.Data = false;
+                return result;
+            }
+            
+            // 验证用户名格式（只有配置了正则才验证）
+            if (!string.IsNullOrEmpty(usernameRegex) && !System.Text.RegularExpressions.Regex.IsMatch(dto.Username, usernameRegex))
+            {
+                result.Msg = usernameRemark;
+                result.Data = false;
+                return result;
+            }
+            
+            // 验证密码（只有配置了正则才验证）
+            string? passwordRegex = null;
+            var passwordRemark = "请按照要求设置密码";
+            var passwordConfig = userConfig.FirstOrDefault(c => c.Code == "CODE_10_03");
+            if (passwordConfig != null)
+            {
+                if (!string.IsNullOrEmpty(passwordConfig.Value))
+                    passwordRegex = passwordConfig.Value;
+                if (!string.IsNullOrEmpty(passwordConfig.Remark))
+                    passwordRemark = passwordConfig.Remark;
+            }
+            
+            if (!string.IsNullOrEmpty(passwordRegex) && !System.Text.RegularExpressions.Regex.IsMatch(dto.Password, passwordRegex))
+            {
+                result.Msg = passwordRemark;
+                result.Data = false;
+                return result;
+            }
+            
             await _authService.AppRegisterAsync(dto);
             result.Msg = "注册成功";
             result.Data = true;
