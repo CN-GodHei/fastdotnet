@@ -151,8 +151,8 @@ const progressHistory = ref<any[]>([])
 const hasShownFailedMessage = ref(false)
 
 // iframe 源地址 - 指向我们新创建的插件管理页面
-// const iframeSrc = ref('https://fastdotnet.top/plugin-manager/embedded?layout=none') // 指向 Nuxt 项目的插件管理页面
-const iframeSrc = ref('http://localhost:3000/plugin-manager/embedded?layout=none') // 指向 Nuxt 项目的插件管理页面
+const iframeSrc = ref('https://fastdotnet.top/plugin-manager/embedded?layout=none') // 指向 Nuxt 项目的插件管理页面
+// const iframeSrc = ref('http://localhost:3000/plugin-manager/embedded?layout=none') // 指向 Nuxt 项目的插件管理页面
 
 // 记录开始加载时间
 const loadStartTime = ref<number>(0)
