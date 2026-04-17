@@ -30,6 +30,12 @@ namespace Fastdotnet.Service.Service.Sys
         /// <param name="dictTypeAndDataList">字典类型和数据列表</param>
         public async Task SaveDictDataAsync(List<DictTypeAndData> dictTypeAndDataList)
         {
+            // 如果传入数据为空，直接返回
+            if (dictTypeAndDataList == null || !dictTypeAndDataList.Any())
+            {
+                return;
+            }
+
             // 先获取数据库中所有现有的数据
             var existingTypes = await _typeRepository.GetAllAsync();
             var existingData = await _dataRepository.GetAllAsync();
