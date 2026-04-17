@@ -316,8 +316,8 @@ namespace Fastdotnet.Service.Initializers
             // 调用服务保存字典数据
             await _dictInitializerService.SaveDictDataAsync(dictTypeAndDataList);
             
-            Console.WriteLine("[FdDictInitializer] 字典数据初始化完成");
-            Console.WriteLine("[FdDictInitializer] 已初始化 PASSWORD_CONFIG.DefaultUserPassword = '1234567'");
+            //Console.WriteLine("[FdDictInitializer] 字典数据初始化完成");
+            //Console.WriteLine("[FdDictInitializer] 已初始化 PASSWORD_CONFIG.DefaultUserPassword = '1234567'");
         }
     }
 }
