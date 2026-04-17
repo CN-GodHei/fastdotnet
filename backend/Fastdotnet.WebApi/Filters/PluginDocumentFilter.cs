@@ -37,7 +37,13 @@ namespace Fastdotnet.WebApi.Filters
                         {
                             // 检查主系统API的作用域
                             var apiScope = GetApiUsageScope(apiDesc);
-                            if (!ShouldKeepApi(scope, apiScope))
+                            
+                            // 如果没有ApiUsageScopeAttribute，则移除该API
+                            if (apiScope == null)
+                            {
+                                pathsToRemove.Add(path.Key);
+                            }
+                            else if (!ShouldKeepApi(scope, apiScope.Value))
                             {
                                 pathsToRemove.Add(path.Key);
                             }
@@ -107,7 +113,8 @@ namespace Fastdotnet.WebApi.Filters
         /// <summary>
         /// 获取API的使用范围
         /// </summary>
-        private ApiUsageScopeEnum GetApiUsageScope(ApiDescription apiDesc)
+        /// <returns>如果找到ApiUsageScopeAttribute则返回对应的枚举值，否则返回null</returns>
+        private ApiUsageScopeEnum? GetApiUsageScope(ApiDescription apiDesc)
         {
             // 尝试从控制器或动作方法上的特性获取作用域
             if (apiDesc.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
@@ -157,8 +164,8 @@ namespace Fastdotnet.WebApi.Filters
                 }
             }
             
-            // 默认返回Both，表示两端通用
-            return ApiUsageScopeEnum.Both;
+            // 没有找到ApiUsageScopeAttribute，返回null
+            return null;
         }
         
         /// <summary>
