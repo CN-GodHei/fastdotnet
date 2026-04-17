@@ -293,4 +293,41 @@
         /// </summary>
         public List<FdDictDataDto>? Children { get; set; }
     }
+
+    /// <summary>
+    /// 简化版字典数据（用于前端下拉选择等场景）
+    /// </summary>
+    public class FdDictDataSimple
+    {
+        /// <summary>
+        /// 编码（程序内部标识，可选）
+        /// </summary>
+        public string? Code { get; set; }
+
+        /// <summary>
+        /// 值（实际提交的值）
+        /// </summary>
+        public string Value { get; set; }
+
+        /// <summary>
+        /// 显示文本（下拉框显示的标签）
+        /// </summary>
+        public string Label { get; set; }
+    }
+
+    /// <summary>
+    /// 最简版字典数据（仅 label 和 value，适用于简单下拉场景）
+    /// </summary>
+    public class FdDictDataMinimal
+    {
+        /// <summary>
+        /// 值（实际提交的值）
+        /// </summary>
+        public string Value { get; set; }
+
+        /// <summary>
+        /// 显示文本（下拉框显示的标签）
+        /// </summary>
+        public string Label { get; set; }
+    }
 }
