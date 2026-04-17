@@ -14,8 +14,8 @@ namespace Fastdotnet.Service.Mappings
             CreateMap<FdDictData, FdDictDataDto>()
                 .ForMember(dest => dest.ValueType, opt => opt.MapFrom(src => (int)src.ValueType))
                 .MaskSensitiveData();
-            CreateMap<FdDictType, FdDictDataSimple>();
-            CreateMap<FdDictType, FdDictDataMinimal>();
+            CreateMap<FdDictData, FdDictDataSimple>();
+            CreateMap<FdDictData, FdDictDataMinimal>();
             // DTO -> Entity（int 自动转换为枚举）
             CreateMap<CreateFdDictDataDto, FdDictData>()
                 .ForMember(dest => dest.ValueType, opt => opt.MapFrom(src => (DictValueType)src.ValueType));

@@ -46,6 +46,7 @@ namespace Fastdotnet.Service.Service.Sys
                 return;
             }
 
+
             // 先获取数据库中所有现有的数据
             var existingTypes = await _typeRepository.GetAllAsync();
             var existingData = await _dataRepository.GetAllAsync();
@@ -87,8 +88,10 @@ namespace Fastdotnet.Service.Service.Sys
             {
                 var typeToAdd = item.fdDictType;
 
-                // 检查字典类型是否存在，不存在则可能需要生成 Code
-                if (!existingTypes.Any(t => t.Id == item.fdDictType.Id))
+                // 检查字典类型是否存在（以 Code 为准）
+                var existingType = existingTypes.FirstOrDefault(t => t.Code == item.fdDictType.Code);
+                
+                if (existingType == null)
                 {
                     // 如果类型没有 Code，自动生成
                     if (string.IsNullOrEmpty(typeToAdd.Code))
@@ -122,7 +125,7 @@ namespace Fastdotnet.Service.Service.Sys
                 else
                 {
                     // 类型已存在，使用数据库中的类型信息
-                    typeToAdd = existingTypes.First(t => t.Id == item.fdDictType.Id);
+                    typeToAdd = existingType;
                 }
 
                 // 检查字典数据是否存在，并自动生成 Code
@@ -131,9 +134,18 @@ namespace Fastdotnet.Service.Service.Sys
                     var typeCode = typeToAdd.Code;
                     var currentSuffix = maxSuffixByType.GetValueOrDefault(typeCode, 0) + 1;
 
-                    foreach (var data in item.fdDictData.Where(d => !existingData.Any(ed => ed.Id == d.Id)))
+                    foreach (var data in item.fdDictData)
                     {
-                        // 如果没有 Code 或 Code 已存在，自动生成
+                        // 以 Code 为准检查数据是否已存在
+                        var existingItem = existingData.FirstOrDefault(ed => ed.Code == data.Code);
+                        
+                        if (existingItem != null)
+                        {
+                            // 数据已存在，跳过
+                            continue;
+                        }
+
+                        // 如果没有 Code，自动生成
                         if (string.IsNullOrEmpty(data.Code))
                         {
                             data.Code = $"{typeCode}_{currentSuffix:D3}";
