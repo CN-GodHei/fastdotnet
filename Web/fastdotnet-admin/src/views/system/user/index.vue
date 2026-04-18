@@ -51,10 +51,12 @@
 				<el-table-column prop="PhoneNumber" label="手机号" show-overflow-tooltip />
 				<el-table-column prop="Nickname" label="昵称" show-overflow-tooltip />
 				<el-table-column prop="Status" label="账户状态" show-overflow-tooltip />
-				<el-table-column label="操作" width="260" fixed="right" align="center">
+				<el-table-column label="操作" width="340" fixed="right" align="center">
 					<template #default="scope">
 						<el-button icon="ele-Edit" size="small" text type="primary"
 							@click="openEditDialog(scope.row)">修改</el-button>
+						<el-button icon="ele-Setting" size="small" text type="primary"
+							@click="openExtensionDialog(scope.row)">扩展信息</el-button>
 						<el-button icon="ele-User" size="small" text type="primary"
 							@click="openAssignRoleDialog(scope.row)">分配角色</el-button>
 						<el-button icon="ele-Delete" size="small" text type="danger"
@@ -154,6 +156,22 @@
 				</span>
 			</template>
 		</el-dialog>
+
+		<!-- 用户扩展信息对话框 -->
+		<el-dialog v-model="state.extensionDialog.visible" draggable :close-on-click-modal="false" width="800px">
+			<template #header>
+				<div style="color: #fff">
+					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Setting /> </el-icon>
+					<span> {{ state.extensionDialog.title }} </span>
+				</div>
+			</template>
+			<UserExtensionPanels v-if="state.extensionDialog.visible" :userId="state.extensionDialog.userId" />
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="state.extensionDialog.visible = false">关 闭</el-button>
+				</span>
+			</template>
+		</el-dialog>
 	</div>
 </template>
 
@@ -161,6 +179,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { buildMixedQuery } from '@/utils/queryBuilder';
+import UserExtensionPanels from '@/components/UserExtensionPanels.vue';
 
 import dayjs from 'dayjs'; // 引入日期处理库
 import * as FdAppUserApi from '@/api/fd-system-api-admin/FdAppUser';
@@ -200,6 +219,11 @@ const state = reactive({
 		selectedRoles: [] as string[],
 		allRoles: [] as Array<{ key: string; name: string; code: string }>[],
 		currentUserRoles: [] as string[],
+	},
+	extensionDialog: {
+		visible: false,
+		title: '',
+		userId: '',
 	},
 	formData: {
 		Id: '',
@@ -332,6 +356,13 @@ const openAssignRoleDialog = async (row: APIModel.FdAppUserDto) => {
 	} catch (error) {
 		ElMessage.error('获取角色数据失败');
 	}
+};
+
+// 打开扩展信息对话框
+const openExtensionDialog = (row: APIModel.FdAppUserDto) => {
+	state.extensionDialog.userId = row.Id as string;
+	state.extensionDialog.title = `"${row.Nickname}" 的扩展信息`;
+	state.extensionDialog.visible = true;
 };
 
 // 加载所有角色

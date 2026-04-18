@@ -31,33 +31,9 @@ namespace Fastdotnet.Core.IService.Sys
             T entity,
             CancellationToken ct = default) where T : class, new()
         {
-            // 检查实体是否已存在，如果存在则更新，否则插入
-            var table = _db.GetSimpleClient<T>();
-            var existing = await table.GetByIdAsync(GetEntityId(entity));
-            
-            if (existing != null)
-            {
-                await table.UpdateAsync(entity); // 移除返回值
-            }
-            else
-            {
-                await table.InsertReturnIdentityAsync(entity); // 移除返回值
-            }
-        }
-        
-        private object GetEntityId<T>(T entity) where T : class, new()
-        {
-            var type = typeof(T);
-            var idProperty = type.GetProperty("Id") ?? 
-                           type.GetProperty("ID") ?? 
-                           type.GetProperty("id");
-            
-            if (idProperty != null)
-            {
-                return idProperty.GetValue(entity);
-            }
-            
-            throw new InvalidOperationException($"Entity {typeof(T).Name} does not have an Id property");
+            // 优化：使用 SqlSugar 的 Saveable 方法，自动根据主键判断插入或更新
+            // 这种方式比反射获取 ID 更高效，且代码更简洁
+            await _db.Saveable(entity).ExecuteCommandAsync();
         }
     }
 }

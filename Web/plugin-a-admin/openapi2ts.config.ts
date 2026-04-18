@@ -1,6 +1,6 @@
 export default [
     {
-        schemaPath: 'http://localhost:18889/swagger/plugin-11375910391972869/swagger.json',
+        schemaPath: 'http://localhost:18889/swagger/plugin-11375910391972869-admin/swagger.json',
         serversPath: './src/api',
         projectName: 'plugin-a',
         namespace: "APIModel",

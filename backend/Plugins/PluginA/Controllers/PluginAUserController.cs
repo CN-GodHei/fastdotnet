@@ -4,7 +4,9 @@ using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.Dtos.App;
 using Fastdotnet.Core.Entities.App;
 using Fastdotnet.Core.Enum;
+using Fastdotnet.Core.Extensibility.Users;
 using Fastdotnet.Core.IService.App;
+using Fastdotnet.Core.IService.Sys;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PluginA.Dto;
@@ -17,17 +19,25 @@ using System.Threading.Tasks;
 namespace PluginA.Controllers
 {
     [Route("api/[controller]")]
-    [ApiUsageScope(ApiUsageScopeEnum.AppOnly)]
+    [ApiUsageScope(ApiUsageScopeEnum.Both)]
     [AllowAnonymous]
     public class PluginAUserController : ControllerBase
     {
         private readonly IFdAppUserService _appUserService;
         private readonly IMapper _mpper;
+        private readonly IStorageContext _storageContext;
+        private readonly IFdAppUserExtensionHandler<PluginAUserExtension> _userExtensionHandler;
 
-        public PluginAUserController(IFdAppUserService appUserService, IMapper mpper)
+        public PluginAUserController(
+            IFdAppUserService appUserService, 
+            IMapper mpper,
+            IStorageContext storageContext,
+            IFdAppUserExtensionHandler<PluginAUserExtension> userExtensionHandler)
         {
             _appUserService = appUserService;
             _mpper = mpper;
+            _storageContext = storageContext;
+            _userExtensionHandler = userExtensionHandler;
         }
 
         /// <summary>
@@ -77,12 +87,8 @@ namespace PluginA.Controllers
                     return NotFound($"User with ID {userId} not found.");
                 }
 
-                // 更新用户基础信息和扩展数据
-                await _appUserService.UpdateFdAppUserWithExtensionAsync(
-                    userId,
-                    u => u.Email = "", // 更新基础信息中的更新时间
-                    extensionData
-                );
+                // 【优化】仅更新插件扩展表，不触碰主框架用户表
+                await _userExtensionHandler.SaveAsync(userId, extensionData, _storageContext);
 
                 return Ok(new { Message = "User extension updated successfully." });
             }

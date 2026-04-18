@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build --mode micro",
+    "build": "vite build --mode micro",
     "build:micro": "vite build --mode micro",
     "preview": "vite preview",
     "openapi2ts": "openapi2ts",
@@ -22,8 +22,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.9.0",
-    "@umijs/openapi": "^1.13.15",
     "@vitejs/plugin-vue": "^5.0.0",
+		"fastdotnet-openapi2ts": "^1.0.1",
     "typescript": "^5.2.0",
     "vite": "^5.0.0",
     "vite-plugin-qiankun": "^1.0.15",

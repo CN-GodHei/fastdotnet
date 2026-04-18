@@ -116,7 +116,7 @@
 import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
 // 导入你想要测试的 API 函数
-import { getApiPluginsPinyin_11375910391972869PluginATestDto } from '@/api/plugin-a/PluginATestDto';
+import { getPluginsAdminP11375910391972869PluginATestDto } from '@/api/plugin-a/PluginATestDto';
 // 导入共享的查询构建器
 import { getSharedFdQueryBuilder } from '@/main';
 // 导入全局上传组件
@@ -195,7 +195,7 @@ const testGetApi = async () => {
   error.value = null;
   try {
     // 调用 API 函数
-    const data = await getApiPluginsPinyin_11375910391972869PluginATestDto();
+    const data = await getPluginsAdminP11375910391972869PluginATestDto();
     //console.log('API Response:', data);
     responseData.value = data;
   } catch (err) {

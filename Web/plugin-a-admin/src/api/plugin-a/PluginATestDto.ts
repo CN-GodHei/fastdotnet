@@ -2,26 +2,25 @@
 /* eslint-disable */
 import request from "../../utils/fdRequestAdapter";
 
-/** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/plugins/11375910391972869/PluginATestDto */
-export async function getApiPluginsPinyin_11375910391972869PluginATestDto(options?: {
+/** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/plugins/admin/p11375910391972869/PluginATestDto */
+export async function getPluginsAdminP11375910391972869PluginATestDto(options?: {
   [key: string]: any;
 }) {
   return request<APIModel.PluginATestDto[]>(
-    "/api/plugins/11375910391972869/PluginATestDto",
+    "/api/plugins/admin/p11375910391972869/PluginATestDto",
     {
       method: "GET",
       ...(options || {}),
     }
   );
 }
-
-/** 创建新记录 根据提供的数据创建一条新记录。 POST /api/plugins/11375910391972869/PluginATestDto */
-export async function postApiPluginsPinyin_11375910391972869PluginATestDto(
+/** 创建新记录 根据提供的数据创建一条新记录。 POST /api/plugins/admin/p11375910391972869/PluginATestDto */
+export async function postPluginsAdminP11375910391972869PluginATestDto(
   body: APIModel.PluginATestCreateDto,
   options?: { [key: string]: any }
 ) {
   return request<APIModel.PluginATestDto>(
-    "/api/plugins/11375910391972869/PluginATestDto",
+    "/api/plugins/admin/p11375910391972869/PluginATestDto",
     {
       method: "POST",
       headers: {
@@ -32,16 +31,16 @@ export async function postApiPluginsPinyin_11375910391972869PluginATestDto(
     }
   );
 }
-
-/** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/plugins/11375910391972869/PluginATestDto/${param0} */
-export async function getId(
+/** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/plugins/admin/p11375910391972869/PluginATestDto/${param0} */
+export async function getPluginsAdminP11375910391972869PluginATestDtoId(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: APIModel.getIdParams,
+  params: APIModel.getPluginsAdminP11375910391972869PluginATestDtoIdParams,
   options?: { [key: string]: any }
 ) {
   const { id: param0, ...queryParams } = params;
+
   return request<APIModel.PluginATestDto>(
-    `/api/plugins/11375910391972869/PluginATestDto/${param0}`,
+    `/api/plugins/admin/p11375910391972869/PluginATestDto/${param0}`,
     {
       method: "GET",
       params: { ...queryParams },
@@ -49,17 +48,17 @@ export async function getId(
     }
   );
 }
-
-/** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/plugins/11375910391972869/PluginATestDto/${param0} */
-export async function putId(
+/** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/plugins/admin/p11375910391972869/PluginATestDto/${param0} */
+export async function putPluginsAdminP11375910391972869PluginATestDtoId(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: APIModel.putIdParams,
+  params: APIModel.putPluginsAdminP11375910391972869PluginATestDtoIdParams,
   body: APIModel.PluginATestUpdateDto,
   options?: { [key: string]: any }
 ) {
   const { id: param0, ...queryParams } = params;
+
   return request<APIModel.PluginATestDto>(
-    `/api/plugins/11375910391972869/PluginATestDto/${param0}`,
+    `/api/plugins/admin/p11375910391972869/PluginATestDto/${param0}`,
     {
       method: "PUT",
       headers: {
@@ -71,16 +70,16 @@ export async function putId(
     }
   );
 }
-
-/** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/plugins/11375910391972869/PluginATestDto/${param0} */
-export async function deleteId(
+/** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/plugins/admin/p11375910391972869/PluginATestDto/${param0} */
+export async function deletePluginsAdminP11375910391972869PluginATestDtoId(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: APIModel.deleteIdParams,
+  params: APIModel.deletePluginsAdminP11375910391972869PluginATestDtoIdParams,
   options?: { [key: string]: any }
 ) {
   const { id: param0, ...queryParams } = params;
+
   return request<boolean>(
-    `/api/plugins/11375910391972869/PluginATestDto/${param0}`,
+    `/api/plugins/admin/p11375910391972869/PluginATestDto/${param0}`,
     {
       method: "DELETE",
       params: { ...queryParams },
@@ -88,14 +87,47 @@ export async function deleteId(
     }
   );
 }
-
-/** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/plugins/11375910391972869/PluginATestDto/batch */
-export async function deleteBatch(
+/** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/plugins/admin/p11375910391972869/PluginATestDto/batch */
+export async function putPluginsAdminP11375910391972869PluginATestDtoBatch(
+  body: APIModel.PluginATestUpdateDto[],
+  options?: { [key: string]: any }
+) {
+  return request<number>(
+    "/api/plugins/admin/p11375910391972869/PluginATestDto/batch",
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json-patch+json",
+      },
+      data: body,
+      ...(options || {}),
+    }
+  );
+}
+/** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/plugins/admin/p11375910391972869/PluginATestDto/batch */
+export async function postPluginsAdminP11375910391972869PluginATestDtoBatch(
+  body: APIModel.PluginATestCreateDto[],
+  options?: { [key: string]: any }
+) {
+  return request<number>(
+    "/api/plugins/admin/p11375910391972869/PluginATestDto/batch",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json-patch+json",
+      },
+      data: body,
+      ...(options || {}),
+    }
+  );
+}
+/** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/plugins/admin/p11375910391972869/PluginATestDto/batch */
+export async function deletePluginsAdminP11375910391972869PluginATestDtoBatch(
   body: string[],
   options?: { [key: string]: any }
 ) {
   return request<number>(
-    "/api/plugins/11375910391972869/PluginATestDto/batch",
+    "/api/plugins/admin/p11375910391972869/PluginATestDto/batch",
     {
       method: "DELETE",
       headers: {
@@ -106,15 +138,48 @@ export async function deleteBatch(
     }
   );
 }
-
-/** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/plugins/11375910391972869/PluginATestDto/page */
-export async function getPage(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: APIModel.getPageParams,
+/** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/plugins/admin/p11375910391972869/PluginATestDto/batch/updatebycondition */
+export async function putPluginsAdminP11375910391972869PluginATestDtoBatchUpdatebycondition(
+  body: APIModel.BatchUpdateByConditionDto1PluginATestUpdateDto,
   options?: { [key: string]: any }
 ) {
-  return request<APIModel.PluginATestDtoPageResult>(
-    "/api/plugins/11375910391972869/PluginATestDto/page",
+  return request<number>(
+    "/api/plugins/admin/p11375910391972869/PluginATestDto/batch/updatebycondition",
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json-patch+json",
+      },
+      data: body,
+      ...(options || {}),
+    }
+  );
+}
+/** 根据自定义条件获取列表(不分页) 根据自定义条件获取列表(不分页) POST /api/plugins/admin/p11375910391972869/PluginATestDto/list-by-condition */
+export async function postPluginsAdminP11375910391972869PluginATestDtoListByCondition(
+  body: APIModel.QueryByConditionDto,
+  options?: { [key: string]: any }
+) {
+  return request<any>(
+    "/api/plugins/admin/p11375910391972869/PluginATestDto/list-by-condition",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json-patch+json",
+      },
+      data: body,
+      ...(options || {}),
+    }
+  );
+}
+/** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/plugins/admin/p11375910391972869/PluginATestDto/page */
+export async function getPluginsAdminP11375910391972869PluginATestDtoPage(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: APIModel.getPluginsAdminP11375910391972869PluginATestDtoPageParams,
+  options?: { [key: string]: any }
+) {
+  return request<APIModel.PageResult1PluginATestDto>(
+    "/api/plugins/admin/p11375910391972869/PluginATestDto/page",
     {
       method: "GET",
       params: {
@@ -128,14 +193,13 @@ export async function getPage(
     }
   );
 }
-
-/** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/plugins/11375910391972869/PluginATestDto/page/search */
-export async function postPageSearch(
+/** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/plugins/admin/p11375910391972869/PluginATestDto/page/search */
+export async function postPluginsAdminP11375910391972869PluginATestDtoPageSearch(
   body: APIModel.PageQueryByConditionDto,
   options?: { [key: string]: any }
 ) {
-  return request<APIModel.PluginATestDtoPageResult>(
-    "/api/plugins/11375910391972869/PluginATestDto/page/search",
+  return request<APIModel.PageResult1PluginATestDto>(
+    "/api/plugins/admin/p11375910391972869/PluginATestDto/page/search",
     {
       method: "POST",
       headers: {
@@ -146,15 +210,14 @@ export async function postPageSearch(
     }
   );
 }
-
-/** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/plugins/11375910391972869/PluginATestDto/recyclebin */
-export async function getRecyclebin(
+/** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/plugins/admin/p11375910391972869/PluginATestDto/recyclebin */
+export async function getPluginsAdminP11375910391972869PluginATestDtoRecyclebin(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: APIModel.getRecyclebinParams,
+  params: APIModel.getPluginsAdminP11375910391972869PluginATestDtoRecyclebinParams,
   options?: { [key: string]: any }
 ) {
-  return request<APIModel.PluginATestDtoPageResult>(
-    "/api/plugins/11375910391972869/PluginATestDto/recyclebin",
+  return request<APIModel.PageResult1PluginATestDto>(
+    "/api/plugins/admin/p11375910391972869/PluginATestDto/recyclebin",
     {
       method: "GET",
       params: {
@@ -168,16 +231,16 @@ export async function getRecyclebin(
     }
   );
 }
-
-/** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/plugins/11375910391972869/PluginATestDto/recyclebin/${param0}/permanent */
-export async function deleteRecyclebinIdPermanent(
+/** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/plugins/admin/p11375910391972869/PluginATestDto/recyclebin/${param0}/permanent */
+export async function deletePluginsAdminP11375910391972869PluginATestDtoRecyclebinIdPermanent(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: APIModel.deleteRecyclebinIdPermanentParams,
+  params: APIModel.deletePluginsAdminP11375910391972869PluginATestDtoRecyclebinIdPermanentParams,
   options?: { [key: string]: any }
 ) {
   const { id: param0, ...queryParams } = params;
+
   return request<boolean>(
-    `/api/plugins/11375910391972869/PluginATestDto/recyclebin/${param0}/permanent`,
+    `/api/plugins/admin/p11375910391972869/PluginATestDto/recyclebin/${param0}/permanent`,
     {
       method: "DELETE",
       params: { ...queryParams },
@@ -185,16 +248,16 @@ export async function deleteRecyclebinIdPermanent(
     }
   );
 }
-
-/** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/plugins/11375910391972869/PluginATestDto/recyclebin/${param0}/restore */
-export async function putRecyclebinIdRestore(
+/** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/plugins/admin/p11375910391972869/PluginATestDto/recyclebin/${param0}/restore */
+export async function putPluginsAdminP11375910391972869PluginATestDtoRecyclebinIdRestore(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: APIModel.putRecyclebinIdRestoreParams,
+  params: APIModel.putPluginsAdminP11375910391972869PluginATestDtoRecyclebinIdRestoreParams,
   options?: { [key: string]: any }
 ) {
   const { id: param0, ...queryParams } = params;
+
   return request<boolean>(
-    `/api/plugins/11375910391972869/PluginATestDto/recyclebin/${param0}/restore`,
+    `/api/plugins/admin/p11375910391972869/PluginATestDto/recyclebin/${param0}/restore`,
     {
       method: "PUT",
       params: { ...queryParams },
@@ -202,14 +265,13 @@ export async function putRecyclebinIdRestore(
     }
   );
 }
-
-/** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/plugins/11375910391972869/PluginATestDto/recyclebin/permanent */
-export async function postRecyclebinPermanent(
-  body: APIModel.PluginATestBooleanFuncExpression,
+/** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/plugins/admin/p11375910391972869/PluginATestDto/recyclebin/permanent */
+export async function postPluginsAdminP11375910391972869PluginATestDtoRecyclebinPermanent(
+  body: APIModel.Expression1Func2PluginATest_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
   options?: { [key: string]: any }
 ) {
   return request<number>(
-    "/api/plugins/11375910391972869/PluginATestDto/recyclebin/permanent",
+    "/api/plugins/admin/p11375910391972869/PluginATestDto/recyclebin/permanent",
     {
       method: "POST",
       headers: {
@@ -220,14 +282,13 @@ export async function postRecyclebinPermanent(
     }
   );
 }
-
-/** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/plugins/11375910391972869/PluginATestDto/recyclebin/restore */
-export async function postRecyclebinRestore(
-  body: APIModel.PluginATestBooleanFuncExpression,
+/** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/plugins/admin/p11375910391972869/PluginATestDto/recyclebin/restore */
+export async function postPluginsAdminP11375910391972869PluginATestDtoRecyclebinRestore(
+  body: APIModel.Expression1Func2PluginATest_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
   options?: { [key: string]: any }
 ) {
   return request<number>(
-    "/api/plugins/11375910391972869/PluginATestDto/recyclebin/restore",
+    "/api/plugins/admin/p11375910391972869/PluginATestDto/recyclebin/restore",
     {
       method: "POST",
       headers: {
@@ -238,14 +299,13 @@ export async function postRecyclebinRestore(
     }
   );
 }
-
-/** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/plugins/11375910391972869/PluginATestDto/recyclebin/search */
-export async function postRecyclebinSearch(
+/** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/plugins/admin/p11375910391972869/PluginATestDto/recyclebin/search */
+export async function postPluginsAdminP11375910391972869PluginATestDtoRecyclebinSearch(
   body: APIModel.PageQueryByConditionDto,
   options?: { [key: string]: any }
 ) {
-  return request<APIModel.PluginATestDtoPageResult>(
-    "/api/plugins/11375910391972869/PluginATestDto/recyclebin/search",
+  return request<APIModel.PageResult1PluginATestDto>(
+    "/api/plugins/admin/p11375910391972869/PluginATestDto/recyclebin/search",
     {
       method: "POST",
       headers: {
@@ -256,11 +316,15 @@ export async function postRecyclebinSearch(
     }
   );
 }
-
-/** 此处后端没有提供注释 GET /api/plugins/11375910391972869/PluginATestDto/test */
-export async function getTest(options?: { [key: string]: any }) {
-  return request<any>("/api/plugins/11375910391972869/PluginATestDto/test", {
-    method: "GET",
-    ...(options || {}),
-  });
+/** 此处后端没有提供注释 GET /api/plugins/admin/p11375910391972869/PluginATestDto/test */
+export async function getPluginsAdminP11375910391972869PluginATestDtoTest(options?: {
+  [key: string]: any;
+}) {
+  return request<string>(
+    "/api/plugins/admin/p11375910391972869/PluginATestDto/test",
+    {
+      method: "GET",
+      ...(options || {}),
+    }
+  );
 }

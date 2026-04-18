@@ -50,15 +50,23 @@ public class FdAppUserService : IFdAppUserService
         Action<FdAppUser> updateAction,
         CancellationToken ct = default)
     {
-        _unitOfWork.BeginTransactionAsync(ct); // 开始事务，不使用await
+        try
+        {
+            await _unitOfWork.BeginTransactionAsync(ct); // 修复：添加 await
 
-        var fdAppUser = await _fdAppUserRepo.GetByIdAsync(fdAppUserId, ct)
-            ?? throw new KeyNotFoundException($"FdAppUser with ID {fdAppUserId} not found.");
+            var fdAppUser = await _fdAppUserRepo.GetByIdAsync(fdAppUserId, ct)
+                ?? throw new KeyNotFoundException($"FdAppUser with ID {fdAppUserId} not found.");
 
-        updateAction(fdAppUser);
-        await _fdAppUserRepo.UpdateAsync(fdAppUser); // 不需要CancellationToken参数
+            updateAction(fdAppUser);
+            await _fdAppUserRepo.UpdateAsync(fdAppUser);
 
-        await _unitOfWork.CommitAsync(ct); // 提交事务
+            await _unitOfWork.CommitAsync(ct);
+        }
+        catch
+        {
+            await _unitOfWork.RollbackAsync(ct); // 添加回滚逻辑
+            throw;
+        }
     }
 
     public async Task UpdateFdAppUserWithExtensionAsync<TExtension>(
@@ -70,29 +78,37 @@ public class FdAppUserService : IFdAppUserService
         if (extensionData == null)
             throw new ArgumentNullException(nameof(extensionData));
 
-        _unitOfWork.BeginTransactionAsync(ct); // 开始事务，不使用await
-
-        // 1. 更新主表
-        var fdAppUser = await _fdAppUserRepo.GetByIdAsync(fdAppUserId, ct)
-            ?? throw new KeyNotFoundException($"FdAppUser with ID {fdAppUserId} not found.");
-
-        updateBaseAction(fdAppUser);
-        await _fdAppUserRepo.UpdateAsync(fdAppUser); // 不需要CancellationToken参数
-
-        // 2. 更新扩展表
-        var handlerType = typeof(IFdAppUserExtensionHandler<>).MakeGenericType(typeof(TExtension)); // 使用插件系统定义的接口
-        if (_serviceProvider.GetService(handlerType) is IFdAppUserExtensionHandler<TExtension> handler)
+        try
         {
-            await handler.SaveAsync(fdAppUserId, extensionData, _storageContext, ct); // 使用正确的参数顺序
-        }
-        else
-        {
-            throw new InvalidOperationException(
-                $"No extension handler registered for type '{typeof(TExtension).Name}'. " +
-                $"Did you forget to register IFdAppUserExtensionHandler<{typeof(TExtension).Name}>?");
-        }
+            await _unitOfWork.BeginTransactionAsync(ct); // 修复：添加 await
 
-        await _unitOfWork.CommitAsync(ct); // 提交事务
+            // 1. 更新主表
+            var fdAppUser = await _fdAppUserRepo.GetByIdAsync(fdAppUserId, ct)
+                ?? throw new KeyNotFoundException($"FdAppUser with ID {fdAppUserId} not found.");
+
+            updateBaseAction(fdAppUser);
+            await _fdAppUserRepo.UpdateAsync(fdAppUser);
+
+            // 2. 更新扩展表
+            var handlerType = typeof(IFdAppUserExtensionHandler<>).MakeGenericType(typeof(TExtension)); // 使用插件系统定义的接口
+            if (_serviceProvider.GetService(handlerType) is IFdAppUserExtensionHandler<TExtension> handler)
+            {
+                await handler.SaveAsync(fdAppUserId, extensionData, _storageContext, ct); // 使用正确的参数顺序
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    $"No extension handler registered for type '{typeof(TExtension).Name}'. " +
+                    $"Did you forget to register IFdAppUserExtensionHandler<{typeof(TExtension).Name}>?");
+            }
+
+            await _unitOfWork.CommitAsync(ct);
+        }
+        catch
+        {
+            await _unitOfWork.RollbackAsync(ct); // 添加回滚逻辑
+            throw;
+        }
     }
 
     public async Task<string> CreateFdAppUserWithExtensionAsync<TExtension>(
@@ -103,27 +119,35 @@ public class FdAppUserService : IFdAppUserService
         if (extensionData == null)
             throw new ArgumentNullException(nameof(extensionData));
 
-        _unitOfWork.BeginTransactionAsync(ct); // 开始事务，不使用await
-
-        // 1. 创建主表
-        var fdAppUser = new FdAppUser();
-        initBaseAction(fdAppUser);
-        await _fdAppUserRepo.InsertAsync(fdAppUser);
-        var fdAppUserId = fdAppUser.Id; // SqlSugar 会回填 ID
-
-        // 2. 创建扩展
-        var handlerType = typeof(IFdAppUserExtensionHandler<>).MakeGenericType(typeof(TExtension)); // 使用插件系统定义的接口
-        if (_serviceProvider.GetService(handlerType) is IFdAppUserExtensionHandler<TExtension> handler)
+        try
         {
-            await handler.SaveAsync(fdAppUserId, extensionData, _storageContext, ct); // 使用正确的参数顺序
-        }
-        else
-        {
-            throw new InvalidOperationException(
-                $"No extension handler registered for type '{typeof(TExtension).Name}'.");
-        }
+            await _unitOfWork.BeginTransactionAsync(ct); // 修复：添加 await
 
-        await _unitOfWork.CommitAsync(ct); // 提交事务
-        return fdAppUserId;
+            // 1. 创建主表
+            var fdAppUser = new FdAppUser();
+            initBaseAction(fdAppUser);
+            await _fdAppUserRepo.InsertAsync(fdAppUser);
+            var fdAppUserId = fdAppUser.Id; // SqlSugar 会回填 ID
+
+            // 2. 创建扩展
+            var handlerType = typeof(IFdAppUserExtensionHandler<>).MakeGenericType(typeof(TExtension)); // 使用插件系统定义的接口
+            if (_serviceProvider.GetService(handlerType) is IFdAppUserExtensionHandler<TExtension> handler)
+            {
+                await handler.SaveAsync(fdAppUserId, extensionData, _storageContext, ct); // 使用正确的参数顺序
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    $"No extension handler registered for type '{typeof(TExtension).Name}'.");
+            }
+
+            await _unitOfWork.CommitAsync(ct);
+            return fdAppUserId;
+        }
+        catch
+        {
+            await _unitOfWork.RollbackAsync(ct); // 添加回滚逻辑
+            throw;
+        }
     }
 }

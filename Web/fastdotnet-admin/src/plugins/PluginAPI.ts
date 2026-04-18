@@ -22,10 +22,18 @@ export interface PluginService {
   description?: string;
 }
 
+export interface PluginUIComponent {
+  pluginId: string;
+  componentName: string;
+  component: any; // Vue Component
+  description?: string;
+}
+
 export class PluginAPI {
   private static instance: PluginAPI;
   private services: Map<string, PluginService> = new Map(); // serviceName -> service
   private serviceProviders: Map<string, string[]> = new Map(); // pluginId -> serviceNames[]
+  private uiComponents: Map<string, PluginUIComponent> = new Map(); // key -> component
   private eventBus: PluginEventBus;
 
   private constructor() {
@@ -122,6 +130,45 @@ export class PluginAPI {
     }
 
     return true;
+  }
+
+  /**
+   * 注册UI组件（用于用户扩展面板等场景）
+   */
+  public registerUIComponent(component: PluginUIComponent): boolean {
+    const key = `${component.pluginId}_${component.componentName}`;
+    if (this.uiComponents.has(key)) {
+      console.warn(`[PluginAPI] UI Component ${key} already registered`);
+      return false;
+    }
+
+    this.uiComponents.set(key, component);
+    console.log(`[PluginAPI] UI Component registered: ${key}`);
+    return true;
+  }
+
+  /**
+   * 获取注册的UI组件
+   */
+  public getUIComponent(pluginId: string, componentName: string): any {
+    const key = `${pluginId}_${componentName}`;
+    return this.uiComponents.get(key)?.component;
+  }
+
+  /**
+   * 获取特定插件注册的所有UI组件
+   */
+  public getUIComponentsByPlugin(pluginId: string): PluginUIComponent[] {
+    return Array.from(this.uiComponents.values())
+      .filter(c => c.pluginId === pluginId);
+  }
+
+  /**
+   * 注销UI组件
+   */
+  public unregisterUIComponent(pluginId: string, componentName: string): boolean {
+    const key = `${pluginId}_${componentName}`;
+    return this.uiComponents.delete(key);
   }
 
   /**

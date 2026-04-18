@@ -12,37 +12,23 @@ namespace PluginA.IService
     /// <summary>
     /// PluginA 用户扩展数据处理器
     /// </summary>
-    public class PluginAUserExtensionHandler : IFdAppUserExtensionHandler<PluginAUserExtension>
+    public class PluginAUserExtensionHandler : FdAppUserExtensionHandlerBase<PluginAUserExtension>
     {
-        private readonly ISqlSugarClient _db;
-
-        public PluginAUserExtensionHandler(ISqlSugarClient db)
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="storageContext">存储上下文</param>
+        public PluginAUserExtensionHandler(IStorageContext storageContext) 
+            : base(storageContext, "p_pluginA_user_extensions")
         {
-            _db = db;
         }
 
         /// <summary>
-        /// 保存用户扩展数据
+        /// 设置用户ID到扩展数据中
         /// </summary>
-        public async Task SaveAsync(string userId, PluginAUserExtension data, IStorageContext context, CancellationToken ct = default)
+        protected override void SetUserId(PluginAUserExtension data, string userId)
         {
-            // 设置用户ID
             data.FdAppUserId = userId;
-
-            // 使用IStorageContext接口进行存储操作
-            await context.SaveEntityAsync(data, ct);
-        }
-
-        /// <summary>
-        /// 加载用户扩展数据
-        /// </summary>
-        public async Task<PluginAUserExtension?> LoadAsync(string userId, IStorageContext context, CancellationToken ct = default)
-        {
-            // 使用IStorageContext接口进行查询操作
-            var sql = "SELECT * FROM Fd_PluginAUserExtension WHERE FdAppUserId = @userId";
-            var parameters = new { userId = userId };
-
-            return await context.QuerySingleOrDefaultAsync<PluginAUserExtension>(sql, parameters, ct);
         }
     }
 }
