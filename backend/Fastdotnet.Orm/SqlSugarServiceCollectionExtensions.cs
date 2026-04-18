@@ -116,75 +116,115 @@ public static class SqlSugarServiceCollectionExtensions
                 {
                     var entity = entityInfo.EntityValue;
 
-                    if (entityInfo.OperationType == DataFilterType.InsertByObject)
+                    // 【优化】仅对实现了 IBaseEntity 的实体执行自定义 AOP 逻辑
+                    if (entity is IBaseEntity baseEntity)
                     {
-                        // 1. 自动填充主键 ID 自动填充雪花ID（如果ID为0）
-                        if (entityInfo.PropertyName == nameof(IBaseEntity.Id) && oldValue == null)
+                        if (entityInfo.OperationType == DataFilterType.InsertByObject)
                         {
-                            //entityInfo.SetValue(SnowflakeIdGenerator.NextStrId());
-                            entityInfo.SetValue(YitIdHelper.NextId());
-                        }
+                            // 1. 自动填充主键 ID（如果ID为0或null）
+                            if (entityInfo.PropertyName == nameof(IBaseEntity.Id) && oldValue == null)
+                            {
+                                entityInfo.SetValue(YitIdHelper.NextId());
+                            }
 
-                        // 2. 自动填充 CreatedAt（如果未设置） 自动填充创建时间（如果CreatedAt为默认值）
-                        else if (entityInfo.PropertyName == nameof(IBaseEntity.CreatedAt) && (DateTime)oldValue == default)
-                        {
-                            // 使用本地时间，确保所见即所得
-                            entityInfo.SetValue(DateTime.Now);
+                            // 2. 自动填充 CreatedAt（如果未设置）
+                            else if (entityInfo.PropertyName == nameof(IBaseEntity.CreatedAt) && (DateTime)oldValue == default)
+                            {
+                                entityInfo.SetValue(DateTime.Now);
+                            }
+                            // 3. 自动填充 CreatedBy（仅当字段为空时）
+                            else if (entity is IAuditableEntity auditableInsert &&
+                                     entityInfo.PropertyName == nameof(IAuditableEntity.CreatedBy) &&
+                                     string.IsNullOrEmpty((string?)oldValue))
+                            {
+                                var currentUser = serviceProvider.GetService<ICurrentUser>();
+                                var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "anonymous";
+                                entityInfo.SetValue(userId ?? "anonymous");
+                            }
                         }
-                        // 3. 自动填充 CreatedBy（仅当字段为空时）
-                        else if (entity is IAuditableEntity auditableInsert &&
-                                 entityInfo.PropertyName == nameof(IAuditableEntity.CreatedBy) &&
-                                 string.IsNullOrEmpty((string?)oldValue))
+                        else if (entityInfo.OperationType == DataFilterType.UpdateByObject)
                         {
-                            var currentUser = serviceProvider.GetService<ICurrentUser>();
-                            var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "anonymous";
-                            entityInfo.SetValue(userId ?? "anonymous");
+                            // 自动填充更新时间
+                            if (entityInfo.PropertyName == nameof(IBaseEntity.UpdatedAt))
+                            {
+                                entityInfo.SetValue(DateTime.Now);
+                            }
+                            // 2. 自动填充 UpdatedBy
+                            else if (entity is IAuditableEntity auditableUpdate &&
+                                     entityInfo.PropertyName == nameof(IAuditableEntity.UpdatedBy))
+                            {
+                                var currentUser = serviceProvider.GetService<ICurrentUser>();
+                                var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "anonymous";
+                                entityInfo.SetValue(userId ?? "anonymous");
+                            }
+
+                            // 3. 处理软删除
+                            else if (entity is IAuditableEntity auditableDelete &&
+                                     entity is ISoftDelete softDelete &&
+                                     entityInfo.PropertyName == nameof(ISoftDelete.IsDeleted))
+                            {
+                                bool oldIsDeleted = (bool)(oldValue ?? false);
+                                var property = entity.GetType().GetProperty(entityInfo.PropertyName);
+                                if (property == null) return;
+                                object currentValueObj = property.GetValue(entityInfo);
+                                bool newIsDeleted = currentValueObj is bool b ? b : false;
+
+                                if (!oldIsDeleted && newIsDeleted)
+                                {
+                                    var deletedAtProp = entity.GetType().GetProperty(nameof(auditableDelete.DeletedAt));
+                                    if (deletedAtProp != null && deletedAtProp.GetValue(entity) == null)
+                                    {
+                                        deletedAtProp.SetValue(entity, DateTime.Now);
+                                    }
+
+                                    var deletedByProp = entity.GetType().GetProperty(nameof(auditableDelete.DeletedBy));
+                                    if (deletedByProp != null && deletedByProp.GetValue(entity) == null)
+                                    {
+                                        var currentUser = serviceProvider.GetService<ICurrentUser>();
+                                        var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "anonymous";
+                                        deletedByProp.SetValue(entity, userId ?? "anonymous");
+                                    }
+                                }
+                            }
                         }
                     }
-                    else if (entityInfo.OperationType == DataFilterType.UpdateByObject)
+                    // 如果实体没有实现 IBaseEntity，则不执行审计字段等自定义逻辑，但仍需处理主键生成
+                    else if (entityInfo.OperationType == DataFilterType.InsertByObject)
                     {
-                        // 自动填充更新时间
-                        if (entityInfo.PropertyName == nameof(IBaseEntity.UpdatedAt))
-                        {
-                            // 使用本地时间，确保所见即所得
-                            entityInfo.SetValue(DateTime.Now);
-                        }
-                        // 2. 自动填充 UpdatedBy（覆盖写入，或仅当为空？建议覆盖）
-                        else if (entity is IAuditableEntity auditableUpdate &&
-                                 entityInfo.PropertyName == nameof(IAuditableEntity.UpdatedBy))
-                        {
-                            var currentUser = serviceProvider.GetService<ICurrentUser>();
-                            var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "anonymous";
-                            entityInfo.SetValue(userId ?? "anonymous");
-                        }
+                        // 尝试通过反射获取实体的主键属性
+                        var entityType = entity.GetType();
+                        var primaryKeyProp = entityType.GetProperties()
+                            .FirstOrDefault(p => p.GetCustomAttribute<SugarColumn>()?.IsPrimaryKey == true);
 
-                        // 3. 【关键】处理软删除：当 IsDeleted 从 false 变为 true 时，填充 DeletedAt 和 DeletedBy
-                        else if (entity is IAuditableEntity auditableDelete &&
-                                 entity is ISoftDelete softDelete &&
-                                 entityInfo.PropertyName == nameof(ISoftDelete.IsDeleted))
+                        if (primaryKeyProp != null)
                         {
-                            bool oldIsDeleted = (bool)(oldValue ?? false);
-                            var property = entityInfo.GetType().GetProperty(entityInfo.PropertyName);
-                            if (property == null) return;
-                            object currentValueObj = property.GetValue(entityInfo);
-                            bool newIsDeleted = currentValueObj is bool b ? b : false;
+                            var currentValue = primaryKeyProp.GetValue(entity);
+                            // 判断主键是否为空（针对 string 类型和数值/ Guid 类型）
+                            bool isNullOrEmpty = currentValue == null || 
+                                               (currentValue is string s && string.IsNullOrEmpty(s)) ||
+                                               (currentValue is long l && l == 0) ||
+                                               (currentValue is int i && i == 0) ||
+                                               (currentValue is Guid g && g == Guid.Empty);
 
-                            if (!oldIsDeleted && newIsDeleted)
+                            if (isNullOrEmpty)
                             {
-                                // 设置 DeletedAt（如果还没设）
-                                var deletedAtProp = entity.GetType().GetProperty(nameof(auditableDelete.DeletedAt));
-                                if (deletedAtProp != null && deletedAtProp.GetValue(entity) == null)
+                                // 根据主键类型生成对应的 ID
+                                if (primaryKeyProp.PropertyType == typeof(string))
                                 {
-                                    deletedAtProp.SetValue(entity, DateTime.Now);
+                                    primaryKeyProp.SetValue(entity, YitIdHelper.NextId().ToString());
                                 }
-
-                                // 设置 DeletedBy（如果还没设）
-                                var deletedByProp = entity.GetType().GetProperty(nameof(auditableDelete.DeletedBy));
-                                if (deletedByProp != null && deletedByProp.GetValue(entity) == null)
+                                else if (primaryKeyProp.PropertyType == typeof(long))
                                 {
-                                    var currentUser = serviceProvider.GetService<ICurrentUser>();
-                                    var userId = currentUser?.IsAuthenticated == true ? currentUser.Id : "anonymous";
-                                    deletedByProp.SetValue(entity, userId ?? "anonymous");
+                                    primaryKeyProp.SetValue(entity, YitIdHelper.NextId());
+                                }
+                                else if (primaryKeyProp.PropertyType == typeof(int))
+                                {
+                                    // 注意：雪花ID通常超过int范围，这里仅做兼容，实际业务建议用long或string
+                                    primaryKeyProp.SetValue(entity, (int)(YitIdHelper.NextId() % int.MaxValue));
+                                }
+                                else if (primaryKeyProp.PropertyType == typeof(Guid))
+                                {
+                                    primaryKeyProp.SetValue(entity, Guid.NewGuid());
                                 }
                             }
                         }

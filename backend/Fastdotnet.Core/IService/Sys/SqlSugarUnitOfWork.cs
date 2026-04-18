@@ -55,16 +55,27 @@ namespace Fastdotnet.Core.IService.Sys
         private object GetEntityId<T>(T entity) where T : class, new()
         {
             var type = typeof(T);
-            var idProperty = type.GetProperty("Id") ?? 
-                           type.GetProperty("ID") ?? 
-                           type.GetProperty("id");
+            
+            // 【优化】优先通过 SugarColumn 特性查找主键，支持自定义主键名称
+            var idProperty = type.GetProperties()
+                .FirstOrDefault(p => p.GetCustomAttribute<SugarColumn>()?.IsPrimaryKey == true);
+
+            // 兼容旧逻辑：如果没有标记特性，则尝试查找常见的 Id 命名
+            if (idProperty == null)
+            {
+                idProperty = type.GetProperty("Id") ?? 
+                             type.GetProperty("ID") ?? 
+                             type.GetProperty("id");
+            }
             
             if (idProperty != null)
             {
                 return idProperty.GetValue(entity);
             }
             
-            throw new InvalidOperationException($"Entity {typeof(T).Name} does not have an Id property");
+            throw new InvalidOperationException($"Entity {typeof(T).Name} does not have a primary key property marked with [SugarColumn(IsPrimaryKey = true)] or named 'Id'");
         }
+
+
     }
 }
