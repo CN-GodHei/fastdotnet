@@ -158,13 +158,7 @@
 		</el-dialog>
 
 		<!-- 用户扩展信息对话框 -->
-		<el-dialog v-model="state.extensionDialog.visible" draggable :close-on-click-modal="false" width="800px">
-			<template #header>
-				<div style="color: #fff">
-					<el-icon size="16" style="margin-right: 3px; display: inline; vertical-align: middle"> <ele-Setting /> </el-icon>
-					<span> {{ state.extensionDialog.title }} </span>
-				</div>
-			</template>
+		<el-dialog v-model="state.extensionDialog.visible" draggable :close-on-click-modal="false" width="800px" :body-style="{ padding: '0 20px 10px' }" :show-close="false">
 			<UserExtensionPanels v-if="state.extensionDialog.visible" :userId="state.extensionDialog.userId" />
 			<template #footer>
 				<span class="dialog-footer">
@@ -457,14 +451,6 @@ onMounted(() => {
 });
 </script>
 <style scoped lang="scss">
-// .el-form--inline .el-form-item {
-// 	margin-right: 12px !important; // 稍微紧凑一点
-// 	margin-bottom: 8px !important;
-// }
-
-// .fdadminuser-container .el-card:first-child .el-form .el-form-item:last-of-type {
-// 	margin-bottom: 5 !important;
-// }
 .role-selection-container {
 	padding: 20px;
 	
@@ -481,5 +467,11 @@ onMounted(() => {
 			padding: 0 20px;
 		}
 	}
+}
+</style>
+
+<style lang="scss">
+.el-overlay .el-overlay-dialog .el-dialog .el-dialog__body {
+	padding: 0 20px 10px !important;
 }
 </style>

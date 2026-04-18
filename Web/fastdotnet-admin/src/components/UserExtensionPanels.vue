@@ -83,6 +83,6 @@ onMounted(() => {
 
 <style scoped>
 .user-extension-panels {
-  margin-top: 20px;
+  /* 移除顶部间距，避免与 dialog header 产生过大空隙 */
 }
 </style>
