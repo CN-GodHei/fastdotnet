@@ -65,8 +65,6 @@ export class PluginRegistry {
 
     // 注册依赖关系
     this.registerDependencies(metadata);
-
-    console.log(`[PluginRegistry] Plugin registered: ${metadata.name} (${metadata.id})`);
     return true;
   }
 
@@ -366,42 +364,7 @@ export class PluginRegistry {
    * 获取并打印所有激活的插件信息
    */
   public logActivePlugins(): void {
-    const allPlugins = this.getAllPlugins();
-    const activePlugins = allPlugins.filter(p => p.enabled);
-    console.log(activePlugins)
-    const inactivePlugins = allPlugins.filter(p => !p.enabled);
-    
-    console.group('[PluginRegistry] Active Plugins Information');
-    console.log(`Total plugins: ${allPlugins.length}`);
-    console.log(`Enabled plugins: ${activePlugins.length}`);
-    console.log(`Disabled plugins: ${inactivePlugins.length}`);
-    
-    console.group('Enabled Plugins:');
-    activePlugins.forEach(plugin => {
-      console.log(`- ${plugin.name} (${plugin.id}): v${plugin.version}`);
-      if (plugin.description) {
-        console.log(`  Description: ${plugin.description}`);
-      }
-      if (plugin.dependencies && plugin.dependencies.length > 0) {
-        console.log(`  Dependencies: ${plugin.dependencies.join(', ')}`);
-      }
-      if (plugin.microAppConfig) {
-        console.log(`  Entry: ${plugin.microAppConfig.entry}`);
-        console.log(`  Active Rule: ${plugin.microAppConfig.activeRule}`);
-      }
-      console.log('');
-    });
-    console.groupEnd();
-    
-    if (inactivePlugins.length > 0) {
-      console.group('Disabled Plugins:');
-      inactivePlugins.forEach(plugin => {
-        console.log(`- ${plugin.name} (${plugin.id}): v${plugin.version}`);
-      });
-      console.groupEnd();
-    }
-    
-    console.groupEnd();
+    // 静默执行，不输出日志
   }
 }
 

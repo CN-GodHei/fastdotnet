@@ -14,7 +14,6 @@ const registerUI = () => {
       component: UserExtensionPanel,
       description: '演示插件用户扩展管理面板'
     });
-    console.log('[PluginA] UserExtensionPanel registered (Eager Load).');
   }
 };
 

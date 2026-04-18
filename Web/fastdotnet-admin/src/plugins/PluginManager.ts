@@ -61,7 +61,6 @@ class PluginManager {
    */
   public registerPlugin(metadata: PluginMetadata): void {
     this.pluginConfigs.set(metadata.id, metadata);
-    console.log(`[PluginManager] Plugin registered: ${metadata.name} (${metadata.id})`);
   }
 
   /**
@@ -83,20 +82,11 @@ class PluginManager {
    * 这会通过 loadMicroApp 加载插件，但使用一个隐藏的容器
    */
   public async preloadAllPluginsForUIRegistration(): Promise<void> {
-    console.log('[PluginManager] 开始预加载所有插件以注册 UI 组件...');
-    
-    // 【修复】从 pluginRegistry 获取已注册的插件
+    // 从 pluginRegistry 获取已注册的插件
     const allPlugins = pluginRegistry.getAllPlugins();
-    console.log(`[PluginManager] 总共找到 ${allPlugins.length} 个插件`);
     
     // 严格过滤：只处理 enabled === true 的插件
-    const enabledPlugins = allPlugins.filter(p => {
-      const isEnabled = p.enabled === true;
-      console.log(`[PluginManager] 插件 ${p.name} (${p.id}): enabled=${p.enabled}, 是否预加载=${isEnabled}`);
-      return isEnabled;
-    });
-    
-    console.log(`[PluginManager] 其中 ${enabledPlugins.length} 个已启用，将预加载`);
+    const enabledPlugins = allPlugins.filter(p => p.enabled === true);
     
     for (const plugin of enabledPlugins) {
       if (!plugin.microAppConfig) {
@@ -112,11 +102,8 @@ class PluginManager {
       try {
         // 检查是否已经加载过
         if (this.plugins.has(plugin.id)) {
-          console.log(`[PluginManager] 插件 ${plugin.id} 已加载，跳过`);
           continue;
         }
-        
-        console.log(`[PluginManager] 开始预加载插件: ${plugin.name} (${plugin.id})`);
         
         // 使用一个隐藏的容器来加载插件，这样不会显示界面但会执行脚本
         const hiddenContainerId = `hidden-preload-${plugin.id}`;
@@ -129,13 +116,10 @@ class PluginManager {
         }
         
         await this.loadPlugin(plugin.id, `#${hiddenContainerId}`);
-        console.log(`[PluginManager] 插件 ${plugin.id} 预加载完成`);
       } catch (error) {
         console.warn(`[PluginManager] 预加载插件 ${plugin.id} 失败:`, error);
       }
     }
-    
-    console.log('[PluginManager] 所有插件预加载完成');
   }
 
   /**
@@ -193,7 +177,6 @@ class PluginManager {
       };
 
       this.plugins.set(pluginId, pluginInstance);
-      console.log(`[PluginManager] Plugin loaded: ${config.name} (${pluginId})`);
 
       return microApp;
     } catch (error) {
@@ -225,7 +208,6 @@ class PluginManager {
       }
       
       this.plugins.delete(pluginId);
-      console.log(`[PluginManager] Plugin unloaded: ${pluginInstance.metadata.name} (${pluginId})`);
       return true;
     } catch (error) {
       console.error(`[PluginManager] Failed to unload plugin ${pluginId}:`, error);

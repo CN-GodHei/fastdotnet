@@ -79,13 +79,8 @@ import { initializePlugins } from '@/plugins/PluginLoader';
 
 async function initializePluginSystem() {
   try {
-    // 初始化插件注册中心，可以从后端API加载插件配置
-    console.log('[MainApp] Initializing plugin system...');
-    
     // 从后端API加载插件配置
     await initializePlugins();
-    
-    console.log('[MainApp] Plugin system initialized');
   } catch (error) {
     console.error('[MainApp] Failed to initialize plugin system:', error);
   }

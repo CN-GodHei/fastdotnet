@@ -93,7 +93,6 @@ const loadPlugin = async (pluginId: string) => {
 
     if (microApp) {
       currentPlugin.value = pluginId;
-      console.log(`[PluginPortal] Plugin ${pluginId} loaded successfully`);
     } else {
       throw new Error(`Failed to load plugin ${pluginId}`);
     }
