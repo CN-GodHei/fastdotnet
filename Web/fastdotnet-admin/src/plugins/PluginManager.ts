@@ -5,6 +5,8 @@
 
 import { loadMicroApp, MicroApp } from 'qiankun';
 import { useMicroAppsStore } from '@/stores/microApps';
+import { pluginRegistry } from './PluginRegistry';
+import request from '@/utils/request';
 
 export interface PluginMetadata {
   id: string;
@@ -77,6 +79,66 @@ class PluginManager {
   }
 
   /**
+   * 【新增】预加载所有已启用插件的脚本（仅为了触发 UI 组件注册）
+   * 这会通过 loadMicroApp 加载插件，但使用一个隐藏的容器
+   */
+  public async preloadAllPluginsForUIRegistration(): Promise<void> {
+    console.log('[PluginManager] 开始预加载所有插件以注册 UI 组件...');
+    
+    // 【修复】从 pluginRegistry 获取已注册的插件
+    const allPlugins = pluginRegistry.getAllPlugins();
+    console.log(`[PluginManager] 总共找到 ${allPlugins.length} 个插件`);
+    
+    // 严格过滤：只处理 enabled === true 的插件
+    const enabledPlugins = allPlugins.filter(p => {
+      const isEnabled = p.enabled === true;
+      console.log(`[PluginManager] 插件 ${p.name} (${p.id}): enabled=${p.enabled}, 是否预加载=${isEnabled}`);
+      return isEnabled;
+    });
+    
+    console.log(`[PluginManager] 其中 ${enabledPlugins.length} 个已启用，将预加载`);
+    
+    for (const plugin of enabledPlugins) {
+      if (!plugin.microAppConfig) {
+        console.warn(`[PluginManager] 插件 ${plugin.id} 没有 microAppConfig，跳过`);
+        continue;
+      }
+      
+      // 【关键修复】将 pluginRegistry 的配置同步到 pluginManager 的 pluginConfigs
+      if (!this.pluginConfigs.has(plugin.id)) {
+        this.pluginConfigs.set(plugin.id, plugin);
+      }
+      
+      try {
+        // 检查是否已经加载过
+        if (this.plugins.has(plugin.id)) {
+          console.log(`[PluginManager] 插件 ${plugin.id} 已加载，跳过`);
+          continue;
+        }
+        
+        console.log(`[PluginManager] 开始预加载插件: ${plugin.name} (${plugin.id})`);
+        
+        // 使用一个隐藏的容器来加载插件，这样不会显示界面但会执行脚本
+        const hiddenContainerId = `hidden-preload-${plugin.id}`;
+        let container = document.getElementById(hiddenContainerId);
+        if (!container) {
+          container = document.createElement('div');
+          container.id = hiddenContainerId;
+          container.style.display = 'none';
+          document.body.appendChild(container);
+        }
+        
+        await this.loadPlugin(plugin.id, `#${hiddenContainerId}`);
+        console.log(`[PluginManager] 插件 ${plugin.id} 预加载完成`);
+      } catch (error) {
+        console.warn(`[PluginManager] 预加载插件 ${plugin.id} 失败:`, error);
+      }
+    }
+    
+    console.log('[PluginManager] 所有插件预加载完成');
+  }
+
+  /**
    * 动态加载插件
    */
   public async loadPlugin(
@@ -108,6 +170,8 @@ class PluginManager {
             ...props,
             pluginId: pluginId,
             pluginMetadata: config,
+            // 【关键修复】传递主应用的 request 实例给子应用
+            request: request,
           },
         },
         {

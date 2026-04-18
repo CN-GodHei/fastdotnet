@@ -90,6 +90,13 @@ async function initializePluginSystem() {
     console.error('[MainApp] Failed to initialize plugin system:', error);
   }
   
+  // 【新增】预加载所有插件以注册 UI 组件
+  try {
+    await pluginManager.preloadAllPluginsForUIRegistration();
+  } catch (error) {
+    // console.error('[MainApp] Failed to preload plugins:', error);
+  }
+  
   // 输出当前激活的插件信息
   setTimeout(() => {
     pluginRegistry.logActivePlugins();
@@ -100,8 +107,9 @@ async function initializePluginSystem() {
 // 定义一个变量，防止 qiankun 被重复启动
 let qiankunStarted = false;
 export async function startQiankun() {
-  // 初始化插件系统
-//   initializePluginSystem();
+  // 【修复】初始化插件系统并预加载
+  await initializePluginSystem();
+  
   // 检查是否有 token，如果没有则不启动 qiankun
     const token = Session.get('token');
     if (!token) {

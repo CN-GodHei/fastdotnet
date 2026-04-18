@@ -77,8 +77,11 @@ export class PluginLoader {
         }
       };
 
-      // 注册插件
-      const registered = pluginRegistry.registerPlugin(metadata);
+      // 注册插件（【修复】传递 autoEnable 参数，使用后端的 enabled 状态）
+      const registered = pluginRegistry.registerPlugin(metadata, undefined, {
+        autoEnable: apiPlugin.enabled ?? apiPlugin.Enabled ?? true,
+        validateDependencies: true
+      });
       
       if (registered) {
         return {

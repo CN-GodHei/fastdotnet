@@ -33,18 +33,17 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       lib: {
-        name: 'PluginA',
+        name: '11375910391972869',
         entry: path.resolve(__dirname, 'src/micro-main.ts'),
         formats: ['umd'],
-        fileName: () => `plugin-a-admin.js`
+        fileName: () => `11375910391972869-admin.js`
       },
       rollupOptions: {
-        external: ['vue', 'vue-router', 'pinia', 'element-plus'],
+        // 【修复】只外部化 vue 和 element-plus，将 vue-router 和 pinia 打包进去
+        external: ['vue', 'element-plus'],
         output: {
           globals: {
             vue: 'Vue',
-            'vue-router': 'VueRouter',
-            pinia: 'Pinia',
             'element-plus': 'ElementPlus'
           },
           assetFileNames: `assets/[name].[ext]`,

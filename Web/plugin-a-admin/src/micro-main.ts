@@ -4,15 +4,9 @@ import UserExtensionPanel from './UserExtensionPanel.vue'
 
 let appInstance: ReturnType<typeof init> | null = null;
 
-export async function bootstrap() {
-  //console.log('[PluginA] bootstraped');
-}
-
-export async function mount(props: any) {
-  //console.log('[PluginA] mounting with props:', props);
-  
-  // 注册用户扩展面板组件到主应用
-  const pluginAPI = props.pluginAPI || (window as any).__PLUGIN_API__;
+// 【关键优化】在脚本加载时立即尝试注册 UI 组件，不依赖 mount 调用
+const registerUI = () => {
+  const pluginAPI = (window as any).__PLUGIN_API__;
   if (pluginAPI) {
     pluginAPI.registerUIComponent({
       pluginId: '11375910391972869',
@@ -20,8 +14,22 @@ export async function mount(props: any) {
       component: UserExtensionPanel,
       description: '演示插件用户扩展管理面板'
     });
-    console.log('[PluginA] UserExtensionPanel registered.');
+    console.log('[PluginA] UserExtensionPanel registered (Eager Load).');
   }
+};
+
+// 立即执行一次注册
+registerUI();
+
+export async function bootstrap() {
+  //console.log('[PluginA] bootstraped');
+}
+
+export async function mount(props: any) {
+  //console.log('[PluginA] mounting with props:', props);
+  
+  // 确保注册（如果之前因为 window.__PLUGIN_API__ 未就绪而失败）
+  registerUI();
 
   appInstance = init(props);
 }

@@ -29,47 +29,55 @@ interface Props {
 
 const props = defineProps<Props>();
 
-// 定义已知的插件ID列表（实际项目中可以从配置或API获取）
+// 定义已知的插件ID列表
 const knownPluginIds = ['11365281228129286', '11375910391972869']; 
 
 const panels = ref<{ pluginId: string; pluginName: string; order: number }[]>([]);
 const activeTab = ref('');
 const loadedComponents = ref(new Map<string, any>());
 
-onMounted(() => {
-  // 初始化面板列表
+/**
+ * 扫描并更新面板列表
+ */
+function scanAndLoadPanels() {
+  panels.value = [];
   knownPluginIds.forEach(id => {
-    // 尝试获取组件以确认插件是否注册了面板
     const component = pluginAPI.getUIComponent(id, 'UserExtensionPanel');
     if (component) {
       const info = pluginAPI.getPluginInfo(id);
       panels.value.push({
         pluginId: id,
         pluginName: info?.name || id,
-        order: info ? parseInt(info.version.replace(/\./g, '')) : 0 // 简单用版本号做排序示例
+        order: 0
       });
+      // 立即加载该组件
+      loadedComponents.value.set(id, component);
     }
   });
 
-  if (panels.value.length > 0) {
+  if (panels.value.length > 0 && !activeTab.value) {
     activeTab.value = panels.value[0].pluginId;
-    loadPanel(activeTab.value);
-  }
-});
-
-async function loadPanel(pluginId: string) {
-  if (loadedComponents.value.has(pluginId)) return;
-
-  const component = pluginAPI.getUIComponent(pluginId, 'UserExtensionPanel');
-  if (component) {
-    loadedComponents.value.set(pluginId, component);
   }
 }
 
-watch(activeTab, (newTab) => {
-  if (newTab && !loadedComponents.value.has(newTab)) {
-    loadPanel(newTab);
-  }
+onMounted(() => {
+  scanAndLoadPanels();
+  
+  // 监听 pluginAPI 的变化（如果插件是异步加载的）
+  // 这里我们设置一个简短的轮询，确保在插件加载完成后能捕捉到
+  const timer = setInterval(() => {
+    const oldLen = panels.value.length;
+    scanAndLoadPanels();
+    if (panels.value.length > oldLen) {
+      // console.log('[UserExtensionPanels] 检测到新注册的插件面板');
+    }
+  }, 1000);
+
+  // 组件销毁时清除定时器
+  watch(() => props.userId, () => {
+    // 用户切换时重新扫描
+    scanAndLoadPanels();
+  });
 });
 </script>
 

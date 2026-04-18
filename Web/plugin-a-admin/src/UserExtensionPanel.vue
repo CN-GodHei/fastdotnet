@@ -54,6 +54,13 @@ const originalData = ref<FormData | null>(null);
  * 加载用户扩展信息
  */
 async function load() {
+  // 【修复】检查 FdRequest 是否可用（预加载时可能还未初始化）
+  const { getSharedFdRequest } = await import('./main');
+  if (!getSharedFdRequest()) {
+    console.warn('[PluginA] FdRequest 尚未初始化，跳过加载');
+    return;
+  }
+  
   try {
     console.log('[PluginA] 开始加载用户扩展信息, userId:', props.userId);
     const res = await getPluginsSharedP11375910391972869PluginAUserExtensionUserId({
