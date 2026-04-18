@@ -34,8 +34,6 @@ export class PluginLoader {
       const response: any = await getApiPluginScan();
       const plugins = response || [];
 
-      console.log(`[PluginLoader] Found ${plugins.length} plugins from API`);
-
       const results: PluginLoadResult[] = [];
 
       for (const plugin of plugins) {
@@ -77,8 +75,11 @@ export class PluginLoader {
         }
       };
 
-      // 注册插件
-      const registered = pluginRegistry.registerPlugin(metadata);
+      // 注册插件（【修复】传递 autoEnable 参数，使用后端的 enabled 状态）
+      const registered = pluginRegistry.registerPlugin(metadata, undefined, {
+        autoEnable: apiPlugin.enabled ?? apiPlugin.Enabled ?? true,
+        validateDependencies: true
+      });
       
       if (registered) {
         return {
@@ -219,13 +220,7 @@ export const pluginLoader = PluginLoader.getInstance();
 
 // 初始化时自动加载插件
 export async function initializePlugins() {
-  console.log('[PluginLoader] Starting plugin initialization...');
   const results = await pluginLoader.loadPluginsFromAPI();
-  
-  const successCount = results.filter(r => r.success).length;
-  const totalCount = results.length;
-  
-  console.log(`[PluginLoader] Plugin initialization completed: ${successCount}/${totalCount} plugins loaded successfully`);
   
   // 输出当前激活的插件信息
   pluginRegistry.logActivePlugins();

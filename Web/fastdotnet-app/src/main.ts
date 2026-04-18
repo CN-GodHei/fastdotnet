@@ -79,15 +79,17 @@ import { initializePlugins } from '@/plugins/PluginLoader';
 
 async function initializePluginSystem() {
   try {
-    // 初始化插件注册中心，可以从后端API加载插件配置
-    console.log('[MainApp] Initializing plugin system...');
-    
     // 从后端API加载插件配置
     await initializePlugins();
-    
-    console.log('[MainApp] Plugin system initialized');
   } catch (error) {
     console.error('[MainApp] Failed to initialize plugin system:', error);
+  }
+  
+  // 【新增】预加载所有插件以注册 UI 组件
+  try {
+    await pluginManager.preloadAllPluginsForUIRegistration();
+  } catch (error) {
+    // console.error('[MainApp] Failed to preload plugins:', error);
   }
   
   // 输出当前激活的插件信息
@@ -100,8 +102,9 @@ async function initializePluginSystem() {
 // 定义一个变量，防止 qiankun 被重复启动
 let qiankunStarted = false;
 export async function startQiankun() {
-  // 初始化插件系统
-//   initializePluginSystem();
+  // 【修复】初始化插件系统并预加载
+  await initializePluginSystem();
+  
   // 检查是否有 token，如果没有则不启动 qiankun
     const token = Session.get('token');
     if (!token) {
@@ -130,7 +133,6 @@ export async function startQiankun() {
                 if (pluginId === '这是你开发时的插件Id，为了避免重复编译才能测试，你可以在这里指定本地开发服务器入口') {
                     return 'http://localhost:8099/index.html';//换成自己的本地开发服务器入口
                 }
-
                 // 可以为更多插件添加调试入口
             }
             return null; // 如果没有匹配或者不是开发环境，则返回 null
