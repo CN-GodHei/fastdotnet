@@ -1,0 +1,9 @@
+{
+  "id": "11375910391972869",
+  "name": "演示插件",
+  "description": "这是一个演示插件,从开发到使用的全生命周期演示",
+  "version": "1.0.0",
+  "author": "Fastdotnet Team",
+  "enabled": true,
+  "entryPoint": "index.html"
+}

@@ -1,0 +1,11 @@
+{
+    "id": "11375910391972869",
+    "name": "演示插件A",
+    "description": "这是一个演示插件,从开发到使用的全生命周期演示",
+    "version": "1.0.0",
+    "enabled": true,
+    "author": "Fastdotnet Team",
+    "dependencies": [],
+    "tags": [ "demo", "example" ],
+    "entryPoint": "PluginA.dll"
+}
