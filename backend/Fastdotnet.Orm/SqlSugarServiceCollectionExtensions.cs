@@ -166,7 +166,7 @@ public static class SqlSugarServiceCollectionExtensions
                                 bool oldIsDeleted = (bool)(oldValue ?? false);
                                 var property = entity.GetType().GetProperty(entityInfo.PropertyName);
                                 if (property == null) return;
-                                object currentValueObj = property.GetValue(entityInfo);
+                                object currentValueObj = property.GetValue(entity);
                                 bool newIsDeleted = currentValueObj is bool b ? b : false;
 
                                 if (!oldIsDeleted && newIsDeleted)
