@@ -154,8 +154,8 @@ class PluginManager {
             ...props,
             pluginId: pluginId,
             pluginMetadata: config,
-            // 【关键修复】传递主应用的 request 实例给子应用
-            request: request,
+            // 【关键修复】传递主应用的 FdRequest 实例给子应用
+            FdRequest: request,
           },
         },
         {
