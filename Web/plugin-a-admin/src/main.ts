@@ -34,12 +34,12 @@ export const getMenuInfo = () => menuInfo;
 // --- 导出结束 ---
 
 const init = (props: any = {}) => {
-  // --- 从 props 中解构出 request、FdQueryBuilder 和 SignalRManager ---
-  const { container, request, FdQueryBuilder, signalRManager, menuInfo: propsMenuInfo } = props
+  // --- 从 props 中解构出 FdRequest、FdQueryBuilder、SignalRManager 和 uploadService ---
+  const { container, FdRequest, FdQueryBuilder, signalRManager, menuInfo: propsMenuInfo } = props
   // --- 解构结束 ---
 
-  // --- 保存接收到的 request 实例、查询构建器和SignalR管理器 ---
-  sharedFdRequest = request;
+  // --- 保存接收到的 FdRequest 实例、查询构建器、SignalR管理器和上传服务 ---
+  sharedFdRequest = FdRequest;
   sharedFdQueryBuilder = FdQueryBuilder;
   sharedSignalRManager = signalRManager;
   // --- 保存上传服务 ---
@@ -73,7 +73,7 @@ const init = (props: any = {}) => {
     router,
     pinia,
     // --- 将 request 实例、查询构建器和SignalR管理器也返回 ---
-    request,
+    FdRequest,
     FdQueryBuilder,
     signalRManager,
     menuInfo,
