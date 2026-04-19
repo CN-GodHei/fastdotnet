@@ -1,13 +1,14 @@
 import type { LifeCycles } from 'qiankun'
 import init from './main'
-import UserExtensionPanel from './UserExtensionPanel.vue'
 
 let appInstance: ReturnType<typeof init> | null = null;
 
 // 【关键优化】在脚本加载时立即尝试注册 UI 组件，不依赖 mount 调用
-const registerUI = () => {
+const registerUI = async () => {
   const pluginAPI = (window as any).__PLUGIN_API__;
   if (pluginAPI) {
+    // 动态导入组件，避免模块加载时执行 API 相关代码
+    const { default: UserExtensionPanel } = await import('./UserExtensionPanel.vue');
     pluginAPI.registerUIComponent({
       pluginId: '11375910391972869',
       componentName: 'UserExtensionPanel',
@@ -17,8 +18,8 @@ const registerUI = () => {
   }
 };
 
-// 立即执行一次注册
-registerUI();
+// 延迟执行注册，等待主应用初始化完成
+setTimeout(() => registerUI(), 100);
 
 export async function bootstrap() {
   //console.log('[PluginA] bootstraped');
