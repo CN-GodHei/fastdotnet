@@ -160,7 +160,7 @@ class PluginManager {
         },
         {
           sandbox: {
-            strictStyleIsolation: true,
+            strictStyleIsolation: false,
             experimentalStyleIsolation: true,
           },
           // 设置超时时间
