@@ -1,37 +1,19 @@
+<!-- src/views/Home.vue -->
 <template>
-  <div class="home-container">
-    <el-card>
-      <template #header>
-        <div class="card-header">
-          <span>{{ displayName }} - 管理端</span>
-        </div>
-      </template>
-      
-      <div class="content">
-        <p>这是 {{ displayName }} 插件的管理端页面。</p>
-        <p>Plugin ID: {{ pluginId }}</p>
-      </div>
-    </el-card>
+  <div class="home" style="background-color: #e6f7ff; padding: 50px; border: 2px solid #91d5ff;">
+    <h1 style="font-size: 48px; color: #1890ff;">Plugin A - HOME PAGE</h1>
+    <p style="font-size: 24px;">这里是插件A的 **主页** 页面。</p>
+    <p>You are viewing the main entry point of Plugin A.</p>
   </div>
 </template>
 
 <script setup lang="ts">
-// 这些值会在模板生成时被替换
-const pluginId = '11375910391972869'
-const displayName = '演示插件'
+// Plugin A Home View
 </script>
 
 <style scoped>
-.home-container {
-  padding: 20px;
-}
-
-.card-header {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.content {
-  line-height: 2;
+.home {
+  text-align: center;
+  border-radius: 8px;
 }
 </style>
