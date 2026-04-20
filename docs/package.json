@@ -1,0 +1,17 @@
+{
+  "name": "fastdotnet-docs",
+  "version": "1.0.0",
+  "description": "Fastdotnet 快速开发框架官方文档",
+  "type": "module",
+  "scripts": {
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
+  },
+  "keywords": ["fastdotnet", "docs", ".NET", "framework"],
+  "author": "Fastdotnet Team",
+  "license": "MIT",
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}

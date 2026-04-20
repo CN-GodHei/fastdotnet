@@ -128,7 +128,6 @@ dist
 fastdotnet.-plugin.-core
 .trae/
 .trae
-docs
 wwwroot
 *.tar
 *.tar.gz
