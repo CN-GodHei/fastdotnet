@@ -17,6 +17,12 @@ export default {
   ignoreDeadLinks: true,
   
   themeConfig: {
+    // 大纲配置 - 显示 H2 和 H3 标题
+    // outline: {
+    //   label: 'On this page',
+    //   level: [2, 3],
+    // },
+    // outlineLevel: [2, 3],
     nav: [
       { text: '首页', link: '/' },
       { text: '快速开始', link: '/01-快速开始/' },
