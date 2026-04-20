@@ -1,7 +1,55 @@
 # Fastdotnet 框架
 
+## 🌐 官方网站
+
+- **官网**：[https://fastdotnet.top](https://fastdotnet.top) - 框架介绍、特性展示
+- **插件商城**：[https://fastdotnet.top/marketplace](https://fastdotnet.top/marketplace) - 海量插件选购
+- **官方文档**：[https://docs.fastdotnet.top](https://docs.fastdotnet.top) - 完整开发文档
+
+## 🎮 在线体验
+
+无需安装，立即体验 Fastdotnet：
+
+- **管理端演示**：http://admin.demo.fastdotnet.top/
+  - 账号：`superadmin` / 密码：`123456`
+  - 功能：系统管理、用户管理、权限配置等
+
+- **应用端演示**：http://app.demo.fastdotnet.top/
+  - 账号：`admintest` / 密码：`123456`
+  - 功能：业务操作、数据展示等
+
+> 💡 提示：演示环境数据会定期重置，请勿存储重要数据。
+
+## 📚 官方文档
+
+访问 [https://docs.fastdotnet.top](https://docs.fastdotnet.top) 查看完整文档，包括：
+- 快速开始指南
+- 架构设计说明
+- 后端开发教程
+- 前端开发教程
+- 插件开发指南
+- API 参考文档
+
+---
+
 ## 项目简介
-Fastdotnet是一个基于.NET Core的模块化开发框架，采用插件化架构设计，支持功能模块的热插拔，具有高度的可扩展性和灵活性。框架基于.NET 10.0构建，适用于构建企业级应用程序。框架底座采用分层架构设计，插件开发可以自由选择架构模式（如DDD、Clean Architecture等）。
+Fastdotnet是一个基于**.NET 10**的模块化开发框架，采用插件化架构设计，支持功能模块的热插拔，具有高度的可扩展性和灵活性。框架底座采用分层架构设计，插件开发可以自由选择架构模式（如DDD、Clean Architecture等）。
+
+### 核心技术栈
+
+**后端：**
+- 🚀 **.NET 10** - 最新版本的 .NET 运行时
+- 🗄️ **SqlSugar ORM** - 高性能 ORM 框架
+- 🔐 **OpenIddict / OIDC** - 开放身份连接协议，支持 SSO
+- 🔑 **JWT** - JSON Web Token 认证
+- 💉 **Autofac** - 依赖注入容器
+- 📝 **Swagger/OpenAPI** - API 文档
+
+**前端：**
+- ⚡ **Vue 3 + TypeScript** - 现代化前端框架
+- 🎨 **Element Plus** - 企业级 UI 组件库
+- 🏗️ **Vite** - 极速构建工具
+- 🔌 **qiankun** - 微前端框架
 
 ## 项目结构
 ```
@@ -329,8 +377,24 @@ public class MyPlugin : PluginBase
 4. 推送到分支 (`git push origin feature/amazing-feature`)
 5. 创建 Pull Request
 
+## 相关链接
+
+- 🌐 **官方网站**：[https://fastdotnet.top](https://fastdotnet.top)
+- 🛒 **插件商城**：[https://fastdotnet.top/marketplace](https://fastdotnet.top/marketplace) - 海量插件选购
+- 📚 **官方文档**：[https://docs.fastdotnet.top](https://docs.fastdotnet.top)
+- 🎮 **在线演示**：
+  - 管理端：http://admin.demo.fastdotnet.top/ (`superadmin` / `123456`)
+  - 应用端：http://app.demo.fastdotnet.top/ (`admintest` / `123456`)
+- 🐛 **问题反馈**：[GitHub Issues](https://github.com/CN-GodHei/fastdotnet/issues)
+- 📧 **官方邮箱**：yunnanzuyuankeji@163.com
+- 💬 **QQ交流群**：779454817
+
+---
+
 ## 联系方式
-- QQ交流群: 779454817
+
+- 📧 **官方邮箱**：yunnanzuyuankeji@163.com
+- 💬 **QQ交流群**：779454817
 
 ## 许可证
 本项目采用 MIT 许可证 - 详情请参阅 LICENSE 文件

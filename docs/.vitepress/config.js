@@ -1,7 +1,17 @@
 export default {
   title: "Fastdotnet Docs",
-  description: "Fastdotnet 快速开发框架官方文档",
+  description: "Fastdotnet 快速开发框架官方文档 - 基于 .NET 10、SqlSugar ORM、OIDC、Vue 3、TypeScript、qiankun 微前端的现代化企业级开发框架",
   base: "/",
+  
+  // SEO 优化
+  head: [
+    ['meta', { name: 'keywords', content: 'Fastdotnet, .NET 10, SqlSugar, OIDC, OpenIddict, Vue 3, TypeScript, qiankun, 微前端, 快速开发框架, 插件化架构, 企业级应用' }],
+    ['meta', { name: 'author', content: 'Fastdotnet Team' }],
+    ['meta', { property: 'og:title', content: 'Fastdotnet - 基于 .NET 10 的快速开发框架' }],
+    ['meta', { property: 'og:description', content: '现代化的企业级开发框架，支持插件化、微前端、多数据库' }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['link', { rel: 'canonical', href: 'https://docs.fastdotnet.top' }]
+  ],
   
   // 忽略外部链接检查（localhost 等开发环境地址）
   ignoreDeadLinks: true,
@@ -24,6 +34,7 @@ export default {
           text: '快速开始',
           items: [
             { text: '介绍', link: '/01-快速开始/index' },
+            { text: '在线演示', link: '/01-快速开始/在线演示' },
             { text: '环境准备', link: '/01-快速开始/环境准备' },
             { text: '安装部署', link: '/01-快速开始/安装部署' },
             { text: '第一个应用', link: '/01-快速开始/第一个应用' }
