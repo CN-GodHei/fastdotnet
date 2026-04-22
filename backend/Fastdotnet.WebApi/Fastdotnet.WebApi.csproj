@@ -24,6 +24,7 @@
     <PackageReference Include="Autofac" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" />
     <PackageReference Include="AutoMapper" />
+    <PackageReference Include="Fastdotnet.Plugin.Core" />
     <PackageReference Include="Lazy.Captcha.Core" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
@@ -68,12 +69,6 @@
   <ItemGroup>
     <Folder Include="Middleware\Authentication\" />
     <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Fastdotnet.Plugin.Core">
-      <HintPath>..\..\..\fastdotnet.-plugin.-core\Fastdotnet.Plugin.Core\bin\Debug\net10.0\Fastdotnet.Plugin.Core.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <!--
