@@ -36,6 +36,14 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/storage-demo', // 存储服务演示页面
+    name: 'StorageDemo',
+    component: () => import('../views/StorageDemo.vue'),
+    meta: {
+      title: 'Plugin A Storage Demo'
+    }
+  },
+  {
     path: '/:pathMatch(.*)*', // 匹配所有未定义路由
     name: 'NotFound',
     component: { render: () => null }, // 渲染空内容，避免警告

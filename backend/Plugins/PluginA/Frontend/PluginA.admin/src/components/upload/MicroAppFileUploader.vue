@@ -49,13 +49,16 @@ interface Props {
   showProgress?: boolean;
   /** 自定义上传参数 */
   customParams?: Record<string, any>;
+  /** 是否强制使用后端代理上传 */
+  forceProxy?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   maxSize: 10, // 10MB
   accept: '', // 默认不限制类型
   showProgress: true,
-  customParams: () => ({})
+  customParams: () => ({}),
+  forceProxy: false // 默认自动选择上传模式
 });
 
 const emit = defineEmits(['success', 'error', 'progress', 'change']);
@@ -140,6 +143,7 @@ const customUpload = async (options: {
     // 使用主应用的上传服务上传文件
     const result = await uploadService.uploadFile(options.file, {
       bucketName: props.bucketName,
+      forceProxy: props.forceProxy, // 传递 forceProxy 参数
       onProgress: (percent: number) => {
         uploadProgress.value = percent;
         options.onProgress({ percent });
