@@ -3,13 +3,25 @@ import { getApiStorageConfig, postApiStorageGetUploadCredential, postApiStorageU
 
 /**
  * 上传文件工具函数
- * 根据系统当前配置自动选择上传方式（后端代理或前端直传）
+ * 根据系统当前配置自动选择上传方式(后端代理或前端直传)
  */
 export interface UploadFileOptions {
   file: File;
   bucketName?: string;
   onProgress?: (percent: number) => void;
   timeout?: number;
+  /**
+   * 是否强制使用后端代理上传
+   * - true: 始终走后端代理,即使OSS支持直传
+   * - false/undefined: 根据OSS配置自动选择(默认行为)
+   * 
+   * 适用场景:
+   * - 需要后端进行文件内容校验(病毒扫描、内容审核)
+   * - 需要严格的权限控制
+   * - 敏感文件不希望暴露OSS凭证
+   * - 需要在上传前执行其他业务逻辑
+   */
+  forceProxy?: boolean;
 }
 
 export interface UploadResult {
@@ -25,15 +37,22 @@ export interface UploadResult {
  * 上传单个文件
  */
 export const uploadFile = async (options: UploadFileOptions): Promise<UploadResult> => {
-  const { file, bucketName, onProgress, timeout = 60000 } = options;
+  const { file, bucketName, onProgress, timeout = 60000, forceProxy = false } = options;
 
   try {
-    // 首先获取当前存储配置
+    // 如果强制使用代理,直接走后端代理上传
+    if (forceProxy) {
+      return await uploadFileViaBackend(file, bucketName, onProgress, timeout);
+    }
+
+    // 否则获取当前存储配置,自动选择上传方式
     const configResponse = await getApiStorageConfig();
     
     if (!configResponse) {
       throw new Error('获取存储配置失败');
     }
+    
+    // 兼容 PascalCase 和 camelCase
     const supportDirectUpload = configResponse.SupportDirectUpload ?? configResponse.supportDirectUpload ?? false;
 
     if (supportDirectUpload) {
@@ -44,7 +63,7 @@ export const uploadFile = async (options: UploadFileOptions): Promise<UploadResu
       return await uploadFileViaBackend(file, bucketName, onProgress, timeout);
     }
   } catch (error: any) {
-    console.error('文件上传失败:', error);
+    console.error('[Upload] 文件上传失败:', error);
     throw error;
   }
 };

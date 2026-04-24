@@ -25,12 +25,14 @@ class UploadService {
     bucketName?: string;
     onProgress?: (percent: number) => void;
     timeout?: number;
+    forceProxy?: boolean; // 是否强制使用后端代理上传
   }) {
     return await uploadFile({
       file,
       bucketName: options?.bucketName,
       onProgress: options?.onProgress,
-      timeout: options?.timeout || 60000
+      timeout: options?.timeout || 60000,
+      forceProxy: options?.forceProxy
     });
   }
 
