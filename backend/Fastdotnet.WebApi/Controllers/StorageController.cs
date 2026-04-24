@@ -108,13 +108,18 @@ namespace Fastdotnet.WebApi.Controllers
         /// <summary>
         /// 删除文件
         /// </summary>
-        /// <param name="fileName">文件名</param>
-        /// <param name="bucketName">存储桶名称（可选）</param>
+        /// <param name="filePath">文件路径(支持相对路径,如: 20260425/xxx.png)</param>
+        /// <param name="bucketName">存储桶名称(可选)</param>
         /// <returns>删除结果</returns>
-        [HttpDelete("delete/{fileName}")]
-        public async Task<ActionResult<bool>> DeleteAsync(string fileName, string? bucketName = null)
+        [HttpDelete("delete")]
+        public async Task<ActionResult<bool>> DeleteAsync([FromQuery] string filePath, [FromQuery] string? bucketName = null)
         {
-            var result = await _storageService.DeleteAsync(fileName, bucketName);
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return BadRequest("文件路径不能为空");
+            }
+        
+            var result = await _storageService.DeleteAsync(filePath, bucketName);
             return Ok(new { Success = result });
         }
 

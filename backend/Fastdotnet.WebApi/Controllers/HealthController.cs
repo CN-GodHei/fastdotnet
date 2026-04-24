@@ -9,6 +9,7 @@ namespace Fastdotnet.WebApi.Controllers;
 [ApiController]
 [Route("[controller]")]
 [SkipAntiReplayAttribute]
+[ApiUsageScope(ApiUsageScopeEnum.Both)]
 public class HealthController : ControllerBase
 {
     /// <summary>

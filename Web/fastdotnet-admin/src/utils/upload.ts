@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import { getApiStorageConfig, postApiStorageGetUploadCredential, postApiStorageUpload } from '@/api/fd-system-api-admin/Storage';
+import { getApiStorageConfig, postApiStorageGetUploadCredential, postApiStorageUpload, deleteApiStorage__openAPI__delete } from '@/api/fd-system-api-admin/Storage';
 
 /**
  * 上传文件工具函数
@@ -191,4 +191,51 @@ export const getUploadCredential = async (params: {
     BucketName: params.bucketName || undefined
   } as any);
   return response;
+};
+
+/**
+ * 删除文件
+ */
+export const deleteFile = async (fileName: string, bucketName?: string): Promise<boolean> => {
+  try {
+    // 从 URL 中提取完整的文件路径(如果传入的是完整URL)
+    let actualFileName = fileName;
+    if (fileName.includes('://')) {
+      // 是完整URL,提取域名后的完整路径
+      // 例如: https://domain.com/20260425/xxx.png -> 20260425/xxx.png
+      try {
+        const url = new URL(fileName);
+        // pathname 以 / 开头,需要去掉
+        actualFileName = url.pathname.startsWith('/') ? url.pathname.substring(1) : url.pathname;
+      } catch (e) {
+        // URL解析失败,尝试简单分割
+        const urlParts = fileName.split('/');
+        // 找到域名后的所有部分
+        const domainIndex = urlParts.findIndex(part => part.includes('.'));
+        if (domainIndex !== -1 && domainIndex < urlParts.length - 1) {
+          actualFileName = urlParts.slice(domainIndex + 1).join('/');
+        } else {
+          actualFileName = urlParts[urlParts.length - 1];
+        }
+      }
+    }
+
+    if (!actualFileName) {
+      throw new Error('无法解析文件名');
+    }
+
+    // console.log('[Upload] 删除文件:', actualFileName);
+
+    // 调用 openapi2ts 生成的 API
+    const result = await deleteApiStorage__openAPI__delete({
+      filePath: actualFileName,
+      bucketName: bucketName || undefined
+    });
+
+    // request 拦截器已经返回 response.data
+    return result as unknown as boolean;
+  } catch (error: any) {
+    // console.error('[Upload] 删除文件失败:', error);
+    throw error;
+  }
 };

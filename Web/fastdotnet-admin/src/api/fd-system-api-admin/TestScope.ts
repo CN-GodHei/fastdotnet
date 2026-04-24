@@ -16,17 +16,6 @@ export async function getApiTestScopeBoth(options?: { [key: string]: any }) {
 		...(options || {}),
 	});
 }
-/** 将参数使用RSA加密后返回 POST /api/test-scope/encrypt-with-config-key */
-export async function postApiTestScopeEncryptWithConfigKey(body: APIModel.ExampleRequest, options?: { [key: string]: any }) {
-	return request<any>('/api/test-scope/encrypt-with-config-key', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json-patch+json',
-		},
-		data: body,
-		...(options || {}),
-	});
-}
 /** 加密特性使用示例 - 使用加密特性，请求参数解密固定使用RSA算法，响应加密使用RSA算法 
 
 **请求加密**: 该接口的请求参数需要使用 RSA 算法进行加密。
@@ -66,13 +55,6 @@ export async function postApiTestScopeEncryptRsa(body: APIModel.ExampleRequest, 
 			'Content-Type': 'application/json-patch+json',
 		},
 		data: processedBody,
-		...(options || {}),
-	});
-}
-/** 无作用域限制接口 GET /api/test-scope/no-scope */
-export async function getApiTestScopeNoScope(options?: { [key: string]: any }) {
-	return request<any>('/api/test-scope/no-scope', {
-		method: 'GET',
 		...(options || {}),
 	});
 }

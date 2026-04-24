@@ -58,7 +58,7 @@ export async function getApiPluginGetAuthCode(options?: { [key: string]: any }) 
 		...(options || {}),
 	});
 }
-/** 从URL下载并加载插件 POST /api/Plugin/load */
+/** 从 URL 下载并加载插件 POST /api/Plugin/load */
 export async function postApiPluginLoad(body: APIModel.DownloadPluginDto, options?: { [key: string]: any }) {
 	return request<APIModel.ApiResult>('/api/Plugin/load', {
 		method: 'POST',

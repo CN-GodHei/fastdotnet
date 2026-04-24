@@ -1,4 +1,4 @@
-import { uploadFile, getCurrentStorageConfig, getUploadCredential } from '@/utils/upload';
+import { uploadFile, deleteFile, getCurrentStorageConfig, getUploadCredential } from '@/utils/upload';
 import { getApiStorageConfig, postApiStorageGetUploadCredential, postApiStorageUpload } from '@/api/fd-system-api-admin/Storage';
 
 /**
@@ -90,6 +90,13 @@ class UploadService {
     bucketName?: string;
   }) {
     return await getUploadCredential(params);
+  }
+
+  /**
+   * 删除文件
+   */
+  async deleteFile(fileName: string, bucketName?: string): Promise<boolean> {
+    return await deleteFile(fileName, bucketName);
   }
 
   /**

@@ -3,7 +3,6 @@
 // API 更新时间：
 // API 唯一标识：
 import * as Auth from './Auth';
-import * as Authorization from './Authorization';
 import * as Captcha from './Captcha';
 import * as CodeGen from './CodeGen';
 import * as CodeGenConfig from './CodeGenConfig';
@@ -34,7 +33,6 @@ import * as System from './System';
 import * as TestScope from './TestScope';
 export default {
 	Auth,
-	Authorization,
 	Captcha,
 	CodeGen,
 	CodeGenConfig,

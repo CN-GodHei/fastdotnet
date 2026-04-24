@@ -42,7 +42,7 @@ export async function deleteApiOidcAppClientId(
 ) {
 	const { clientId: param0, ...queryParams } = params;
 
-	return request<any>(`/api/OidcApp/${param0}`, {
+	return request<boolean>(`/api/OidcApp/${param0}`, {
 		method: 'DELETE',
 		params: { ...queryParams },
 		...(options || {}),

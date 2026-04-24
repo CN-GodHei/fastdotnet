@@ -9,18 +9,16 @@ export async function getApiStorageConfig(options?: { [key: string]: any }) {
 		...(options || {}),
 	});
 }
-/** 删除文件 DELETE /api/Storage/delete/${param0} */
-export async function deleteApiStorage__openAPI__deleteFileName(
+/** 删除文件 DELETE /api/Storage/delete */
+export async function deleteApiStorage__openAPI__delete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteApiStorage_openAPI_deleteFileNameParams,
+	params: APIModel.deleteApiStorage_openAPI_deleteParams,
 	options?: { [key: string]: any }
 ) {
-	const { fileName: param0, ...queryParams } = params;
-
-	return request<boolean>(`/api/Storage/delete/${param0}`, {
+	return request<boolean>('/api/Storage/delete', {
 		method: 'DELETE',
 		params: {
-			...queryParams,
+			...params,
 		},
 		...(options || {}),
 	});
