@@ -85,16 +85,50 @@ namespace Fastdotnet.Core.Service.Sys
 
         public async Task<bool> DeleteAsync(string fileName, string? bucketName = null)
         {
-            var directory = Path.Combine(_options.LocalStoragePath, bucketName ?? _options.DefaultBucket);
-            var filePath = Path.Combine(directory, fileName);
-
-            if (File.Exists(filePath))
+            try
             {
-                await Task.Run(() => File.Delete(filePath));
-                return true;
+                // fileName 可能是完整路径(如: uploads/default/xxx.png) 或相对路径(如: default/xxx.png)
+                // 需要正确解析
+                
+                string relativePath;
+                
+                // 如果 fileName 以 "uploads/" 开头,说明是完整URL路径,需要去掉
+                if (fileName.StartsWith("uploads/", StringComparison.OrdinalIgnoreCase))
+                {
+                    relativePath = fileName.Substring("uploads/".Length);
+                }
+                else
+                {
+                    relativePath = fileName;
+                }
+                
+                // 构建完整文件路径
+                var fullPath = Path.Combine(_options.LocalStoragePath, relativePath.Replace('/', Path.DirectorySeparatorChar));
+                
+                
+                // 安全检查: 确保路径在允许的目录内
+                var fullBasePath = Path.GetFullPath(_options.LocalStoragePath);
+                var fullFilePath = Path.GetFullPath(fullPath);
+                
+                if (!fullFilePath.StartsWith(fullBasePath, StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+                
+                if (File.Exists(fullFilePath))
+                {
+                    await Task.Run(() => File.Delete(fullFilePath));
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-
-            return false;
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public async Task<string> GetFileUrlAsync(string fileName, string? bucketName = null)
