@@ -34,8 +34,9 @@ export const uploadFile = async (options: UploadFileOptions): Promise<UploadResu
     if (!configResponse) {
       throw new Error('获取存储配置失败');
     }
+    const supportDirectUpload = configResponse.SupportDirectUpload ?? configResponse.supportDirectUpload ?? false;
 
-    if (configResponse.supportDirectUpload) {
+    if (supportDirectUpload) {
       // 使用前端直传
       return await uploadFileDirectly(file, bucketName, onProgress);
     } else {
@@ -101,12 +102,21 @@ const uploadFileDirectly = async (
   }
 
   const credential = credentialResponse;
+  // 兼容 PascalCase 和 camelCase
+  const uploadUrl = credential.UploadUrl || credential.uploadUrl;
+  const uploadParams = credential.UploadParams || credential.uploadParams || {};
+  const uploadHeaders = credential.UploadHeaders || credential.uploadHeaders || {};
+  const fileUrlTemplate = credential.FileUrlTemplate || credential.fileUrlTemplate;
+  
+  
+  if (!uploadUrl) {
+    throw new Error('上传凭证中缺少UploadUrl');
+  }
   
   // 构建表单数据
   const formData = new FormData();
   
   // 添加直传参数
-  const uploadParams = credential.uploadParams || {};
   for (const [key, value] of Object.entries(uploadParams)) {
     formData.append(key, String(value));
   }
@@ -115,18 +125,20 @@ const uploadFileDirectly = async (
   formData.append('file', file, file.name);
 
   // 执行直传
-  const response = await fetch(credential.uploadUrl, {
+  const response = await fetch(uploadUrl, {
     method: 'POST',
     body: formData,
-    headers: credential.uploadHeaders || {}
+    headers: uploadHeaders
   });
 
   if (response.ok) {
     // 直传成功
+    const key = uploadParams.Key || uploadParams.key || file.name;
+    const url = fileUrlTemplate?.replace('{filename}', key) || key;
     return {
       code: 200,
       data: {
-        url: credential.fileUrlTemplate?.replace('{filename}', uploadParams.key || file.name),
+        url,
         fileName: file.name
       },
       message: '上传成功'
