@@ -126,29 +126,43 @@ const uploadFileDirectly = async (
   const uploadParams = credential.UploadParams || credential.uploadParams || {};
   const uploadHeaders = credential.UploadHeaders || credential.uploadHeaders || {};
   const fileUrlTemplate = credential.FileUrlTemplate || credential.fileUrlTemplate;
+  const requestMethod = (credential.RequestMethod || credential.requestMethod || 'POST').toUpperCase();
   
   
   if (!uploadUrl) {
     throw new Error('上传凭证中缺少UploadUrl');
   }
   
-  // 构建表单数据
-  const formData = new FormData();
+  let response: Response;
   
-  // 添加直传参数
-  for (const [key, value] of Object.entries(uploadParams)) {
-    formData.append(key, String(value));
-  }
-  
-  // 添加文件
-  formData.append('file', file, file.name);
+  // 根据请求方法选择不同的上传方式
+  if (requestMethod === 'PUT') {
+    // MinIO/S3 预签名URL: 直接 PUT 文件流
+    response = await fetch(uploadUrl, {
+      method: 'PUT',
+      body: file,
+      headers: {
+        'Content-Type': file.type || 'application/octet-stream'
+      }
+    });
+  } else {
+    // 七牛云等: POST + FormData
+    const formData = new FormData();
+    
+    // 添加直传参数
+    for (const [key, value] of Object.entries(uploadParams)) {
+      formData.append(key, String(value));
+    }
+    
+    // 添加文件
+    formData.append('file', file, file.name);
 
-  // 执行直传
-  const response = await fetch(uploadUrl, {
-    method: 'POST',
-    body: formData,
-    headers: uploadHeaders
-  });
+    response = await fetch(uploadUrl, {
+      method: 'POST',
+      body: formData,
+      headers: uploadHeaders
+    });
+  }
 
   if (response.ok) {
     // 直传成功

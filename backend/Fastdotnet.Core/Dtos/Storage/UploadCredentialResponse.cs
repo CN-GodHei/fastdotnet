@@ -39,6 +39,11 @@ namespace Fastdotnet.Core.Dtos.Storage
         /// 是否支持前端直传
         /// </summary>
         public bool SupportDirectUpload { get; set; } = true;
+
+        /// <summary>
+        /// HTTP请求方法 (GET, POST, PUT等),默认为POST
+        /// </summary>
+        public string RequestMethod { get; set; } = "POST";
     }
 
     /// <summary>

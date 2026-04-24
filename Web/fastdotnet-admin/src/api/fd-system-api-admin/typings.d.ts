@@ -3301,6 +3301,7 @@ declare namespace APIModel {
 		ExpiresAt?: string;
 		FileUrlTemplate?: string;
 		SupportDirectUpload?: boolean;
+		RequestMethod?: string;
 	};
 
 	type UserAgreementStatusDto = {
