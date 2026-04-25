@@ -1,3 +1,6 @@
+using System.Reflection;
+using SqlSugar;
+
 namespace Fastdotnet.Core.Extensibility.Users
 {
     /// <summary>
@@ -46,7 +49,9 @@ namespace Fastdotnet.Core.Extensibility.Users
         /// <returns>扩展数据，如果不存在则返回 null</returns>
         public virtual async Task<TData?> LoadAsync(string userId, IStorageContext context, CancellationToken ct = default)
         {
-            var sql = $"SELECT * FROM {TableName} WHERE FdAppUserId = @userId";
+            // 动态获取实体的主键字段名
+            var primaryKeyPropertyName = GetPrimaryKeyPropertyName();
+            var sql = $"SELECT * FROM {TableName} WHERE {primaryKeyPropertyName} = @userId";
             return await context.QuerySingleOrDefaultAsync<TData>(sql, new { userId }, ct);
         }
 
@@ -56,5 +61,39 @@ namespace Fastdotnet.Core.Extensibility.Users
         /// <param name="data">扩展数据</param>
         /// <param name="userId">用户ID</param>
         protected abstract void SetUserId(TData data, string userId);
+
+        /// <summary>
+        /// 获取实体的主键字段名
+        /// </summary>
+        /// <returns>主键字段名</returns>
+        protected string GetPrimaryKeyPropertyName()
+        {
+            var type = typeof(TData);
+            
+            // 优先通过 SugarColumn 特性查找主键，支持自定义主键名称
+            var idProperty = type.GetProperties()
+                .FirstOrDefault(p => p.GetCustomAttribute<SugarColumn>()?.IsPrimaryKey == true);
+
+            // 兼容旧逻辑：如果没有标记特性，则尝试查找常见的 Id 命名
+            if (idProperty == null)
+            {
+                idProperty = type.GetProperty("Id") ?? 
+                             type.GetProperty("ID") ?? 
+                             type.GetProperty("id");
+            }
+            
+            if (idProperty != null)
+            {
+                // 检查是否有 SugarColumn 特性并指定了 ColumnName
+                var sugarColumnAttr = idProperty.GetCustomAttribute<SugarColumn>();
+                if (sugarColumnAttr != null && !string.IsNullOrEmpty(sugarColumnAttr.ColumnName))
+                {
+                    return sugarColumnAttr.ColumnName;
+                }
+                return idProperty.Name;
+            }
+            
+            throw new InvalidOperationException($"Entity {typeof(TData).Name} does not have a primary key property marked with [SugarColumn(IsPrimaryKey = true)] or named 'Id'");
+        }
     }
 }
