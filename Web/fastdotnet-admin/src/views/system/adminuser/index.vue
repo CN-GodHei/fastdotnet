@@ -57,16 +57,33 @@
 						</el-tag>
 					</template>
 				</el-table-column>
-				<el-table-column label="操作" width="320" fixed="right" align="center">
+				<el-table-column label="操作" width="120" fixed="right" align="center">
 					<template #default="scope">
-						<el-button icon="ele-Edit" size="small" text type="primary"
-							@click="openEditDialog(scope.row)">修改</el-button>
-						<el-button icon="ele-Key" size="small" text type="warning"
-							@click="handleResetPassword(scope.row)">重置密码</el-button>
-						<el-button icon="ele-User" size="small" text type="primary"
-							@click="openAssignRoleDialog(scope.row)">分配角色</el-button>
-						<el-button icon="ele-Delete" size="small" text type="danger"
-							@click="handleDelete(scope.row)">删除</el-button>
+						<el-dropdown trigger="click" @command="(command: string) => handleCommand(command, scope.row)">
+							<el-button type="primary" size="small" link>
+								操作<el-icon class="el-icon--right"><arrow-down /></el-icon>
+							</el-button>
+							<template #dropdown>
+								<el-dropdown-menu>
+									<el-dropdown-item command="edit">
+										<el-icon><Edit /></el-icon>
+										<span>修改</span>
+									</el-dropdown-item>
+									<el-dropdown-item command="resetPassword">
+										<el-icon><Key /></el-icon>
+										<span>重置密码</span>
+									</el-dropdown-item>
+									<el-dropdown-item command="assignRole">
+										<el-icon><User /></el-icon>
+										<span>分配角色</span>
+									</el-dropdown-item>
+									<el-dropdown-item command="delete" divided>
+										<el-icon><Delete /></el-icon>
+										<span style="color: #f56c6c">删除</span>
+									</el-dropdown-item>
+								</el-dropdown-menu>
+							</template>
+						</el-dropdown>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -167,6 +184,7 @@
 <script lang="ts" setup name="FdAdminUser">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
+import { ArrowDown, Edit, Key, User, Delete } from '@element-plus/icons-vue';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
@@ -449,6 +467,24 @@ const handleResetPassword = (row: APIModel.FdAdminUserDto) => {
 		.catch(() => {
 			// 用户取消操作
 		});
+};
+
+// 处理下拉菜单命令
+const handleCommand = (command: string, row: APIModel.FdAdminUserDto) => {
+	switch (command) {
+		case 'edit':
+			openEditDialog(row);
+			break;
+		case 'resetPassword':
+			handleResetPassword(row);
+			break;
+		case 'assignRole':
+			openAssignRoleDialog(row);
+			break;
+		case 'delete':
+			handleDelete(row);
+			break;
+	}
 };
 
 onMounted(() => {
