@@ -23,15 +23,18 @@ namespace Fastdotnet.WebApi.Filters
         
         /// <summary>
         /// 生成稳定的操作ID
-        /// 格式: {controller}-{method}（全小写，连字符分隔）
-        /// 例如: unifiedpay-pay, captcha-generate, user-deletebyid
+        /// 格式: {http-method}-{controller}-{method}（全小写，连字符分隔）
+        /// 例如: get-captcha-generate, post-unified-pay-pay
         /// 设计理念：
-        /// 1. 不包含HTTP方法，因为GET→POST等变更是常见重构
+        /// 1. 包含HTTP方法前缀，避免同一路径不同方法的命名冲突
         /// 2. 移除Async后缀，因为这是C#实现细节
         /// 3. 统一使用小写+连字符，避免大小写变化影响
         /// </summary>
         private string GenerateStableOperationId(OperationFilterContext context)
         {
+            // 获取HTTP方法
+            var httpMethod = context.ApiDescription.HttpMethod.ToLower();
+            
             // 获取控制器名称（去掉Controller后缀）
             var controllerType = context.MethodInfo.DeclaringType;
             if (controllerType == null)
@@ -53,11 +56,12 @@ namespace Fastdotnet.WebApi.Filters
             }
             
             // 转换为 kebab-case（小写+连字符）
+            var httpMethodKebab = httpMethod; // HTTP方法已经是小写
             var controllerKebab = ToKebabCase(controllerName);
             var methodKebab = ToKebabCase(methodName);
             
             // 组合成稳定的操作ID
-            return $"{controllerKebab}-{methodKebab}";
+            return $"{httpMethodKebab}-{controllerKebab}-{methodKebab}";
         }
         
         /// <summary>
