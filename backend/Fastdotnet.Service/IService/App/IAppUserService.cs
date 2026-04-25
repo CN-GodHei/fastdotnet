@@ -5,6 +5,11 @@ namespace Fastdotnet.Service.IService.App
     /// </summary>
     public interface IAppUserService
     {
+        /// <summary>
+        /// 重置用户密码为系统默认密码
+        /// </summary>
+        /// <param name="userId">用户ID</param>
+        Task ResetPasswordAsync(string userId);
         
         /// <summary>
         /// 获取用户角色关联信息

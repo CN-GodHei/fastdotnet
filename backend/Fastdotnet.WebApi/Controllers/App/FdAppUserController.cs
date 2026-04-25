@@ -86,5 +86,18 @@ namespace Fastdotnet.WebApi.Controllers.App
 
             return isValid;
         }
+
+        /// <summary>
+        /// 重置用户密码为系统默认密码
+        /// </summary>
+        /// <param name="id">用户ID</param>
+        /// <returns>操作结果</returns>
+        [HttpPost("{id}/reset-password")]
+        [Authorize]
+        public async Task<bool> ResetPassword(string id)
+        {
+            await _appUserService.ResetPasswordAsync(id);
+            return true;
+        }
     }
 }

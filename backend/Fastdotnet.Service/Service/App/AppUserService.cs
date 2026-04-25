@@ -1,5 +1,6 @@
 ﻿using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Service.IService.App;
+using Fastdotnet.Service.IService.Sys;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,21 +9,28 @@ namespace Fastdotnet.Service.Service.App
 {
     public class AppUserService : IAppUserService
     {
+        private readonly IRepository<FdAppUser> _appUserRepository;
         private readonly IRepository<FdRole> _roleRepository;
         private readonly IRepository<FdAppUserRole> _AppUserRoleRepository;
         private readonly IRepository<FdMenuButton> _menuButtonRepository;
         private readonly IRepository<FdRoleMenuButton> _roleMenuButtonRepository;
+        private readonly IPasswordService _passwordService;
 
-        public AppUserService(IRepository<FdAppUserRole> AppUserRoleRepository,
+        public AppUserService(
+            IRepository<FdAppUser> appUserRepository,
+            IRepository<FdAppUserRole> AppUserRoleRepository,
             IRepository<FdRole> roleRepository,
             IRepository<FdMenuButton> menuButtonRepository,
-            IRepository<FdRoleMenuButton> roleMenuButtonRepository
+            IRepository<FdRoleMenuButton> roleMenuButtonRepository,
+            IPasswordService passwordService
             )
         {
+            _appUserRepository = appUserRepository;
             _AppUserRoleRepository = AppUserRoleRepository;
             _roleRepository = roleRepository;
             _menuButtonRepository = menuButtonRepository;
             _roleMenuButtonRepository = roleMenuButtonRepository;
+            _passwordService = passwordService;
         }
         public async Task<List<string>> GetUserButtonPermissionsAsync(string userId)
         {
@@ -52,6 +60,21 @@ namespace Fastdotnet.Service.Service.App
             return new List<FdAppUserRole> {
                 new FdAppUserRole { AppUserId = userId, RoleId = DefaultRole.FirstOrDefault()?.Id }
             }.Union(userExistRole).ToList();
+        }
+
+        public async Task ResetPasswordAsync(string userId)
+        {
+            var user = await _appUserRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new BusinessException("用户不存在");
+            }
+
+            // 使用系统配置的默认密码进行加密
+            var encryptedPassword = await _passwordService.GetDefaultEncryptedPasswordAsync();
+            user.Password = encryptedPassword;
+
+            await _appUserRepository.UpdateAsync(user);
         }
     }
 }

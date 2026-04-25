@@ -2611,6 +2611,10 @@ declare namespace APIModel {
 		id: string;
 	};
 
+	type postApiFdAppUserIdResetPasswordParams = {
+		id: string;
+	};
+
 	type postApiAdminFdRoleIdMenuBtnsParams = {
 		id: string;
 	};

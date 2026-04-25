@@ -33,9 +33,9 @@ namespace Fastdotnet.Service.IService.Admin
         Task DeleteAsync(string id);
 
         /// <summary>
-        /// (由管理员)重置用户密码
+        /// (由管理员)重置用户密码为系统默认密码
         /// </summary>
-        Task ResetPasswordAsync(string id, string newPassword);
+        Task ResetPasswordAsync(string id);
         
         /// <summary>
         /// 判断指定用户是否为超级管理员

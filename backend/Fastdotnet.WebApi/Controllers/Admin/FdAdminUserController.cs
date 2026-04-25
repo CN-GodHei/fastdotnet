@@ -97,9 +97,9 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         [HttpPost("{id}/reset-password")]
         [Authorize(Policy = Permissions.Admin.Users.ResetPassword)]
-        public async Task<bool> ResetPassword(string id, [FromBody] ResetPasswordDto dto)
+        public async Task<bool> ResetPassword(string id)
         { 
-            await _adminUserService.ResetPasswordAsync(id, dto.NewPassword);
+            await _adminUserService.ResetPasswordAsync(id);
             return true;
         }
 

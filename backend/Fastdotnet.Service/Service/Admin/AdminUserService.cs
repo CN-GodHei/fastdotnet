@@ -1,4 +1,5 @@
 using Fastdotnet.Core.Entities.Sys;
+using Fastdotnet.Service.IService.Sys;
 
 namespace Fastdotnet.Service.Service.Admin
 {
@@ -10,6 +11,7 @@ namespace Fastdotnet.Service.Service.Admin
         private readonly IRepository<FdRole> _roleRepository;
         private readonly IRepository<FdMenuButton> _menuButtonRepository;
         private readonly IRepository<FdRoleMenuButton> _roleMenuButtonRepository;
+        private readonly IPasswordService _passwordService;
 
         public AdminUserService(
             IRepository<FdAdminUser> repository, 
@@ -17,7 +19,8 @@ namespace Fastdotnet.Service.Service.Admin
             IRepository<FdAdminUserRole> adminUserRoleRepository,
             IRepository<FdRole> roleRepository,
             IRepository<FdMenuButton> menuButtonRepository,
-            IRepository<FdRoleMenuButton> roleMenuButtonRepository)
+            IRepository<FdRoleMenuButton> roleMenuButtonRepository,
+            IPasswordService passwordService)
         {
             _repository = repository;
             _mapper = mapper;
@@ -25,6 +28,7 @@ namespace Fastdotnet.Service.Service.Admin
             _roleRepository = roleRepository;
             _menuButtonRepository = menuButtonRepository;
             _roleMenuButtonRepository = roleMenuButtonRepository;
+            _passwordService = passwordService;
         }
 
         public async Task<string> CreateAsync(CreateFdAdminUserDto dto)
@@ -74,7 +78,7 @@ namespace Fastdotnet.Service.Service.Admin
             };
         }
 
-        public async Task ResetPasswordAsync(string id, string newPassword)
+        public async Task ResetPasswordAsync(string id)
         {
             var user = await _repository.GetByIdAsync(id);
             if (user == null)
@@ -82,11 +86,12 @@ namespace Fastdotnet.Service.Service.Admin
                 throw new BusinessException("用户不存在");
             }
 
-            // 在实际项目中，密码应该在这里进行加密处理
-            // user.Password = PasswordHasher.Hash(newPassword);
-            user.Password = newPassword; // 临时明文处理
+            // 使用系统配置的默认密码进行加密
+            var encryptedPassword = await _passwordService.GetDefaultEncryptedPasswordAsync();
+            user.Password = encryptedPassword;
 
             await _repository.UpdateAsync(user);
+
         }
 
         public async Task UpdateAsync(string id, UpdateFdAdminUserDto dto)

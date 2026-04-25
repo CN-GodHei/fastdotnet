@@ -51,10 +51,12 @@
 				<el-table-column prop="PhoneNumber" label="手机号" show-overflow-tooltip />
 				<el-table-column prop="Nickname" label="昵称" show-overflow-tooltip />
 				<el-table-column prop="Status" label="账户状态" show-overflow-tooltip />
-				<el-table-column label="操作" width="340" fixed="right" align="center">
+				<el-table-column label="操作" width="400" fixed="right" align="center">
 					<template #default="scope">
 						<el-button icon="ele-Edit" size="small" text type="primary"
 							@click="openEditDialog(scope.row)">修改</el-button>
+						<el-button icon="ele-Key" size="small" text type="warning"
+							@click="handleResetPassword(scope.row)">重置密码</el-button>
 						<el-button icon="ele-Setting" size="small" text type="primary"
 							@click="openExtensionDialog(scope.row)">扩展信息</el-button>
 						<el-button icon="ele-User" size="small" text type="primary"
@@ -443,6 +445,26 @@ const handleDelete = (row: APIModel.FdAppUserDto) => {
 		.catch(() => {
 			ElMessage.error('删除失败');
 			return;
+		});
+};
+
+// 重置密码
+const handleResetPassword = (row: APIModel.FdAppUserDto) => {
+	ElMessageBox.confirm(`确定要将用户 "${row.Nickname}" 的密码重置为系统默认密码吗？`, '重置密码', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type: 'warning',
+	})
+		.then(async () => {
+			try {
+				await FdAppUserApi.postApiFdAppUserIdResetPassword({ id: row.Id as string });
+				ElMessage.success('密码重置成功，新密码为系统默认密码');
+			} catch (error) {
+				ElMessage.error('密码重置失败');
+			}
+		})
+		.catch(() => {
+			// 用户取消操作
 		});
 };
 
