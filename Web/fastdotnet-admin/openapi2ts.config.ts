@@ -6,7 +6,7 @@ export default [
   namespace:"APIModel",//默认API
   enumStyle:"string-literal",//枚举样式	string-literal | enum
   requestImportStatement:"import request, { encryptRequest } from '@/utils/request'",
-  isCamelCase:false,
+  isCamelCase:true,
   dataFields: ['Data', 'PageInfo', 'Items'], // 添加分页数据字段支持
 }
 ]
