@@ -105,6 +105,8 @@ public static class SwaggerExtensions
             c.DocumentFilter<TagOrderDocumentFilter>();
             // 添加操作过滤器，为继承自GenericDtoControllerBase的控制器生成文档
             c.OperationFilter<InheritedGenericControllerOperationFilter>();
+            // 添加稳定操作名过滤器，确保前端生成的函数名不受路由前缀变化影响
+            c.OperationFilter<StableOperationNameFilter>();
             // 添加加密相关信息的操作过滤器
             c.OperationFilter<EncryptionOperationFilter>();
 
