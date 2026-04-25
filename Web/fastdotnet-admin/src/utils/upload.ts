@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import { getApiStorageConfig, postApiStorageGetUploadCredential, postApiStorageUpload, deleteApiStorage__openAPI__delete } from '@/api/fd-system-api-admin/Storage';
+import { getStorageGetCurrentConfig, postStorageGetUploadCredential, postStorageUpload, deleteStorageDelete } from '@/api/fd-system-api-admin/Storage';
 
 /**
  * 上传文件工具函数
@@ -46,7 +46,7 @@ export const uploadFile = async (options: UploadFileOptions): Promise<UploadResu
     }
 
     // 否则获取当前存储配置,自动选择上传方式
-    const configResponse = await getApiStorageConfig();
+    const configResponse = await getStorageGetCurrentConfig();
     
     if (!configResponse) {
       throw new Error('获取存储配置失败');
@@ -82,7 +82,7 @@ const uploadFileViaBackend = async (
     bucketName: bucketName
   };
   const body = {};
-  const response: any = await postApiStorageUpload(params, body, file, {
+  const response: any = await postStorageUpload(params, body, file, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -109,7 +109,7 @@ const uploadFileDirectly = async (
   onProgress?: (percent: number) => void
 ): Promise<UploadResult> => {
   // 获取上传凭证
-  const credentialResponse = await postApiStorageGetUploadCredential({
+  const credentialResponse = await postStorageGetUploadCredential({
     FileName: file.name,
     FileSize: file.size,
     ContentType: file.type,
@@ -185,7 +185,7 @@ const uploadFileDirectly = async (
  * 获取当前存储配置
  */
 export const getCurrentStorageConfig = async () => {
-  const response = await getApiStorageConfig();
+  const response = await getStorageGetCurrentConfig();
   return response;
 };
 
@@ -198,7 +198,7 @@ export const getUploadCredential = async (params: {
   contentType: string;
   bucketName?: string;
 }) => {
-  const response = await postApiStorageGetUploadCredential({
+  const response = await postStorageGetUploadCredential({
     FileName: params.fileName,
     FileSize: params.fileSize,
     ContentType: params.contentType,
@@ -241,7 +241,7 @@ export const deleteFile = async (fileName: string, bucketName?: string): Promise
     // console.log('[Upload] 删除文件:', actualFileName);
 
     // 调用 openapi2ts 生成的 API
-    const result = await deleteApiStorage__openAPI__delete({
+    const result = await deleteStorageDelete({
       filePath: actualFileName,
       bucketName: bucketName || undefined
     });

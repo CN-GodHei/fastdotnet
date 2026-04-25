@@ -72,7 +72,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, reactive } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { getApiStorageConfig, postApiStorageGetUploadCredential } from '@/api/fd-system-api-admin/Storage';
+import { getStorageGetCurrentConfig, postStorageGetUploadCredential } from '@/api/fd-system-api-admin/Storage';
 import { uploadFile } from '@/utils/upload';
 import { Plus } from '@element-plus/icons-vue';
 
@@ -222,7 +222,7 @@ const uploadData = computed(() => {
  */
 const loadStorageConfig = async () => {
   try {
-    const response = await getApiStorageConfig();
+    const response = await getStorageGetCurrentConfig();
     if (response) {
       Object.assign(currentStorageConfig, {
         type: response.StorageType,
@@ -289,7 +289,7 @@ const handleBeforeUpload = async (file: File) => {
   // 如果支持直传，需要先获取上传凭证
   if (currentStorageConfig.supportDirectUpload) {
     try {
-      const credentialResponse = await postApiStorageGetUploadCredential({
+      const credentialResponse = await postStorageGetUploadCredential({
         FileName: file.name,
         FileSize: file.size,
         ContentType: file.type,

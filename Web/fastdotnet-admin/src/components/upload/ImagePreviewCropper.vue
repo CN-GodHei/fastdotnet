@@ -128,7 +128,7 @@ import { Plus, ZoomIn, ZoomOut, RefreshLeft, RefreshRight, Refresh } from '@elem
 import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
 
-import { getApiStorageConfig, postApiStorageGetUploadCredential } from '@/api/fd-system-api-admin/Storage';
+import { getStorageGetCurrentConfig, postStorageGetUploadCredential } from '@/api/fd-system-api-admin/Storage';
 import { uploadFile as uploadFileUtil } from '@/utils/upload';
 
 interface Props {
@@ -259,7 +259,7 @@ const uploadData = computed(() => {
  */
 const loadStorageConfig = async () => {
   try {
-    const response = await getApiStorageConfig();
+    const response = await getStorageGetCurrentConfig();
     if (response) {
       Object.assign(currentStorageConfig, {
         type: response.StorageType,
@@ -596,7 +596,7 @@ const handleBeforeUpload = async (file: File) => {
   // 如果支持直传，需要先获取上传凭证
   if (currentStorageConfig.supportDirectUpload) {
     try {
-      const credentialResponse = await postApiStorageGetUploadCredential({
+      const credentialResponse = await postStorageGetUploadCredential({
         FileName: file.name,
         FileSize: file.size,
         ContentType: file.type,

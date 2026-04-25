@@ -1,5 +1,5 @@
 import { uploadFile, deleteFile, getCurrentStorageConfig, getUploadCredential } from '@/utils/upload';
-import { getApiStorageConfig, postApiStorageGetUploadCredential, postApiStorageUpload } from '@/api/fd-system-api-admin/Storage';
+import { getStorageGetCurrentConfig, postStorageGetUploadCredential, postStorageUpload } from '@/api/fd-system-api-admin/Storage';
 
 /**
  * 上传服务，提供统一的上传接口
