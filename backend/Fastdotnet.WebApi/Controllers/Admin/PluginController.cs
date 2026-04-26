@@ -175,14 +175,14 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         {
             if (file == null || file.Length == 0)
             {
-                return new ApiResult(400, "请上传文件");
+                return ApiResult.Fail(400, "请上传文件");
             }
 
             // 验证文件扩展名
             var fileExt = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (fileExt != ".zip")
             {
-                return new ApiResult(400, "仅支持上传 .zip 格式的插件包");
+                return ApiResult.Fail(400, "仅支持上传 .zip 格式的插件包");
             }
 
             // 将文件转为字节流传递给 Service 层
