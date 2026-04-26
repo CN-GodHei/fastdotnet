@@ -148,9 +148,14 @@ namespace Fastdotnet.Core.Dtos.App
         public int Status { get; set; }
 
         /// <summary>
+        /// 最后登录时间
+        /// </summary>
+        public DateTime? LastLoginTime { get; set; }
+
+        /// <summary>
         /// 注册时间
         /// </summary>
-        //public DateTime RegistrationDate { get; set; }
+        public DateTime RegistrationDate { get; set; }
 
         /// <summary>
         /// 用户的角色ID列表
