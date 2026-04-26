@@ -80,24 +80,26 @@ namespace Fastdotnet.Service.Service
             string userId;
             string userName;
             List<string> roleCodes = new List<string>();
+            FdAdminUser adminUser = null;
+            FdAppUser appUser = null;
 
             if (userCategory == "Admin")
             {
-                var user = await _adminUserRepository.GetFirstAsync(u => u.Username == dto.Username);
-                if (user == null)
+                adminUser = await _adminUserRepository.GetFirstAsync(u => u.Username == dto.Username);
+                if (adminUser == null)
                 {
                     throw new BusinessException("用户名或密码错误");
                 }
 
                 // 验证密码
-                bool isPasswordValid = await _passwordService.VerifyPasswordAsync(dto.Password, user.Password);
+                bool isPasswordValid = await _passwordService.VerifyPasswordAsync(dto.Password, adminUser.Password);
                 if (!isPasswordValid)
                 {
                     throw new BusinessException("用户名或密码错误");
                 }
 
-                userId = user.Id;
-                userName = user.Username;
+                userId = adminUser.Id;
+                userName = adminUser.Username;
 
                 var userRoles = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
                 if (!userRoles.Any())
@@ -115,21 +117,21 @@ namespace Fastdotnet.Service.Service
             }
             else if (userCategory == "App")
             {
-                var user = await _appUserRepository.GetFirstAsync(u => u.Username == dto.Username);
-                if (user == null)
+                appUser = await _appUserRepository.GetFirstAsync(u => u.Username == dto.Username);
+                if (appUser == null)
                 {
                     throw new BusinessException("用户名或密码错误");
                 }
 
                 // 验证密码
-                bool isPasswordValid = await _passwordService.VerifyPasswordAsync(dto.Password, user.Password);
+                bool isPasswordValid = await _passwordService.VerifyPasswordAsync(dto.Password, appUser.Password);
                 if (!isPasswordValid)
                 {
                     throw new BusinessException("用户名或密码错误");
                 }
 
-                userId = user.Id;
-                userName = user.Username;
+                userId = appUser.Id;
+                userName = appUser.Username;
 
                 var userRoles = await _appUserRoleRepository.GetListAsync(ur => ur.AppUserId == userId);
                 if (!userRoles.Any())
@@ -148,6 +150,18 @@ namespace Fastdotnet.Service.Service
             else
             {
                 throw new BusinessException("无效的用户类别");
+            }
+
+            // 更新最后登录时间
+            if (userCategory == "Admin" && adminUser != null)
+            {
+                adminUser.LastLoginTime = DateTime.Now;
+                await _adminUserRepository.UpdateAsync(adminUser);
+            }
+            else if (userCategory == "App" && appUser != null)
+            {
+                appUser.LastLoginTime = DateTime.Now;
+                await _appUserRepository.UpdateAsync(appUser);
             }
 
             return GenerateJwtToken(userId, userName, userCategory, roleCodes);
