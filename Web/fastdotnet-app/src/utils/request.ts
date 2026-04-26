@@ -298,7 +298,8 @@ service.interceptors.response.use(
 					// 解密失败是否视为错误？视业务而定，这里暂返回原文或报错
 				}
 			}
-			return res.Data;
+			// 如果 Data 存在则返回 Data，否则返回完整响应（用于非泛型 ApiResult）
+			return res.Data !== undefined ? res.Data : res;
 		}
 
 		// 3. 防重放错误处理 (408/409)
