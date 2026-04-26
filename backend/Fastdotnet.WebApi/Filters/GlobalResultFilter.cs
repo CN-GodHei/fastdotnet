@@ -65,9 +65,9 @@ namespace Fastdotnet.WebApi.Filters
             }
             else if (context.Result is StatusCodeResult statusCodeResult)
             {
-                // 保留状态码，但包装消息（可选）
+                // 保留状态码，设置消息
                 var message = $"请求完成，状态码: {statusCodeResult.StatusCode}";
-                context.Result = new ObjectResult(ApiResult<object>.Success(message))
+                context.Result = new ObjectResult(ApiResult.FromCode(statusCodeResult.StatusCode, message))
                 {
                     StatusCode = statusCodeResult.StatusCode
                 };
@@ -87,12 +87,25 @@ namespace Fastdotnet.WebApi.Filters
             // 无需处理
         }
 
-        // 判断是否已经是 ApiResult<T>
+        // 判断是否已经是 ApiResult 或 ApiResult<T>
         private static bool IsApiResult(object value)
         {
             if (value == null) return false;
             var type = value.GetType();
-            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ApiResult<>);
+            
+            // 检查是否是 ApiResult<T>
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ApiResult<>))
+            {
+                return true;
+            }
+            
+            // 检查是否是非泛型的 ApiResult
+            if (type == typeof(ApiResult))
+            {
+                return true;
+            }
+            
+            return false;
         }
 
         // 尝试识别 PageResult<T> 并提取属性

@@ -36,6 +36,14 @@ namespace Fastdotnet.Core.Dtos
         public static ApiResult Success(string msg = "success") => new ApiResult { Code = 200, Msg = msg };
 
         /// <summary>
+        /// 返回指定状态码和消息（用于特殊状态码场景）
+        /// </summary>
+        /// <param name="code">状态码</param>
+        /// <param name="msg">消息</param>
+        /// <returns>ApiResult</returns>
+        public static ApiResult FromCode(int code, string msg) => new ApiResult { Code = code, Msg = msg };
+
+        /// <summary>
         /// 失败返回
         /// </summary>
         /// <param name="code">错误码</param>

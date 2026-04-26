@@ -278,7 +278,7 @@ service.interceptors.response.use(
 
 		// 2. 状态码处理
 		if (status === 200) {
-			if (res.Code !== 0) {
+			if (res.Code !== 200) {
 				// 业务错误
 				if (res.Code === 401 || res.Code === 4001) {
 					handleLogout();
