@@ -18,13 +18,27 @@ namespace Fastdotnet.Service.Service
     }
 
     /// <summary>
-    /// 处理“重置密码”场景的验证码策略
+    /// 处理"重置密码"场景的验证码策略
     /// </summary>
     public class ResetPasswordVerificationStrategy : EmailVerificationStrategyBase
     {
         public override string BusinessCode => "ResetPassword";
 
         public ResetPasswordVerificationStrategy(IEmailService emailService, IMemoryCache memoryCache, IBaseService<FdDictData, string> FdDictDataservice,
+            IBaseService<SystemInfoConfig, string> SystemInfoConfigservice)
+            : base(emailService, memoryCache, FdDictDataservice, SystemInfoConfigservice)
+        {
+        }
+    }
+
+    /// <summary>
+    /// 处理"修改邮箱"场景的验证码策略
+    /// </summary>
+    public class ChangeEmailVerificationStrategy : EmailVerificationStrategyBase
+    {
+        public override string BusinessCode => "ChangeEmail";
+
+        public ChangeEmailVerificationStrategy(IEmailService emailService, IMemoryCache memoryCache, IBaseService<FdDictData, string> FdDictDataservice,
             IBaseService<SystemInfoConfig, string> SystemInfoConfigservice)
             : base(emailService, memoryCache, FdDictDataservice, SystemInfoConfigservice)
         {
