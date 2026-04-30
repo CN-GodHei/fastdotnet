@@ -266,8 +266,7 @@ app.UseEndpoints(endpoints =>
 });
 
 // 注册主程序的 SignalR 方法
-var httpContextAccessor = app.Services.GetRequiredService<Microsoft.AspNetCore.Http.IHttpContextAccessor>();
-var systemProvider = new Fastdotnet.WebApi.Providers.SystemSignalRProvider(httpContextAccessor);
+var systemProvider = new Fastdotnet.WebApi.Providers.SystemSignalRProvider();
 Fastdotnet.Core.Hubs.PluginMethodRegistry.RegisterPlugin(systemProvider);
 Console.WriteLine($"[Program] System 插件 SignalR 方法已注册");
 

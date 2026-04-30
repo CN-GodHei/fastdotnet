@@ -28,6 +28,6 @@ namespace Fastdotnet.Core.Plugin
         /// </summary>
         /// <param name="methodName">方法名</param>
         /// <param name="handler">方法处理器</param>
-        void Register(string methodName, Func<object[], Task<object?>> handler);
+        void Register(string methodName, Func<object[], Microsoft.AspNetCore.SignalR.HubCallerContext, Task<object?>> handler);
     }
 }

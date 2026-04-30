@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using Microsoft.AspNetCore.SignalR;
 using System.Text.Json;
 
@@ -150,7 +150,7 @@ namespace Fastdotnet.Core.Hubs
                 Console.WriteLine($"[SignalR] 转换后的参数数量: {argsArray?.Length ?? 0}");
                 
                 // 通过 PluginMethodRegistry 调用插件注册的方法
-                var result = await PluginMethodRegistry.InvokeMethod(pluginId, methodName, argsArray ?? Array.Empty<object>());
+                var result = await PluginMethodRegistry.InvokeMethod(pluginId, methodName, argsArray ?? Array.Empty<object>(), Context);
                 
                 Console.WriteLine($"[SignalR] 调用成功: {pluginId}.{methodName}");
                 return result;

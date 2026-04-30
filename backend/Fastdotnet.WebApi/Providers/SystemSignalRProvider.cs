@@ -1,7 +1,7 @@
 using Fastdotnet.Core.Hubs;
 using Fastdotnet.Core.Plugin;
 using Fastdotnet.Plugin.Core.Infrastructure;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Fastdotnet.WebApi.Providers
 {
@@ -11,11 +11,8 @@ namespace Fastdotnet.WebApi.Providers
     /// </summary>
     public class SystemSignalRProvider : IPluginSignalRProvider
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public SystemSignalRProvider(IHttpContextAccessor httpContextAccessor)
+        public SystemSignalRProvider()
         {
-            _httpContextAccessor = httpContextAccessor;
             Console.WriteLine($"[SystemSignalRProvider] 实例已创建");
         }
 
@@ -28,7 +25,7 @@ namespace Fastdotnet.WebApi.Providers
                 Console.WriteLine($"[SystemSignalRProvider] 开始注册方法...");
                 
                 // 注册检查插件安装状态的方法
-                registry.Register("CheckPluginInstalling", async (args) =>
+                registry.Register("CheckPluginInstalling", async (args, context) =>
                 {
                     if (args == null || args.Length == 0)
                         return false;
@@ -37,9 +34,10 @@ namespace Fastdotnet.WebApi.Providers
                     if (string.IsNullOrEmpty(pluginId))
                         return false;
 
-                    // 从当前 HTTP 上下文获取 userId
-                    var userId = _httpContextAccessor?.HttpContext?.User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
-                              ?? _httpContextAccessor?.HttpContext?.User?.FindFirst("sub")?.Value;
+                    // 从 SignalR 上下文获取 userId
+                    var userId = context?.UserIdentifier 
+                              ?? context?.User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                              ?? context?.User?.FindFirst("sub")?.Value;
 
                     if (string.IsNullOrEmpty(userId))
                         return false;
@@ -50,7 +48,7 @@ namespace Fastdotnet.WebApi.Providers
                 Console.WriteLine($"[SystemSignalRProvider] CheckPluginInstalling 已注册");
                 
                 // 注册取消插件安装的方法
-                registry.Register("CancelPluginInstallation", async (args) =>
+                registry.Register("CancelPluginInstallation", async (args, context) =>
                 {
                     if (args == null || args.Length == 0)
                         return new { success = false, message = "参数错误" };
@@ -59,9 +57,10 @@ namespace Fastdotnet.WebApi.Providers
                     if (string.IsNullOrEmpty(pluginId))
                         return new { success = false, message = "插件ID不能为空" };
 
-                    // 从当前 HTTP 上下文获取 userId
-                    var userId = _httpContextAccessor?.HttpContext?.User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
-                              ?? _httpContextAccessor?.HttpContext?.User?.FindFirst("sub")?.Value;
+                    // 从 SignalR 上下文获取 userId
+                    var userId = context?.UserIdentifier 
+                              ?? context?.User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                              ?? context?.User?.FindFirst("sub")?.Value;
 
                     if (string.IsNullOrEmpty(userId))
                         return new { success = false, message = "未找到用户信息" };

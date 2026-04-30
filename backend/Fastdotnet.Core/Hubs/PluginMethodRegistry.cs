@@ -9,15 +9,15 @@ namespace Fastdotnet.Core.Hubs
     public class SignalRMethodRegistry : ISignalRMethodRegistry
     {
         private readonly string _pluginId;
-        private readonly ConcurrentDictionary<string, Func<object[], Task<object?>>> _handlers;
+        private readonly ConcurrentDictionary<string, Func<object[], Microsoft.AspNetCore.SignalR.HubCallerContext, Task<object?>>> _handlers;
 
-        public SignalRMethodRegistry(string pluginId, ConcurrentDictionary<string, Func<object[], Task<object?>>> handlers)
+        public SignalRMethodRegistry(string pluginId, ConcurrentDictionary<string, Func<object[], Microsoft.AspNetCore.SignalR.HubCallerContext, Task<object?>>> handlers)
         {
             _pluginId = pluginId;
             _handlers = handlers;
         }
 
-        public void Register(string methodName, Func<object[], Task<object?>> handler)
+        public void Register(string methodName, Func<object[], Microsoft.AspNetCore.SignalR.HubCallerContext, Task<object?>> handler)
         {
             var key = $"{_pluginId}.{methodName}";
             _handlers[key] = handler;
@@ -30,7 +30,7 @@ namespace Fastdotnet.Core.Hubs
     public static class PluginMethodRegistry
     {
         // 存储插件注册的方法 (key: "pluginId.methodName", value: 方法委托)
-        private static readonly ConcurrentDictionary<string, Func<object[], Task<object?>>> _methodHandlers = new();
+        private static readonly ConcurrentDictionary<string, Func<object[], Microsoft.AspNetCore.SignalR.HubCallerContext, Task<object?>>> _methodHandlers = new();
 
         /// <summary>
         /// 注册插件的所有方法
@@ -68,8 +68,9 @@ namespace Fastdotnet.Core.Hubs
         /// <param name="pluginId">插件ID</param>
         /// <param name="methodName">方法名</param>
         /// <param name="args">参数</param>
+        /// <param name="context">SignalR Hub Caller Context</param>
         /// <returns>方法返回值</returns>
-        public static async Task<object?> InvokeMethod(string pluginId, string methodName, object[] args)
+        public static async Task<object?> InvokeMethod(string pluginId, string methodName, object[] args, Microsoft.AspNetCore.SignalR.HubCallerContext context)
         {
             var key = $"{pluginId}.{methodName}";
             
@@ -79,7 +80,7 @@ namespace Fastdotnet.Core.Hubs
             if (_methodHandlers.TryGetValue(key, out var handler))
             {
                 Console.WriteLine($"[PluginMethodRegistry] 找到方法处理器: {key}");
-                return await handler(args);
+                return await handler(args, context);
             }
 
             throw new InvalidOperationException($"插件 {pluginId} 未注册方法: {methodName}");
