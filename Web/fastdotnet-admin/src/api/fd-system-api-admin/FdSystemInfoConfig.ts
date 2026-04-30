@@ -3,14 +3,19 @@
 import request, { encryptRequest } from '@/utils/request';
 
 /** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/admin/FdSystemInfoConfig */
-export async function getApiAdminFdSystemInfoConfig(options?: { [key: string]: any }) {
+/** @deprecated 请使用 getGenericDtoControllerBase5GetAll，原函数名: getApiAdminFdSystemInfoConfig */
+export async function getGenericDtoControllerBase5GetAll(options?: { [key: string]: any }) {
 	return request<APIModel.FdSystemInfoConfigDto[]>('/api/admin/FdSystemInfoConfig', {
 		method: 'GET',
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetAll */
+export const getApiAdminFdSystemInfoConfig = getGenericDtoControllerBase5GetAll;
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/admin/FdSystemInfoConfig */
-export async function postApiAdminFdSystemInfoConfig(body: APIModel.CreateFdSystemInfoConfigDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5Create，原函数名: postApiAdminFdSystemInfoConfig */
+export async function postGenericDtoControllerBase5Create(body: APIModel.CreateFdSystemInfoConfigDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdSystemInfoConfigDto>('/api/admin/FdSystemInfoConfig', {
 		method: 'POST',
 		headers: {
@@ -20,10 +25,14 @@ export async function postApiAdminFdSystemInfoConfig(body: APIModel.CreateFdSyst
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5Create */
+export const postApiAdminFdSystemInfoConfig = postGenericDtoControllerBase5Create;
 /** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/admin/FdSystemInfoConfig/${param0} */
-export async function getApiAdminFdSystemInfoConfigId(
+/** @deprecated 请使用 getGenericDtoControllerBase5GetById，原函数名: getApiAdminFdSystemInfoConfigId */
+export async function getGenericDtoControllerBase5GetById(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiAdminFdSystemInfoConfigIdParams,
+	params: APIModel.getGenericDtoControllerBase5GetByIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -34,10 +43,14 @@ export async function getApiAdminFdSystemInfoConfigId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetById */
+export const getApiAdminFdSystemInfoConfigId = getGenericDtoControllerBase5GetById;
 /** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/admin/FdSystemInfoConfig/${param0} */
-export async function putApiAdminFdSystemInfoConfigId(
+/** @deprecated 请使用 putGenericDtoControllerBase5Update，原函数名: putApiAdminFdSystemInfoConfigId */
+export async function putGenericDtoControllerBase5Update(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putApiAdminFdSystemInfoConfigIdParams,
+	params: APIModel.putGenericDtoControllerBase5UpdateParams,
 	body: APIModel.UpdateFdSystemInfoConfigDto,
 	options?: { [key: string]: any }
 ) {
@@ -53,10 +66,14 @@ export async function putApiAdminFdSystemInfoConfigId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5Update */
+export const putApiAdminFdSystemInfoConfigId = putGenericDtoControllerBase5Update;
 /** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/admin/FdSystemInfoConfig/${param0} */
-export async function deleteApiAdminFdSystemInfoConfigId(
+/** @deprecated 请使用 deleteGenericDtoControllerBase5Delete，原函数名: deleteApiAdminFdSystemInfoConfigId */
+export async function deleteGenericDtoControllerBase5Delete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteApiAdminFdSystemInfoConfigIdParams,
+	params: APIModel.deleteGenericDtoControllerBase5DeleteParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -67,8 +84,12 @@ export async function deleteApiAdminFdSystemInfoConfigId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5Delete */
+export const deleteApiAdminFdSystemInfoConfigId = deleteGenericDtoControllerBase5Delete;
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/FdSystemInfoConfig/batch */
-export async function putApiAdminFdSystemInfoConfigBatch(body: APIModel.UpdateFdSystemInfoConfigDto[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 putGenericDtoControllerBase5UpdateMany，原函数名: putApiAdminFdSystemInfoConfigBatch */
+export async function putGenericDtoControllerBase5UpdateMany(body: APIModel.UpdateFdSystemInfoConfigDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdSystemInfoConfig/batch', {
 		method: 'PUT',
 		headers: {
@@ -78,8 +99,12 @@ export async function putApiAdminFdSystemInfoConfigBatch(body: APIModel.UpdateFd
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateMany */
+export const putApiAdminFdSystemInfoConfigBatch = putGenericDtoControllerBase5UpdateMany;
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/FdSystemInfoConfig/batch */
-export async function postApiAdminFdSystemInfoConfigBatch(body: APIModel.CreateFdSystemInfoConfigDto[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5CreateMany，原函数名: postApiAdminFdSystemInfoConfigBatch */
+export async function postGenericDtoControllerBase5CreateMany(body: APIModel.CreateFdSystemInfoConfigDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdSystemInfoConfig/batch', {
 		method: 'POST',
 		headers: {
@@ -89,8 +114,12 @@ export async function postApiAdminFdSystemInfoConfigBatch(body: APIModel.CreateF
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5CreateMany */
+export const postApiAdminFdSystemInfoConfigBatch = postGenericDtoControllerBase5CreateMany;
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/admin/FdSystemInfoConfig/batch */
-export async function deleteApiAdminFdSystemInfoConfigBatch(body: string[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 deleteGenericDtoControllerBase5BatchDelete，原函数名: deleteApiAdminFdSystemInfoConfigBatch */
+export async function deleteGenericDtoControllerBase5BatchDelete(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdSystemInfoConfig/batch', {
 		method: 'DELETE',
 		headers: {
@@ -100,8 +129,12 @@ export async function deleteApiAdminFdSystemInfoConfigBatch(body: string[], opti
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5BatchDelete */
+export const deleteApiAdminFdSystemInfoConfigBatch = deleteGenericDtoControllerBase5BatchDelete;
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdSystemInfoConfig/batch/updatebycondition */
-export async function putApiAdminFdSystemInfoConfigBatchUpdatebycondition(
+/** @deprecated 请使用 putGenericDtoControllerBase5UpdateManyByCondition，原函数名: putApiAdminFdSystemInfoConfigBatchUpdatebycondition */
+export async function putGenericDtoControllerBase5UpdateManyByCondition(
 	body: APIModel.BatchUpdateByConditionDto1UpdateFdSystemInfoConfigDto,
 	options?: { [key: string]: any }
 ) {
@@ -114,15 +147,23 @@ export async function putApiAdminFdSystemInfoConfigBatchUpdatebycondition(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateManyByCondition */
+export const putApiAdminFdSystemInfoConfigBatchUpdatebycondition = putGenericDtoControllerBase5UpdateManyByCondition;
 /** 此处后端没有提供注释 GET /api/admin/FdSystemInfoConfig/GetServiceDateTime */
-export async function getApiAdminFdSystemInfoConfigGetServiceDateTime(options?: { [key: string]: any }) {
+/** @deprecated 请使用 getFdSystemInfoConfigGetServiceDateTime，原函数名: getApiAdminFdSystemInfoConfigGetServiceDateTime */
+export async function getFdSystemInfoConfigGetServiceDateTime(options?: { [key: string]: any }) {
 	return request<string>('/api/admin/FdSystemInfoConfig/GetServiceDateTime', {
 		method: 'GET',
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getFdSystemInfoConfigGetServiceDateTime */
+export const getApiAdminFdSystemInfoConfigGetServiceDateTime = getFdSystemInfoConfigGetServiceDateTime;
 /** 根据自定义条件获取列表(不分页) 根据自定义条件获取列表(不分页) POST /api/admin/FdSystemInfoConfig/list-by-condition */
-export async function postApiAdminFdSystemInfoConfigListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5GetListByCondition，原函数名: postApiAdminFdSystemInfoConfigListByCondition */
+export async function postGenericDtoControllerBase5GetListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
 	return request<any>('/api/admin/FdSystemInfoConfig/list-by-condition', {
 		method: 'POST',
 		headers: {
@@ -132,10 +173,14 @@ export async function postApiAdminFdSystemInfoConfigListByCondition(body: APIMod
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetListByCondition */
+export const postApiAdminFdSystemInfoConfigListByCondition = postGenericDtoControllerBase5GetListByCondition;
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/admin/FdSystemInfoConfig/page */
-export async function getApiAdminFdSystemInfoConfigPage(
+/** @deprecated 请使用 getGenericDtoControllerBase5GetPage，原函数名: getApiAdminFdSystemInfoConfigPage */
+export async function getGenericDtoControllerBase5GetPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiAdminFdSystemInfoConfigPageParams,
+	params: APIModel.getGenericDtoControllerBase5GetPageParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/admin/FdSystemInfoConfig/page', {
@@ -150,8 +195,12 @@ export async function getApiAdminFdSystemInfoConfigPage(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetPage */
+export const getApiAdminFdSystemInfoConfigPage = getGenericDtoControllerBase5GetPage;
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdSystemInfoConfig/page/search */
-export async function postApiAdminFdSystemInfoConfigPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5GetPageByCondition，原函数名: postApiAdminFdSystemInfoConfigPageSearch */
+export async function postGenericDtoControllerBase5GetPageByCondition(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdSystemInfoConfig/page/search', {
 		method: 'POST',
 		headers: {
@@ -161,17 +210,25 @@ export async function postApiAdminFdSystemInfoConfigPageSearch(body: APIModel.Pa
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetPageByCondition */
+export const postApiAdminFdSystemInfoConfigPageSearch = postGenericDtoControllerBase5GetPageByCondition;
 /** [Public] 获取所有系统配置项（用于客户端初始化） GET /api/admin/FdSystemInfoConfig/public/all */
-export async function getApiAdminFdSystemInfoConfigPublicAll(options?: { [key: string]: any }) {
+/** @deprecated 请使用 getFdSystemInfoConfigGetPublicConfigs，原函数名: getApiAdminFdSystemInfoConfigPublicAll */
+export async function getFdSystemInfoConfigGetPublicConfigs(options?: { [key: string]: any }) {
 	return request<Record<string, any>>('/api/admin/FdSystemInfoConfig/public/all', {
 		method: 'GET',
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getFdSystemInfoConfigGetPublicConfigs */
+export const getApiAdminFdSystemInfoConfigPublicAll = getFdSystemInfoConfigGetPublicConfigs;
 /** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/admin/FdSystemInfoConfig/recyclebin */
-export async function getApiAdminFdSystemInfoConfigRecyclebin(
+/** @deprecated 请使用 getGenericDtoControllerBase5GetRecycleBin，原函数名: getApiAdminFdSystemInfoConfigRecyclebin */
+export async function getGenericDtoControllerBase5GetRecycleBin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiAdminFdSystemInfoConfigRecyclebinParams,
+	params: APIModel.getGenericDtoControllerBase5GetRecycleBinParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/admin/FdSystemInfoConfig/recyclebin', {
@@ -186,10 +243,14 @@ export async function getApiAdminFdSystemInfoConfigRecyclebin(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetRecycleBin */
+export const getApiAdminFdSystemInfoConfigRecyclebin = getGenericDtoControllerBase5GetRecycleBin;
 /** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/admin/FdSystemInfoConfig/recyclebin/${param0}/permanent */
-export async function deleteApiAdminFdSystemInfoConfigRecyclebinIdPermanent(
+/** @deprecated 请使用 deleteGenericDtoControllerBase5PermanentDelete，原函数名: deleteApiAdminFdSystemInfoConfigRecyclebinIdPermanent */
+export async function deleteGenericDtoControllerBase5PermanentDelete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteApiAdminFdSystemInfoConfigRecyclebinIdPermanentParams,
+	params: APIModel.deleteGenericDtoControllerBase5PermanentDeleteParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -200,10 +261,14 @@ export async function deleteApiAdminFdSystemInfoConfigRecyclebinIdPermanent(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5PermanentDelete */
+export const deleteApiAdminFdSystemInfoConfigRecyclebinIdPermanent = deleteGenericDtoControllerBase5PermanentDelete;
 /** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/admin/FdSystemInfoConfig/recyclebin/${param0}/restore */
-export async function putApiAdminFdSystemInfoConfigRecyclebinIdRestore(
+/** @deprecated 请使用 putGenericDtoControllerBase5Restore，原函数名: putApiAdminFdSystemInfoConfigRecyclebinIdRestore */
+export async function putGenericDtoControllerBase5Restore(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putApiAdminFdSystemInfoConfigRecyclebinIdRestoreParams,
+	params: APIModel.putGenericDtoControllerBase5RestoreParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -214,8 +279,12 @@ export async function putApiAdminFdSystemInfoConfigRecyclebinIdRestore(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5Restore */
+export const putApiAdminFdSystemInfoConfigRecyclebinIdRestore = putGenericDtoControllerBase5Restore;
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdSystemInfoConfig/recyclebin/permanent */
-export async function postApiAdminFdSystemInfoConfigRecyclebinPermanent(
+/** @deprecated 请使用 postGenericDtoControllerBase5PermanentDeleteBatch，原函数名: postApiAdminFdSystemInfoConfigRecyclebinPermanent */
+export async function postGenericDtoControllerBase5PermanentDeleteBatch(
 	body: APIModel.Expression1Func2SystemInfoConfig_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
@@ -228,8 +297,12 @@ export async function postApiAdminFdSystemInfoConfigRecyclebinPermanent(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5PermanentDeleteBatch */
+export const postApiAdminFdSystemInfoConfigRecyclebinPermanent = postGenericDtoControllerBase5PermanentDeleteBatch;
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdSystemInfoConfig/recyclebin/restore */
-export async function postApiAdminFdSystemInfoConfigRecyclebinRestore(
+/** @deprecated 请使用 postGenericDtoControllerBase5RestoreBatch，原函数名: postApiAdminFdSystemInfoConfigRecyclebinRestore */
+export async function postGenericDtoControllerBase5RestoreBatch(
 	body: APIModel.Expression1Func2SystemInfoConfig_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
@@ -242,8 +315,12 @@ export async function postApiAdminFdSystemInfoConfigRecyclebinRestore(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5RestoreBatch */
+export const postApiAdminFdSystemInfoConfigRecyclebinRestore = postGenericDtoControllerBase5RestoreBatch;
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdSystemInfoConfig/recyclebin/search */
-export async function postApiAdminFdSystemInfoConfigRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5SearchRecycleBin，原函数名: postApiAdminFdSystemInfoConfigRecyclebinSearch */
+export async function postGenericDtoControllerBase5SearchRecycleBin(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdSystemInfoConfig/recyclebin/search', {
 		method: 'POST',
 		headers: {
@@ -253,3 +330,6 @@ export async function postApiAdminFdSystemInfoConfigRecyclebinSearch(body: APIMo
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5SearchRecycleBin */
+export const postApiAdminFdSystemInfoConfigRecyclebinSearch = postGenericDtoControllerBase5SearchRecycleBin;

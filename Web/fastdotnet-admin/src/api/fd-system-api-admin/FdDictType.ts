@@ -3,14 +3,19 @@
 import request, { encryptRequest } from '@/utils/request';
 
 /** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/admin/FdDictType */
-export async function getApiAdminFdDictType(options?: { [key: string]: any }) {
+/** @deprecated 请使用 getGenericDtoControllerBase5GetAll，原函数名: getApiAdminFdDictType */
+export async function getGenericDtoControllerBase5GetAll(options?: { [key: string]: any }) {
 	return request<APIModel.FdDictTypeDto[]>('/api/admin/FdDictType', {
 		method: 'GET',
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetAll */
+export const getApiAdminFdDictType = getGenericDtoControllerBase5GetAll;
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/admin/FdDictType */
-export async function postApiAdminFdDictType(body: APIModel.CreateFdDictTypeDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5Create，原函数名: postApiAdminFdDictType */
+export async function postGenericDtoControllerBase5Create(body: APIModel.CreateFdDictTypeDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdDictTypeDto>('/api/admin/FdDictType', {
 		method: 'POST',
 		headers: {
@@ -20,10 +25,14 @@ export async function postApiAdminFdDictType(body: APIModel.CreateFdDictTypeDto,
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5Create */
+export const postApiAdminFdDictType = postGenericDtoControllerBase5Create;
 /** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/admin/FdDictType/${param0} */
-export async function getApiAdminFdDictTypeId(
+/** @deprecated 请使用 getGenericDtoControllerBase5GetById，原函数名: getApiAdminFdDictTypeId */
+export async function getGenericDtoControllerBase5GetById(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiAdminFdDictTypeIdParams,
+	params: APIModel.getGenericDtoControllerBase5GetByIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -34,10 +43,14 @@ export async function getApiAdminFdDictTypeId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetById */
+export const getApiAdminFdDictTypeId = getGenericDtoControllerBase5GetById;
 /** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/admin/FdDictType/${param0} */
-export async function putApiAdminFdDictTypeId(
+/** @deprecated 请使用 putGenericDtoControllerBase5Update，原函数名: putApiAdminFdDictTypeId */
+export async function putGenericDtoControllerBase5Update(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putApiAdminFdDictTypeIdParams,
+	params: APIModel.putGenericDtoControllerBase5UpdateParams,
 	body: APIModel.UpdateFdDictTypeDto,
 	options?: { [key: string]: any }
 ) {
@@ -53,10 +66,14 @@ export async function putApiAdminFdDictTypeId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5Update */
+export const putApiAdminFdDictTypeId = putGenericDtoControllerBase5Update;
 /** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/admin/FdDictType/${param0} */
-export async function deleteApiAdminFdDictTypeId(
+/** @deprecated 请使用 deleteGenericDtoControllerBase5Delete，原函数名: deleteApiAdminFdDictTypeId */
+export async function deleteGenericDtoControllerBase5Delete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteApiAdminFdDictTypeIdParams,
+	params: APIModel.deleteGenericDtoControllerBase5DeleteParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -67,8 +84,12 @@ export async function deleteApiAdminFdDictTypeId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5Delete */
+export const deleteApiAdminFdDictTypeId = deleteGenericDtoControllerBase5Delete;
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/FdDictType/batch */
-export async function putApiAdminFdDictTypeBatch(body: APIModel.UpdateFdDictTypeDto[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 putGenericDtoControllerBase5UpdateMany，原函数名: putApiAdminFdDictTypeBatch */
+export async function putGenericDtoControllerBase5UpdateMany(body: APIModel.UpdateFdDictTypeDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdDictType/batch', {
 		method: 'PUT',
 		headers: {
@@ -78,8 +99,12 @@ export async function putApiAdminFdDictTypeBatch(body: APIModel.UpdateFdDictType
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateMany */
+export const putApiAdminFdDictTypeBatch = putGenericDtoControllerBase5UpdateMany;
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/FdDictType/batch */
-export async function postApiAdminFdDictTypeBatch(body: APIModel.CreateFdDictTypeDto[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5CreateMany，原函数名: postApiAdminFdDictTypeBatch */
+export async function postGenericDtoControllerBase5CreateMany(body: APIModel.CreateFdDictTypeDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdDictType/batch', {
 		method: 'POST',
 		headers: {
@@ -89,8 +114,12 @@ export async function postApiAdminFdDictTypeBatch(body: APIModel.CreateFdDictTyp
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5CreateMany */
+export const postApiAdminFdDictTypeBatch = postGenericDtoControllerBase5CreateMany;
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/admin/FdDictType/batch */
-export async function deleteApiAdminFdDictTypeBatch(body: string[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 deleteGenericDtoControllerBase5BatchDelete，原函数名: deleteApiAdminFdDictTypeBatch */
+export async function deleteGenericDtoControllerBase5BatchDelete(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdDictType/batch', {
 		method: 'DELETE',
 		headers: {
@@ -100,8 +129,12 @@ export async function deleteApiAdminFdDictTypeBatch(body: string[], options?: { 
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5BatchDelete */
+export const deleteApiAdminFdDictTypeBatch = deleteGenericDtoControllerBase5BatchDelete;
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdDictType/batch/updatebycondition */
-export async function putApiAdminFdDictTypeBatchUpdatebycondition(
+/** @deprecated 请使用 putGenericDtoControllerBase5UpdateManyByCondition，原函数名: putApiAdminFdDictTypeBatchUpdatebycondition */
+export async function putGenericDtoControllerBase5UpdateManyByCondition(
 	body: APIModel.BatchUpdateByConditionDto1UpdateFdDictTypeDto,
 	options?: { [key: string]: any }
 ) {
@@ -114,8 +147,12 @@ export async function putApiAdminFdDictTypeBatchUpdatebycondition(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateManyByCondition */
+export const putApiAdminFdDictTypeBatchUpdatebycondition = putGenericDtoControllerBase5UpdateManyByCondition;
 /** 根据自定义条件获取列表(不分页) 根据自定义条件获取列表(不分页) POST /api/admin/FdDictType/list-by-condition */
-export async function postApiAdminFdDictTypeListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5GetListByCondition，原函数名: postApiAdminFdDictTypeListByCondition */
+export async function postGenericDtoControllerBase5GetListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
 	return request<any>('/api/admin/FdDictType/list-by-condition', {
 		method: 'POST',
 		headers: {
@@ -125,10 +162,14 @@ export async function postApiAdminFdDictTypeListByCondition(body: APIModel.Query
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetListByCondition */
+export const postApiAdminFdDictTypeListByCondition = postGenericDtoControllerBase5GetListByCondition;
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/admin/FdDictType/page */
-export async function getApiAdminFdDictTypePage(
+/** @deprecated 请使用 getGenericDtoControllerBase5GetPage，原函数名: getApiAdminFdDictTypePage */
+export async function getGenericDtoControllerBase5GetPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiAdminFdDictTypePageParams,
+	params: APIModel.getGenericDtoControllerBase5GetPageParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/admin/FdDictType/page', {
@@ -143,8 +184,12 @@ export async function getApiAdminFdDictTypePage(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetPage */
+export const getApiAdminFdDictTypePage = getGenericDtoControllerBase5GetPage;
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdDictType/page/search */
-export async function postApiAdminFdDictTypePageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5GetPageByCondition，原函数名: postApiAdminFdDictTypePageSearch */
+export async function postGenericDtoControllerBase5GetPageByCondition(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdDictType/page/search', {
 		method: 'POST',
 		headers: {
@@ -154,10 +199,14 @@ export async function postApiAdminFdDictTypePageSearch(body: APIModel.PageQueryB
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetPageByCondition */
+export const postApiAdminFdDictTypePageSearch = postGenericDtoControllerBase5GetPageByCondition;
 /** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/admin/FdDictType/recyclebin */
-export async function getApiAdminFdDictTypeRecyclebin(
+/** @deprecated 请使用 getGenericDtoControllerBase5GetRecycleBin，原函数名: getApiAdminFdDictTypeRecyclebin */
+export async function getGenericDtoControllerBase5GetRecycleBin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiAdminFdDictTypeRecyclebinParams,
+	params: APIModel.getGenericDtoControllerBase5GetRecycleBinParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/admin/FdDictType/recyclebin', {
@@ -172,10 +221,14 @@ export async function getApiAdminFdDictTypeRecyclebin(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetRecycleBin */
+export const getApiAdminFdDictTypeRecyclebin = getGenericDtoControllerBase5GetRecycleBin;
 /** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/admin/FdDictType/recyclebin/${param0}/permanent */
-export async function deleteApiAdminFdDictTypeRecyclebinIdPermanent(
+/** @deprecated 请使用 deleteGenericDtoControllerBase5PermanentDelete，原函数名: deleteApiAdminFdDictTypeRecyclebinIdPermanent */
+export async function deleteGenericDtoControllerBase5PermanentDelete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteApiAdminFdDictTypeRecyclebinIdPermanentParams,
+	params: APIModel.deleteGenericDtoControllerBase5PermanentDeleteParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -186,10 +239,14 @@ export async function deleteApiAdminFdDictTypeRecyclebinIdPermanent(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5PermanentDelete */
+export const deleteApiAdminFdDictTypeRecyclebinIdPermanent = deleteGenericDtoControllerBase5PermanentDelete;
 /** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/admin/FdDictType/recyclebin/${param0}/restore */
-export async function putApiAdminFdDictTypeRecyclebinIdRestore(
+/** @deprecated 请使用 putGenericDtoControllerBase5Restore，原函数名: putApiAdminFdDictTypeRecyclebinIdRestore */
+export async function putGenericDtoControllerBase5Restore(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putApiAdminFdDictTypeRecyclebinIdRestoreParams,
+	params: APIModel.putGenericDtoControllerBase5RestoreParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -200,8 +257,12 @@ export async function putApiAdminFdDictTypeRecyclebinIdRestore(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5Restore */
+export const putApiAdminFdDictTypeRecyclebinIdRestore = putGenericDtoControllerBase5Restore;
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdDictType/recyclebin/permanent */
-export async function postApiAdminFdDictTypeRecyclebinPermanent(
+/** @deprecated 请使用 postGenericDtoControllerBase5PermanentDeleteBatch，原函数名: postApiAdminFdDictTypeRecyclebinPermanent */
+export async function postGenericDtoControllerBase5PermanentDeleteBatch(
 	body: APIModel.Expression1Func2FdDictType_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
@@ -214,8 +275,12 @@ export async function postApiAdminFdDictTypeRecyclebinPermanent(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5PermanentDeleteBatch */
+export const postApiAdminFdDictTypeRecyclebinPermanent = postGenericDtoControllerBase5PermanentDeleteBatch;
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdDictType/recyclebin/restore */
-export async function postApiAdminFdDictTypeRecyclebinRestore(
+/** @deprecated 请使用 postGenericDtoControllerBase5RestoreBatch，原函数名: postApiAdminFdDictTypeRecyclebinRestore */
+export async function postGenericDtoControllerBase5RestoreBatch(
 	body: APIModel.Expression1Func2FdDictType_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
@@ -228,8 +293,12 @@ export async function postApiAdminFdDictTypeRecyclebinRestore(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5RestoreBatch */
+export const postApiAdminFdDictTypeRecyclebinRestore = postGenericDtoControllerBase5RestoreBatch;
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdDictType/recyclebin/search */
-export async function postApiAdminFdDictTypeRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5SearchRecycleBin，原函数名: postApiAdminFdDictTypeRecyclebinSearch */
+export async function postGenericDtoControllerBase5SearchRecycleBin(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdDictType/recyclebin/search', {
 		method: 'POST',
 		headers: {
@@ -239,3 +308,6 @@ export async function postApiAdminFdDictTypeRecyclebinSearch(body: APIModel.Page
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5SearchRecycleBin */
+export const postApiAdminFdDictTypeRecyclebinSearch = postGenericDtoControllerBase5SearchRecycleBin;

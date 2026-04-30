@@ -2,63 +2,75 @@
 /* eslint-disable */
 // API 更新时间：
 // API 唯一标识：
-import * as Auth from './Auth';
-import * as Captcha from './Captcha';
-import * as CodeGen from './CodeGen';
-import * as CodeGenConfig from './CodeGenConfig';
-import * as EncryptionKey from './EncryptionKey';
-import * as FdAdminUser from './FdAdminUser';
-import * as FdAdminUserRole from './FdAdminUserRole';
-import * as FdAppUser from './FdAppUser';
-import * as FdAppUserRole from './FdAppUserRole';
-import * as FdBlacklists from './FdBlacklists';
-import * as FdDictData from './FdDictData';
-import * as FdDictType from './FdDictType';
-import * as FdEmailConfig from './FdEmailConfig';
-import * as FdMenu from './FdMenu';
-import * as FdMenuButtons from './FdMenuButtons';
-import * as FdNationalStandard from './FdNationalStandard';
-import * as FdNationalStandardItem from './FdNationalStandardItem';
-import * as FdPermissions from './FdPermissions';
-import * as FdRatelimitRule from './FdRatelimitRule';
-import * as FdRole from './FdRole';
-import * as FdSystemInfoConfig from './FdSystemInfoConfig';
-import * as Health from './Health';
-import * as OidcApp from './OidcApp';
-import * as OidcLogin from './OidcLogin';
-import * as Plugin from './Plugin';
-import * as PluginConfiguration from './PluginConfiguration';
-import * as Storage from './Storage';
-import * as System from './System';
-import * as TestScope from './TestScope';
+import * as auth from './auth';
+import * as captcha from './captcha';
+import * as codeGen from './codeGen';
+import * as codeGenConfig from './codeGenConfig';
+import * as encryptionKey from './encryptionKey';
+import * as fdAdminUser from './fdAdminUser';
+import * as fdAdminUserRole from './fdAdminUserRole';
+import * as fdAppNotice from './fdAppNotice';
+import * as fdAppTodoTask from './fdAppTodoTask';
+import * as fdAppUser from './fdAppUser';
+import * as fdAppUserRole from './fdAppUserRole';
+import * as fdAppUserWorkbench from './fdAppUserWorkbench';
+import * as fdBlacklists from './fdBlacklists';
+import * as fdDictData from './fdDictData';
+import * as fdDictType from './fdDictType';
+import * as fdEmailConfig from './fdEmailConfig';
+import * as fdMenu from './fdMenu';
+import * as fdMenuButtons from './fdMenuButtons';
+import * as fdNationalStandard from './fdNationalStandard';
+import * as fdNationalStandardItem from './fdNationalStandardItem';
+import * as fdNotice from './fdNotice';
+import * as fdPermissions from './fdPermissions';
+import * as fdRatelimitRule from './fdRatelimitRule';
+import * as fdRole from './fdRole';
+import * as fdSystemInfoConfig from './fdSystemInfoConfig';
+import * as fdTodoTask from './fdTodoTask';
+import * as fdWorkbench from './fdWorkbench';
+import * as health from './health';
+import * as oidcApp from './oidcApp';
+import * as oidcLogin from './oidcLogin';
+import * as plugin from './plugin';
+import * as pluginConfiguration from './pluginConfiguration';
+import * as storage from './storage';
+import * as system from './system';
+import * as testScope from './testScope';
 export default {
-	Auth,
-	Captcha,
-	CodeGen,
-	CodeGenConfig,
-	EncryptionKey,
-	FdAdminUser,
-	FdAdminUserRole,
-	FdAppUser,
-	FdAppUserRole,
-	FdBlacklists,
-	FdDictData,
-	FdDictType,
-	FdEmailConfig,
-	FdMenu,
-	FdMenuButtons,
-	FdNationalStandard,
-	FdNationalStandardItem,
-	FdPermissions,
-	FdRatelimitRule,
-	FdRole,
-	FdSystemInfoConfig,
-	Health,
-	OidcApp,
-	OidcLogin,
-	Plugin,
-	PluginConfiguration,
-	Storage,
-	System,
-	TestScope,
+	auth,
+	captcha,
+	codeGen,
+	codeGenConfig,
+	encryptionKey,
+	fdAdminUser,
+	fdAdminUserRole,
+	fdAppNotice,
+	fdAppTodoTask,
+	fdAppUser,
+	fdAppUserRole,
+	fdAppUserWorkbench,
+	fdBlacklists,
+	fdDictData,
+	fdDictType,
+	fdEmailConfig,
+	fdMenu,
+	fdMenuButtons,
+	fdNationalStandard,
+	fdNationalStandardItem,
+	fdNotice,
+	fdPermissions,
+	fdRatelimitRule,
+	fdRole,
+	fdSystemInfoConfig,
+	fdTodoTask,
+	fdWorkbench,
+	health,
+	oidcApp,
+	oidcLogin,
+	plugin,
+	pluginConfiguration,
+	storage,
+	system,
+	testScope,
 };

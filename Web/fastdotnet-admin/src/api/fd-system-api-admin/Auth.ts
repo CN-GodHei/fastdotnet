@@ -3,7 +3,8 @@
 import request, { encryptRequest } from '@/utils/request';
 
 /** 管理员端登录 POST /api/auth/admin/login */
-export async function postApiAuthAdminLogin(body: APIModel.LoginDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postAuthAdminLogin，原函数名: postApiAuthAdminLogin */
+export async function postAuthAdminLogin(body: APIModel.LoginDto, options?: { [key: string]: any }) {
 	return request<APIModel.LoginResultDto>('/api/auth/admin/login', {
 		method: 'POST',
 		headers: {
@@ -13,3 +14,6 @@ export async function postApiAuthAdminLogin(body: APIModel.LoginDto, options?: {
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postAuthAdminLogin */
+export const postApiAuthAdminLogin = postAuthAdminLogin;

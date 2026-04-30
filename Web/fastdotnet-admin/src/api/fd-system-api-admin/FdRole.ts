@@ -3,14 +3,19 @@
 import request, { encryptRequest } from '@/utils/request';
 
 /** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/admin/FdRole */
-export async function getApiAdminFdRole(options?: { [key: string]: any }) {
+/** @deprecated 请使用 getFdRoleGetAll，原函数名: getApiAdminFdRole */
+export async function getFdRoleGetAll(options?: { [key: string]: any }) {
 	return request<APIModel.FdRoleDto[]>('/api/admin/FdRole', {
 		method: 'GET',
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getFdRoleGetAll */
+export const getApiAdminFdRole = getFdRoleGetAll;
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/admin/FdRole */
-export async function postApiAdminFdRole(body: APIModel.CreateFdRoleDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postFdRoleCreate，原函数名: postApiAdminFdRole */
+export async function postFdRoleCreate(body: APIModel.CreateFdRoleDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdRoleDto>('/api/admin/FdRole', {
 		method: 'POST',
 		headers: {
@@ -20,10 +25,14 @@ export async function postApiAdminFdRole(body: APIModel.CreateFdRoleDto, options
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postFdRoleCreate */
+export const postApiAdminFdRole = postFdRoleCreate;
 /** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/admin/FdRole/${param0} */
-export async function getApiAdminFdRoleId(
+/** @deprecated 请使用 getFdRoleGetById，原函数名: getApiAdminFdRoleId */
+export async function getFdRoleGetById(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiAdminFdRoleIdParams,
+	params: APIModel.getFdRoleGetByIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -34,10 +43,14 @@ export async function getApiAdminFdRoleId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getFdRoleGetById */
+export const getApiAdminFdRoleId = getFdRoleGetById;
 /** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/admin/FdRole/${param0} */
-export async function putApiAdminFdRoleId(
+/** @deprecated 请使用 putFdRoleUpdate，原函数名: putApiAdminFdRoleId */
+export async function putFdRoleUpdate(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putApiAdminFdRoleIdParams,
+	params: APIModel.putFdRoleUpdateParams,
 	body: APIModel.UpdateFdRoleDto,
 	options?: { [key: string]: any }
 ) {
@@ -53,10 +66,14 @@ export async function putApiAdminFdRoleId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putFdRoleUpdate */
+export const putApiAdminFdRoleId = putFdRoleUpdate;
 /** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/admin/FdRole/${param0} */
-export async function deleteApiAdminFdRoleId(
+/** @deprecated 请使用 deleteFdRoleDelete，原函数名: deleteApiAdminFdRoleId */
+export async function deleteFdRoleDelete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteApiAdminFdRoleIdParams,
+	params: APIModel.deleteFdRoleDeleteParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -67,10 +84,14 @@ export async function deleteApiAdminFdRoleId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteFdRoleDelete */
+export const deleteApiAdminFdRoleId = deleteFdRoleDelete;
 /** 此处后端没有提供注释 POST /api/admin/FdRole/${param0}/menu-btns */
-export async function postApiAdminFdRoleIdMenuBtns(
+/** @deprecated 请使用 postFdRoleSave，原函数名: postApiAdminFdRoleIdMenuBtns */
+export async function postFdRoleSave(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postApiAdminFdRoleIdMenuBtnsParams,
+	params: APIModel.postFdRoleSaveParams,
 	body: APIModel.MenuBtnRe[],
 	options?: { [key: string]: any }
 ) {
@@ -86,10 +107,14 @@ export async function postApiAdminFdRoleIdMenuBtns(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postFdRoleSave */
+export const postApiAdminFdRoleIdMenuBtns = postFdRoleSave;
 /** 此处后端没有提供注释 GET /api/admin/FdRole/${param0}/permissions */
-export async function getApiAdminFdRoleIdPermissions(
+/** @deprecated 请使用 getFdRoleGetPermissionIds，原函数名: getApiAdminFdRoleIdPermissions */
+export async function getFdRoleGetPermissionIds(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiAdminFdRoleIdPermissionsParams,
+	params: APIModel.getFdRoleGetPermissionIdsParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -100,10 +125,14 @@ export async function getApiAdminFdRoleIdPermissions(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getFdRoleGetPermissionIds */
+export const getApiAdminFdRoleIdPermissions = getFdRoleGetPermissionIds;
 /** 此处后端没有提供注释 POST /api/admin/FdRole/${param0}/permissions */
-export async function postApiAdminFdRoleIdPermissions(
+/** @deprecated 请使用 postFdRoleAssignPermissions，原函数名: postApiAdminFdRoleIdPermissions */
+export async function postFdRoleAssignPermissions(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postApiAdminFdRoleIdPermissionsParams,
+	params: APIModel.postFdRoleAssignPermissionsParams,
 	body: APIModel.AssignPermissionsDto,
 	options?: { [key: string]: any }
 ) {
@@ -119,8 +148,12 @@ export async function postApiAdminFdRoleIdPermissions(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postFdRoleAssignPermissions */
+export const postApiAdminFdRoleIdPermissions = postFdRoleAssignPermissions;
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/FdRole/batch */
-export async function putApiAdminFdRoleBatch(body: APIModel.UpdateFdRoleDto[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 putGenericDtoControllerBase5UpdateMany，原函数名: putApiAdminFdRoleBatch */
+export async function putGenericDtoControllerBase5UpdateMany(body: APIModel.UpdateFdRoleDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdRole/batch', {
 		method: 'PUT',
 		headers: {
@@ -130,8 +163,12 @@ export async function putApiAdminFdRoleBatch(body: APIModel.UpdateFdRoleDto[], o
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateMany */
+export const putApiAdminFdRoleBatch = putGenericDtoControllerBase5UpdateMany;
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/FdRole/batch */
-export async function postApiAdminFdRoleBatch(body: APIModel.CreateFdRoleDto[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5CreateMany，原函数名: postApiAdminFdRoleBatch */
+export async function postGenericDtoControllerBase5CreateMany(body: APIModel.CreateFdRoleDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdRole/batch', {
 		method: 'POST',
 		headers: {
@@ -141,8 +178,12 @@ export async function postApiAdminFdRoleBatch(body: APIModel.CreateFdRoleDto[], 
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5CreateMany */
+export const postApiAdminFdRoleBatch = postGenericDtoControllerBase5CreateMany;
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/admin/FdRole/batch */
-export async function deleteApiAdminFdRoleBatch(body: string[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 deleteGenericDtoControllerBase5BatchDelete，原函数名: deleteApiAdminFdRoleBatch */
+export async function deleteGenericDtoControllerBase5BatchDelete(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdRole/batch', {
 		method: 'DELETE',
 		headers: {
@@ -152,8 +193,12 @@ export async function deleteApiAdminFdRoleBatch(body: string[], options?: { [key
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5BatchDelete */
+export const deleteApiAdminFdRoleBatch = deleteGenericDtoControllerBase5BatchDelete;
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdRole/batch/updatebycondition */
-export async function putApiAdminFdRoleBatchUpdatebycondition(
+/** @deprecated 请使用 putGenericDtoControllerBase5UpdateManyByCondition，原函数名: putApiAdminFdRoleBatchUpdatebycondition */
+export async function putGenericDtoControllerBase5UpdateManyByCondition(
 	body: APIModel.BatchUpdateByConditionDto1UpdateFdRoleDto,
 	options?: { [key: string]: any }
 ) {
@@ -166,8 +211,12 @@ export async function putApiAdminFdRoleBatchUpdatebycondition(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateManyByCondition */
+export const putApiAdminFdRoleBatchUpdatebycondition = putGenericDtoControllerBase5UpdateManyByCondition;
 /** 根据自定义条件获取列表(不分页) 根据自定义条件获取列表(不分页) POST /api/admin/FdRole/list-by-condition */
-export async function postApiAdminFdRoleListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5GetListByCondition，原函数名: postApiAdminFdRoleListByCondition */
+export async function postGenericDtoControllerBase5GetListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
 	return request<any>('/api/admin/FdRole/list-by-condition', {
 		method: 'POST',
 		headers: {
@@ -177,10 +226,14 @@ export async function postApiAdminFdRoleListByCondition(body: APIModel.QueryByCo
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetListByCondition */
+export const postApiAdminFdRoleListByCondition = postGenericDtoControllerBase5GetListByCondition;
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/admin/FdRole/page */
-export async function getApiAdminFdRolePage(
+/** @deprecated 请使用 getFdRoleGetPage，原函数名: getApiAdminFdRolePage */
+export async function getFdRoleGetPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiAdminFdRolePageParams,
+	params: APIModel.getFdRoleGetPageParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/admin/FdRole/page', {
@@ -195,8 +248,12 @@ export async function getApiAdminFdRolePage(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getFdRoleGetPage */
+export const getApiAdminFdRolePage = getFdRoleGetPage;
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdRole/page/search */
-export async function postApiAdminFdRolePageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5GetPageByCondition，原函数名: postApiAdminFdRolePageSearch */
+export async function postGenericDtoControllerBase5GetPageByCondition(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdRole/page/search', {
 		method: 'POST',
 		headers: {
@@ -206,10 +263,14 @@ export async function postApiAdminFdRolePageSearch(body: APIModel.PageQueryByCon
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetPageByCondition */
+export const postApiAdminFdRolePageSearch = postGenericDtoControllerBase5GetPageByCondition;
 /** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/admin/FdRole/recyclebin */
-export async function getApiAdminFdRoleRecyclebin(
+/** @deprecated 请使用 getGenericDtoControllerBase5GetRecycleBin，原函数名: getApiAdminFdRoleRecyclebin */
+export async function getGenericDtoControllerBase5GetRecycleBin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiAdminFdRoleRecyclebinParams,
+	params: APIModel.getGenericDtoControllerBase5GetRecycleBinParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/admin/FdRole/recyclebin', {
@@ -224,10 +285,14 @@ export async function getApiAdminFdRoleRecyclebin(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetRecycleBin */
+export const getApiAdminFdRoleRecyclebin = getGenericDtoControllerBase5GetRecycleBin;
 /** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/admin/FdRole/recyclebin/${param0}/permanent */
-export async function deleteApiAdminFdRoleRecyclebinIdPermanent(
+/** @deprecated 请使用 deleteGenericDtoControllerBase5PermanentDelete，原函数名: deleteApiAdminFdRoleRecyclebinIdPermanent */
+export async function deleteGenericDtoControllerBase5PermanentDelete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteApiAdminFdRoleRecyclebinIdPermanentParams,
+	params: APIModel.deleteGenericDtoControllerBase5PermanentDeleteParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -238,10 +303,14 @@ export async function deleteApiAdminFdRoleRecyclebinIdPermanent(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5PermanentDelete */
+export const deleteApiAdminFdRoleRecyclebinIdPermanent = deleteGenericDtoControllerBase5PermanentDelete;
 /** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/admin/FdRole/recyclebin/${param0}/restore */
-export async function putApiAdminFdRoleRecyclebinIdRestore(
+/** @deprecated 请使用 putGenericDtoControllerBase5Restore，原函数名: putApiAdminFdRoleRecyclebinIdRestore */
+export async function putGenericDtoControllerBase5Restore(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putApiAdminFdRoleRecyclebinIdRestoreParams,
+	params: APIModel.putGenericDtoControllerBase5RestoreParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -252,8 +321,12 @@ export async function putApiAdminFdRoleRecyclebinIdRestore(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5Restore */
+export const putApiAdminFdRoleRecyclebinIdRestore = putGenericDtoControllerBase5Restore;
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdRole/recyclebin/permanent */
-export async function postApiAdminFdRoleRecyclebinPermanent(
+/** @deprecated 请使用 postGenericDtoControllerBase5PermanentDeleteBatch，原函数名: postApiAdminFdRoleRecyclebinPermanent */
+export async function postGenericDtoControllerBase5PermanentDeleteBatch(
 	body: APIModel.Expression1Func2FdRole_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
@@ -266,8 +339,12 @@ export async function postApiAdminFdRoleRecyclebinPermanent(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5PermanentDeleteBatch */
+export const postApiAdminFdRoleRecyclebinPermanent = postGenericDtoControllerBase5PermanentDeleteBatch;
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdRole/recyclebin/restore */
-export async function postApiAdminFdRoleRecyclebinRestore(
+/** @deprecated 请使用 postGenericDtoControllerBase5RestoreBatch，原函数名: postApiAdminFdRoleRecyclebinRestore */
+export async function postGenericDtoControllerBase5RestoreBatch(
 	body: APIModel.Expression1Func2FdRole_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
@@ -280,8 +357,12 @@ export async function postApiAdminFdRoleRecyclebinRestore(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5RestoreBatch */
+export const postApiAdminFdRoleRecyclebinRestore = postGenericDtoControllerBase5RestoreBatch;
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdRole/recyclebin/search */
-export async function postApiAdminFdRoleRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5SearchRecycleBin，原函数名: postApiAdminFdRoleRecyclebinSearch */
+export async function postGenericDtoControllerBase5SearchRecycleBin(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdRole/recyclebin/search', {
 		method: 'POST',
 		headers: {
@@ -291,3 +372,6 @@ export async function postApiAdminFdRoleRecyclebinSearch(body: APIModel.PageQuer
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5SearchRecycleBin */
+export const postApiAdminFdRoleRecyclebinSearch = postGenericDtoControllerBase5SearchRecycleBin;

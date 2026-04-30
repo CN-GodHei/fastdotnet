@@ -3,14 +3,19 @@
 import request, { encryptRequest } from '@/utils/request';
 
 /** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/FdNationalStandard */
-export async function getApiFdNationalStandard(options?: { [key: string]: any }) {
+/** @deprecated 请使用 getGenericDtoControllerBase5GetAll，原函数名: getApiFdNationalStandard */
+export async function getGenericDtoControllerBase5GetAll(options?: { [key: string]: any }) {
 	return request<APIModel.FdNationalStandardDto[]>('/api/FdNationalStandard', {
 		method: 'GET',
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetAll */
+export const getApiFdNationalStandard = getGenericDtoControllerBase5GetAll;
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/FdNationalStandard */
-export async function postApiFdNationalStandard(body: APIModel.CreateFdNationalStandardDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5Create，原函数名: postApiFdNationalStandard */
+export async function postGenericDtoControllerBase5Create(body: APIModel.CreateFdNationalStandardDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdNationalStandardDto>('/api/FdNationalStandard', {
 		method: 'POST',
 		headers: {
@@ -20,10 +25,14 @@ export async function postApiFdNationalStandard(body: APIModel.CreateFdNationalS
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5Create */
+export const postApiFdNationalStandard = postGenericDtoControllerBase5Create;
 /** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/FdNationalStandard/${param0} */
-export async function getApiFdNationalStandardId(
+/** @deprecated 请使用 getGenericDtoControllerBase5GetById，原函数名: getApiFdNationalStandardId */
+export async function getGenericDtoControllerBase5GetById(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiFdNationalStandardIdParams,
+	params: APIModel.getGenericDtoControllerBase5GetByIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -34,10 +43,14 @@ export async function getApiFdNationalStandardId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetById */
+export const getApiFdNationalStandardId = getGenericDtoControllerBase5GetById;
 /** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/FdNationalStandard/${param0} */
-export async function putApiFdNationalStandardId(
+/** @deprecated 请使用 putGenericDtoControllerBase5Update，原函数名: putApiFdNationalStandardId */
+export async function putGenericDtoControllerBase5Update(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putApiFdNationalStandardIdParams,
+	params: APIModel.putGenericDtoControllerBase5UpdateParams,
 	body: APIModel.UpdateFdNationalStandardDto,
 	options?: { [key: string]: any }
 ) {
@@ -53,10 +66,14 @@ export async function putApiFdNationalStandardId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5Update */
+export const putApiFdNationalStandardId = putGenericDtoControllerBase5Update;
 /** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/FdNationalStandard/${param0} */
-export async function deleteApiFdNationalStandardId(
+/** @deprecated 请使用 deleteGenericDtoControllerBase5Delete，原函数名: deleteApiFdNationalStandardId */
+export async function deleteGenericDtoControllerBase5Delete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteApiFdNationalStandardIdParams,
+	params: APIModel.deleteGenericDtoControllerBase5DeleteParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -67,10 +84,14 @@ export async function deleteApiFdNationalStandardId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5Delete */
+export const deleteApiFdNationalStandardId = deleteGenericDtoControllerBase5Delete;
 /** 根据标准编码获取标准详情（包含条目统计） GET /api/FdNationalStandard/${param0}/detail */
-export async function getApiFdNationalStandardStandardCodeDetail(
+/** @deprecated 请使用 getFdNationalStandardGetStandardDetail，原函数名: getApiFdNationalStandardStandardCodeDetail */
+export async function getFdNationalStandardGetStandardDetail(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiFdNationalStandardStandardCodeDetailParams,
+	params: APIModel.getFdNationalStandardGetStandardDetailParams,
 	options?: { [key: string]: any }
 ) {
 	const { standardCode: param0, ...queryParams } = params;
@@ -81,10 +102,14 @@ export async function getApiFdNationalStandardStandardCodeDetail(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getFdNationalStandardGetStandardDetail */
+export const getApiFdNationalStandardStandardCodeDetail = getFdNationalStandardGetStandardDetail;
 /** 获取标准的完整树形结构 GET /api/FdNationalStandard/${param0}/tree */
-export async function getApiFdNationalStandardStandardCodeTree(
+/** @deprecated 请使用 getFdNationalStandardGetStandardTree，原函数名: getApiFdNationalStandardStandardCodeTree */
+export async function getFdNationalStandardGetStandardTree(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiFdNationalStandardStandardCodeTreeParams,
+	params: APIModel.getFdNationalStandardGetStandardTreeParams,
 	options?: { [key: string]: any }
 ) {
 	const { standardCode: param0, ...queryParams } = params;
@@ -95,10 +120,14 @@ export async function getApiFdNationalStandardStandardCodeTree(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getFdNationalStandardGetStandardTree */
+export const getApiFdNationalStandardStandardCodeTree = getFdNationalStandardGetStandardTree;
 /** 更新标准版本（版本升级） POST /api/FdNationalStandard/${param0}/version */
-export async function postApiFdNationalStandardStandardCodeVersion(
+/** @deprecated 请使用 postFdNationalStandardUpdateVersion，原函数名: postApiFdNationalStandardStandardCodeVersion */
+export async function postFdNationalStandardUpdateVersion(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postApiFdNationalStandardStandardCodeVersionParams,
+	params: APIModel.postFdNationalStandardUpdateVersionParams,
 	body: APIModel.UpdateVersionRequest,
 	options?: { [key: string]: any }
 ) {
@@ -114,8 +143,12 @@ export async function postApiFdNationalStandardStandardCodeVersion(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postFdNationalStandardUpdateVersion */
+export const postApiFdNationalStandardStandardCodeVersion = postFdNationalStandardUpdateVersion;
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/FdNationalStandard/batch */
-export async function putApiFdNationalStandardBatch(body: APIModel.UpdateFdNationalStandardDto[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 putGenericDtoControllerBase5UpdateMany，原函数名: putApiFdNationalStandardBatch */
+export async function putGenericDtoControllerBase5UpdateMany(body: APIModel.UpdateFdNationalStandardDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/FdNationalStandard/batch', {
 		method: 'PUT',
 		headers: {
@@ -125,8 +158,12 @@ export async function putApiFdNationalStandardBatch(body: APIModel.UpdateFdNatio
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateMany */
+export const putApiFdNationalStandardBatch = putGenericDtoControllerBase5UpdateMany;
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/FdNationalStandard/batch */
-export async function postApiFdNationalStandardBatch(body: APIModel.CreateFdNationalStandardDto[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5CreateMany，原函数名: postApiFdNationalStandardBatch */
+export async function postGenericDtoControllerBase5CreateMany(body: APIModel.CreateFdNationalStandardDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/FdNationalStandard/batch', {
 		method: 'POST',
 		headers: {
@@ -136,8 +173,12 @@ export async function postApiFdNationalStandardBatch(body: APIModel.CreateFdNati
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5CreateMany */
+export const postApiFdNationalStandardBatch = postGenericDtoControllerBase5CreateMany;
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/FdNationalStandard/batch */
-export async function deleteApiFdNationalStandardBatch(body: string[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 deleteGenericDtoControllerBase5BatchDelete，原函数名: deleteApiFdNationalStandardBatch */
+export async function deleteGenericDtoControllerBase5BatchDelete(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/FdNationalStandard/batch', {
 		method: 'DELETE',
 		headers: {
@@ -147,8 +188,12 @@ export async function deleteApiFdNationalStandardBatch(body: string[], options?:
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5BatchDelete */
+export const deleteApiFdNationalStandardBatch = deleteGenericDtoControllerBase5BatchDelete;
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/FdNationalStandard/batch/updatebycondition */
-export async function putApiFdNationalStandardBatchUpdatebycondition(
+/** @deprecated 请使用 putGenericDtoControllerBase5UpdateManyByCondition，原函数名: putApiFdNationalStandardBatchUpdatebycondition */
+export async function putGenericDtoControllerBase5UpdateManyByCondition(
 	body: APIModel.BatchUpdateByConditionDto1UpdateFdNationalStandardDto,
 	options?: { [key: string]: any }
 ) {
@@ -161,8 +206,12 @@ export async function putApiFdNationalStandardBatchUpdatebycondition(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateManyByCondition */
+export const putApiFdNationalStandardBatchUpdatebycondition = putGenericDtoControllerBase5UpdateManyByCondition;
 /** 导入标准及其条目（批量操作） POST /api/FdNationalStandard/import */
-export async function postApiFdNationalStandard__openAPI__import(body: APIModel.ImportStandardRequest, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postFdNationalStandardImportStandard，原函数名: postApiFdNationalStandardOpenApiImport */
+export async function postFdNationalStandardImportStandard(body: APIModel.ImportStandardRequest, options?: { [key: string]: any }) {
 	return request<string>('/api/FdNationalStandard/import', {
 		method: 'POST',
 		headers: {
@@ -172,8 +221,12 @@ export async function postApiFdNationalStandard__openAPI__import(body: APIModel.
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postFdNationalStandardImportStandard */
+export const postApiFdNationalStandardOpenApiImport = postFdNationalStandardImportStandard;
 /** 根据自定义条件获取列表(不分页) 根据自定义条件获取列表(不分页) POST /api/FdNationalStandard/list-by-condition */
-export async function postApiFdNationalStandardListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5GetListByCondition，原函数名: postApiFdNationalStandardListByCondition */
+export async function postGenericDtoControllerBase5GetListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
 	return request<any>('/api/FdNationalStandard/list-by-condition', {
 		method: 'POST',
 		headers: {
@@ -183,10 +236,14 @@ export async function postApiFdNationalStandardListByCondition(body: APIModel.Qu
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetListByCondition */
+export const postApiFdNationalStandardListByCondition = postGenericDtoControllerBase5GetListByCondition;
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/FdNationalStandard/page */
-export async function getApiFdNationalStandardPage(
+/** @deprecated 请使用 getGenericDtoControllerBase5GetPage，原函数名: getApiFdNationalStandardPage */
+export async function getGenericDtoControllerBase5GetPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiFdNationalStandardPageParams,
+	params: APIModel.getGenericDtoControllerBase5GetPageParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/FdNationalStandard/page', {
@@ -201,8 +258,12 @@ export async function getApiFdNationalStandardPage(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetPage */
+export const getApiFdNationalStandardPage = getGenericDtoControllerBase5GetPage;
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/FdNationalStandard/page/search */
-export async function postApiFdNationalStandardPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5GetPageByCondition，原函数名: postApiFdNationalStandardPageSearch */
+export async function postGenericDtoControllerBase5GetPageByCondition(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/FdNationalStandard/page/search', {
 		method: 'POST',
 		headers: {
@@ -212,10 +273,14 @@ export async function postApiFdNationalStandardPageSearch(body: APIModel.PageQue
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetPageByCondition */
+export const postApiFdNationalStandardPageSearch = postGenericDtoControllerBase5GetPageByCondition;
 /** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/FdNationalStandard/recyclebin */
-export async function getApiFdNationalStandardRecyclebin(
+/** @deprecated 请使用 getGenericDtoControllerBase5GetRecycleBin，原函数名: getApiFdNationalStandardRecyclebin */
+export async function getGenericDtoControllerBase5GetRecycleBin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiFdNationalStandardRecyclebinParams,
+	params: APIModel.getGenericDtoControllerBase5GetRecycleBinParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/FdNationalStandard/recyclebin', {
@@ -230,10 +295,14 @@ export async function getApiFdNationalStandardRecyclebin(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetRecycleBin */
+export const getApiFdNationalStandardRecyclebin = getGenericDtoControllerBase5GetRecycleBin;
 /** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/FdNationalStandard/recyclebin/${param0}/permanent */
-export async function deleteApiFdNationalStandardRecyclebinIdPermanent(
+/** @deprecated 请使用 deleteGenericDtoControllerBase5PermanentDelete，原函数名: deleteApiFdNationalStandardRecyclebinIdPermanent */
+export async function deleteGenericDtoControllerBase5PermanentDelete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteApiFdNationalStandardRecyclebinIdPermanentParams,
+	params: APIModel.deleteGenericDtoControllerBase5PermanentDeleteParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -244,10 +313,14 @@ export async function deleteApiFdNationalStandardRecyclebinIdPermanent(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5PermanentDelete */
+export const deleteApiFdNationalStandardRecyclebinIdPermanent = deleteGenericDtoControllerBase5PermanentDelete;
 /** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/FdNationalStandard/recyclebin/${param0}/restore */
-export async function putApiFdNationalStandardRecyclebinIdRestore(
+/** @deprecated 请使用 putGenericDtoControllerBase5Restore，原函数名: putApiFdNationalStandardRecyclebinIdRestore */
+export async function putGenericDtoControllerBase5Restore(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putApiFdNationalStandardRecyclebinIdRestoreParams,
+	params: APIModel.putGenericDtoControllerBase5RestoreParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -258,8 +331,12 @@ export async function putApiFdNationalStandardRecyclebinIdRestore(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5Restore */
+export const putApiFdNationalStandardRecyclebinIdRestore = putGenericDtoControllerBase5Restore;
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/FdNationalStandard/recyclebin/permanent */
-export async function postApiFdNationalStandardRecyclebinPermanent(
+/** @deprecated 请使用 postGenericDtoControllerBase5PermanentDeleteBatch，原函数名: postApiFdNationalStandardRecyclebinPermanent */
+export async function postGenericDtoControllerBase5PermanentDeleteBatch(
 	body: APIModel.Expression1Func2FdNationalStandard_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
@@ -272,8 +349,12 @@ export async function postApiFdNationalStandardRecyclebinPermanent(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5PermanentDeleteBatch */
+export const postApiFdNationalStandardRecyclebinPermanent = postGenericDtoControllerBase5PermanentDeleteBatch;
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/FdNationalStandard/recyclebin/restore */
-export async function postApiFdNationalStandardRecyclebinRestore(
+/** @deprecated 请使用 postGenericDtoControllerBase5RestoreBatch，原函数名: postApiFdNationalStandardRecyclebinRestore */
+export async function postGenericDtoControllerBase5RestoreBatch(
 	body: APIModel.Expression1Func2FdNationalStandard_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
@@ -286,8 +367,12 @@ export async function postApiFdNationalStandardRecyclebinRestore(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5RestoreBatch */
+export const postApiFdNationalStandardRecyclebinRestore = postGenericDtoControllerBase5RestoreBatch;
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/FdNationalStandard/recyclebin/search */
-export async function postApiFdNationalStandardRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5SearchRecycleBin，原函数名: postApiFdNationalStandardRecyclebinSearch */
+export async function postGenericDtoControllerBase5SearchRecycleBin(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/FdNationalStandard/recyclebin/search', {
 		method: 'POST',
 		headers: {
@@ -297,3 +382,6 @@ export async function postApiFdNationalStandardRecyclebinSearch(body: APIModel.P
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5SearchRecycleBin */
+export const postApiFdNationalStandardRecyclebinSearch = postGenericDtoControllerBase5SearchRecycleBin;

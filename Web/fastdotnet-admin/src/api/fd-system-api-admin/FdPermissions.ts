@@ -3,14 +3,19 @@
 import request, { encryptRequest } from '@/utils/request';
 
 /** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/admin/FdPermissions */
-export async function getApiAdminFdPermissions(options?: { [key: string]: any }) {
+/** @deprecated 请使用 getGenericDtoControllerBase5GetAll，原函数名: getApiAdminFdPermissions */
+export async function getGenericDtoControllerBase5GetAll(options?: { [key: string]: any }) {
 	return request<APIModel.FdPermissionDto[]>('/api/admin/FdPermissions', {
 		method: 'GET',
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetAll */
+export const getApiAdminFdPermissions = getGenericDtoControllerBase5GetAll;
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/admin/FdPermissions */
-export async function postApiAdminFdPermissions(body: APIModel.CreateFdPermissionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5Create，原函数名: postApiAdminFdPermissions */
+export async function postGenericDtoControllerBase5Create(body: APIModel.CreateFdPermissionDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdPermissionDto>('/api/admin/FdPermissions', {
 		method: 'POST',
 		headers: {
@@ -20,10 +25,14 @@ export async function postApiAdminFdPermissions(body: APIModel.CreateFdPermissio
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5Create */
+export const postApiAdminFdPermissions = postGenericDtoControllerBase5Create;
 /** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/admin/FdPermissions/${param0} */
-export async function getApiAdminFdPermissionsId(
+/** @deprecated 请使用 getGenericDtoControllerBase5GetById，原函数名: getApiAdminFdPermissionsId */
+export async function getGenericDtoControllerBase5GetById(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiAdminFdPermissionsIdParams,
+	params: APIModel.getGenericDtoControllerBase5GetByIdParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -34,10 +43,14 @@ export async function getApiAdminFdPermissionsId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetById */
+export const getApiAdminFdPermissionsId = getGenericDtoControllerBase5GetById;
 /** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/admin/FdPermissions/${param0} */
-export async function putApiAdminFdPermissionsId(
+/** @deprecated 请使用 putGenericDtoControllerBase5Update，原函数名: putApiAdminFdPermissionsId */
+export async function putGenericDtoControllerBase5Update(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putApiAdminFdPermissionsIdParams,
+	params: APIModel.putGenericDtoControllerBase5UpdateParams,
 	body: APIModel.UpdateFdPermissionDto,
 	options?: { [key: string]: any }
 ) {
@@ -53,10 +66,14 @@ export async function putApiAdminFdPermissionsId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5Update */
+export const putApiAdminFdPermissionsId = putGenericDtoControllerBase5Update;
 /** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/admin/FdPermissions/${param0} */
-export async function deleteApiAdminFdPermissionsId(
+/** @deprecated 请使用 deleteGenericDtoControllerBase5Delete，原函数名: deleteApiAdminFdPermissionsId */
+export async function deleteGenericDtoControllerBase5Delete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteApiAdminFdPermissionsIdParams,
+	params: APIModel.deleteGenericDtoControllerBase5DeleteParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -67,8 +84,12 @@ export async function deleteApiAdminFdPermissionsId(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5Delete */
+export const deleteApiAdminFdPermissionsId = deleteGenericDtoControllerBase5Delete;
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/FdPermissions/batch */
-export async function putApiAdminFdPermissionsBatch(body: APIModel.UpdateFdPermissionDto[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 putGenericDtoControllerBase5UpdateMany，原函数名: putApiAdminFdPermissionsBatch */
+export async function putGenericDtoControllerBase5UpdateMany(body: APIModel.UpdateFdPermissionDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdPermissions/batch', {
 		method: 'PUT',
 		headers: {
@@ -78,8 +99,12 @@ export async function putApiAdminFdPermissionsBatch(body: APIModel.UpdateFdPermi
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateMany */
+export const putApiAdminFdPermissionsBatch = putGenericDtoControllerBase5UpdateMany;
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/FdPermissions/batch */
-export async function postApiAdminFdPermissionsBatch(body: APIModel.CreateFdPermissionDto[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5CreateMany，原函数名: postApiAdminFdPermissionsBatch */
+export async function postGenericDtoControllerBase5CreateMany(body: APIModel.CreateFdPermissionDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdPermissions/batch', {
 		method: 'POST',
 		headers: {
@@ -89,8 +114,12 @@ export async function postApiAdminFdPermissionsBatch(body: APIModel.CreateFdPerm
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5CreateMany */
+export const postApiAdminFdPermissionsBatch = postGenericDtoControllerBase5CreateMany;
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/admin/FdPermissions/batch */
-export async function deleteApiAdminFdPermissionsBatch(body: string[], options?: { [key: string]: any }) {
+/** @deprecated 请使用 deleteGenericDtoControllerBase5BatchDelete，原函数名: deleteApiAdminFdPermissionsBatch */
+export async function deleteGenericDtoControllerBase5BatchDelete(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdPermissions/batch', {
 		method: 'DELETE',
 		headers: {
@@ -100,8 +129,12 @@ export async function deleteApiAdminFdPermissionsBatch(body: string[], options?:
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5BatchDelete */
+export const deleteApiAdminFdPermissionsBatch = deleteGenericDtoControllerBase5BatchDelete;
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdPermissions/batch/updatebycondition */
-export async function putApiAdminFdPermissionsBatchUpdatebycondition(
+/** @deprecated 请使用 putGenericDtoControllerBase5UpdateManyByCondition，原函数名: putApiAdminFdPermissionsBatchUpdatebycondition */
+export async function putGenericDtoControllerBase5UpdateManyByCondition(
 	body: APIModel.BatchUpdateByConditionDto1UpdateFdPermissionDto,
 	options?: { [key: string]: any }
 ) {
@@ -114,8 +147,12 @@ export async function putApiAdminFdPermissionsBatchUpdatebycondition(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateManyByCondition */
+export const putApiAdminFdPermissionsBatchUpdatebycondition = putGenericDtoControllerBase5UpdateManyByCondition;
 /** 根据自定义条件获取列表(不分页) 根据自定义条件获取列表(不分页) POST /api/admin/FdPermissions/list-by-condition */
-export async function postApiAdminFdPermissionsListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5GetListByCondition，原函数名: postApiAdminFdPermissionsListByCondition */
+export async function postGenericDtoControllerBase5GetListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
 	return request<any>('/api/admin/FdPermissions/list-by-condition', {
 		method: 'POST',
 		headers: {
@@ -125,10 +162,14 @@ export async function postApiAdminFdPermissionsListByCondition(body: APIModel.Qu
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetListByCondition */
+export const postApiAdminFdPermissionsListByCondition = postGenericDtoControllerBase5GetListByCondition;
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/admin/FdPermissions/page */
-export async function getApiAdminFdPermissionsPage(
+/** @deprecated 请使用 getGenericDtoControllerBase5GetPage，原函数名: getApiAdminFdPermissionsPage */
+export async function getGenericDtoControllerBase5GetPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiAdminFdPermissionsPageParams,
+	params: APIModel.getGenericDtoControllerBase5GetPageParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/admin/FdPermissions/page', {
@@ -143,8 +184,12 @@ export async function getApiAdminFdPermissionsPage(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetPage */
+export const getApiAdminFdPermissionsPage = getGenericDtoControllerBase5GetPage;
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdPermissions/page/search */
-export async function postApiAdminFdPermissionsPageSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5GetPageByCondition，原函数名: postApiAdminFdPermissionsPageSearch */
+export async function postGenericDtoControllerBase5GetPageByCondition(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdPermissions/page/search', {
 		method: 'POST',
 		headers: {
@@ -154,10 +199,14 @@ export async function postApiAdminFdPermissionsPageSearch(body: APIModel.PageQue
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetPageByCondition */
+export const postApiAdminFdPermissionsPageSearch = postGenericDtoControllerBase5GetPageByCondition;
 /** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/admin/FdPermissions/recyclebin */
-export async function getApiAdminFdPermissionsRecyclebin(
+/** @deprecated 请使用 getGenericDtoControllerBase5GetRecycleBin，原函数名: getApiAdminFdPermissionsRecyclebin */
+export async function getGenericDtoControllerBase5GetRecycleBin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiAdminFdPermissionsRecyclebinParams,
+	params: APIModel.getGenericDtoControllerBase5GetRecycleBinParams,
 	options?: { [key: string]: any }
 ) {
 	return request<APIModel.PageInfo>('/api/admin/FdPermissions/recyclebin', {
@@ -172,10 +221,14 @@ export async function getApiAdminFdPermissionsRecyclebin(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetRecycleBin */
+export const getApiAdminFdPermissionsRecyclebin = getGenericDtoControllerBase5GetRecycleBin;
 /** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/admin/FdPermissions/recyclebin/${param0}/permanent */
-export async function deleteApiAdminFdPermissionsRecyclebinIdPermanent(
+/** @deprecated 请使用 deleteGenericDtoControllerBase5PermanentDelete，原函数名: deleteApiAdminFdPermissionsRecyclebinIdPermanent */
+export async function deleteGenericDtoControllerBase5PermanentDelete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.deleteApiAdminFdPermissionsRecyclebinIdPermanentParams,
+	params: APIModel.deleteGenericDtoControllerBase5PermanentDeleteParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -186,10 +239,14 @@ export async function deleteApiAdminFdPermissionsRecyclebinIdPermanent(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5PermanentDelete */
+export const deleteApiAdminFdPermissionsRecyclebinIdPermanent = deleteGenericDtoControllerBase5PermanentDelete;
 /** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/admin/FdPermissions/recyclebin/${param0}/restore */
-export async function putApiAdminFdPermissionsRecyclebinIdRestore(
+/** @deprecated 请使用 putGenericDtoControllerBase5Restore，原函数名: putApiAdminFdPermissionsRecyclebinIdRestore */
+export async function putGenericDtoControllerBase5Restore(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.putApiAdminFdPermissionsRecyclebinIdRestoreParams,
+	params: APIModel.putGenericDtoControllerBase5RestoreParams,
 	options?: { [key: string]: any }
 ) {
 	const { id: param0, ...queryParams } = params;
@@ -200,8 +257,12 @@ export async function putApiAdminFdPermissionsRecyclebinIdRestore(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5Restore */
+export const putApiAdminFdPermissionsRecyclebinIdRestore = putGenericDtoControllerBase5Restore;
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdPermissions/recyclebin/permanent */
-export async function postApiAdminFdPermissionsRecyclebinPermanent(
+/** @deprecated 请使用 postGenericDtoControllerBase5PermanentDeleteBatch，原函数名: postApiAdminFdPermissionsRecyclebinPermanent */
+export async function postGenericDtoControllerBase5PermanentDeleteBatch(
 	body: APIModel.Expression1Func2FdPermission_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
@@ -214,8 +275,12 @@ export async function postApiAdminFdPermissionsRecyclebinPermanent(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5PermanentDeleteBatch */
+export const postApiAdminFdPermissionsRecyclebinPermanent = postGenericDtoControllerBase5PermanentDeleteBatch;
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdPermissions/recyclebin/restore */
-export async function postApiAdminFdPermissionsRecyclebinRestore(
+/** @deprecated 请使用 postGenericDtoControllerBase5RestoreBatch，原函数名: postApiAdminFdPermissionsRecyclebinRestore */
+export async function postGenericDtoControllerBase5RestoreBatch(
 	body: APIModel.Expression1Func2FdPermission_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
 	options?: { [key: string]: any }
 ) {
@@ -228,8 +293,12 @@ export async function postApiAdminFdPermissionsRecyclebinRestore(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5RestoreBatch */
+export const postApiAdminFdPermissionsRecyclebinRestore = postGenericDtoControllerBase5RestoreBatch;
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdPermissions/recyclebin/search */
-export async function postApiAdminFdPermissionsRecyclebinSearch(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
+/** @deprecated 请使用 postGenericDtoControllerBase5SearchRecycleBin，原函数名: postApiAdminFdPermissionsRecyclebinSearch */
+export async function postGenericDtoControllerBase5SearchRecycleBin(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdPermissions/recyclebin/search', {
 		method: 'POST',
 		headers: {
@@ -239,3 +308,6 @@ export async function postApiAdminFdPermissionsRecyclebinSearch(body: APIModel.P
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5SearchRecycleBin */
+export const postApiAdminFdPermissionsRecyclebinSearch = postGenericDtoControllerBase5SearchRecycleBin;
