@@ -1,4 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Fastdotnet.Core.Attributes;
+using Fastdotnet.Core.Enum;
+using AutoMapper;
+using Fastdotnet.Service.IService;
 
 namespace Fastdotnet.WebApi.Controllers.App
 {
@@ -6,11 +10,12 @@ namespace Fastdotnet.WebApi.Controllers.App
     /// 应用端待办任务控制器
     /// </summary>
     [Route("api/app/[controller]")]
-    public class FdTodoTaskController : AppGenericDtoControllerBase<Fastdotnet.Core.Entities.App.FdTodoTask, string, Fastdotnet.Core.Dtos.App.CreateFdTodoTaskDto, Fastdotnet.Core.Dtos.App.UpdateFdTodoTaskDto, Fastdotnet.Core.Dtos.App.FdTodoTaskDto>
+    [ApiUsageScope(ApiUsageScopeEnum.Both)]
+    public class FdAppTodoTaskController : AppGenericDtoControllerBase<Fastdotnet.Core.Entities.App.FdTodoTask, string, Fastdotnet.Core.Dtos.App.CreateFdTodoTaskDto, Fastdotnet.Core.Dtos.App.UpdateFdTodoTaskDto, Fastdotnet.Core.Dtos.App.FdTodoTaskDto>
     {
         private readonly Fastdotnet.Service.IService.App.IFdTodoTaskService _todoTaskService;
 
-        public FdTodoTaskController(
+        public FdAppTodoTaskController(
             Fastdotnet.Service.IService.App.IFdTodoTaskService todoTaskService,
             IBaseService<Fastdotnet.Core.Entities.App.FdTodoTask, string> service,
             IMapper mapper) : base(service, mapper)

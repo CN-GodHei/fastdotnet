@@ -104,6 +104,15 @@ public class ApplicationModule : Module
 
         containerBuilder.RegisterGeneric(typeof(RawRepository<>)).As(typeof(IRawRepository<>)).InstancePerLifetimeScope();
         containerBuilder.RegisterGeneric(typeof(RawRepository<,>)).As(typeof(IRawRepository<,>)).InstancePerLifetimeScope();
+
+        // --- 自动注册所有服务 (以 Service 结尾的类) ---
+        var serviceAssembly = typeof(FdDictDataService).Assembly;
+        containerBuilder.RegisterAssemblyTypes(serviceAssembly)
+            .Where(t => t.Name.EndsWith("Service"))
+            .AsImplementedInterfaces()
+            .InstancePerLifetimeScope();
+        // -------------------------------------------
+
         // 在 Autofac 中注册 AutoMapper
         containerBuilder.Register(c =>
         {

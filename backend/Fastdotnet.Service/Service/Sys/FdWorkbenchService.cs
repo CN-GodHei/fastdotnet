@@ -71,5 +71,28 @@ namespace Fastdotnet.Service.Service.Sys
             var list = await _roleCardRepository.GetListAsync(rc => rc.RoleId == roleId);
             return list.Select(rc => rc.CardId).ToList();
         }
+
+        public async Task<List<string>> GetCardRoleIdsAsync(string cardId)
+        {
+            var list = await _roleCardRepository.GetListAsync(rc => rc.CardId == cardId);
+            return list.Select(rc => rc.RoleId).ToList();
+        }
+
+        public async Task<bool> UpdateCardRolesAsync(string cardId, List<string> roleIds)
+        {
+            // 1. 删除该卡片的所有旧角色分配
+            await _roleCardRepository.DeleteAsync(rc => rc.CardId == cardId);
+
+            // 2. 插入新分配
+            var roleCards = roleIds.Select(rid => new FdRoleCard
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                CardId = cardId,
+                RoleId = rid
+            }).ToList();
+
+            await _roleCardRepository.InsertRangeAsync(roleCards);
+            return true;
+        }
     }
 }

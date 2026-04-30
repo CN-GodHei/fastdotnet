@@ -2,6 +2,8 @@ using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.Dtos.App;
 using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.App;
+using Fastdotnet.Core.Attributes;
+using Fastdotnet.Core.Enum;
 using Fastdotnet.Service.IService;
 using Fastdotnet.Service.IService.App;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +15,12 @@ namespace Fastdotnet.WebApi.Controllers.App
     /// 我的工作台 (应用端)
     /// </summary>
     [Route("api/app/[controller]")]
-    public class FdUserWorkbenchController : AppGenericDtoControllerBase<FdUserLayout, SaveFdUserLayoutDto, UpdateFdUserLayoutDto, FdUserLayoutDto>
+    [ApiUsageScope(ApiUsageScopeEnum.Both)]
+    public class FdAppUserWorkbenchController : AppGenericDtoControllerBase<FdUserLayout, SaveFdUserLayoutDto, UpdateFdUserLayoutDto, FdUserLayoutDto>
     {
         private readonly IFdUserWorkbenchService _userWorkbenchService;
 
-        public FdUserWorkbenchController(
+        public FdAppUserWorkbenchController(
             IFdUserWorkbenchService userWorkbenchService,
             IBaseService<FdUserLayout, string> service,
             IMapper mapper,

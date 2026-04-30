@@ -11,5 +11,7 @@ namespace Fastdotnet.Service.IService.Sys
         // 权限分配
         Task<bool> AssignCardsToRoleAsync(string roleId, List<string> cardIds);
         Task<List<string>> GetRoleCardIdsAsync(string roleId);
+        Task<List<string>> GetCardRoleIdsAsync(string cardId);
+        Task<bool> UpdateCardRolesAsync(string cardId, List<string> roleIds);
     }
 }

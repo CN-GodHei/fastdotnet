@@ -1,4 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Fastdotnet.Core.Attributes;
+using Fastdotnet.Core.Enum;
+using AutoMapper;
+using Fastdotnet.Service.IService;
 
 namespace Fastdotnet.WebApi.Controllers.App
 {
@@ -6,11 +10,12 @@ namespace Fastdotnet.WebApi.Controllers.App
     /// 应用端系统通知控制器
     /// </summary>
     [Route("api/app/[controller]")]
-    public class FdNoticeController : AppGenericDtoControllerBase<Fastdotnet.Core.Entities.App.FdNotice, string, Fastdotnet.Core.Dtos.App.CreateFdNoticeDto, Fastdotnet.Core.Dtos.App.UpdateFdNoticeDto, Fastdotnet.Core.Dtos.App.FdNoticeDto>
+    [ApiUsageScope(ApiUsageScopeEnum.Both)]
+    public class FdAppNoticeController : AppGenericDtoControllerBase<Fastdotnet.Core.Entities.App.FdNotice, string, Fastdotnet.Core.Dtos.App.CreateFdNoticeDto, Fastdotnet.Core.Dtos.App.UpdateFdNoticeDto, Fastdotnet.Core.Dtos.App.FdNoticeDto>
     {
         private readonly Fastdotnet.Service.IService.App.IFdNoticeService _noticeService;
 
-        public FdNoticeController(
+        public FdAppNoticeController(
             Fastdotnet.Service.IService.App.IFdNoticeService noticeService,
             IBaseService<Fastdotnet.Core.Entities.App.FdNotice, string> service,
             IMapper mapper) : base(service, mapper)

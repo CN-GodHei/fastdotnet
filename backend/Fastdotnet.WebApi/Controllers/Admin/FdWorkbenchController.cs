@@ -47,5 +47,23 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         {
             return await _workbenchService.GetRoleCardIdsAsync(roleId);
         }
+
+        /// <summary>
+        /// 获取卡片已分配的角色ID列表
+        /// </summary>
+        [HttpGet("card-roles/{cardId}")]
+        public async Task<List<string>> GetCardRoles(string cardId)
+        {
+            return await _workbenchService.GetCardRoleIdsAsync(cardId);
+        }
+
+        /// <summary>
+        /// 为卡片分配角色
+        /// </summary>
+        [HttpPost("assign-roles/{cardId}")]
+        public async Task<bool> UpdateCardRoles(string cardId, [FromBody] List<string> roleIds)
+        {
+            return await _workbenchService.UpdateCardRolesAsync(cardId, roleIds);
+        }
     }
 }
