@@ -3,9 +3,10 @@
 import request, { encryptRequest } from '@/utils/request';
 
 /** 生成验证码图片 GET /api/Captcha/generate */
-export async function getApiCaptchaGenerate(
+/** @deprecated 请使用 getCaptchaGenerate，原函数名: getApiCaptchaGenerate */
+export async function getCaptchaGenerate(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.getApiCaptchaGenerateParams,
+	params: APIModel.getCaptchaGenerateParams,
 	options?: { [key: string]: any }
 ) {
 	return request<string>('/api/Captcha/generate', {
@@ -16,11 +17,15 @@ export async function getApiCaptchaGenerate(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 getCaptchaGenerate */
+export const getApiCaptchaGenerate = getCaptchaGenerate;
 /** 验证验证码 (仅供测试使用)
 在正常的登录流程中，验证码验证应在后端完成，而不是通过此接口。 POST /api/Captcha/validate */
-export async function postApiCaptchaValidate(
+/** @deprecated 请使用 postCaptchaValidate，原函数名: postApiCaptchaValidate */
+export async function postCaptchaValidate(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-	params: APIModel.postApiCaptchaValidateParams,
+	params: APIModel.postCaptchaValidateParams,
 	options?: { [key: string]: any }
 ) {
 	return request<boolean>('/api/Captcha/validate', {
@@ -31,3 +36,6 @@ export async function postApiCaptchaValidate(
 		...(options || {}),
 	});
 }
+
+/** @deprecated 此函数名已变更，请使用 postCaptchaValidate */
+export const postApiCaptchaValidate = postCaptchaValidate;

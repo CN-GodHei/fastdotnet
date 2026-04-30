@@ -2,25 +2,35 @@
 /* eslint-disable */
 // API 更新时间：
 // API 唯一标识：
-import * as Auth from './Auth';
-import * as AppMenus from './AppMenus';
-import * as Captcha from './Captcha';
-import * as FdAppUser from './FdAppUser';
-import * as FdSystemInfoConfig from './FdSystemInfoConfig';
-import * as Health from './Health';
-import * as Plugin from './Plugin';
-import * as Storage from './Storage';
-import * as System from './System';
-import * as TestScope from './TestScope';
+import * as auth from './auth';
+import * as appMenus from './appMenus';
+import * as captcha from './captcha';
+import * as fdAppNotice from './fdAppNotice';
+import * as fdAppTodoTask from './fdAppTodoTask';
+import * as fdAppUser from './fdAppUser';
+import * as fdAppUserWorkbench from './fdAppUserWorkbench';
+import * as fdDictDataApp from './fdDictDataApp';
+import * as fdSystemInfoConfig from './fdSystemInfoConfig';
+import * as health from './health';
+import * as oidcLogin from './oidcLogin';
+import * as plugin from './plugin';
+import * as storage from './storage';
+import * as system from './system';
+import * as testScope from './testScope';
 export default {
-	Auth,
-	AppMenus,
-	Captcha,
-	FdAppUser,
-	FdSystemInfoConfig,
-	Health,
-	Plugin,
-	Storage,
-	System,
-	TestScope,
+	auth,
+	appMenus,
+	captcha,
+	fdAppNotice,
+	fdAppTodoTask,
+	fdAppUser,
+	fdAppUserWorkbench,
+	fdDictDataApp,
+	fdSystemInfoConfig,
+	health,
+	oidcLogin,
+	plugin,
+	storage,
+	system,
+	testScope,
 };
