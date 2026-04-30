@@ -3,6 +3,8 @@ using Autofac.Extensions.DependencyInjection;
 using Fastdotnet.Core.Service.App;
 using Fastdotnet.Core.Service.Sys;
 using Fastdotnet.Service.IService.Sys;
+using Fastdotnet.Service.IService.App;
+using Fastdotnet.Service.Service.App;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SqlSugar;
@@ -80,6 +82,14 @@ public class ApplicationModule : Module
         containerBuilder.RegisterType<PluginConfigurationService>().As<IPluginConfigurationService>().InstancePerLifetimeScope();
 
         containerBuilder.RegisterType<FdDictDataService>().As<IFdDictDataService>().InstancePerLifetimeScope();
+        
+        // 应用端服务注册
+        containerBuilder.RegisterType<Fastdotnet.Service.Service.App.FdTodoTaskService>().As<Fastdotnet.Service.IService.App.IFdTodoTaskService>().InstancePerLifetimeScope();
+        containerBuilder.RegisterType<Fastdotnet.Service.Service.App.FdNoticeService>().As<Fastdotnet.Service.IService.App.IFdNoticeService>().InstancePerLifetimeScope();
+        
+        // 管理端服务注册
+        containerBuilder.RegisterType<Fastdotnet.Service.Service.Sys.FdTodoTaskService>().As<Fastdotnet.Service.IService.Sys.IFdTodoTaskService>().InstancePerLifetimeScope();
+        containerBuilder.RegisterType<Fastdotnet.Service.Service.Sys.FdNoticeService>().As<Fastdotnet.Service.IService.Sys.IFdNoticeService>().InstancePerLifetimeScope();
 
         // 注册密码服务
         containerBuilder.RegisterType<Fastdotnet.Service.Service.Sys.PasswordService>()
