@@ -64,6 +64,8 @@ const fetchData = async () => {
 onMounted(() => {
   fetchData();
 });
+
+defineExpose({ fetchData });
 </script>
 
 <style scoped lang="scss">
