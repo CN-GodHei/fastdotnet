@@ -13,22 +13,20 @@ namespace Fastdotnet.WebApi.Controllers.App
     public class FdAppUserController 
         : AppGenericDtoControllerBase<FdAppUser, CreateFdAppUserDto, UpdateFdAppUserDto, FdAppUserDto>
     {
-        public FdAppUserController(IBaseService<FdAppUser, string> service, IMapper mapper, ICurrentUser currentUser, IAppUserService appUserService, IPasswordService passwordService, IVerificationCodeManager verificationCodeManager) : base(service, mapper, currentUser)
+        public FdAppUserController(IBaseService<FdAppUser, string> service, ICurrentUser currentUser, IAppUserService appUserService, IPasswordService passwordService, IVerificationCodeManager verificationCodeManager) : base(service, currentUser)
         {
             _service = service;
-            _mapper = mapper;
             _currentUser = currentUser;
             _appUserService = appUserService;
             _passwordService = passwordService;
             _verificationCodeManager = verificationCodeManager;
         }
         private readonly IBaseService<FdAppUser, string> _service;
-        private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
         private readonly IAppUserService _appUserService;
         private readonly IPasswordService _passwordService;
         private readonly IVerificationCodeManager _verificationCodeManager;
-        //public  FdAppUserController(IBaseService<FdAppUser, string> service, IMapper mapper, ICurrentUser currentUser) 
+        //public  FdAppUserController(IBaseService<FdAppUser, string> service, ICurrentUser currentUser) 
         //{
         //    _service = service;
         //    _mapper = mapper;
@@ -52,7 +50,7 @@ namespace Fastdotnet.WebApi.Controllers.App
             var buttons = await _appUserService.GetUserButtonPermissionsAsync(_currentUser.Id);
 
             // 构造返回对象
-            var userDto = _mapper.Map<FdAppUserDto>(user);
+            var userDto = user.Adapt<FdAppUserDto>();
             userDto.RoleIds = roleIds;
             userDto.Buttons = buttons;
 

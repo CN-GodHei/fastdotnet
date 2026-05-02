@@ -11,8 +11,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     {
         public FdDictDataController(
             //IFdDictDataService fddictdataService,
-            IBaseService<FdDictData, string> service,
-            IMapper mapper) : base(service, mapper)
+            IBaseService<FdDictData, string> service) : base(service)
         {
 
         }

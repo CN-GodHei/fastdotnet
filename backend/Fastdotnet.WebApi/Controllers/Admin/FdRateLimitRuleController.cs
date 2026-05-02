@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Dtos.Sys;
+﻿using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Core.Service.Sys;
 
@@ -15,10 +15,9 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         private readonly IRateLimitCacheService _rateLimitCacheService;
 
         public FdRatelimitRuleController(
-            IBaseService<FdRateLimitRule, string> rateLimitRuleService, 
-            IMapper mapper,
+            IBaseService<FdRateLimitRule, string> rateLimitRuleService,
             IRateLimitCacheService rateLimitCacheService) 
-            : base(rateLimitRuleService, mapper)
+            : base(rateLimitRuleService)
         {
             _rateLimitRuleService = rateLimitRuleService;
             _rateLimitCacheService = rateLimitCacheService;
@@ -63,7 +62,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         protected override async Task AfterCreate(FdRateLimitRule entity, CreateFdRateLimitRuleDto dto)
         {
             // 添加到缓存
-            var ruleDto = _mapper.Map<FdRateLimitRuleDto>(entity);
+            var ruleDto = entity.Adapt<FdRateLimitRuleDto>();
             await _rateLimitCacheService.SetRateLimitRuleAsync(entity.Type, entity.Key, ruleDto);
             await base.AfterCreate(entity, dto);
         }
@@ -74,7 +73,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         protected override async Task AfterUpdate(FdRateLimitRule entity, UpdateFdRateLimitRuleDto dto)
         {
             // 更新缓存
-            var ruleDto = _mapper.Map<FdRateLimitRuleDto>(entity);
+            var ruleDto = entity.Adapt<FdRateLimitRuleDto>();
             await _rateLimitCacheService.SetRateLimitRuleAsync(entity.Type, entity.Key, ruleDto);
             await base.AfterUpdate(entity, dto);
         }

@@ -1,4 +1,3 @@
-using AutoMapper;
 using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Service.IService.Sys;
@@ -9,27 +8,24 @@ namespace Fastdotnet.Service.Service.Sys
     {
         private readonly IRepository<FdWorkbenchCard, string> _cardRepository;
         private readonly IRepository<FdRoleCard, string> _roleCardRepository;
-        private readonly IMapper _mapper;
 
         public FdWorkbenchService(
             IRepository<FdWorkbenchCard, string> cardRepository,
-            IRepository<FdRoleCard, string> roleCardRepository,
-            IMapper mapper)
+            IRepository<FdRoleCard, string> roleCardRepository)
         {
             _cardRepository = cardRepository;
             _roleCardRepository = roleCardRepository;
-            _mapper = mapper;
         }
 
         public async Task<List<FdWorkbenchCardDto>> GetAllCardsAsync()
         {
             var cards = await _cardRepository.GetAllAsync();
-            return _mapper.Map<List<FdWorkbenchCardDto>>(cards.OrderBy(c => c.Name));
+            return cards.OrderBy(c => c.Name).Adapt<List<FdWorkbenchCardDto>>();
         }
 
         public async Task<string> CreateCardAsync(CreateFdWorkbenchCardDto dto)
         {
-            var card = _mapper.Map<FdWorkbenchCard>(dto);
+            var card = dto.Adapt<FdWorkbenchCard>();
             card.Id = Guid.NewGuid().ToString("N");
             await _cardRepository.InsertAsync(card);
             return card.Id;
@@ -40,7 +36,7 @@ namespace Fastdotnet.Service.Service.Sys
             var card = await _cardRepository.GetByIdAsync(dto.Id);
             if (card == null) return false;
 
-            _mapper.Map(dto, card);
+            dto.Adapt(card);
             return await _cardRepository.UpdateAsync(card) != null;
         }
 

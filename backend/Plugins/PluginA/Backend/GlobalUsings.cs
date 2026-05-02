@@ -6,7 +6,7 @@ global using System.Text;
 global using System.Threading;
 global using System.Threading.Tasks;
 global using Autofac;
-global using AutoMapper;
+global using Mapster;
 global using Fastdotnet.Core.Attributes;
 global using Fastdotnet.Core.Controllers;
 global using Fastdotnet.Core.Entities.App;

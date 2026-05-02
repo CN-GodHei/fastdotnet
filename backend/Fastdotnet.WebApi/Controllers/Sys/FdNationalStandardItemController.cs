@@ -8,16 +8,13 @@
     {
         private readonly IBaseService<FdNationalStandardItem, string> _fdnationalstandarditembaseService;
         private readonly IFdNationalStandardItemService _fdnationalstandarditemService;
-        private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
         public FdNationalStandardItemController(
             IFdNationalStandardItemService fdnationalstandarditemService,
-            IBaseService<FdNationalStandardItem, string> fdnationalstandarditembaseService,
-            IMapper mapper, ICurrentUser currentUser) : base(fdnationalstandarditembaseService, mapper, currentUser)
+            IBaseService<FdNationalStandardItem, string> fdnationalstandarditembaseService, ICurrentUser currentUser) : base(fdnationalstandarditembaseService, currentUser)
         {
             _fdnationalstandarditembaseService = fdnationalstandarditembaseService;
             _fdnationalstandarditemService = fdnationalstandarditemService;
-            _mapper = mapper;
             _currentUser = currentUser;
         }
     }

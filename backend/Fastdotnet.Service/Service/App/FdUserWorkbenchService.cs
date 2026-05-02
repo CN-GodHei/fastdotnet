@@ -1,4 +1,3 @@
-using AutoMapper;
 using Fastdotnet.Core.Dtos.App;
 using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.App;
@@ -17,7 +16,6 @@ namespace Fastdotnet.Service.Service.App
         private readonly IRepository<FdAppUserRole, string> _appUserRoleRepository;
         private readonly IRepository<FdAdminUserRole, string> _adminUserRoleRepository;
         private readonly ICurrentUser _currentUser;
-        private readonly IMapper _mapper;
 
         public FdUserWorkbenchService(
             IRepository<FdWorkbenchCard, string> cardRepository,
@@ -25,8 +23,7 @@ namespace Fastdotnet.Service.Service.App
             IRepository<FdUserLayout, string> layoutRepository,
             IRepository<FdAppUserRole, string> appUserRoleRepository,
             IRepository<FdAdminUserRole, string> adminUserRoleRepository,
-            ICurrentUser currentUser,
-            IMapper mapper)
+            ICurrentUser currentUser)
         {
             _cardRepository = cardRepository;
             _roleCardRepository = roleCardRepository;
@@ -34,7 +31,6 @@ namespace Fastdotnet.Service.Service.App
             _appUserRoleRepository = appUserRoleRepository;
             _adminUserRoleRepository = adminUserRoleRepository;
             _currentUser = currentUser;
-            _mapper = mapper;
         }
 
         public async Task<List<FdWorkbenchCardDto>> GetAvailableCardsAsync()
@@ -65,7 +61,7 @@ namespace Fastdotnet.Service.Service.App
 
             // 3. 获取卡片详情
             var cards = await _cardRepository.GetListAsync(c => cardIds.Contains(c.Id));
-            return _mapper.Map<List<FdWorkbenchCardDto>>(cards);
+            return cards.Adapt<List<FdWorkbenchCardDto>>();
         }
 
         public async Task<FdUserLayoutDto?> GetMyLayoutAsync(string name = "Default")
@@ -74,7 +70,7 @@ namespace Fastdotnet.Service.Service.App
             if (string.IsNullOrEmpty(userId)) return null;
 
             var layout = await _layoutRepository.GetFirstAsync(l => l.UserId == userId && l.Name == name);
-            return _mapper.Map<FdUserLayoutDto>(layout);
+            return layout.Adapt<FdUserLayoutDto>();
         }
 
         public async Task<bool> SaveMyLayoutAsync(SaveFdUserLayoutDto dto)

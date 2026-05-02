@@ -1,4 +1,3 @@
-using AutoMapper;
 using Fastdotnet.Core.Attributes;
 using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.Dtos.App;
@@ -24,18 +23,15 @@ namespace PluginA.Controllers
     public class PluginAUserController : ControllerBase
     {
         private readonly IFdAppUserService _appUserService;
-        private readonly IMapper _mpper;
         private readonly IStorageContext _storageContext;
         private readonly IFdAppUserExtensionHandler<PluginAUserExtension> _userExtensionHandler;
 
         public PluginAUserController(
             IFdAppUserService appUserService, 
-            IMapper mpper,
             IStorageContext storageContext,
             IFdAppUserExtensionHandler<PluginAUserExtension> userExtensionHandler)
         {
             _appUserService = appUserService;
-            _mpper = mpper;
             _storageContext = storageContext;
             _userExtensionHandler = userExtensionHandler;
         }
@@ -118,7 +114,7 @@ namespace PluginA.Controllers
                         u.Status = request.Status;
                         u.RegistrationDate = System.DateTime.Now;
                     },
-                    _mpper.Map<PluginAUserExtension>(request.ExtensionData)
+                    request.ExtensionData.Adapt<PluginAUserExtension>()
                 );
                 //var userId = await _appUserService.CreateFdAppUserWithExtensionAsync(
                 //    u =>

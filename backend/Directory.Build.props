@@ -1,3 +1,3 @@
 <Project>
-  <Import Project="Directory.Packages.props" Condition="Exists('Directory.Packages.props')" />
+  <!-- Directory.Packages.props 会被 SDK 自动导入，无需手动导入 -->
 </Project>

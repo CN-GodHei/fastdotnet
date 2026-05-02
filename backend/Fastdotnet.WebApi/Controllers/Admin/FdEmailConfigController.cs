@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Dtos.Sys;
+﻿using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
@@ -9,7 +9,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     public class FdEmailConfigController : GenericDtoControllerBase<EmailConfig, FdCreateEmailConfigDto, FdUpdateEmailConfigDto, FdEmailConfigDto>
     {
         private readonly IEmailService _emailService;
-        public FdEmailConfigController(IBaseService<EmailConfig, string> service, IMapper mapper, IEmailService emailService) : base(service, mapper)
+        public FdEmailConfigController(IBaseService<EmailConfig, string> service, IEmailService emailService) : base(service)
         {
             _emailService = emailService;
         }
@@ -25,7 +25,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             {
                 throw new BusinessException("邮件配置不存在，请检查种子数据是否已正确初始化。");
             }
-            return _mapper.Map<FdEmailConfigDto>(config);
+            return config.Adapt<FdEmailConfigDto>();
         }
 
         /// <summary>
@@ -40,9 +40,9 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 throw new BusinessException("邮件配置不存在，请检查种子数据是否已正确初始化。");
             }
 
-            _mapper.Map(dto, existing);
+            dto.Adapt(existing);
             var result = await _service.UpdateAsync(existing);
-            return _mapper.Map<FdEmailConfigDto>(result);
+            return result.Adapt<FdEmailConfigDto>();
         }
 
         /// <summary>

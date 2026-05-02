@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿// 已迁移到 PluginAMappingRegistry.cs
+//using AutoMapper;
 using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Core.Extensions;
@@ -13,14 +14,14 @@ using System.Threading.Tasks;
 
 namespace PluginA.Mappings
 {
-    public class PluginAUserExtensionProfile : Profile
-    {
-        public PluginAUserExtensionProfile()
-        {
-            CreateMap<PluginAUserExtension, PluginAUserExtensionDto>().MaskSensitiveData();
-            CreateMap<CreatePluginAUserExtensionDto, PluginAUserExtension>();
-            CreateMap<UpdatePluginAUserExtensionDto, PluginAUserExtension>();
-            CreateMap<CreateUserWithExtensionRequest, PluginAUserExtension>();
-        }
-    }
+    //public class PluginAUserExtensionProfile : Profile
+    //{
+    //    public PluginAUserExtensionProfile()
+    //    {
+    //        CreateMap<PluginAUserExtension, PluginAUserExtensionDto>().MaskSensitiveData();
+    //        CreateMap<CreatePluginAUserExtensionDto, PluginAUserExtension>();
+    //        CreateMap<UpdatePluginAUserExtensionDto, PluginAUserExtension>();
+    //        CreateMap<CreateUserWithExtensionRequest, PluginAUserExtension>();
+    //    }
+    //}
 }

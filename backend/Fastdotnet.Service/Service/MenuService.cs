@@ -1,4 +1,5 @@
 
+using Fastdotnet.Core.Dtos.Common;
 using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Service.IService.App;
@@ -12,7 +13,6 @@ namespace Fastdotnet.Service.Service
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
         private readonly IRepository<FdAppUserRole> _appUserRoleRepository;
         private readonly IPermissionService _permissionService;
-        private readonly IMapper _mapper;
         private readonly IAdminUserService _adminUserService;
         private readonly IAppUserService _appUserService;
 
@@ -22,7 +22,6 @@ namespace Fastdotnet.Service.Service
             IRepository<FdAdminUserRole> adminUserRoleRepository,
             IRepository<FdAppUserRole> appUserRoleRepository,
             IPermissionService permissionService,
-            IMapper mapper,
             IAdminUserService adminUserService,
             IAppUserService appUserService)
         {
@@ -31,7 +30,6 @@ namespace Fastdotnet.Service.Service
             _adminUserRoleRepository = adminUserRoleRepository;
             _appUserRoleRepository = appUserRoleRepository;
             _permissionService = permissionService;
-            _mapper = mapper;
             _adminUserService = adminUserService;
             _appUserService = appUserService;
         }
@@ -82,34 +80,33 @@ namespace Fastdotnet.Service.Service
 
         public async Task<List<FdMenuDto>> BuildMenuTree(List<FdMenu> allMenus, string? parentCode)
         {
-            // Ô¤´¦Àí£º¹¹½¨¸¸×Ó¹ØÏµ×Öµä£¬´¦Àí null ParentCode
+            // é¢„å¤„ç†ï¼šæ„å»ºçˆ¶å­å…³ç³»å­—å…¸ï¼Œå¤„ç† null ParentCode
             var menuDict = allMenus
-                .GroupBy(m => m.ParentCode ?? string.Empty) // ½« null ×ª»»Îª ""
+                .GroupBy(m => m.ParentCode ?? string.Empty) // å°† null è½¬æ¢ä¸º ""
                 .ToDictionary(g => g.Key, g => g.OrderBy(m => m.Sort).ToList());
 
-            // µİ¹é¹¹½¨Ê÷
+            // é€’å½’æ„å»ºæ ‘
             async Task<List<FdMenuDto>> BuildTreeRecursive(string? currentParentCode)
             {
-                // ½« null ×ª»»Îª "" ÒÔÆ¥Åä×ÖµäÖĞµÄ¼ü
+                // å°† null è½¬æ¢ä¸º "" ä»¥åŒ¹é…å­—å…¸ä¸­çš„é”®
                 var key = currentParentCode ?? string.Empty;
 
-                // ¿ìËÙ²éÕÒ×Ó²Ëµ¥
+                // å¿«é€ŸæŸ¥æ‰¾å­èœå•
                 if (!menuDict.TryGetValue(key, out var childMenus))
                 {
                     return new List<FdMenuDto>();
                 }
-
-                // Ê¹ÓÃ AutoMapper ºÍÒì²½´¦Àí
+                // ä½¿ç”¨ Mapster å’Œå¼‚æ­¥å¤„ç†
                 var tasks = childMenus.Select(async m =>
                 {
-                    // Ê¹ÓÃ AutoMapper Ó³Éä»ù±¾ÊôĞÔ
-                    var menuDto = _mapper.Map<FdMenuDto>(m);
-                    // µİ¹é¹¹½¨×Ó²Ëµ¥
+                    // ä½¿ç”¨ Mapster æ˜ å°„åŸºæœ¬å±æ€§
+                    var menuDto = m.Adapt<FdMenuDto>();
+                    // é€’å½’æ„å»ºå­èœå•
                     menuDto.Children = await BuildTreeRecursive(m.Code);
                     return menuDto;
                 });
 
-                // µÈ´ıËùÓĞÈÎÎñÍê³É
+                // ç­‰å¾…æ‰€æœ‰ä»»åŠ¡å®Œæˆ
                 var menuDtos = await Task.WhenAll(tasks);
                 return menuDtos.ToList();
             }

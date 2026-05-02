@@ -18,6 +18,8 @@ using System.IdentityModel.Tokens.Jwt;
 using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
+Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
 // 可选：延长停机超时时间
 builder.Host.ConfigureHostOptions(o => o.ShutdownTimeout = TimeSpan.FromMinutes(2));
 builder.Services.Configure<AppSettings>(builder.Configuration);

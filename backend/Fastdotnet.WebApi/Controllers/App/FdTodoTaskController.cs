@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Fastdotnet.Core.Attributes;
 using Fastdotnet.Core.Enum;
-using AutoMapper;
 using Fastdotnet.Service.IService;
 
 namespace Fastdotnet.WebApi.Controllers.App
@@ -17,8 +16,7 @@ namespace Fastdotnet.WebApi.Controllers.App
 
         public FdAppTodoTaskController(
             Fastdotnet.Service.IService.App.IFdTodoTaskService todoTaskService,
-            IBaseService<Fastdotnet.Core.Entities.App.FdTodoTask, string> service,
-            IMapper mapper) : base(service, mapper)
+            IBaseService<Fastdotnet.Core.Entities.App.FdTodoTask, string> service) : base(service)
         {
             _todoTaskService = todoTaskService;
         }

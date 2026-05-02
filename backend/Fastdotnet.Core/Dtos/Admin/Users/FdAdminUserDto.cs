@@ -13,9 +13,17 @@ namespace Fastdotnet.Core.Dtos.Admin.Users
 
         public string? Name { get; set; }
 
+        /// <summary>
+        /// 邮箱
+        /// </summary>
+        [SensitiveData(SensitiveDataType.Email)]
         public string? Email { get; set; }
 
-        public string? Phone { get; set; }
+        /// <summary>
+        /// 手机号
+        /// </summary>
+        [SensitiveData(SensitiveDataType.Phone)]
+        public string? PhoneNumber { get; set; }
 
         public bool IsActive { get; set; }
 

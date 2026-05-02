@@ -1,4 +1,4 @@
-
+﻿
 using Fastdotnet.Core.Dtos;
 using Fastdotnet.Core.Dtos.Admin.Users;
 using Fastdotnet.Service.IService.Sys;
@@ -17,9 +17,8 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public FdAdminUserController(
             IAdminUserService adminUserService,
             IBaseService<FdAdminUser, string> service,
-            IMapper mapper,
             ICurrentUser currentUser,
-            IPasswordService passwordService) : base(service, mapper)
+            IPasswordService passwordService) : base(service)
         {
             _adminUserService = adminUserService;
             _service = service;
@@ -122,7 +121,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             var buttons = await _adminUserService.GetUserButtonPermissionsAsync(_currentUser.Id);
 
             // 构造返回对象
-            var userDto = _mapper.Map<FdAdminUserDto>(user);
+            var userDto = user.Adapt<FdAdminUserDto>();
             userDto.RoleIds = roleIds;
             userDto.Buttons = buttons;
 

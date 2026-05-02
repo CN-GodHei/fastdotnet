@@ -297,8 +297,7 @@ const loadMenuData = async () => {
 			searchBody.QueryParameters = queryResult.queryParameters;
 		}
 		// const res = await MenuApi.getApiAdminFdMenu();
-		const res = await MenuApi.postApiAdminFdMenuListByCondition(searchBody);
-		// const res = await MenuApi.getApiAdminFdMenuTree();
+		const res = await MenuApi.postApiAdminFdMenuListByCondition(searchBody) as any;
 		state.menuData = res || [];
 	} catch (error) {
 		console.error('加载菜单数据失败:', error);
@@ -534,11 +533,11 @@ const onSubmit = async () => {
 		}
 	}
 };
-// 页面加载时
-onMounted(async () => {
-	// 初始加载数据
-	await loadMenuData();
-});
+// 页面加载时 - 移除 onMounted 中的自动加载，改为在 openDialog 时按需加载
+// onMounted(async () => {
+// 	// 初始加载数据
+// 	await loadMenuData();
+// });
 
 // 暴露变量
 defineExpose({

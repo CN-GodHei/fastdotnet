@@ -477,16 +477,13 @@ namespace {nameSpace ?? "Fastdotnet.WebApi.Controllers"}
     {{
         private readonly IBaseService<{entityName}, string> _{entityName.ToLower()}baseService;
         //private readonly I{entityName}Service _{entityName.ToLower()}Service;
-        private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
         public {entityName}Controller(
             //I{entityName}Service {entityName.ToLower()}Service,
-            IBaseService<{entityName}, string> {entityName.ToLower()}baseService,
-            IMapper mapper, ICurrentUser currentUser) : base({entityName.ToLower()}baseService, mapper, currentUser)
+            IBaseService<{entityName}, string> {entityName.ToLower()}baseService, ICurrentUser currentUser) : base({entityName.ToLower()}baseService, currentUser)
         {{
             _{entityName.ToLower()}baseService = {entityName.ToLower()}baseService;
             //_{entityName.ToLower()}Service = {entityName.ToLower()}Service;
-            _mapper = mapper;
             _currentUser = currentUser;
         }}
     }}

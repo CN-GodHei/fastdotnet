@@ -121,13 +121,13 @@ namespace Fastdotnet.Core.Dtos.App
         /// <summary>
         /// 邮箱
         /// </summary>
-
+        [SensitiveData(SensitiveDataType.Email)]
         public string? Email { get; set; }
 
         /// <summary>
         /// 手机号
         /// </summary>
-
+        [SensitiveData(SensitiveDataType.Phone)]
         public string? PhoneNumber { get; set; }
 
         /// <summary>

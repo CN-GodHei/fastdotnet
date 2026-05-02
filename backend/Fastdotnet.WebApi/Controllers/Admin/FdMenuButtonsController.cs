@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Dtos;
+﻿using Fastdotnet.Core.Dtos;
 using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 
@@ -11,8 +11,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     {
         private readonly IBaseService<FdMenuButton, string> _service1;
         public FdMenuButtonsController(
-            IBaseService<FdMenuButton, string> service,
-            IMapper mapper) : base(service, mapper)
+            IBaseService<FdMenuButton, string> service) : base(service)
         {
             _service1 = service;
         }

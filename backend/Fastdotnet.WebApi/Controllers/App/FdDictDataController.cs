@@ -14,8 +14,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         IFdDictDataService _ddDictDataService;
         public FdDictDataAppController(
             IFdDictDataService fddictdataService,
-            IBaseService<FdDictData, string> service,
-            IMapper mapper) : base(service, mapper)
+            IBaseService<FdDictData, string> service) : base(service)
         {
             _service = service;
             _ddDictDataService = fddictdataService;
@@ -31,7 +30,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         [AllowAnonymous]
         public async Task<List<FdDictDataDto>> UserConfig()
         {
-            return _mapper.Map<List<FdDictDataDto>>(await _ddDictDataService.GetUserConfig());
+            return (await _ddDictDataService.GetUserConfig()).Adapt<List<FdDictDataDto>>();
         }
     }
 }

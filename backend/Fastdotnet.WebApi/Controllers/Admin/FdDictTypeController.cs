@@ -11,8 +11,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     {
         public FdDictTypeController(
             //IFdDictTypeService fddicttypeService,
-            IBaseService<FdDictType, string> service,
-            IMapper mapper) : base(service, mapper)
+            IBaseService<FdDictType, string> service) : base(service)
         {
 
         }

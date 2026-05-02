@@ -1,19 +1,19 @@
 ﻿namespace Fastdotnet.Core.Dtos.Admin
 {
-
-    /// <summary>
-    /// AutoMapper配置文件
-    /// </summary>
-    public class FdAppUserRoleProfile : Profile
-    {
-        public FdAppUserRoleProfile()
-        {
-            // Source -> Target
-            CreateMap<FdAppUserRole, FdAppUserRoleDto>().MaskSensitiveData();
-            CreateMap<CreateFdAppUserRoleDto, FdAppUserRole>();
-            CreateMap<UpdateFdAppUserRoleDto, FdAppUserRole>();
-        }
-    }
+    // 已迁移到 CoreDtoMappingRegistry.cs
+    ///// <summary>
+    ///// AutoMapper配置文件
+    ///// </summary>
+    //public class FdAppUserRoleProfile : Profile
+    //{
+    //    public FdAppUserRoleProfile()
+    //    {
+    //        // Source -> Target
+    //        CreateMap<FdAppUserRole, FdAppUserRoleDto>().MaskSensitiveData();
+    //        CreateMap<CreateFdAppUserRoleDto, FdAppUserRole>();
+    //        CreateMap<UpdateFdAppUserRoleDto, FdAppUserRole>();
+    //    }
+    //}
 
     /// <summary>
     ///新增传输模型

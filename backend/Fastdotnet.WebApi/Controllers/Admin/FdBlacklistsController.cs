@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Dtos.Sys;
+﻿using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Core.Service.Sys;
 
@@ -15,10 +15,9 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         private readonly IRateLimitCacheService _rateLimitCacheService;
 
         public FdBlacklistsController(
-            IBaseService<FdBlacklist, string> blacklistService, 
-            IMapper mapper,
+            IBaseService<FdBlacklist, string> blacklistService,
             IRateLimitCacheService rateLimitCacheService) 
-            : base(blacklistService, mapper)
+            : base(blacklistService)
         {
             _blacklistService = blacklistService;
             _rateLimitCacheService = rateLimitCacheService;

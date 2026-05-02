@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Dtos.Sys;
+﻿using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Core.Enum;
 
@@ -8,7 +8,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     [Route("api/admin/[controller]")]
     public class FdSystemInfoConfigController : GenericDtoControllerBase<SystemInfoConfig, CreateFdSystemInfoConfigDto, UpdateFdSystemInfoConfigDto, FdSystemInfoConfigDto>
     {
-        public FdSystemInfoConfigController(IBaseService<SystemInfoConfig, string> service, IMapper mapper, ICurrentUser currentUser) : base(service, mapper, currentUser)
+        public FdSystemInfoConfigController(IBaseService<SystemInfoConfig, string> service, ICurrentUser currentUser) : base(service, currentUser)
         {
         }
 

@@ -6,7 +6,7 @@ global using System.Threading.Tasks;
 global using Autofac;
 global using Autofac.Core;
 global using Autofac.Extensions.DependencyInjection;
-global using AutoMapper;
+global using Mapster;
 global using Fastdotnet.Core.Hubs;
 global using Fastdotnet.Core.Initializers;
 global using Fastdotnet.Core.IService;

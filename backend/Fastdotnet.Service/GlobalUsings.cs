@@ -1,4 +1,4 @@
-global using AutoMapper;
+global using Mapster;
 global using Dm.util;
 global using Fastdotnet.Core.Constants;
 global using Fastdotnet.Core.Dtos;

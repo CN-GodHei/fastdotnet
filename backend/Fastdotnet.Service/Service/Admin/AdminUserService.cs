@@ -6,7 +6,6 @@ namespace Fastdotnet.Service.Service.Admin
     public class AdminUserService : IAdminUserService
     {
         private readonly IRepository<FdAdminUser> _repository;
-        private readonly IMapper _mapper;
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
         private readonly IRepository<FdRole> _roleRepository;
         private readonly IRepository<FdMenuButton> _menuButtonRepository;
@@ -15,7 +14,6 @@ namespace Fastdotnet.Service.Service.Admin
 
         public AdminUserService(
             IRepository<FdAdminUser> repository, 
-            IMapper mapper,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
             IRepository<FdRole> roleRepository,
             IRepository<FdMenuButton> menuButtonRepository,
@@ -23,7 +21,6 @@ namespace Fastdotnet.Service.Service.Admin
             IPasswordService passwordService)
         {
             _repository = repository;
-            _mapper = mapper;
             _adminUserRoleRepository = adminUserRoleRepository;
             _roleRepository = roleRepository;
             _menuButtonRepository = menuButtonRepository;
@@ -39,7 +36,7 @@ namespace Fastdotnet.Service.Service.Admin
                 throw new BusinessException("用户名已存在");
             }
 
-            var user = _mapper.Map<FdAdminUser>(dto);
+            var user = dto.Adapt<FdAdminUser>();
             // 在实际项目中，密码应该在这里进行加密处理
             // user.Password = PasswordHasher.Hash(dto.Password);
 
@@ -60,7 +57,7 @@ namespace Fastdotnet.Service.Service.Admin
         public async Task<FdAdminUserDto?> GetAsync(string id)
         {
             var user = await _repository.GetByIdAsync(id);
-            return _mapper.Map<FdAdminUserDto?>(user);
+            return user.Adapt<FdAdminUserDto?>();
         }
 
         public async Task<PageResult<FdAdminUserDto>> GetPageAsync(PageQueryDto query)
@@ -73,7 +70,7 @@ namespace Fastdotnet.Service.Service.Admin
 
             return new PageResult<FdAdminUserDto>
             {
-                Items = _mapper.Map<IList<FdAdminUserDto>>(pageResult.Items),
+                Items = pageResult.Items.Adapt<IList<FdAdminUserDto>>(),
                 PageInfo = pageResult.PageInfo
             };
         }
@@ -102,7 +99,7 @@ namespace Fastdotnet.Service.Service.Admin
                 throw new BusinessException("用户不存在");
             }
 
-            _mapper.Map(dto, user);
+            dto.Adapt(user);
             await _repository.UpdateAsync(user);
         }
         

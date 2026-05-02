@@ -1,4 +1,4 @@
-
+﻿
 using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 
@@ -19,7 +19,6 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         private readonly IUserRefFiller _userRefFiller;
         public FdMenuController(
             IBaseService<FdMenu, string> service,
-            IMapper mapper,
             IMenuService menuService,
             ICurrentUser currentUser,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
@@ -29,7 +28,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             IRepository<FdRoleMenuButton> roleMenuBtnRepository,
             IUserRefFiller userRefFiller,
 
-            IRepository<FdMenuButton> menuBtnRepository) : base(service, mapper)
+            IRepository<FdMenuButton> menuBtnRepository) : base(service)
         {
             _menuService = menuService;
             _currentUser = currentUser;
@@ -83,7 +82,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             var menuTree = await _menuService.BuildMenuTree(menus, null);
 
             // 转换为 DTO
-            var menuDtos = _mapper.Map<List<FdMenuDto>>(menuTree);
+            var menuDtos = menuTree.Adapt<List<FdMenuDto>>();
             await _userRefFiller.FillNamesAsync(menuDtos, SystemCategory.Admin, x => x.Creator, x => x.Updater);
             return menuDtos;
         }
@@ -98,11 +97,12 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             // 调用基类方法确保基础逻辑执行
             await base.AfterGetListByCondition(query, result);
 
+            var aa = result.Adapt<List<FdMenu>>();
             // 构建树形结构
-            var menuTree = await _menuService.BuildMenuTree(_mapper.Map<List<FdMenu>>(result), null);
+            var menuTree = await _menuService.BuildMenuTree(aa, null);
 
             // 转换为 DTO
-            var menuDtos = _mapper.Map<List<FdMenuDto>>(menuTree);
+            var menuDtos = menuTree.Adapt<List<FdMenuDto>>();
             await _userRefFiller.FillNamesAsync(menuDtos, SystemCategory.Admin, x => x.Creator, x => x.Updater);
             return menuDtos;
         }

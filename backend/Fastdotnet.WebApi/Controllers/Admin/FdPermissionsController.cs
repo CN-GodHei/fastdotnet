@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Dtos.Sys;
+﻿using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
@@ -8,8 +8,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     public class FdPermissionsController : GenericDtoControllerBase<FdPermission, string, CreateFdPermissionDto, UpdateFdPermissionDto, FdPermissionDto>
     {
         public FdPermissionsController(
-            IBaseService<FdPermission, string> service,
-            IMapper mapper) : base(service, mapper)
+            IBaseService<FdPermission, string> service) : base(service)
         {
 
         }

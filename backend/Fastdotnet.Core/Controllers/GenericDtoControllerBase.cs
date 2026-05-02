@@ -126,19 +126,16 @@ namespace Fastdotnet.Core.Controllers
         where TUpdateDto : class
     {
         protected readonly IBaseService<TEntity, TKey> _service;
-        protected readonly IMapper _mapper;
         protected readonly ICurrentUser _currentUser;
 
-        protected GenericDtoControllerBase(IBaseService<TEntity, TKey> service, IMapper mapper, ICurrentUser currentUser)
+        protected GenericDtoControllerBase(IBaseService<TEntity, TKey> service, ICurrentUser currentUser)
         {
             _service = service;
-            _mapper = mapper;
             _currentUser = currentUser;
         }
-        protected GenericDtoControllerBase(IBaseService<TEntity, TKey> service, IMapper mapper)
+        protected GenericDtoControllerBase(IBaseService<TEntity, TKey> service)
         {
             _service = service;
-            _mapper = mapper;
         }
         /// <summary>
         /// 获取所有实体
@@ -147,7 +144,7 @@ namespace Fastdotnet.Core.Controllers
         public virtual async Task<List<TDto>> GetAll(CancellationToken cancellationToken = default)
         {
             var entities = await _service.GetAllAsync(cancellationToken);
-            return _mapper.Map<List<TDto>>(entities);
+            return entities.Adapt<List<TDto>>();
         }
 
         /// <summary>
@@ -241,7 +238,7 @@ namespace Fastdotnet.Core.Controllers
         public virtual async Task<TDto> GetById(TKey id, CancellationToken cancellationToken = default)
         {
             var entity = await _service.GetByIdAsync(id);
-            return _mapper.Map<TDto>(entity);
+            return entity.Adapt<TDto>();
         }
 
         /// <summary>
@@ -255,7 +252,7 @@ namespace Fastdotnet.Core.Controllers
             var pageResult = await _service.GetPageAsync(pageIndex, pageSize);
             return new PageResult<TDto>
             {
-                Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),
+                Items = pageResult.Items.Adapt<IList<TDto>>() ?? new List<TDto>(),
                 PageInfo = pageResult.PageInfo,
             };
         }
@@ -288,7 +285,7 @@ namespace Fastdotnet.Core.Controllers
 
             return new PageResult<TDto>
             {
-                Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),
+                Items = pageResult.Items.Adapt<IList<TDto>>() ?? new List<TDto>(),
                 PageInfo = pageResult.PageInfo,
             };
         }
@@ -301,7 +298,7 @@ namespace Fastdotnet.Core.Controllers
         public virtual async Task<TDto> Create(TCreateDto dto)
         {
             dto.IsValid();
-            var entity = _mapper.Map<TEntity>(dto);
+            var entity = dto.Adapt<TEntity>();
 
             // 可以在子类中重写BeforeCreate方法来添加自定义逻辑
             await BeforeCreate(entity, dto);
@@ -311,7 +308,7 @@ namespace Fastdotnet.Core.Controllers
             // 可以在子类中重写AfterCreate方法来添加自定义逻辑
             await AfterCreate(result, dto);
 
-            return _mapper.Map<TDto>(result);
+            return result.Adapt<TDto>();
         }
 
         /// <summary>
@@ -348,7 +345,7 @@ namespace Fastdotnet.Core.Controllers
                 throw new BusinessException("参数不能为空!");
             }
             dtos.IsValid();
-            var entitys = _mapper.Map<List<TEntity>>(dtos);
+            var entitys = dtos.Adapt<List<TEntity>>();
 
             // 可以在子类中重写BeforeCreate方法来添加自定义逻辑
             await BeforeCreateMany(entitys, dtos);
@@ -398,7 +395,7 @@ namespace Fastdotnet.Core.Controllers
                 throw new ArgumentException("未找到指定实体");
             }
 
-            _mapper.Map(dto, existing);
+            dto.Adapt(existing);
 
             // 可以在子类中重写BeforeUpdate方法来添加自定义逻辑
             await BeforeUpdate(existing, existing, dto);
@@ -408,7 +405,7 @@ namespace Fastdotnet.Core.Controllers
             // 可以在子类中重写AfterUpdate方法来添加自定义逻辑
             await AfterUpdate(result, dto);
 
-            return _mapper.Map<TDto>(result);
+            return result.Adapt<TDto>();
         }
 
         /// <summary>
@@ -534,7 +531,7 @@ namespace Fastdotnet.Core.Controllers
             }
 
             dtos.IsValid();
-            var updatedEntities = _mapper.Map<List<TEntity>>(dtos);
+            var updatedEntities = dtos.Adapt<List<TEntity>>();
 
             // 可以在子类中重写BeforeUpdateMany方法来添加自定义逻辑
             await BeforeUpdateMany(updatedEntities, dtos);
@@ -560,8 +557,8 @@ namespace Fastdotnet.Core.Controllers
                 throw new BusinessException("参数不能为空!");
             }
 
-            // 使用 AutoMapper 将 DTO 映射为实体，以便提取要更新的字段
-            var updateEntity = _mapper.Map<TEntity>(updateInfo.Dto);
+            // 使用 Mapster 将 DTO 映射为实体，以便提取要更新的字段
+            var updateEntity = updateInfo.Dto.Adapt<TEntity>();
 
             // 获取要更新的字段和值
             var updateColumns = new Dictionary<string, object>();
@@ -782,7 +779,7 @@ namespace Fastdotnet.Core.Controllers
             var pageResult = await _service.GetRecycleBinAsync(pageIndex, pageSize, null, SqlSugar.OrderByType.Desc, cancellationToken);
             return new PageResult<TDto>
             {
-                Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),
+                Items = pageResult.Items.Adapt<IList<TDto>>() ?? new List<TDto>(),
                 PageInfo = pageResult.PageInfo,
             };
         }
@@ -815,7 +812,7 @@ namespace Fastdotnet.Core.Controllers
 
             return new PageResult<TDto>
             {
-                Items = _mapper.Map<IList<TDto>>(pageResult.Items) ?? new List<TDto>(),
+                Items = pageResult.Items.Adapt<IList<TDto>>() ?? new List<TDto>(),
                 PageInfo = pageResult.PageInfo,
             };
         }
@@ -899,11 +896,11 @@ namespace Fastdotnet.Core.Controllers
         where TCreateDto : class
         where TUpdateDto : class
     {
-        protected GenericDtoControllerBase(IBaseService<TEntity, string> service, IMapper mapper, ICurrentUser currentUser) : base(service, mapper, currentUser)
+        protected GenericDtoControllerBase(IBaseService<TEntity, string> service, ICurrentUser currentUser) : base(service, currentUser)
         {
         }
 
-        protected GenericDtoControllerBase(IBaseService<TEntity, string> service, IMapper mapper) : base(service, mapper)
+        protected GenericDtoControllerBase(IBaseService<TEntity, string> service) : base(service)
         {
         }
     }

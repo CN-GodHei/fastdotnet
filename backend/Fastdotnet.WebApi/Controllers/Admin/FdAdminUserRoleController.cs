@@ -15,9 +15,8 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public FdAdminUserRoleController(
             //IFdAdminUserRoleService fdadminuserroleService,
             IBaseService<FdAdminUserRole, string> service,
-            IMapper mapper,
             IUnitOfWork unitOfWork,
-            IAdminUserService adminUserService) : base(service, mapper)
+            IAdminUserService adminUserService) : base(service)
         {
             _baseService = service;
             _unitOfWork = unitOfWork;

@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Controllers;
+﻿using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.Dtos.App;
 using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.App;
@@ -7,7 +7,6 @@ using Fastdotnet.Core.Enum;
 using Fastdotnet.Service.IService;
 using Fastdotnet.Service.IService.App;
 using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
 
 namespace Fastdotnet.WebApi.Controllers.App
 {
@@ -23,8 +22,7 @@ namespace Fastdotnet.WebApi.Controllers.App
         public FdAppUserWorkbenchController(
             IFdUserWorkbenchService userWorkbenchService,
             IBaseService<FdUserLayout, string> service,
-            IMapper mapper,
-            Fastdotnet.Core.IService.ICurrentUser currentUser) : base(service, mapper, currentUser)
+            Fastdotnet.Core.IService.ICurrentUser currentUser) : base(service, currentUser)
         {
             _userWorkbenchService = userWorkbenchService;
         }

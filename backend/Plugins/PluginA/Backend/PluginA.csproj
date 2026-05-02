@@ -62,18 +62,23 @@
 	<Target Name="CopyToPublishDir" AfterTargets="Build">
 		<PropertyGroup>
 			<PublishBaseDir>$(MSBuildThisFileDirectory)..\publish\$(PluginId)</PublishBaseDir>
+			<DependenciesDir>$(PublishBaseDir)\dependencies</DependenciesDir>
 			<SourceBinDir>$(OutputPath)</SourceBinDir>
 			<TargetFileName>$(TargetName)$(TargetExt)</TargetFileName>
 		</PropertyGroup>
-		
+
 		<!-- 创建目标目录 -->
 		<MakeDir Directories="$(PublishBaseDir)" />
-		
-		<!-- 只复制当前项目生成的 DLL、PDB、XML 文件到发布根目录 -->
+		<MakeDir Directories="$(DependenciesDir)" />
+
+		<!-- 复制当前项目生成的 DLL、PDB、XML 文件到发布根目录 -->
 		<Copy SourceFiles="$(SourceBinDir)$(TargetFileName)" DestinationFolder="$(PublishBaseDir)" SkipUnchangedFiles="true" Condition="Exists('$(SourceBinDir)$(TargetFileName)')" />
 		<Copy SourceFiles="$(SourceBinDir)$(TargetName).pdb" DestinationFolder="$(PublishBaseDir)" SkipUnchangedFiles="true" Condition="Exists('$(SourceBinDir)$(TargetName).pdb')" />
 		<Copy SourceFiles="$(SourceBinDir)$(TargetName).xml" DestinationFolder="$(PublishBaseDir)" SkipUnchangedFiles="true" Condition="Exists('$(SourceBinDir)$(TargetName).xml')" />
-		
-		<Message Text="已复制插件文件: $(TargetFileName) 到: $(PublishBaseDir)" Importance="high" />
+
+		<!-- 复制 plugin.json 配置文件 -->
+		<Copy SourceFiles="$(MSBuildThisFileDirectory)plugin.json" DestinationFolder="$(PublishBaseDir)" SkipUnchangedFiles="true" Condition="Exists('$(MSBuildThisFileDirectory)plugin.json')" />
+
+		<Message Text="已复制插件文件: $(TargetFileName) 和 plugin.json 到: $(PublishBaseDir)" Importance="high" />
 	</Target>
 </Project>

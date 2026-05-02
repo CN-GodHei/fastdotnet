@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Dtos;
+﻿using Fastdotnet.Core.Dtos;
 using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Core.Enum;
@@ -19,13 +19,12 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         public FdRoleController(
             IBaseService<FdRole, string> service,
-            IMapper mapper,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
             IRepository<FdAppUserRole> appUserRoleRepository,
             IRepository<FdRolePermission> rolePermissionRepository,
             IRepository<FdRoleMenu> roleMenuRepository,
             IRepository<FdRoleMenuButton> roleMenuButtonRepository,
-            IUnitOfWork unitOfWork) : base(service, mapper)
+            IUnitOfWork unitOfWork) : base(service)
         {
             _adminUserRoleRepository = adminUserRoleRepository;
             _appUserRoleRepository = appUserRoleRepository;

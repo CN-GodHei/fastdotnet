@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Dtos.Sys;
+﻿using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Service.IService.Sys;
 using Microsoft.AspNetCore.Mvc;
@@ -15,8 +15,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         public FdWorkbenchController(
             IFdWorkbenchService workbenchService,
-            IBaseService<FdWorkbenchCard, string> service,
-            IMapper mapper) : base(service, mapper)
+            IBaseService<FdWorkbenchCard, string> service) : base(service)
         {
             _workbenchService = workbenchService;
         }

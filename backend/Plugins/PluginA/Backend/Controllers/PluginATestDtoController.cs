@@ -1,4 +1,3 @@
-using AutoMapper;
 using Fastdotnet.Core.Attributes;
 using Fastdotnet.Core.Controllers;
 using Fastdotnet.Core.IService;
@@ -24,8 +23,8 @@ namespace PluginA.Controllers
     public class PluginATestDtoController : GenericDtoControllerBase<PluginATest, string, PluginATestCreateDto, PluginATestUpdateDto, PluginATestDto>
     {
         private readonly IPluginConfigurationService _pluginConfigurationService;
-        public PluginATestDtoController(IBaseService<PluginATest, string> pluginATestService, IMapper mapper, IPluginConfigurationService pluginConfigurationService)
-            : base(pluginATestService, mapper)
+        public PluginATestDtoController(IBaseService<PluginATest, string> pluginATestService, IPluginConfigurationService pluginConfigurationService)
+            : base(pluginATestService)
         {
             _pluginConfigurationService = pluginConfigurationService;
         }

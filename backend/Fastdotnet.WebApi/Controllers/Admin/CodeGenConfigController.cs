@@ -1,4 +1,4 @@
-using Fastdotnet.Core.Dtos.Sys;
+﻿using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
@@ -12,8 +12,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         private readonly ICodeGenConfigService _codeGenConfigService;
         public CodeGenConfigController(
             IBaseService<FdCodeGenConfig, string> service,
-            ICodeGenConfigService codeGenConfigService,
-            IMapper mapper) : base(service, mapper)
+            ICodeGenConfigService codeGenConfigService) : base(service)
         {
             _codeGenConfigService = codeGenConfigService;
         }

@@ -113,49 +113,39 @@ public class ApplicationModule : Module
             .InstancePerLifetimeScope();
         // -------------------------------------------
 
-        // 在 Autofac 中注册 AutoMapper
-        containerBuilder.Register(c =>
+        // 在 Load 方法中立即初始化 Mapster（而不是延迟注册）
+        System.Console.WriteLine("[DEBUG] ApplicationModule.Load 开始执行...");
+        
+        var config = TypeAdapterConfig.GlobalSettings;
+        
+        // 显式指定要扫描的程序集（确保 Service 层的 Register 被加载）
+        var assemblies = new[]
         {
-            var context = c.Resolve<IComponentContext>();
-            //var loggerFactory = context.Resolve<ILoggerFactory>(); // 1. 解析 ILoggerFactory
+            typeof(Fastdotnet.Core.Dtos.Base.IAuditableEntity).Assembly, // Core 层
+            typeof(Fastdotnet.Service.Mappings.ServiceDtoMappingRegistry).Assembly, // Service 层
+            typeof(Fastdotnet.WebApi.Modules.ApplicationModule).Assembly // WebApi 层
+        };
+
+        System.Console.WriteLine($"[DEBUG] 准备扫描 {assemblies.Length} 个程序集:");
+        foreach (var asm in assemblies)
+        {
+            System.Console.WriteLine($"  - {asm.GetName().Name} (Location: {asm.Location})");
+        }
+
+        // 扫描所有程序集，自动注册 IRegister 接口
+        try
+        {
+            config.Scan(assemblies);
+            System.Console.WriteLine("[DEBUG] Mapster Scan 成功完成");
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine($"[ERROR] Mapster Scan 失败: {ex.Message}");
+            throw;
+        }
         
-            // 2. 创建和配置 MapperConfigurationExpression
-            var expression = new AutoMapper.MapperConfigurationExpression();
-                    
-            // 3. 安全地获取可扫描的程序集，避免 ReflectionTypeLoadException
-            var assemblies = new List<System.Reflection.Assembly>();
-            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                try
-                {
-                    // 尝试获取类型，如果失败则跳过该程序集
-                    _ = asm.GetTypes();
-                    assemblies.Add(asm);
-                }
-                catch (ReflectionTypeLoadException ex)
-                {
-                    // 记录错误但继续处理其他程序集
-                    Console.WriteLine($"跳过程序集 {asm.FullName}，原因：{ex.Message}");
-                    // 可选：输出详细的 LoaderExceptions 信息
-                    if (ex.LoaderExceptions != null)
-                    {
-                        foreach (var loaderEx in ex.LoaderExceptions)
-                        {
-                            if (loaderEx != null)
-                                Console.WriteLine($"  - {loaderEx.Message}");
-                        }
-                    }
-                }
-            }
-                    
-            expression.AddMaps(assemblies.ToArray());
-            expression.ConstructServicesUsing(context.Resolve);
-        
-            // 4. 使用你提供的特定构造函数创建 MapperConfiguration
-            var config = new MapperConfiguration(expression);
-        
-            return config.CreateMapper();
-        }).As<IMapper>().InstancePerLifetimeScope();
+        // 在 Autofac 中注册 Mapster（仅用于依赖注入）
+        containerBuilder.Register(c => config).As<TypeAdapterConfig>().SingleInstance();
 
         // 注册本地存储服务
         containerBuilder.RegisterType<LocalStorageService>().AsSelf().InstancePerLifetimeScope();

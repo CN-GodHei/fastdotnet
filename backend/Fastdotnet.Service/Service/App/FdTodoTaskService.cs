@@ -1,4 +1,3 @@
-using AutoMapper;
 using Fastdotnet.Core.IService.Sys;
 using Fastdotnet.Service.IService.App;
 
@@ -8,16 +7,13 @@ namespace Fastdotnet.Service.Service.App
     {
         private readonly IRawRepository<Fastdotnet.Core.Entities.App.FdTodoTask, string> _todoRepository;
         private readonly ICurrentUser _currentUser;
-        private readonly IMapper _mapper;
 
         public FdTodoTaskService(
             IRawRepository<Fastdotnet.Core.Entities.App.FdTodoTask, string> todoRepository,
-            ICurrentUser currentUser,
-            IMapper mapper)
+            ICurrentUser currentUser)
         {
             _todoRepository = todoRepository;
             _currentUser = currentUser;
-            _mapper = mapper;
         }
 
         public async Task<List<Fastdotnet.Core.Dtos.App.FdTodoTaskDto>> GetMyTodoTasksAsync()
@@ -26,12 +22,12 @@ namespace Fastdotnet.Service.Service.App
             if (string.IsNullOrEmpty(userId)) return new List<Fastdotnet.Core.Dtos.App.FdTodoTaskDto>();
 
             var tasks = await _todoRepository.GetListAsync(t => t.AssigneeId == userId && t.Status == 0);
-            return _mapper.Map<List<Fastdotnet.Core.Dtos.App.FdTodoTaskDto>>(tasks.OrderByDescending(t => t.CreatedAt));
+            return tasks.OrderByDescending(t => t.CreatedAt).Adapt<List<Fastdotnet.Core.Dtos.App.FdTodoTaskDto>>();
         }
 
         public async Task<string> CreateAsync(Fastdotnet.Core.Dtos.App.CreateFdTodoTaskDto dto)
         {
-            var task = _mapper.Map<Fastdotnet.Core.Entities.App.FdTodoTask>(dto);
+            var task = dto.Adapt<Fastdotnet.Core.Entities.App.FdTodoTask>();
             task.Id = Guid.NewGuid().ToString("N");
             task.Status = 0;
             task.CreatedAt = DateTime.Now;

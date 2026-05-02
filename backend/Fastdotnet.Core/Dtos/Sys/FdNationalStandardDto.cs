@@ -4,19 +4,20 @@ using System.Text;
 
 namespace Fastdotnet.Core.Dtos.Sys
 {
-    /// <summary>
-    /// AutoMapper配置文件
-    /// </summary>
-    public class FdNationalStandardProfile : Profile
-    {
-        public FdNationalStandardProfile()
-        {
-            // Source -> Target
-            CreateMap<FdNationalStandard, FdNationalStandardDto>().MaskSensitiveData();
-            CreateMap<CreateFdNationalStandardDto, FdNationalStandard>();
-            CreateMap<UpdateFdNationalStandardDto, FdNationalStandard>();
-        }
-    }
+    // 已迁移到 CoreDtoMappingRegistry.cs
+    ///// <summary>
+    ///// AutoMapper配置文件
+    ///// </summary>
+    //public class FdNationalStandardProfile : Profile
+    //{
+    //    public FdNationalStandardProfile()
+    //    {
+    //        // Source -> Target
+    //        CreateMap<FdNationalStandard, FdNationalStandardDto>().MaskSensitiveData();
+    //        CreateMap<CreateFdNationalStandardDto, FdNationalStandard>();
+    //        CreateMap<UpdateFdNationalStandardDto, FdNationalStandard>();
+    //    }
+    //}
 
     /// <summary>
     ///新增传输模型

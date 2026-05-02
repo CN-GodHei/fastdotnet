@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
@@ -12,8 +12,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         public FdNoticeController(
             Fastdotnet.Service.IService.Sys.IFdNoticeService noticeService,
-            IBaseService<Fastdotnet.Core.Entities.Sys.FdNotice, string> service,
-            IMapper mapper) : base(service, mapper)
+            IBaseService<Fastdotnet.Core.Entities.Sys.FdNotice, string> service) : base(service)
         {
             _noticeService = noticeService;
         }

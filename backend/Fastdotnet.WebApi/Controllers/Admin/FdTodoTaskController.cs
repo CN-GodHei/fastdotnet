@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
@@ -12,8 +12,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         public FdTodoTaskController(
             Fastdotnet.Service.IService.Sys.IFdTodoTaskService todoTaskService,
-            IBaseService<Fastdotnet.Core.Entities.Sys.FdTodoTask, string> service,
-            IMapper mapper) : base(service, mapper)
+            IBaseService<Fastdotnet.Core.Entities.Sys.FdTodoTask, string> service) : base(service)
         {
             _todoTaskService = todoTaskService;
         }

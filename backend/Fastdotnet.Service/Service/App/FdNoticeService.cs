@@ -1,4 +1,3 @@
-using AutoMapper;
 using Fastdotnet.Core.IService.Sys;
 using Fastdotnet.Service.IService.App;
 
@@ -8,16 +7,13 @@ namespace Fastdotnet.Service.Service.App
     {
         private readonly IRawRepository<Fastdotnet.Core.Entities.App.FdNotice, string> _noticeRepository;
         private readonly ICurrentUser _currentUser;
-        private readonly IMapper _mapper;
 
         public FdNoticeService(
             IRawRepository<Fastdotnet.Core.Entities.App.FdNotice, string> noticeRepository,
-            ICurrentUser currentUser,
-            IMapper mapper)
+            ICurrentUser currentUser)
         {
             _noticeRepository = noticeRepository;
             _currentUser = currentUser;
-            _mapper = mapper;
         }
 
         public async Task<List<Fastdotnet.Core.Dtos.App.FdNoticeDto>> GetMyNoticesAsync()
@@ -26,12 +22,12 @@ namespace Fastdotnet.Service.Service.App
             if (string.IsNullOrEmpty(userId)) return new List<Fastdotnet.Core.Dtos.App.FdNoticeDto>();
 
             var notices = await _noticeRepository.GetListAsync(n => n.ReceiverId == userId);
-            return _mapper.Map<List<Fastdotnet.Core.Dtos.App.FdNoticeDto>>(notices.OrderByDescending(n => n.CreatedAt));
+            return notices.OrderByDescending(n => n.CreatedAt).Adapt<List<Fastdotnet.Core.Dtos.App.FdNoticeDto>>();
         }
 
         public async Task<string> SendAsync(Fastdotnet.Core.Dtos.App.CreateFdNoticeDto dto)
         {
-            var notice = _mapper.Map<Fastdotnet.Core.Entities.App.FdNotice>(dto);
+            var notice = dto.Adapt<Fastdotnet.Core.Entities.App.FdNotice>();
             notice.Id = Guid.NewGuid().ToString("N");
             notice.IsRead = 0;
             notice.CreatedAt = DateTime.Now;

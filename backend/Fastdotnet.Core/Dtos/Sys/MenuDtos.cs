@@ -2,15 +2,16 @@ using Fastdotnet.Core.Entities.Sys;
 
 namespace Fastdotnet.Core.Dtos.Sys
 {
-    public class MenuProfile : Profile
-    {
-        public MenuProfile()
-        {
-            CreateMap<FdMenu, FdMenuDto>();
-            CreateMap<CreateFdMenuDto, FdMenu>();
-            CreateMap<UpdateFdMenuDto, FdMenu>();
-        }
-    }
+    // 已迁移到 CoreDtoMappingRegistry.cs
+    //public class MenuProfile : Profile
+    //{
+    //    public MenuProfile()
+    //    {
+    //        CreateMap<FdMenu, FdMenuDto>();
+    //        CreateMap<CreateFdMenuDto, FdMenu>();
+    //        CreateMap<UpdateFdMenuDto, FdMenu>();
+    //    }
+    //}
 
     public class FdMenuDto
     {
