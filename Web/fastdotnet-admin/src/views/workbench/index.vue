@@ -61,7 +61,7 @@
     <el-dialog v-model="marketVisible" title="卡片集市" width="600px">
       <div class="market-list">
         <div 
-          v-for="card in allCardsMetadata" 
+          v-for="card in availableCards" 
           :key="card.Id" 
           class="market-card"
           @click="addCard(card)"
@@ -69,13 +69,14 @@
           <div class="m-title">{{ card.Name }}</div>
           <div class="m-desc">{{ card.Description }}</div>
         </div>
+        <div v-if="availableCards.length === 0" style="text-align: center; padding: 30px; color: #999;">所有卡片均已添加</div>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { GridLayout, GridItem } from 'vue-grid-layout-v3';
 import { Setting } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
@@ -97,6 +98,12 @@ const getWidgetIcon = (item: any) => getMetadata(item)?.Icon || 'Grid';
 const getWidgetType = (item: any) => getMetadata(item)?.Type || 'List';
 const getWidgetUrl = (item: any) => getMetadata(item)?.DataSourceUrl || '';
 const getWidgetConfig = (item: any) => getMetadata(item)?.ConfigJson || '{}';
+
+// 过滤已添加的卡片：布局中已存在的 realCardId 不再显示
+const availableCards = computed(() => {
+  const addedIds = new Set(layout.value.map(item => item.realCardId || item.i));
+  return allCardsMetadata.value.filter(card => !addedIds.has(card.Id));
+});
 
 const loadData = async () => {
   try {
