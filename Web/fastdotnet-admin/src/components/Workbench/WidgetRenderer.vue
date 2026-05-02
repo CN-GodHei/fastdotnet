@@ -12,7 +12,7 @@
 
 <script setup lang="ts" name="WidgetRenderer">
 import { ref, onMounted, computed, defineAsyncComponent } from 'vue';
-import axios from 'axios';
+import request from '@/utils/request';
 
 const props = defineProps({
   type: { type: String, required: true },
@@ -51,8 +51,7 @@ const fetchData = async () => {
   error.value = null;
   
   try {
-    const res = await axios.get(props.dataSourceUrl);
-    // 适配已解包的响应
+    const res = await request<any>(props.dataSourceUrl, { method: 'GET' });
     widgetData.value = res;
   } catch (err: any) {
     console.error('Widget data fetch failed:', err);
