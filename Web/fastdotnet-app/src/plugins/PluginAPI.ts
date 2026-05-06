@@ -329,8 +329,23 @@ export class PluginAPI {
   }
 }
 
-// 创建全局插件API实例
-export const pluginAPI = PluginAPI.getInstance();
+// 创建全局插件API实例（延迟初始化，避免循环依赖）
+let _pluginAPI: PluginAPI | null = null;
+
+export const getPluginAPI = (): PluginAPI => {
+  if (!_pluginAPI) {
+    _pluginAPI = PluginAPI.getInstance();
+  }
+  return _pluginAPI;
+};
+
+// 保持向后兼容的导出
+export const pluginAPI = new Proxy({} as PluginAPI, {
+  get(target, prop) {
+    const api = getPluginAPI();
+    return (api as any)[prop];
+  }
+});
 
 // 便捷的插件通信函数
 export const usePluginCommunication = (pluginId: string) => {

@@ -6,6 +6,7 @@
 import { loadMicroApp, MicroApp } from 'qiankun';
 import { useMicroAppsStore } from '@/stores/microApps';
 import { pluginRegistry } from './PluginRegistry';
+import { getPluginAPI } from './PluginAPI';
 import request from '@/utils/request';
 
 export interface PluginMetadata {
@@ -156,6 +157,10 @@ class PluginManager {
             pluginMetadata: config,
             // 【关键修复】传递主应用的 request 实例给子应用
             Fdrequest: request,
+            // 传递 PluginAPI 给子应用，用于组件注册（延迟获取）
+            get pluginAPI() {
+              return getPluginAPI();
+            },
           },
         },
         {
