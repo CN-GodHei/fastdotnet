@@ -61,10 +61,25 @@
 			</el-button>
 		</el-form-item>
 	</el-form>
+	
+	<!-- 社会化登录区域（直接调用后端 API） -->
+	<div v-if="socialProviders.length > 0" class="social-login-section login-animation5">
+		<div class="social-login-title">第三方登录</div>
+		<div class="social-login-buttons">
+			<el-button 
+				v-for="provider in socialProviders" 
+				:key="provider"
+				:class="['social-btn', `social-btn-${provider}`]"
+				@click="handleSocialLogin(provider)"
+			>
+				{{ getProviderName(provider) }}
+			</el-button>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts" name="loginAccount">
-import { reactive, computed, onMounted, watch } from 'vue';
+import { reactive, computed, onMounted, watch, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
@@ -78,6 +93,7 @@ import { formatAxis } from '@/utils/formatTime';
 import { NextLoading } from '@/utils/loading';
 // 引入适配的登录 API
 import { postApiAuthAppLogin } from '@/api/fd-system-api-app/auth';
+import { getPluginGetEnabledPlugins } from '@/api/fd-system-api-app/plugin';
 import { startQiankun } from '@/main';
 
 // 定义变量内容
@@ -86,6 +102,9 @@ const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const route = useRoute();
 const router = useRouter();
+
+// 社会化登录平台列表
+const socialProviders = ref<string[]>([]);
 
 const state = reactive({
 	isShowPassword: false,
@@ -275,7 +294,85 @@ watch(
 // 组件挂载时获取配置并设置验证码
 onMounted(() => {
 	updateCaptchaConfig();
+	loadSocialProviders(); // 加载第三方登录平台列表
 });
+
+// 加载第三方登录平台列表（先检查插件是否启用）
+const loadSocialProviders = async () => {
+	try {
+		// 1. 获取已启用的插件列表
+		const pluginsResponse = await getPluginGetEnabledPlugins();
+		const plugins = pluginsResponse || [];
+		
+		// 2. 查找 SocialLogin 插件
+		const socialLoginPlugin = plugins.find((p: any) => p.id === '12836701732078597');
+		
+		if (!socialLoginPlugin) {
+			console.log('[Account] SocialLogin plugin is not enabled');
+			return;
+		}
+		
+		console.log('[Account] SocialLogin plugin is enabled, loading providers...');
+		
+		// 3. 调用 SocialLogin 插件的 API 获取已启用的平台
+		const response = await fetch('/api/plugins/app/p12836701732078597/SocialLogin/providers');
+		const data = await response.json();
+		
+		// 注意：框架返回格式是 {Data: ..., Code: 200, Msg: ...}
+		if (data?.Code === 200 && Array.isArray(data.Data)) {
+			socialProviders.value = data.Data || [];
+			console.log(`[Account] Loaded ${socialProviders.value.length} social login providers:`, socialProviders.value);
+		} else {
+			console.log('[Account] No social login providers available', data);
+		}
+	} catch (error) {
+		console.error('[Account] Failed to load social login providers:', error);
+	}
+};
+
+// 获取平台显示名称
+const getProviderName = (provider: string): string => {
+	const names: Record<string, string> = {
+		wechat: '微信',
+		wechatMp: '微信公众号',
+		qq: 'QQ',
+		alipay: '支付宝',
+		github: 'GitHub',
+		gitee: 'Gitee',
+		weibo: '微博',
+		douyin: '抖音',
+		feishu: '飞书',
+		huawei: '华为',
+		xiaomi: '小米',
+		linkedin: 'LinkedIn',
+		twitter: 'Twitter',
+		instagram: 'Instagram',
+		apple: 'Apple',
+		baidu: '百度',
+		coding: 'Coding',
+		oschina: '开源中国',
+		gitlab: 'GitLab',
+		microsoft: 'Microsoft',
+	};
+	return names[provider] || provider;
+};
+
+// 处理第三方登录
+const handleSocialLogin = (provider: string) => {
+	// 生成 state 用于防 CSRF
+	const state = Math.random().toString(36).substring(2, 15);
+	
+	// 注意：redirectUri 应该是后端的回调地址，不是前端页面
+	// GitHub 会回调到这个地址，然后后端再重定向到前端
+	const backendCallbackUrl = `${window.location.origin}/api/plugins/app/p12836701732078597/SocialLogin/callback/${provider}`;
+	
+	// 保存 state 到 sessionStorage（用于回调时验证）
+	sessionStorage.setItem('social_login_state', state);
+	sessionStorage.setItem('social_login_provider', provider);
+	
+	// 直接跳转到后端授权接口，后端会重定向到第三方平台
+	window.location.href = `/api/plugins/app/p12836701732078597/SocialLogin/authorize/${provider}?redirectUri=${encodeURIComponent(backendCallbackUrl)}&state=${state}`;
+};
 </script>
 
 <style scoped lang="scss">
@@ -312,6 +409,51 @@ onMounted(() => {
 		letter-spacing: 2px;
 		font-weight: 300;
 		margin-top: 15px;
+	}
+	
+	// 社会化登录区域样式
+	.social-login-section {
+		margin-top: 30px;
+		padding-top: 20px;
+		border-top: 1px solid #dcdfe6;
+		animation-name: error-num;
+		animation-duration: 0.5s;
+		animation-fill-mode: forwards;
+		animation-delay: 0.5s;
+		
+		.social-login-title {
+			text-align: center;
+			color: #909399;
+			font-size: 14px;
+			margin-bottom: 15px;
+		}
+		
+		.social-login-buttons {
+			display: flex;
+			justify-content: center;
+			gap: 10px;
+			flex-wrap: wrap;
+			
+			.social-btn {
+				min-width: 100px;
+				
+				&.social-btn-wechat { background-color: #07c160; color: white; }
+				&.social-btn-wechatMp { background-color: #07c160; color: white; }
+				&.social-btn-qq { background-color: #12b7f5; color: white; }
+				&.social-btn-alipay { background-color: #1677ff; color: white; }
+				&.social-btn-github { background-color: #333; color: white; }
+				&.social-btn-gitee { background-color: #c71d23; color: white; }
+				&.social-btn-weibo { background-color: #e6162d; color: white; }
+				&.social-btn-douyin { background-color: #000; color: white; }
+				&.social-btn-feishu { background-color: #3370ff; color: white; }
+				&.social-btn-huawei { background-color: #cf0a2c; color: white; }
+				&.social-btn-xiaomi { background-color: #ff6900; color: white; }
+				&.social-btn-linkedin { background-color: #0077b5; color: white; }
+				&.social-btn-twitter { background-color: #1da1f2; color: white; }
+				&.social-btn-instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
+				&.social-btn-apple { background-color: #000; color: white; }
+			}
+		}
 	}
 }
 </style>
