@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/node": "^20.9.0",
     "@vitejs/plugin-vue": "^5.0.0",
-		"fastdotnet-openapi2ts": "^1.0.1",
+		"fastdotnet-openapi2ts": "^1.1.1",
     "typescript": "^5.2.0",
     "vite": "^5.0.0",
     "vite-plugin-qiankun": "^1.0.15",
