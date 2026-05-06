@@ -43,6 +43,19 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         /// <summary>
+        /// 获取已启用的插件列表（允许匿名访问）
+        /// </summary>
+        [HttpGet("enabled")]
+        [AllowAnonymous]
+        [ApiUsageScope(Core.Enum.ApiUsageScopeEnum.Both)]
+        public async Task<List<PluginInfo>> GetEnabledPlugins()
+        {
+            var allPlugins = await _pluginLoadService.ScanPluginsAsync();
+            // 只返回已启用的插件
+            return allPlugins.Where(p => p.enabled).ToList();
+        }
+
+        /// <summary>
         /// 启用一个插件（如果未加载，则先加载）
         /// </summary>
         [HttpPost("enable/{pluginId}")]
