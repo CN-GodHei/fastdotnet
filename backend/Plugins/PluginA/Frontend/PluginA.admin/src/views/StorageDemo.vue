@@ -22,17 +22,17 @@
 
       <!-- 上传区域 -->
       <el-form label-width="120px">
-        <el-form-item label="存储桶(可选)">
+        <el-form-item label="存储路径前缀(可选)">
           <el-input 
-            v-model="bucketName" 
-            placeholder="留空使用默认存储桶"
+            v-model="pathPrefix" 
+            placeholder="留空使用默认路径，如：plugin-icons/"
             clearable
           />
         </el-form-item>
 
         <el-form-item label="基本上传">
           <MicroAppFileUploader
-            :bucket-name="bucketName || undefined"
+            :path-prefix="pathPrefix || undefined"
             :max-size="10"
             @success="onUploadSuccess"
             @error="onUploadError"
@@ -43,7 +43,7 @@
 
         <el-form-item label="强制代理上传">
           <MicroAppFileUploader
-            :bucket-name="bucketName || undefined"
+            :path-prefix="pathPrefix || undefined"
             :max-size="10"
             :force-proxy="true"
             @success="onProxyUploadSuccess"
@@ -58,7 +58,7 @@
 
         <el-form-item label="图片上传">
           <MicroAppFileUploader
-            :bucket-name="bucketName || undefined"
+            :path-prefix="pathPrefix || undefined"
             :max-size="5"
             accept="image/*"
             list-type="picture-card"
@@ -121,8 +121,8 @@ import MicroAppFileUploader from '@/components/upload/MicroAppFileUploader.vue';
 // 导入共享的上传服务
 import { getSharedUploadService } from '@/main';
 
-// 存储桶名称
-const bucketName = ref('');
+// 存储路径前缀
+const pathPrefix = ref('');
 
 // 上传结果列表
 interface UploadResult {
@@ -236,8 +236,8 @@ const removeResult = async (row: UploadResult) => {
       return;
     }
 
-    // 调用上传服务的删除方法(会自动从URL中提取文件名)
-    await uploadService.deleteFile(row.url, bucketName.value || undefined);
+    // 调用上传服务的删除方法(会自动从URL中提取文件路径)
+    await uploadService.deleteFile(row.url);
 
     // 从列表中移除
     const index = uploadResults.value.findIndex(r => r.id === row.id);

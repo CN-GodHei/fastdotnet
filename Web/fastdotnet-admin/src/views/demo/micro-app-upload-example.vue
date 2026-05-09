@@ -153,7 +153,7 @@ const startUpload = async () => {
 
         // 执行上传
         const result = await uploadService.uploadFile(file, {
-          bucketName: 'micro-app-uploads', // 微应用专用存储桶
+          pathPrefix: 'micro-app-uploads/', // 微应用专用存储路径
           onProgress: (percent) => {
             console.log(`上传进度: ${file.name} - ${percent}%`);
           }

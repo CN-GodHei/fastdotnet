@@ -19,10 +19,15 @@ namespace Fastdotnet.Core.Service.Sys
             _service = service;
         }
 
-        public async Task<string> UploadAsync(Stream fileStream, string fileName, string? bucketName = null)
+        public async Task<string> UploadAsync(Stream fileStream, string fileName, string? pathPrefix = null)
         {
             // 确保目录存在
-            var directory = Path.Combine(_options.LocalStoragePath, bucketName ?? _options.DefaultBucket);
+            var directory = Path.Combine(_options.LocalStoragePath, _options.DefaultBucket);
+            if (!string.IsNullOrEmpty(pathPrefix))
+            {
+                directory = Path.Combine(directory, pathPrefix.TrimStart('/').TrimEnd('/'));
+            }
+            
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
@@ -39,7 +44,7 @@ namespace Fastdotnet.Core.Service.Sys
             }
 
             // 返回访问URL
-            var relativePath = Path.Combine(bucketName ?? _options.DefaultBucket, uniqueFileName).Replace('\\', '/');
+            var relativePath = Path.Combine(_options.DefaultBucket, pathPrefix ?? "", uniqueFileName).Replace('\\', '/');
             // 读取配置决定使用内网还是外网域名
             var linkType = await _service.GetFirstAsync(w => w.Code == "LocalStorageLinkType");
             var domainCode = linkType?.Value == "outer" ? "CODE_09_02" : "CODE_09_01";
@@ -61,19 +66,29 @@ namespace Fastdotnet.Core.Service.Sys
         //    return await File.ReadAllBytesAsync(filePath);
         //}
 
-        public async Task<(Stream stream, long length)> OpenReadAsync(string fileName, string? bucketName = null)
+        public async Task<(Stream stream, long length)> OpenReadAsync(string filePath)
         {
-            var directory = Path.Combine(_options.LocalStoragePath, bucketName ?? _options.DefaultBucket);
-            var filePath = Path.Combine(directory, fileName);
-
-            if (!File.Exists(filePath))
+            // 处理文件路径：如果filePath以"uploads/"开头，需要移除该前缀
+            var relativePath = filePath;
+            if (relativePath.StartsWith("uploads/", StringComparison.OrdinalIgnoreCase))
             {
-                throw new FileNotFoundException($"File not found: {filePath}");
+                relativePath = relativePath.Substring(8); // 移除 "uploads/"
+            }
+            else if (relativePath.StartsWith("uploads\\", StringComparison.OrdinalIgnoreCase))
+            {
+                relativePath = relativePath.Substring(8); // 移除 "uploads\"
+            }
+            
+            var fullPath = Path.Combine(_options.LocalStoragePath, relativePath.Replace('/', Path.DirectorySeparatorChar));
+
+            if (!File.Exists(fullPath))
+            {
+                throw new FileNotFoundException($"File not found: {fullPath}");
             }
 
             // 打开文件流
             var stream = new FileStream(
-                filePath,
+                fullPath,
                 FileMode.Open,
                 FileAccess.Read,
                 FileShare.Read,
@@ -83,28 +98,24 @@ namespace Fastdotnet.Core.Service.Sys
             return (stream, stream.Length);
         }
 
-        public async Task<bool> DeleteAsync(string fileName, string? bucketName = null)
+        public async Task<bool> DeleteAsync(string filePath)
         {
             try
             {
-                // fileName 可能是完整路径(如: uploads/default/xxx.png) 或相对路径(如: default/xxx.png)
-                // 需要正确解析
-                
-                string relativePath;
-                
-                // 如果 fileName 以 "uploads/" 开头,说明是完整URL路径,需要去掉
-                if (fileName.StartsWith("uploads/", StringComparison.OrdinalIgnoreCase))
+                // 处理文件路径：如果filePath以"uploads/"开头，需要移除该前缀
+                // 因为LocalStoragePath已经包含了"uploads"目录
+                var relativePath = filePath;
+                if (relativePath.StartsWith("uploads/", StringComparison.OrdinalIgnoreCase))
                 {
-                    relativePath = fileName.Substring("uploads/".Length);
+                    relativePath = relativePath.Substring(8); // 移除 "uploads/"
                 }
-                else
+                else if (relativePath.StartsWith("uploads\\", StringComparison.OrdinalIgnoreCase))
                 {
-                    relativePath = fileName;
+                    relativePath = relativePath.Substring(8); // 移除 "uploads\"
                 }
                 
                 // 构建完整文件路径
                 var fullPath = Path.Combine(_options.LocalStoragePath, relativePath.Replace('/', Path.DirectorySeparatorChar));
-                
                 
                 // 安全检查: 确保路径在允许的目录内
                 var fullBasePath = Path.GetFullPath(_options.LocalStoragePath);
@@ -131,15 +142,14 @@ namespace Fastdotnet.Core.Service.Sys
             }
         }
 
-        public async Task<string> GetFileUrlAsync(string fileName, string? bucketName = null)
+        public async Task<string> GetFileUrlAsync(string filePath)
         {
-            var relativePath = Path.Combine(bucketName ?? _options.DefaultBucket, fileName).Replace('\\', '/');
             // 读取配置决定使用内网还是外网域名
             var linkType = await _service.GetFirstAsync(w => w.Code == "LocalStorageLinkType");
             var domainCode = linkType?.Value == "outer" ? "CODE_09_02" : "CODE_09_01";
             var siteDomain = await _service.GetFirstAsync(w => w.Code == domainCode);
             
-            return $"{siteDomain?.Value}{_options.BaseUrl}/{relativePath}";
+            return $"{siteDomain?.Value}{_options.BaseUrl}/{filePath}";
         }
 
         public string StorageType => "local";

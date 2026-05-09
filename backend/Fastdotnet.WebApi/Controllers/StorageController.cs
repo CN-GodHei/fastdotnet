@@ -31,13 +31,13 @@ namespace Fastdotnet.WebApi.Controllers
         /// 上传文件
         /// </summary>
         /// <param name="file">要上传的文件</param>
-        /// <param name="bucketName">存储桶名称（可选）</param>
+        /// <param name="pathPrefix">存储路径前缀（可选），如：plugin-icons/、user-avatars/2024/01/</param>
         /// <returns>上传结果</returns>
         [HttpPost("upload")]
         [AllowAnonymous]
         // 为该接口单独设置 200 MB 的限制
         [RequestSizeLimit(209715200)]
-        public async Task<ActionResult<string>> UploadAsync(IFormFile file, string? bucketName = null)
+        public async Task<ActionResult<string>> UploadAsync(IFormFile file, [FromQuery] string? pathPrefix = null)
         {
             if (file == null || file.Length == 0)
             {
@@ -45,7 +45,7 @@ namespace Fastdotnet.WebApi.Controllers
             }
 
             using var stream = file.OpenReadStream();
-            var url = await _storageService.UploadAsync(stream, file.FileName, bucketName);
+            var url = await _storageService.UploadAsync(stream, file.FileName, pathPrefix: pathPrefix);
 
             return Ok(new { Url = url, FileName = file.FileName });
         }
@@ -72,20 +72,21 @@ namespace Fastdotnet.WebApi.Controllers
         //        return NotFound("文件不存在");
         //    }
         //}
-        [HttpGet("download/{fileName}")]
-        public async Task<IActionResult> DownloadAsync(string fileName, string? bucketName = null)
+        [HttpGet("download/{*filePath}")]
+        public async Task<IActionResult> DownloadAsync(string filePath)
         {
             try
             {
-                var fileExtension = Path.GetExtension(fileName);
+                var fileExtension = Path.GetExtension(filePath);
                 var contentType = GetContentType(fileExtension);
 
                 // 获取流，而不是获取字节数组
-                var (stream, length) = await _storageService.OpenReadAsync(fileName, bucketName);
+                var (stream, length) = await _storageService.OpenReadAsync(filePath);
 
                 if (stream == null) return NotFound("文件不存在");
 
                 // ✅ 设置响应头，告诉浏览器这是一个文件下载
+                var fileName = Path.GetFileName(filePath);
                 HttpContext.Response.Headers.Append("Content-Disposition", $"attachment; filename=\"{fileName}\"");
 
                 // ✅ 返回流式结果
@@ -108,31 +109,29 @@ namespace Fastdotnet.WebApi.Controllers
         /// <summary>
         /// 删除文件
         /// </summary>
-        /// <param name="filePath">文件路径(支持相对路径,如: 20260425/xxx.png)</param>
-        /// <param name="bucketName">存储桶名称(可选)</param>
+        /// <param name="filePath">文件完整路径(支持相对路径,如: plugin-icons/20260425/xxx.png)</param>
         /// <returns>删除结果</returns>
         [HttpDelete("delete")]
-        public async Task<ActionResult<bool>> DeleteAsync([FromQuery] string filePath, [FromQuery] string? bucketName = null)
+        public async Task<ActionResult<bool>> DeleteAsync([FromQuery] string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
             {
                 return BadRequest("文件路径不能为空");
             }
         
-            var result = await _storageService.DeleteAsync(filePath, bucketName);
+            var result = await _storageService.DeleteAsync(filePath);
             return Ok(new { Success = result });
         }
 
         /// <summary>
         /// 获取文件URL
         /// </summary>
-        /// <param name="fileName">文件名</param>
-        /// <param name="bucketName">存储桶名称（可选）</param>
+        /// <param name="filePath">文件完整路径</param>
         /// <returns>文件URL</returns>
-        [HttpGet("url/{fileName}")]
-        public async Task<ActionResult<string>> GetFileUrlAsync(string fileName, string? bucketName = null)
+        [HttpGet("url/{*filePath}")]
+        public async Task<ActionResult<string>> GetFileUrlAsync(string filePath)
         {
-            var url = await _storageService.GetFileUrlAsync(fileName, bucketName);
+            var url = await _storageService.GetFileUrlAsync(filePath);
             return Ok(new { Url = url });
         }
 

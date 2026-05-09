@@ -39,7 +39,7 @@ function getUploadService() {
  * 上传文件（微应用环境）
  */
 export async function microAppUploadFile(file: File, options?: {
-  bucketName?: string;
+  pathPrefix?: string;
   onProgress?: (percent: number) => void;
   timeout?: number;
 }) {
@@ -56,7 +56,7 @@ export async function microAppUploadFile(file: File, options?: {
  * 批量上传文件（微应用环境）
  */
 export async function microAppUploadFiles(files: File[], options?: {
-  bucketName?: string;
+  pathPrefix?: string;
   onProgress?: (percent: number, index: number) => void;
   timeout?: number;
 }) {

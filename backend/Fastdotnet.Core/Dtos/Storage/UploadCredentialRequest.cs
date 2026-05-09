@@ -22,13 +22,9 @@ namespace Fastdotnet.Core.Dtos.Storage
         public string ContentType { get; set; } = string.Empty;
 
         /// <summary>
-        /// 存储桶名称
+        /// 存储路径前缀（可选），如：plugin-icons/、user-avatars/2024/01/
+        /// 注意：不包含bucket名称，仅为bucket内的相对路径
         /// </summary>
-        public string? BucketName { get; set; }
-
-        /// <summary>
-        /// OSS类型（aliyun, tencent, aws, minio, qiniu等）
-        /// </summary>
-        public string? OssType { get; set; }
+        public string? PathPrefix { get; set; }
     }
 }

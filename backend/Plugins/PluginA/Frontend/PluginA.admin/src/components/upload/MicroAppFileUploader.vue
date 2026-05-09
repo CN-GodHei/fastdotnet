@@ -39,8 +39,8 @@ import { ElMessage, ElProgress, ElButton, ElUpload } from 'element-plus';
 import { getSharedUploadService } from '@/main'; // 使用插件从主应用接收到的上传服务
 
 interface Props {
-  /** 存储桶名称 */
-  bucketName?: string;
+  /** 存储路径前缀（可选），如：plugin-icons/、user-avatars/2024/01/ */
+  pathPrefix?: string;
   /** 最大文件大小(MB) */
   maxSize?: number;
   /** 允许的文件类型 */
@@ -142,7 +142,7 @@ const customUpload = async (options: {
   try {
     // 使用主应用的上传服务上传文件
     const result = await uploadService.uploadFile(options.file, {
-      bucketName: props.bucketName,
+      pathPrefix: props.pathPrefix,
       forceProxy: props.forceProxy, // 传递 forceProxy 参数
       onProgress: (percent: number) => {
         uploadProgress.value = percent;

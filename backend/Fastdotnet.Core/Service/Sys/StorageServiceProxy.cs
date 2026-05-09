@@ -71,11 +71,11 @@ namespace Fastdotnet.Core.Service.Sys
             return _currentStorageService;
         }
 
-        public async Task<string> UploadAsync(Stream fileStream, string fileName, string? bucketName = null)
+        public async Task<string> UploadAsync(Stream fileStream, string fileName, string? pathPrefix = null)
         {
             var service = GetCurrentStorageService();
             Console.WriteLine($"Current storage service implementation: {service.GetType().FullName}");
-            return await service.UploadAsync(fileStream, fileName, bucketName);
+            return await service.UploadAsync(fileStream, fileName, pathPrefix);
         }
 
         //public async Task<byte[]> DownloadAsync(string fileName, string? bucketName = null)
@@ -84,21 +84,21 @@ namespace Fastdotnet.Core.Service.Sys
         //    return await service.DownloadAsync(fileName, bucketName);
         //}
 
-        public async Task<(Stream stream, long length)> OpenReadAsync(string fileName, string? bucketName = null)
+        public async Task<(Stream stream, long length)> OpenReadAsync(string filePath)
         {
             var service = GetCurrentStorageService();
-            return await service.OpenReadAsync(fileName, bucketName);
+            return await service.OpenReadAsync(filePath);
         }
-        public async Task<bool> DeleteAsync(string fileName, string? bucketName = null)
+        public async Task<bool> DeleteAsync(string filePath)
         {
             var service = GetCurrentStorageService();
-            return await service.DeleteAsync(fileName, bucketName);
+            return await service.DeleteAsync(filePath);
         }
 
-        public async Task<string> GetFileUrlAsync(string fileName, string? bucketName = null)
+        public async Task<string> GetFileUrlAsync(string filePath)
         {
             var service = GetCurrentStorageService();
-            return await service.GetFileUrlAsync(fileName, bucketName);
+            return await service.GetFileUrlAsync(filePath);
         }
 
         public string StorageType

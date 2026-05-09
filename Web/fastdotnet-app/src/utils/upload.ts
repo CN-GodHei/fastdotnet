@@ -7,7 +7,11 @@ import { getApiStorageConfig, postApiStorageGetUploadCredential, postApiStorageU
  */
 export interface UploadFileOptions {
   file: File;
-  bucketName?: string;
+  /**
+   * 存储路径前缀（可选），如：plugin-icons/、user-avatars/2024/01/
+   * 注意：不包含bucket名称，仅为bucket内的相对路径
+   */
+  pathPrefix?: string;
   onProgress?: (percent: number) => void;
   timeout?: number;
 }
@@ -25,7 +29,7 @@ export interface UploadResult {
  * 上传单个文件
  */
 export const uploadFile = async (options: UploadFileOptions): Promise<UploadResult> => {
-  const { file, bucketName, onProgress, timeout = 60000 } = options;
+  const { file, pathPrefix, onProgress, timeout = 60000 } = options;
 
   try {
     // 首先获取当前存储配置
@@ -37,10 +41,10 @@ export const uploadFile = async (options: UploadFileOptions): Promise<UploadResu
 
     if (configResponse.supportDirectUpload) {
       // 使用前端直传
-      return await uploadFileDirectly(file, bucketName, onProgress);
+      return await uploadFileDirectly(file, pathPrefix, onProgress);
     } else {
       // 使用后端代理上传
-      return await uploadFileViaBackend(file, bucketName, onProgress, timeout);
+      return await uploadFileViaBackend(file, pathPrefix, onProgress, timeout);
     }
   } catch (error: any) {
     console.error('文件上传失败:', error);
@@ -53,13 +57,13 @@ export const uploadFile = async (options: UploadFileOptions): Promise<UploadResu
  */
 const uploadFileViaBackend = async (
   file: File,
-  bucketName?: string,
+  pathPrefix?: string,
   onProgress?: (percent: number) => void,
   timeout: number = 60000
 ): Promise<UploadResult> => {
   // 使用专门的上传API
   const params = {
-    bucketName: bucketName
+    pathPrefix: pathPrefix
   };
   const body = {};
   const response: any = await postApiStorageUpload(params, body, file, {
@@ -84,7 +88,7 @@ const uploadFileViaBackend = async (
  */
 const uploadFileDirectly = async (
   file: File,
-  bucketName?: string,
+  pathPrefix?: string,
   onProgress?: (percent: number) => void
 ): Promise<UploadResult> => {
   // 获取上传凭证
@@ -92,7 +96,7 @@ const uploadFileDirectly = async (
     FileName: file.name,
     FileSize: file.size,
     ContentType: file.type,
-    BucketName: bucketName || undefined
+    PathPrefix: pathPrefix || undefined
   } as any);
 
   if (!credentialResponse) {
@@ -150,13 +154,13 @@ export const getUploadCredential = async (params: {
   fileName: string;
   fileSize: number;
   contentType: string;
-  bucketName?: string;
+  pathPrefix?: string;
 }) => {
   const response = await postApiStorageGetUploadCredential({
     FileName: params.fileName,
     FileSize: params.fileSize,
     ContentType: params.contentType,
-    BucketName: params.bucketName || undefined
+    PathPrefix: params.pathPrefix || undefined
   } as any);
   return response;
 };

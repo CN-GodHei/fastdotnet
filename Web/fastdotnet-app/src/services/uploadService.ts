@@ -22,13 +22,13 @@ class UploadService {
    * 上传单个文件
    */
   async uploadFile(file: File, options?: {
-    bucketName?: string;
+    pathPrefix?: string;
     onProgress?: (percent: number) => void;
     timeout?: number;
   }) {
     return await uploadFile({
       file,
-      bucketName: options?.bucketName,
+      pathPrefix: options?.pathPrefix,
       onProgress: options?.onProgress,
       timeout: options?.timeout || 60000
     });
@@ -38,7 +38,7 @@ class UploadService {
    * 批量上传文件
    */
   async uploadFiles(files: File[], options?: {
-    bucketName?: string;
+    pathPrefix?: string;
     onProgress?: (percent: number, index: number) => void;
     timeout?: number;
   }): Promise<Array<{ file: File; result: any; error?: Error }>> {
@@ -48,7 +48,7 @@ class UploadService {
       const file = files[i];
       try {
         const result = await this.uploadFile(file, {
-          bucketName: options?.bucketName,
+          pathPrefix: options?.pathPrefix,
           onProgress: (percent) => {
             options?.onProgress?.(percent, i);
           },
@@ -85,7 +85,7 @@ class UploadService {
     fileName: string;
     fileSize: number;
     contentType: string;
-    bucketName?: string;
+    pathPrefix?: string;
   }) {
     return await getUploadCredential(params);
   }

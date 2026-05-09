@@ -12,26 +12,25 @@ namespace Fastdotnet.Core.IService.Sys
         /// <param name="storageService">存储服务</param>
         /// <param name="fileData">文件数据</param>
         /// <param name="fileName">文件名</param>
-        /// <param name="bucketName">存储桶名称（可选）</param>
+        /// <param name="pathPrefix">存储路径前缀（可选），如：plugin-icons/、user-avatars/2024/01/</param>
         /// <returns>文件访问URL</returns>
-        public static async Task<string> UploadAsync(this IStorageService storageService, byte[] fileData, string fileName, string? bucketName = null)
+        public static async Task<string> UploadAsync(this IStorageService storageService, byte[] fileData, string fileName, string? pathPrefix = null)
         {
             using var stream = new MemoryStream(fileData);
-            return await storageService.UploadAsync(stream, fileName, bucketName);
+            return await storageService.UploadAsync(stream, fileName, pathPrefix);
         }
 
         /// <summary>
         /// 检查文件是否存在
         /// </summary>
         /// <param name="storageService">存储服务</param>
-        /// <param name="fileName">文件名</param>
-        /// <param name="bucketName">存储桶名称（可选）</param>
+        /// <param name="filePath">文件完整路径</param>
         /// <returns>文件是否存在</returns>
-        public static async Task<bool> ExistsAsync(this IStorageService storageService, string fileName, string? bucketName = null)
+        public static async Task<bool> ExistsAsync(this IStorageService storageService, string filePath)
         {
             try
             {
-                var url = await storageService.GetFileUrlAsync(fileName, bucketName);
+                var url = await storageService.GetFileUrlAsync(filePath);
                 // 尝试获取文件，如果成功则说明存在
                 // 这里可能需要根据具体实现来判断
                 return !string.IsNullOrEmpty(url);

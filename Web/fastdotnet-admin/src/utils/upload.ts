@@ -7,7 +7,11 @@ import { getStorageGetCurrentConfig, postStorageGetUploadCredential, postStorage
  */
 export interface UploadFileOptions {
   file: File;
-  bucketName?: string;
+  /**
+   * 存储路径前缀（可选），如：plugin-icons/、user-avatars/2024/01/
+   * 注意：不包含bucket名称，仅为bucket内的相对路径
+   */
+  pathPrefix?: string;
   onProgress?: (percent: number) => void;
   timeout?: number;
   /**
@@ -37,12 +41,12 @@ export interface UploadResult {
  * 上传单个文件
  */
 export const uploadFile = async (options: UploadFileOptions): Promise<UploadResult> => {
-  const { file, bucketName, onProgress, timeout = 60000, forceProxy = false } = options;
+  const { file, pathPrefix, onProgress, timeout = 60000, forceProxy = false } = options;
 
   try {
     // 如果强制使用代理,直接走后端代理上传
     if (forceProxy) {
-      return await uploadFileViaBackend(file, bucketName, onProgress, timeout);
+      return await uploadFileViaBackend(file, pathPrefix, onProgress, timeout);
     }
 
     // 否则获取当前存储配置,自动选择上传方式
@@ -57,10 +61,10 @@ export const uploadFile = async (options: UploadFileOptions): Promise<UploadResu
 
     if (supportDirectUpload) {
       // 使用前端直传
-      return await uploadFileDirectly(file, bucketName, onProgress);
+      return await uploadFileDirectly(file, pathPrefix, onProgress);
     } else {
       // 使用后端代理上传
-      return await uploadFileViaBackend(file, bucketName, onProgress, timeout);
+      return await uploadFileViaBackend(file, pathPrefix, onProgress, timeout);
     }
   } catch (error: any) {
     console.error('[Upload] 文件上传失败:', error);
@@ -73,13 +77,13 @@ export const uploadFile = async (options: UploadFileOptions): Promise<UploadResu
  */
 const uploadFileViaBackend = async (
   file: File,
-  bucketName?: string,
+  pathPrefix?: string,
   onProgress?: (percent: number) => void,
   timeout: number = 60000
 ): Promise<UploadResult> => {
   // 使用专门的上传API
   const params = {
-    bucketName: bucketName
+    pathPrefix: pathPrefix
   };
   const body = {};
   const response: any = await postStorageUpload(params, body, file, {
@@ -105,7 +109,7 @@ const uploadFileViaBackend = async (
  */
 const uploadFileDirectly = async (
   file: File,
-  bucketName?: string,
+  pathPrefix?: string,
   onProgress?: (percent: number) => void
 ): Promise<UploadResult> => {
   // 获取上传凭证
@@ -113,7 +117,7 @@ const uploadFileDirectly = async (
     FileName: file.name,
     FileSize: file.size,
     ContentType: file.type,
-    BucketName: bucketName || undefined
+    PathPrefix: pathPrefix || undefined
   } as any);
 
   if (!credentialResponse) {
@@ -196,13 +200,13 @@ export const getUploadCredential = async (params: {
   fileName: string;
   fileSize: number;
   contentType: string;
-  bucketName?: string;
+  pathPrefix?: string;
 }) => {
   const response = await postStorageGetUploadCredential({
     FileName: params.fileName,
     FileSize: params.fileSize,
     ContentType: params.contentType,
-    BucketName: params.bucketName || undefined
+    PathPrefix: params.pathPrefix || undefined
   } as any);
   return response;
 };
@@ -210,40 +214,39 @@ export const getUploadCredential = async (params: {
 /**
  * 删除文件
  */
-export const deleteFile = async (fileName: string, bucketName?: string): Promise<boolean> => {
+export const deleteFile = async (filePath: string): Promise<boolean> => {
   try {
     // 从 URL 中提取完整的文件路径(如果传入的是完整URL)
-    let actualFileName = fileName;
-    if (fileName.includes('://')) {
+    let actualFilePath = filePath;
+    if (filePath.includes('://')) {
       // 是完整URL,提取域名后的完整路径
-      // 例如: https://domain.com/20260425/xxx.png -> 20260425/xxx.png
+      // 例如: https://domain.com/default/plugin-icons/20260425/xxx.png -> default/plugin-icons/20260425/xxx.png
       try {
-        const url = new URL(fileName);
+        const url = new URL(filePath);
         // pathname 以 / 开头,需要去掉
-        actualFileName = url.pathname.startsWith('/') ? url.pathname.substring(1) : url.pathname;
+        actualFilePath = url.pathname.startsWith('/') ? url.pathname.substring(1) : url.pathname;
       } catch (e) {
         // URL解析失败,尝试简单分割
-        const urlParts = fileName.split('/');
+        const urlParts = filePath.split('/');
         // 找到域名后的所有部分
         const domainIndex = urlParts.findIndex(part => part.includes('.'));
         if (domainIndex !== -1 && domainIndex < urlParts.length - 1) {
-          actualFileName = urlParts.slice(domainIndex + 1).join('/');
+          actualFilePath = urlParts.slice(domainIndex + 1).join('/');
         } else {
-          actualFileName = urlParts[urlParts.length - 1];
+          actualFilePath = urlParts[urlParts.length - 1];
         }
       }
     }
 
-    if (!actualFileName) {
-      throw new Error('无法解析文件名');
+    if (!actualFilePath) {
+      throw new Error('无法解析文件路径');
     }
 
-    // console.log('[Upload] 删除文件:', actualFileName);
+    // console.log('[Upload] 删除文件:', actualFilePath);
 
     // 调用 openapi2ts 生成的 API
     const result = await deleteStorageDelete({
-      filePath: actualFileName,
-      bucketName: bucketName || undefined
+      filePath: actualFilePath
     });
 
     // request 拦截器已经返回 response.data

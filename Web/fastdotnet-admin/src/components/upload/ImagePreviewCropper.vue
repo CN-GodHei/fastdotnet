@@ -132,8 +132,8 @@ import { getStorageGetCurrentConfig, postStorageGetUploadCredential } from '@/ap
 import { uploadFile as uploadFileUtil } from '@/utils/upload';
 
 interface Props {
-  /** 存储桶名称 */
-  bucketName?: string;
+  /** 存储路径前缀（可选），如：plugin-icons/、user-avatars/2024/01/ */
+  pathPrefix?: string;
   /** 最大文件大小(MB) */
   maxSize?: number;
   /** 允许的文件类型 */
@@ -244,8 +244,8 @@ const uploadHeaders = computed(() => {
 
 const uploadData = computed(() => {
   const data: Record<string, any> = { ...props.customParams };
-  if (props.bucketName) {
-    data.bucketName = props.bucketName;
+  if (props.pathPrefix) {
+    data.pathPrefix = props.pathPrefix;
   }
   // 如果是直传，添加直传所需的参数
   if (currentStorageConfig.supportDirectUpload) {
@@ -600,7 +600,7 @@ const handleBeforeUpload = async (file: File) => {
         FileName: file.name,
         FileSize: file.size,
         ContentType: file.type,
-        BucketName: props.bucketName
+        PathPrefix: props.pathPrefix
       } as any);
       
       if (credentialResponse) {
@@ -634,7 +634,7 @@ const customUploadFile = async (file: File) => {
     }
     
     // 添加文件
-    formData.append(props.bucketName || 'file', file, file.name);
+    formData.append(props.pathPrefix || 'file', file, file.name);
 
     // 执行直传
     const uploadUrl = currentStorageConfig.config.UploadUrl;
@@ -679,21 +679,21 @@ const customUploadFile = async (file: File) => {
 const defaultUploadFile = async (file: File) => {
   try {
     const formData = new FormData();
-    formData.append(props.bucketName || 'file', file, file.name);
+    formData.append(props.pathPrefix || 'file', file, file.name);
     
     // 添加自定义参数
     for (const [key, value] of Object.entries(props.customParams)) {
       formData.append(key, String(value));
     }
     
-    if (props.bucketName) {
-      formData.append('bucketName', props.bucketName);
+    if (props.pathPrefix) {
+      formData.append('pathPrefix', props.pathPrefix);
     }
 
     // 通过统一的上传工具上传
     const response: any = await uploadFileUtil({
       file: file,
-      bucketName: props.bucketName,
+      pathPrefix: props.pathPrefix,
       onProgress: (percent: number) => {
         uploadProgress.value = percent;
         emit('progress', { percent }, file, []);
