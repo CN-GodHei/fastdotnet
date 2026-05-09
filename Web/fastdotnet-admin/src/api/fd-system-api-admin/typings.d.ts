@@ -31,11 +31,6 @@ declare namespace APIModel {
 		Dto?: FdUpdateEmailConfigDto;
 	};
 
-	type BatchUpdateByConditionDto1PluginATestUpdateDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: PluginATestUpdateDto;
-	};
-
 	type BatchUpdateByConditionDto1UpdateCodeGenDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateCodeGenDto;
@@ -450,28 +445,6 @@ declare namespace APIModel {
 		Scopes?: string[];
 	};
 
-	type CreateOrderRequest = {
-		UserId?: string;
-		TotalAmount?: number;
-		ItemCount?: number;
-	};
-
-	type CreatePluginAUserExtensionDto = {
-		Preferences?: string;
-		Points?: number;
-	};
-
-	type CreateUserWithExtensionRequest = {
-		ExtensionData?: CreatePluginAUserExtensionDto;
-		Username: string;
-		Password: string;
-		Email: string;
-		PhoneNumber: string;
-		Nickname?: string;
-		AvatarUrl: string;
-		Status?: number;
-	};
-
 	type DataStatus = 0 | 1 | 2 | 3;
 
 	type deleteAppGenericDtoControllerBase5DeleteParams = {
@@ -690,10 +663,8 @@ declare namespace APIModel {
 	};
 
 	type deleteStorageDeleteParams = {
-		/** 文件路径(支持相对路径,如: 20260425/xxx.png) */
+		/** 文件完整路径(支持相对路径,如: plugin-icons/20260425/xxx.png) */
 		filePath?: string;
-		/** 存储桶名称(可选) */
-		bucketName?: string;
 	};
 
 	type DownloadPluginDto = {
@@ -931,17 +902,6 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
-	type Expression1Func2PluginATest_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type Expression1Func2SystemInfoConfig_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -1045,7 +1005,7 @@ declare namespace APIModel {
 		Username?: string;
 		Name?: string;
 		Email?: string;
-		Phone?: string;
+		PhoneNumber?: string;
 		IsActive?: boolean;
 		LastLoginTime?: string;
 		LastLoginIp?: string;
@@ -1956,10 +1916,7 @@ declare namespace APIModel {
 	};
 
 	type getStorageDownloadParams = {
-		/** 文件名 */
-		fileName: string;
-		/** 存储桶名称（可选） */
-		bucketName?: string;
+		filePath: string;
 	};
 
 	type getStorageGetFileByPathParams = {
@@ -1968,10 +1925,8 @@ declare namespace APIModel {
 	};
 
 	type getStorageGetFileUrlParams = {
-		/** 文件名 */
-		fileName: string;
-		/** 存储桶名称（可选） */
-		bucketName?: string;
+		/** 文件完整路径 */
+		filePath: string;
 	};
 
 	type HealthStatus = {
@@ -2172,9 +2127,9 @@ declare namespace APIModel {
 		Items?: FdWorkbenchCardDto[];
 	};
 
-	type PageResult1PluginATestDto = {
+	type PageResult1PaymentRecord = {
 		PageInfo?: PageInfo;
-		Items?: PluginATestDto[];
+		Items?: PaymentRecord[];
 	};
 
 	type ParameterExpression = {
@@ -2185,39 +2140,35 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
-	type PluginATestCreateDto = {
-		Name?: string;
+	type PayCreateOrderRequest = {
+		OrderId?: string;
+		Amount?: number;
 		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
 	};
 
-	type PluginATestDto = {
-		Id?: string;
-		Name?: string;
+	type PaymentMethod = 0 | 1 | 2;
+
+	type PaymentRecord = {
+		OrderId?: string;
+		UserId?: string;
+		TransactionId?: string;
+		PaymentMethod?: PaymentMethod;
+		Amount?: number;
+		Status?: PaymentStatus;
 		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
+		Subject?: string;
+		NotifyUrl?: string;
+		PaidAt?: string;
+		FailReason?: string;
+		ExtraData?: string;
+		Id?: string;
 		CreatedAt?: string;
-		UpdateTime?: string;
+		UpdatedAt?: string;
+		IsDeleted?: boolean;
+		DeletedAt?: string;
 	};
 
-	type PluginATestUpdateDto = {
-		Id?: string;
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-	};
-
-	type PluginAUserExtension = {
-		FdAppUserId?: string;
-		Preferences?: string;
-		Points?: number;
-	};
+	type PaymentStatus = 0 | 1 | 2 | 3;
 
 	type PluginConfigurationGetRawJsonDto = {
 		ExistRocord?: boolean;
@@ -2315,8 +2266,8 @@ declare namespace APIModel {
 	};
 
 	type postStorageUploadParams = {
-		/** 存储桶名称（可选） */
-		bucketName?: string;
+		/** 存储路径前缀（可选），如：plugin-icons/、user-avatars/2024/01/ */
+		pathPrefix?: string;
 	};
 
 	type putAppGenericDtoControllerBase5UpdateParams = {
@@ -2596,6 +2547,16 @@ declare namespace APIModel {
 		Total?: number;
 	};
 
+	type UnifiedPayDto = {
+		OrderId: string;
+		PaymentMethod: PaymentMethod;
+		TradeType?: string;
+		OpenId?: string;
+		ClientIp?: string;
+		ReturnUrl?: string;
+		Attach?: string;
+	};
+
 	type UninstallResDto = {
 		Result?: boolean;
 		Offline?: boolean;
@@ -2870,8 +2831,7 @@ declare namespace APIModel {
 		FileName: string;
 		FileSize?: number;
 		ContentType?: string;
-		BucketName?: string;
-		OssType?: string;
+		PathPrefix?: string;
 	};
 
 	type UploadCredentialResponse = {

@@ -67,6 +67,17 @@ export async function postPluginEnablePlugin(
 
 /** @deprecated 此函数名已变更，请使用 postPluginEnablePlugin */
 export const postApiPluginEnablePluginId = postPluginEnablePlugin;
+/** 获取已启用的插件列表（允许匿名访问） GET /api/Plugin/enabled */
+/** @deprecated 请使用 getPluginGetEnabledPlugins，原函数名: getApiPluginEnabled */
+export async function getPluginGetEnabledPlugins(options?: { [key: string]: any }) {
+	return request<APIModel.PluginInfo[]>('/api/Plugin/enabled', {
+		method: 'GET',
+		...(options || {}),
+	});
+}
+
+/** @deprecated 此函数名已变更，请使用 getPluginGetEnabledPlugins */
+export const getApiPluginEnabled = getPluginGetEnabledPlugins;
 /** 获取用户授权码 GET /api/Plugin/GetAuthCode */
 /** @deprecated 请使用 getPluginGetAuthCode，原函数名: getApiPluginGetAuthCode */
 export async function getPluginGetAuthCode(options?: { [key: string]: any }) {
