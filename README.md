@@ -1,5 +1,13 @@
 # Fastdotnet 框架
 
+## 💬 交流与支持
+
+**👥 QQ交流群：[779454817](https://qm.qq.com/cgi-bin/qm/qr?k=779454817&jump_from=webapi)**
+
+> 点击链接即可加入QQ群，获取技术支持、交流开发经验、反馈问题建议
+
+---
+
 ## 🌐 官方网站
 
 - **官网**：[https://fastdotnet.top](https://fastdotnet.top) - 框架介绍、特性展示
