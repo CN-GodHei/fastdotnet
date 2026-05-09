@@ -101,6 +101,12 @@ namespace Fastdotnet.Core.Service.Sys
             return await service.GetFileUrlAsync(filePath);
         }
 
+        public async Task<string> GeneratePresignedUrlAsync(string filePath, int expiresInMinutes = 60)
+        {
+            var service = GetCurrentStorageService();
+            return await service.GeneratePresignedUrlAsync(filePath, expiresInMinutes);
+        }
+
         public string StorageType
         {
             get

@@ -152,6 +152,13 @@ namespace Fastdotnet.Core.Service.Sys
             return $"{siteDomain?.Value}{_options.BaseUrl}/{filePath}";
         }
 
+        public async Task<string> GeneratePresignedUrlAsync(string filePath, int expiresInMinutes = 60)
+        {
+            // 本地存储不支持预签名URL，直接返回普通URL
+            // 如果需要权限控制，应该通过后端代理下载接口
+            return await GetFileUrlAsync(filePath);
+        }
+
         public string StorageType => "local";
 
         public async Task<UploadCredentialResponse> GenerateUploadCredentialAsync(UploadCredentialRequest request)

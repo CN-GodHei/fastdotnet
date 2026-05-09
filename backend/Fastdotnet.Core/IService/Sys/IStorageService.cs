@@ -46,6 +46,15 @@ namespace Fastdotnet.Core.IService.Sys
         Task<string> GetFileUrlAsync(string filePath);
 
         /// <summary>
+        /// 生成临时访问链接（预签名URL）
+        /// 适用于私有bucket或需要权限控制的文件，生成带过期时间的临时访问链接
+        /// </summary>
+        /// <param name="filePath">文件完整路径</param>
+        /// <param name="expiresInMinutes">有效期（分钟），默认60分钟</param>
+        /// <returns>临时访问URL</returns>
+        Task<string> GeneratePresignedUrlAsync(string filePath, int expiresInMinutes = 60);
+
+        /// <summary>
         /// 获取存储类型标识
         /// </summary>
         string StorageType { get; }
