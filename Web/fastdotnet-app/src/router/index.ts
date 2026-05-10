@@ -95,7 +95,15 @@ router.beforeEach(async (to, from, next) => {
 	NProgress.configure({ showSpinner: false });
 	if (to.meta.title) NProgress.start();
 	const token = Session.get('token');
+	
+	// 白名单：允许未登录访问的路由
+	const whiteList = ['/login', '/social-login-callback'];
+	
 	if (to.path === '/login' && !token) {
+		next();
+		NProgress.done();
+	} else if (whiteList.includes(to.path)) {
+		// 白名单路由，直接放行
 		next();
 		NProgress.done();
 	} else {

@@ -362,16 +362,16 @@ const handleSocialLogin = (provider: string) => {
 	// 生成 state 用于防 CSRF
 	const state = Math.random().toString(36).substring(2, 15);
 	
-	// 注意：redirectUri 应该是后端的回调地址，不是前端页面
-	// GitHub 会回调到这个地址，然后后端再重定向到前端
-	const backendCallbackUrl = `${window.location.origin}/api/plugins/app/p12836701732078597/SocialLogin/callback/${provider}`;
+	// redirectUri 应该是前端的回调页面地址
+	// 后端会保存这个地址，在 GitHub 回调后再重定向到这里
+	const frontendCallbackUrl = `${window.location.origin}/social-login-callback`;
 	
 	// 保存 state 到 sessionStorage（用于回调时验证）
 	sessionStorage.setItem('social_login_state', state);
 	sessionStorage.setItem('social_login_provider', provider);
 	
 	// 直接跳转到后端授权接口，后端会重定向到第三方平台
-	window.location.href = `/api/plugins/app/p12836701732078597/SocialLogin/authorize/${provider}?redirectUri=${encodeURIComponent(backendCallbackUrl)}&state=${state}`;
+	window.location.href = `/api/plugins/app/p12836701732078597/SocialLogin/authorize/${provider}?redirectUri=${encodeURIComponent(frontendCallbackUrl)}&state=${state}`;
 };
 </script>
 
