@@ -435,35 +435,35 @@ const handleIconHover = (event: MouseEvent, isEnter: boolean) => {
 		font-weight: 300;
 		margin-top: 15px;
 	}
+}
+
+// 社会化登录区域样式（与 login-content-form 平级）
+.social-login-section {
+	margin-top: 20px;
+	animation-name: error-num;
+	animation-duration: 0.5s;
+	animation-fill-mode: forwards;
+	animation-delay: 0.5s;
 	
-	// 社会化登录区域样式
-	.social-login-section {
-		margin-top: 32px;
-		animation-name: error-num;
-		animation-duration: 0.5s;
-		animation-fill-mode: forwards;
-		animation-delay: 0.5s;
+	.social-login-buttons {
+		display: flex;
+		justify-content: center;
+		gap: 10px;
+		flex-wrap: wrap;
 		
-		.social-login-buttons {
-			display: flex;
-			justify-content: center;
-			gap: 10px;
-			flex-wrap: wrap;
+		.social-icon {
+			cursor: pointer;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 			
-			.social-icon {
-				cursor: pointer;
-				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-				
-				&:hover {
-					transform: scale(1.2) translateY(-2px) !important;
-					box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
-					background-color: #e8f4ff !important;
-				}
-				
-				&:active {
-					transform: scale(0.95) translateY(0) !important;
-					box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-				}
+			&:hover {
+				transform: scale(1.2) translateY(-2px) !important;
+				box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+				background-color: #e8f4ff !important;
+			}
+			
+			&:active {
+				transform: scale(0.95) translateY(0) !important;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 			}
 		}
 	}
