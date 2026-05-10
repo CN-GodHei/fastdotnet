@@ -64,16 +64,18 @@
 	
 	<!-- 社会化登录区域（直接调用后端 API） -->
 	<div v-if="socialProviders.length > 0" class="social-login-section login-animation5">
-		<div class="social-login-title">第三方登录</div>
-		<div class="social-login-buttons">
-			<el-button 
+		<div class="social-login-buttons" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+			<img 
 				v-for="provider in socialProviders" 
 				:key="provider"
-				:class="['social-btn', `social-btn-${provider}`]"
+				:src="getProviderIconUrl(provider)" 
+				:class="['social-icon', `social-icon-${provider}`]"
 				@click="handleSocialLogin(provider)"
-			>
-				{{ getProviderName(provider) }}
-			</el-button>
+				@mouseenter="handleIconHover($event, true)"
+				@mouseleave="handleIconHover($event, false)"
+				alt=""
+				style="width: 40px; height: 40px; display: inline-block; object-fit: contain; cursor: pointer; border-radius: 6px; padding: 4px; background-color: #f5f7fa; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"
+			/>
 		</div>
 	</div>
 </template>
@@ -357,6 +359,15 @@ const getProviderName = (provider: string): string => {
 	return names[provider] || provider;
 };
 
+// 获取平台图标 URL
+const getProviderIconUrl = (provider: string): string => {
+	// 从环境变量获取主域名
+	const baseUrl = import.meta.env.VITE_API_URL || '';
+	// 插件 ID 和发布路径是固定的
+	const pluginId = '12836701732078597';
+	return `${baseUrl}/plugins/${pluginId}/publish/${provider}.svg`;
+};
+
 // 处理第三方登录
 const handleSocialLogin = (provider: string) => {
 	// 生成 state 用于防 CSRF
@@ -372,6 +383,20 @@ const handleSocialLogin = (provider: string) => {
 	
 	// 直接跳转到后端授权接口，后端会重定向到第三方平台
 	window.location.href = `/api/plugins/app/p12836701732078597/SocialLogin/authorize/${provider}?redirectUri=${encodeURIComponent(frontendCallbackUrl)}&state=${state}`;
+};
+
+// 处理图标 hover 效果
+const handleIconHover = (event: MouseEvent, isEnter: boolean) => {
+	const target = event.currentTarget as HTMLElement;
+	if (isEnter) {
+		target.style.transform = 'scale(1.2) translateY(-2px)';
+		target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.2)';
+		target.style.backgroundColor = '#e8f4ff';
+	} else {
+		target.style.transform = 'scale(1) translateY(0)';
+		target.style.boxShadow = '';
+		target.style.backgroundColor = '#f5f7fa';
+	}
 };
 </script>
 
@@ -413,20 +438,11 @@ const handleSocialLogin = (provider: string) => {
 	
 	// 社会化登录区域样式
 	.social-login-section {
-		margin-top: 30px;
-		padding-top: 20px;
-		border-top: 1px solid #dcdfe6;
+		margin-top: 32px;
 		animation-name: error-num;
 		animation-duration: 0.5s;
 		animation-fill-mode: forwards;
 		animation-delay: 0.5s;
-		
-		.social-login-title {
-			text-align: center;
-			color: #909399;
-			font-size: 14px;
-			margin-bottom: 15px;
-		}
 		
 		.social-login-buttons {
 			display: flex;
@@ -434,24 +450,20 @@ const handleSocialLogin = (provider: string) => {
 			gap: 10px;
 			flex-wrap: wrap;
 			
-			.social-btn {
-				min-width: 100px;
+			.social-icon {
+				cursor: pointer;
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 				
-				&.social-btn-wechat { background-color: #07c160; color: white; }
-				&.social-btn-wechatMp { background-color: #07c160; color: white; }
-				&.social-btn-qq { background-color: #12b7f5; color: white; }
-				&.social-btn-alipay { background-color: #1677ff; color: white; }
-				&.social-btn-github { background-color: #333; color: white; }
-				&.social-btn-gitee { background-color: #c71d23; color: white; }
-				&.social-btn-weibo { background-color: #e6162d; color: white; }
-				&.social-btn-douyin { background-color: #000; color: white; }
-				&.social-btn-feishu { background-color: #3370ff; color: white; }
-				&.social-btn-huawei { background-color: #cf0a2c; color: white; }
-				&.social-btn-xiaomi { background-color: #ff6900; color: white; }
-				&.social-btn-linkedin { background-color: #0077b5; color: white; }
-				&.social-btn-twitter { background-color: #1da1f2; color: white; }
-				&.social-btn-instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
-				&.social-btn-apple { background-color: #000; color: white; }
+				&:hover {
+					transform: scale(1.2) translateY(-2px) !important;
+					box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+					background-color: #e8f4ff !important;
+				}
+				
+				&:active {
+					transform: scale(0.95) translateY(0) !important;
+					box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+				}
 			}
 		}
 	}
