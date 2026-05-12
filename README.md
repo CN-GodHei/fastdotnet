@@ -1,5 +1,7 @@
 # Fastdotnet 框架
 
+**[🇨🇳 中文文档](README.md)** | **[🇺🇸 English Documentation](README.en.md)**
+
 > 🏪 **插件商城现已上线！** 海量现成插件，助力外包项目快速交付，缩短周期 70%+ → [立即浏览](https://fastdotnet.top/marketplace)
 
 ## 🎯 框架简介
