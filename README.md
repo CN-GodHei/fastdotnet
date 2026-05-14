@@ -42,6 +42,8 @@
 
 **👥 QQ交流群：[779454817](https://qm.qq.com/cgi-bin/qm/qr?k=779454817&jump_from=webapi)**
 
+**🗣️ GitHub Discussions**：[点击参与](https://github.com/CN-GodHei/fastdotnet/discussions) - 公开问答、功能建议、插件交流（推荐）
+
 > 点击链接即可加入QQ群，获取技术支持、交流开发经验、反馈问题建议
 
 ---

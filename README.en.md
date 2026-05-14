@@ -42,6 +42,8 @@
 
 **👥 QQ Group: [779454817](https://qm.qq.com/cgi-bin/qm/qr?k=779454817&jump_from=webapi)**
 
+**🗣️ GitHub Discussions**: [Join Now](https://github.com/CN-GodHei/fastdotnet/discussions) - Public Q&A, feature suggestions, plugin discussions (Recommended)
+
 > Click the link to join the QQ group for technical support, development experience sharing, and feedback
 
 ---
