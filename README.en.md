@@ -649,6 +649,10 @@ Welcome to contribute code, report issues or suggest improvements. Please follow
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Create a Pull Request
 
+Before contributing, please read:
+- 📜 [Code of Conduct](CODE_OF_CONDUCT.en.md) - Understand our community standards and expectations
+- 🔒 [Security Policy](SECURITY.en.md) - How to responsibly report security vulnerabilities
+
 ## Related Links
 
 - 🌐 **Official Website**: [https://fastdotnet.top](https://fastdotnet.top)

@@ -648,6 +648,10 @@ public class MyPlugin : PluginBase
 4. 推送到分支 (`git push origin feature/amazing-feature`)
 5. 创建 Pull Request
 
+在参与贡献之前，请阅读：
+- 📜 [行为准则](CODE_OF_CONDUCT.md) - 了解我们的社区规范和期望
+- 🔒 [安全政策](SECURITY.md) - 如何负责任地报告安全漏洞
+
 ## 相关链接
 
 - 🌐 **官方网站**：[https://fastdotnet.top](https://fastdotnet.top)
