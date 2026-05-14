@@ -659,11 +659,14 @@ public class MyPlugin : PluginBase
   - 💼 **官方插件**：支付、工作流、社交登录、OSS等常用功能
   - 👨‍💻 **第三方插件**：社区开发者贡献的专业插件
   - 🚀 **快速交付**：外包项目通过插件组合，缩短交付周期 70%+
-  - 💰 **开发者价值复用**：一次开发，多次销售，将“项目代码”转化为“产品资产”
+  - 💰 **开发者价值复用**：一次开发，多次销售，将"项目代码"转化为"产品资产"
 - 📚 **官方文档**：[https://docs.fastdotnet.top](https://docs.fastdotnet.top)
 - 🎮 **在线演示**：
   - 管理端：http://admin.demo.fastdotnet.top/ (`superadmin` / `123456`)
   - 应用端：http://app.demo.fastdotnet.top/ (`admintest` / `123456`)
+- 📦 **依赖清单**：
+  - [后端依赖](DEPENDENCIES_BACKEND.md) - 查看后端使用的第三方库及许可证
+  - [前端依赖](DEPENDENCIES_FRONTEND.md) - 查看前端使用的第三方库及许可证
 - 🐛 **问题反馈**：[GitHub Issues](https://github.com/CN-GodHei/fastdotnet/issues)
 - 📧 **官方邮箱**：yunnanzuyuankeji@163.com
 - 💬 **QQ交流群**：779454817

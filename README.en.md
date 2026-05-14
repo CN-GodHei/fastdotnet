@@ -665,6 +665,9 @@ Before contributing, please read:
 - 🎮 **Live Demos**:
   - Admin Panel: http://admin.demo.fastdotnet.top/ (`superadmin` / `123456`)
   - Application: http://app.demo.fastdotnet.top/ (`admintest` / `123456`)
+- 📦 **Dependency Lists**:
+  - [Backend Dependencies](DEPENDENCIES_BACKEND.en.md) - View third-party libraries and licenses used in backend
+  - [Frontend Dependencies](DEPENDENCIES_FRONTEND.en.md) - View third-party libraries and licenses used in frontend
 - 🐛 **Issue Tracking**: [GitHub Issues](https://github.com/CN-GodHei/fastdotnet/issues)
 - 📧 **Official Email**: yunnanzuyuankeji@163.com
 - 💬 **QQ Group**: 779454817
