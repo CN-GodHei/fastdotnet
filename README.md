@@ -42,6 +42,8 @@
 
 **👥 QQ交流群：[779454817](https://qm.qq.com/cgi-bin/qm/qr?k=779454817&jump_from=webapi)**
 
+**🗣️ GitHub Discussions**：[点击参与](https://github.com/CN-GodHei/fastdotnet/discussions) - 公开问答、功能建议、插件交流（推荐）
+
 > 点击链接即可加入QQ群，获取技术支持、交流开发经验、反馈问题建议
 
 ---
@@ -689,6 +691,10 @@ public class MyPlugin : PluginBase
 4. 推送到分支 (`git push origin feature/amazing-feature`)
 5. 创建 Pull Request
 
+在参与贡献之前，请阅读：
+- 📜 [行为准则](CODE_OF_CONDUCT.md) - 了解我们的社区规范和期望
+- 🔒 [安全政策](SECURITY.md) - 如何负责任地报告安全漏洞
+
 ## 相关链接
 
 - 🌐 **官方网站**：[https://fastdotnet.top](https://fastdotnet.top)
@@ -696,11 +702,14 @@ public class MyPlugin : PluginBase
   - 💼 **官方插件**：支付、工作流、社交登录、OSS等常用功能
   - 👨‍💻 **第三方插件**：社区开发者贡献的专业插件
   - 🚀 **快速交付**：外包项目通过插件组合，缩短交付周期 70%+
-  - 💰 **开发者价值复用**：一次开发，多次销售，将“项目代码”转化为“产品资产”
+  - 💰 **开发者价值复用**：一次开发，多次销售，将"项目代码"转化为"产品资产"
 - 📚 **官方文档**：[https://docs.fastdotnet.top](https://docs.fastdotnet.top)
 - 🎮 **在线演示**：
   - 管理端：http://admin.demo.fastdotnet.top/ (`superadmin` / `123456`)
   - 应用端：http://app.demo.fastdotnet.top/ (`admintest` / `123456`)
+- 📦 **依赖清单**：
+  - [后端依赖](DEPENDENCIES_BACKEND.md) - 查看后端使用的第三方库及许可证
+  - [前端依赖](DEPENDENCIES_FRONTEND.md) - 查看前端使用的第三方库及许可证
 - 🐛 **问题反馈**：[GitHub Issues](https://github.com/CN-GodHei/fastdotnet/issues)
 - 📧 **官方邮箱**：yunnanzuyuankeji@163.com
 - 💬 **QQ交流群**：779454817

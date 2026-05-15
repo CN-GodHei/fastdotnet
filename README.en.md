@@ -42,6 +42,8 @@
 
 **👥 QQ Group: [779454817](https://qm.qq.com/cgi-bin/qm/qr?k=779454817&jump_from=webapi)**
 
+**🗣️ GitHub Discussions**: [Join Now](https://github.com/CN-GodHei/fastdotnet/discussions) - Public Q&A, feature suggestions, plugin discussions (Recommended)
+
 > Click the link to join the QQ group for technical support, development experience sharing, and feedback
 
 ---
@@ -690,6 +692,10 @@ Welcome to contribute code, report issues or suggest improvements. Please follow
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Create a Pull Request
 
+Before contributing, please read:
+- 📜 [Code of Conduct](CODE_OF_CONDUCT.en.md) - Understand our community standards and expectations
+- 🔒 [Security Policy](SECURITY.en.md) - How to responsibly report security vulnerabilities
+
 ## Related Links
 
 - 🌐 **Official Website**: [https://fastdotnet.top](https://fastdotnet.top)
@@ -702,6 +708,9 @@ Welcome to contribute code, report issues or suggest improvements. Please follow
 - 🎮 **Live Demos**:
   - Admin Panel: http://admin.demo.fastdotnet.top/ (`superadmin` / `123456`)
   - Application: http://app.demo.fastdotnet.top/ (`admintest` / `123456`)
+- 📦 **Dependency Lists**:
+  - [Backend Dependencies](DEPENDENCIES_BACKEND.en.md) - View third-party libraries and licenses used in backend
+  - [Frontend Dependencies](DEPENDENCIES_FRONTEND.en.md) - View third-party libraries and licenses used in frontend
 - 🐛 **Issue Tracking**: [GitHub Issues](https://github.com/CN-GodHei/fastdotnet/issues)
 - 📧 **Official Email**: yunnanzuyuankeji@163.com
 - 💬 **QQ Group**: 779454817
