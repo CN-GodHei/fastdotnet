@@ -61,6 +61,7 @@
 - **管理端演示**：http://admin.demo.fastdotnet.top/
   - 账号：`superadmin` / 密码：`123456`
   - 功能：系统管理、用户管理、权限配置等
+  - 💡 提示：可使用 `mktest` / `123456` 体验插件商城的下载和授权功能
 
 - **应用端演示**：http://app.demo.fastdotnet.top/
   - 账号：`admintest` / 密码：`123456`
@@ -705,7 +706,7 @@ public class MyPlugin : PluginBase
   - 💰 **开发者价值复用**：一次开发，多次销售，将"项目代码"转化为"产品资产"
 - 📚 **官方文档**：[https://docs.fastdotnet.top](https://docs.fastdotnet.top)
 - 🎮 **在线演示**：
-  - 管理端：http://admin.demo.fastdotnet.top/ (`superadmin` / `123456`)
+  - 管理端：http://admin.demo.fastdotnet.top/ (`superadmin` / `123456`，也可用 `mktest` / `123456` 体验插件功能)
   - 应用端：http://app.demo.fastdotnet.top/ (`admintest` / `123456`)
 - 📦 **依赖清单**：
   - [后端依赖](DEPENDENCIES_BACKEND.md) - 查看后端使用的第三方库及许可证

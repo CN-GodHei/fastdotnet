@@ -61,6 +61,7 @@ Experience Fastdotnet instantly without installation:
 - **Admin Panel Demo**: http://admin.demo.fastdotnet.top/
   - Username: `superadmin` / Password: `123456`
   - Features: System management, user management, permission configuration, etc.
+  - 💡 Tip:  use `mktest` / `123456` to experience plugin marketplace download and authorization features
 
 - **Application Demo**: http://app.demo.fastdotnet.top/
   - Username: `admintest` / Password: `123456`
@@ -706,7 +707,7 @@ Before contributing, please read:
   - 💰 **Developer Value Reuse**: Develop once, sell multiple times, transform "project code" into "product assets"
 - 📚 **Official Documentation**: [https://docs.fastdotnet.top](https://docs.fastdotnet.top)
 - 🎮 **Live Demos**:
-  - Admin Panel: http://admin.demo.fastdotnet.top/ (`superadmin` / `123456`)
+  - Admin Panel: http://admin.demo.fastdotnet.top/ (`superadmin` / `123456`, or use `mktest` / `123456` for plugin features)
   - Application: http://app.demo.fastdotnet.top/ (`admintest` / `123456`)
 - 📦 **Dependency Lists**:
   - [Backend Dependencies](DEPENDENCIES_BACKEND.en.md) - View third-party libraries and licenses used in backend
