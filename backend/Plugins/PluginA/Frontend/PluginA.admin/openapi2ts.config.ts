@@ -9,6 +9,6 @@ export default [
         // 路径是相对于生成的 API 文件所在目录 (src/api/...) 的。
         requestLibPath: '../../utils/fdRequestAdapter',
         // --- 修改结束 ---
-        isCamelCase: false,
+        isCamelCase: true,
     }
 ];
