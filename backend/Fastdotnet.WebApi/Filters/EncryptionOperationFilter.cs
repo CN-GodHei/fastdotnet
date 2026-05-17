@@ -26,42 +26,68 @@ namespace Fastdotnet.WebApi.Filters
 
                 if (isRequestEncrypted)
                 {
+                    var algorithm = Core.Attributes.EncryptionAttributeHelper.GetRequestEncryptionAlgorithm(context.MethodInfo);
+                    var keyIdentifier = Core.Attributes.EncryptionAttributeHelper.GetRequestEncryptionKeyIdentifier(context.MethodInfo);
+                    
+                    // 判断是否为混合加密（算法名称包含 HYBRID 或 AES）
+                    var isHybrid = algorithm.ToUpper().Contains("HYBRID") || algorithm.ToUpper().Contains("AES");
+                    var displayAlgorithm = isHybrid ? "HYBRID" : algorithm;
+                    
                     var requestEncryption = new OpenApiObject
                     {
-                        ["algorithm"] = new OpenApiString(Core.Attributes.EncryptionAttributeHelper.GetRequestEncryptionAlgorithm(context.MethodInfo)),
-                        ["keyIdentifier"] = new OpenApiString(Core.Attributes.EncryptionAttributeHelper.GetRequestEncryptionKeyIdentifier(context.MethodInfo))
+                        ["algorithm"] = new OpenApiString(displayAlgorithm),
+                        ["originalAlgorithm"] = new OpenApiString(algorithm),
+                        ["keyIdentifier"] = new OpenApiString(keyIdentifier),
+                        ["isHybrid"] = new OpenApiBoolean(isHybrid)
                     };
                     encryptionInfo["request"] = requestEncryption;
                     
                     // 在摘要中添加请求加密提示
-                    operation.Summary = originalSummary + (string.IsNullOrEmpty(originalSummary) ? "" : " ") + "🔐[请求加密]";
+                    var encryptionTip = isHybrid ? "🔐[请求加密-混合]" : "🔐[请求加密]";
+                    operation.Summary = originalSummary + (string.IsNullOrEmpty(originalSummary) ? "" : " ") + encryptionTip;
                     
                     // 添加详细描述
-                    var requestEncryptionDesc = $"\n\n**请求加密**: 该接口的请求参数需要使用 {Core.Attributes.EncryptionAttributeHelper.GetRequestEncryptionAlgorithm(context.MethodInfo)} 算法进行加密。" +
-                                              (string.IsNullOrEmpty(Core.Attributes.EncryptionAttributeHelper.GetRequestEncryptionKeyIdentifier(context.MethodInfo)) 
+                    var algorithmDesc = isHybrid 
+                        ? "RSA + AES 混合加密" 
+                        : $"{algorithm} 算法";
+                    var requestEncryptionDesc = $"\n\n**请求加密**: 该接口的请求参数需要使用 {algorithmDesc} 进行加密。" +
+                                              (string.IsNullOrEmpty(keyIdentifier) 
                                                ? "" 
-                                               : $"密钥标识: {Core.Attributes.EncryptionAttributeHelper.GetRequestEncryptionKeyIdentifier(context.MethodInfo)}");
+                                               : $"密钥标识: {keyIdentifier}");
                     operation.Description = originalDescription + requestEncryptionDesc;
                 }
 
                 if (isResponseEncrypted)
                 {
+                    var algorithm = Core.Attributes.EncryptionAttributeHelper.GetResponseEncryptionAlgorithm(context.MethodInfo);
+                    var keyIdentifier = Core.Attributes.EncryptionAttributeHelper.GetResponseEncryptionKeyIdentifier(context.MethodInfo);
+                    
+                    // 判断是否为混合加密
+                    var isHybrid = algorithm.ToUpper().Contains("HYBRID") || algorithm.ToUpper().Contains("AES");
+                    var displayAlgorithm = isHybrid ? "HYBRID" : algorithm;
+                    
                     var responseEncryption = new OpenApiObject
                     {
-                        ["algorithm"] = new OpenApiString(Core.Attributes.EncryptionAttributeHelper.GetResponseEncryptionAlgorithm(context.MethodInfo)),
-                        ["keyIdentifier"] = new OpenApiString(Core.Attributes.EncryptionAttributeHelper.GetResponseEncryptionKeyIdentifier(context.MethodInfo))
+                        ["algorithm"] = new OpenApiString(displayAlgorithm),
+                        ["originalAlgorithm"] = new OpenApiString(algorithm),
+                        ["keyIdentifier"] = new OpenApiString(keyIdentifier),
+                        ["isHybrid"] = new OpenApiBoolean(isHybrid)
                     };
                     encryptionInfo["response"] = responseEncryption;
                     
                     // 在摘要中添加响应加密提示
                     var summaryToAddTo = isRequestEncrypted ? operation.Summary : originalSummary;
-                    operation.Summary = summaryToAddTo + (string.IsNullOrEmpty(summaryToAddTo) ? "" : " ") + "🔐[响应加密]";
+                    var encryptionTip = isHybrid ? "🔐[响应加密-混合]" : "🔐[响应加密]";
+                    operation.Summary = summaryToAddTo + (string.IsNullOrEmpty(summaryToAddTo) ? "" : " ") + encryptionTip;
                     
                     // 添加详细描述
-                    var responseEncryptionDesc = $"\n\n**响应加密**: 该接口的响应数据使用 {Core.Attributes.EncryptionAttributeHelper.GetResponseEncryptionAlgorithm(context.MethodInfo)} 算法进行加密。" +
-                                               (string.IsNullOrEmpty(Core.Attributes.EncryptionAttributeHelper.GetResponseEncryptionKeyIdentifier(context.MethodInfo)) 
+                    var algorithmDesc = isHybrid 
+                        ? "RSA + AES 混合加密" 
+                        : $"{algorithm} 算法";
+                    var responseEncryptionDesc = $"\n\n**响应加密**: 该接口的响应数据使用 {algorithmDesc} 进行加密。" +
+                                               (string.IsNullOrEmpty(keyIdentifier) 
                                                 ? "" 
-                                                : $"密钥标识: {Core.Attributes.EncryptionAttributeHelper.GetResponseEncryptionKeyIdentifier(context.MethodInfo)}");
+                                                : $"密钥标识: {keyIdentifier}");
                     operation.Description = operation.Description + responseEncryptionDesc;
                 }
 

@@ -202,6 +202,7 @@ builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<ICodeGenConfigService, CodeGenConfigService>();
 builder.Services.AddScoped<IOidcAppService, OidcAppService>();
+builder.Services.AddScoped<IEncryptionKeyService, EncryptionKeyService>();
 
 // 扫描并注册所有 IStartupTask 实现
 builder.Services.Scan(scan => scan
@@ -299,6 +300,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// 预生成加密密钥对（避免并发竞争）
+try
+{
+    var encryptionKeyService = app.Services.GetRequiredService<IEncryptionKeyService>();
+    await encryptionKeyService.RefreshKeyPairAsync();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"[Program] 预生成 RSA 密钥对失败: {ex.Message}");
+}
 
 // 启用响应压缩中间件（必须放在所有业务逻辑之后，UseEndpoints 之前）
 // 注意：如果启用了 EncryptionMiddleware，压缩效果会大打折扣（加密数据不可压缩）

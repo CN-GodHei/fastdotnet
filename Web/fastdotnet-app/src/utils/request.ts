@@ -288,14 +288,63 @@ service.interceptors.response.use(
 				return Promise.reject(new Error(res.Msg));
 			}
 
-			// 解密逻辑
-			const privateKey = response.headers['x-rsa-privatekey'];
-			if (privateKey && res.Data) {
-				try {
-					return decryptResponse(res.Data, 'RSA', privateKey);
-				} catch (e) {
-					console.error('解密失败', e);
-					// 解密失败是否视为错误？视业务而定，这里暂返回原文或报错
+			// 解密逻辑（支持 RSA、混合加密和纯 AES）
+			const encryptionAlgorithm = response.headers['x-encryption-algorithm'];
+			
+			if (encryptionAlgorithm === 'AES-256-CBC') {
+				// 纯 AES 加密响应（从响应头获取密钥）
+				const aesKey = response.headers['x-encryption-key'];
+				const aesIV = response.headers['x-encryption-iv'];
+				
+				if (aesKey && aesIV && res.Data) {
+					try {
+						// 使用 CryptoJS 解密
+						return import('crypto-js').then((CryptoJS) => {
+							const encryptedData = typeof res.Data === 'string' ? res.Data : JSON.stringify(res.Data);
+							const ciphertext = CryptoJS.default.enc.Base64.parse(encryptedData);
+							const key = CryptoJS.default.enc.Base64.parse(aesKey);
+							const iv = CryptoJS.default.enc.Base64.parse(aesIV);
+							
+							const decrypted = CryptoJS.default.AES.decrypt(
+								CryptoJS.default.lib.CipherParams.create({
+									ciphertext: ciphertext
+								}),
+								key,
+								{ iv: iv, mode: CryptoJS.default.mode.CBC, padding: CryptoJS.default.pad.Pkcs7 }
+							);
+							
+							const decryptedText = decrypted.toString(CryptoJS.default.enc.Utf8);
+							return JSON.parse(decryptedText);
+						}).catch((e) => {
+							console.error('AES 解密失败', e);
+							return res.Data;
+						});
+					} catch (e) {
+						console.error('AES 解密失败', e);
+						return res.Data;
+					}
+				}
+			} else {
+				// RSA 或混合加密（向后兼容）
+				const privateKey = response.headers['x-rsa-privatekey'];
+				if (privateKey && res.Data) {
+					try {
+						// 检测是否为混合加密格式
+						let algorithm = 'RSA';
+						let dataToDecrypt = res.Data;
+						
+						// 如果 Data 是对象且包含 encryptedKey 字段，说明是混合加密
+						if (typeof res.Data === 'object' && res.Data.encryptedKey) {
+							algorithm = 'HYBRID';
+							dataToDecrypt = JSON.stringify(res.Data);
+						}
+						
+						return decryptResponse(dataToDecrypt, algorithm, privateKey);
+					} catch (e) {
+						console.error('解密失败', e);
+						// 解密失败时返回原文
+						return res.Data;
+					}
 				}
 			}
 			// 如果 Data 存在则返回 Data，否则返回完整响应（用于非泛型 ApiResult）

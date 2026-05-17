@@ -1,31 +1,85 @@
 // 导入 JSEncrypt
 import { JSEncrypt } from 'jsencrypt';
+import CryptoJS from 'crypto-js';
+import { Session } from '@/utils/storage';
 
 /**
- * AES 加密函数
+ * AES 加密函数（CBC 模式 + PKCS7 填充）
+ * @param data 要加密的数据（对象或字符串）
+ * @param key Base64 编码的 AES 密钥
+ * @param iv Base64 编码的初始化向量
  */
-export async function aesEncrypt(data: any): Promise<string> {
-  console.log('使用AES算法对数据进行加密:', data);
-  // 这里实现 AES 加密逻辑
-  return JSON.stringify(data); // TODO: 实际AES加密逻辑
-}
-
-/**
- * AES 解密函数
- */
-export async function aesDecrypt(encryptedData: string): Promise<any> {
-  console.log('使用AES算法对数据进行解密:', encryptedData);
-  // 这里实现 AES 解密逻辑
+export async function aesEncrypt(
+  data: any,
+  key: string,
+  iv: string
+): Promise<string> {
   try {
-    return JSON.parse(encryptedData); // TODO: 实际AES解密逻辑
-  } catch {
-    return encryptedData;
+    // 1. 序列化数据
+    const plaintext = typeof data === 'string' ? data : JSON.stringify(data);
+
+    // 2. 解码密钥和 IV
+    const keyBytes = CryptoJS.enc.Base64.parse(key);
+    const ivBytes = CryptoJS.enc.Base64.parse(iv);
+
+    // 3. AES 加密（CBC 模式 + PKCS7 填充）
+    const encrypted = CryptoJS.AES.encrypt(plaintext, keyBytes, {
+      iv: ivBytes,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7
+    });
+
+    // 4. 返回 Base64 编码的密文
+    return encrypted.toString();
+  } catch (error) {
+    console.error('AES 加密失败:', error);
+    throw new Error('AES 加密失败');
   }
 }
 
 /**
- * RSA 加密函数
- * 注意：实际应用中，前端一般不执行敏感数据的RSA加密
+ * AES 解密函数（CBC 模式 + PKCS7 填充）
+ * @param encryptedData Base64 编码的密文
+ * @param key Base64 编码的 AES 密钥
+ * @param iv Base64 编码的初始化向量
+ */
+export async function aesDecrypt(
+  encryptedData: string,
+  key: string,
+  iv: string
+): Promise<any> {
+  try {
+    // 1. 解码密钥和 IV
+    const keyBytes = CryptoJS.enc.Base64.parse(key);
+    const ivBytes = CryptoJS.enc.Base64.parse(iv);
+
+    // 2. AES 解密
+    const decrypted = CryptoJS.AES.decrypt(encryptedData, keyBytes, {
+      iv: ivBytes,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7
+    });
+
+    // 3. 转换为字符串
+    const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
+    if (!plaintext) {
+      throw new Error('解密结果为空');
+    }
+
+    // 4. 尝试解析为 JSON
+    try {
+      return JSON.parse(plaintext);
+    } catch {
+      return plaintext;
+    }
+  } catch (error) {
+    console.error('AES 解密失败:', error);
+    throw new Error('AES 解密失败');
+  }
+}
+
+/**
+ * RSA 加密函数（用于加密 AES 密钥或小数据）
  */
 export async function rsaEncrypt(data: string, publicKeyBase64?: string): Promise<string> {
   if (!publicKeyBase64) {
@@ -35,19 +89,17 @@ export async function rsaEncrypt(data: string, publicKeyBase64?: string): Promis
   // 使用 JSEncrypt 进行加密
   const encrypt = new JSEncrypt();
   
-  // 将 Base64 编码的公钥转换为 PEM 格式，JSEncrypt 需要 PEM 格式
+  // 将 Base64 编码的公钥转换为 PEM 格式
   let pemKey;
   if (publicKeyBase64.includes('-----BEGIN')) {
     pemKey = publicKeyBase64;
   } else {
-    // 对于 Base64 格式的公钥，需要使用正确的 PEM 包装
     const formattedKey = publicKeyBase64.replace(/(.{64})/g, '$1\n').trim();
     pemKey = `-----BEGIN PUBLIC KEY-----\n${formattedKey}\n-----END PUBLIC KEY-----`;
   }
   
   encrypt.setPublicKey(pemKey);
   
-  // 加密数据
   const encrypted = encrypt.encrypt(data);
   if (!encrypted) {
     throw new Error('RSA 加密失败');
@@ -57,122 +109,175 @@ export async function rsaEncrypt(data: string, publicKeyBase64?: string): Promis
 }
 
 /**
- * RSA 解密函数
- * 注意：在实际应用中，私钥不应出现在前端，此功能仅作演示用途
+ * RSA 解密函数（用于解密 AES 密钥）
+ * 注意：私钥由后端通过响应头传递，仅用于解密会话密钥
  */
-export async function rsaDecrypt(encryptedData: string, privateKeyBase64?: string): Promise<any> {
+export async function rsaDecrypt(encryptedData: string, privateKeyBase64?: string): Promise<string> {
   if (!privateKeyBase64) {
     throw new Error('RSA 私钥未提供');
   }
   
-  // 创建 JSEncrypt 实例并设置私钥
   const decrypt = new JSEncrypt();
   
-  // 将 Base64 编码的私钥转换为 PEM 格式，JSEncrypt 需要 PEM 格式
+  // 将 Base64 编码的私钥转换为 PEM 格式
   let pemKey;
   if (privateKeyBase64.includes('-----BEGIN')) {
     pemKey = privateKeyBase64;
   } else {
-    // 对于 Base64 格式的私钥，需要使用正确的 PEM 包装
     const formattedKey = privateKeyBase64.replace(/(.{64})/g, '$1\n').trim();
     pemKey = `-----BEGIN RSA PRIVATE KEY-----\n${formattedKey}\n-----END RSA PRIVATE KEY-----`;
   }
   
   decrypt.setPrivateKey(pemKey);
 
-  // 检查是否为分段加密的数据（使用 |SPLIT| 分隔符）
-  if (encryptedData.includes('|SPLIT|')) {
-    // 分段解密
-    const encryptedBlocks = encryptedData.split('|SPLIT|');
-    const decryptedParts: string[] = [];
-    
-    for (const encryptedBlock of encryptedBlocks) {
-      if (encryptedBlock.trim()) {
-        console.log('解密数据块:', encryptedBlock)
-        const decryptedBlock = decrypt.decrypt(encryptedBlock);
-        if (decryptedBlock === false) {
-          throw new Error(`分段解密失败: ${encryptedBlock.substring(0, 20)}...`);
-        }
-        decryptedParts.push(decryptedBlock as string);
-      }
-    }
-    console.log(decryptedParts)
-    // 合并解密后的数据
-    const result = decryptedParts.join('');
-    
-    // 尝试解析为JSON，如果不成功则返回原始字符串
-    try {
-      return JSON.parse(result);
-    } catch {
-      return result;
-    }
-  } else {
-    // 单次解密
-    const decrypted = decrypt.decrypt(encryptedData);
-    if (decrypted === false) {
-      throw new Error('RSA 解密失败');
-    }
-    
-    // 尝试解析为JSON，如果不成功则返回原始字符串
-    try {
-      return JSON.parse(decrypted as string);
-    } catch {
-      return decrypted;
-    }
+  const decrypted = decrypt.decrypt(encryptedData);
+  if (decrypted === false) {
+    throw new Error('RSA 解密失败');
   }
+  
+  return decrypted as string;
 }
 
 /**
  * 请求加密工具函数
+ * @param data 要加密的数据
+ * @param algorithm 加密算法（'RSA' 或 'AES' 或 'HYBRID'）
+ * @param publicKey RSA 公钥（用于 RSA 或混合加密）
  */
-export async function encryptRequest(data: any, algorithm: string = 'RSA', publicKey?: string) {
-  // 根据算法类型执行相应加密
-  switch(algorithm) {
+export async function encryptRequest(
+  data: any,
+  algorithm: string = 'RSA',
+  publicKey?: string
+): Promise<string | any> {
+  switch (algorithm) {
     case 'AES':
-      // 这里实现 AES 加密逻辑
-      console.log('使用AES算法对请求数据进行加密:', data);
-      return await aesEncrypt(data); // TODO: 实际AES加密逻辑
-    case 'RSA':
-      // 使用 JSEncrypt 进行 RSA 加密
+      // AES 需要额外的 key 和 iv 参数，此模式不常用
+      console.warn('AES 加密需要提供密钥和 IV，请使用 HYBRID 模式');
+      return data;
+
+    case 'HYBRID':
+      // 混合加密：RSA + AES
+      // 如果没有提供公钥，尝试从 Session 中获取
+      let rsaPublicKey = publicKey;
+      if (!rsaPublicKey) {
+        rsaPublicKey = Session.get('encryptionPublicKey');
+        if (!rsaPublicKey) {
+          console.warn('[Encryption] 未找到 RSA 公钥，尝试从后端获取...');
+          throw new Error('混合加密需要提供 RSA 公钥。请在登录前调用 /api/encryption/public-key 获取公钥并存储到 Session');
+        }
+      }
+      
       try {
-        // 使用传入的公钥进行加密
+        // 1. 生成随机 AES 密钥和 IV
+        const aesKey = CryptoJS.lib.WordArray.random(32); // 256-bit
+        const aesIV = CryptoJS.lib.WordArray.random(16);  // 128-bit
+
+        // 2. 用 AES 加密数据
+        const plaintext = typeof data === 'string' ? data : JSON.stringify(data);
+        const encryptedData = CryptoJS.AES.encrypt(plaintext, aesKey, {
+          iv: aesIV,
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7
+        }).toString();
+
+        // 3. 用 RSA 加密 AES 密钥和 IV
+        const keyAndIV = aesKey.toString(CryptoJS.enc.Base64) + '|' + aesIV.toString(CryptoJS.enc.Base64);
+        const encryptedKey = await rsaEncrypt(keyAndIV, rsaPublicKey);
+
+        // 4. 返回组合结果
+        return JSON.stringify({
+          encryptedData,
+          encryptedKey,
+          algorithm: 'AES-256-CBC+RSA'
+        });
+      } catch (error) {
+        console.error('[Encryption] 混合加密失败，可能公钥已过期，尝试刷新公钥...');
+        
+        // 如果是首次尝试且没有强制指定公钥，尝试刷新公钥后重试
+        if (!publicKey) {
+          try {
+            // 动态导入避免循环依赖
+            const { getEncryptionPublicKey } = await import('@/utils/encryption');
+            const freshPublicKey = await getEncryptionPublicKey(true);
+            
+            if (freshPublicKey) {
+              console.log('[Encryption] 公钥已刷新，重试加密...');
+              // 递归调用，使用新公钥
+              return encryptRequest(data, 'HYBRID', freshPublicKey);
+            }
+          } catch (refreshError) {
+            console.error('[Encryption] 刷新公钥失败:', refreshError);
+          }
+        }
+        
+        // 重试失败或已有公钥，抛出原始错误
+        throw error;
+      }
+
+    case 'RSA':
+    default:
+      // 纯 RSA 加密（仅适用于小数据）
+      try {
         return await rsaEncrypt(JSON.stringify(data), publicKey);
       } catch (error) {
         console.error('RSA加密失败:', error);
-        return data; // 加密失败时返回原数据
+        return data;
       }
-    default:
-      return data; // 默认不加密
   }
 }
 
 /**
  * 响应解密工具函数
+ * @param data 加密的数据（字符串或对象）
+ * @param algorithm 加密算法（'RSA' 或 'AES' 或 'HYBRID'）
+ * @param privateKey RSA 私钥（从响应头获取）
  */
-export async function decryptResponse(data: any, algorithm: string = 'RSA', privateKey?: string) {
-  // 根据算法类型执行相应解密
-  // 注意：在实际使用中，响应解密通常通过响应头 x-rsa-privateKey 来判断，
-  // 这个函数主要用于在响应拦截器之外进行手动解密
-  switch(algorithm) {
-    case 'AES':
-      // 这里实现 AES 解密逻辑
-      console.log('使用AES算法对响应数据进行解密:', data);
-      return await aesDecrypt(data); // TODO: 实际AES解密逻辑
-    case 'RSA':
-      // 使用 JSEncrypt 进行 RSA 解密
-      // 注意：在实际应用中，私钥不应出现在前端
-      console.log('准备RSA解密，加密数据长度:', typeof data === 'string' ? data.length : 'not string');
-      console.log('传入的私钥长度:', privateKey ? privateKey.length : 'undefined');
-      console.log('传入的私钥前缀:', privateKey ? privateKey.substring(0, 10) : 'undefined');
-      
+export async function decryptResponse(
+  data: any,
+  algorithm: string = 'RSA',
+  privateKey?: string
+): Promise<any> {
+  if (!data) return data;
+
+  switch (algorithm) {
+    case 'HYBRID':
+      // 混合加密解密
+      if (!privateKey) {
+        throw new Error('混合解密需要提供 RSA 私钥');
+      }
       try {
-        // 使用传入的私钥进行解密
+        // 1. 解析加密数据
+        const encryptedObj = typeof data === 'string' ? JSON.parse(data) : data;
+        const { encryptedData, encryptedKey } = encryptedObj;
+
+        // 2. 用 RSA 解密 AES 密钥
+        const decryptedKeyAndIV = await rsaDecrypt(encryptedKey, privateKey);
+        const [keyBase64, ivBase64] = decryptedKeyAndIV.split('|');
+
+        // 3. 用 AES 解密数据
+        return await aesDecrypt(encryptedData, keyBase64, ivBase64);
+      } catch (error) {
+        console.error('混合解密失败:', error);
+        throw error;
+      }
+
+    case 'AES':
+      // 纯 AES 解密（需要额外参数，不常用）
+      console.warn('AES 解密需要提供密钥和 IV，请使用 HYBRID 模式');
+      return data;
+
+    case 'RSA':
+    default:
+      // 纯 RSA 解密
+      if (!privateKey) {
+        console.warn('RSA 解密需要提供私钥');
+        return data;
+      }
+      try {
         return await rsaDecrypt(data, privateKey);
       } catch (error) {
         console.error('RSA解密失败:', error);
-        return data; // 解密失败时返回原数据
+        return data;
       }
-    default:
-      return data; // 默认不解密
   }
 }

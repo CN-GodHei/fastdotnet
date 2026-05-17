@@ -646,6 +646,20 @@ declare namespace APIModel {
 		RedeemedTime?: string;
 	};
 
+	type CreateSchedulerJobDto = {
+		JobName: string;
+		JobType: string;
+		JobContent: string;
+		CronExpression: string;
+		JobParams?: string;
+		StartTime?: string;
+		EndTime?: string;
+		JobStatus?: string;
+		Concurrent?: string;
+		Remark?: string;
+		ExeDateDesc?: string;
+	};
+
 	type CreateUserPluginActivationDto = {
 		PurchaseId: number;
 		PluginId: string;
@@ -2112,11 +2126,6 @@ declare namespace APIModel {
 		Items?: OnlinePaymentDto[];
 	};
 
-	type PageResult1PaymentRecord = {
-		PageInfo?: PageInfo;
-		Items?: PaymentRecord[];
-	};
-
 	type PageResult1PluginATestDto = {
 		PageInfo?: PageInfo;
 		Items?: PluginATestDto[];
@@ -2144,45 +2153,6 @@ declare namespace APIModel {
 		IsByRef?: boolean;
 		CanReduce?: boolean;
 	};
-
-	type PayCreateOrderRequest = {
-		OrderId?: string;
-		Amount?: number;
-		Description?: string;
-	};
-
-	enum PaymentMethod {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-	}
-
-	type PaymentRecord = {
-		OrderId?: string;
-		UserId?: string;
-		TransactionId?: string;
-		PaymentMethod?: PaymentMethod;
-		Amount?: number;
-		Status?: PaymentStatus;
-		Description?: string;
-		Subject?: string;
-		NotifyUrl?: string;
-		PaidAt?: string;
-		FailReason?: string;
-		ExtraData?: string;
-		Id?: string;
-		CreatedAt?: string;
-		UpdatedAt?: string;
-		IsDeleted?: boolean;
-		DeletedAt?: string;
-	};
-
-	enum PaymentStatus {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-		3 = '3',
-	}
 
 	type PluginATestCreateDto = {
 		Name?: string;
@@ -2328,13 +2298,6 @@ declare namespace APIModel {
 		SelectFields?: string[];
 	};
 
-	type RefundDto = {
-		PaymentMethod?: string;
-		OutTradeNo?: string;
-		RefundAmount?: number;
-		RefundReason?: string;
-	};
-
 	type RevokedLicenseDto = {
 		PluginId: string;
 		UninstallCode: string;
@@ -2405,16 +2368,6 @@ declare namespace APIModel {
 	type TreeModel1FdNationalStandardItemDto = {
 		TreeData?: FdNationalStandardItemDto[];
 		Total?: number;
-	};
-
-	type UnifiedPayDto = {
-		OrderId: string;
-		PaymentMethod: PaymentMethod;
-		TradeType?: string;
-		OpenId?: string;
-		ClientIp?: string;
-		ReturnUrl?: string;
-		Attach?: string;
 	};
 
 	type UninstallResDto = {
