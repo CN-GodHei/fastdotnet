@@ -14,6 +14,7 @@ using Fastdotnet.Service.Service.App;
 using Fastdotnet.Service.Service.Sys;
 using Fastdotnet.WebApi.Providers;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.ResponseCompression;
 using System.IdentityModel.Tokens.Jwt;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -32,6 +33,43 @@ builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysPath))
     .SetApplicationName("Fastdotnet.OIDC");
 Console.WriteLine($"[DataProtection] Using fixed keys path: {dataProtectionKeysPath}");
+
+// 配置响应压缩（Gzip 和 Brotli）
+builder.Services.AddResponseCompression(options =>
+{
+    // 启用 Gzip 和 Brotli 压缩
+    options.EnableForHttps = true; // 即使 HTTPS 也启用压缩
+    
+    // 添加压缩提供者
+    options.Providers.Add<BrotliCompressionProvider>();
+    options.Providers.Add<GzipCompressionProvider>();
+    
+    // 指定需要压缩的 MIME 类型
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
+    {
+        "application/json",
+        "application/xml",
+        "text/xml",
+        "application/javascript",
+        "text/javascript",
+        "application/x-javascript",
+        "text/css",
+        "text/plain",
+        "application/octet-stream"
+    });
+});
+
+// 配置 Brotli 压缩选项
+builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+{
+    options.Level = System.IO.Compression.CompressionLevel.Fastest; // 快速压缩，平衡性能和压缩率
+});
+
+// 配置 Gzip 压缩选项
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = System.IO.Compression.CompressionLevel.Fastest; // 快速压缩
+});
 
 var options = new IdGeneratorOptions(0001);
 // options.WorkerIdBitLength = 10; // 默认值6，限定 WorkerId 最大值为2^6-1，即默认最多支持64个节点。
@@ -217,6 +255,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseCors();
 }
+
+// 启用响应压缩中间件（必须在 UseRouting 之后，UseEndpoints 之前）
+app.UseResponseCompression();
+
 // 只在生产环境中使用HTTPS重定向
 //if (!app.Environment.IsDevelopment())
 //{
