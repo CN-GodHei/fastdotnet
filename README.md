@@ -1,22 +1,27 @@
-# Fastdotnet 框架
+# Fastdotnet: AI Agent 时代的企业级动态插件化底座
 
 **[🇨🇳 中文文档](README.md)** | **[🇺🇸 English Documentation](README.en.md)**
 
 > 🏪 **插件商城现已上线！** 海量现成插件，助力外包项目快速交付，缩短周期 70%+ → [立即浏览](https://fastdotnet.top/marketplace)
 
-## 🎯 框架简介
+## 🚀 为什么需要 Fastdotnet？
 
-**Fastdotnet** 是一个基于 **.NET 10** 的企业级模块化开发框架，采用真正的插件化架构设计，支持功能模块的运行时热插拔。
+还在为复杂的业务模块解耦头疼吗？还在纠结如何实现不间断更新吗？
 
-### 💡 核心价值
+Fastdotnet 为你提供一套开箱即用的**动态插件加载方案**，基于 .NET 10 和 AssemblyLoadContext 技术，实现真正的运行时热插拔。它不仅是一个开发框架，更是 **AI Agent 应用实现模块化编排的高效底座**。
 
-> **像搭积木一样构建企业应用** - 从插件商城选择需要的功能插件，快速组装成完整系统
+### 💡 核心价值：像搭积木一样构建企业应用
+
+<div align="center">
+  <img src="docs/.vitepress/public/images/plugin-marketplace.png" alt="Fastdotnet 插件管理界面" width="800" />
+  <p><em>可视化插件管理界面，支持在线购买、一键安装与热更新</em></p>
+</div>
 
 #### 🏪 插件商城生态
 - **官方插件库**：支付、工作流、社交登录、对象存储等常用功能开箱即用
 - **第三方开发者**：社区贡献的专业插件，覆盖各行业业务场景
-- **快速项目交付**：外包项目通过插件组合，从"月"级别缩短到"周"级别交付
-- **💰 开发者价值复用**：一次开发，多次销售 - 将通用功能封装为插件上架商城，实现从"项目制"到"产品化"的转变
+- **快速项目交付**：外包项目通过插件组合，从“月”级别缩短到“周”级别交付
+- **💰 开发者价值复用**：一次开发，多次销售 - 将通用功能封装为插件上架商城，实现从“项目制”到“产品化”的转变
 
 ### 解决什么问题？
 - **企业 SaaS 多租户场景**：不同客户需要不同的功能模块，传统单体应用难以灵活配置
@@ -25,16 +30,53 @@
 - **微服务轻量化替代**：提供类似微服务的模块化能力，但无需复杂的分布式基础设施
 - **🚀 快速项目交付**：通过插件商城海量现成插件，外包项目可快速组装上线，缩短交付周期 70%+
 
-### 与 ABP 等框架的区别？
+### 与 ABP / Orchard Core 等框架的区别？
 
-| 特性 | Fastdotnet | ABP Framework |
-|------|-----------|---------------|
-| **插件隔离性** | ✅ AssemblyLoadContext 真正隔离，DLL版本互不冲突 | ❌ 共享同一应用域，存在依赖冲突风险 |
-| **热插拔能力** | ✅ 运行时动态加载/卸载，无需重启 | ⚠️ 需要重启应用才能加载新模块 |
-| **前端集成** | ✅ qiankun 微前端深度集成，前后端同步交付 | ❌ 需自行实现前端模块化方案 |
-| **架构复杂度** | 🟢 轻量级分层架构，学习成本低 | 🔴 重度 DDD 架构，学习曲线陡峭 |
-| **适用场景** | 中小型企业应用、SaaS平台、快速原型开发 | 大型企业级复杂业务系统 |
-| **自定义程度** | ✅ 插件内可自由选择架构模式（DDD/Clean等） | ⚠️ 强制遵循 ABP 规范 |
+| 特性 | Fastdotnet | ABP Framework | Orchard Core |
+|------|-----------|---------------|-------------|
+| **插件隔离性** | ✅ AssemblyLoadContext 真正隔离，DLL版本互不冲突 |  共享同一应用域，存在依赖冲突风险 | ⚠️ 基于租户隔离，复杂度较高 |
+| **热插拔能力** | ✅ 运行时动态加载/卸载，无需重启 | ⚠️ 需要重启应用才能加载新模块 | ✅ 支持模块化，但配置较繁琐 |
+| **前端集成** | ✅ qiankun 微前端深度集成，前后端同步交付 | ❌ 需自行实现前端模块化方案 | ❌ 主要关注后端 CMS 能力 |
+| **架构复杂度** |  轻量级分层架构，学习成本低 | 🔴 重度 DDD 架构，学习曲线陡峭 | 🟡 中等复杂度，适合 CMS 场景 |
+| **AI 集成潜力** | 🚀 专为 AI Agent 编排设计，易于挂载智能体插件 | ⚠️ 需额外适配 | ❌ 无原生支持 |
+| **适用场景** | 中小型企业应用、SaaS平台、快速原型开发、AI 应用底座 | 大型企业级复杂业务系统 | 内容管理系统 (CMS) |
+
+---
+
+##  3 分钟快速上手
+
+无需复杂的环境配置，通过 Docker 即可在 1 分钟内体验完整的 Fastdotnet 生态。
+
+### 方式一：Docker 一键启动（推荐）
+
+```bash
+# 克隆仓库
+git clone https://github.com/CN-GodHei/fastdotnet.git
+cd fastdotnet/docker
+
+# 启动所有服务（后端 + 前端 + 数据库）
+docker-compose up -d
+```
+
+启动完成后，访问以下地址：
+- **管理端**：http://localhost:8080 (`superadmin` / `123456`)
+- **应用端**：http://localhost:8081 (`admintest` / `123456`)
+
+### 方式二：代码极简示例
+
+如果你想直接在代码中体验插件加载，只需几行代码：
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddFastdotnet(); // 注册框架核心服务
+
+var app = builder.Build();
+app.UseFastdotnetPlugins(); // 自动扫描并加载 plugins 目录下的所有插件
+
+app.Run();
+```
+
+> 💡 **提示**：更多关于插件开发的细节，请查看 [插件开发指南](https://docs.fastdotnet.top)。
 
 ---
 
@@ -82,7 +124,45 @@
 
 ---
 
-## 🔒 安全测试合作招募
+##  AI 集成规划 (AI-Ready)
+
+Fastdotnet 正在积极向 **AI Agent 时代** 演进。我们已完成了基于 Microsoft Semantic Kernel 的智能体集成方案规划，旨在让开发者能够像挂载插件一样轻松接入 AI 能力。
+
+###  规划概览
+- **智能对话与 RAG**：支持知识库问答、上下文记忆管理。
+- **Agent 编排**：通过 Elsa 工作流引擎实现多智能体协作与任务自动化。
+- **Function Calling**：插件即工具，AI 可直接调用业务逻辑。
+
+👉 **查看详细规划**：[AI 智能体集成方案](backend/AI智能体集成方案/README.md)
+
+---
+
+##  社区规范与贡献引导
+
+Fastdotnet 是一个开放的项目，我们欢迎任何形式的贡献。为了让协作更高效，请遵循以下规范：
+
+###  Issue 模板
+我们建立了标准化的 Issue 模板，请在反馈问题时选择对应的类型：
+- [Bug Report](https://github.com/CN-GodHei/fastdotnet/issues/new?template=bug_report.yml)：报告程序错误或异常。
+- [Feature Request](https://github.com/CN-GodHei/fastdotnet/issues/new?template=feature_request.yml)：提出新功能建议或改进想法。
+
+###  Roadmap (开发路线图)
+
+| 阶段 | 计划内容 | 状态 |
+|------|----------|------|
+| v1.0 | 核心插件系统、OIDC 认证、基础权限管理 | ✅ 已完成 |
+| v1.1 | 插件商城上线、支付/工作流官方插件发布 | 🚀 进行中 |
+| v1.2 | **AI Agent 集成**、智能体编排引擎 |  规划中 |
+| v1.3 | 增强多租户隔离、性能优化与 AOT 支持 | ⏳ 待定 |
+
+> 💡 **欢迎贡献**：如果你对某个功能感兴趣，欢迎在 Issues 中留言或直接提交 PR！
+
+###  CONTRIBUTING.md
+详细的贡献指南请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)，其中包含了如何运行测试、代码风格规范以及 PR 提交流程。
+
+---
+
+##  安全测试合作招募
 
 **我们正在寻找专业的网络安全公司合作！**
 
@@ -483,6 +563,34 @@ public interface IPlugin
 4. 插件之间应保持独立，避免相互依赖
 5. 插件可以包含自己的控制器、服务和模型
 6. 插件控制器应继承自`GenericDtoControllerBase`或`AppGenericDtoControllerBase`基类
+
+### 🚀 快速开始：Hello World 插件
+
+为了帮助您快速理解如何挂载功能，这里提供一个最简化的插件示例：
+
+```csharp
+public class HelloWorldPlugin : PluginBase
+{
+    public override string PluginId => "hello-world";
+    public override string Name => "Hello World Plugin";
+    public override string Version => "1.0.0";
+    
+    // 1. 注册服务：这是解决“第一个阻碍”的关键
+    public override void ConfigureServices(ContainerBuilder builder)
+    {
+        // 在这里注册您的服务，它们将拥有独立的 DI 容器
+        builder.RegisterType<MyService>().As<IMyService>().InstancePerLifetimeScope();
+    }
+    
+    protected override Task OnStartAsync()
+    {
+        Console.WriteLine("Hello World Plugin is running!");
+        return Task.CompletedTask;
+    }
+}
+```
+
+> 💡 **提示**：通过 `ContainerBuilder` 注册的服务会自动与主程序隔离，您无需担心 DLL 版本冲突问题。
 
 ### 热插拔机制
 - 插件管理器负责插件的加载、卸载和生命周期管理

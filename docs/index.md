@@ -2,59 +2,41 @@
 layout: home
 hero:
   name: "Fastdotnet"
-  text: "快速开发框架"
-  tagline: 基于 .NET 的现代化、高性能、插件化快速开发框架
+  text: "AI Agent 时代的企业级动态插件化底座"
+  tagline: 基于 .NET 10 与 AssemblyLoadContext 技术，实现真正的运行时热插拔与模块化编排。
   image:
     src: /logo.png
     alt: Fastdotnet
   actions:
     - theme: brand
-      text: 快速开始
+      text: 3 分钟快速上手
       link: /01-快速开始/
     - theme: alt
       text: 官方网站
       link: https://fastdotnet.top/
     - theme: alt
-      text: 插件商城
+      text: 🏪 插件商城
       link: https://fastdotnet.top/marketplace
     - theme: alt
       text: 管理端体验
       link: http://admin.demo.fastdotnet.top/
     - theme: alt
-      text: 应用端体验
-      link: http://app.demo.fastdotnet.top/
-    - theme: alt
       text: 在 GitHub 上查看
       link: https://github.com/CN-GodHei/fastdotnet.git
-    - theme: alt
-      text: 在 Gitee 上查看
-      link: https://gitee.com/CN-GodHei/fastdotnet.git
 
 features:
   - icon: 🚀
-    title: 快速开发
-    details: 提供丰富的基础功能模块，让开发者专注于业务逻辑实现
+    title: 极速交付
+    details: 像搭积木一样构建应用，外包项目交付周期缩短 70%+
   - icon: 🔌
-    title: 插件系统
-    details: 灵活的插件架构，支持动态加载和卸载，轻松扩展功能
-  - icon: 🏪
-    title: 插件商城
-    details: 海量现成插件，外包项目可快速组装上线，缩短交付周期 70%+
+    title: 真正热插拔
+    details: 基于 ALC 技术实现运行时隔离，DLL 版本互不冲突
+  - icon: 
+    title: AI-Ready
+    details: 专为 AI Agent 编排设计，支持 Function Calling 与智能体挂载
   - icon: 💰
     title: 价值复用
-    details: 一次开发，多次销售，将“项目代码”转化为“产品资产”，获得持续收益
-  - icon: 🔐
-    title: 权限管理
-    details: 完整的 RBAC 权限控制系统，支持细粒度权限控制
-  - icon: 📱
-    title: 前后端分离
-    details: 前后端完全分离架构，支持多种前端框架集成
-  - icon: 🎯
-    title: 微前端
-    details: 基于 qiankun 的微前端架构，支持插件独立开发和部署
-  - icon: 📦
-    title: 多数据库支持
-    details: 支持 SQL Server、PostgreSQL、MySQL、SQLite、达梦等多种数据库
+    details: 一次开发，多次销售，将“项目代码”转化为“产品资产”
 ---
 
 ## 为什么选择 Fastdotnet？

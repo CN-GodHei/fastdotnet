@@ -1,16 +1,21 @@
-# Fastdotnet Framework
+# Fastdotnet: The Enterprise Dynamic Plugin Base for the AI Agent Era
 
 **[🇨🇳 中文文档](README.md)** | **[🇺🇸 English Documentation](README.en.md)**
 
 > 🏪 **Plugin Marketplace is Now Live!** Massive ready-to-use plugins to accelerate outsourcing project delivery by 70%+ → [Browse Now](https://fastdotnet.top/marketplace)
 
-## 🎯 Framework Overview
+##  Why Choose Fastdotnet?
 
-**Fastdotnet** is an enterprise-grade modular development framework based on **.NET 10**, featuring a true plugin-based architecture with runtime hot-swapping capabilities.
+Struggling with complex business module decoupling? Worried about how to achieve uninterrupted updates?
 
-### 💡 Core Value Proposition
+Fastdotnet provides an out-of-the-box **dynamic plugin loading solution** based on .NET 10 and AssemblyLoadContext technology, achieving true runtime hot-swapping. It's not just a development framework; it's an **efficient base for modular orchestration of AI Agent applications**.
 
-> **Build Enterprise Applications Like Building Blocks** - Select functional plugins from the marketplace and quickly assemble a complete system
+### 💡 Core Value: Build Enterprise Applications Like Building Blocks
+
+<div align="center">
+  <img src="docs/.vitepress/public/images/plugin-marketplace.png" alt="Fastdotnet Plugin Management Interface" width="800" />
+  <p><em>Visual plugin management interface supporting online purchase, one-click installation, and hot updates</em></p>
+</div>
 
 #### 🏪 Plugin Marketplace Ecosystem
 - **Official Plugin Library**: Payment, workflow, social login, object storage and other common features out of the box
@@ -25,16 +30,53 @@
 - **Lightweight Microservices Alternative**: Provides microservice-like modularity without complex distributed infrastructure
 - **🚀 Rapid Project Delivery**: Massive ready-made plugins from the marketplace enable quick assembly and deployment, shortening delivery cycles by 70%+
 
-### How Does It Differ from ABP and Other Frameworks?
+### How Does It Differ from ABP / Orchard Core?
 
-| Feature | Fastdotnet | ABP Framework |
-|---------|-----------|---------------|
-| **Plugin Isolation** | ✅ True isolation via AssemblyLoadContext, no DLL version conflicts | ❌ Shared application domain, risk of dependency conflicts |
-| **Hot-Swapping** | ✅ Runtime dynamic loading/unloading, no restart required | ⚠️ Requires application restart to load new modules |
-| **Frontend Integration** | ✅ Deep qiankun micro-frontend integration, synchronized frontend-backend delivery | ❌ Need to implement frontend modularization separately |
-| **Architecture Complexity** | 🟢 Lightweight layered architecture, low learning curve | 🔴 Heavy DDD architecture, steep learning curve |
-| **Use Cases** | SME applications, SaaS platforms, rapid prototyping | Large-scale enterprise complex business systems |
-| **Customization** | ✅ Free to choose architecture patterns within plugins (DDD/Clean/etc.) | ⚠️ Must follow ABP conventions |
+| Feature | Fastdotnet | ABP Framework | Orchard Core |
+|---------|-----------|---------------|-------------|
+| **Plugin Isolation** | ✅ True isolation via AssemblyLoadContext, no DLL version conflicts | ❌ Shared application domain, risk of dependency conflicts | ⚠️ Tenant-based isolation, higher complexity |
+| **Hot-Swapping** | ✅ Runtime dynamic loading/unloading, no restart required | ⚠️ Requires application restart to load new modules | ✅ Supports modularity but configuration is cumbersome |
+| **Frontend Integration** | ✅ Deep qiankun micro-frontend integration, synchronized frontend-backend delivery | ❌ Need to implement frontend modularization separately | ❌ Primarily focuses on backend CMS capabilities |
+| **Architecture Complexity** | 🟢 Lightweight layered architecture, low learning curve | 🔴 Heavy DDD architecture, steep learning curve | 🟡 Medium complexity, suitable for CMS scenarios |
+| **AI Integration Potential** | 🚀 Designed for AI Agent orchestration, easy to mount agent plugins | ⚠️ Requires additional adaptation | ❌ No native support |
+| **Use Cases** | SME applications, SaaS platforms, rapid prototyping, AI app base | Large-scale enterprise complex business systems | Content Management Systems (CMS) |
+
+---
+
+## ⚡ 3-Minute Quick Start
+
+Experience the complete Fastdotnet ecosystem in under 1 minute via Docker without complex environment configuration.
+
+### Method 1: One-Click Docker Startup (Recommended)
+
+```
+# Clone repository
+git clone https://github.com/CN-GodHei/fastdotnet.git
+cd fastdotnet/docker
+
+# Start all services (Backend + Frontend + Database)
+docker-compose up -d
+```
+
+Once started, visit:
+- **Admin Panel**: http://localhost:8080 (`superadmin` / `123456`)
+- **Application**: http://localhost:8081 (`admintest` / `123456`)
+
+### Method 2: Minimal Code Example
+
+If you want to experience plugin loading directly in code, it only takes a few lines:
+
+``csharp
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddFastdotnet(); // Register framework core services
+
+var app = builder.Build();
+app.UseFastdotnetPlugins(); // Automatically scan and load all plugins in the plugins directory
+
+app.Run();
+```
+
+> 💡 **Tip**: For more details on plugin development, please check the [Plugin Development Guide](https://docs.fastdotnet.top).
 
 ---
 
@@ -509,7 +551,7 @@ The cache system is built on Microsoft HybridCache with the following features:
 ### Usage
 
 #### Controller Level Usage
-```csharp
+``csharp
 [ApiController]
 [Route("api/[controller]")]
 public class UserController : ControllerBase
@@ -525,7 +567,7 @@ public class UserController : ControllerBase
 ```
 
 #### Service Layer Usage
-```csharp
+``csharp
 public class UserService : IUserService
 {
     private readonly IHybridCacheService _cacheService;
@@ -609,7 +651,7 @@ Suitable for outsourcing projects and rapid prototyping without coding from scra
 - Supported Operating Systems: Windows, Linux, macOS
 
 ### Build Project
-```bash
+```
 # Clone repository
 git clone https://github.com/yourusername/fastdotnet.git
 cd fastdotnet/backend
@@ -652,7 +694,7 @@ dotnet run
 👉 Detailed Guide: [Plugin Development Docs](https://docs.fastdotnet.top) | [Marketplace Seller Guide](https://fastdotnet.top/marketplace/seller)
 
 #### Example: Inheriting PluginBase Class
-```csharp
+``csharp
 public class MyPlugin : PluginBase
 {
     public override string PluginId => "your-plugin-id";
@@ -839,3 +881,5 @@ Continuous Sales + Earn Commissions 💰💰💰
 ---
 
 **🌟 If Fastdotnet has helped you, please Star to show your support!**
+
+```
