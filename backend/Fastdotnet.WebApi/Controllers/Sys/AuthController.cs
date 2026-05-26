@@ -44,7 +44,8 @@ namespace Fastdotnet.WebApi.Controllers.Sys
         /// <returns></returns>
         [HttpPost("admin/login")]
         [ApiUsageScope(ApiUsageScopeEnum.AdminOnly)]
-        //[EncryptResponse]
+        [EncryptResponse]
+        [EncryptRequest]
         public async Task<LoginResultDto> AdminLogin([FromBody] LoginDto dto)
         {
             // 1. 检查系统配置是否启用验证码
@@ -91,6 +92,8 @@ namespace Fastdotnet.WebApi.Controllers.Sys
         /// <returns></returns>
         [HttpPost("app/login")]
         [ApiUsageScope(ApiUsageScopeEnum.AppOnly)]
+        [EncryptResponse]
+        [EncryptRequest]
         public async Task<LoginResultDto> AppLogin([FromBody] LoginDto dto)
         {
             // 1. 检查系统配置是否启用验证码

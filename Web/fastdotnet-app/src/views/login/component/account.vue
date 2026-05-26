@@ -297,6 +297,11 @@ watch(
 onMounted(() => {
 	updateCaptchaConfig();
 	loadSocialProviders(); // 加载第三方登录平台列表
+	
+	// 预获取 RSA 公钥（用于混合加密）
+	import('@/utils/encryption').then(({ getEncryptionPublicKey }) => {
+		getEncryptionPublicKey();
+	});
 });
 
 // 加载第三方登录平台列表（先检查插件是否启用）

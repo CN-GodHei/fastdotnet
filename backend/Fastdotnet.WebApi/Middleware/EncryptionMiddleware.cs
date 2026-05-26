@@ -18,13 +18,13 @@ namespace Fastdotnet.WebApi.Middleware
     public class EncryptionMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IHybridCacheService _cacheService;
+        private readonly IEncryptionKeyService _encryptionKeyService;
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public EncryptionMiddleware(RequestDelegate next, IHybridCacheService cacheService, IHttpContextAccessor contextAccessor)
+        public EncryptionMiddleware(RequestDelegate next, IEncryptionKeyService encryptionKeyService, IHttpContextAccessor contextAccessor)
         {
             _next = next;
-            _cacheService = cacheService;
+            _encryptionKeyService = encryptionKeyService;
             _contextAccessor = contextAccessor;
         }
 
@@ -62,8 +62,32 @@ namespace Fastdotnet.WebApi.Middleware
                         {
                             try
                             {
-                                var decryptedBody = DecryptRequestBody(requestBody);
+                                var decryptedBody = await DecryptRequestBody(requestBody);
                                 await RewriteRequestBody(context.Request, decryptedBody);
+                            }
+                            catch (CryptographicException ex)
+                            {
+                                // 密钥不匹配（可能是公钥过期）
+                                context.Response.StatusCode = 498; // 自定义状态码：Token/Key Expired
+                                context.Response.ContentType = "application/json; charset=utf-8";
+                                
+                                var errorResponse = new
+                                {
+                                    Code = 498,
+                                    Message = "加密密钥已过期，请刷新公钥后重试",
+                                    NeedRefreshPublicKey = true
+                                };
+                                
+                                // 使用 JsonSerializerOptions 避免中文转义
+                                var jsonOptions = new System.Text.Json.JsonSerializerOptions
+                                {
+                                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                                };
+                                
+                                await context.Response.WriteAsync(
+                                    System.Text.Json.JsonSerializer.Serialize(errorResponse, jsonOptions)
+                                );
+                                return;
                             }
                             catch (Exception ex)
                             {
@@ -86,8 +110,6 @@ namespace Fastdotnet.WebApi.Middleware
                     // 检查是否需要对响应数据进行加密
                     if (ShouldEncryptResponse(methodInfo, controllerTypeInfo))
                     {
-                        var algorithm = GetResponseEncryptionAlgorithm(methodInfo, controllerTypeInfo);
-
                         newResponseBody.Seek(0, SeekOrigin.Begin);
                         var responseBody = await new StreamReader(newResponseBody).ReadToEndAsync();
 
@@ -205,20 +227,45 @@ namespace Fastdotnet.WebApi.Middleware
         /// <summary>
         /// 解密请求体
         /// </summary>
-        private string DecryptRequestBody(string encryptedBody)
+        private async Task<string> DecryptRequestBody(string encryptedBody)
         {
             //var encryptionService = new EncryptionService();
             // 移除可能的引号
             var trimmedBody = encryptedBody.Trim('"');
-            // 使用配置中的固定密钥解密请求参数
-            var key = GetRequestParamKey("RSA", true); // 固定使用RSA算法，true 表示获取解密密钥（私钥）
-            if (string.IsNullOrEmpty(key))
+            
+            // 获取加密算法
+            var endpoint = _contextAccessor.HttpContext?.GetEndpoint();
+            var algorithm = "RSA"; // 默认
+            if (endpoint != null)
             {
-                throw new InvalidOperationException($"无法获取Rsa解密密钥");
+                var controllerActionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>();
+                if (controllerActionDescriptor != null)
+                {
+                    algorithm = EncryptionAttributeHelper.GetRequestEncryptionAlgorithm(controllerActionDescriptor.MethodInfo) ??
+                               EncryptionAttributeHelper.GetRequestEncryptionAlgorithm(controllerActionDescriptor.ControllerTypeInfo) ??
+                               "RSA";
+                }
+            }
+            
+            // 从缓存中获取私钥解密请求参数
+            var (success, key) = await GetResponseEncryptionKeyAsync(true); // true 表示获取私钥
+            if (!success || string.IsNullOrEmpty(key))
+            {
+                throw new InvalidOperationException($"无法获取{algorithm}解密密钥");
             }
 
-            // RSA解密需要私钥
-            return CryptographyUtils.RSADecrypt(trimmedBody, key);
+            // 根据算法选择解密方式
+            if (algorithm.ToUpper() == "HYBRID" || algorithm.ToUpper().Contains("AES"))
+            {
+                // 混合解密（RSA + AES）
+                //Console.WriteLine($"[EncryptionMiddleware] 正在使用私钥解密，私钥: {key}");
+                return Core.Utils.HybridEncryptionUtils.Decrypt(trimmedBody, key);
+            }
+            else
+            {
+                // RSA解密需要私钥
+                return CryptographyUtils.RSADecrypt(trimmedBody, key);
+            }
         }
 
         /// <summary>
@@ -226,60 +273,35 @@ namespace Fastdotnet.WebApi.Middleware
         /// </summary>
         private async Task<string> EncryptResponseBody(string responseBody)
         {
-            //var encryptionService = new EncryptionService();
+            // 响应加密使用 AES 对称加密
+            // 生成随机 AES 密钥和 IV
+            using var aes = System.Security.Cryptography.Aes.Create();
+            aes.KeySize = 256;
+            aes.GenerateKey();
+            aes.GenerateIV();
 
-            // 从缓存中获取响应加密密钥
-            var (success, key) = await GetResponseEncryptionKeyAsync( false); // false 表示获取加密密钥（公钥或对称密钥）
-            if (!success)
+            byte[] aesKey = aes.Key;
+            byte[] aesIV = aes.IV;
+
+            // 用 AES 加密响应数据
+            byte[] plainBytes = System.Text.Encoding.UTF8.GetBytes(responseBody);
+            byte[] encryptedData;
+
+            using (var encryptor = aes.CreateEncryptor())
             {
-                throw new InvalidOperationException($"无法获取Rsa加密密钥");
+                encryptedData = encryptor.TransformFinalBlock(plainBytes, 0, plainBytes.Length);
             }
-            try
-            {
-                // 解析响应体以检查是否为ApiResult格式
-                var jObject = JObject.Parse(responseBody);
 
-                // 检查是否包含ApiResult的基本字段：Code、Msg、Data
-                if (jObject.ContainsKey("Code") &&
-                    jObject.ContainsKey("Msg") &&
-                    jObject.ContainsKey("Data"))
-                {
-                    // 这是一个ApiResult格式的响应，只加密Data字段
-                    var originalData = jObject["Data"]?.ToString();
-                    string encryptedData;
+            // 将 AES 密钥和 IV 编码为 Base64，并通过响应头传递
+            var keyBase64 = Convert.ToBase64String(aesKey);
+            var ivBase64 = Convert.ToBase64String(aesIV);
+            
+            _contextAccessor.HttpContext?.Response.Headers.Append("X-Encryption-Key", keyBase64);
+            _contextAccessor.HttpContext?.Response.Headers.Append("X-Encryption-IV", ivBase64);
+            _contextAccessor.HttpContext?.Response.Headers.Append("X-Encryption-Algorithm", "AES-256-CBC");
 
-                    // RSA加密需要公钥
-                    encryptedData = CryptographyUtils.RSAEncrypt(originalData, key);
-                    //尝试解密
-                    var (success1, key1) = await GetResponseEncryptionKeyAsync(true); // false 表示获取加密密钥（公钥或对称密钥）
-                    string aa = CryptographyUtils.RSADecrypt(encryptedData, key1);
-
-                    // 重建响应体，保持Code和Msg不变，只替换Data为加密内容
-                    jObject["Data"] = encryptedData;
-                    return jObject.ToString(Formatting.None);
-                }
-                else
-                {
-                    // 不是ApiResult格式，按原来的方式加密整个响应体
-                    return CryptographyUtils.RSAEncrypt(responseBody, key);
-
-                }
-            }
-            catch (JsonReaderException ex)
-            {
-                // 如果JSON解析失败，记录错误并返回原始加密方式
-                Console.WriteLine($"JSON解析错误: {ex.Message}");
-                // 如果响应不是有效的JSON，仍然尝试加密整个响应体
-                return CryptographyUtils.RSAEncrypt(responseBody, key);
-
-            }
-            catch (Exception ex)
-            {
-                // 其他异常也记录并返回原始加密方式
-                Console.WriteLine($"加密处理错误: {ex.Message}");
-                // 如果在加密过程中发生错误，抛出异常让调用方处理
-                throw;
-            }
+            // 返回 Base64 编码的加密数据
+            return Convert.ToBase64String(encryptedData);
         }
 
         /// <summary>
@@ -314,40 +336,25 @@ namespace Fastdotnet.WebApi.Middleware
         /// </summary>
         private async Task<(bool success, string key)> GetResponseEncryptionKeyAsync(bool isForDecryption)
         {
-            var keyType = isForDecryption ? "PrivateKey" : "PublicKey";
-            var cacheKey = $"Fastdotnet_Encryption_Response_Rsa_{keyType}";
-
-            // 首先尝试从缓存获取密钥
-            var cachedKey = await _cacheService.GetAsync<string>(cacheKey);
-            if (!string.IsNullOrEmpty(cachedKey))
-            {
-                return (true, cachedKey);
-            }
-
-            // 如果缓存中没有密钥，生成新的密钥对并存储到缓存
-            //var encryptionService = new EncryptionService();
             try
             {
-                // 非对称加密算法
-                var (publicKey, privateKey) = CryptographyUtils.GenerateRSAKeyPair();
-
-                // 将密钥对存入缓存，使用配置中的过期时间
-                var options = new HybridCacheEntryOptions
+                string key;
+                if (isForDecryption)
                 {
-                    Expiration = TimeSpan.FromHours(24),                 // 24小时后过期
-                    LocalCacheExpiration = TimeSpan.FromHours(24)          // 本地缓存24小时过期
-                };
-
-                await _cacheService.SetAsync($"Fastdotnet_Encryption_Response_Rsa_PublicKey", publicKey, options);
-                await _cacheService.SetAsync($"Fastdotnet_Encryption_Response_Rsa_PrivateKey", privateKey, options);
-
-                // 返回请求的密钥类型
-                var requestedKey = isForDecryption ? privateKey : publicKey;
-                return (true, requestedKey);
-
+                    // 获取私钥
+                    key = await _encryptionKeyService.GetOrCreatePrivateKeyAsync();
+                }
+                else
+                {
+                    // 获取公钥
+                    key = await _encryptionKeyService.GetOrCreatePublicKeyAsync();
+                }
+                
+                return (true, key);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"[EncryptionMiddleware] 获取密钥失败: {ex.Message}");
                 return (false, "");
             }
         }

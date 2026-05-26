@@ -288,14 +288,63 @@ service.interceptors.response.use(
 				return Promise.reject(new Error(res.Msg));
 			}
 
-			// 解密逻辑
-			const privateKey = response.headers['x-rsa-privatekey'];
-			if (privateKey && res.Data) {
-				try {
-					return decryptResponse(res.Data, 'RSA', privateKey);
-				} catch (e) {
-					console.error('解密失败', e);
-					// 解密失败是否视为错误？视业务而定，这里暂返回原文或报错
+			// 解密逻辑（支持 RSA、混合加密和纯 AES）
+			const encryptionAlgorithm = response.headers['x-encryption-algorithm'];
+			
+			if (encryptionAlgorithm === 'AES-256-CBC') {
+				// 纯 AES 加密响应（从响应头获取密钥）
+				const aesKey = response.headers['x-encryption-key'];
+				const aesIV = response.headers['x-encryption-iv'];
+				
+				if (aesKey && aesIV && res.Data) {
+					try {
+						// 使用 CryptoJS 解密
+						return import('crypto-js').then((CryptoJS) => {
+							const encryptedData = typeof res.Data === 'string' ? res.Data : JSON.stringify(res.Data);
+							const ciphertext = CryptoJS.default.enc.Base64.parse(encryptedData);
+							const key = CryptoJS.default.enc.Base64.parse(aesKey);
+							const iv = CryptoJS.default.enc.Base64.parse(aesIV);
+							
+							const decrypted = CryptoJS.default.AES.decrypt(
+								CryptoJS.default.lib.CipherParams.create({
+									ciphertext: ciphertext
+								}),
+								key,
+								{ iv: iv, mode: CryptoJS.default.mode.CBC, padding: CryptoJS.default.pad.Pkcs7 }
+							);
+							
+							const decryptedText = decrypted.toString(CryptoJS.default.enc.Utf8);
+							return JSON.parse(decryptedText);
+						}).catch((e) => {
+							console.error('AES 解密失败', e);
+							return res.Data;
+						});
+					} catch (e) {
+						console.error('AES 解密失败', e);
+						return res.Data;
+					}
+				}
+			} else {
+				// RSA 或混合加密（向后兼容）
+				const privateKey = response.headers['x-rsa-privatekey'];
+				if (privateKey && res.Data) {
+					try {
+						// 检测是否为混合加密格式
+						let algorithm = 'RSA';
+						let dataToDecrypt = res.Data;
+						
+						// 如果 Data 是对象且包含 encryptedKey 字段，说明是混合加密
+						if (typeof res.Data === 'object' && res.Data.encryptedKey) {
+							algorithm = 'HYBRID';
+							dataToDecrypt = JSON.stringify(res.Data);
+						}
+						
+						return decryptResponse(dataToDecrypt, algorithm, privateKey);
+					} catch (e) {
+						console.error('解密失败', e);
+						// 解密失败时返回原文
+						return res.Data;
+					}
 				}
 			}
 			// 如果 Data 存在则返回 Data，否则返回完整响应（用于非泛型 ApiResult）
@@ -330,6 +379,39 @@ service.interceptors.response.use(
 			} else {
 				// 超过最大重试次数，放弃并提示用户
 				ElMessage.error(errorMsg + ' (自动重试失败，请刷新页面)');
+				return Promise.reject(response);
+			}
+		}
+
+		// 3.5. 加密密钥过期处理 (498)
+		if (status === 498) {
+			console.warn('[Encryption] 检测到加密密钥已过期，尝试刷新公钥并重试...');
+			
+			const currentRetryCount = (response.config as any).__encryptionRetryCount || 0;
+			
+			if (currentRetryCount < 1) {
+				// 标记重试次数
+				(response.config as any).__encryptionRetryCount = currentRetryCount + 1;
+				
+				// 动态导入避免循环依赖
+				return import('@/utils/encryption').then(async ({ getEncryptionPublicKey }) => {
+					const freshPublicKey = await getEncryptionPublicKey(true);
+					
+					if (freshPublicKey) {
+						console.log('[Encryption] 公钥已刷新，重试请求...');
+						// 重新发起请求
+						return service(response.config as InternalAxiosRequestConfig);
+					} else {
+						ElMessage.error('公钥刷新失败，请刷新页面重试');
+						return Promise.reject(response);
+					}
+				}).catch((err) => {
+					console.error('[Encryption] 刷新公钥异常:', err);
+					ElMessage.error('公钥刷新失败，请刷新页面重试');
+					return Promise.reject(response);
+				});
+			} else {
+				ElMessage.error('加密密钥刷新后仍然失败，请刷新页面');
 				return Promise.reject(response);
 			}
 		}

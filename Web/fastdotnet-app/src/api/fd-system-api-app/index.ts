@@ -5,6 +5,7 @@
 import * as auth from './auth';
 import * as appMenus from './appMenus';
 import * as captcha from './captcha';
+import * as encryptionKey from './encryptionKey';
 import * as fdAppNotice from './fdAppNotice';
 import * as fdAppTodoTask from './fdAppTodoTask';
 import * as fdAppUser from './fdAppUser';
@@ -21,6 +22,7 @@ export default {
 	auth,
 	appMenus,
 	captcha,
+	encryptionKey,
 	fdAppNotice,
 	fdAppTodoTask,
 	fdAppUser,

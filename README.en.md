@@ -61,12 +61,54 @@ Experience Fastdotnet instantly without installation:
 - **Admin Panel Demo**: http://admin.demo.fastdotnet.top/
   - Username: `superadmin` / Password: `123456`
   - Features: System management, user management, permission configuration, etc.
+  - 💡 Tip:  use `mktest` / `123456` to experience plugin marketplace download and authorization features
 
 - **Application Demo**: http://app.demo.fastdotnet.top/
   - Username: `admintest` / Password: `123456`
   - Features: Business operations, data display, etc.
 
 > 💡 Note: Demo environment data is reset periodically. Do not store important data.
+
+## 🤝 Sponsors
+
+Thanks to the following sponsors for supporting the Fastdotnet project:
+
+<div align="center">
+  <a href="https://www.netzyun.com/" target="_blank">
+    <img src="sponsorship/网臻云_logo.png" alt="NetZyun" width="200" />
+  </a>
+  <p><strong>NetZyun</strong> - Our demo server sponsor</p>
+</div>
+
+---
+
+## 🔒 Security Testing Partnership
+
+**We are looking for professional cybersecurity companies to collaborate!**
+
+As an enterprise-grade development framework, Fastdotnet places high importance on system security. We invite professional security testing teams to conduct comprehensive security audits and penetration tests.
+
+### Collaboration Scope
+- ✅ Framework core code security audit
+- ✅ Plugin system isolation mechanism verification
+- ✅ Authentication & authorization system (OIDC/JWT/RBAC) security testing
+- ✅ API interface security assessment
+- ✅ Data encryption and transmission security inspection
+- ✅ Common vulnerability scanning (SQL injection, XSS, CSRF, etc.)
+
+### Collaboration Model
+- **Free Testing**: Provide free testing environment and technical support for security companies
+- **Brand Exposure**: Display your company logo and links in README, official website, and documentation
+- **Report Publication**: Publicly release test reports to enhance industry influence for both parties
+- **Long-term Partnership**: Establish continuous security collaboration mechanisms
+
+### Contact Us
+📧 Email: yunnanzuyuankeji@163.com  
+💬 QQ Group: 779454817
+
+> 💡 If you are a professional company or team in the security field, please contact us to jointly enhance Fastdotnet's security!
+
+---
 
 ## 📚 Official Documentation
 
@@ -665,7 +707,7 @@ Before contributing, please read:
   - 💰 **Developer Value Reuse**: Develop once, sell multiple times, transform "project code" into "product assets"
 - 📚 **Official Documentation**: [https://docs.fastdotnet.top](https://docs.fastdotnet.top)
 - 🎮 **Live Demos**:
-  - Admin Panel: http://admin.demo.fastdotnet.top/ (`superadmin` / `123456`)
+  - Admin Panel: http://admin.demo.fastdotnet.top/ (`superadmin` / `123456`, or use `mktest` / `123456` for plugin features)
   - Application: http://app.demo.fastdotnet.top/ (`admintest` / `123456`)
 - 📦 **Dependency Lists**:
   - [Backend Dependencies](DEPENDENCIES_BACKEND.en.md) - View third-party libraries and licenses used in backend

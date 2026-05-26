@@ -78,6 +78,7 @@ import { formatAxis } from '@/utils/formatTime';
 import { NextLoading } from '@/utils/loading';
 // 引入适配的登录 API
 import { postApiAuthAdminLogin } from '@/api/fd-system-api-admin/auth';
+import { getEncryptionPublicKey } from '@/utils/encryption';
 import { startQiankun } from '@/main';
 import { baseSignalRManager } from '@/utils/signalr';
 
@@ -161,6 +162,13 @@ const onSignIn = async () => {
 	
 	state.loading.signIn = true;
 	try {
+		// 0. 获取 RSA 公钥（用于混合加密）
+		const publicKey = await getEncryptionPublicKey(true); // 强制刷新，确保使用最新公钥
+		if (!publicKey) {
+			ElMessage.error('获取加密公钥失败，请刷新页面重试');
+			return;
+		}
+		
 		// 1. 调用后端登录接口
 		const loginData: any = {
 			Username: state.ruleForm.userName,
@@ -173,7 +181,23 @@ const onSignIn = async () => {
 			loginData.CaptchaCode = state.ruleForm.code;
 		}
 		
-		const res = await postApiAuthAdminLogin(loginData);
+		// 注意：这里不能直接使用 postApiAuthAdminLogin，因为它内部会再次从 Session 读取公钥
+		// 需要手动调用 request 并传入刚获取的公钥
+		const { default: request, encryptRequest } = await import('@/utils/request');
+		
+		// 打印公钥指纹用于调试
+		const publicKeyFingerprint = publicKey.substring(0, 50) + '...';
+		console.log('[Login] 使用公钥加密:', publicKey);
+		
+		const processedBody = await encryptRequest(loginData, 'HYBRID', publicKey);
+		
+		const res = await request('/api/auth/admin/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json-patch+json',
+			},
+			data: processedBody,
+		});
 
 		// 2. 检查响应并存储 token
 		// 由于 request.ts 响应拦截器已修改为直接返回 res.Data,
@@ -284,6 +308,11 @@ watch(
 // 组件挂载时获取配置并设置验证码
 onMounted(() => {
 	updateCaptchaConfig();
+	
+	// 预获取 RSA 公钥（用于混合加密）
+	import('@/utils/encryption').then(({ getEncryptionPublicKey }) => {
+		getEncryptionPublicKey();
+	});
 });
 </script>
 

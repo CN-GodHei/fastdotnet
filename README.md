@@ -61,12 +61,54 @@
 - **管理端演示**：http://admin.demo.fastdotnet.top/
   - 账号：`superadmin` / 密码：`123456`
   - 功能：系统管理、用户管理、权限配置等
+  - 💡 提示：可使用 `mktest` / `123456` 体验插件商城的下载和授权功能
 
 - **应用端演示**：http://app.demo.fastdotnet.top/
   - 账号：`admintest` / 密码：`123456`
   - 功能：业务操作、数据展示等
 
 > 💡 提示：演示环境数据会定期重置，请勿存储重要数据。
+
+## 🤝 赞助商
+
+感谢以下赞助商对 Fastdotnet 项目的支持：
+
+<div align="center">
+  <a href="https://www.netzyun.com/" target="_blank">
+    <img src="sponsorship/网臻云_logo.png" alt="网臻云" width="200" />
+  </a>
+  <p><strong>网臻云</strong> - 我们的演示服务器赞助商</p>
+</div>
+
+---
+
+## 🔒 安全测试合作招募
+
+**我们正在寻找专业的网络安全公司合作！**
+
+Fastdotnet 作为一个企业级开发框架，高度重视系统安全性。我们诚邀专业的安全测试团队对框架进行全面的安全审计和渗透测试。
+
+### 合作内容
+- ✅ 框架核心代码安全审计
+- ✅ 插件系统隔离机制安全性验证
+- ✅ 认证授权体系（OIDC/JWT/RBAC）安全测试
+- ✅ API 接口安全防护评估
+- ✅ 数据加密与传输安全检测
+- ✅ 常见漏洞扫描（SQL注入、XSS、CSRF等）
+
+### 合作方式
+- **免费测试**：为安全公司提供免费的测试环境和技术支持
+- **品牌曝光**：在 README、官网、文档中展示贵公司 Logo 和链接
+- **报告发布**：公开发布测试报告，提升双方行业影响力
+- **长期合作**：建立持续的安全合作机制
+
+### 联系我们
+📧 邮箱：yunnanzuyuankeji@163.com  
+💬 QQ群：779454817
+
+> 💡 如果您是安全领域的专业公司或团队，欢迎与我们联系，共同提升 Fastdotnet 的安全性！
+
+---
 
 ## 📚 官方文档
 
@@ -664,7 +706,7 @@ public class MyPlugin : PluginBase
   - 💰 **开发者价值复用**：一次开发，多次销售，将"项目代码"转化为"产品资产"
 - 📚 **官方文档**：[https://docs.fastdotnet.top](https://docs.fastdotnet.top)
 - 🎮 **在线演示**：
-  - 管理端：http://admin.demo.fastdotnet.top/ (`superadmin` / `123456`)
+  - 管理端：http://admin.demo.fastdotnet.top/ (`superadmin` / `123456`，也可用 `mktest` / `123456` 体验插件功能)
   - 应用端：http://app.demo.fastdotnet.top/ (`admintest` / `123456`)
 - 📦 **依赖清单**：
   - [后端依赖](DEPENDENCIES_BACKEND.md) - 查看后端使用的第三方库及许可证

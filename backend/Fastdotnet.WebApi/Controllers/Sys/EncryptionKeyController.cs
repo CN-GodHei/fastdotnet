@@ -3,6 +3,7 @@ using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Hybrid;
 using System.Security.Cryptography;
 
 namespace Fastdotnet.WebApi.Controllers.Sys
@@ -13,9 +14,15 @@ namespace Fastdotnet.WebApi.Controllers.Sys
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    [ApiUsageScope(ApiUsageScopeEnum.AdminOnly)]
+    [ApiUsageScope(ApiUsageScopeEnum.Both)]
     public class EncryptionKeyController : ControllerBase
     {
+        private readonly IEncryptionKeyService _encryptionKeyService;
+
+        public EncryptionKeyController(IEncryptionKeyService encryptionKeyService)
+        {
+            _encryptionKeyService = encryptionKeyService;
+        }
         /// <summary>
         /// 生成加密算法的密钥对
         /// </summary>
@@ -55,31 +62,23 @@ namespace Fastdotnet.WebApi.Controllers.Sys
         }
 
         /// <summary>
-        /// 获取指定算法的公钥
+        /// 获取 RSA 公钥（用于混合加密）
         /// </summary>
-        /// <param name="algorithm">加密算法类型</param>
         /// <returns>公钥信息</returns>
-        [HttpGet("public/{algorithm}")]
-        [AllowAnonymous] // 允许匿名访问
-        public async Task<IActionResult> GetPublicKey(string algorithm)
+        [HttpGet("public-key")]
+        [AllowAnonymous] // 允许匿名访问（登录前需要获取）
+        public async Task<IActionResult> GetPublicKey()
         {
-            if (string.IsNullOrWhiteSpace(algorithm))
-            {
-                return BadRequest("算法类型不能为空");
-            }
-
-            algorithm = algorithm.ToUpper();
-
             try
             {
-                // 非对称加密算法 - 生成临时密钥对返回公钥
-                var (publicKey, _) = CryptographyUtils.GenerateRSAKeyPair();
+                var publicKey = await _encryptionKeyService.GetOrCreatePublicKeyAsync();
 
                 return Ok(new
                 {
                     Success = true,
-                    Algorithm = algorithm,
-                    PublicKey = publicKey
+                    Algorithm = "RSA",
+                    PublicKey = publicKey,
+                    Message = "RSA公钥获取成功"
                 });
             }
             catch (Exception ex)
@@ -97,49 +96,30 @@ namespace Fastdotnet.WebApi.Controllers.Sys
         /// </summary>
         /// <param name="algorithm">加密算法类型</param>
         /// <returns>私钥信息</returns>
-        [HttpGet("private/{algorithm}")]
-        [AllowAnonymous] // 允许匿名访问
-        public async Task<IActionResult> GetPrivateKey(string algorithm)
-        {
+        //[HttpGet("private/{algorithm}")]
+        //[AllowAnonymous] // 允许匿名访问
+        //public async Task<IActionResult> GetPrivateKey(string algorithm)
+        //{
 
-            try
-            {
-                var (_, privateKey) = CryptographyUtils.GenerateRSAKeyPair();
+        //    try
+        //    {
+        //        var (_, privateKey) = CryptographyUtils.GenerateRSAKeyPair();
 
-                return Ok(new
-                {
-                    Success = true,
-                    Algorithm = algorithm,
-                    PrivateKey = privateKey
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Success = false,
-                    Message = $"获取私钥时发生错误: {ex.Message}"
-                });
-            }
-        }
-
-
-        /// <summary>
-        /// 生成对称加密算法的密钥
-        /// </summary>
-        /// <param name="algorithm">加密算法</param>
-        /// <returns>生成的密钥</returns>
-        private string GenerateSymmetricKey(string algorithm)
-        {
-            var keyLength = algorithm switch
-            {
-                "AES" => 32, // AES-256需要32字节密钥
-                _ => 16  // 默认16字节
-            };
-
-            var keyBytes = new byte[keyLength];
-            RandomNumberGenerator.Fill(keyBytes);
-            return Convert.ToBase64String(keyBytes); // 返回Base64编码的密钥
-        }
+        //        return Ok(new
+        //        {
+        //            Success = true,
+        //            Algorithm = algorithm,
+        //            PrivateKey = privateKey
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new
+        //        {
+        //            Success = false,
+        //            Message = $"获取私钥时发生错误: {ex.Message}"
+        //        });
+        //    }
+        //}
     }
 }
