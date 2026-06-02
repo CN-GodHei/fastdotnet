@@ -103,10 +103,149 @@ namespace Fastdotnet.WebApi.Filters
                 }
             }
 
-            // 执行移除操作
+                // 执行移除操作
             foreach (var path in pathsToRemove)
             {
                 swaggerDoc.Paths.Remove(path);
+            }
+
+            // 移除未被任何剩余 API 路径引用的 schema 类型
+            RemoveUnusedSchemas(swaggerDoc);
+        }
+
+        /// <summary>
+        /// 移除 Swagger 文档中未被剩余 API 路径引用的 schema 类型
+        /// 避免生成多余的模型类型定义
+        /// </summary>
+        private void RemoveUnusedSchemas(OpenApiDocument swaggerDoc)
+        {
+            if (swaggerDoc.Components?.Schemas == null || swaggerDoc.Components.Schemas.Count == 0)
+                return;
+
+            // 收集所有被引用到的 schema ID
+            var referencedSchemas = new HashSet<string>();
+
+            foreach (var pathItem in swaggerDoc.Paths.Values)
+            {
+                foreach (var operation in pathItem.Operations.Values)
+                {
+                    // 检查参数
+                    foreach (var parameter in operation.Parameters)
+                    {
+                        CollectSchemaRefs(parameter.Schema, referencedSchemas);
+                    }
+
+                    // 检查请求体
+                    if (operation.RequestBody?.Content != null)
+                    {
+                        foreach (var mediaType in operation.RequestBody.Content.Values)
+                        {
+                            CollectSchemaRefs(mediaType.Schema, referencedSchemas);
+                        }
+                    }
+
+                    // 检查响应
+                    if (operation.Responses != null)
+                    {
+                        foreach (var response in operation.Responses.Values)
+                        {
+                            if (response.Content != null)
+                            {
+                                foreach (var mediaType in response.Content.Values)
+                                {
+                                    CollectSchemaRefs(mediaType.Schema, referencedSchemas);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 传递闭包：如果 schema A 引用了 schema B，B 也需要保留
+            var processed = new HashSet<string>();
+            var queue = new Queue<string>(referencedSchemas);
+
+            while (queue.Count > 0)
+            {
+                var schemaId = queue.Dequeue();
+                if (!processed.Add(schemaId))
+                    continue;
+
+                if (swaggerDoc.Components.Schemas.TryGetValue(schemaId, out var schema))
+                {
+                    CollectSchemaRefs(schema, referencedSchemas);
+                }
+            }
+
+            // 移除未被引用的 schema
+            var schemasToRemove = swaggerDoc.Components.Schemas.Keys
+                .Where(id => !referencedSchemas.Contains(id))
+                .ToList();
+
+            foreach (var id in schemasToRemove)
+            {
+                swaggerDoc.Components.Schemas.Remove(id);
+            }
+
+            if (schemasToRemove.Count > 0)
+            {
+                Console.WriteLine($"[Swagger] 文档 '{swaggerDoc.Info?.Title}' 移除了 {schemasToRemove.Count} 个未引用的 schema 类型");
+            }
+        }
+
+        /// <summary>
+        /// 递归收集 schema 中的 $ref 引用
+        /// </summary>
+        private void CollectSchemaRefs(OpenApiSchema? schema, HashSet<string> refs)
+        {
+            if (schema == null) return;
+
+            // 检查直接引用
+            if (schema.Reference != null && !string.IsNullOrEmpty(schema.Reference.Id))
+            {
+                refs.Add(schema.Reference.Id);
+            }
+
+            // 检查 OneOf
+            if (schema.OneOf != null)
+            {
+                foreach (var sub in schema.OneOf)
+                    CollectSchemaRefs(sub, refs);
+            }
+
+            // 检查 AnyOf
+            if (schema.AnyOf != null)
+            {
+                foreach (var sub in schema.AnyOf)
+                    CollectSchemaRefs(sub, refs);
+            }
+
+            // 检查 AllOf
+            if (schema.AllOf != null)
+            {
+                foreach (var sub in schema.AllOf)
+                    CollectSchemaRefs(sub, refs);
+            }
+
+            // 检查数组类型
+            if (schema.Items != null)
+            {
+                CollectSchemaRefs(schema.Items, refs);
+            }
+
+            // 检查 AdditionalProperties
+            if (schema.AdditionalProperties != null)
+            {
+                CollectSchemaRefs(schema.AdditionalProperties, refs);
+            }
+
+            // 递归检查属性
+            if (schema.Properties != null)
+            {
+                foreach (var prop in schema.Properties.Values)
+                {
+                    CollectSchemaRefs(prop, refs);
+                }
             }
         }
         

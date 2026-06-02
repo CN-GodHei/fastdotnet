@@ -46,8 +46,8 @@ importers:
         specifier: ^9.0.0
         version: 9.33.0(eslint@8.57.1)
       fastdotnet-openapi2ts:
-        specifier: ^1.1.1
-        version: 1.1.1(chokidar@3.6.0)(typescript@5.9.3)
+        specifier: ^1.2.0
+        version: 1.2.0(chokidar@3.6.0)(typescript@5.9.3)
       husky:
         specifier: ^9.0.0
         version: 9.1.7
@@ -1020,8 +1020,8 @@ packages:
   fast-safe-stringify@2.1.1:
     resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
 
-  fastdotnet-openapi2ts@1.1.1:
-    resolution: {integrity: sha512-7qCZ7pEgl991l+DRggMHDSAbq/B3SXlDlABy7ArmEe9I7KyEdqmNljIcTnfRx2XVEHlPTXOuwNLa+Qv3Bby1EA==}
+  fastdotnet-openapi2ts@1.2.0:
+    resolution: {integrity: sha512-Uep2a4D2Y+P/+aKbfHpcIoONRIzygK7M3lRfc+1jYIGPETgL7Yi+ZbcEP283nUKZgeg44DHQtMknajUYd66jsA==}
     hasBin: true
 
   fastq@1.20.1:
@@ -2922,7 +2922,7 @@ snapshots:
 
   fast-safe-stringify@2.1.1: {}
 
-  fastdotnet-openapi2ts@1.1.1(chokidar@3.6.0)(typescript@5.9.3):
+  fastdotnet-openapi2ts@1.2.0(chokidar@3.6.0)(typescript@5.9.3):
     dependencies:
       chalk: 4.1.2
       cosmiconfig: 9.0.1(typescript@5.9.3)
