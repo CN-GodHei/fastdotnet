@@ -3,7 +3,6 @@
 import request, { encryptRequest } from '@/utils/request';
 
 /** 此处后端没有提供注释 GET /api/FdDictDataApp */
-/** @deprecated 请使用 getAppGenericDtoControllerBase5GetAll，原函数名: getApiFdDictDataApp */
 export async function getAppGenericDtoControllerBase5GetAll(options?: { [key: string]: any }) {
 	return request<APIModel.FdDictDataDto[]>('/api/FdDictDataApp', {
 		method: 'GET',
@@ -14,7 +13,6 @@ export async function getAppGenericDtoControllerBase5GetAll(options?: { [key: st
 /** @deprecated 此函数名已变更，请使用 getAppGenericDtoControllerBase5GetAll */
 export const getApiFdDictDataApp = getAppGenericDtoControllerBase5GetAll;
 /** 此处后端没有提供注释 POST /api/FdDictDataApp */
-/** @deprecated 请使用 postAppGenericDtoControllerBase5Create，原函数名: postApiFdDictDataApp */
 export async function postAppGenericDtoControllerBase5Create(body: APIModel.CreateFdDictDataDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdDictDataDto>('/api/FdDictDataApp', {
 		method: 'POST',
@@ -29,7 +27,6 @@ export async function postAppGenericDtoControllerBase5Create(body: APIModel.Crea
 /** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5Create */
 export const postApiFdDictDataApp = postAppGenericDtoControllerBase5Create;
 /** 此处后端没有提供注释 GET /api/FdDictDataApp/${param0} */
-/** @deprecated 请使用 getAppGenericDtoControllerBase5GetById，原函数名: getApiFdDictDataAppId */
 export async function getAppGenericDtoControllerBase5GetById(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
 	params: APIModel.getAppGenericDtoControllerBase5GetByIdParams,
@@ -47,7 +44,6 @@ export async function getAppGenericDtoControllerBase5GetById(
 /** @deprecated 此函数名已变更，请使用 getAppGenericDtoControllerBase5GetById */
 export const getApiFdDictDataAppId = getAppGenericDtoControllerBase5GetById;
 /** 此处后端没有提供注释 PUT /api/FdDictDataApp/${param0} */
-/** @deprecated 请使用 putAppGenericDtoControllerBase5Update，原函数名: putApiFdDictDataAppId */
 export async function putAppGenericDtoControllerBase5Update(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
 	params: APIModel.putAppGenericDtoControllerBase5UpdateParams,
@@ -70,7 +66,6 @@ export async function putAppGenericDtoControllerBase5Update(
 /** @deprecated 此函数名已变更，请使用 putAppGenericDtoControllerBase5Update */
 export const putApiFdDictDataAppId = putAppGenericDtoControllerBase5Update;
 /** 此处后端没有提供注释 DELETE /api/FdDictDataApp/${param0} */
-/** @deprecated 请使用 deleteAppGenericDtoControllerBase5Delete，原函数名: deleteApiFdDictDataAppId */
 export async function deleteAppGenericDtoControllerBase5Delete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
 	params: APIModel.deleteAppGenericDtoControllerBase5DeleteParams,
@@ -88,7 +83,6 @@ export async function deleteAppGenericDtoControllerBase5Delete(
 /** @deprecated 此函数名已变更，请使用 deleteAppGenericDtoControllerBase5Delete */
 export const deleteApiFdDictDataAppId = deleteAppGenericDtoControllerBase5Delete;
 /** 此处后端没有提供注释 PUT /api/FdDictDataApp/batch */
-/** @deprecated 请使用 putAppGenericDtoControllerBase5UpdateMany，原函数名: putApiFdDictDataAppBatch */
 export async function putAppGenericDtoControllerBase5UpdateMany(body: APIModel.UpdateFdDictDataDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/FdDictDataApp/batch', {
 		method: 'PUT',
@@ -103,7 +97,6 @@ export async function putAppGenericDtoControllerBase5UpdateMany(body: APIModel.U
 /** @deprecated 此函数名已变更，请使用 putAppGenericDtoControllerBase5UpdateMany */
 export const putApiFdDictDataAppBatch = putAppGenericDtoControllerBase5UpdateMany;
 /** 此处后端没有提供注释 POST /api/FdDictDataApp/batch */
-/** @deprecated 请使用 postAppGenericDtoControllerBase5CreateMany，原函数名: postApiFdDictDataAppBatch */
 export async function postAppGenericDtoControllerBase5CreateMany(body: APIModel.CreateFdDictDataDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/FdDictDataApp/batch', {
 		method: 'POST',
@@ -118,7 +111,6 @@ export async function postAppGenericDtoControllerBase5CreateMany(body: APIModel.
 /** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5CreateMany */
 export const postApiFdDictDataAppBatch = postAppGenericDtoControllerBase5CreateMany;
 /** 此处后端没有提供注释 DELETE /api/FdDictDataApp/batch */
-/** @deprecated 请使用 deleteAppGenericDtoControllerBase5BatchDelete，原函数名: deleteApiFdDictDataAppBatch */
 export async function deleteAppGenericDtoControllerBase5BatchDelete(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/FdDictDataApp/batch', {
 		method: 'DELETE',
@@ -133,7 +125,6 @@ export async function deleteAppGenericDtoControllerBase5BatchDelete(body: string
 /** @deprecated 此函数名已变更，请使用 deleteAppGenericDtoControllerBase5BatchDelete */
 export const deleteApiFdDictDataAppBatch = deleteAppGenericDtoControllerBase5BatchDelete;
 /** 此处后端没有提供注释 PUT /api/FdDictDataApp/batch/updatebycondition */
-/** @deprecated 请使用 putAppGenericDtoControllerBase5UpdateManyByCondition，原函数名: putApiFdDictDataAppBatchUpdatebycondition */
 export async function putAppGenericDtoControllerBase5UpdateManyByCondition(
 	body: APIModel.BatchUpdateByConditionDto1UpdateFdDictDataDto,
 	options?: { [key: string]: any }
@@ -151,7 +142,6 @@ export async function putAppGenericDtoControllerBase5UpdateManyByCondition(
 /** @deprecated 此函数名已变更，请使用 putAppGenericDtoControllerBase5UpdateManyByCondition */
 export const putApiFdDictDataAppBatchUpdatebycondition = putAppGenericDtoControllerBase5UpdateManyByCondition;
 /** 获取用户相关配置 GET /api/FdDictDataApp/GetUserConfig */
-/** @deprecated 请使用 getFdDictDataAppUserConfig，原函数名: getApiFdDictDataAppGetUserConfig */
 export async function getFdDictDataAppUserConfig(options?: { [key: string]: any }) {
 	return request<APIModel.FdDictDataDto[]>('/api/FdDictDataApp/GetUserConfig', {
 		method: 'GET',
@@ -162,7 +152,6 @@ export async function getFdDictDataAppUserConfig(options?: { [key: string]: any 
 /** @deprecated 此函数名已变更，请使用 getFdDictDataAppUserConfig */
 export const getApiFdDictDataAppGetUserConfig = getFdDictDataAppUserConfig;
 /** 此处后端没有提供注释 POST /api/FdDictDataApp/list-by-condition */
-/** @deprecated 请使用 postAppGenericDtoControllerBase5GetListByCondition，原函数名: postApiFdDictDataAppListByCondition */
 export async function postAppGenericDtoControllerBase5GetListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
 	return request<any>('/api/FdDictDataApp/list-by-condition', {
 		method: 'POST',
@@ -177,7 +166,6 @@ export async function postAppGenericDtoControllerBase5GetListByCondition(body: A
 /** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5GetListByCondition */
 export const postApiFdDictDataAppListByCondition = postAppGenericDtoControllerBase5GetListByCondition;
 /** 此处后端没有提供注释 GET /api/FdDictDataApp/page */
-/** @deprecated 请使用 getAppGenericDtoControllerBase5GetPage，原函数名: getApiFdDictDataAppPage */
 export async function getAppGenericDtoControllerBase5GetPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
 	params: APIModel.getAppGenericDtoControllerBase5GetPageParams,
@@ -199,7 +187,6 @@ export async function getAppGenericDtoControllerBase5GetPage(
 /** @deprecated 此函数名已变更，请使用 getAppGenericDtoControllerBase5GetPage */
 export const getApiFdDictDataAppPage = getAppGenericDtoControllerBase5GetPage;
 /** 此处后端没有提供注释 POST /api/FdDictDataApp/page/search */
-/** @deprecated 请使用 postAppGenericDtoControllerBase5GetPageByCondition，原函数名: postApiFdDictDataAppPageSearch */
 export async function postAppGenericDtoControllerBase5GetPageByCondition(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/FdDictDataApp/page/search', {
 		method: 'POST',

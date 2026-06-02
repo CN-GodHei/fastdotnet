@@ -3,7 +3,6 @@
 import request, { encryptRequest } from '@/utils/request';
 
 /** 管理端专用接口 GET /api/test-scope/admin-only */
-/** @deprecated 请使用 getTestScopeAdminOnly，原函数名: getApiTestScopeAdminOnly */
 export async function getTestScopeAdminOnly(options?: { [key: string]: any }) {
 	return request<any>('/api/test-scope/admin-only', {
 		method: 'GET',
@@ -14,7 +13,6 @@ export async function getTestScopeAdminOnly(options?: { [key: string]: any }) {
 /** @deprecated 此函数名已变更，请使用 getTestScopeAdminOnly */
 export const getApiTestScopeAdminOnly = getTestScopeAdminOnly;
 /** 两端通用接口 GET /api/test-scope/both */
-/** @deprecated 请使用 getTestScopeBoth，原函数名: getApiTestScopeBoth */
 export async function getTestScopeBoth(options?: { [key: string]: any }) {
 	return request<any>('/api/test-scope/both', {
 		method: 'GET',
@@ -29,11 +27,11 @@ export const getApiTestScopeBoth = getTestScopeBoth;
 **请求加密**: 该接口的请求参数需要使用 RSA + AES 混合加密 进行加密。
 
 **响应加密**: 该接口的响应数据使用 RSA + AES 混合加密 进行加密。 [请求加密] [响应加密] POST /api/test-scope/encrypt/default */
-/** @deprecated 请使用 postTestScopeDefaultEncryption，原函数名: postApiTestScopeEncryptOpenApiDefault */
 export async function postTestScopeDefaultEncryption(body: APIModel.ExampleRequest, options?: { [key: string]: any }) {
 	// 请求加密
 	let processedBody = body;
 	if (body) {
+		// 混合加密（RSA + AES）
 		processedBody = await encryptRequest(body, 'HYBRID');
 	}
 
@@ -54,11 +52,11 @@ export const postApiTestScopeEncryptOpenApiDefault = postTestScopeDefaultEncrypt
 **请求加密**: 该接口的请求参数需要使用 RSA + AES 混合加密 进行加密。
 
 **响应加密**: 该接口的响应数据使用 RSA + AES 混合加密 进行加密。 [请求加密] [响应加密] POST /api/test-scope/encrypt/rsa */
-/** @deprecated 请使用 postTestScopeRsaEncryption，原函数名: postApiTestScopeEncryptRsa */
 export async function postTestScopeRsaEncryption(body: APIModel.ExampleRequest, options?: { [key: string]: any }) {
 	// 请求加密
 	let processedBody = body;
 	if (body) {
+		// 混合加密（RSA + AES）
 		processedBody = await encryptRequest(body, 'HYBRID');
 	}
 

@@ -1,16 +1,4 @@
 declare namespace APIModel {
-	enum ActivationStatus {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-	}
-
-	enum ActivationStatusDto {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-	}
-
 	type ApiResult = {
 		Code?: number;
 		Msg?: string;
@@ -20,52 +8,6 @@ declare namespace APIModel {
 		Data?: boolean;
 		Code?: number;
 		Msg?: string;
-	};
-
-	type AppMarketplacePluginDto = {
-		Id?: string;
-		Name?: string;
-		Author?: string;
-		Categories?: string[];
-		SupportedLicenseMode?: SupportedLicenseModeDto;
-		PriceSingleServer?: number;
-		PriceMultiServer?: number;
-		IsFree?: boolean;
-		IsOfficial?: boolean;
-		DocumentationUrl?: string;
-		PurchaseStatus?: string;
-		SubTitle?: string;
-		IconUrl?: string;
-		LatestVersion?: string;
-		LatestDocumentationUrl?: string;
-		LatestReleaseNotes?: string;
-		DownloadCount?: number;
-		VersionList?: string[];
-	};
-
-	type AppMarketplacePluginGetByIdDto = {
-		Id?: string;
-		Name?: string;
-		Description?: string;
-		Author?: string;
-		Categories?: string[];
-		SupportedLicenseMode?: SupportedLicenseModeDto;
-		PriceSingleServer?: number;
-		PriceMultiServer?: number;
-		IsFree?: boolean;
-		IsOfficial?: boolean;
-		DocumentationUrl?: string;
-		PurchaseStatus?: string;
-		SubTitle?: string;
-		IconUrl?: string;
-		UserPurchased?: boolean;
-		UserPurchasedSingleServer?: boolean;
-		UserPurchasedMultiServer?: boolean;
-		LatestVersion?: string;
-		LatestDocumentationUrl?: string;
-		LatestReleaseNotes?: string;
-		DownloadCount?: number;
-		VersionList?: string[];
 	};
 
 	type AppRegisterDto = {
@@ -87,11 +29,6 @@ declare namespace APIModel {
 	type BatchUpdateByConditionDto1FdUpdateEmailConfigDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: FdUpdateEmailConfigDto;
-	};
-
-	type BatchUpdateByConditionDto1PluginATestUpdateDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: PluginATestUpdateDto;
 	};
 
 	type BatchUpdateByConditionDto1UpdateCodeGenDto = {
@@ -207,56 +144,6 @@ declare namespace APIModel {
 	type BatchUpdateByConditionDto1UpdateFdWorkbenchCardDto = {
 		Query?: PageQueryByConditionDto;
 		Dto?: UpdateFdWorkbenchCardDto;
-	};
-
-	type BatchUpdateByConditionDto1UpdateGiftRecordDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateGiftRecordDto;
-	};
-
-	type BatchUpdateByConditionDto1UpdateMkActivitiesDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMkActivitiesDto;
-	};
-
-	type BatchUpdateByConditionDto1UpdateMkInvitationsDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMkInvitationsDto;
-	};
-
-	type BatchUpdateByConditionDto1UpdateMkMarketplacePluginsDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMkMarketplacePluginsDto;
-	};
-
-	type BatchUpdateByConditionDto1UpdateMkUseractivityrecordsDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMkUseractivityrecordsDto;
-	};
-
-	type BatchUpdateByConditionDto1UpdateMkUserServeInfoDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateMkUserServeInfoDto;
-	};
-
-	type BatchUpdateByConditionDto1UpdateOnlinePaymentDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateOnlinePaymentDto;
-	};
-
-	type BatchUpdateByConditionDto1UpdatePointRedemptionDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdatePointRedemptionDto;
-	};
-
-	type BatchUpdateByConditionDto1UpdateUserPluginActivationDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateUserPluginActivationDto;
-	};
-
-	type BatchUpdateByConditionDto1UpdateUserPluginPurchaseDto = {
-		Query?: PageQueryByConditionDto;
-		Dto?: UpdateUserPluginPurchaseDto;
 	};
 
 	type ChangeEmailDto = {
@@ -549,51 +436,6 @@ declare namespace APIModel {
 		DefaultHeight?: number;
 	};
 
-	type CreateGiftRecordDto = {
-		PurchaseId: number;
-		Reason?: string;
-		GivenBy?: string;
-		GivenTime?: string;
-	};
-
-	type CreateMkActivitiesDto = {
-		Name: string;
-		Type: string;
-		Ruleconfig: string;
-		Starttime: string;
-		Endtime: string;
-		Isactive: boolean;
-	};
-
-	type CreateMkMarketplacePluginsDto = {
-		Name?: string;
-		SubTitle?: string;
-		Description?: string;
-		Author?: string;
-		Categories?: string[];
-		IsActive?: boolean;
-		IsFree?: boolean;
-		IsOfficial?: boolean;
-		IconUrl?: string;
-		PriceSingleServer?: number;
-		PriceMultiServer?: number;
-		DocumentationUrl?: string;
-	};
-
-	type CreateMkUseractivityrecordsDto = {
-		Activityid: string;
-		Userid: string;
-		Status: string;
-		Progress: string;
-		Rewarddata: string;
-	};
-
-	type CreateMkUserServeInfoDto = {
-		UserId?: string;
-		MachineFingerprint?: string;
-		MachineName?: string;
-	};
-
 	type CreateOidcApplicationRequest = {
 		DisplayName?: string;
 		ClientType?: string;
@@ -601,49 +443,6 @@ declare namespace APIModel {
 		PostLogoutRedirectUris?: string[];
 		GrantTypes?: string[];
 		Scopes?: string[];
-	};
-
-	type CreateOnlinePaymentDto = {
-		PurchaseId: number;
-		Channel?: OnlinePaymentChannelDto;
-		TransactionId: string;
-		ThirdPartyData?: string;
-		CallbackData?: string;
-		PaidTime?: string;
-	};
-
-	type CreateOrderRequest = {
-		PluginId: string;
-		LicenseType: LicenseType;
-	};
-
-	type CreateOrderRequest = {
-		UserId?: string;
-		TotalAmount?: number;
-		ItemCount?: number;
-	};
-
-	type CreateOrderResult = {
-		IsNeedPay?: boolean;
-		OrderId?: string;
-		UserId?: string;
-		Amount?: number;
-		Description?: string;
-		Subject?: string;
-		NotifyUrl?: string;
-		ExtraData?: Record<string, any>;
-	};
-
-	type CreatePluginAUserExtensionDto = {
-		Preferences?: string;
-		Points?: number;
-	};
-
-	type CreatePointRedemptionDto = {
-		PurchaseId: number;
-		PointsUsed?: number;
-		UserId: string;
-		RedeemedTime?: string;
 	};
 
 	type CreateSchedulerJobDto = {
@@ -660,54 +459,7 @@ declare namespace APIModel {
 		ExeDateDesc?: string;
 	};
 
-	type CreateUserPluginActivationDto = {
-		PurchaseId: number;
-		PluginId: string;
-		UserId: string;
-		LicenseType: LicenseTypeDto;
-		ActivationDate?: string;
-		MachineFingerprint: string;
-		IpAddress?: string;
-		Hostname?: string;
-		LicenseFileContent?: string;
-		Status?: ActivationStatusDto;
-		DeactivationDate?: string;
-		RevocationReason?: string;
-		Notes?: string;
-	};
-
-	type CreateUserPluginPurchaseDto = {
-		UserId: string;
-		PluginId: string;
-		OrderId: string;
-		LicenseType: LicenseTypeDto;
-		Quantity?: number;
-		PurchasePrice?: number;
-		Currency?: string;
-		PurchaseDate?: string;
-		UpdatesUntil?: string;
-		IsLifetime?: boolean;
-		Status?: PurchaseStatusDto;
-		Notes?: string;
-	};
-
-	type CreateUserWithExtensionRequest = {
-		ExtensionData?: CreatePluginAUserExtensionDto;
-		Username: string;
-		Password: string;
-		Email: string;
-		PhoneNumber: string;
-		Nickname?: string;
-		AvatarUrl: string;
-		Status?: number;
-	};
-
-	enum DataStatus {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-		3 = '3',
-	}
+	type DataStatus = 0 | 1 | 2 | 3;
 
 	type deleteAppGenericDtoControllerBase5DeleteParams = {
 		id: string;
@@ -969,94 +721,6 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
-	type Expression1Func2GiftRecord_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type Expression1Func2MkActivities_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type Expression1Func2MkInvitations_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type Expression1Func2MkMarketplacePlugins_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type Expression1Func2MkUseractivityrecords_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type Expression1Func2OnlinePayment_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type Expression1Func2PluginATest_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type Expression1Func2PointRedemption_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
 	type Expression1Func2SystemInfoConfig_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
 		Type?: string;
 		NodeType?: ExpressionType;
@@ -1068,115 +732,92 @@ declare namespace APIModel {
 		CanReduce?: boolean;
 	};
 
-	type Expression1Func2UserPluginActivation_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	type Expression1Func2UserPluginPurchase_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral = {
-		Type?: string;
-		NodeType?: ExpressionType;
-		Parameters?: ParameterExpression[];
-		Name?: string;
-		Body?: Expression;
-		ReturnType?: string;
-		TailCall?: boolean;
-		CanReduce?: boolean;
-	};
-
-	enum ExpressionType {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-		3 = '3',
-		4 = '4',
-		5 = '5',
-		6 = '6',
-		7 = '7',
-		8 = '8',
-		9 = '9',
-		10 = '10',
-		11 = '11',
-		12 = '12',
-		13 = '13',
-		14 = '14',
-		15 = '15',
-		16 = '16',
-		17 = '17',
-		18 = '18',
-		19 = '19',
-		20 = '20',
-		21 = '21',
-		22 = '22',
-		23 = '23',
-		24 = '24',
-		25 = '25',
-		26 = '26',
-		27 = '27',
-		28 = '28',
-		29 = '29',
-		30 = '30',
-		31 = '31',
-		32 = '32',
-		33 = '33',
-		34 = '34',
-		35 = '35',
-		36 = '36',
-		37 = '37',
-		38 = '38',
-		39 = '39',
-		40 = '40',
-		41 = '41',
-		42 = '42',
-		43 = '43',
-		44 = '44',
-		45 = '45',
-		46 = '46',
-		47 = '47',
-		48 = '48',
-		49 = '49',
-		50 = '50',
-		51 = '51',
-		52 = '52',
-		53 = '53',
-		54 = '54',
-		55 = '55',
-		56 = '56',
-		57 = '57',
-		58 = '58',
-		59 = '59',
-		60 = '60',
-		61 = '61',
-		62 = '62',
-		63 = '63',
-		64 = '64',
-		65 = '65',
-		66 = '66',
-		67 = '67',
-		68 = '68',
-		69 = '69',
-		70 = '70',
-		71 = '71',
-		72 = '72',
-		73 = '73',
-		74 = '74',
-		75 = '75',
-		76 = '76',
-		77 = '77',
-		78 = '78',
-		79 = '79',
-		80 = '80',
-		81 = '81',
-		82 = '82',
-		83 = '83',
-		84 = '84',
-	}
+	type ExpressionType =
+		| 0
+		| 1
+		| 2
+		| 3
+		| 4
+		| 5
+		| 6
+		| 7
+		| 8
+		| 9
+		| 10
+		| 11
+		| 12
+		| 13
+		| 14
+		| 15
+		| 16
+		| 17
+		| 18
+		| 19
+		| 20
+		| 21
+		| 22
+		| 23
+		| 24
+		| 25
+		| 26
+		| 27
+		| 28
+		| 29
+		| 30
+		| 31
+		| 32
+		| 33
+		| 34
+		| 35
+		| 36
+		| 37
+		| 38
+		| 39
+		| 40
+		| 41
+		| 42
+		| 43
+		| 44
+		| 45
+		| 46
+		| 47
+		| 48
+		| 49
+		| 50
+		| 51
+		| 52
+		| 53
+		| 54
+		| 55
+		| 56
+		| 57
+		| 58
+		| 59
+		| 60
+		| 61
+		| 62
+		| 63
+		| 64
+		| 65
+		| 66
+		| 67
+		| 68
+		| 69
+		| 70
+		| 71
+		| 72
+		| 73
+		| 74
+		| 75
+		| 76
+		| 77
+		| 78
+		| 79
+		| 80
+		| 81
+		| 82
+		| 83
+		| 84;
 
 	type FdAdminUserDto = {
 		Id?: string;
@@ -1292,11 +933,6 @@ declare namespace APIModel {
 		ExtData?: string;
 		Status?: number;
 		Children?: FdDictDataDto[];
-	};
-
-	type FdDictDataMinimal = {
-		Value?: string;
-		Label?: string;
 	};
 
 	type FdDictTypeDto = {
@@ -1570,12 +1206,6 @@ declare namespace APIModel {
 		CodeGenId?: string;
 	};
 
-	type GenerateLicenseRequestDto = {
-		PluginId: string;
-		MachineFingerprint: string;
-		Notes?: string;
-	};
-
 	type getAppGenericDtoControllerBase5GetByIdParams = {
 		id: string;
 	};
@@ -1649,38 +1279,6 @@ declare namespace APIModel {
 		filePath: string;
 	};
 
-	type GetUserIdDto = {
-		Id?: string;
-	};
-
-	type GiftRecord = {
-		PurchaseId?: number;
-		Reason?: string;
-		GivenBy?: string;
-		GivenTime?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-		Purchase?: UserPluginPurchase;
-		CreatedBy?: string;
-		UpdatedBy?: string;
-		DeletedBy?: string;
-		Id?: string;
-		CreatedAt?: string;
-		UpdatedAt?: string;
-		IsDeleted?: boolean;
-		DeletedAt?: string;
-	};
-
-	type GiftRecordDto = {
-		Id?: string;
-		PurchaseId?: number;
-		Reason?: string;
-		GivenBy?: string;
-		GivenTime?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-	};
-
 	type HealthStatus = {
 		/** 健康状态（Healthy/Unhealthy） */
 		Status?: string;
@@ -1698,27 +1296,6 @@ declare namespace APIModel {
 		Items?: FdNationalStandardItem[];
 	};
 
-	type LicenseFileDto = {
-		PluginId?: string;
-		UserId?: string;
-		LicenseType?: string;
-		MachineFingerprint?: string;
-		IssueDate?: string;
-		UpdatesUntil?: string;
-		Signature?: string;
-		Offline?: string;
-	};
-
-	enum LicenseType {
-		0 = '0',
-		1 = '1',
-	}
-
-	enum LicenseTypeDto {
-		0 = '0',
-		1 = '1',
-	}
-
 	type LoginDto = {
 		Username: string;
 		Password: string;
@@ -1733,23 +1310,6 @@ declare namespace APIModel {
 
 	type LoginResultDto = {
 		Token?: string;
-	};
-
-	type MarketplacePluginQueryDto = {
-		OrderBy?: string;
-		Category?: string;
-		PageIndex?: number;
-		PageSize?: number;
-		DynamicQuery?: string;
-		QueryParameters?: any[];
-	};
-
-	type MarketplaceUserExtensionDto = {
-		FdAppUserId?: string;
-		IsOfficialStaff?: boolean;
-		IsDeveloper?: boolean;
-		IsDemoAccount?: boolean;
-		DABindMachineFingerprint?: string;
 	};
 
 	type MaskConfigModel = {
@@ -1779,176 +1339,7 @@ declare namespace APIModel {
 		Exist?: boolean;
 	};
 
-	enum MenuType {
-		0 = '0',
-		1 = '1',
-	}
-
-	type MkActivitiesDto = {
-		Name?: string;
-		Type?: string;
-		Ruleconfig?: string;
-		Starttime?: string;
-		Endtime?: string;
-		Isactive?: boolean;
-	};
-
-	type MkInvitationsDto = {
-		Inviterid?: string;
-		Inviteeid?: string;
-		Activityid?: string;
-		Status?: string;
-	};
-
-	type MkMarketplacePlugins = {
-		Name?: string;
-		SubTitle?: string;
-		Description?: string;
-		IconUrl?: string;
-		Author?: string;
-		SupportedLicenseMode?: SupportedLicenseMode;
-		IsActive?: boolean;
-		IsFree?: boolean;
-		IsOfficial?: boolean;
-		DownloadCount?: number;
-		PriceSingleServer?: number;
-		PriceMultiServer?: number;
-		DocumentationUrl?: string;
-		Versions?: MkMarketplacePluginVersions[];
-		Purchases?: UserPluginPurchase[];
-		Activations?: UserPluginActivation[];
-		Categories?: MkPluginCategory[];
-		CreatedBy?: string;
-		UpdatedBy?: string;
-		DeletedBy?: string;
-		Id?: string;
-		CreatedAt?: string;
-		UpdatedAt?: string;
-		IsDeleted?: boolean;
-		DeletedAt?: string;
-	};
-
-	type MkMarketplacePluginsDto = {
-		Id?: string;
-		Name?: string;
-		SubTitle?: string;
-		Description?: string;
-		Author?: string;
-		Categories?: string[];
-		SupportedLicenseMode?: SupportedLicenseMode;
-		IsActive?: boolean;
-		IsFree?: boolean;
-		IsOfficial?: boolean;
-		DownloadCount?: number;
-		IconUrl?: string;
-		PriceSingleServer?: number;
-		PriceMultiServer?: number;
-		DocumentationUrl?: string;
-	};
-
-	type MkMarketplacePluginVersions = {
-		PluginId?: string;
-		Version?: string;
-		DownloadUrl?: string;
-		ReleaseNotes?: string;
-		IsActive?: boolean;
-		Plugin?: MkMarketplacePlugins;
-		CreatedBy?: string;
-		UpdatedBy?: string;
-		DeletedBy?: string;
-		Id?: string;
-		CreatedAt?: string;
-		UpdatedAt?: string;
-		IsDeleted?: boolean;
-		DeletedAt?: string;
-	};
-
-	type MkMarketplacePluginVersionsDto = {
-		Id?: string;
-		PluginId?: string;
-		Version?: string;
-		DownloadUrl?: string;
-		DocumentationUrl?: string;
-		ReleaseNotes?: string;
-		IsActive?: boolean;
-		CreatedAt?: string;
-		CreatedBy?: string;
-		UpdatedBy?: string;
-		DeletedBy?: string;
-	};
-
-	type MkPluginCategory = {
-		PluginId?: number;
-		Category?: string;
-		Plugin?: MkMarketplacePlugins;
-		Id?: string;
-		CreatedAt?: string;
-		UpdatedAt?: string;
-		IsDeleted?: boolean;
-		DeletedAt?: string;
-	};
-
-	type MkUseractivityrecordsDto = {
-		Activityid?: string;
-		Userid?: string;
-		Status?: string;
-		Progress?: string;
-		Rewarddata?: string;
-	};
-
-	type MkUserServeInfoDto = {
-		UserId?: string;
-		MachineFingerprint?: string;
-		MachineName?: string;
-	};
-
-	type OnlinePayment = {
-		PurchaseId?: number;
-		Channel?: OnlinePaymentChannel;
-		TransactionId?: string;
-		ThirdPartyData?: string;
-		CallbackData?: string;
-		PaidTime?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-		Purchase?: UserPluginPurchase;
-		CreatedBy?: string;
-		UpdatedBy?: string;
-		DeletedBy?: string;
-		Id?: string;
-		CreatedAt?: string;
-		UpdatedAt?: string;
-		IsDeleted?: boolean;
-		DeletedAt?: string;
-	};
-
-	enum OnlinePaymentChannel {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-		3 = '3',
-		4 = '4',
-	}
-
-	enum OnlinePaymentChannelDto {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-		3 = '3',
-		4 = '4',
-	}
-
-	type OnlinePaymentDto = {
-		Id?: string;
-		PurchaseId?: number;
-		Channel?: OnlinePaymentChannelDto;
-		TransactionId?: string;
-		ThirdPartyData?: string;
-		CallbackData?: string;
-		PaidTime?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-	};
+	type MenuType = 0 | 1;
 
 	type PageInfo = {
 		Total?: number;
@@ -1964,11 +1355,6 @@ declare namespace APIModel {
 		PageSize?: number;
 		DynamicQuery?: string;
 		QueryParameters?: any[];
-	};
-
-	type PageResult1AppMarketplacePluginDto = {
-		PageInfo?: PageInfo;
-		Items?: AppMarketplacePluginDto[];
 	};
 
 	type PageResult1CodeGenConfigDto = {
@@ -2091,101 +1477,12 @@ declare namespace APIModel {
 		Items?: FdWorkbenchCardDto[];
 	};
 
-	type PageResult1GiftRecordDto = {
-		PageInfo?: PageInfo;
-		Items?: GiftRecordDto[];
-	};
-
-	type PageResult1MkActivitiesDto = {
-		PageInfo?: PageInfo;
-		Items?: MkActivitiesDto[];
-	};
-
-	type PageResult1MkInvitationsDto = {
-		PageInfo?: PageInfo;
-		Items?: MkInvitationsDto[];
-	};
-
-	type PageResult1MkMarketplacePluginsDto = {
-		PageInfo?: PageInfo;
-		Items?: MkMarketplacePluginsDto[];
-	};
-
-	type PageResult1MkUseractivityrecordsDto = {
-		PageInfo?: PageInfo;
-		Items?: MkUseractivityrecordsDto[];
-	};
-
-	type PageResult1MkUserServeInfoDto = {
-		PageInfo?: PageInfo;
-		Items?: MkUserServeInfoDto[];
-	};
-
-	type PageResult1OnlinePaymentDto = {
-		PageInfo?: PageInfo;
-		Items?: OnlinePaymentDto[];
-	};
-
-	type PageResult1PluginATestDto = {
-		PageInfo?: PageInfo;
-		Items?: PluginATestDto[];
-	};
-
-	type PageResult1PointRedemptionDto = {
-		PageInfo?: PageInfo;
-		Items?: PointRedemptionDto[];
-	};
-
-	type PageResult1UserPluginActivationDto = {
-		PageInfo?: PageInfo;
-		Items?: UserPluginActivationDto[];
-	};
-
-	type PageResult1UserPluginPurchaseDto = {
-		PageInfo?: PageInfo;
-		Items?: UserPluginPurchaseDto[];
-	};
-
 	type ParameterExpression = {
 		Type?: string;
 		NodeType?: ExpressionType;
 		Name?: string;
 		IsByRef?: boolean;
 		CanReduce?: boolean;
-	};
-
-	type PluginATestCreateDto = {
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-	};
-
-	type PluginATestDto = {
-		Id?: string;
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-		CreatedAt?: string;
-		UpdateTime?: string;
-	};
-
-	type PluginATestUpdateDto = {
-		Id?: string;
-		Name?: string;
-		Description?: string;
-		TestValue?: number;
-		IsEnabled?: boolean;
-		Creator?: string;
-	};
-
-	type PluginAUserExtension = {
-		FdAppUserId?: string;
-		Preferences?: string;
-		Points?: number;
 	};
 
 	type PluginConfigurationGetRawJsonDto = {
@@ -2204,30 +1501,6 @@ declare namespace APIModel {
 		dependencies?: string[];
 		tags?: string[];
 		entryPoint?: string;
-	};
-
-	type PointRedemption = {
-		PurchaseId?: number;
-		PointsUsed?: number;
-		UserId?: string;
-		RedeemedTime?: string;
-		Purchase?: UserPluginPurchase;
-		CreatedBy?: string;
-		UpdatedBy?: string;
-		DeletedBy?: string;
-		Id?: string;
-		CreatedAt?: string;
-		UpdatedAt?: string;
-		IsDeleted?: boolean;
-		DeletedAt?: string;
-	};
-
-	type PointRedemptionDto = {
-		Id?: string;
-		PurchaseId?: number;
-		PointsUsed?: number;
-		UserId?: string;
-		RedeemedTime?: string;
 	};
 
 	type postCaptchaValidateParams = {
@@ -2259,19 +1532,6 @@ declare namespace APIModel {
 		pathPrefix?: string;
 	};
 
-	enum PurchaseStatus {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-		3 = '3',
-	}
-
-	enum PurchaseStatusDto {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-	}
-
 	type putAppGenericDtoControllerBase5UpdateParams = {
 		id: string;
 	};
@@ -2296,12 +1556,6 @@ declare namespace APIModel {
 		DynamicQuery?: string;
 		QueryParameters?: any[];
 		SelectFields?: string[];
-	};
-
-	type RevokedLicenseDto = {
-		PluginId: string;
-		UninstallCode: string;
-		MachineFingerprint: string;
 	};
 
 	type SaveFdUserLayoutDto = {
@@ -2331,22 +1585,7 @@ declare namespace APIModel {
 		ConfigParams?: Record<string, any>;
 	};
 
-	enum SupportedLicenseMode {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-	}
-
-	enum SupportedLicenseModeDto {
-		0 = '0',
-		1 = '1',
-		2 = '2',
-	}
-
-	enum SystemCategory {
-		0 = '0',
-		1 = '1',
-	}
+	type SystemCategory = 0 | 1;
 
 	type TableInfoDto = {
 		TableName?: string;
@@ -2393,11 +1632,6 @@ declare namespace APIModel {
 		PrintType?: string;
 		PrintName?: string;
 		TableUniqueList?: TableUniqueConfigDto[];
-	};
-
-	type UpdateDescriptionDto = {
-		Id: string;
-		Description?: string;
 	};
 
 	type UpdateFdAdminUserDto = {
@@ -2633,126 +1867,9 @@ declare namespace APIModel {
 		DefaultHeight?: number;
 	};
 
-	type UpdateGiftRecordDto = {
-		Id?: string;
-		PurchaseId?: number;
-		Reason?: string;
-		GivenBy?: string;
-		GivenTime?: string;
-	};
-
-	type UpdateMkActivitiesDto = {
-		Name?: string;
-		Type?: string;
-		Ruleconfig?: string;
-		Starttime?: string;
-		Endtime?: string;
-		Isactive?: boolean;
-	};
-
-	type UpdateMkInvitationsDto = {
-		Inviterid?: string;
-		Inviteeid?: string;
-		Activityid?: string;
-		Status?: string;
-	};
-
-	type UpdateMkMarketplacePluginsDto = {
-		Name?: string;
-		SubTitle?: string;
-		Description?: string;
-		Author?: string;
-		Categories?: string[];
-		IsActive?: boolean;
-		IsFree?: boolean;
-		IsOfficial?: boolean;
-		IconUrl?: string;
-		PriceSingleServer?: number;
-		PriceMultiServer?: number;
-		DocumentationUrl?: string;
-	};
-
-	type UpdateMkMarketplacePluginVersionsDto = {
-		Id: string;
-		PluginId?: string;
-		Version: string;
-		DownloadUrl?: string;
-		DocumentationUrl?: string;
-		ReleaseNotes?: string;
-		IsActive?: boolean;
-		CreatedBy?: string;
-		UpdatedBy?: string;
-		DeletedBy?: string;
-	};
-
-	type UpdateMkUseractivityrecordsDto = {
-		Activityid?: string;
-		Userid?: string;
-		Status?: string;
-		Progress?: string;
-		Rewarddata?: string;
-	};
-
-	type UpdateMkUserServeInfoDto = {
-		UserId?: string;
-		MachineFingerprint?: string;
-		MachineName?: string;
-	};
-
-	type UpdateOnlinePaymentDto = {
-		Id?: string;
-		PurchaseId?: number;
-		Channel?: OnlinePaymentChannelDto;
-		TransactionId?: string;
-		ThirdPartyData?: string;
-		CallbackData?: string;
-		PaidTime?: string;
-	};
-
 	type UpdatePluginLicenseOnlineDto = {
 		Token: string;
 		PluginId: string;
-	};
-
-	type UpdatePointRedemptionDto = {
-		Id?: string;
-		PurchaseId?: number;
-		PointsUsed?: number;
-		UserId?: string;
-		RedeemedTime?: string;
-	};
-
-	type UpdateUserPluginActivationDto = {
-		Id?: string;
-		PurchaseId?: number;
-		PluginId?: string;
-		UserId?: string;
-		LicenseType?: LicenseTypeDto;
-		ActivationDate?: string;
-		MachineFingerprint?: string;
-		IpAddress?: string;
-		Hostname?: string;
-		LicenseFileContent?: string;
-		Status?: ActivationStatusDto;
-		DeactivationDate?: string;
-		RevocationReason?: string;
-		Notes?: string;
-	};
-
-	type UpdateUserPluginPurchaseDto = {
-		Id?: string;
-		UserId?: string;
-		PluginId?: string;
-		OrderId?: string;
-		LicenseType?: LicenseTypeDto;
-		Quantity?: number;
-		PurchasePrice?: number;
-		Currency?: string;
-		PurchaseDate?: string;
-		UpdatesUntil?: string;
-		IsLifetime?: boolean;
-		Status?: PurchaseStatusDto;
-		Notes?: string;
 	};
 
 	type UpdateVersionRequest = {
@@ -2778,101 +1895,6 @@ declare namespace APIModel {
 		FileUrlTemplate?: string;
 		SupportDirectUpload?: boolean;
 		RequestMethod?: string;
-	};
-
-	type UserPluginActivation = {
-		PluginId?: string;
-		UserId?: string;
-		LicenseType?: LicenseType;
-		ActivationDate?: string;
-		MachineFingerprint?: string;
-		IpAddress?: string;
-		Hostname?: string;
-		LicenseFileContent?: string;
-		Status?: ActivationStatus;
-		DeactivationDate?: string;
-		RevocationReason?: string;
-		Notes?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-		IsOffline?: boolean;
-		Plugin?: MkMarketplacePlugins;
-		CreatedBy?: string;
-		UpdatedBy?: string;
-		DeletedBy?: string;
-		Id?: string;
-		CreatedAt?: string;
-		UpdatedAt?: string;
-		IsDeleted?: boolean;
-		DeletedAt?: string;
-	};
-
-	type UserPluginActivationDto = {
-		Id?: string;
-		PurchaseId?: number;
-		PluginId?: string;
-		UserId?: string;
-		LicenseType?: LicenseTypeDto;
-		ActivationDate?: string;
-		MachineFingerprint?: string;
-		IpAddress?: string;
-		Hostname?: string;
-		LicenseFileContent?: string;
-		Status?: ActivationStatusDto;
-		DeactivationDate?: string;
-		RevocationReason?: string;
-		Notes?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-		IsOffline?: boolean;
-	};
-
-	type UserPluginPurchase = {
-		UserId?: string;
-		PluginId?: string;
-		OrderId?: string;
-		LicenseType?: LicenseType;
-		Quantity?: number;
-		PurchasePrice?: number;
-		Currency?: string;
-		PurchaseDate?: string;
-		UpdatesUntil?: string;
-		IsLifetime?: boolean;
-		Status?: PurchaseStatus;
-		Notes?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
-		Plugin?: MkMarketplacePlugins;
-		Activations?: UserPluginActivation[];
-		OnlinePayment?: OnlinePayment;
-		PointRedemption?: PointRedemption;
-		GiftRecord?: GiftRecord;
-		CreatedBy?: string;
-		UpdatedBy?: string;
-		DeletedBy?: string;
-		Id?: string;
-		CreatedAt?: string;
-		UpdatedAt?: string;
-		IsDeleted?: boolean;
-		DeletedAt?: string;
-	};
-
-	type UserPluginPurchaseDto = {
-		Id?: string;
-		UserId?: string;
-		PluginId?: string;
-		OrderId?: string;
-		LicenseType?: LicenseTypeDto;
-		Quantity?: number;
-		PurchasePrice?: number;
-		Currency?: string;
-		PurchaseDate?: string;
-		UpdatesUntil?: string;
-		IsLifetime?: boolean;
-		Status?: PurchaseStatusDto;
-		Notes?: string;
-		CreateTime?: string;
-		UpdateTime?: string;
 	};
 
 	type UserRefDto = {

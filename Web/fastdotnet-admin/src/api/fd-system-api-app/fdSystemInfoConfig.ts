@@ -3,7 +3,6 @@
 import request, { encryptRequest } from '@/utils/request';
 
 /** [Public] 获取所有系统配置项（用于客户端初始化） GET /api/admin/FdSystemInfoConfig/public/all */
-/** @deprecated 请使用 getFdSystemInfoConfigGetPublicConfigs，原函数名: getApiAdminFdSystemInfoConfigPublicAll */
 export async function getFdSystemInfoConfigGetPublicConfigs(options?: { [key: string]: any }) {
 	return request<Record<string, any>>('/api/admin/FdSystemInfoConfig/public/all', {
 		method: 'GET',
