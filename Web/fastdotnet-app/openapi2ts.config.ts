@@ -7,6 +7,7 @@ export default [
   enumStyle:"enum",//枚举样式	string-literal | enum
   requestImportStatement:"import request, { encryptRequest } from '@/utils/request'",
   isCamelCase:true,
+  noLegacyFunctionNames:false, // 过渡期兼容旧函数名
   dataFields: ['Data', 'PageInfo', 'Items'], // 添加分页数据字段支持
 }
 ]

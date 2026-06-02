@@ -7,6 +7,7 @@ export default [
     enumStyle: "string-literal",
     requestImportStatement: "import request, { encryptRequest } from '@/utils/request'",
     isCamelCase: true,
+    noLegacyFunctionNames: false,
     dataFields: ['Data', 'PageInfo', 'Items'],
   },
     {
@@ -17,6 +18,7 @@ export default [
     enumStyle: "string-literal",
     requestImportStatement: "import request, { encryptRequest } from '@/utils/request'",
     isCamelCase: true,
+    noLegacyFunctionNames: false,
     dataFields: ['Data', 'PageInfo', 'Items'],
   }
 ]
