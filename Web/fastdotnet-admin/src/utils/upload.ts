@@ -1,5 +1,5 @@
-import request from '@/utils/request';
-import { getStorageGetCurrentConfig, postStorageGetUploadCredential, postStorageUpload, deleteStorageDelete } from '@/api/fd-system-api-admin/Storage';
+﻿import request from '@/utils/request';
+import { getStorageGetCurrentConfig, postStorageGetUploadCredential, postStorageUpload, deleteStorageDelete } from '@/api/fd-system-api-admin/storage';
 
 /**
  * 上传文件工具函数

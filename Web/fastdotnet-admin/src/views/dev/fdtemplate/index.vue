@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="sys-codeGen-container">
 		<el-card shadow="hover" :body-style="{ padding: 5 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
@@ -65,7 +65,7 @@ import {
   getApiCodeGenPage, 
   deleteApiCodeGenId, 
   getApiCodeGenApplicationnamespaces 
-} from '@/api/fd-system-api-admin/CodeGen';
+} from '@/api/fd-system-api-admin/codeGen';
 import APIModel from '@/api/fd-system-api-admin';
 
 const EditCodeGenDialog = defineAsyncComponent(() => import('./component/editCodeGenDialog.vue'));

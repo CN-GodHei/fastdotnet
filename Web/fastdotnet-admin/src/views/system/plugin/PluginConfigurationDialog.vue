@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <el-dialog v-model="dialogVisible" title="插件配置" width="800px" :close-on-click-modal="false">
     <div class="config-content">
       <el-alert 
@@ -53,7 +53,7 @@ import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import {
   getApiPluginConfigurationGetPluginConfigurationByPluginId,
   putApiPluginConfigurationPluginId
-} from '@/api/fd-system-api-admin/PluginConfiguration'
+} from '@/api/fd-system-api-admin/pluginConfiguration'
 
 // 定义 props
 interface Props {

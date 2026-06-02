@@ -1,11 +1,11 @@
-/**
+﻿/**
  * 插件加载器
  * 负责从后端API加载插件配置并注册到插件系统
  */
 
 import { PluginMetadata } from './PluginManager';
 import { pluginRegistry } from './PluginRegistry';
-import { getApiPluginScan } from '@/api/fd-system-api-app/Plugin';
+import { getApiPluginScan } from '@/api/fd-system-api-app/plugin';
 
 export interface PluginLoadResult {
   success: boolean;

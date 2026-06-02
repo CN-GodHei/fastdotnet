@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="sys-codeGenConfig-container">
 		<el-dialog v-model="state.isShowDialog" draggable :close-on-click-modal="false" width="1500px">
 			<template #header>
@@ -227,13 +227,13 @@ import {
 	postApiCodeGenConfigBatch,
 	postApiCodeGenConfigPageSearch,
 	putApiCodeGenConfigBatch
-} from '@/api/fd-system-api-admin/CodeGenConfig';
+} from '@/api/fd-system-api-admin/codeGenConfig';
 import { 
 	getApiCodeGenGettablelist,
 	getCodeGenTablelistConfigId,
 	getApiCodeGenGettablecolumnlist,
 	getApiCodeGen
-} from '@/api/fd-system-api-admin/CodeGen';
+} from '@/api/fd-system-api-admin/codeGen';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 import APIModel from '@/api/fd-system-api-admin';
 import { ElMessage, ElMessageBox } from 'element-plus';

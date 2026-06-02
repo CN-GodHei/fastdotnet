@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <el-dialog 
       :title="state.dialogTitle" 
@@ -76,7 +76,7 @@ import {
   postApiAdminFdBlacklists,
   putApiAdminFdBlacklistsId,
   getApiAdminFdBlacklistsId
-} from '@/api/fd-system-api-admin/FdBlacklists';
+} from '@/api/fd-system-api-admin/fdBlacklists';
 import type { 
   FdBlacklistDto, 
   CreateFdBlacklistDto, 

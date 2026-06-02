@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="dict-management-container">
 		<el-row :gutter="10" style="height: calc(100vh - 120px);">
 			<!-- 左侧：字典类型列表 -->
@@ -212,8 +212,8 @@
 <script lang="ts" setup name="DictManagement">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import * as FdDictTypeApi from '@/api/fd-system-api-admin/FdDictType';
-import * as FdDictDataApi from '@/api/fd-system-api-admin/FdDictData';
+import * as FdDictTypeApi from '@/api/fd-system-api-admin/fdDictType';
+import * as FdDictDataApi from '@/api/fd-system-api-admin/fdDictData';
 
 // 状态管理
 const state = reactive({

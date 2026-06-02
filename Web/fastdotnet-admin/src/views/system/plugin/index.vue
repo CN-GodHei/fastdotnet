@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="system-plugin-container layout-pd">
     <el-card shadow="hover" header="插件管理">
       <div class="server-auth-section">
@@ -253,8 +253,8 @@ import {
   getApiPluginGetAuthCode,
   postApiPluginSetAuthCode,
   postApiPluginUploadOffline
-} from '@/api/fd-system-api-admin/Plugin'
-import { getApiSystemMachineFingerprint } from '@/api/fd-system-api-admin/System'
+} from '@/api/fd-system-api-admin/plugin'
+import { getApiSystemMachineFingerprint } from '@/api/fd-system-api-admin/system'
 import { MicroAppEvents, receiveFromMicroApp, removeMicroAppEventListener } from '@/utils/microAppCommunication'
 import PluginConfigurationDialog from './PluginConfigurationDialog.vue'
 import PluginLicenseDialog from './PluginLicenseDialog.vue'

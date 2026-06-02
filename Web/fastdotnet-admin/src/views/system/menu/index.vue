@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="fdmenu-container">
 		<el-card shadow="hover" :body-style="{ padding: 2 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
@@ -92,7 +92,7 @@
 import { defineAsyncComponent, ref, onMounted, reactive } from 'vue';
 import { RouteRecordRaw } from 'vue-router';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import * as MenuApi from '@/api/fd-system-api-admin/FdMenu';
+import * as MenuApi from '@/api/fd-system-api-admin/fdMenu';
 // 引入组件
 const MenuDialog = defineAsyncComponent(() => import('@/views/system/menu/dialog.vue'));
 import { buildMixedQuery } from '@/utils/queryBuilder';

@@ -1,11 +1,11 @@
-import { createApp } from 'vue';
+﻿import { createApp } from 'vue';
 import * as Vue from 'vue';
 import pinia from '@/stores/index';
 import * as Pinia from 'pinia';
 import App from '@/App.vue';
 import router from '@/router';
 import * as VueRouter from 'vue-router';
-import { getApiAdminFdMenuTree } from '@/api/fd-system-api-admin/FdMenu';
+import { getApiAdminFdMenuTree } from '@/api/fd-system-api-admin/fdMenu';
 import { Session } from '@/utils/storage';
 import request from '@/utils/request';
 import { buildMixedQuery } from '@/utils/queryBuilder';

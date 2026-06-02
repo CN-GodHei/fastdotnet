@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="image-preview-cropper">
     <!-- 图片上传区域 -->
     <el-upload
@@ -128,7 +128,7 @@ import { Plus, ZoomIn, ZoomOut, RefreshLeft, RefreshRight, Refresh } from '@elem
 import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
 
-import { getStorageGetCurrentConfig, postStorageGetUploadCredential } from '@/api/fd-system-api-admin/Storage';
+import { getStorageGetCurrentConfig, postStorageGetUploadCredential } from '@/api/fd-system-api-admin/storage';
 import { uploadFile as uploadFileUtil } from '@/utils/upload';
 
 interface Props {

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="marketplace-iframe-container" style="height: 100%; position: relative;">
     <!-- iframe - 强制占满整个容器 -->
     <iframe ref="marketplaceIframe" :src="iframeSrc" frameborder="0"
@@ -105,7 +105,7 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Loading, Refresh, InfoFilled, Link } from '@element-plus/icons-vue'
-import { getApiPluginScan, postApiPluginLoad, postApiPluginSetAuthCode } from '@/api/fd-system-api-admin/Plugin'
+import { getApiPluginScan, postApiPluginLoad, postApiPluginSetAuthCode } from '@/api/fd-system-api-admin/plugin'
 import { usePluginStore } from '@/stores/plugin'
 import { baseSignalRManager } from '@/utils/signalr'
 import * as signalR from '@microsoft/signalr'

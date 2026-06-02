@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div class="oidc-apps-container">
         <el-card class="box-card">
             <template #header>
@@ -65,7 +65,7 @@ import {
     postApiOidcApp,
     postApiOidcAppClientIdResetSecret,
     deleteApiOidcAppClientId
-} from '@/api/fd-system-api-admin/OidcApp';
+} from '@/api/fd-system-api-admin/oidcApp';
 
 const apps = ref([]);
 const loading = ref(false);

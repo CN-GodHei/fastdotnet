@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="email-config-container">
 		<el-card shadow="hover">
 			<template #header>
@@ -165,7 +165,7 @@
 <script lang="ts" setup name="FdEmailConfig">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
-import * as FdEmailConfigApi from '@/api/fd-system-api-admin/FdEmailConfig';
+import * as FdEmailConfigApi from '@/api/fd-system-api-admin/fdEmailConfig';
 
 const formRef = ref();
 const loading = ref(false);

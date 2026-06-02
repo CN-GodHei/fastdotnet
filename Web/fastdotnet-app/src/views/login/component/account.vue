@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<el-form size="large" class="login-content-form">
 		<el-form-item class="login-animation1">
 			<el-input text :placeholder="$t('message.account.accountPlaceholder1')" v-model="state.ruleForm.userName" clearable autocomplete="off">
@@ -95,7 +95,7 @@ import { formatAxis } from '@/utils/formatTime';
 import { NextLoading } from '@/utils/loading';
 // 引入适配的登录 API
 import { postApiAuthAppLogin } from '@/api/fd-system-api-app/Auth';
-import { getPluginGetEnabledPlugins } from '@/api/fd-system-api-app/Plugin';
+import { getPluginGetEnabledPlugins } from '@/api/fd-system-api-app/plugin';
 import { startQiankun } from '@/main';
 
 // 定义变量内容

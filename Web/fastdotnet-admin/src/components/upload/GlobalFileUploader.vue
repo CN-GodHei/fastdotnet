@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="global-file-uploader">
     <!-- 显示当前存储类型 -->
     <div v-if="showStorageInfo && showStorageTypeLabel" class="storage-info">
@@ -72,7 +72,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, reactive } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { getStorageGetCurrentConfig, postStorageGetUploadCredential } from '@/api/fd-system-api-admin/Storage';
+import { getStorageGetCurrentConfig, postStorageGetUploadCredential } from '@/api/fd-system-api-admin/storage';
 import { uploadFile } from '@/utils/upload';
 import { Plus } from '@element-plus/icons-vue';
 

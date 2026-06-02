@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
-import { getApiPluginScan } from '@/api/fd-system-api-admin/Plugin' // 导入插件 API
+﻿import { defineStore } from 'pinia'
+import { getApiPluginScan } from '@/api/fd-system-api-admin/plugin' // 导入插件 API
 
 export const usePluginStore = defineStore('plugin', {
   state: () => ({

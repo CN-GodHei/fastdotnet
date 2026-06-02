@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="fdrole-container">
 		<el-card shadow="hover" :body-style="{ padding: 2 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
@@ -162,8 +162,8 @@ import { ElMessageBox, ElMessage, ElTree } from 'element-plus';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
-import * as FdRoleApi from '@/api/fd-system-api-admin/FdRole';
-import * as FdMenuApi from '@/api/fd-system-api-admin/FdMenu';
+import * as FdRoleApi from '@/api/fd-system-api-admin/fdRole';
+import * as FdMenuApi from '@/api/fd-system-api-admin/fdMenu';
 
 const queryForm = ref();
 const formRef = ref();

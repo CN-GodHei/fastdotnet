@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="fdadminuser-container">
 		<el-card shadow="hover" :body-style="{ padding: 2 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
@@ -188,9 +188,9 @@ import { ArrowDown, Edit, Key, User, Delete } from '@element-plus/icons-vue';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
-import * as FdAdminUserApi from '@/api/fd-system-api-admin/FdAdminUser';
-import * as FdRoleApi from '@/api/fd-system-api-admin/FdRole';
-import * as FdAdminUserRoleApi from '@/api/fd-system-api-admin/FdAdminUserRole';
+import * as FdAdminUserApi from '@/api/fd-system-api-admin/fdAdminUser';
+import * as FdRoleApi from '@/api/fd-system-api-admin/fdRole';
+import * as FdAdminUserRoleApi from '@/api/fd-system-api-admin/fdAdminUserRole';
 
 const queryForm = ref();
 const formRef = ref();

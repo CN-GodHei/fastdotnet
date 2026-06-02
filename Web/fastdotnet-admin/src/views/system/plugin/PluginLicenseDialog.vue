@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <el-dialog 
     v-model="dialogVisible" 
     title="插件授权" 
@@ -116,7 +116,7 @@
 <script setup lang="ts" name="PluginLicenseDialog">
 import { ref, computed, watch, nextTick } from 'vue'
 import { ElMessage, FormInstance } from 'element-plus'
-import { postApiPluginSetPluginLicense, postApiPluginUpdatePluginLicenseOnline } from '@/api/fd-system-api-admin/Plugin'
+import { postApiPluginSetPluginLicense, postApiPluginUpdatePluginLicenseOnline } from '@/api/fd-system-api-admin/plugin'
 import { usePluginStore } from '@/stores/plugin'
 
 // 定义插件数据类型

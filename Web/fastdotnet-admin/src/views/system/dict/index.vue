@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="fddicttype-container">
 		<el-card shadow="hover" :body-style="{ padding: 2 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
@@ -117,7 +117,7 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
-import * as FdDictTypeApi from '@/api/fd-system-api-admin/FdDictType';
+import * as FdDictTypeApi from '@/api/fd-system-api-admin/fdDictType';
 
 const queryForm = ref();
 const formRef = ref();

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="fdappuser-container">
 		<el-card shadow="hover" :body-style="{ padding: 2 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
@@ -198,9 +198,9 @@ import { buildMixedQuery } from '@/utils/queryBuilder';
 import UserExtensionPanels from '@/components/UserExtensionPanels.vue';
 
 import dayjs from 'dayjs'; // 引入日期处理库
-import * as FdAppUserApi from '@/api/fd-system-api-admin/FdAppUser';
-import * as FdRoleApi from '@/api/fd-system-api-admin/FdRole';
-import * as FdAppUserRoleApi from '@/api/fd-system-api-admin/FdAppUserRole';
+import * as FdAppUserApi from '@/api/fd-system-api-admin/fdAppUser';
+import * as FdRoleApi from '@/api/fd-system-api-admin/fdRole';
+import * as FdAppUserRoleApi from '@/api/fd-system-api-admin/fdAppUserRole';
 const queryForm = ref();
 const formRef = ref();
 

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="marketplace-container layout-padding">
     <el-card shadow="hover" header="插件市场">
       <!-- 插件商城微应用容器 -->
@@ -11,7 +11,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { loadMicroApp } from 'qiankun'
 import { useMicroAppsStore } from '@/stores/microApps'
-import { getApiPluginScan } from '@/api/fd-system-api-admin/Plugin'
+import { getApiPluginScan } from '@/api/fd-system-api-admin/plugin'
 
 // 定义微应用实例
 let microAppInstance: any = null

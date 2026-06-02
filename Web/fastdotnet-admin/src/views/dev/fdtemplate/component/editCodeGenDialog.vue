@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="sys-editCodeGen-container">
 		<el-dialog v-model="state.isShowDialog" draggable :close-on-click-modal="false" width="700px">
 			<template #header>
@@ -104,7 +104,7 @@ import {
   getCodeGenTablelistConfigId, 
   postApiCodeGen, 
   putApiCodeGenId 
-} from '@/api/fd-system-api-admin/CodeGen';
+} from '@/api/fd-system-api-admin/codeGen';
 import APIModel from '@/api/fd-system-api-admin';
 import { ElMessage } from 'element-plus';
 

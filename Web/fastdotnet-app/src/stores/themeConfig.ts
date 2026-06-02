@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia';
-import { getApiAdminFdSystemInfoConfigPublicAll } from '@/api/fd-system-api-app/FdSystemInfoConfig';
+﻿import { defineStore } from 'pinia';
+import { getApiAdminFdSystemInfoConfigPublicAll } from '@/api/fd-system-api-app/fdSystemInfoConfig';
 
 /**
  * 布局配置

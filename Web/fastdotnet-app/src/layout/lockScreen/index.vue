@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div v-show="state.isShowLockScreen">
 		<div class="layout-lock-screen-mask"></div>
 		<div class="layout-lock-screen-img" :class="{ 'layout-lock-screen-filter': state.isShowLoockLogin }"></div>
@@ -80,7 +80,7 @@ import { Local } from '@/utils/storage';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '@/stores/themeConfig';
 import { useUserInfo } from '@/stores/userInfo';
-import { postApiFdAppUserUnlock } from '@/api/fd-system-api-app/FdAppUser';
+import { postApiFdAppUserUnlock } from '@/api/fd-system-api-app/fdAppUser';
 import { ElMessage } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 

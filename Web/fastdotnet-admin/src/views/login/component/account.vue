@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<el-form size="large" class="login-content-form">
 		<el-form-item class="login-animation1">
 			<el-input text :placeholder="$t('message.account.accountPlaceholder1')" v-model="state.ruleForm.userName" clearable autocomplete="off">
@@ -77,7 +77,7 @@ import { Session } from '@/utils/storage';
 import { formatAxis } from '@/utils/formatTime';
 import { NextLoading } from '@/utils/loading';
 // 引入适配的登录 API
-import { postApiAuthAdminLogin } from '@/api/fd-system-api-admin/auth';
+import { postApiAuthAdminLogin } from '@/api/fd-system-api-admin/Auth';
 import { getEncryptionPublicKey } from '@/utils/encryption';
 import { startQiankun } from '@/main';
 import { baseSignalRManager } from '@/utils/signalr';

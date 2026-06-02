@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="system-menu-dialog-container">
 		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px">
 			<el-form ref="menuDialogFormRef" :model="state.ruleForm" size="default" label-width="80px">
@@ -220,7 +220,7 @@ import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoutesList } from '@/stores/routesList';
 import { i18n } from '@/i18n/index';
-import * as MenuApi from '@/api/fd-system-api-admin/FdMenu';
+import * as MenuApi from '@/api/fd-system-api-admin/fdMenu';
 
 import { ElMessage } from 'element-plus';
 // import { setBackEndControlRefreshRoutes } from "@/router/backEnd";
@@ -440,7 +440,7 @@ const onSubmit = async () => {
 						PermissionCode: state.ruleForm.PermissionCode, // 权限代码
 					};
 
-					await import('@/api/fd-system-api-admin/FdMenuButtons').then((MenuButtonsApi) => {
+					await import('@/api/fd-system-api-admin/fdMenuButtons').then((MenuButtonsApi) => {
 						MenuButtonsApi.putApiAdminFdMenuButtonsId({ id: state.ruleForm.Id }, updateData);
 					});
 
@@ -463,7 +463,7 @@ const onSubmit = async () => {
 					PermissionCode: state.ruleForm.PermissionCode, // 权限代码
 				};
 
-				await import('@/api/fd-system-api-admin/FdMenuButtons').then((MenuButtonsApi) => {
+				await import('@/api/fd-system-api-admin/fdMenuButtons').then((MenuButtonsApi) => {
 					MenuButtonsApi.postApiAdminFdMenuButtons(createData);
 				});
 

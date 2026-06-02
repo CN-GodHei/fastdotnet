@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="sys-codeGenPreview-container">
 		<el-dialog 
 			v-model="state.isShowDialog" 
@@ -40,7 +40,7 @@ import { reactive, ref, nextTick } from 'vue';
 import { ElMessage, ElIcon } from 'element-plus';
 import * as monaco from 'monaco-editor';
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-import { getApiCodeGenPreviewConfigId } from '@/api/fd-system-api-admin/CodeGen';
+import { getApiCodeGenPreviewConfigId } from '@/api/fd-system-api-admin/codeGen';
 import APIModel from '@/api/fd-system-api-admin';
 
 const monacoEditorRef = ref();

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="gbdata-container">
 		<el-row :gutter="10" style="height: calc(100vh - 120px);">
 			<!-- 左侧：国标标准列表 -->
@@ -322,8 +322,8 @@ import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { Document, List, Plus, Edit, Delete, Search, Refresh, Download } from '@element-plus/icons-vue';
 import { buildMixedQuery } from '@/utils/queryBuilder';
-import * as StandardApi from '@/api/fd-system-api-admin/FdNationalStandard';
-import * as ItemApi from '@/api/fd-system-api-admin/FdNationalStandardItem';
+import * as StandardApi from '@/api/fd-system-api-admin/fdNationalStandard';
+import * as ItemApi from '@/api/fd-system-api-admin/fdNationalStandardItem';
 
 // ========== 左侧标准相关 ==========
 const standardQueryForm = ref();

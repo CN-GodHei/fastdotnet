@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router';
+﻿import { RouteRecordRaw } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import pinia from '@/stores/index';
 import { useUserInfo } from '@/stores/userInfo';
@@ -9,7 +9,7 @@ import { dynamicRoutes, notFoundAndNoPower } from '@/router/route';
 import { formatTwoStageRoutes, formatFlatteningRoutes, router } from '@/router/index';
 import { useRoutesList } from '@/stores/routesList';
 import { useTagsViewRoutes } from '@/stores/tagsViewRoutes';
-import { getApiAdminFdMenuTree } from '@/api/fd-system-api-admin/FdMenu';
+import { getApiAdminFdMenuTree } from '@/api/fd-system-api-admin/fdMenu';
 
 // 后端控制路由
 
