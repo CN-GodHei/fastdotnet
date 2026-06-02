@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="oidc-apps-container">
         <el-card class="box-card">
             <template #header>
@@ -61,10 +61,10 @@
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import {
-    getApiOidcApp,
-    postApiOidcApp,
-    postApiOidcAppClientIdResetSecret,
-    deleteApiOidcAppClientId
+    getOidcAppGetApplications,
+    postOidcAppCreateApplication,
+    postOidcAppResetSecret,
+    deleteOidcAppDeleteApplication
 } from '@/api/fd-system-api-admin/oidcApp';
 
 const apps = ref([]);
@@ -84,7 +84,7 @@ const form = reactive({
 const fetchApps = async () => {
     loading.value = true;
     try {
-        const res = await getApiOidcApp();
+        const res = await getOidcAppGetApplications();
         // 兼容不同的返回结构：有些接口直接返回数组，有些包装在 Data 字段中
         apps.value = Array.isArray(res) ? res : (res.Data || []);
     } catch (error) {
@@ -116,7 +116,7 @@ const removeRedirectUri = (index: number) => {
 
 const submitForm = async () => {
     try {
-        await postApiOidcApp(form as any);
+        await postOidcAppCreateApplication(form as any);
         ElMessage.success('创建成功');
         dialogVisible.value = false;
         fetchApps();
@@ -128,7 +128,7 @@ const submitForm = async () => {
 const handleResetSecret = async (row: any) => {
     try {
         // 注意：这里使用 row.ClientId (大写 C)
-        const res = await postApiOidcAppClientIdResetSecret({ clientId: row.ClientId });
+        const res = await postOidcAppResetSecret({ clientId: row.ClientId });
         ElMessageBox.alert(`新的 Client Secret: ${res.clientSecret || res.Data?.clientSecret}`, '重置成功', {
             confirmButtonText: '确定'
         });
@@ -145,7 +145,7 @@ const handleDelete = (row: any) => {
     }).then(async () => {
         try {
             // 注意：这里使用 row.ClientId (大写 C)
-            var result = await deleteApiOidcAppClientId({ clientId: row.ClientId });
+            var result = await deleteOidcAppDeleteApplication({ clientId: row.ClientId });
             if (result === true) {
 
                 ElMessage.success('删除成功');

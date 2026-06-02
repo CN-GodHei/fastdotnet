@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<el-form size="large" class="login-content-form">
 		<el-form-item class="login-animation1">
 			<el-input text :placeholder="$t('message.account.accountPlaceholder1')" v-model="state.ruleForm.userName" clearable autocomplete="off">
@@ -94,7 +94,7 @@ import { Session } from '@/utils/storage';
 import { formatAxis } from '@/utils/formatTime';
 import { NextLoading } from '@/utils/loading';
 // 引入适配的登录 API
-import { postApiAuthAppLogin } from '@/api/fd-system-api-app/Auth';
+import { postAuthAppLogin } from '@/api/fd-system-api-app/Auth';
 import { getPluginGetEnabledPlugins } from '@/api/fd-system-api-app/plugin';
 import { startQiankun } from '@/main';
 
@@ -193,7 +193,7 @@ const onSignIn = async () => {
 			loginData.CaptchaCode = state.ruleForm.code;
 		}
 		
-		const res = await postApiAuthAppLogin(loginData);
+		const res = await postAuthAppLogin(loginData);
 
 		// 2. 检查响应并存储 token
 		// 由于 request.ts 响应拦截器已修改为直接返回 res.Data,

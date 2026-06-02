@@ -1,4 +1,4 @@
-﻿import { RouteRecordRaw } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import pinia from '@/stores/index';
 import { useUserInfo } from '@/stores/userInfo';
@@ -9,7 +9,7 @@ import { dynamicRoutes, notFoundAndNoPower } from '@/router/route';
 import { formatTwoStageRoutes, formatFlatteningRoutes, router } from '@/router/index';
 import { useRoutesList } from '@/stores/routesList';
 import { useTagsViewRoutes } from '@/stores/tagsViewRoutes';
-import { getApiAppMenusTree } from '@/api/fd-system-api-app/appMenus';
+import { getAppMenusGetUserMenuTree } from '@/api/fd-system-api-app/appMenus';
 
 // 后端控制路由
 
@@ -117,7 +117,7 @@ export async function getBackEndControlRoutes() {
 		// 从适配的菜单 API 获取用户菜单树
 		// 由于 request.ts 已修改为直接返回 res.Data，
 		// 这里的 res 就是 res.Data，即菜单数组 [...]
-		const menuTreeData = await getApiAppMenusTree();
+		const menuTreeData = await getAppMenusGetUserMenuTree();
 		//console.log('后端返回的菜单数据 (已处理):', menuTreeData); // 添加日志查看结构
 
 		return { data: menuTreeData };

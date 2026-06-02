@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="fdrole-container">
 		<el-card shadow="hover" :body-style="{ padding: 2 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
@@ -240,7 +240,7 @@ const openAssignPermissionsDialog = async (row: APIModel.FdRoleDto) => {
 		state.menuBtnData = [];
 
 		// 获取菜单按钮数据
-		const menuBtnData = (await FdMenuApi.getApiAdminFdMenuMenuBtns({ Belong: 1, RoleId: row.Id as string })) as unknown as APIModel.MenuBtnRe[];
+		const menuBtnData = (await FdMenuApi.getFdMenuGetMenuBtn({ Belong: 1, RoleId: row.Id as string })) as unknown as APIModel.MenuBtnRe[];
 		state.menuBtnData = processMenuBtnData(menuBtnData);
 
 		// 延迟设置 Tree 组件的选中状态，确保 DOM 已经渲染
@@ -485,7 +485,7 @@ const savePermissions = async () => {
 		const permissionData = buildPermissionData(state.menuBtnData);
 		//console.log(permissionData)
 		// 调用保存接口
-		const result = await FdRoleApi.postApiAdminFdRoleIdMenuBtns(
+		const result = await FdRoleApi.postFdRoleSave(
 			{ id: state.currentRoleId },
 			permissionData
 		);
@@ -567,7 +567,7 @@ const getList = async () => {
 		}
 		// 调试日志
 		////console.log('Search request body:', searchBody);
-		const response = await FdRoleApi.postApiAdminFdRolePageSearch(searchBody);
+		const response = await FdRoleApi.postGenericDtoControllerBase5GetPageByCondition(searchBody);
 		state.tableData.data = response.Items as APIModel.FdRoleDto[] || [] as APIModel.FdRoleDto[];
 		state.pagination.total = response.PageInfo?.Total || 0;
 	} catch (error) {
@@ -626,13 +626,13 @@ const submitForm = () => {
 			if (state.dialog.type === 'update' && state.formData.Id) {
 				// 更新接口调用
 				const updateData = { ...state.formData } as APIModel.UpdateFdRoleDto;
-				await FdRoleApi.putApiAdminFdRoleId({ id: state.formData.Id }, updateData);
+				await FdRoleApi.putFdRoleUpdate({ id: state.formData.Id }, updateData);
 				ElMessage.success('更新成功');
 			} else {
 				// 新增接口调用
 				const createData = { ...state.formData } as APIModel.CreateFdRoleDto;
 				createData.Belong = 1;
-				await FdRoleApi.postApiAdminFdRole(createData);
+				await FdRoleApi.postFdRoleCreate(createData);
 				ElMessage.success('添加成功');
 			}
 			state.dialog.visible = false;
@@ -649,7 +649,7 @@ const handleDelete = (row: APIModel.FdRoleDto) => {
 	ElMessageBox.confirm('确定删除吗？')
 		.then(async () => {
 			// 删除接口调用
-			await FdRoleApi.deleteApiAdminFdRoleId({ id: row.Id as string });
+			await FdRoleApi.deleteFdRoleDelete({ id: row.Id as string });
 			ElMessage.success('删除成功');
 			getList();
 		})

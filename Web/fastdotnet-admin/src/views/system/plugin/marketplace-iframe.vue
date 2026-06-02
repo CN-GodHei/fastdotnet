@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="marketplace-iframe-container" style="height: 100%; position: relative;">
     <!-- iframe - 强制占满整个容器 -->
     <iframe ref="marketplaceIframe" :src="iframeSrc" frameborder="0"
@@ -105,7 +105,7 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Loading, Refresh, InfoFilled, Link } from '@element-plus/icons-vue'
-import { getApiPluginScan, postApiPluginLoad, postApiPluginSetAuthCode } from '@/api/fd-system-api-admin/plugin'
+import { getPluginScanPlugins, postPluginLoadPlugin, postPluginSetAuthCode } from '@/api/fd-system-api-admin/plugin'
 import { usePluginStore } from '@/stores/plugin'
 import { baseSignalRManager } from '@/utils/signalr'
 import * as signalR from '@microsoft/signalr'
@@ -269,7 +269,7 @@ const sendInitialData = () => {
     // 使用postMessage发送数据到iframe
     if (marketplaceIframe.value?.contentWindow) {
       // 先获取已安装插件列表
-      getApiPluginScan().then((res: any) => {
+      getPluginScanPlugins().then((res: any) => {
         const installedPlugins = res || []
 
         // 发送到iframe
@@ -351,7 +351,7 @@ const handleInstallPlugin = async (data: any) => {
   
   try {
     // 调用后端 API，立即返回（后台执行）
-    const result = await postApiPluginLoad(data)
+    const result = await postPluginLoadPlugin(data)
     
     // 记录安装状态到 localStorage
     localStorage.setItem('plugin_installing', JSON.stringify({
@@ -677,7 +677,7 @@ const handleLoginSuccess = async (data: any) => {
   const { AuthCode, Token } = data
   try {
     // 调用后端接口，将 AuthCode 写入
-    await postApiPluginSetAuthCode({
+    await postPluginSetAuthCode({
       AuthCode: AuthCode
     })
 
@@ -695,7 +695,7 @@ const handleLoginSuccess = async (data: any) => {
 
 // 发送已安装插件列表到 iframe
 const sendInstalledPlugins = () => {
-  getApiPluginScan().then((res: any) => {
+  getPluginScanPlugins().then((res: any) => {
     const installedPlugins = res || []
 
     if (marketplaceIframe.value?.contentWindow) {

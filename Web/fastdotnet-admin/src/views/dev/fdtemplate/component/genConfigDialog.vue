@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="sys-codeGenConfig-container">
 		<el-dialog v-model="state.isShowDialog" draggable :close-on-click-modal="false" width="1500px">
 			<template #header>
@@ -223,16 +223,16 @@ import { Edit } from '@element-plus/icons-vue';
 import {
 	getCodeGenConfigPage,
 	putCodeGenConfigId,
-	postApiCodeGenConfig,
-	postApiCodeGenConfigBatch,
-	postApiCodeGenConfigPageSearch,
-	putApiCodeGenConfigBatch
+	postGenericDtoControllerBase5Create,
+	postGenericDtoControllerBase5CreateMany,
+	postGenericDtoControllerBase5GetPageByCondition,
+	putGenericDtoControllerBase5UpdateMany
 } from '@/api/fd-system-api-admin/codeGenConfig';
 import { 
-	getApiCodeGenGettablelist,
+	getCodeGenGetTableList,
 	getCodeGenTablelistConfigId,
-	getApiCodeGenGettablecolumnlist,
-	getApiCodeGen
+	getCodeGenGetTableColumnList,
+	getGenericDtoControllerBase5GetAll
 } from '@/api/fd-system-api-admin/codeGen';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 import APIModel from '@/api/fd-system-api-admin';
@@ -310,7 +310,7 @@ const handleQuery = async (row: any) => {
 			QueryParameters: queryResult.queryParameters,
 		} as APIModel.PageQueryByConditionDto;
 
-		const configRes = await postApiCodeGenConfigPageSearch(searchParams);
+		const configRes = await postGenericDtoControllerBase5GetPageByCondition(searchParams);
 		const existingConfigs = configRes?.Items || [];
 
 		// 确保每行数据都有MaskConfig和EnableMask字段
@@ -456,7 +456,7 @@ const saveMaskConfig = () => {
 // 加载表列表
 const loadTableList = async () => {
 	try {
-		const res = await getApiCodeGen();
+		const res = await getGenericDtoControllerBase5GetAll();
 		state.tableDataList = res;
 	} catch (error) {
 		console.error('加载表列表失败', error);
@@ -522,7 +522,7 @@ const tableChanged = async (val: string | undefined, item: any) => {
 			QueryParameters: queryResult.queryParameters,
 		} as APIModel.PageQueryByConditionDto;
 
-		const res = await postApiCodeGenConfigPageSearch(searchParams);
+		const res = await postGenericDtoControllerBase5GetPageByCondition(searchParams);
 		state.columnDataList = res?.Items || [];
 		
 		// 设置默认值字段为主键
@@ -598,7 +598,7 @@ const submit = async () => {
 	state.loading = true;
 	try {
 		// 由于查询出来的都是数据库已有的记录，直接使用批量更新接口
-		await putApiCodeGenConfigBatch(state.tableData as APIModel.UpdateFdCodeGenConfigDto[]);
+		await putGenericDtoControllerBase5UpdateMany(state.tableData as APIModel.UpdateFdCodeGenConfigDto[]);
 
 		ElMessage.success('字段配置保存成功');
 		closeDialog();

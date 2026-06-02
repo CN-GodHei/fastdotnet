@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="sys-codeGen-container">
 		<el-card shadow="hover" :body-style="{ padding: 5 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
@@ -62,9 +62,9 @@
 import { onMounted, reactive, ref, defineAsyncComponent } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { 
-  getApiCodeGenPage, 
-  deleteApiCodeGenId, 
-  getApiCodeGenApplicationnamespaces 
+  getGenericDtoControllerBase5GetPage, 
+  deleteGenericDtoControllerBase5Delete, 
+  getCodeGenGetApplicationNamespaces 
 } from '@/api/fd-system-api-admin/codeGen';
 import APIModel from '@/api/fd-system-api-admin';
 
@@ -105,7 +105,7 @@ const state = reactive({
 
 onMounted(async () => {
 	await handleQuery();
-	const res = await getApiCodeGenApplicationnamespaces();
+	const res = await getCodeGenGetApplicationNamespaces();
 	state.applicationNamespaces = res;
 });
 
@@ -118,7 +118,7 @@ const handleQuery = async () => {
 			pageSize: state.tableParams.pageSize,
 			...state.queryParams
 		};
-		const res = await getApiCodeGenPage(params);
+		const res = await getGenericDtoControllerBase5GetPage(params);
 		if (res) {
 			state.tableData = res.Items|| [];
 			state.tableParams.total = res.PageInfo || 0;
@@ -196,7 +196,7 @@ const deleConfig = (row: any) => {
 		type: 'warning',
 	}).then(async () => {
 		try {
-			const res = await deleteApiCodeGenId({ id: row.Id });
+			const res = await deleteGenericDtoControllerBase5Delete({ id: row.Id });
 			if (res) {
 				ElMessage.success('删除成功');
 				await handleQuery();

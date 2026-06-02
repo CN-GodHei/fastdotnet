@@ -1,11 +1,11 @@
-﻿/**
+/**
  * 插件加载器
  * 负责从后端API加载插件配置并注册到插件系统
  */
 
 import { PluginMetadata } from './PluginManager';
 import { pluginRegistry } from './PluginRegistry';
-import { getApiPluginScan } from '@/api/fd-system-api-admin/plugin';
+import { getPluginScanPlugins } from '@/api/fd-system-api-admin/plugin';
 
 export interface PluginLoadResult {
   success: boolean;
@@ -31,7 +31,7 @@ export class PluginLoader {
   public async loadPluginsFromAPI(): Promise<PluginLoadResult[]> {
     try {
       // 从后端获取插件列表
-      const response: any = await getApiPluginScan();
+      const response: any = await getPluginScanPlugins();
       const plugins = response || [];
 
       const results: PluginLoadResult[] = [];

@@ -1,5 +1,5 @@
-﻿import { defineStore } from 'pinia';
-import { getApiFdAppUserGetUserInfo } from '@/api/fd-system-api-app/fdAppUser';
+import { defineStore } from 'pinia';
+import { getFdAppUserGetUserInfo } from '@/api/fd-system-api-app/fdAppUser';
 import { Session } from '@/utils/storage';
 
 /**
@@ -31,7 +31,7 @@ export const useUserInfo = defineStore('userInfo', {
 			try {
 				// 调用后端API获取用户信息
 				// 由于 request.ts 的响应拦截器已经返回了 res.Data，所以这里直接获取 AdminUserDto 对象
-				const apiUserInfo: APIModel.FdAppUserDto = await getApiFdAppUserGetUserInfo();
+				const apiUserInfo: APIModel.FdAppUserDto = await getFdAppUserGetUserInfo();
 				// //console.log('apiUserInfo', apiUserInfo);
 				
 				

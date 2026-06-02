@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<el-form size="large" class="login-content-form">
 		<el-form-item class="login-animation1">
 			<el-input text :placeholder="$t('message.account.accountPlaceholder1')" v-model="state.ruleForm.userName" clearable autocomplete="off">
@@ -77,7 +77,7 @@ import { Session } from '@/utils/storage';
 import { formatAxis } from '@/utils/formatTime';
 import { NextLoading } from '@/utils/loading';
 // 引入适配的登录 API
-import { postApiAuthAdminLogin } from '@/api/fd-system-api-admin/Auth';
+import { postAuthAdminLogin } from '@/api/fd-system-api-admin/Auth';
 import { getEncryptionPublicKey } from '@/utils/encryption';
 import { startQiankun } from '@/main';
 import { baseSignalRManager } from '@/utils/signalr';
@@ -181,7 +181,7 @@ const onSignIn = async () => {
 			loginData.CaptchaCode = state.ruleForm.code;
 		}
 		
-		// 注意：这里不能直接使用 postApiAuthAdminLogin，因为它内部会再次从 Session 读取公钥
+		// 注意：这里不能直接使用 postAuthAdminLogin，因为它内部会再次从 Session 读取公钥
 		// 需要手动调用 request 并传入刚获取的公钥
 		const { default: request, encryptRequest } = await import('@/utils/request');
 		

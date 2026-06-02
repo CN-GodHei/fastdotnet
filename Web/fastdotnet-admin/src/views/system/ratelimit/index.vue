@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="fdratelimitrule-container">
 		<el-card shadow="hover" :body-style="{ padding: 2 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
@@ -194,7 +194,7 @@ const getList = async () => {
 		}
 		// 调试日志
 		////console.log('Search request body:', searchBody);
-		const response = await FdRatelimitRuleApi.postApiAdminFdRatelimitRulePageSearch(searchBody);
+		const response = await FdRatelimitRuleApi.postGenericDtoControllerBase5GetPageByCondition(searchBody);
 		state.tableData.data = response.Items || [];
 		state.tableData.total = response.PageInfo?.Total || 0;
 	} catch (error) {

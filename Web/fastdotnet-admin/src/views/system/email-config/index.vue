@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="email-config-container">
 		<el-card shadow="hover">
 			<template #header>
@@ -197,7 +197,7 @@ const testDialog = reactive({
 const loadConfig = async () => {
 	loading.value = true;
 	try {
-		const config = await FdEmailConfigApi.getApiAdminFdEmailConfigGetConfig();
+		const config = await FdEmailConfigApi.getFdEmailConfigGetConfig();
 		if (config) {
 			Object.assign(formData, config);
 		}
@@ -217,7 +217,7 @@ const handleSubmit = async () => {
 		
 		submitting.value = true;
 		try {
-			await FdEmailConfigApi.postApiAdminFdEmailConfigUpdateConfig(formData);
+			await FdEmailConfigApi.postFdEmailConfigUpdateConfig(formData);
 			ElMessage.success('配置保存成功');
 			// 重新加载配置
 			await loadConfig();
@@ -256,7 +256,7 @@ const sendTestEmail = async () => {
 
 	testDialog.sending = true;
 	try {
-		await FdEmailConfigApi.postApiAdminFdEmailConfigTestSend({
+		await FdEmailConfigApi.postFdEmailConfigTestSend({
 			ToEmail: testDialog.formData.toEmail,
 			Subject: testDialog.formData.subject,
 			Body: testDialog.formData.body,

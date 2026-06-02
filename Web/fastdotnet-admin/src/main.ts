@@ -1,11 +1,11 @@
-﻿import { createApp } from 'vue';
+import { createApp } from 'vue';
 import * as Vue from 'vue';
 import pinia from '@/stores/index';
 import * as Pinia from 'pinia';
 import App from '@/App.vue';
 import router from '@/router';
 import * as VueRouter from 'vue-router';
-import { getApiAdminFdMenuTree } from '@/api/fd-system-api-admin/fdMenu';
+import { getFdMenuGetUserMenuTree } from '@/api/fd-system-api-admin/fdMenu';
 import { Session } from '@/utils/storage';
 import request from '@/utils/request';
 import { buildMixedQuery } from '@/utils/queryBuilder';
@@ -119,7 +119,7 @@ export async function startQiankun() {
 
     try {
         // 修复类型问题，确保传给 extractMicroApps 的是数组
-        const menuResponse = await getApiAdminFdMenuTree();
+        const menuResponse = await getFdMenuGetUserMenuTree();
         const allMenus = Array.isArray(menuResponse) ? menuResponse : (menuResponse.data || []);
         const microAppConfigs = new Map();
 

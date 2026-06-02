@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="marketplace-container layout-padding">
     <el-card shadow="hover" header="插件市场">
       <!-- 插件商城微应用容器 -->
@@ -11,7 +11,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { loadMicroApp } from 'qiankun'
 import { useMicroAppsStore } from '@/stores/microApps'
-import { getApiPluginScan } from '@/api/fd-system-api-admin/plugin'
+import { getPluginScanPlugins } from '@/api/fd-system-api-admin/plugin'
 
 // 定义微应用实例
 let microAppInstance: any = null
@@ -19,7 +19,7 @@ let microAppInstance: any = null
 // 获取已安装插件列表
 const getInstalledPlugins = async () => {
   try {
-    const res: any = await getApiPluginScan()
+    const res: any = await getPluginScanPlugins()
     return res || []
   } catch (error) {
     console.error('获取已安装插件列表失败:', error)

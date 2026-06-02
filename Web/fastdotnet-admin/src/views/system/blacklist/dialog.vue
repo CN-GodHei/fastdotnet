@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div>
     <el-dialog 
       :title="state.dialogTitle" 
@@ -73,9 +73,9 @@
 import { reactive, ref, nextTick } from 'vue';
 import { ElMessage } from 'element-plus';
 import {
-  postApiAdminFdBlacklists,
-  putApiAdminFdBlacklistsId,
-  getApiAdminFdBlacklistsId
+  postGenericDtoControllerBase5Create,
+  putGenericDtoControllerBase5Update,
+  getGenericDtoControllerBase5GetById
 } from '@/api/fd-system-api-admin/fdBlacklists';
 import type { 
   FdBlacklistDto, 
@@ -128,7 +128,7 @@ const openDialog = async (type: string, row?: FdBlacklistDto) => {
   if (type === 'edit' && row?.Id) {
     // 编辑时需要先获取最新数据
     try {
-      const data = await getApiAdminFdBlacklistsId({ id: row.Id });
+      const data = await getGenericDtoControllerBase5GetById({ id: row.Id });
       state.rowData = data;
       state.formData = {
         Id: data.Id,
@@ -189,7 +189,7 @@ const handleSubmit = () => {
           Reason: state.formData.Reason,
           ExpiredAt: state.formData.ExpiredAt
         };
-        await postApiAdminFdBlacklists(CreateTimea);
+        await postGenericDtoControllerBase5Create(CreateTimea);
         ElMessage.success('新增成功');
       } else {
         // 编辑
@@ -203,7 +203,7 @@ const handleSubmit = () => {
           Reason: state.formData.Reason,
           ExpiredAt: state.formData.ExpiredAt
         };
-        await putApiAdminFdBlacklistsId({ id: state.formData.Id }, updateData);
+        await putGenericDtoControllerBase5Update({ id: state.formData.Id }, updateData);
         ElMessage.success('更新成功');
       }
       

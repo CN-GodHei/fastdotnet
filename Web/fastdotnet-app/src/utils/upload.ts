@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import { getApiStorageConfig, postApiStorageGetUploadCredential, postApiStorageUpload } from '@/api/fd-system-api-app/Storage';
+import { getStorageGetCurrentConfig, postStorageGetUploadCredential, postStorageUpload } from '@/api/fd-system-api-app/Storage';
 
 /**
  * 上传文件工具函数
@@ -33,7 +33,7 @@ export const uploadFile = async (options: UploadFileOptions): Promise<UploadResu
 
   try {
     // 首先获取当前存储配置
-    const configResponse = await getApiStorageConfig();
+    const configResponse = await getStorageGetCurrentConfig();
     
     if (!configResponse) {
       throw new Error('获取存储配置失败');
@@ -66,7 +66,7 @@ const uploadFileViaBackend = async (
     pathPrefix: pathPrefix
   };
   const body = {};
-  const response: any = await postApiStorageUpload(params, body, file, {
+  const response: any = await postStorageUpload(params, body, file, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -92,7 +92,7 @@ const uploadFileDirectly = async (
   onProgress?: (percent: number) => void
 ): Promise<UploadResult> => {
   // 获取上传凭证
-  const credentialResponse = await postApiStorageGetUploadCredential({
+  const credentialResponse = await postStorageGetUploadCredential({
     FileName: file.name,
     FileSize: file.size,
     ContentType: file.type,
@@ -143,7 +143,7 @@ const uploadFileDirectly = async (
  * 获取当前存储配置
  */
 export const getCurrentStorageConfig = async () => {
-  const response = await getApiStorageConfig();
+  const response = await getStorageGetCurrentConfig();
   return response;
 };
 
@@ -156,7 +156,7 @@ export const getUploadCredential = async (params: {
   contentType: string;
   pathPrefix?: string;
 }) => {
-  const response = await postApiStorageGetUploadCredential({
+  const response = await postStorageGetUploadCredential({
     FileName: params.fileName,
     FileSize: params.fileSize,
     ContentType: params.contentType,

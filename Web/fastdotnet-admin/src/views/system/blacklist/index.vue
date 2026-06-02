@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="fdblacklist-container">
 		<el-card shadow="hover" :body-style="{ padding: 2 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
@@ -112,7 +112,7 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import { buildMixedQuery } from '@/utils/queryBuilder';
 import type { FdBlacklist } from '@/api/fd-system-api-admin/typings';
 import dayjs from 'dayjs'; // 引入日期处理库
-import { postApiAdminFdBlacklistsPageSearch, deleteApiAdminFdBlacklistsId } from '@/api/fd-system-api-admin/fdBlacklists';
+import { postGenericDtoControllerBase5GetPageByCondition, deleteGenericDtoControllerBase5Delete } from '@/api/fd-system-api-admin/fdBlacklists';
 const queryForm = ref();
 const formRef = ref();
 
@@ -181,7 +181,7 @@ const getList = async () => {
 		}
 		// 调试日志
 		// //console.log('Search request body:', searchBody);
-		const response = await postApiAdminFdBlacklistsPageSearch(searchBody);
+		const response = await postGenericDtoControllerBase5GetPageByCondition(searchBody);
 		state.tableData.data = response.Items || [];
 		state.tableData.total = response.PageInfo?.Total || 0;
 	} catch (error) {

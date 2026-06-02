@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="fdadminuser-container">
 		<el-card shadow="hover" :body-style="{ padding: 2 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
@@ -267,7 +267,7 @@ const getList = async () => {
 		}
 		// 调试日志
 		//console.log('Search request body:', searchBody);
-		const response = await FdAdminUserApi.postApiAdminFdAdminUserPageSearch(searchBody);
+		const response = await FdAdminUserApi.postGenericDtoControllerBase5GetPageByCondition(searchBody);
 		state.tableData.data = response.Items as APIModel.FdAdminUserDto[] || [] as APIModel.FdAdminUserDto[];
 		state.pagination.total = response.PageInfo?.Total || 0;
 	} catch (error) {
@@ -326,12 +326,12 @@ const submitForm = () => {
 			if (state.dialog.type === 'update' && state.formData.Id) {
 				// 更新接口调用
 				const updateData = { ...state.formData } as APIModel.UpdateFdAdminUserDto;
-				await FdAdminUserApi.putApiAdminFdAdminUserId({ id: state.formData.Id }, updateData);
+				await FdAdminUserApi.putGenericDtoControllerBase5Update({ id: state.formData.Id }, updateData);
 				ElMessage.success('更新成功');
 			} else {
 				// 新增接口调用
 				const createData = { ...state.formData } as APIModel.CreateFdAdminUserDto;
-				await FdAdminUserApi.postApiAdminFdAdminUser(createData);
+				await FdAdminUserApi.postFdAdminUserCreate(createData);
 				ElMessage.success('添加成功');
 			}
 			state.dialog.visible = false;
@@ -381,7 +381,7 @@ const loadAllRoles = async () => {
 			searchBody.DynamicQuery = queryResult.dynamicQuery;
 			searchBody.QueryParameters = queryResult.queryParameters;
 		}
-		const response = await FdRoleApi.postApiAdminFdRoleListByCondition(searchBody);
+		const response = await FdRoleApi.postGenericDtoControllerBase5GetListByCondition(searchBody);
 		state.roleDialog.allRoles = (response || []).map((role: APIModel.FdRoleDto) => ({
 			key: role.Id as string,
 			name: role.Name as string,
@@ -396,7 +396,7 @@ const loadAllRoles = async () => {
 const loadUserRoles = async (userId: string) => {
 	try {
 		// 使用专门的用户角色查询接口
-		const roleIds = await FdAdminUserRoleApi.getApiFdAdminUserRoleUserUserIdRoles({ userId });
+		const roleIds = await FdAdminUserRoleApi.getFdAdminUserRoleGetUserRoles({ userId });
 		state.roleDialog.currentUserRoles = roleIds || [];
 	} catch (error) {
 		ElMessage.error('获取用户角色失败');
@@ -420,7 +420,7 @@ const saveRoleAssignment = async () => {
 			RoleIds: selectedRoles
 		};
 		
-		const result = await FdAdminUserRoleApi.postApiFdAdminUserRoleAssignRoles(assignDto);
+		const result = await FdAdminUserRoleApi.postFdAdminUserRoleAssignUserRoles(assignDto);
 		
 		if (result) {
 			ElMessage.success('角色分配保存成功');
@@ -439,7 +439,7 @@ const handleDelete = (row: APIModel.FdAdminUserDto) => {
 	ElMessageBox.confirm('确定删除吗？')
 		.then(async () => {
 			// 删除接口调用
-			await FdAdminUserApi.deleteApiAdminFdAdminUserId({ id: row.Id as string });
+			await FdAdminUserApi.deleteFdAdminUserDelete({ id: row.Id as string });
 			ElMessage.success('删除成功');
 			getList();
 		})
@@ -458,7 +458,7 @@ const handleResetPassword = (row: APIModel.FdAdminUserDto) => {
 	})
 		.then(async () => {
 			try {
-				await FdAdminUserApi.postApiAdminFdAdminUserIdResetPassword({ id: row.Id as string });
+				await FdAdminUserApi.postFdAdminUserResetPassword({ id: row.Id as string });
 				ElMessage.success('密码重置成功，新密码为系统默认密码');
 			} catch (error) {
 				ElMessage.error('密码重置失败');

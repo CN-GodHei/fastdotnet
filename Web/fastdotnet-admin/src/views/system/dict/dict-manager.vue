@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="dict-management-container">
 		<el-row :gutter="10" style="height: calc(100vh - 120px);">
 			<!-- 左侧：字典类型列表 -->
@@ -278,7 +278,7 @@ const dataFormRef = ref();
 const getTypeList = async () => {
 	state.typeLoading = true;
 	try {
-		const response = await FdDictTypeApi.postApiAdminFdDictTypePageSearch({
+		const response = await FdDictTypeApi.postGenericDtoControllerBase5GetPageByCondition({
 			PageIndex: 1,
 			PageSize: 1000, // 一次性加载所有类型
 			DynamicQuery: typeQueryParams.keyword ? `Name.Contains("${typeQueryParams.keyword}") || Code.Contains("${typeQueryParams.keyword}")` : undefined
@@ -297,7 +297,7 @@ const getDataList = async (typeId: string, typeCode: string) => {
 	
 	state.dataLoading = true;
 	try {
-		const response = await FdDictDataApi.postApiAdminFdDictDataPageSearch({
+		const response = await FdDictDataApi.postGenericDtoControllerBase5GetPageByCondition({
 			PageIndex: 1,
 			PageSize: 1000,
 			DynamicQuery: `DictTypeId == "${typeId}"`
@@ -391,10 +391,10 @@ const submitTypeForm = async () => {
 	
 	try {
 		if (state.typeDialog.type === 'update') {
-			await FdDictTypeApi.putApiAdminFdDictTypeId({ id: state.typeFormData.Id }, state.typeFormData);
+			await FdDictTypeApi.putGenericDtoControllerBase5Update({ id: state.typeFormData.Id }, state.typeFormData);
 			ElMessage.success('更新成功');
 		} else {
-			await FdDictTypeApi.postApiAdminFdDictType(state.typeFormData);
+			await FdDictTypeApi.postGenericDtoControllerBase5Create(state.typeFormData);
 			ElMessage.success('添加成功');
 		}
 		state.typeDialog.visible = false;
@@ -412,7 +412,7 @@ const handleTypeDelete = (row: APIModel.FdDictTypeDto) => {
 		type: 'warning',
 	}).then(async () => {
 		try {
-			await FdDictTypeApi.deleteApiAdminFdDictTypeId({ id: row.Id });
+			await FdDictTypeApi.deleteGenericDtoControllerBase5Delete({ id: row.Id });
 			ElMessage.success('删除成功');
 			if ((state.selectedType as any)?.Id === row.Id) {
 				state.selectedType = null;
@@ -495,10 +495,10 @@ const submitDataForm = async () => {
 	
 	try {
 		if (state.dataDialog.type === 'update') {
-			await FdDictDataApi.putApiAdminFdDictDataId({ id: state.dataFormData.Id }, state.dataFormData);
+			await FdDictDataApi.putGenericDtoControllerBase5Update({ id: state.dataFormData.Id }, state.dataFormData);
 			ElMessage.success('更新成功');
 		} else {
-			await FdDictDataApi.postApiAdminFdDictData(state.dataFormData);
+			await FdDictDataApi.postGenericDtoControllerBase5Create(state.dataFormData);
 			ElMessage.success('添加成功');
 		}
 		state.dataDialog.visible = false;
@@ -518,7 +518,7 @@ const handleDataDelete = (row: APIModel.FdDictDataDto) => {
 		type: 'warning',
 	}).then(async () => {
 		try {
-			await FdDictDataApi.deleteApiAdminFdDictDataId({ id: row.Id });
+			await FdDictDataApi.deleteGenericDtoControllerBase5Delete({ id: row.Id });
 			ElMessage.success('删除成功');
 			if (state.selectedType) {
 				getDataList(state.selectedType.Id, state.selectedType.Code);

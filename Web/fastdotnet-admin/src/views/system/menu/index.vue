@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="fdmenu-container">
 		<el-card shadow="hover" :body-style="{ padding: 2 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
@@ -144,8 +144,8 @@ const getTableData = async () => {
 			searchBody.DynamicQuery = queryResult.dynamicQuery;
 			searchBody.QueryParameters = queryResult.queryParameters;
 		}
-		// const res = await MenuApi.getApiAdminFdMenu();
-		const res = await MenuApi.postApiAdminFdMenuListByCondition(searchBody);
+		// const res = await MenuApi.getFdMenuGetAll();
+		const res = await MenuApi.postGenericDtoControllerBase5GetListByCondition(searchBody);
 		state.tableData.data = res || [];
 	} catch (error) {
 		ElMessage.error('获取菜单数据失败');
@@ -194,7 +194,7 @@ const onTabelRowDel = (row: APIModel.FdMenuDto) => {
 			try {
 				// 使用row.Id作为菜单的唯一标识符
 				if (row.Id) {
-					await MenuApi.deleteApiAdminFdMenuId({ id: row.Id });
+					await MenuApi.deleteFdMenuDelete({ id: row.Id });
 					ElMessage.success('删除成功');
 					getTableData();
 				} else {

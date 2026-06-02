@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <el-dialog v-model="dialogVisible" title="插件配置" width="800px" :close-on-click-modal="false">
     <div class="config-content">
       <el-alert 
@@ -51,8 +51,8 @@ import { ElMessage } from 'element-plus'
 import * as monaco from 'monaco-editor'
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import {
-  getApiPluginConfigurationGetPluginConfigurationByPluginId,
-  putApiPluginConfigurationPluginId
+  getPluginConfigurationGetPluginConfigurationById,
+  putPluginConfigurationUpdate
 } from '@/api/fd-system-api-admin/pluginConfiguration'
 
 // 定义 props
@@ -186,7 +186,7 @@ const handleCopy = async () => {
 // 获取插件配置
 const fetchConfig = async (id: string) => {
   try {
-    const response = await getApiPluginConfigurationGetPluginConfigurationByPluginId({ PluginId: id })
+    const response = await getPluginConfigurationGetPluginConfigurationById({ PluginId: id })
     // 后端返回的是 { ExistRocord?: boolean; RawJson?: string; }
     // 如果存在记录，使用 RawJson，否则使用空对象
     if (response?.ExistRocord && response?.RawJson) {
@@ -213,7 +213,7 @@ const handleConfirm = async () => {
   
   try {
     // 调用 PUT 接口，传入 JSON 字符串
-    await putApiPluginConfigurationPluginId(
+    await putPluginConfigurationUpdate(
       { PluginId: pluginId.value },
       JSON.stringify(configJson.value)
     )

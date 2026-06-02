@@ -1,5 +1,5 @@
-﻿import { defineStore } from 'pinia'
-import { getApiPluginScan } from '@/api/fd-system-api-admin/plugin' // 导入插件 API
+import { defineStore } from 'pinia'
+import { getPluginScanPlugins } from '@/api/fd-system-api-admin/plugin' // 导入插件 API
 
 export const usePluginStore = defineStore('plugin', {
   state: () => ({
@@ -64,7 +64,7 @@ export const usePluginStore = defineStore('plugin', {
       this.loading = true
       try {
         // 调用 API 获取插件列表
-        const response = await getApiPluginScan()
+        const response = await getPluginScanPlugins()
         // 假设 response.data 是插件数组
         this.plugins = response.data || []
       } catch (error) {

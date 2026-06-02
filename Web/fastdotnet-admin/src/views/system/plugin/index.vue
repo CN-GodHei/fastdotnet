@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="system-plugin-container layout-pd">
     <el-card shadow="hover" header="插件管理">
       <div class="server-auth-section">
@@ -246,15 +246,15 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 import { CopyDocument,UploadFilled,Link } from '@element-plus/icons-vue'
 // 导入插件相关的 API
 import {
-  getApiPluginScan,
-  postApiPluginEnablePluginId,
-  postApiPluginDisablePluginId,
-  postApiPluginUninstallPluginId,
-  getApiPluginGetAuthCode,
-  postApiPluginSetAuthCode,
-  postApiPluginUploadOffline
+  getPluginScanPlugins,
+  postPluginEnablePlugin,
+  postPluginDisablePlugin,
+  postPluginUninstallPlugin,
+  getPluginGetAuthCode,
+  postPluginSetAuthCode,
+  postPluginUploadOfflinePackage
 } from '@/api/fd-system-api-admin/plugin'
-import { getApiSystemMachineFingerprint } from '@/api/fd-system-api-admin/system'
+import { getSystemGetMachineFingerprint } from '@/api/fd-system-api-admin/system'
 import { MicroAppEvents, receiveFromMicroApp, removeMicroAppEventListener } from '@/utils/microAppCommunication'
 import PluginConfigurationDialog from './PluginConfigurationDialog.vue'
 import PluginLicenseDialog from './PluginLicenseDialog.vue'
@@ -327,7 +327,7 @@ const copying = ref(false)
 // 获取插件列表
 const getPluginList = () => {
   // 扫描插件
-  getApiPluginScan().then((res: any) => {
+  getPluginScanPlugins().then((res: any) => {
     pluginList.value = res
 
     // 如果在插件市场页面，通知它更新插件列表
@@ -388,7 +388,7 @@ const handleUploadFile = async () => {
     uploading.value = true
     
     // 调用上传 API
-    const res = await postApiPluginUploadOffline({}, selectedFile.value, {
+    const res = await postPluginUploadOfflinePackage({}, selectedFile.value, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -428,7 +428,7 @@ const handleSetAuthCode = async () => {
   
   try {
     settingAuthCode.value = true
-    await postApiPluginSetAuthCode({ AuthCode: tempAuthCode.value })
+    await postPluginSetAuthCode({ AuthCode: tempAuthCode.value })
     ElMessage.success('设置授权码成功')
     setAuthDialogVisible.value = false
     // 更新显示的授权码
@@ -447,7 +447,7 @@ const handleEnable = (row: Plugin) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    postApiPluginEnablePluginId({ pluginId: row.id }).then((res) => {
+    postPluginEnablePlugin({ pluginId: row.id }).then((res) => {
       if (res.Code == 200) {
         ElMessage.success('启用成功')
         getPluginList() // 重新获取插件列表
@@ -472,7 +472,7 @@ const handleDisable = (row: Plugin) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    postApiPluginDisablePluginId({ pluginId: row.id }).then(() => {
+    postPluginDisablePlugin({ pluginId: row.id }).then(() => {
       ElMessage.success('停用成功')
       getPluginList() // 重新获取插件列表
 
@@ -494,7 +494,7 @@ const handleUninstall = (row: Plugin) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    postApiPluginUninstallPluginId({ pluginId: row.id }).then((res: any) => {
+    postPluginUninstallPlugin({ pluginId: row.id }).then((res: any) => {
       if (res.Result === true) {
         // 检查是否为离线授权方式
         if (res.Offline === true && res.UninstallCode) {
@@ -717,7 +717,7 @@ onMounted(() => {
 // 获取服务器用户授权码
 const fetchServerAuthCode = async () => {
   try {
-    const res = await getApiPluginGetAuthCode()
+    const res = await getPluginGetAuthCode()
     serverAuthCode.value = typeof res === 'string' ? res : ''
   } catch (error: any) {
     console.error('获取授权码失败:', error)
@@ -746,7 +746,7 @@ const fetchServerAuthCode = async () => {
 // 获取机器码
 const fetchMachineCode = async () => {
   try {
-    const res = await getApiSystemMachineFingerprint()
+    const res = await getSystemGetMachineFingerprint()
     machineCode.value = typeof res === 'string' ? res : ''
   } catch (error: any) {
     console.error('获取机器码失败:', error)

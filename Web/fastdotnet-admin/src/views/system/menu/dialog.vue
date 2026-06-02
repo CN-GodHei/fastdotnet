@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="system-menu-dialog-container">
 		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px">
 			<el-form ref="menuDialogFormRef" :model="state.ruleForm" size="default" label-width="80px">
@@ -296,8 +296,8 @@ const loadMenuData = async () => {
 			searchBody.DynamicQuery = queryResult.dynamicQuery;
 			searchBody.QueryParameters = queryResult.queryParameters;
 		}
-		// const res = await MenuApi.getApiAdminFdMenu();
-		const res = await MenuApi.postApiAdminFdMenuListByCondition(searchBody) as any;
+		// const res = await MenuApi.getFdMenuGetAll();
+		const res = await MenuApi.postGenericDtoControllerBase5GetListByCondition(searchBody) as any;
 		state.menuData = res || [];
 	} catch (error) {
 		console.error('加载菜单数据失败:', error);
@@ -441,7 +441,7 @@ const onSubmit = async () => {
 					};
 
 					await import('@/api/fd-system-api-admin/fdMenuButtons').then((MenuButtonsApi) => {
-						MenuButtonsApi.putApiAdminFdMenuButtonsId({ id: state.ruleForm.Id }, updateData);
+						MenuButtonsApi.putFdMenuButtonsUpdate({ id: state.ruleForm.Id }, updateData);
 					});
 
 					ElMessage.success('按钮更新成功');
@@ -464,7 +464,7 @@ const onSubmit = async () => {
 				};
 
 				await import('@/api/fd-system-api-admin/fdMenuButtons').then((MenuButtonsApi) => {
-					MenuButtonsApi.postApiAdminFdMenuButtons(createData);
+					MenuButtonsApi.postFdMenuButtonsCreate(createData);
 				});
 
 				// ElMessage.success('按钮创建成功');
@@ -497,7 +497,7 @@ const onSubmit = async () => {
 						Belong: state.ruleForm.Belong, // 添加模块分类
 					};
 
-					await MenuApi.putApiAdminFdMenuId({ id: state.ruleForm.Id }, updateData);
+					await MenuApi.putFdMenuUpdate({ id: state.ruleForm.Id }, updateData);
 
 					ElMessage.success((state.ruleForm.menuType === 'directory' ? '目录' : '菜单') + '更新成功');
 				} else {
@@ -518,7 +518,7 @@ const onSubmit = async () => {
 				//console.log(11);
 
 				createData.Category = 'Admin';
-				await MenuApi.postApiAdminFdMenu(createData);
+				await MenuApi.postGenericDtoControllerBase5Create(createData);
 				ElMessage.success((state.ruleForm.menuType === 'directory' ? '目录' : '菜单') + '创建成功');
 			}
 

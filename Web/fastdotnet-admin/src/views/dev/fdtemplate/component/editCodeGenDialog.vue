@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="sys-editCodeGen-container">
 		<el-dialog v-model="state.isShowDialog" draggable :close-on-click-modal="false" width="700px">
 			<template #header>
@@ -98,12 +98,12 @@
 <script lang="ts" setup name="sysEditCodeGen">
 import { computed, onMounted, reactive, ref, nextTick } from 'vue';
 import { 
-  getApiCodeGenGettablelist, 
-  getApiCodeGenGettablecolumnlist, 
+  getCodeGenGetTableList, 
+  getCodeGenGetTableColumnList, 
   getCodeGenGetentityname,
   getCodeGenTablelistConfigId, 
-  postApiCodeGen, 
-  putApiCodeGenId 
+  postGenericDtoControllerBase5Create, 
+  putGenericDtoControllerBase5Update 
 } from '@/api/fd-system-api-admin/codeGen';
 import APIModel from '@/api/fd-system-api-admin';
 import { ElMessage } from 'element-plus';
@@ -161,7 +161,7 @@ const changeTableUniqueColumn = (value: any, index: number) => {
 const getColumnInfoList = async (tableName: string) => {
 	if (!tableName) return;
 	try {
-		const res = await getApiCodeGenGettablecolumnlist({ tableName });
+		const res = await getCodeGenGetTableColumnList({ tableName });
 		state.columnData = res || [];
 	} catch (error) {
 		console.error('获取列信息失败', error);
@@ -224,7 +224,7 @@ const openDialog = async (row: APIModel.CreateCodeGenDto & APIModel.UpdateCodeGe
 	
 	try {
 		// 获取表列表
-		const res = await getApiCodeGenGettablelist();
+		const res = await getCodeGenGetTableList();
 		state.tableData = res || [];
 		
 		// 等待界面更新
@@ -285,11 +285,11 @@ const submit = () => {
 		try {
 			if (state.ruleForm.Id && state.ruleForm.Id !== '') {
 				// 更新操作
-				await putApiCodeGenId({ id: state.ruleForm.Id }, state.ruleForm as APIModel.UpdateCodeGenDto);
+				await putGenericDtoControllerBase5Update({ id: state.ruleForm.Id }, state.ruleForm as APIModel.UpdateCodeGenDto);
 				ElMessage.success('更新成功');
 			} else {
 				// 添加操作
-				await postApiCodeGen(state.ruleForm as APIModel.CreateCodeGenDto);
+				await postGenericDtoControllerBase5Create(state.ruleForm as APIModel.CreateCodeGenDto);
 				ElMessage.success('添加成功');
 			}
 			closeDialog();

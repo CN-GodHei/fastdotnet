@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="fdadminuser-container">
 		<el-card shadow="hover" :body-style="{ padding: 2 }">
 			<el-form :model="state.queryParams" ref="queryForm" :inline="true">
@@ -257,7 +257,7 @@ const getList = async () => {
 		}
 		// 调试日志
 		//console.log('Search request body:', searchBody);
-		const response = await FdAdminUserApi.postApiAdminFdAdminUserPageSearch(searchBody);
+		const response = await FdAdminUserApi.postGenericDtoControllerBase5GetPageByCondition(searchBody);
 		state.tableData.data = response.Items as APIModel.FdAdminUserDto[] || [] as APIModel.FdAdminUserDto[];
 		state.pagination.total = response.PageInfo?.Total || 0;
 	} catch (error) {
@@ -316,12 +316,12 @@ const submitForm = () => {
 			if (state.dialog.type === 'update' && state.formData.Id) {
 				// 更新接口调用
 				const updateData = { ...state.formData } as APIModel.UpdateFdAdminUserDto;
-				await FdAdminUserApi.putApiAdminFdAdminUserId({ id: state.formData.Id }, updateData);
+				await FdAdminUserApi.putGenericDtoControllerBase5Update({ id: state.formData.Id }, updateData);
 				ElMessage.success('更新成功');
 			} else {
 				// 新增接口调用
 				const createData = { ...state.formData } as APIModel.CreateFdAdminUserDto;
-				await FdAdminUserApi.postApiAdminFdAdminUser(createData);
+				await FdAdminUserApi.postFdAdminUserCreate(createData);
 				ElMessage.success('添加成功');
 			}
 			state.dialog.visible = false;
@@ -338,7 +338,7 @@ const handleDelete = (row: APIModel.FdAdminUserDto) => {
 	ElMessageBox.confirm('确定删除吗？')
 		.then(async () => {
 			// 删除接口调用
-			await FdAdminUserApi.deleteApiAdminFdAdminUserId({ id: row.Id as string });
+			await FdAdminUserApi.deleteFdAdminUserDelete({ id: row.Id as string });
 			ElMessage.success('删除成功');
 			getList();
 		})

@@ -1,4 +1,4 @@
-﻿<template>
+<template>
 	<div class="gbdata-container">
 		<el-row :gutter="10" style="height: calc(100vh - 120px);">
 			<!-- 左侧：国标标准列表 -->
@@ -382,7 +382,7 @@ const getStandardList = async () => {
 			searchBody.QueryParameters = queryResult.queryParameters;
 		}
 		
-		const response = await StandardApi.postApiFdNationalStandardPageSearch(searchBody);
+		const response = await StandardApi.postGenericDtoControllerBase5GetPageByCondition(searchBody);
 		standardState.tableData.data = response.Items || [];
 		standardState.pagination.total = response.PageInfo?.Total || 0;
 	} catch (error) {
@@ -461,10 +461,10 @@ const submitStandardForm = () => {
 		if (!valid) return;
 		try {
 			if (standardState.dialog.type === 'update' && standardState.formData.Id) {
-				await StandardApi.putApiFdNationalStandardId({ id: standardState.formData.Id }, standardState.formData);
+				await StandardApi.putGenericDtoControllerBase5Update({ id: standardState.formData.Id }, standardState.formData);
 				ElMessage.success('更新成功');
 			} else {
-				await StandardApi.postApiFdNationalStandard(standardState.formData);
+				await StandardApi.postGenericDtoControllerBase5Create(standardState.formData);
 				ElMessage.success('添加成功');
 			}
 			standardState.dialog.visible = false;
@@ -481,7 +481,7 @@ const handleStandardDelete = (row: APIModel.FdNationalStandardDto) => {
 		type: 'warning'
 	})
 	.then(async () => {
-		await StandardApi.deleteApiFdNationalStandardId({ id: row.Id });
+		await StandardApi.deleteGenericDtoControllerBase5Delete({ id: row.Id });
 		ElMessage.success('删除成功');
 		if (selectedStandardId.value === row.Id) {
 			selectedStandardId.value = '';
@@ -549,7 +549,7 @@ const getItemList = async () => {
 			searchBody.QueryParameters = queryResult.queryParameters;
 		}
 		
-		const response = await ItemApi.postApiFdNationalStandardItemPageSearch(searchBody);
+		const response = await ItemApi.postGenericDtoControllerBase5GetPageByCondition(searchBody);
 		itemState.tableData.data = response.Items || [];
 		itemState.pagination.total = response.PageInfo?.Total || 0;
 	} catch (error) {
@@ -610,10 +610,10 @@ const submitItemForm = () => {
 		if (!valid) return;
 		try {
 			if (itemState.dialog.type === 'update' && itemState.formData.Id) {
-				await ItemApi.putApiFdNationalStandardItemId({ id: itemState.formData.Id }, itemState.formData);
+				await ItemApi.putGenericDtoControllerBase5Update({ id: itemState.formData.Id }, itemState.formData);
 				ElMessage.success('更新成功');
 			} else {
-				await ItemApi.postApiFdNationalStandardItem(itemState.formData);
+				await ItemApi.postGenericDtoControllerBase5Create(itemState.formData);
 				ElMessage.success('添加成功');
 			}
 			itemState.dialog.visible = false;
@@ -630,7 +630,7 @@ const handleItemDelete = (row: APIModel.FdNationalStandardItemDto) => {
 		type: 'warning'
 	})
 	.then(async () => {
-		await ItemApi.deleteApiFdNationalStandardItemId({ id: row.Id });
+		await ItemApi.deleteGenericDtoControllerBase5Delete({ id: row.Id });
 		ElMessage.success('删除成功');
 		getItemList();
 	})

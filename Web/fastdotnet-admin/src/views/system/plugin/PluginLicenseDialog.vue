@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <el-dialog 
     v-model="dialogVisible" 
     title="插件授权" 
@@ -116,7 +116,7 @@
 <script setup lang="ts" name="PluginLicenseDialog">
 import { ref, computed, watch, nextTick } from 'vue'
 import { ElMessage, FormInstance } from 'element-plus'
-import { postApiPluginSetPluginLicense, postApiPluginUpdatePluginLicenseOnline } from '@/api/fd-system-api-admin/plugin'
+import { postPluginSetPluginLicense, postPluginUpdatePluginLicenseOnline } from '@/api/fd-system-api-admin/plugin'
 import { usePluginStore } from '@/stores/plugin'
 
 // 定义插件数据类型
@@ -299,7 +299,7 @@ const handleOnlineLicense = async () => {
     onlineSubmitting.value = true
     
     // 调用在线授权 API，使用商城 Token 进行授权
-    const response = await postApiPluginUpdatePluginLicenseOnline({
+    const response = await postPluginUpdatePluginLicenseOnline({
       Token: token,      // 使用商城的 Token
       PluginId: props.pluginId
     })
@@ -339,7 +339,7 @@ const handleConfirm = async () => {
       submitting.value = true
       
       // 调用设置插件许可 API
-      await postApiPluginSetPluginLicense({
+      await postPluginSetPluginLicense({
         Type: licenseForm.value.Type,
         LicenseStr: licenseForm.value.LicenseStr
       })
