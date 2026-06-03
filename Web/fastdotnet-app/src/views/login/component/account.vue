@@ -94,7 +94,7 @@ import { Session } from '@/utils/storage';
 import { formatAxis } from '@/utils/formatTime';
 import { NextLoading } from '@/utils/loading';
 // 引入适配的登录 API
-import { postAuthAppLogin } from '@/api/fd-system-api-app/Auth';
+import { postAuthAppLogin } from '@/api/fd-system-api-app/auth';
 import { getPluginGetEnabledPlugins } from '@/api/fd-system-api-app/plugin';
 import { startQiankun } from '@/main';
 

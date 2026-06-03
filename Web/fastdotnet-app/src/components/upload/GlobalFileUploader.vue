@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, reactive } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { getStorageGetCurrentConfig, postStorageGetUploadCredential, postStorageUpload } from '@/api/fd-system-api-app/Storage';
+import { getStorageGetCurrentConfig, postStorageGetUploadCredential, postStorageUpload } from '@/api/fd-system-api-app/storage';
 import { Plus } from '@element-plus/icons-vue';
 
 interface Props {
