@@ -77,7 +77,7 @@ import { Session } from '@/utils/storage';
 import { formatAxis } from '@/utils/formatTime';
 import { NextLoading } from '@/utils/loading';
 // 引入适配的登录 API
-import { postAuthAdminLogin } from '@/api/fd-system-api-admin/Auth';
+import { postAuthAdminLogin } from '@/api/fd-system-api-admin/auth';
 import { getEncryptionPublicKey } from '@/utils/encryption';
 import { startQiankun } from '@/main';
 import { baseSignalRManager } from '@/utils/signalr';
