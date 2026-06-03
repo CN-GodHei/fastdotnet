@@ -13,9 +13,6 @@ export async function postEncryptionKeyGenerateKeyPair(body: string, options?: {
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postEncryptionKeyGenerateKeyPair */
-export const postApiEncryptionKeyGenerate = postEncryptionKeyGenerateKeyPair;
 /** 获取 RSA 公钥（用于混合加密） GET /api/EncryptionKey/public-key */
 export async function getEncryptionKeyGetPublicKey(options?: { [key: string]: any }) {
 	return request<any>('/api/EncryptionKey/public-key', {
@@ -23,6 +20,3 @@ export async function getEncryptionKeyGetPublicKey(options?: { [key: string]: an
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getEncryptionKeyGetPublicKey */
-export const getApiEncryptionKeyPublicKey = getEncryptionKeyGetPublicKey;

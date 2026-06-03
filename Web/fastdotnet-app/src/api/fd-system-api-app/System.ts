@@ -9,6 +9,3 @@ export async function getSystemGetMachineFingerprint(options?: { [key: string]: 
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getSystemGetMachineFingerprint */
-export const getApiSystemMachineFingerprint = getSystemGetMachineFingerprint;

@@ -4,19 +4,6 @@ declare namespace APIModel {
 		Msg?: string;
 	};
 
-	type ApiResult1Boolean = {
-		Data?: boolean;
-		Code?: number;
-		Msg?: string;
-	};
-
-	type AppRegisterDto = {
-		Username: string;
-		Password: string;
-		Email: string;
-		VerificationCode: string;
-	};
-
 	type AssignPermissionsDto = {
 		PermissionIds?: string[];
 	};
@@ -155,10 +142,6 @@ declare namespace APIModel {
 		CurrentPassword: string;
 		NewPassword: string;
 		ConfirmPassword: string;
-	};
-
-	type CheckRegistrUserNameDto = {
-		Username: string;
 	};
 
 	type CodeGenConfigDto = {
@@ -443,20 +426,6 @@ declare namespace APIModel {
 		PostLogoutRedirectUris?: string[];
 		GrantTypes?: string[];
 		Scopes?: string[];
-	};
-
-	type CreateSchedulerJobDto = {
-		JobName: string;
-		JobType: string;
-		JobContent: string;
-		CronExpression: string;
-		JobParams?: string;
-		StartTime?: string;
-		EndTime?: string;
-		JobStatus?: string;
-		Concurrent?: string;
-		Remark?: string;
-		ExeDateDesc?: string;
 	};
 
 	type DataStatus = 0 | 1 | 2 | 3;
@@ -1957,11 +1926,6 @@ declare namespace APIModel {
 		CaptchaCode?: string;
 	};
 
-	type LoginRequest = {
-		Username?: string;
-		Password?: string;
-	};
-
 	type LoginResultDto = {
 		Token?: string;
 	};
@@ -2468,10 +2432,6 @@ declare namespace APIModel {
 	type SaveFdUserLayoutDto = {
 		LayoutData?: string;
 		Name?: string;
-	};
-
-	type SendRegistrationCodeDto = {
-		Email: string;
 	};
 
 	type SetAuthCodeDto = {

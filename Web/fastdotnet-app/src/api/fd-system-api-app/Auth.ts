@@ -13,9 +13,6 @@ export async function postAuthCheckRegistrUserName(body: APIModel.CheckRegistrUs
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAuthCheckRegistrUserName */
-export const postApiAuthAppCheckregistrusername = postAuthCheckRegistrUserName;
 /** 用户端登录 
 
 **请求加密**: 该接口的请求参数需要使用 RSA + AES 混合加密 进行加密。
@@ -38,9 +35,6 @@ export async function postAuthAppLogin(body: APIModel.LoginDto, options?: { [key
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAuthAppLogin */
-export const postApiAuthAppLogin = postAuthAppLogin;
 /** App端用户注册 POST /api/auth/app/register */
 export async function postAuthAppRegister(body: APIModel.AppRegisterDto, options?: { [key: string]: any }) {
 	return request<boolean>('/api/auth/app/register', {
@@ -52,9 +46,6 @@ export async function postAuthAppRegister(body: APIModel.AppRegisterDto, options
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAuthAppRegister */
-export const postApiAuthAppRegister = postAuthAppRegister;
 /** 发送App注册验证码 POST /api/auth/app/send-registration-code */
 export async function postAuthSendRegistrationCode(body: APIModel.SendRegistrationCodeDto, options?: { [key: string]: any }) {
 	return request<boolean>('/api/auth/app/send-registration-code', {
@@ -66,6 +57,3 @@ export async function postAuthSendRegistrationCode(body: APIModel.SendRegistrati
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAuthSendRegistrationCode */
-export const postApiAuthAppSendRegistrationCode = postAuthSendRegistrationCode;

@@ -21,9 +21,6 @@ export async function putPluginConfigurationUpdate(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putPluginConfigurationUpdate */
-export const putApiPluginConfigurationPluginId = putPluginConfigurationUpdate;
 /** 使用插件Id获取插件配置信息 GET /api/PluginConfiguration/Get-Plugin-ConfigurationBy/${param0} */
 export async function getPluginConfigurationGetPluginConfigurationById(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -38,6 +35,3 @@ export async function getPluginConfigurationGetPluginConfigurationById(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getPluginConfigurationGetPluginConfigurationById */
-export const getApiPluginConfigurationGetPluginConfigurationByPluginId = getPluginConfigurationGetPluginConfigurationById;

@@ -9,9 +9,6 @@ export async function getAppGenericDtoControllerBase5GetAll(options?: { [key: st
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getAppGenericDtoControllerBase5GetAll */
-export const getApiAppFdAppUserWorkbench = getAppGenericDtoControllerBase5GetAll;
 /** 此处后端没有提供注释 POST /api/app/FdAppUserWorkbench */
 export async function postAppGenericDtoControllerBase5Create(body: APIModel.SaveFdUserLayoutDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdUserLayoutDto>('/api/app/FdAppUserWorkbench', {
@@ -23,9 +20,6 @@ export async function postAppGenericDtoControllerBase5Create(body: APIModel.Save
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5Create */
-export const postApiAppFdAppUserWorkbench = postAppGenericDtoControllerBase5Create;
 /** 此处后端没有提供注释 GET /api/app/FdAppUserWorkbench/${param0} */
 export async function getAppGenericDtoControllerBase5GetById(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -40,9 +34,6 @@ export async function getAppGenericDtoControllerBase5GetById(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getAppGenericDtoControllerBase5GetById */
-export const getApiAppFdAppUserWorkbenchId = getAppGenericDtoControllerBase5GetById;
 /** 此处后端没有提供注释 PUT /api/app/FdAppUserWorkbench/${param0} */
 export async function putAppGenericDtoControllerBase5Update(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -62,9 +53,6 @@ export async function putAppGenericDtoControllerBase5Update(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putAppGenericDtoControllerBase5Update */
-export const putApiAppFdAppUserWorkbenchId = putAppGenericDtoControllerBase5Update;
 /** 此处后端没有提供注释 DELETE /api/app/FdAppUserWorkbench/${param0} */
 export async function deleteAppGenericDtoControllerBase5Delete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -79,9 +67,6 @@ export async function deleteAppGenericDtoControllerBase5Delete(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteAppGenericDtoControllerBase5Delete */
-export const deleteApiAppFdAppUserWorkbenchId = deleteAppGenericDtoControllerBase5Delete;
 /** 获取我可用的卡片列表 (已授权) GET /api/app/FdAppUserWorkbench/available-cards */
 export async function getFdAppUserWorkbenchGetAvailableCards(options?: { [key: string]: any }) {
 	return request<APIModel.FdWorkbenchCardDto[]>('/api/app/FdAppUserWorkbench/available-cards', {
@@ -89,9 +74,6 @@ export async function getFdAppUserWorkbenchGetAvailableCards(options?: { [key: s
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getFdAppUserWorkbenchGetAvailableCards */
-export const getApiAppFdAppUserWorkbenchAvailableCards = getFdAppUserWorkbenchGetAvailableCards;
 /** 此处后端没有提供注释 PUT /api/app/FdAppUserWorkbench/batch */
 export async function putAppGenericDtoControllerBase5UpdateMany(body: APIModel.UpdateFdUserLayoutDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/app/FdAppUserWorkbench/batch', {
@@ -103,9 +85,6 @@ export async function putAppGenericDtoControllerBase5UpdateMany(body: APIModel.U
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putAppGenericDtoControllerBase5UpdateMany */
-export const putApiAppFdAppUserWorkbenchBatch = putAppGenericDtoControllerBase5UpdateMany;
 /** 此处后端没有提供注释 POST /api/app/FdAppUserWorkbench/batch */
 export async function postAppGenericDtoControllerBase5CreateMany(body: APIModel.SaveFdUserLayoutDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/app/FdAppUserWorkbench/batch', {
@@ -117,9 +96,6 @@ export async function postAppGenericDtoControllerBase5CreateMany(body: APIModel.
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5CreateMany */
-export const postApiAppFdAppUserWorkbenchBatch = postAppGenericDtoControllerBase5CreateMany;
 /** 此处后端没有提供注释 DELETE /api/app/FdAppUserWorkbench/batch */
 export async function deleteAppGenericDtoControllerBase5BatchDelete(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/app/FdAppUserWorkbench/batch', {
@@ -131,9 +107,6 @@ export async function deleteAppGenericDtoControllerBase5BatchDelete(body: string
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteAppGenericDtoControllerBase5BatchDelete */
-export const deleteApiAppFdAppUserWorkbenchBatch = deleteAppGenericDtoControllerBase5BatchDelete;
 /** 此处后端没有提供注释 PUT /api/app/FdAppUserWorkbench/batch/updatebycondition */
 export async function putAppGenericDtoControllerBase5UpdateManyByCondition(
 	body: APIModel.BatchUpdateByConditionDto1UpdateFdUserLayoutDto,
@@ -148,9 +121,6 @@ export async function putAppGenericDtoControllerBase5UpdateManyByCondition(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putAppGenericDtoControllerBase5UpdateManyByCondition */
-export const putApiAppFdAppUserWorkbenchBatchUpdatebycondition = putAppGenericDtoControllerBase5UpdateManyByCondition;
 /** 此处后端没有提供注释 POST /api/app/FdAppUserWorkbench/list-by-condition */
 export async function postAppGenericDtoControllerBase5GetListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
 	return request<any>('/api/app/FdAppUserWorkbench/list-by-condition', {
@@ -162,9 +132,6 @@ export async function postAppGenericDtoControllerBase5GetListByCondition(body: A
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5GetListByCondition */
-export const postApiAppFdAppUserWorkbenchListByCondition = postAppGenericDtoControllerBase5GetListByCondition;
 /** 获取我的当前工作台布局 GET /api/app/FdAppUserWorkbench/my-layout */
 export async function getFdAppUserWorkbenchGetMyLayout(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -181,9 +148,6 @@ export async function getFdAppUserWorkbenchGetMyLayout(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getFdAppUserWorkbenchGetMyLayout */
-export const getApiAppFdAppUserWorkbenchMyLayout = getFdAppUserWorkbenchGetMyLayout;
 /** 此处后端没有提供注释 GET /api/app/FdAppUserWorkbench/page */
 export async function getAppGenericDtoControllerBase5GetPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -202,9 +166,6 @@ export async function getAppGenericDtoControllerBase5GetPage(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getAppGenericDtoControllerBase5GetPage */
-export const getApiAppFdAppUserWorkbenchPage = getAppGenericDtoControllerBase5GetPage;
 /** 此处后端没有提供注释 POST /api/app/FdAppUserWorkbench/page/search */
 export async function postAppGenericDtoControllerBase5GetPageByCondition(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/app/FdAppUserWorkbench/page/search', {
@@ -216,9 +177,6 @@ export async function postAppGenericDtoControllerBase5GetPageByCondition(body: A
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5GetPageByCondition */
-export const postApiAppFdAppUserWorkbenchPageSearch = postAppGenericDtoControllerBase5GetPageByCondition;
 /** 保存我的工作台布局 (自定义业务逻辑) POST /api/app/FdAppUserWorkbench/save-layout */
 export async function postFdAppUserWorkbenchSaveLayout(body: APIModel.SaveFdUserLayoutDto, options?: { [key: string]: any }) {
 	return request<boolean>('/api/app/FdAppUserWorkbench/save-layout', {
@@ -230,6 +188,3 @@ export async function postFdAppUserWorkbenchSaveLayout(body: APIModel.SaveFdUser
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postFdAppUserWorkbenchSaveLayout */
-export const postApiAppFdAppUserWorkbenchSaveLayout = postFdAppUserWorkbenchSaveLayout;

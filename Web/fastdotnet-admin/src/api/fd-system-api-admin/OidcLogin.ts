@@ -9,9 +9,6 @@ export async function getOidcLoginAccessDenied(options?: { [key: string]: any })
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getOidcLoginAccessDenied */
-export const getOidcAccessDenied = getOidcLoginAccessDenied;
 /** OIDC 登录页面（GET） GET /oidc/login */
 export async function getOidcLoginLogin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -26,9 +23,6 @@ export async function getOidcLoginLogin(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getOidcLoginLogin */
-export const getOidcLogin = getOidcLoginLogin;
 /** OIDC 登录处理（POST） POST /oidc/login */
 export async function postOidcLoginLogin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -53,9 +47,6 @@ export async function postOidcLoginLogin(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postOidcLoginLogin */
-export const postOidcLogin = postOidcLoginLogin;
 /** OIDC 登出 GET /oidc/logout */
 export async function getOidcLoginLogout(options?: { [key: string]: any }) {
 	return request<any>('/oidc/logout', {
@@ -63,6 +54,3 @@ export async function getOidcLoginLogout(options?: { [key: string]: any }) {
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getOidcLoginLogout */
-export const getOidcLogout = getOidcLoginLogout;

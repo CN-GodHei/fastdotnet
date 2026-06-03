@@ -9,6 +9,3 @@ export async function getAppMenusGetUserMenuTree(options?: { [key: string]: any 
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getAppMenusGetUserMenuTree */
-export const getApiAppMenusTree = getAppMenusGetUserMenuTree;

@@ -9,9 +9,6 @@ export async function getAppGenericDtoControllerBase5GetAll(options?: { [key: st
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getAppGenericDtoControllerBase5GetAll */
-export const getApiFdAppUser = getAppGenericDtoControllerBase5GetAll;
 /** 此处后端没有提供注释 POST /api/FdAppUser */
 export async function postAppGenericDtoControllerBase5Create(body: APIModel.CreateFdAppUserDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdAppUserDto>('/api/FdAppUser', {
@@ -23,9 +20,6 @@ export async function postAppGenericDtoControllerBase5Create(body: APIModel.Crea
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5Create */
-export const postApiFdAppUser = postAppGenericDtoControllerBase5Create;
 /** 此处后端没有提供注释 GET /api/FdAppUser/${param0} */
 export async function getAppGenericDtoControllerBase5GetById(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -40,9 +34,6 @@ export async function getAppGenericDtoControllerBase5GetById(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getAppGenericDtoControllerBase5GetById */
-export const getApiFdAppUserId = getAppGenericDtoControllerBase5GetById;
 /** 此处后端没有提供注释 PUT /api/FdAppUser/${param0} */
 export async function putAppGenericDtoControllerBase5Update(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -62,9 +53,6 @@ export async function putAppGenericDtoControllerBase5Update(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putAppGenericDtoControllerBase5Update */
-export const putApiFdAppUserId = putAppGenericDtoControllerBase5Update;
 /** 此处后端没有提供注释 DELETE /api/FdAppUser/${param0} */
 export async function deleteAppGenericDtoControllerBase5Delete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -79,9 +67,6 @@ export async function deleteAppGenericDtoControllerBase5Delete(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteAppGenericDtoControllerBase5Delete */
-export const deleteApiFdAppUserId = deleteAppGenericDtoControllerBase5Delete;
 /** 重置用户密码为系统默认密码 POST /api/FdAppUser/${param0}/reset-password */
 export async function postFdAppUserResetPassword(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -96,9 +81,6 @@ export async function postFdAppUserResetPassword(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postFdAppUserResetPassword */
-export const postApiFdAppUserIdResetPassword = postFdAppUserResetPassword;
 /** 此处后端没有提供注释 PUT /api/FdAppUser/batch */
 export async function putAppGenericDtoControllerBase5UpdateMany(body: APIModel.UpdateFdAppUserDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/FdAppUser/batch', {
@@ -110,9 +92,6 @@ export async function putAppGenericDtoControllerBase5UpdateMany(body: APIModel.U
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putAppGenericDtoControllerBase5UpdateMany */
-export const putApiFdAppUserBatch = putAppGenericDtoControllerBase5UpdateMany;
 /** 此处后端没有提供注释 POST /api/FdAppUser/batch */
 export async function postAppGenericDtoControllerBase5CreateMany(body: APIModel.CreateFdAppUserDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/FdAppUser/batch', {
@@ -124,9 +103,6 @@ export async function postAppGenericDtoControllerBase5CreateMany(body: APIModel.
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5CreateMany */
-export const postApiFdAppUserBatch = postAppGenericDtoControllerBase5CreateMany;
 /** 此处后端没有提供注释 DELETE /api/FdAppUser/batch */
 export async function deleteAppGenericDtoControllerBase5BatchDelete(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/FdAppUser/batch', {
@@ -138,9 +114,6 @@ export async function deleteAppGenericDtoControllerBase5BatchDelete(body: string
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteAppGenericDtoControllerBase5BatchDelete */
-export const deleteApiFdAppUserBatch = deleteAppGenericDtoControllerBase5BatchDelete;
 /** 此处后端没有提供注释 PUT /api/FdAppUser/batch/updatebycondition */
 export async function putAppGenericDtoControllerBase5UpdateManyByCondition(
 	body: APIModel.BatchUpdateByConditionDto1UpdateFdAppUserDto,
@@ -155,9 +128,6 @@ export async function putAppGenericDtoControllerBase5UpdateManyByCondition(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putAppGenericDtoControllerBase5UpdateManyByCondition */
-export const putApiFdAppUserBatchUpdatebycondition = putAppGenericDtoControllerBase5UpdateManyByCondition;
 /** 修改用户邮箱 POST /api/FdAppUser/change-email */
 export async function postFdAppUserChangeEmail(body: APIModel.ChangeEmailDto, options?: { [key: string]: any }) {
 	return request<boolean>('/api/FdAppUser/change-email', {
@@ -169,9 +139,6 @@ export async function postFdAppUserChangeEmail(body: APIModel.ChangeEmailDto, op
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postFdAppUserChangeEmail */
-export const postApiFdAppUserChangeEmail = postFdAppUserChangeEmail;
 /** 修改用户密码 POST /api/FdAppUser/change-password */
 export async function postFdAppUserChangePassword(body: APIModel.ChangePasswordDto, options?: { [key: string]: any }) {
 	return request<boolean>('/api/FdAppUser/change-password', {
@@ -183,9 +150,6 @@ export async function postFdAppUserChangePassword(body: APIModel.ChangePasswordD
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postFdAppUserChangePassword */
-export const postApiFdAppUserChangePassword = postFdAppUserChangePassword;
 /** 此处后端没有提供注释 GET /api/FdAppUser/getUserInfo */
 export async function getFdAppUserGetUserInfo(options?: { [key: string]: any }) {
 	return request<APIModel.FdAppUserDto>('/api/FdAppUser/getUserInfo', {
@@ -193,9 +157,6 @@ export async function getFdAppUserGetUserInfo(options?: { [key: string]: any }) 
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getFdAppUserGetUserInfo */
-export const getApiFdAppUserGetUserInfo = getFdAppUserGetUserInfo;
 /** 此处后端没有提供注释 POST /api/FdAppUser/list-by-condition */
 export async function postAppGenericDtoControllerBase5GetListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
 	return request<any>('/api/FdAppUser/list-by-condition', {
@@ -207,9 +168,6 @@ export async function postAppGenericDtoControllerBase5GetListByCondition(body: A
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5GetListByCondition */
-export const postApiFdAppUserListByCondition = postAppGenericDtoControllerBase5GetListByCondition;
 /** 此处后端没有提供注释 GET /api/FdAppUser/page */
 export async function getAppGenericDtoControllerBase5GetPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -228,9 +186,6 @@ export async function getAppGenericDtoControllerBase5GetPage(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getAppGenericDtoControllerBase5GetPage */
-export const getApiFdAppUserPage = getAppGenericDtoControllerBase5GetPage;
 /** 此处后端没有提供注释 POST /api/FdAppUser/page/search */
 export async function postAppGenericDtoControllerBase5GetPageByCondition(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/FdAppUser/page/search', {
@@ -242,9 +197,6 @@ export async function postAppGenericDtoControllerBase5GetPageByCondition(body: A
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5GetPageByCondition */
-export const postApiFdAppUserPageSearch = postAppGenericDtoControllerBase5GetPageByCondition;
 /** 发送修改邮箱验证码 POST /api/FdAppUser/send-change-email-code */
 export async function postFdAppUserSendChangeEmailCode(body: string, options?: { [key: string]: any }) {
 	return request<boolean>('/api/FdAppUser/send-change-email-code', {
@@ -256,9 +208,6 @@ export async function postFdAppUserSendChangeEmailCode(body: string, options?: {
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postFdAppUserSendChangeEmailCode */
-export const postApiFdAppUserSendChangeEmailCode = postFdAppUserSendChangeEmailCode;
 /** 解锁屏幕 POST /api/FdAppUser/unlock */
 export async function postFdAppUserUnlock(body: APIModel.UnlockDto, options?: { [key: string]: any }) {
 	return request<boolean>('/api/FdAppUser/unlock', {
@@ -270,6 +219,3 @@ export async function postFdAppUserUnlock(body: APIModel.UnlockDto, options?: { 
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postFdAppUserUnlock */
-export const postApiFdAppUserUnlock = postFdAppUserUnlock;

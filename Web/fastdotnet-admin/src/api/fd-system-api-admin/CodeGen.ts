@@ -9,9 +9,6 @@ export async function getGenericDtoControllerBase5GetAll(options?: { [key: strin
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetAll */
-export const getApiCodeGen = getGenericDtoControllerBase5GetAll;
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/CodeGen */
 export async function postGenericDtoControllerBase5Create(body: APIModel.CreateCodeGenDto, options?: { [key: string]: any }) {
 	return request<APIModel.CodeGenConfigDto>('/api/CodeGen', {
@@ -23,9 +20,6 @@ export async function postGenericDtoControllerBase5Create(body: APIModel.CreateC
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5Create */
-export const postApiCodeGen = postGenericDtoControllerBase5Create;
 /** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/CodeGen/${param0} */
 export async function getGenericDtoControllerBase5GetById(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -40,9 +34,6 @@ export async function getGenericDtoControllerBase5GetById(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetById */
-export const getApiCodeGenId = getGenericDtoControllerBase5GetById;
 /** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/CodeGen/${param0} */
 export async function putGenericDtoControllerBase5Update(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -62,9 +53,6 @@ export async function putGenericDtoControllerBase5Update(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5Update */
-export const putApiCodeGenId = putGenericDtoControllerBase5Update;
 /** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/CodeGen/${param0} */
 export async function deleteGenericDtoControllerBase5Delete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -79,9 +67,6 @@ export async function deleteGenericDtoControllerBase5Delete(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5Delete */
-export const deleteApiCodeGenId = deleteGenericDtoControllerBase5Delete;
 /** 获取应用命名空间列表 GET /api/CodeGen/applicationnamespaces */
 export async function getCodeGenGetApplicationNamespaces(options?: { [key: string]: any }) {
 	return request<string[]>('/api/CodeGen/applicationnamespaces', {
@@ -89,9 +74,6 @@ export async function getCodeGenGetApplicationNamespaces(options?: { [key: strin
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getCodeGenGetApplicationNamespaces */
-export const getApiCodeGenApplicationnamespaces = getCodeGenGetApplicationNamespaces;
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/CodeGen/batch */
 export async function putGenericDtoControllerBase5UpdateMany(body: APIModel.UpdateCodeGenDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGen/batch', {
@@ -103,9 +85,6 @@ export async function putGenericDtoControllerBase5UpdateMany(body: APIModel.Upda
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateMany */
-export const putApiCodeGenBatch = putGenericDtoControllerBase5UpdateMany;
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/CodeGen/batch */
 export async function postGenericDtoControllerBase5CreateMany(body: APIModel.CreateCodeGenDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGen/batch', {
@@ -117,9 +96,6 @@ export async function postGenericDtoControllerBase5CreateMany(body: APIModel.Cre
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5CreateMany */
-export const postApiCodeGenBatch = postGenericDtoControllerBase5CreateMany;
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/CodeGen/batch */
 export async function deleteGenericDtoControllerBase5BatchDelete(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/CodeGen/batch', {
@@ -131,9 +107,6 @@ export async function deleteGenericDtoControllerBase5BatchDelete(body: string[],
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5BatchDelete */
-export const deleteApiCodeGenBatch = deleteGenericDtoControllerBase5BatchDelete;
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/CodeGen/batch/updatebycondition */
 export async function putGenericDtoControllerBase5UpdateManyByCondition(
 	body: APIModel.BatchUpdateByConditionDto1UpdateCodeGenDto,
@@ -148,9 +121,6 @@ export async function putGenericDtoControllerBase5UpdateManyByCondition(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateManyByCondition */
-export const putApiCodeGenBatchUpdatebycondition = putGenericDtoControllerBase5UpdateManyByCondition;
 /** 根据表名和配置ID获取列信息 GET /api/CodeGen/columnlist/${param0}/${param1} */
 export async function getCodeGenGetColumnListByTableNameAndConfigId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -165,9 +135,6 @@ export async function getCodeGenGetColumnListByTableNameAndConfigId(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getCodeGenGetColumnListByTableNameAndConfigId */
-export const getApiCodeGenColumnlistTableNameConfigId = getCodeGenGetColumnListByTableNameAndConfigId;
 /** 下载生成的代码文件 GET /api/CodeGen/download */
 export async function getCodeGenDownloadFile(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -182,9 +149,6 @@ export async function getCodeGenDownloadFile(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getCodeGenDownloadFile */
-export const getApiCodeGenDownload = getCodeGenDownloadFile;
 /** 根据表名获取实体名 GET /api/CodeGen/getentityname */
 export async function getCodeGenGetEntityName(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -199,9 +163,6 @@ export async function getCodeGenGetEntityName(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getCodeGenGetEntityName */
-export const getApiCodeGenGetentityname = getCodeGenGetEntityName;
 /** 获取表的列数据 GET /api/CodeGen/gettablecolumnlist */
 export async function getCodeGenGetTableColumnList(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -216,9 +177,6 @@ export async function getCodeGenGetTableColumnList(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getCodeGenGetTableColumnList */
-export const getApiCodeGenGettablecolumnlist = getCodeGenGetTableColumnList;
 /** 获取库表数据 GET /api/CodeGen/gettablelist */
 export async function getCodeGenGetTableList(options?: { [key: string]: any }) {
 	return request<APIModel.TableInfoDto[]>('/api/CodeGen/gettablelist', {
@@ -226,9 +184,6 @@ export async function getCodeGenGetTableList(options?: { [key: string]: any }) {
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getCodeGenGetTableList */
-export const getApiCodeGenGettablelist = getCodeGenGetTableList;
 /** 根据自定义条件获取列表(不分页) 根据自定义条件获取列表(不分页) POST /api/CodeGen/list-by-condition */
 export async function postGenericDtoControllerBase5GetListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
 	return request<any>('/api/CodeGen/list-by-condition', {
@@ -240,9 +195,6 @@ export async function postGenericDtoControllerBase5GetListByCondition(body: APIM
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetListByCondition */
-export const postApiCodeGenListByCondition = postGenericDtoControllerBase5GetListByCondition;
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/CodeGen/page */
 export async function getGenericDtoControllerBase5GetPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -261,9 +213,6 @@ export async function getGenericDtoControllerBase5GetPage(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetPage */
-export const getApiCodeGenPage = getGenericDtoControllerBase5GetPage;
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/CodeGen/page/search */
 export async function postGenericDtoControllerBase5GetPageByCondition(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/CodeGen/page/search', {
@@ -275,9 +224,6 @@ export async function postGenericDtoControllerBase5GetPageByCondition(body: APIM
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetPageByCondition */
-export const postApiCodeGenPageSearch = postGenericDtoControllerBase5GetPageByCondition;
 /** 预览生成的代码 GET /api/CodeGen/preview/${param0} */
 export async function getCodeGenPreviewCode(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -298,9 +244,6 @@ export async function getCodeGenPreviewCode(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getCodeGenPreviewCode */
-export const getApiCodeGenPreviewConfigId = getCodeGenPreviewCode;
 /** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/CodeGen/recyclebin */
 export async function getGenericDtoControllerBase5GetRecycleBin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -319,9 +262,6 @@ export async function getGenericDtoControllerBase5GetRecycleBin(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetRecycleBin */
-export const getApiCodeGenRecyclebin = getGenericDtoControllerBase5GetRecycleBin;
 /** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/CodeGen/recyclebin/${param0}/permanent */
 export async function deleteGenericDtoControllerBase5PermanentDelete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -336,9 +276,6 @@ export async function deleteGenericDtoControllerBase5PermanentDelete(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5PermanentDelete */
-export const deleteApiCodeGenRecyclebinIdPermanent = deleteGenericDtoControllerBase5PermanentDelete;
 /** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/CodeGen/recyclebin/${param0}/restore */
 export async function putGenericDtoControllerBase5Restore(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -353,9 +290,6 @@ export async function putGenericDtoControllerBase5Restore(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5Restore */
-export const putApiCodeGenRecyclebinIdRestore = putGenericDtoControllerBase5Restore;
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/CodeGen/recyclebin/permanent */
 export async function postGenericDtoControllerBase5PermanentDeleteBatch(
 	body: APIModel.Expression1Func2FdCodeGen_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
@@ -370,9 +304,6 @@ export async function postGenericDtoControllerBase5PermanentDeleteBatch(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5PermanentDeleteBatch */
-export const postApiCodeGenRecyclebinPermanent = postGenericDtoControllerBase5PermanentDeleteBatch;
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/CodeGen/recyclebin/restore */
 export async function postGenericDtoControllerBase5RestoreBatch(
 	body: APIModel.Expression1Func2FdCodeGen_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
@@ -387,9 +318,6 @@ export async function postGenericDtoControllerBase5RestoreBatch(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5RestoreBatch */
-export const postApiCodeGenRecyclebinRestore = postGenericDtoControllerBase5RestoreBatch;
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/CodeGen/recyclebin/search */
 export async function postGenericDtoControllerBase5SearchRecycleBin(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/CodeGen/recyclebin/search', {
@@ -401,9 +329,6 @@ export async function postGenericDtoControllerBase5SearchRecycleBin(body: APIMod
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5SearchRecycleBin */
-export const postApiCodeGenRecyclebinSearch = postGenericDtoControllerBase5SearchRecycleBin;
 /** 根据配置ID获取表列表 GET /api/CodeGen/tablelist/${param0} */
 export async function getCodeGenGetTableListByConfigId(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -418,6 +343,3 @@ export async function getCodeGenGetTableListByConfigId(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getCodeGenGetTableListByConfigId */
-export const getApiCodeGenTablelistConfigId = getCodeGenGetTableListByConfigId;

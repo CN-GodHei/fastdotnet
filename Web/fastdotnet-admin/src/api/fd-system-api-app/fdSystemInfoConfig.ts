@@ -9,6 +9,3 @@ export async function getFdSystemInfoConfigGetPublicConfigs(options?: { [key: st
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getFdSystemInfoConfigGetPublicConfigs */
-export const getApiAdminFdSystemInfoConfigPublicAll = getFdSystemInfoConfigGetPublicConfigs;

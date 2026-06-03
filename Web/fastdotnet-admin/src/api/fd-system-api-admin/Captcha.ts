@@ -16,9 +16,6 @@ export async function getCaptchaGenerate(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getCaptchaGenerate */
-export const getApiCaptchaGenerate = getCaptchaGenerate;
 /** 验证验证码 (仅供测试使用)
 在正常的登录流程中，验证码验证应在后端完成，而不是通过此接口。 POST /api/Captcha/validate */
 export async function postCaptchaValidate(
@@ -34,6 +31,3 @@ export async function postCaptchaValidate(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postCaptchaValidate */
-export const postApiCaptchaValidate = postCaptchaValidate;

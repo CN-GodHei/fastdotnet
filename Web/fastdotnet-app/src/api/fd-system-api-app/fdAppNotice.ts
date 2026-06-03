@@ -9,9 +9,6 @@ export async function getAppGenericDtoControllerBase5GetAll(options?: { [key: st
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getAppGenericDtoControllerBase5GetAll */
-export const getApiAppFdAppNotice = getAppGenericDtoControllerBase5GetAll;
 /** 此处后端没有提供注释 POST /api/app/FdAppNotice */
 export async function postAppGenericDtoControllerBase5Create(body: APIModel.CreateFdNoticeDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdNoticeDto>('/api/app/FdAppNotice', {
@@ -23,9 +20,6 @@ export async function postAppGenericDtoControllerBase5Create(body: APIModel.Crea
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5Create */
-export const postApiAppFdAppNotice = postAppGenericDtoControllerBase5Create;
 /** 此处后端没有提供注释 GET /api/app/FdAppNotice/${param0} */
 export async function getAppGenericDtoControllerBase5GetById(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -40,9 +34,6 @@ export async function getAppGenericDtoControllerBase5GetById(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getAppGenericDtoControllerBase5GetById */
-export const getApiAppFdAppNoticeId = getAppGenericDtoControllerBase5GetById;
 /** 此处后端没有提供注释 PUT /api/app/FdAppNotice/${param0} */
 export async function putAppGenericDtoControllerBase5Update(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -62,9 +53,6 @@ export async function putAppGenericDtoControllerBase5Update(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putAppGenericDtoControllerBase5Update */
-export const putApiAppFdAppNoticeId = putAppGenericDtoControllerBase5Update;
 /** 此处后端没有提供注释 DELETE /api/app/FdAppNotice/${param0} */
 export async function deleteAppGenericDtoControllerBase5Delete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -79,9 +67,6 @@ export async function deleteAppGenericDtoControllerBase5Delete(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteAppGenericDtoControllerBase5Delete */
-export const deleteApiAppFdAppNoticeId = deleteAppGenericDtoControllerBase5Delete;
 /** 此处后端没有提供注释 PUT /api/app/FdAppNotice/batch */
 export async function putAppGenericDtoControllerBase5UpdateMany(body: APIModel.UpdateFdNoticeDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/app/FdAppNotice/batch', {
@@ -93,9 +78,6 @@ export async function putAppGenericDtoControllerBase5UpdateMany(body: APIModel.U
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putAppGenericDtoControllerBase5UpdateMany */
-export const putApiAppFdAppNoticeBatch = putAppGenericDtoControllerBase5UpdateMany;
 /** 此处后端没有提供注释 POST /api/app/FdAppNotice/batch */
 export async function postAppGenericDtoControllerBase5CreateMany(body: APIModel.CreateFdNoticeDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/app/FdAppNotice/batch', {
@@ -107,9 +89,6 @@ export async function postAppGenericDtoControllerBase5CreateMany(body: APIModel.
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5CreateMany */
-export const postApiAppFdAppNoticeBatch = postAppGenericDtoControllerBase5CreateMany;
 /** 此处后端没有提供注释 DELETE /api/app/FdAppNotice/batch */
 export async function deleteAppGenericDtoControllerBase5BatchDelete(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/app/FdAppNotice/batch', {
@@ -121,9 +100,6 @@ export async function deleteAppGenericDtoControllerBase5BatchDelete(body: string
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteAppGenericDtoControllerBase5BatchDelete */
-export const deleteApiAppFdAppNoticeBatch = deleteAppGenericDtoControllerBase5BatchDelete;
 /** 此处后端没有提供注释 PUT /api/app/FdAppNotice/batch/updatebycondition */
 export async function putAppGenericDtoControllerBase5UpdateManyByCondition(
 	body: APIModel.BatchUpdateByConditionDto1UpdateFdNoticeDto,
@@ -138,9 +114,6 @@ export async function putAppGenericDtoControllerBase5UpdateManyByCondition(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putAppGenericDtoControllerBase5UpdateManyByCondition */
-export const putApiAppFdAppNoticeBatchUpdatebycondition = putAppGenericDtoControllerBase5UpdateManyByCondition;
 /** 此处后端没有提供注释 POST /api/app/FdAppNotice/list-by-condition */
 export async function postAppGenericDtoControllerBase5GetListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
 	return request<any>('/api/app/FdAppNotice/list-by-condition', {
@@ -152,9 +125,6 @@ export async function postAppGenericDtoControllerBase5GetListByCondition(body: A
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5GetListByCondition */
-export const postApiAppFdAppNoticeListByCondition = postAppGenericDtoControllerBase5GetListByCondition;
 /** 获取当前用户的通知 GET /api/app/FdAppNotice/my */
 export async function getFdAppNoticeGetMyNotices(options?: { [key: string]: any }) {
 	return request<APIModel.FdNoticeDto[]>('/api/app/FdAppNotice/my', {
@@ -162,9 +132,6 @@ export async function getFdAppNoticeGetMyNotices(options?: { [key: string]: any 
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getFdAppNoticeGetMyNotices */
-export const getApiAppFdAppNoticeMy = getFdAppNoticeGetMyNotices;
 /** 此处后端没有提供注释 GET /api/app/FdAppNotice/page */
 export async function getAppGenericDtoControllerBase5GetPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -183,9 +150,6 @@ export async function getAppGenericDtoControllerBase5GetPage(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getAppGenericDtoControllerBase5GetPage */
-export const getApiAppFdAppNoticePage = getAppGenericDtoControllerBase5GetPage;
 /** 此处后端没有提供注释 POST /api/app/FdAppNotice/page/search */
 export async function postAppGenericDtoControllerBase5GetPageByCondition(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/app/FdAppNotice/page/search', {
@@ -197,9 +161,6 @@ export async function postAppGenericDtoControllerBase5GetPageByCondition(body: A
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAppGenericDtoControllerBase5GetPageByCondition */
-export const postApiAppFdAppNoticePageSearch = postAppGenericDtoControllerBase5GetPageByCondition;
 /** 标记为已读 POST /api/app/FdAppNotice/read/${param0} */
 export async function postFdAppNoticeMarkAsRead(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -214,9 +175,6 @@ export async function postFdAppNoticeMarkAsRead(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postFdAppNoticeMarkAsRead */
-export const postApiAppFdAppNoticeReadId = postFdAppNoticeMarkAsRead;
 /** 全部标记为已读 POST /api/app/FdAppNotice/readAll */
 export async function postFdAppNoticeMarkAllAsRead(options?: { [key: string]: any }) {
 	return request<boolean>('/api/app/FdAppNotice/readAll', {
@@ -224,6 +182,3 @@ export async function postFdAppNoticeMarkAllAsRead(options?: { [key: string]: an
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postFdAppNoticeMarkAllAsRead */
-export const postApiAppFdAppNoticeReadAll = postFdAppNoticeMarkAllAsRead;

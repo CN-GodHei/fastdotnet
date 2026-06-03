@@ -9,9 +9,6 @@ export async function getOidcAppGetApplications(options?: { [key: string]: any }
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getOidcAppGetApplications */
-export const getApiOidcApp = getOidcAppGetApplications;
 /** 创建 OIDC 应用 POST /api/OidcApp */
 export async function postOidcAppCreateApplication(body: APIModel.CreateOidcApplicationRequest, options?: { [key: string]: any }) {
 	return request<any>('/api/OidcApp', {
@@ -23,9 +20,6 @@ export async function postOidcAppCreateApplication(body: APIModel.CreateOidcAppl
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postOidcAppCreateApplication */
-export const postApiOidcApp = postOidcAppCreateApplication;
 /** 根据 ClientId 获取应用详情 GET /api/OidcApp/${param0} */
 export async function getOidcAppGetApplication(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -40,9 +34,6 @@ export async function getOidcAppGetApplication(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getOidcAppGetApplication */
-export const getApiOidcAppClientId = getOidcAppGetApplication;
 /** 删除应用 DELETE /api/OidcApp/${param0} */
 export async function deleteOidcAppDeleteApplication(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -57,9 +48,6 @@ export async function deleteOidcAppDeleteApplication(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteOidcAppDeleteApplication */
-export const deleteApiOidcAppClientId = deleteOidcAppDeleteApplication;
 /** 重置应用密钥 POST /api/OidcApp/${param0}/reset-secret */
 export async function postOidcAppResetSecret(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -74,6 +62,3 @@ export async function postOidcAppResetSecret(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postOidcAppResetSecret */
-export const postApiOidcAppClientIdResetSecret = postOidcAppResetSecret;

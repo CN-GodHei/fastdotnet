@@ -9,9 +9,6 @@ export async function getStorageGetCurrentConfig(options?: { [key: string]: any 
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getStorageGetCurrentConfig */
-export const getApiStorageConfig = getStorageGetCurrentConfig;
 /** 删除文件 DELETE /api/Storage/delete */
 export async function deleteStorageDelete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -26,9 +23,6 @@ export async function deleteStorageDelete(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteStorageDelete */
-export const deleteApiStorageOpenApiDelete = deleteStorageDelete;
 /** 下载文件 GET /api/Storage/download/${param0} */
 export async function getStorageDownload(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -43,9 +37,6 @@ export async function getStorageDownload(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getStorageDownload */
-export const getApiStorageDownloadFilePath = getStorageDownload;
 /** 获取上传凭证 POST /api/Storage/get-upload-credential */
 export async function postStorageGetUploadCredential(body: APIModel.UploadCredentialRequest, options?: { [key: string]: any }) {
 	return request<APIModel.UploadCredentialResponse>('/api/Storage/get-upload-credential', {
@@ -57,9 +48,6 @@ export async function postStorageGetUploadCredential(body: APIModel.UploadCreden
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postStorageGetUploadCredential */
-export const postApiStorageGetUploadCredential = postStorageGetUploadCredential;
 /** 上传文件 POST /api/Storage/upload */
 export async function postStorageUpload(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -100,9 +88,6 @@ export async function postStorageUpload(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postStorageUpload */
-export const postApiStorageUpload = postStorageUpload;
 /** 获取文件URL GET /api/Storage/url/${param0} */
 export async function getStorageGetFileUrl(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -117,9 +102,6 @@ export async function getStorageGetFileUrl(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getStorageGetFileUrl */
-export const getApiStorageUrlFilePath = getStorageGetFileUrl;
 /** 通过URL直接访问上传的文件（公共访问接口） GET /uploads/${param0} */
 export async function getStorageGetFileByPath(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -134,6 +116,3 @@ export async function getStorageGetFileByPath(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getStorageGetFileByPath */
-export const getUploadsRelativePath = getStorageGetFileByPath;

@@ -24,6 +24,3 @@ export async function postAuthAdminLogin(body: APIModel.LoginDto, options?: { [k
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postAuthAdminLogin */
-export const postApiAuthAdminLogin = postAuthAdminLogin;

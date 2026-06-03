@@ -9,9 +9,6 @@ export async function getPluginGetActivePlugins(options?: { [key: string]: any }
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getPluginGetActivePlugins */
-export const getApiPluginActive = getPluginGetActivePlugins;
 /** 检查一个插件当前是否处于活动状态 GET /api/Plugin/active/${param0} */
 export async function getPluginIsPluginActive(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -26,9 +23,6 @@ export async function getPluginIsPluginActive(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getPluginIsPluginActive */
-export const getApiPluginActivePluginId = getPluginIsPluginActive;
 /** 停用一个插件（停止业务并卸载其代码） POST /api/Plugin/disable/${param0} */
 export async function postPluginDisablePlugin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -43,9 +37,6 @@ export async function postPluginDisablePlugin(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postPluginDisablePlugin */
-export const postApiPluginDisablePluginId = postPluginDisablePlugin;
 /** 启用一个插件（如果未加载，则先加载） POST /api/Plugin/enable/${param0} */
 export async function postPluginEnablePlugin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -60,9 +51,6 @@ export async function postPluginEnablePlugin(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postPluginEnablePlugin */
-export const postApiPluginEnablePluginId = postPluginEnablePlugin;
 /** 获取已启用的插件列表（允许匿名访问） GET /api/Plugin/enabled */
 export async function getPluginGetEnabledPlugins(options?: { [key: string]: any }) {
 	return request<APIModel.PluginInfo[]>('/api/Plugin/enabled', {
@@ -70,9 +58,6 @@ export async function getPluginGetEnabledPlugins(options?: { [key: string]: any 
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getPluginGetEnabledPlugins */
-export const getApiPluginEnabled = getPluginGetEnabledPlugins;
 /** 获取用户授权码 GET /api/Plugin/GetAuthCode */
 export async function getPluginGetAuthCode(options?: { [key: string]: any }) {
 	return request<string>('/api/Plugin/GetAuthCode', {
@@ -80,9 +65,6 @@ export async function getPluginGetAuthCode(options?: { [key: string]: any }) {
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getPluginGetAuthCode */
-export const getApiPluginGetAuthCode = getPluginGetAuthCode;
 /** 从 URL 下载并加载插件 POST /api/Plugin/load */
 export async function postPluginLoadPlugin(body: APIModel.DownloadPluginDto, options?: { [key: string]: any }) {
 	return request<APIModel.ApiResult>('/api/Plugin/load', {
@@ -94,9 +76,6 @@ export async function postPluginLoadPlugin(body: APIModel.DownloadPluginDto, opt
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postPluginLoadPlugin */
-export const postApiPluginLoad = postPluginLoadPlugin;
 /** 获取所有已加载的插件（无论是否激活） GET /api/Plugin/loaded */
 export async function getPluginGetLoadedPlugins(options?: { [key: string]: any }) {
 	return request<any>('/api/Plugin/loaded', {
@@ -104,9 +83,6 @@ export async function getPluginGetLoadedPlugins(options?: { [key: string]: any }
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getPluginGetLoadedPlugins */
-export const getApiPluginLoaded = getPluginGetLoadedPlugins;
 /** 扫描插件目录以发现所有可用插件 GET /api/Plugin/scan */
 export async function getPluginScanPlugins(options?: { [key: string]: any }) {
 	return request<APIModel.PluginInfo[]>('/api/Plugin/scan', {
@@ -114,9 +90,6 @@ export async function getPluginScanPlugins(options?: { [key: string]: any }) {
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getPluginScanPlugins */
-export const getApiPluginScan = getPluginScanPlugins;
 /** 设置用户授权码 POST /api/Plugin/SetAuthCode */
 export async function postPluginSetAuthCode(body: APIModel.SetAuthCodeDto, options?: { [key: string]: any }) {
 	return request<boolean>('/api/Plugin/SetAuthCode', {
@@ -128,9 +101,6 @@ export async function postPluginSetAuthCode(body: APIModel.SetAuthCodeDto, optio
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postPluginSetAuthCode */
-export const postApiPluginSetAuthCode = postPluginSetAuthCode;
 /** 设置插件许可 POST /api/Plugin/SetPluginLicense */
 export async function postPluginSetPluginLicense(body: APIModel.SetPluginLicenseDto, options?: { [key: string]: any }) {
 	return request<boolean>('/api/Plugin/SetPluginLicense', {
@@ -142,9 +112,6 @@ export async function postPluginSetPluginLicense(body: APIModel.SetPluginLicense
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postPluginSetPluginLicense */
-export const postApiPluginSetPluginLicense = postPluginSetPluginLicense;
 /** 从磁盘物理删除一个已停用的插件 POST /api/Plugin/uninstall/${param0} */
 export async function postPluginUninstallPlugin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -159,9 +126,6 @@ export async function postPluginUninstallPlugin(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postPluginUninstallPlugin */
-export const postApiPluginUninstallPluginId = postPluginUninstallPlugin;
 /** 在线更新授权 POST /api/Plugin/UpdatePluginLicenseOnline */
 export async function postPluginUpdatePluginLicenseOnline(body: APIModel.UpdatePluginLicenseOnlineDto, options?: { [key: string]: any }) {
 	return request<boolean>('/api/Plugin/UpdatePluginLicenseOnline', {
@@ -173,9 +137,6 @@ export async function postPluginUpdatePluginLicenseOnline(body: APIModel.UpdateP
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postPluginUpdatePluginLicenseOnline */
-export const postApiPluginUpdatePluginLicenseOnline = postPluginUpdatePluginLicenseOnline;
 /** 上传离线插件安装包 POST /api/Plugin/upload-offline */
 export async function postPluginUploadOfflinePackage(body: {}, file?: File, options?: { [key: string]: any }) {
 	const formData = new FormData();
@@ -207,6 +168,3 @@ export async function postPluginUploadOfflinePackage(body: {}, file?: File, opti
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postPluginUploadOfflinePackage */
-export const postApiPluginUploadOffline = postPluginUploadOfflinePackage;

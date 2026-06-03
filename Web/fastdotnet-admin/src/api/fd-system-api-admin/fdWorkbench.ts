@@ -9,9 +9,6 @@ export async function getGenericDtoControllerBase5GetAll(options?: { [key: strin
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetAll */
-export const getApiAdminFdWorkbench = getGenericDtoControllerBase5GetAll;
 /** 创建新记录 根据提供的数据创建一条新记录。 POST /api/admin/FdWorkbench */
 export async function postGenericDtoControllerBase5Create(body: APIModel.CreateFdWorkbenchCardDto, options?: { [key: string]: any }) {
 	return request<APIModel.FdWorkbenchCardDto>('/api/admin/FdWorkbench', {
@@ -23,9 +20,6 @@ export async function postGenericDtoControllerBase5Create(body: APIModel.CreateF
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5Create */
-export const postApiAdminFdWorkbench = postGenericDtoControllerBase5Create;
 /** 根据ID获取记录 根据提供的唯一标识符(ID)检索特定记录的详细信息。 GET /api/admin/FdWorkbench/${param0} */
 export async function getGenericDtoControllerBase5GetById(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -40,9 +34,6 @@ export async function getGenericDtoControllerBase5GetById(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetById */
-export const getApiAdminFdWorkbenchId = getGenericDtoControllerBase5GetById;
 /** 更新现有记录 根据提供的ID和更新数据，修改现有记录的信息。 PUT /api/admin/FdWorkbench/${param0} */
 export async function putGenericDtoControllerBase5Update(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -62,9 +53,6 @@ export async function putGenericDtoControllerBase5Update(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5Update */
-export const putApiAdminFdWorkbenchId = putGenericDtoControllerBase5Update;
 /** 删除记录 根据提供的ID，从系统中移除指定的记录。 DELETE /api/admin/FdWorkbench/${param0} */
 export async function deleteGenericDtoControllerBase5Delete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -79,9 +67,6 @@ export async function deleteGenericDtoControllerBase5Delete(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5Delete */
-export const deleteApiAdminFdWorkbenchId = deleteGenericDtoControllerBase5Delete;
 /** 获取所有定义的卡片 GET /api/admin/FdWorkbench/all */
 export async function getFdWorkbenchGetAll(options?: { [key: string]: any }) {
 	return request<APIModel.FdWorkbenchCardDto[]>('/api/admin/FdWorkbench/all', {
@@ -89,9 +74,6 @@ export async function getFdWorkbenchGetAll(options?: { [key: string]: any }) {
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getFdWorkbenchGetAll */
-export const getApiAdminFdWorkbenchAll = getFdWorkbenchGetAll;
 /** 为卡片分配角色 POST /api/admin/FdWorkbench/assign-roles/${param0} */
 export async function postFdWorkbenchUpdateCardRoles(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -111,9 +93,6 @@ export async function postFdWorkbenchUpdateCardRoles(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postFdWorkbenchUpdateCardRoles */
-export const postApiAdminFdWorkbenchAssignRolesCardId = postFdWorkbenchUpdateCardRoles;
 /** 为角色分配卡片 POST /api/admin/FdWorkbench/assign/${param0} */
 export async function postFdWorkbenchAssign(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -133,9 +112,6 @@ export async function postFdWorkbenchAssign(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postFdWorkbenchAssign */
-export const postApiAdminFdWorkbenchAssignRoleId = postFdWorkbenchAssign;
 /** 根据实体主键批量更新实体信息 根据实体主键批量更新实体信息 PUT /api/admin/FdWorkbench/batch */
 export async function putGenericDtoControllerBase5UpdateMany(body: APIModel.UpdateFdWorkbenchCardDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdWorkbench/batch', {
@@ -147,9 +123,6 @@ export async function putGenericDtoControllerBase5UpdateMany(body: APIModel.Upda
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateMany */
-export const putApiAdminFdWorkbenchBatch = putGenericDtoControllerBase5UpdateMany;
 /** 批量创建新记录 根据提供的数据批量创建新记录。 POST /api/admin/FdWorkbench/batch */
 export async function postGenericDtoControllerBase5CreateMany(body: APIModel.CreateFdWorkbenchCardDto[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdWorkbench/batch', {
@@ -161,9 +134,6 @@ export async function postGenericDtoControllerBase5CreateMany(body: APIModel.Cre
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5CreateMany */
-export const postApiAdminFdWorkbenchBatch = postGenericDtoControllerBase5CreateMany;
 /** 批量删除记录 根据提供的ID列表，批量删除多条记录。 DELETE /api/admin/FdWorkbench/batch */
 export async function deleteGenericDtoControllerBase5BatchDelete(body: string[], options?: { [key: string]: any }) {
 	return request<number>('/api/admin/FdWorkbench/batch', {
@@ -175,9 +145,6 @@ export async function deleteGenericDtoControllerBase5BatchDelete(body: string[],
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5BatchDelete */
-export const deleteApiAdminFdWorkbenchBatch = deleteGenericDtoControllerBase5BatchDelete;
 /** 根据条件批量更新实体属性（部分字段更新） 根据条件批量更新实体属性（部分字段更新） PUT /api/admin/FdWorkbench/batch/updatebycondition */
 export async function putGenericDtoControllerBase5UpdateManyByCondition(
 	body: APIModel.BatchUpdateByConditionDto1UpdateFdWorkbenchCardDto,
@@ -192,9 +159,6 @@ export async function putGenericDtoControllerBase5UpdateManyByCondition(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5UpdateManyByCondition */
-export const putApiAdminFdWorkbenchBatchUpdatebycondition = putGenericDtoControllerBase5UpdateManyByCondition;
 /** 获取卡片已分配的角色ID列表 GET /api/admin/FdWorkbench/card-roles/${param0} */
 export async function getFdWorkbenchGetCardRoles(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -209,9 +173,6 @@ export async function getFdWorkbenchGetCardRoles(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getFdWorkbenchGetCardRoles */
-export const getApiAdminFdWorkbenchCardRolesCardId = getFdWorkbenchGetCardRoles;
 /** 根据自定义条件获取列表(不分页) 根据自定义条件获取列表(不分页) POST /api/admin/FdWorkbench/list-by-condition */
 export async function postGenericDtoControllerBase5GetListByCondition(body: APIModel.QueryByConditionDto, options?: { [key: string]: any }) {
 	return request<any>('/api/admin/FdWorkbench/list-by-condition', {
@@ -223,9 +184,6 @@ export async function postGenericDtoControllerBase5GetListByCondition(body: APIM
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetListByCondition */
-export const postApiAdminFdWorkbenchListByCondition = postGenericDtoControllerBase5GetListByCondition;
 /** 分页获取记录 根据页码和页面大小，分页检索记录。 GET /api/admin/FdWorkbench/page */
 export async function getGenericDtoControllerBase5GetPage(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -244,9 +202,6 @@ export async function getGenericDtoControllerBase5GetPage(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetPage */
-export const getApiAdminFdWorkbenchPage = getGenericDtoControllerBase5GetPage;
 /** 根据条件分页获取记录 根据提供的查询条件和分页参数，分页检索记录。 POST /api/admin/FdWorkbench/page/search */
 export async function postGenericDtoControllerBase5GetPageByCondition(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdWorkbench/page/search', {
@@ -258,9 +213,6 @@ export async function postGenericDtoControllerBase5GetPageByCondition(body: APIM
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5GetPageByCondition */
-export const postApiAdminFdWorkbenchPageSearch = postGenericDtoControllerBase5GetPageByCondition;
 /** 获取回收站数据 检索并返回已软删除的记录（回收站数据）。 GET /api/admin/FdWorkbench/recyclebin */
 export async function getGenericDtoControllerBase5GetRecycleBin(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -279,9 +231,6 @@ export async function getGenericDtoControllerBase5GetRecycleBin(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getGenericDtoControllerBase5GetRecycleBin */
-export const getApiAdminFdWorkbenchRecyclebin = getGenericDtoControllerBase5GetRecycleBin;
 /** 永久删除回收站中的记录 根据提供的ID，将已软删除的记录从数据库中永久移除。 DELETE /api/admin/FdWorkbench/recyclebin/${param0}/permanent */
 export async function deleteGenericDtoControllerBase5PermanentDelete(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -296,9 +245,6 @@ export async function deleteGenericDtoControllerBase5PermanentDelete(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 deleteGenericDtoControllerBase5PermanentDelete */
-export const deleteApiAdminFdWorkbenchRecyclebinIdPermanent = deleteGenericDtoControllerBase5PermanentDelete;
 /** 恢复回收站中的记录 根据提供的ID，将已软删除的记录恢复到正常状态。 PUT /api/admin/FdWorkbench/recyclebin/${param0}/restore */
 export async function putGenericDtoControllerBase5Restore(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -313,9 +259,6 @@ export async function putGenericDtoControllerBase5Restore(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 putGenericDtoControllerBase5Restore */
-export const putApiAdminFdWorkbenchRecyclebinIdRestore = putGenericDtoControllerBase5Restore;
 /** 根据条件永久删除回收站中的记录 根据提供的条件，将回收站中符合条件的记录从数据库中永久移除。 POST /api/admin/FdWorkbench/recyclebin/permanent */
 export async function postGenericDtoControllerBase5PermanentDeleteBatch(
 	body: APIModel.Expression1Func2FdWorkbenchCard_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
@@ -330,9 +273,6 @@ export async function postGenericDtoControllerBase5PermanentDeleteBatch(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5PermanentDeleteBatch */
-export const postApiAdminFdWorkbenchRecyclebinPermanent = postGenericDtoControllerBase5PermanentDeleteBatch;
 /** 批量恢复回收站中的记录 根据提供的条件，批量将回收站中的记录恢复到正常状态。 POST /api/admin/FdWorkbench/recyclebin/restore */
 export async function postGenericDtoControllerBase5RestoreBatch(
 	body: APIModel.Expression1Func2FdWorkbenchCard_SystemBooleanSystemPrivateCoreLibVersion10000Cultureneutral,
@@ -347,9 +287,6 @@ export async function postGenericDtoControllerBase5RestoreBatch(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5RestoreBatch */
-export const postApiAdminFdWorkbenchRecyclebinRestore = postGenericDtoControllerBase5RestoreBatch;
 /** 根据条件查询回收站数据 根据提供的查询条件，检索回收站中的记录。 POST /api/admin/FdWorkbench/recyclebin/search */
 export async function postGenericDtoControllerBase5SearchRecycleBin(body: APIModel.PageQueryByConditionDto, options?: { [key: string]: any }) {
 	return request<APIModel.PageInfo>('/api/admin/FdWorkbench/recyclebin/search', {
@@ -361,9 +298,6 @@ export async function postGenericDtoControllerBase5SearchRecycleBin(body: APIMod
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 postGenericDtoControllerBase5SearchRecycleBin */
-export const postApiAdminFdWorkbenchRecyclebinSearch = postGenericDtoControllerBase5SearchRecycleBin;
 /** 获取角色已分配的卡片ID列表 GET /api/admin/FdWorkbench/role-cards/${param0} */
 export async function getFdWorkbenchGetRoleCards(
 	// 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -378,6 +312,3 @@ export async function getFdWorkbenchGetRoleCards(
 		...(options || {}),
 	});
 }
-
-/** @deprecated 此函数名已变更，请使用 getFdWorkbenchGetRoleCards */
-export const getApiAdminFdWorkbenchRoleCardsRoleId = getFdWorkbenchGetRoleCards;
