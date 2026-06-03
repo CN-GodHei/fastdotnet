@@ -76,7 +76,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                         p.id.Equals(pluginId, StringComparison.OrdinalIgnoreCase));
                     if (pluginInfo != null)
                     {
-                        _pluginSwaggerRegistry.RegisterPlugin(pluginInfo.id, pluginInfo.name, pluginInfo.description);
+                        _pluginSwaggerRegistry.RegisterPlugin(pluginInfo.id, pluginInfo.name, pluginInfo.description, pluginInfo.entryPoint);
                         _logger.LogInformation("已动态注册插件 [{PluginId}] 的 Swagger 文档", pluginId);
                     }
                 }

@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.IO;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -13,7 +14,7 @@ namespace Fastdotnet.WebApi.Services;
 /// </summary>
 public class PluginSwaggerDocRegistry
 {
-    private readonly ConcurrentDictionary<string, (string pluginName, string description)> _plugins = new();
+    private readonly ConcurrentDictionary<string, (string pluginName, string description, string entryPoint)> _plugins = new();
     private readonly IOptions<SwaggerGeneratorOptions> _swaggerGenOptions;
     private SwaggerUIOptions? _swaggerUIOptions;
 
@@ -39,18 +40,18 @@ public class PluginSwaggerDocRegistry
         {
             if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(name))
             {
-                _plugins.TryAdd(id.ToLower(), (name, description ?? ""));
+                _plugins.TryAdd(id.ToLower(), (name, description ?? "", id));
             }
         }
     }
 
     /// <summary>
-    /// 运行时注册单条插件文档（添加 SwaggerDoc + SwaggerUI 端点）
+    /// 运行时注册单条插件文档（添加 SwaggerDoc + SwaggerUI 端点 + XML 注释）
     /// </summary>
-    public bool RegisterPlugin(string pluginId, string pluginName, string description)
+    public bool RegisterPlugin(string pluginId, string pluginName, string description, string entryPoint = null)
     {
         var key = pluginId.ToLower();
-        if (!_plugins.TryAdd(key, (pluginName, description ?? "")))
+        if (!_plugins.TryAdd(key, (pluginName, description ?? "", entryPoint ?? pluginId)))
             return false; // 已存在，不做重复注册
 
         var swaggerOptions = _swaggerGenOptions.Value;
@@ -91,6 +92,18 @@ public class PluginSwaggerDocRegistry
             });
 
             config.Urls = urls;
+        }
+
+        // 3. 加载插件 XML 注释到运行时过滤器
+        try
+        {
+            var assemblyName = Path.GetFileNameWithoutExtension(entryPoint ?? pluginId);
+            var pluginXmlPath = Path.Combine(AppContext.BaseDirectory, "plugins", pluginId, $"{assemblyName}.xml");
+            PluginXmlCommentFilter.AddPluginXml(pluginId, assemblyName, pluginXmlPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"加载插件XML注释到运行时过滤器失败 [{pluginId}]: {ex.Message}");
         }
 
         return true;

@@ -34,7 +34,7 @@ public static class SwaggerExtensions
 
             // 为已启用的插件动态添加API文档定义 - admin 和 app 版本
             var enabledPlugins = GetEnabledPluginConfigs();
-            foreach (var (pluginId, pluginName, description) in enabledPlugins)
+            foreach (var (pluginId, pluginName, description, entryPoint) in enabledPlugins)
             {
                 // 添加 admin 版本文档
                 c.SwaggerDoc($"plugin-{pluginId.ToLower()}-admin", new OpenApiInfo
@@ -52,6 +52,9 @@ public static class SwaggerExtensions
                     Description = $"Fastdotnet {description} - App端"
                 });
             }
+
+            // 注册插件 XML 注释过滤器
+            c.OperationFilter<PluginXmlCommentFilter>();
 
             c.TagActionsBy(apiDesc =>
             {
@@ -100,15 +103,20 @@ public static class SwaggerExtensions
             }
 
             // 为已启用插件的控制器添加XML注释支持
-            foreach (var (pluginId, _, _) in enabledPlugins)
+            foreach (var (pluginId, pluginName, description, entryPoint) in enabledPlugins)
             {
                 try
                 {
-                    var pluginXmlPath = Path.Combine(AppContext.BaseDirectory, PluginsFolderName, pluginId, $"{pluginId}.xml");
+                    // XML 文件名由 entryPoint（如 PluginA.dll）决定，而非 pluginId
+                    var assemblyName = Path.GetFileNameWithoutExtension(entryPoint ?? pluginId);
+                    var pluginXmlPath = Path.Combine(AppContext.BaseDirectory, PluginsFolderName, pluginId, $"{assemblyName}.xml");
                     if (File.Exists(pluginXmlPath))
                     {
                         c.IncludeXmlComments(pluginXmlPath);
                     }
+
+                    // 同时注册到运行时过滤器（支持运行时新启用插件时的注释加载）
+                    PluginXmlCommentFilter.AddPluginXml(pluginId, assemblyName, pluginXmlPath);
                 }
                 catch (Exception ex)
                 {
@@ -168,7 +176,7 @@ public static class SwaggerExtensions
 
             // 为已启用的插件添加文档端点
             var enabledPlugins = GetEnabledPluginConfigs();
-            foreach (var (pluginId, pluginName, _) in enabledPlugins)
+            foreach (var (pluginId, pluginName, _, _) in enabledPlugins)
             {
                 c.SwaggerEndpoint(
                     $"/swagger/plugin-{pluginId.ToLower()}-admin/swagger.json",
@@ -218,9 +226,9 @@ public static class SwaggerExtensions
     /// <summary>
     /// 获取已启用的插件配置列表（读取 plugin.json 中的 enabled 字段）
     /// </summary>
-    private static List<(string pluginId, string pluginName, string description)> GetEnabledPluginConfigs()
+    private static List<(string pluginId, string pluginName, string description, string entryPoint)> GetEnabledPluginConfigs()
     {
-        var result = new List<(string pluginId, string pluginName, string description)>();
+        var result = new List<(string pluginId, string pluginName, string description, string entryPoint)>();
         var pluginsPath = Path.Combine(AppContext.BaseDirectory, PluginsFolderName);
 
         if (!Directory.Exists(pluginsPath))
@@ -240,6 +248,7 @@ public static class SwaggerExtensions
                 var pluginId = root.GetProperty("id").GetString();
                 var pluginName = root.GetProperty("name").GetString();
                 var description = root.TryGetProperty("description", out var descProp) ? descProp.GetString() : "";
+                var entryPoint = root.TryGetProperty("entryPoint", out var entryProp) ? entryProp.GetString() : null;
 
                 // 读取 enabled 字段，只包含已启用的插件
                 bool enabled = true;
@@ -250,7 +259,7 @@ public static class SwaggerExtensions
 
                 if (!string.IsNullOrEmpty(pluginId) && !string.IsNullOrEmpty(pluginName) && enabled)
                 {
-                    result.Add((pluginId, pluginName, description ?? ""));
+                    result.Add((pluginId, pluginName, description ?? "", entryPoint ?? pluginId));
                 }
             }
             catch (Exception ex)
