@@ -1,5 +1,7 @@
 namespace Fastdotnet.WebApi.Extensions;
 
+using Fastdotnet.WebApi.Services;
+
 public static class SwaggerExtensions
 {
     private const string PluginsFolderName = "plugins";
@@ -30,46 +32,25 @@ public static class SwaggerExtensions
                 Description = "Fastdotnet 主系统 API 文档（App端）"
             });
 
-            // 为插件动态添加API文档定义 - admin 和 app 版本
-            var pluginDirs = Directory.GetDirectories(Path.Combine(AppContext.BaseDirectory, "plugins"));
-            foreach (var pluginDir in pluginDirs)
+            // 为已启用的插件动态添加API文档定义 - admin 和 app 版本
+            var enabledPlugins = GetEnabledPluginConfigs();
+            foreach (var (pluginId, pluginName, description) in enabledPlugins)
             {
-                try
+                // 添加 admin 版本文档
+                c.SwaggerDoc($"plugin-{pluginId.ToLower()}-admin", new OpenApiInfo
                 {
-                    var pluginJsonPath = Path.Combine(pluginDir, "plugin.json");
-                    if (File.Exists(pluginJsonPath))
-                    {
-                        var pluginJson = File.ReadAllText(pluginJsonPath);
-                        var pluginConfig = System.Text.Json.JsonDocument.Parse(pluginJson);
-                        var pluginId = pluginConfig.RootElement.GetProperty("id").GetString();
-                        var pluginName = pluginConfig.RootElement.GetProperty("name").GetString();
-                        var pluginDescription = pluginConfig.RootElement.GetProperty("description").GetString();
-
-                        if (!string.IsNullOrEmpty(pluginId))
-                        {
-                            // 添加 admin 版本文档
-                            c.SwaggerDoc($"plugin-{pluginId.ToLower()}-admin", new OpenApiInfo
-                            {
-                                Title = $"{pluginName} 插件 API (Admin)",
-                                Version = "v1",
-                                Description = $"Fastdotnet {pluginDescription} - Admin端"
-                            });
-                            
-                            // 添加 app 版本文档
-                            c.SwaggerDoc($"plugin-{pluginId.ToLower()}-app", new OpenApiInfo
-                            {
-                                Title = $"{pluginName} 插件 API (App)",
-                                Version = "v1",
-                                Description = $"Fastdotnet {pluginDescription} - App端"
-                            });
-                        }
-                    }
-                }
-                catch (Exception ex)
+                    Title = $"{pluginName} 插件 API (Admin)",
+                    Version = "v1",
+                    Description = $"Fastdotnet {description} - Admin端"
+                });
+                
+                // 添加 app 版本文档
+                c.SwaggerDoc($"plugin-{pluginId.ToLower()}-app", new OpenApiInfo
                 {
-                    // 如果读取plugin.json失败，跳过该插件
-                    Console.WriteLine($"读取插件配置失败 {pluginDir}: {ex.Message}");
-                }
+                    Title = $"{pluginName} 插件 API (App)",
+                    Version = "v1",
+                    Description = $"Fastdotnet {description} - App端"
+                });
             }
 
             c.TagActionsBy(apiDesc =>
@@ -118,32 +99,20 @@ public static class SwaggerExtensions
                 c.IncludeXmlComments(xmlPath);
             }
 
-            // 为插件中的控制器添加XML注释支持
-            foreach (var pluginDir in pluginDirs)
+            // 为已启用插件的控制器添加XML注释支持
+            foreach (var (pluginId, _, _) in enabledPlugins)
             {
                 try
                 {
-                    var pluginJsonPath = Path.Combine(pluginDir, "plugin.json");
-                    if (File.Exists(pluginJsonPath))
+                    var pluginXmlPath = Path.Combine(AppContext.BaseDirectory, PluginsFolderName, pluginId, $"{pluginId}.xml");
+                    if (File.Exists(pluginXmlPath))
                     {
-                        var pluginJson = File.ReadAllText(pluginJsonPath);
-                        var pluginConfig = System.Text.Json.JsonDocument.Parse(pluginJson);
-                        var pluginId = pluginConfig.RootElement.GetProperty("id").GetString();
-
-                        if (!string.IsNullOrEmpty(pluginId))
-                        {
-                            var pluginXmlPath = Path.Combine(pluginDir, $"{pluginId}.xml");
-                            if (File.Exists(pluginXmlPath))
-                            {
-                                c.IncludeXmlComments(pluginXmlPath);
-                            }
-                        }
+                        c.IncludeXmlComments(pluginXmlPath);
                     }
                 }
                 catch (Exception ex)
                 {
-                    // 如果读取plugin.json失败，跳过该插件
-                    Console.WriteLine($"读取插件配置失败 {pluginDir}: {ex.Message}");
+                    Console.WriteLine($"读取插件XML注释失败 {pluginId}: {ex.Message}");
                 }
             }
 
@@ -173,6 +142,9 @@ public static class SwaggerExtensions
         }
     });
         });
+
+        // 注册运行时插件 Swagger 文档注册器
+        services.AddSingleton<PluginSwaggerDocRegistry>();
         return services;
     }
 
@@ -194,55 +166,99 @@ public static class SwaggerExtensions
             // 主文档 - app 版本
             c.SwaggerEndpoint("/swagger/main-app/swagger.json", "主系统 API (App) v1");
 
-            // 插件文档
-            var pluginsPath = Path.Combine(AppContext.BaseDirectory, PluginsFolderName);
-            Directory.CreateDirectory(pluginsPath); // 确保目录存在
-
-            if (Directory.Exists(pluginsPath))
+            // 为已启用的插件添加文档端点
+            var enabledPlugins = GetEnabledPluginConfigs();
+            foreach (var (pluginId, pluginName, _) in enabledPlugins)
             {
-                var pluginDirs = Directory.GetDirectories(pluginsPath);
-                foreach (var pluginDir in pluginDirs)
-                {
-                    try
-                    {
-                        var pluginJsonPath = Path.Combine(pluginDir, "plugin.json");
-                        if (!File.Exists(pluginJsonPath)) continue;
-
-                        var pluginJson = File.ReadAllText(pluginJsonPath);
-                        using var doc = JsonDocument.Parse(pluginJson);
-                        var root = doc.RootElement;
-
-                        var pluginId = root.GetProperty("id").GetString();
-                        var pluginName = root.GetProperty("name").GetString();
-
-                        if (!string.IsNullOrEmpty(pluginId))
-                        {
-                            // 添加 admin 版本端点
-                            c.SwaggerEndpoint(
-                                $"/swagger/plugin-{pluginId.ToLower()}-admin/swagger.json",
-                                $"{pluginName} 插件 API (Admin) v1"
-                            );
-                            
-                            // 添加 app 版本端点
-                            c.SwaggerEndpoint(
-                                $"/swagger/plugin-{pluginId.ToLower()}-app/swagger.json",
-                                $"{pluginName} 插件 API (App) v1"
-                            );
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"读取插件配置失败 {pluginDir}: {ex.Message}");
-                    }
-                }
+                c.SwaggerEndpoint(
+                    $"/swagger/plugin-{pluginId.ToLower()}-admin/swagger.json",
+                    $"{pluginName} 插件 API (Admin) v1"
+                );
+                
+                c.SwaggerEndpoint(
+                    $"/swagger/plugin-{pluginId.ToLower()}-app/swagger.json",
+                    $"{pluginName} 插件 API (App) v1"
+                );
             }
 
             c.RoutePrefix = "swagger";
             c.DefaultModelsExpandDepth(-1); // 隐藏底部 Models
+
+            // 捕获 SwaggerUIOptions 引用，供运行时注册新插件端点
+            var registry = app.Services.GetRequiredService<PluginSwaggerDocRegistry>();
+            registry.SetSwaggerUIOptions(c);
+        });
+
+        // 运行时查询活跃插件文档的 API 端点（供客户端动态加载用）
+        app.MapGet("/api/swagger/active-plugin-docs", (PluginSwaggerDocRegistry registry) =>
+        {
+            var plugins = registry.GetActivePlugins();
+            var docs = new List<object>();
+            foreach (var (pluginId, pluginName, _) in plugins)
+            {
+                docs.Add(new
+                {
+                    url = $"/swagger/plugin-{pluginId.ToLower()}-admin/swagger.json",
+                    name = $"{pluginName} 插件 API (Admin) v1"
+                });
+                docs.Add(new
+                {
+                    url = $"/swagger/plugin-{pluginId.ToLower()}-app/swagger.json",
+                    name = $"{pluginName} 插件 API (App) v1"
+                });
+            }
+            return Results.Ok(docs);
         });
 
         app.UseCors(); // 如果 CORS 是开发环境专用，也可放这里
 
         return app;
+    }
+
+    /// <summary>
+    /// 获取已启用的插件配置列表（读取 plugin.json 中的 enabled 字段）
+    /// </summary>
+    private static List<(string pluginId, string pluginName, string description)> GetEnabledPluginConfigs()
+    {
+        var result = new List<(string pluginId, string pluginName, string description)>();
+        var pluginsPath = Path.Combine(AppContext.BaseDirectory, PluginsFolderName);
+
+        if (!Directory.Exists(pluginsPath))
+            return result;
+
+        foreach (var pluginDir in Directory.GetDirectories(pluginsPath))
+        {
+            try
+            {
+                var pluginJsonPath = Path.Combine(pluginDir, "plugin.json");
+                if (!File.Exists(pluginJsonPath)) continue;
+
+                var pluginJson = File.ReadAllText(pluginJsonPath);
+                using var doc = JsonDocument.Parse(pluginJson);
+                var root = doc.RootElement;
+
+                var pluginId = root.GetProperty("id").GetString();
+                var pluginName = root.GetProperty("name").GetString();
+                var description = root.TryGetProperty("description", out var descProp) ? descProp.GetString() : "";
+
+                // 读取 enabled 字段，只包含已启用的插件
+                bool enabled = true;
+                if (root.TryGetProperty("enabled", out var enabledProp))
+                {
+                    enabled = enabledProp.GetBoolean();
+                }
+
+                if (!string.IsNullOrEmpty(pluginId) && !string.IsNullOrEmpty(pluginName) && enabled)
+                {
+                    result.Add((pluginId, pluginName, description ?? ""));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"读取插件配置失败 {pluginDir}: {ex.Message}");
+            }
+        }
+
+        return result;
     }
 }

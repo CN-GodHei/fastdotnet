@@ -1,12 +1,16 @@
-﻿namespace Fastdotnet.WebApi.Tasks
+﻿using Fastdotnet.WebApi.Services;
+
+namespace Fastdotnet.WebApi.Tasks
 {
     public class StartupTask : IStartupTask
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly PluginSwaggerDocRegistry _swaggerDocRegistry;
 
-        public StartupTask(IServiceProvider serviceProvider)
+        public StartupTask(IServiceProvider serviceProvider, PluginSwaggerDocRegistry swaggerDocRegistry)
         {
             _serviceProvider = serviceProvider;
+            _swaggerDocRegistry = swaggerDocRegistry;
         }
 
         public async Task ExecuteAsync()
@@ -21,7 +25,11 @@
 
                     await pluginLoader.StartInstalledPlugins();
 
-                    Console.WriteLine("插件初始化完成");
+                    // 同步已加载的插件到 Swagger 文档注册器
+                    var loadedPlugins = pluginLoader.GetLoadedPlugins();
+                    _swaggerDocRegistry.BulkRegister(loadedPlugins.Select(p => (p.id, p.name, p.description)));
+
+                    Console.WriteLine($"插件初始化完成，已同步 {loadedPlugins.Count()} 个插件文档");
                 }
                 catch (Exception ex)
                 {

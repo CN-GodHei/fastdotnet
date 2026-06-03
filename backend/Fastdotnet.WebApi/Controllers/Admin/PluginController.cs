@@ -1,6 +1,7 @@
 using Fastdotnet.Core.Dtos;
 using Fastdotnet.Core.Enum;
 using Fastdotnet.Core.Plugin;
+using Fastdotnet.WebApi.Services;
 using System.ComponentModel.DataAnnotations;
 
 namespace Fastdotnet.WebApi.Controllers.Admin
@@ -13,11 +14,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         private readonly IPluginLoadService _pluginLoadService;
         private readonly ILogger<PluginController> _logger;
         private readonly ICurrentUser _currentUser;
-        public PluginController(IPluginLoadService pluginLoadService, ILogger<PluginController> logger, ICurrentUser currentUser)
+        private readonly PluginSwaggerDocRegistry _pluginSwaggerRegistry;
+        public PluginController(IPluginLoadService pluginLoadService, ILogger<PluginController> logger, ICurrentUser currentUser, PluginSwaggerDocRegistry pluginSwaggerRegistry)
         {
             _pluginLoadService = pluginLoadService;
             _logger = logger;
             _currentUser = currentUser;
+            _pluginSwaggerRegistry = pluginSwaggerRegistry;
         }
         /// <summary>
         /// 从 URL 下载并加载插件
@@ -62,6 +65,27 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public async Task<ApiResult> EnablePlugin(string pluginId)
         {
             var result = await _pluginLoadService.EnablePluginAsync(pluginId);
+
+            // 启用成功后动态注册 Swagger 文档
+            if (result.Code == 200)
+            {
+                try
+                {
+                    var allPlugins = await _pluginLoadService.ScanPluginsAsync();
+                    var pluginInfo = allPlugins.FirstOrDefault(p =>
+                        p.id.Equals(pluginId, StringComparison.OrdinalIgnoreCase));
+                    if (pluginInfo != null)
+                    {
+                        _pluginSwaggerRegistry.RegisterPlugin(pluginInfo.id, pluginInfo.name, pluginInfo.description);
+                        _logger.LogInformation("已动态注册插件 [{PluginId}] 的 Swagger 文档", pluginId);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "动态注册插件 [{PluginId}] Swagger 文档时出错", pluginId);
+                }
+            }
+
             return result;
         }
 
@@ -72,6 +96,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public async Task<ApiResult> DisablePlugin(string pluginId)
         {
             var result = await _pluginLoadService.DisablePluginAsync(pluginId, true);
+
+            if (result.Code == 200)
+            {
+                _pluginSwaggerRegistry.UnregisterPlugin(pluginId);
+                _logger.LogInformation("已动态注销插件 [{PluginId}] 的 Swagger 文档", pluginId);
+            }
+
             return result;
         }
 
