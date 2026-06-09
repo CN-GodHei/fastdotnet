@@ -3,21 +3,18 @@ using Fastdotnet.Core.Options;
 namespace Fastdotnet.Core.Service.Sys
 {
     /// <summary>
-    /// 混合缓存服务实现
+    /// 混合缓存服务实现（优化后版本）
     /// </summary>
     public class HybridCacheService : IHybridCacheService
     {
         private readonly HybridCache _hybridCache;
         private readonly IOptions<CacheSettings> _cacheSettings;
-        private readonly ConcurrentDictionary<string, HashSet<string>> _tagToKeysMap;
-        private readonly ConcurrentDictionary<string, HashSet<string>> _keyToTagsMap;
 
+        // 💡 彻底移除了 _tagToKeysMap 和 _keyToTagsMap，消除内存泄漏与集群状态不一致的隐患。
         public HybridCacheService(HybridCache hybridCache, IOptions<CacheSettings> cacheSettings)
         {
             _hybridCache = hybridCache;
             _cacheSettings = cacheSettings;
-            _tagToKeysMap = new ConcurrentDictionary<string, HashSet<string>>();
-            _keyToTagsMap = new ConcurrentDictionary<string, HashSet<string>>();
         }
 
         /// <inheritdoc/>
@@ -26,114 +23,69 @@ namespace Fastdotnet.Core.Service.Sys
             // 如果没有提供选项，使用配置文件中的默认值
             var cacheOptions = options ?? CreateDefaultOptions();
 
-            var result = await _hybridCache.GetOrCreateAsync(key, async (ct) =>
-            {
-                return await factory();
-            }, cacheOptions);
-
-            // 关联标签和键
-            if (tags != null && tags.Length > 0)
-            {
-                AssociateTagsWithKey(key, tags);
-            }
-
-            return result;
+            // 💡 .NET 9 的 HybridCache.GetOrCreateAsync 原生重载就支持传入 tags
+            // 底层会自动在本地内存和分布式缓存（如 Redis）中建立标签索引
+            return await _hybridCache.GetOrCreateAsync<T>(
+                key,
+                async (ct) => await factory(),
+                cacheOptions,
+                tags);
         }
 
         /// <inheritdoc/>
         public async Task SetAsync<T>(string key, T value, HybridCacheEntryOptions options = null, string[] tags = null)
         {
-            // 如果没有提供选项，使用配置文件中的默认值
             var cacheOptions = options ?? CreateDefaultOptions();
 
+            // 💡 移除自定义关联函数，直接交由原生底层托管
             await _hybridCache.SetAsync(key, value, cacheOptions, tags);
-
-            // 关联标签和键
-            if (tags != null && tags.Length > 0)
-            {
-                AssociateTagsWithKey(key, tags);
-            }
         }
 
         /// <inheritdoc/>
         public async Task<T> GetAsync<T>(string key)
         {
-            // HybridCache没有直接的GetAsync方法，我们需要使用GetOrCreateAsync但提供一个不会实际执行的工厂方法
-            // 这里我们实现一个合理的Get方法，如果缓存中没有则返回默认值
+            // ⚠️ 修复原版缺陷：原版代码中如果缓存未命中，工厂返回了 default(T)，
+            // 这会导致 HybridCache 把 default(T) 当成有效结果重新写入缓存，导致该 Key 被“空值”污染。
+            // 
+            // 💡 规避方案：在工厂中抛出特定异常。HybridCache 捕获到工厂异常时，
+            // 会判定为加载失败，【不会】向缓存层执行写入操作，从而完美实现“只读”而不污染缓存。
             try
             {
-                return await _hybridCache.GetOrCreateAsync<T>(key, async (ct) =>
-                {
-                    // 如果缓存中没有找到，返回默认值
-                    return default(T);
-                });
+                return await _hybridCache.GetOrCreateAsync<T>(
+                    key,
+                    async (ct) => throw new CacheMissException() // 强行触发未命中中断
+                );
+            }
+            catch (CacheMissException)
+            {
+                // 缓存未命中，安全返回默认值，且不会污染缓存
+                return default;
             }
             catch
             {
-                // 如果发生异常，返回默认值
-                return default(T);
+                // 其他异常（如反序列化失败等）安全返回默认值
+                return default;
             }
         }
 
         /// <inheritdoc/>
         public async Task RemoveAsync(string key)
         {
+            // 💡 原生方法会自动在本地和分布式缓存中同步删除该 Key
             await _hybridCache.RemoveAsync(key);
-
-            // 移除标签关联
-            if (_keyToTagsMap.TryGetValue(key, out var tags))
-            {
-                foreach (var tag in tags)
-                {
-                    if (_tagToKeysMap.TryGetValue(tag, out var keys))
-                    {
-                        keys.Remove(key);
-                        // 如果标签下没有键了，也移除标签
-                        if (keys.Count == 0)
-                        {
-                            _tagToKeysMap.TryRemove(tag, out _);
-                        }
-                    }
-                }
-                _keyToTagsMap.TryRemove(key, out _);
-            }
         }
 
         /// <inheritdoc/>
         public async Task RemoveByTagAsync(string[] tags)
         {
-            // 使用HybridCache的原生RemoveByTagAsync方法
+            // 💡 .NET 9 的 HybridCache.RemoveByTagAsync 原生支持传入 IEnumerable<string>
+            // 它的底层实现是“逻辑作废（基于时间戳匹配）”，非常高效，不需要我们自己去删 Key
             await _hybridCache.RemoveByTagAsync(tags);
-            for (var i = 0; i < tags.Length; i++)
-            {
-                string tag = tags[i];
-                // 更新我们自己的标签映射
-                if (_tagToKeysMap.TryGetValue(tag, out var keys))
-                {
-                    // 移除所有关联的键的标签引用
-                    foreach (var key in keys.ToList())
-                    {
-                        if (_keyToTagsMap.TryGetValue(key, out var keyTags))
-                        {
-                            keyTags.Remove(tag);
-                            if (keyTags.Count == 0)
-                            {
-                                _keyToTagsMap.TryRemove(key, out _);
-                            }
-                        }
-                    }
-
-                    // 清空标签映射
-                    _tagToKeysMap.TryRemove(tag, out _);
-                }
-            }
-
         }
 
         /// <summary>
         /// 创建默认缓存选项
         /// </summary>
-        /// <returns>默认缓存选项</returns>
         private HybridCacheEntryOptions CreateDefaultOptions()
         {
             var settings = _cacheSettings.Value;
@@ -145,22 +97,8 @@ namespace Fastdotnet.Core.Service.Sys
         }
 
         /// <summary>
-        /// 关联标签和键
+        /// 自定义内部专用异常，用于无污染阻断缓存写入
         /// </summary>
-        /// <param name="key">缓存键</param>
-        /// <param name="tags">标签数组</param>
-        private void AssociateTagsWithKey(string key, string[] tags)
-        { 
-            // 记录键到标签的映射
-            var keyTags = _keyToTagsMap.GetOrAdd(key, _ => new HashSet<string>());
-            foreach (var tag in tags)
-            {
-                keyTags.Add(tag);
-
-                // 记录标签到键的映射
-                var tagKeys = _tagToKeysMap.GetOrAdd(tag, _ => new HashSet<string>());
-                tagKeys.Add(key);
-            }
-        }
+        private class CacheMissException : Exception { }
     }
 }
