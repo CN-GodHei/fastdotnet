@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fastdotnet.WebApi", "Fastdo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginA", "Plugins\PluginA\Backend\PluginA.csproj", "{A5A6737B-D79A-E447-CAE3-FB5123039A2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fastdotnet.Core.Notification", "Fastdotnet.Core.Notification\Fastdotnet.Core.Notification.csproj", "{4DA0E61B-0E1F-4BD0-8500-2F3C64D7FBE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{A5A6737B-D79A-E447-CAE3-FB5123039A2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5A6737B-D79A-E447-CAE3-FB5123039A2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5A6737B-D79A-E447-CAE3-FB5123039A2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DA0E61B-0E1F-4BD0-8500-2F3C64D7FBE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DA0E61B-0E1F-4BD0-8500-2F3C64D7FBE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DA0E61B-0E1F-4BD0-8500-2F3C64D7FBE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DA0E61B-0E1F-4BD0-8500-2F3C64D7FBE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
