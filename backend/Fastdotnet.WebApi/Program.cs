@@ -128,6 +128,9 @@ builder.Services.AddSingleton<Fastdotnet.Core.Plugin.PluginReverseProxyRegistry>
 builder.Services.AddHttpForwarder();
 builder.Services.AddSqlSugar(builder.Configuration);
 
+// 注册 EF Core 基础服务（复用 SqlSugar 连接配置，用于第三方库集成）
+builder.Services.AddFastdotnetEfCore(builder.Configuration);
+
 // 注册 HttpContextAccessor 和 CurrentUser 服务
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();

@@ -16,6 +16,7 @@ global using Fastdotnet.Core.Service.Sys;
 global using Fastdotnet.Core.Utils;
 global using Fastdotnet.Core.Utils.Extensions;
 global using Fastdotnet.Orm;
+global using Fastdotnet.Orm.EfCore;
 global using Fastdotnet.Plugin.Contracts;
 global using Fastdotnet.Plugin.Core.Infrastructure;
 global using Fastdotnet.Plugin.Shared.AdapterAOT;

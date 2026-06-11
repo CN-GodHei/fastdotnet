@@ -18,3 +18,5 @@ global using Microsoft.Extensions.Logging;
 global using SqlSugar;
 global using SqlSugar.SplitTableExtensions;
 global using Yitter.IdGenerator;
+global using Microsoft.EntityFrameworkCore;
+global using Fastdotnet.Orm.EfCore;
