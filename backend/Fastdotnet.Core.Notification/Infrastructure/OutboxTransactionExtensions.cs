@@ -25,7 +25,8 @@ public static class OutboxTransactionExtensions
             return;
 
         var entries = EventPublisher.DrainToOutboxEntries(context, tenantId,
-            jsonOptions ?? new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            jsonOptions ?? new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase },
+            source: "fastdotnet://host");
 
         if (entries.Count > 0)
         {

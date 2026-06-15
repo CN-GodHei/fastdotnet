@@ -21,6 +21,9 @@ public static class NotificationServiceCollectionExtensions
         // JSON 序列化选项
         services.TryAddSingleton(options.JsonSerializerOptions);
 
+        // CloudEvents Source 前缀
+        services.TryAddSingleton(options.Source);
+
         // Scoped 事件上下文
         services.AddScoped<EventContext>();
 
@@ -29,6 +32,14 @@ public static class NotificationServiceCollectionExtensions
 
         // 事件路由器（单例）
         services.TryAddSingleton<EventRouter>();
+
+        // AsyncAPI 契约生成器（单例）
+        services.TryAddSingleton(new AsyncApiSpecGenerator(
+            title: "Fastdotnet Events",
+            version: "1.0.0",
+            serverUrl: "/",
+            serverDescription: "Fastdotnet 推送服务"
+        ));
 
         // Outbox 调度器配置
         services.TryAddSingleton(options.DispatcherOptions);
@@ -60,7 +71,6 @@ public static class NotificationServiceCollectionExtensions
                 sp.GetRequiredService<Microsoft.Extensions.Logging.ILogger<WebhookSubscriber>>());
         });
 
-        // 将 Webhook 订阅者注册到路由器
         services.AddSingleton<IEventSubscriptionRegistration>(sp =>
             new WebhookRegistration(eventType, sp.GetRequiredService<IEventSubscriber>()));
 
@@ -98,6 +108,9 @@ internal sealed class WebhookRegistration : IEventSubscriptionRegistration
 /// </summary>
 public class NotificationOptions
 {
+    /// <summary>CloudEvents Source 标识</summary>
+    public string Source { get; set; } = "fastdotnet://host";
+
     public JsonSerializerOptions JsonSerializerOptions { get; set; } = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,

@@ -39,7 +39,12 @@ namespace Plugina
 
         protected override Task OnStartAsync()
         {
-            // 插件启动：向全局 EventRouter 注册订阅者
+            // 1. 向 AsyncAPI 规范生成器注册本插件的事件类型
+            var specGenerator = _serviceProvider?.GetService<AsyncApiSpecGenerator>();
+            specGenerator?.RegisterAssembly(GetType().Assembly);
+            Console.WriteLine($"[{Name}] 事件类型已注册到 AsyncAPI 规范生成器");
+
+            // 2. 向全局 EventRouter 注册订阅者
             var router = _serviceProvider?.GetService<EventRouter>();
             if (router != null)
             {
@@ -47,7 +52,6 @@ namespace Plugina
                 var logger = loggerFactory.CreateLogger<PluginANotificationSubscriber>();
                 _subscriber = new PluginANotificationSubscriber(logger);
 
-                // 订阅本插件的所有事件（通配符）
                 router.SubscribePattern("com.fastdotnet.plugina.*", _subscriber);
 
                 Console.WriteLine($"[{Name}] Notification 订阅者已注册到 EventRouter");

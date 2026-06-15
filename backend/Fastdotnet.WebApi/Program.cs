@@ -2,6 +2,7 @@ using Autofac.Core;
 using Fastdotnet.Core.Entities.Oidc;
 using Fastdotnet.Core.Extensions;
 using Fastdotnet.Core.Notification;
+using Fastdotnet.Core.Notification.Infrastructure;
 using Fastdotnet.Core.Options;
 using Fastdotnet.Core.Service.Oidc;
 using Fastdotnet.Core.Service.Oidc.Stores;
@@ -273,6 +274,9 @@ if (app.Environment.IsDevelopment())
 app.UseRouting(); // 添加路由中间件
 app.UseMiddleware<RequestIdMiddleware>();
 
+// 事件契约可视化端点 /_events/spec /_events/ui
+app.MapEventSpecEndpoints();
+
 // 🌟 启用插件逃生舱（微主机代理转发中间件）
 // 必须放在防重放/加密中间件之前，以避免拦截第三方库（如 Elsa前端）的常规通讯
 app.UseMiddleware<PluginReverseProxyMiddleware>();
@@ -326,7 +330,6 @@ app.UseGracefulShutdown();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
-    // 注册主框架的SignalR端点
     endpoints.MapHub<UniversalHub>("/universalhub");
 });
 

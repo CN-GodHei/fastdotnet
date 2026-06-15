@@ -37,11 +37,11 @@ namespace Fastdotnet.Core.Service.Sys
         }
 
         /// <inheritdoc/>
-        public async Task<T?> GetAsync<T>(string key)
+        public async Task<T> GetAsync<T>(string key)
         {
-            // 使用 CancellationToken 取消机制实现"只读"缓存查询。
-            // 预先取消的 token 会让工厂立即抛出 OperationCanceledException，
-            // HybridCache 检测到后不会把 default(T) 写入缓存，实现无污染的"只读"。
+            // 通过 CancellationToken 参数取消操作，而非在工厂中抛异常。
+            // factory 内抛异常会被 BackgroundFetchAsync 重新抛出导致逃逸；
+            // 用预取消的 token 可以在 HybridCache 进入工厂前就取消，安全无污染。
             try
             {
                 using var cts = new CancellationTokenSource();
@@ -49,11 +49,8 @@ namespace Fastdotnet.Core.Service.Sys
 
                 return await _hybridCache.GetOrCreateAsync<T>(
                     key,
-                    (ct) =>
-                    {
-                        ct.ThrowIfCancellationRequested();
-                        return default!;
-                    }
+                    _ => default!,
+                    cancellationToken: cts.Token
                 );
             }
             catch (OperationCanceledException)

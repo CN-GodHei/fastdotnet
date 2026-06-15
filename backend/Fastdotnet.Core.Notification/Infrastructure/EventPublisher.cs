@@ -1,20 +1,19 @@
 using System.Reflection;
 using System.Text.Json;
 using Fastdotnet.Core.Notification.Entities;
-using Fastdotnet.Core.Notification.Infrastructure;
-using SqlSugar;
 
 namespace Fastdotnet.Core.Notification.Infrastructure;
 
 /// <summary>
-/// Scoped 事件发布器实现。将事件序列化后存入 EventContext，由拦截器统一落库。
+/// Scoped 事件发布器实现。将事件包装为 CloudEvents 1.0 信封后存入 EventContext，由拦截器统一落库。
 /// </summary>
 internal sealed class EventPublisher : IEventPublisher
 {
     private readonly EventContext _context;
     private readonly JsonSerializerOptions _jsonOptions;
+    private readonly string _source;
 
-    public EventPublisher(EventContext context, JsonSerializerOptions? jsonOptions = null)
+    public EventPublisher(EventContext context, JsonSerializerOptions? jsonOptions = null, string source = "fastdotnet://host")
     {
         _context = context;
         _jsonOptions = jsonOptions ?? new JsonSerializerOptions
@@ -22,6 +21,7 @@ internal sealed class EventPublisher : IEventPublisher
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             WriteIndented = false
         };
+        _source = source;
     }
 
     public ValueTask PublishAsync(IFastdotnetEvent @event, CancellationToken cancellationToken = default)
@@ -34,19 +34,23 @@ internal sealed class EventPublisher : IEventPublisher
     }
 
     /// <summary>
-    /// 从 EventContext 提取事件并转换为 SysOutbox 实体列表
+    /// 从 EventContext 提取事件，包装为 CloudEvents 1.0 信封并转换为 SysOutbox 实体列表
     /// </summary>
-    internal static List<SysOutbox> DrainToOutboxEntries(EventContext context, string? tenantId, JsonSerializerOptions jsonOptions)
+    internal static List<SysOutbox> DrainToOutboxEntries(EventContext context, string? tenantId, JsonSerializerOptions jsonOptions, string source = "fastdotnet://host")
     {
         var entries = new List<SysOutbox>();
         foreach (var (evt, timestamp) in context.Drain())
         {
             var eventType = ResolveEventType(evt.GetType());
-            var payload = JsonSerializer.Serialize(evt, evt.GetType(), jsonOptions);
+
+            // 使用 CloudEvents 1.0 信封包装
+            var envelope = CloudEventEnvelope.FromEvent(evt, source, jsonOptions);
+            envelope.Id = Guid.NewGuid().ToString("N"); // 覆盖为事件 ID
+            var payload = envelope.Serialize(jsonOptions);
 
             entries.Add(new SysOutbox
             {
-                Id = Guid.NewGuid().ToString("N"),
+                Id = envelope.Id,
                 TenantId = tenantId,
                 SourceModule = ResolveSourceModule(evt.GetType()),
                 EventType = eventType,
@@ -68,7 +72,6 @@ internal sealed class EventPublisher : IEventPublisher
     {
         var ns = eventType.Namespace ?? string.Empty;
         var parts = ns.Split('.');
-        // 取命名空间第二段作为模块名，如 "MyPlugin.Events" -> "MyPlugin"
         return parts.Length >= 1 ? parts[0] : "Unknown";
     }
 }
