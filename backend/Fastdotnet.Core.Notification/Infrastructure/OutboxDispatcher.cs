@@ -11,6 +11,7 @@ namespace Fastdotnet.Core.Notification.Infrastructure;
 /// 后台发件箱调度器。
 /// 双驱动：Channel 内存信号（毫秒级响应）+ 定时轮询（兜底）。
 /// 通过 SqlSugar 乐观锁实现多节点分布式抢占。
+/// 投递时将事件路由到 EventRouter → SignalR/Webhook 等订阅者。
 /// </summary>
 internal sealed class OutboxDispatcher : BackgroundService
 {
@@ -76,6 +77,7 @@ internal sealed class OutboxDispatcher : BackgroundService
     {
         using var scope = _scopeFactory.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ISqlSugarClient>();
+        var router = scope.ServiceProvider.GetRequiredService<EventRouter>();
 
         var lockDuration = DateTime.Now.AddSeconds(_options.LockDurationSeconds);
 
@@ -100,20 +102,22 @@ internal sealed class OutboxDispatcher : BackgroundService
             .Where(it => it.LockId == _instanceId && it.Status == OutboxStatus.Processing)
             .ToListAsync(ct);
 
-        // 限制批次大小
         var toProcess = batch.Take(_options.BatchSize).ToList();
 
         foreach (var entry in toProcess)
         {
-            await ProcessSingleEntryAsync(db, entry, ct);
+            await ProcessSingleEntryAsync(db, router, entry, ct);
         }
     }
 
-    private async Task ProcessSingleEntryAsync(ISqlSugarClient db, SysOutbox entry, CancellationToken ct)
+    private async Task ProcessSingleEntryAsync(ISqlSugarClient db, EventRouter router, SysOutbox entry, CancellationToken ct)
     {
         try
         {
-            // 将已抢占的事件标记为已发布
+            // 通过 EventRouter 投递到所有匹配的订阅者（SignalR / Webhook / 自定义订阅者）
+            await router.RouteAsync(entry.EventType, entry.Payload, ct);
+
+            // 标记为已发布
             await db.Updateable<SysOutbox>()
                 .SetColumns(it => new SysOutbox
                 {
