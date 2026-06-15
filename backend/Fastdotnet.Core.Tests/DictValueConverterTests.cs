@@ -76,7 +76,7 @@ public class DictValueConverterTests
     {
         var result = DictValueConverter.ConvertByValueType("{\"key\":\"val\"}", DictValueType.Json);
         Assert.IsNotNull(result);
-        Assert.AreEqual("val", ((dynamic)result!).key);
+        Assert.AreEqual("val", (string)((Newtonsoft.Json.Linq.JObject)result!)["key"]!);
     }
 
     [TestMethod]
