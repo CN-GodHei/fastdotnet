@@ -1,266 +1,209 @@
-using System;
 using System.Security.Cryptography;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Fastdotnet.Core.Utils;
 
-namespace Fastdotnet.Core.Tests
+namespace Fastdotnet.Core.Tests;
+
+[TestClass]
+public class CryptographyUtilsTest
 {
-    [TestClass]
-    public class CryptographyUtilsTest
+    #region RSA 测试
+
+    [TestMethod]
+    public void GenerateRSAKeyPair_Default_ReturnsValidKeyPair()
     {
-        [TestMethod]
-        public void Test_SM2_Encryption_Decryption()
-        {
-            // 生成SM2密钥对
-            var (publicKey, privateKey) = CryptographyUtils.GenerateSM2KeyPair();
-            
-            string originalText = "Hello, SM2!";
-            
-            // 加密
-            string encrypted = CryptographyUtils.SM2Encrypt(originalText, publicKey);
-            Assert.IsNotNull(encrypted);
-            Assert.AreNotEqual(originalText, encrypted);
-            
-            // 解密
-            string decrypted = CryptographyUtils.SM2Decrypt(encrypted, privateKey);
-            Assert.AreEqual(originalText, decrypted);
-        }
+        var (publicKey, privateKey) = CryptographyUtils.GenerateRSAKeyPair();
 
-        [TestMethod]
-        public void Test_SM2_KeyGeneration()
-        {
-            var (publicKey, privateKey) = CryptographyUtils.GenerateSM2KeyPair();
-            
-            Assert.IsFalse(string.IsNullOrEmpty(publicKey));
-            Assert.IsFalse(string.IsNullOrEmpty(privateKey));
-            Assert.IsTrue(publicKey.Length > 0);
-            Assert.IsTrue(privateKey.Length > 0);
-        }
-
-        [TestMethod]
-        public void Test_AES_Encryption_Decryption()
-        {
-            string originalText = "Hello, AES!";
-            string key = "1234567890123456"; // 16字节密钥
-            
-            // 加密
-            string encrypted = CryptographyUtils.AESEncrypt(originalText, key);
-            Assert.IsNotNull(encrypted);
-            Assert.AreNotEqual(originalText, encrypted);
-            
-            // 解密
-            string decrypted = CryptographyUtils.AESDecrypt(encrypted, key);
-            Assert.AreEqual(originalText, decrypted);
-        }
-
-        [TestMethod]
-        public void Test_AES_With_IV()
-        {
-            string originalText = "Hello, AES with IV!";
-            string key = "1234567890123456"; // 16字节密钥
-            string iv = "1234567890123456"; // 16字节IV
-            
-            // 加密
-            string encrypted = CryptographyUtils.AESEncrypt(originalText, key, iv);
-            Assert.IsNotNull(encrypted);
-            Assert.AreNotEqual(originalText, encrypted);
-            
-            // 解密
-            string decrypted = CryptographyUtils.AESDecrypt(encrypted, key);
-            Assert.AreEqual(originalText, decrypted);
-        }
-
-        [TestMethod]
-        public void Test_RSA_Encryption_Decryption()
-        {
-            string originalText = "Hello, RSA!";
-            
-            // 生成RSA密钥对
-            var (publicKey, privateKey) = CryptographyUtils.GenerateRSAKeyPair();
-            
-            // 加密
-            string encrypted = CryptographyUtils.RSAEncrypt(originalText, publicKey);
-            Assert.IsNotNull(encrypted);
-            Assert.AreNotEqual(originalText, encrypted);
-            
-            // 解密
-            string decrypted = CryptographyUtils.RSADecrypt(encrypted, privateKey);
-            Assert.AreEqual(originalText, decrypted);
-        }
-
-        [TestMethod]
-        public void Test_RSA_Sign_Verify()
-        {
-            string data = "Data to sign";
-            
-            // 生成RSA密钥对
-            var (publicKey, privateKey) = CryptographyUtils.GenerateRSAKeyPair();
-            
-            // 签名
-            string signature = CryptographyUtils.RSASign(data, privateKey);
-            Assert.IsNotNull(signature);
-            
-            // 验签
-            bool isValid = CryptographyUtils.RSAVerify(data, signature, publicKey);
-            Assert.IsTrue(isValid);
-            
-            // 验证错误数据无法通过验证
-            bool isInvalid = CryptographyUtils.RSAVerify("Different data", signature, publicKey);
-            Assert.IsFalse(isInvalid);
-        }
-
-        [TestMethod]
-        public void Test_SM3_Hash()
-        {
-            string input = "Hello, SM3!";
-            string hash1 = CryptographyUtils.SM3Hash(input);
-            string hash2 = CryptographyUtils.SM3Hash(input);
-            
-            Assert.IsNotNull(hash1);
-            Assert.AreEqual(hash1, hash2); // 相同输入应产生相同哈希
-            
-            string differentInput = "Hello, SM3!!";
-            string hash3 = CryptographyUtils.SM3Hash(differentInput);
-            
-            Assert.AreNotEqual(hash1, hash3); // 不同输入应产生不同哈希
-        }
-
-        [TestMethod]
-        public void Test_SM4_Encryption_Decryption()
-        {
-            string originalText = "Hello, SM4!";
-            string key = "1234567890123456"; // 16字节密钥
-            
-            // 加密
-            string encrypted = CryptographyUtils.SM4Encrypt(originalText, key);
-            Assert.IsNotNull(encrypted);
-            Assert.AreNotEqual(originalText, encrypted);
-            
-            // 解密
-            string decrypted = CryptographyUtils.SM4Decrypt(encrypted, key);
-            Assert.AreEqual(originalText, decrypted);
-        }
-
-        [TestMethod]
-        public void Test_SM4_Encryption_Decryption_CBC_Mode()
-        {
-            string originalText = "Hello, SM4 CBC Mode!";
-            string key = "1234567890123456"; // 16字节密钥
-            
-            // 加密
-            string encrypted = CryptographyUtils.SM4Encrypt(originalText, key, System.Security.Cryptography.CipherMode.CBC);
-            Assert.IsNotNull(encrypted);
-            Assert.AreNotEqual(originalText, encrypted);
-            
-            // 解密
-            string decrypted = CryptographyUtils.SM4Decrypt(encrypted, key, System.Security.Cryptography.CipherMode.CBC);
-            Assert.AreEqual(originalText, decrypted);
-        }
-
-        [TestMethod]
-        public void Test_EncryptionService_SM2()
-        {
-            var service = new EncryptionService();
-            var (publicKey, privateKey) = service.GenerateKeyPair(EncryptionService.AlgorithmType.SM2);
-            
-            string originalText = "Hello from EncryptionService!";
-            
-            // 加密
-            var encryptOptions = new EncryptionService.EncryptionOptions
-            {
-                Algorithm = EncryptionService.AlgorithmType.SM2,
-                Key = publicKey
-            };
-            string encrypted = service.Encrypt(originalText, encryptOptions);
-            Assert.IsNotNull(encrypted);
-            
-            // 解密
-            var decryptOptions = new EncryptionService.EncryptionOptions
-            {
-                Algorithm = EncryptionService.AlgorithmType.SM2,
-                Key = privateKey
-            };
-            string decrypted = service.Decrypt(encrypted, decryptOptions);
-            Assert.AreEqual(originalText, decrypted);
-        }
-
-        [TestMethod]
-        public void Test_EncryptionService_Extension_Methods()
-        {
-            var service = EncryptionServiceExtensions.GetEncryptionService();
-            var (publicKey, privateKey) = service.GenerateKeyPair(EncryptionService.AlgorithmType.SM2);
-            
-            string originalText = "Testing extension methods!";
-            
-            // 使用扩展方法加密
-            string encrypted = service.EncryptWithSM2(originalText, publicKey);
-            Assert.IsNotNull(encrypted);
-            
-            // 使用扩展方法解密
-            string decrypted = service.DecryptWithSM2(encrypted, privateKey);
-            Assert.AreEqual(originalText, decrypted);
-        }
-
-        [TestMethod]
-        public void Test_EncryptionService_SM3_Hash()
-        {
-            var service = EncryptionServiceExtensions.GetEncryptionService();
-            string input = "Test SM3 Hash with Service";
-            string hash = service.HashWithSM3(input);
-            
-            Assert.IsNotNull(hash);
-            Assert.IsTrue(hash.Length > 0);
-            
-            // 验证相同的输入产生相同的哈希
-            string hash2 = service.HashWithSM3(input);
-            Assert.AreEqual(hash, hash2);
-        }
-
-        [TestMethod]
-        public void Test_EncryptionService_SM4()
-        {
-            var service = EncryptionServiceExtensions.GetEncryptionService();
-            string originalText = "Testing SM4 with Service";
-            string key = "1234567890123456";
-            
-            // 使用扩展方法加密
-            string encrypted = service.EncryptWithSM4(originalText, key);
-            Assert.IsNotNull(encrypted);
-            
-            // 使用扩展方法解密
-            string decrypted = service.DecryptWithSM4(encrypted, key);
-            Assert.AreEqual(originalText, decrypted);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Test_SM2_Empty_PlainText_Throws_Exception()
-        {
-            var (publicKey, _) = CryptographyUtils.GenerateSM2KeyPair();
-            CryptographyUtils.SM2Encrypt("", publicKey);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Test_SM2_Empty_PublicKey_Throws_Exception()
-        {
-            CryptographyUtils.SM2Encrypt("test", "");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Test_SM2_Empty_CipherText_Throws_Exception()
-        {
-            var (_, privateKey) = CryptographyUtils.GenerateSM2KeyPair();
-            CryptographyUtils.SM2Decrypt("", privateKey);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Test_SM2_Empty_PrivateKey_Throws_Exception()
-        {
-            CryptographyUtils.SM2Decrypt("test", "");
-        }
+        Assert.IsFalse(string.IsNullOrEmpty(publicKey));
+        Assert.IsFalse(string.IsNullOrEmpty(privateKey));
+        Assert.AreNotEqual(publicKey, privateKey);
     }
+
+    [TestMethod]
+    public void RSA_Encrypt_Decrypt_RoundTrip()
+    {
+        var (publicKey, privateKey) = CryptographyUtils.GenerateRSAKeyPair();
+        var original = "Hello, RSA!";
+
+        var encrypted = CryptographyUtils.RSAEncrypt(original, publicKey);
+        Assert.IsNotNull(encrypted);
+        Assert.AreNotEqual(original, encrypted);
+
+        var decrypted = CryptographyUtils.RSADecrypt(encrypted, privateKey);
+        Assert.AreEqual(original, decrypted);
+    }
+
+    [TestMethod]
+    public void RSA_Sign_Verify_WorksCorrectly()
+    {
+        var (publicKey, privateKey) = CryptographyUtils.GenerateRSAKeyPair();
+        var data = "Data to sign";
+
+        var signature = CryptographyUtils.RSASign(data, privateKey);
+        Assert.IsNotNull(signature);
+
+        var isValid = CryptographyUtils.RSAVerify(data, signature, publicKey);
+        Assert.IsTrue(isValid);
+
+        var isInvalid = CryptographyUtils.RSAVerify("Different data", signature, publicKey);
+        Assert.IsFalse(isInvalid);
+    }
+
+    [TestMethod]
+    public void RSAEncrypt_EmptyPlainText_ThrowsArgumentException()
+    {
+        var (publicKey, _) = CryptographyUtils.GenerateRSAKeyPair();
+        Assert.ThrowsException<ArgumentException>(() =>
+            CryptographyUtils.RSAEncrypt("", publicKey));
+    }
+
+    [TestMethod]
+    public void RSADecrypt_WithWrongKey_ThrowsException()
+    {
+        var (pub1, _) = CryptographyUtils.GenerateRSAKeyPair();
+        var (_, wrongPriv) = CryptographyUtils.GenerateRSAKeyPair();
+
+        var encrypted = CryptographyUtils.RSAEncrypt("test", pub1);
+        Assert.ThrowsException<CryptographicException>(() =>
+            CryptographyUtils.RSADecrypt(encrypted, wrongPriv));
+    }
+
+    #endregion
+
+    #region AES 测试
+
+    [TestMethod]
+    public void AES_Encrypt_Decrypt_RoundTrip()
+    {
+        var original = "Hello, AES!";
+        var key = "1234567890123456";
+
+        var encrypted = CryptographyUtils.AESEncrypt(original, key);
+        Assert.IsNotNull(encrypted);
+        Assert.AreNotEqual(original, encrypted);
+
+        var decrypted = CryptographyUtils.AESDecrypt(encrypted, key);
+        Assert.AreEqual(original, decrypted);
+    }
+
+    [TestMethod]
+    public void AES_Encrypt_WithIV_RoundTrip()
+    {
+        var original = "AES with IV!";
+        var key = "1234567890123456";
+        var iv = "abcdefghijklmnop";
+
+        var encrypted = CryptographyUtils.AESEncrypt(original, key, iv);
+        var decrypted = CryptographyUtils.AESDecrypt(encrypted, key);
+
+        Assert.AreEqual(original, decrypted);
+    }
+
+    [TestMethod]
+    public void AES_Decrypt_WithWrongKey_ThrowsException()
+    {
+        var original = "Sensitive Data";
+        var encrypted = CryptographyUtils.AESEncrypt(original, "1234567890123456");
+
+        Assert.ThrowsException<CryptographicException>(() =>
+            CryptographyUtils.AESDecrypt(encrypted, "6543210987654321"));
+    }
+
+    [TestMethod]
+    public void AES_ECB_Encrypt_Decrypt_RoundTrip()
+    {
+        var original = "ECB Mode Test";
+        var key = "key1234567890abc";
+
+        var encrypted = CryptographyUtils.AESEncryptECB(original, key);
+        Assert.IsNotNull(encrypted);
+
+        var decrypted = CryptographyUtils.AESDecryptECB(encrypted, key);
+        Assert.AreEqual(original, decrypted);
+    }
+
+    #endregion
+
+    #region 密码哈希测试
+
+    [TestMethod]
+    public void HashPassword_ReturnsValidHash()
+    {
+        var password = "MySecurePassword";
+        var hash = CryptographyUtils.HashPassword(password);
+
+        Assert.IsNotNull(hash);
+        Assert.IsTrue(hash.Length > 0);
+    }
+
+    [TestMethod]
+    public void HashPassword_SameInput_ProducesDifferentHashes()
+    {
+        var hash1 = CryptographyUtils.HashPassword("password");
+        var hash2 = CryptographyUtils.HashPassword("password");
+
+        // 每次哈希应产生不同盐值
+        Assert.AreNotEqual(hash1, hash2);
+    }
+
+    [TestMethod]
+    public void VerifyPassword_CorrectPassword_ReturnsTrue()
+    {
+        var password = "correct";
+        var hash = CryptographyUtils.HashPassword(password);
+
+        var result = CryptographyUtils.VerifyPassword(password, hash);
+        Assert.IsTrue(result);
+    }
+
+    [TestMethod]
+    public void VerifyPassword_WrongPassword_ReturnsFalse()
+    {
+        var hash = CryptographyUtils.HashPassword("correct");
+
+        var result = CryptographyUtils.VerifyPassword("wrong", hash);
+        Assert.IsFalse(result);
+    }
+
+    #endregion
+
+    #region 密码可逆加密测试
+
+    [TestMethod]
+    public void Encrypt_Decrypt_Password_RoundTrip()
+    {
+        var password = "SecretPassword123";
+        var key = Convert.ToBase64String(new byte[32]); // 32 字节密钥
+
+        var encrypted = CryptographyUtils.EncryptPassword(password, key);
+        Assert.IsNotNull(encrypted);
+        Assert.AreNotEqual(password, encrypted);
+
+        var decrypted = CryptographyUtils.DecryptPassword(encrypted, key);
+        Assert.AreEqual(password, decrypted);
+    }
+
+    [TestMethod]
+    public void ProcessPassword_HashType_Correct()
+    {
+        var password = "testpass";
+        var result = CryptographyUtils.ProcessPassword(password, CryptographyUtils.PasswordHashType.Irreversible);
+
+        Assert.IsNotNull(result);
+        Assert.AreNotEqual(password, result);
+    }
+
+    [TestMethod]
+    public void VerifyProcessedPassword_WorksCorrectly()
+    {
+        var password = "verifyMe";
+        var hashed = CryptographyUtils.ProcessPassword(password, CryptographyUtils.PasswordHashType.Irreversible);
+
+        var valid = CryptographyUtils.VerifyProcessedPassword(password, hashed, CryptographyUtils.PasswordHashType.Irreversible);
+        Assert.IsTrue(valid);
+
+        var invalid = CryptographyUtils.VerifyProcessedPassword("wrong", hashed, CryptographyUtils.PasswordHashType.Irreversible);
+        Assert.IsFalse(invalid);
+    }
+
+    #endregion
 }

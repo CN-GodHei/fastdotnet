@@ -50,5 +50,10 @@
     <PackageVersion Include="OpenIddict.AspNetCore" Version="7.4.0" />
     <PackageVersion Include="OpenIddict.Abstractions" Version="7.4.0" />
     <PackageVersion Include="OpenIddict.Core" Version="7.4.0" />
+    <!-- 测试框架 -->
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="3.7.3" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.7.3" />
   </ItemGroup>
 </Project>
