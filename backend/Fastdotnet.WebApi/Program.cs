@@ -119,6 +119,8 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 builder.Services.AddEndpointsApiExplorer();
 // 👇 添加自定义 Swagger
 builder.Services.AddCustomSwagger();
+// 👇 添加事件总线（插件间通信 + AsyncAPI 事件目录）
+builder.Services.AddEventBus();
 builder.Services.AddSwaggerGenNewtonsoftSupport(); // ✅ Swagger启用 Newtonsoft 支持
 
 builder.Services.AddSingleton<IActionDescriptorChangeProvider>(ActionDescriptorChangeProvider.Instance);
@@ -274,8 +276,11 @@ if (app.Environment.IsDevelopment())
 app.UseRouting(); // 添加路由中间件
 app.UseMiddleware<RequestIdMiddleware>();
 
-// 事件契约可视化端点 /_events/spec /_events/ui
+// 事件契约可视化端点 /_events/spec /_events/ui（框架对外推送: Webhook/SignalR）
 app.MapEventSpecEndpoints();
+
+// 插件间通信事件目录 /api/eventcatalog/spec /api/eventcatalog/ui（插件间 EventBus）
+app.MapEventCatalogEndpoints();
 
 // 🌟 启用插件逃生舱（微主机代理转发中间件）
 // 必须放在防重放/加密中间件之前，以避免拦截第三方库（如 Elsa前端）的常规通讯
