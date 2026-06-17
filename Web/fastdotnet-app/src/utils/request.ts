@@ -44,7 +44,7 @@ class TimeSyncService {
 			try {
 				const localSendTime = Date.now();
 				// 假设这里获取到了 serverTimestamp
-				const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/FdSystemInfoConfig/GetServiceDateTime`, { cache: 'no-cache' });
+				const response = await fetch(`${import.meta.env.PROD ? import.meta.env.VITE_API_URL : ''}/api/admin/FdSystemInfoConfig/GetServiceDateTime`, { cache: 'no-cache' });
 				const tsHeader = response.headers.get('X-Server-Timestamp');
 				if (tsHeader) {
 					const serverTime = parseInt(tsHeader);
@@ -150,7 +150,8 @@ const pendingQueue: PendingRequest[] = [];
 
 // ========== Axios 实例配置 ==========
 const service: AxiosInstance = axios.create({
-	baseURL: import.meta.env.VITE_API_URL,
+	// 开发环境走 Vite 代理（相对路径），生产环境直接请求后端 API
+	baseURL: import.meta.env.PROD ? import.meta.env.VITE_API_URL : '',
 	timeout: 50000,
 	headers: { 'Content-Type': 'application/json' },
 	paramsSerializer: {
