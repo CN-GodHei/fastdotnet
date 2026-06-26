@@ -347,7 +347,7 @@ namespace Fastdotnet.Core.Service.Sys
             Expression<Func<T, bool>> whereExpression = entity => entity.IsDeleted;
 
             RefAsync<int> totalCount = 0;
-            var query = _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression);
+            var query = _db.Queryable<T>().ClearFilter<ISoftDelete>().WhereIF(whereExpression != null, whereExpression);
 
             if (orderByExpression != null)
             {
@@ -393,8 +393,7 @@ namespace Fastdotnet.Core.Service.Sys
             var combinedExpression = CombineExpressions(deletedExpression, whereExpression);
 
             RefAsync<int> totalCount = 0;
-            var query = _db.Queryable<T>().WhereIF(combinedExpression != null, combinedExpression);
-
+            var query = _db.Queryable<T>().ClearFilter<ISoftDelete>().WhereIF(combinedExpression != null, combinedExpression);
             if (orderByExpression != null)
             {
                 query = query.OrderBy(orderByExpression, orderByType);
@@ -433,7 +432,7 @@ namespace Fastdotnet.Core.Service.Sys
                     {
                         IsDeleted = false,
                         DeletedAt = null,
-                        UpdatedAt = DateTime.Now
+                        //UpdatedAt = DateTime.Now
                     })
                     .Where(it => it.Id.Equals(id) && it.IsDeleted)
                     .ExecuteCommandAsync();
@@ -461,7 +460,7 @@ namespace Fastdotnet.Core.Service.Sys
                     {
                         IsDeleted = false,
                         DeletedAt = null,
-                        UpdatedAt = DateTime.Now
+                        //UpdatedAt = DateTime.Now
                     })
                     .WhereIF(combinedExpression != null, combinedExpression)
                     .ExecuteCommandAsync();
