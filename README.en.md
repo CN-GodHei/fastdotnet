@@ -200,6 +200,7 @@ Fastdotnet is a modular development framework based on **.NET 10**, featuring a 
 
 ##### 💾 Data Storage & Caching
 - ✅ **SqlSugar ORM**: High-performance ORM supporting CodeFirst/DbFirst
+- ✅ **SQL Execution Logging**: Auto-captures every SQL execution (with parameter values) via SqlSugar AOP hooks, stored in `log_sql_execution` daily-partitioned table for slow-query analysis and request tracing. (Configurable via `SqlSugar.EnableSqlExecutionLogging` setting)
 - ✅ **Multi-Database Support**: SQLite, MySQL, PostgreSQL, SQL Server, Dameng
 - ✅ **Hybrid Cache System**: Local memory + Redis dual-layer cache architecture
 - ✅ **Repository Pattern**: Standardized data access abstraction layer
@@ -231,8 +232,10 @@ Fastdotnet is a modular development framework based on **.NET 10**, featuring a 
 - ✅ **Sensitive Data Masking**: Automatic identification and masking of sensitive information
 - ✅ **Replay Attack Prevention**: Request replay detection and protection
 - ✅ **Encrypted Transmission**: AES+RSA encryption for requests/responses
-- ✅ **Global Exception Handling**: Unified exception capture and logging
-- ✅ **Business Operation Logs**: Complete operation audit trail
+- ✅ **Global Exception Handling**: Unified exception capture - BusinessException returns 422, uncontrolled exceptions persist to DB + return 500
+- ✅ **Business Operation Logs**: Complete operation audit trail (operator, IP, headers/body, status code, elapsed time), auto-partitioned by day
+- ✅ **Exception Log Persistence**: Uncontrolled exceptions auto-write to `log_exception` table with exception type, stack trace, request path
+- ✅ **Debug Logs**: Business tracing logs for development, support Key identifier and RequestId correlation
 - ✅ **Graceful Shutdown**: Elegant shutdown mechanism
 
 ##### 📡 Real-Time Communication
