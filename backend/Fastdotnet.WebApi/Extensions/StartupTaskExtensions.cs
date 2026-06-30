@@ -8,11 +8,13 @@ public static class StartupTaskExtensions
     public static void RunStartupTasks(this WebApplication app)
     {
         var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
+        var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger("StartupTask");
         lifetime.ApplicationStarted.Register(() =>
         {
             _ = Task.Run(async () =>
             {
-                Console.WriteLine("Application has started. Executing startup tasks in background...");
+                logger.LogInformation("Application has started. Executing startup tasks in background...");
                 try
                 {
                     using (var scope = app.Services.CreateScope())
@@ -49,16 +51,16 @@ public static class StartupTaskExtensions
                                 catch (Exception logEx)
                                 {
                                     // 如果写日志也失败，至少输出到控制台
-                                    Console.WriteLine($"Failed to log exception for {taskType}: {logEx.Message}");
+                                    logger.LogWarning(logEx, "Failed to log exception for {TaskType}", taskType);
                                 }
                             }
                         }
                     }
-                    Console.WriteLine("All startup tasks executed.");
+                    logger.LogInformation("All startup tasks executed.");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error during startup tasks execution: {ex.Message}");
+                    logger.LogError(ex, "Error during startup tasks execution");
                 }
 
                 // 初始化DebugLogger

@@ -5,7 +5,7 @@ using Fastdotnet.Service.IService.Sys;
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
-    [Route("api/admin/[Controller]")]
+    [Route("api/admin/[controller]")]
     [Authorize]
     public class FdRoleController : GenericDtoControllerBase<FdRole, string, CreateFdRoleDto, UpdateFdRoleDto, FdRoleDto>
     {
@@ -19,13 +19,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         }
 
         [Authorize(Policy = Permissions.Admin.Roles.View)]
-        public override Task<List<FdRoleDto>> GetAll( CancellationToken cancellationToken = default) => base.GetAll();
+        public override Task<List<FdRoleDto>> GetAll(CancellationToken cancellationToken = default) => base.GetAll(cancellationToken);
 
         [Authorize(Policy = Permissions.Admin.Roles.View)]
-        public override Task<FdRoleDto> GetById(string id, CancellationToken cancellationToken = default) => base.GetById(id);
+        public override Task<FdRoleDto> GetById(string id, CancellationToken cancellationToken = default) => base.GetById(id, cancellationToken);
 
         [Authorize(Policy = Permissions.Admin.Roles.View)]
-        public override Task<PageResult<FdRoleDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize);
+        public override Task<PageResult<FdRoleDto>> GetPage([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10, CancellationToken cancellationToken = default) => base.GetPage(pageIndex, pageSize, cancellationToken);
 
         [Authorize(Policy = Permissions.Admin.Roles.Create)]
         public override Task<FdRoleDto> Create(CreateFdRoleDto dto) => base.Create(dto);

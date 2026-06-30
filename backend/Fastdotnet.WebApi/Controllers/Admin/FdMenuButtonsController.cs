@@ -5,17 +5,15 @@ using Fastdotnet.Core.Entities.Sys;
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
-    [Route("api/admin/[Controller]")]
+    [Route("api/admin/[controller]")]
     [Authorize]
     public class FdMenuButtonsController : GenericDtoControllerBase<FdMenuButton, string, CreateFdFdMenuButtonDto, UpdateFdFdMenuButtonDto, FdMenuButtonDto>
     {
-        private readonly IBaseService<FdMenuButton, string> _service1;
         public FdMenuButtonsController(
             IBaseService<FdMenuButton, string> service) : base(service)
         {
-            _service1 = service;
         }
-
+        
         [Authorize(Policy = Permissions.Admin.MenuButtons.View)]
         public override Task<List<FdMenuButtonDto>> GetAll(CancellationToken cancellationToken = default) => base.GetAll();
 
@@ -37,7 +35,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
             {
                 entity.Code = $"{dto.MenuCode}_{dto.Code}";
             }
-            var et = await _service1.GetFirstAsync(x => x.Code == entity.Code&&x.MenuCode==entity.MenuCode);
+            var et = await _service.GetFirstAsync(x => x.Code == entity.Code&&x.MenuCode==entity.MenuCode);
             if (et != null)
             {
                 throw new BusinessException("�˵����Ѵ��ڸñ����İ�ť");

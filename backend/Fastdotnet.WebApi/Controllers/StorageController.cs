@@ -37,7 +37,7 @@ namespace Fastdotnet.WebApi.Controllers
         [AllowAnonymous]
         // 为该接口单独设置 200 MB 的限制
         [RequestSizeLimit(209715200)]
-        public async Task<ActionResult<string>> UploadAsync(IFormFile file, [FromQuery] string? pathPrefix = null)
+        public async Task<ActionResult<string>> Upload(IFormFile file, [FromQuery] string? pathPrefix = null)
         {
             if (file == null || file.Length == 0)
             {
@@ -73,7 +73,7 @@ namespace Fastdotnet.WebApi.Controllers
         //    }
         //}
         [HttpGet("download/{*filePath}")]
-        public async Task<IActionResult> DownloadAsync(string filePath)
+        public async Task<IActionResult> Download(string filePath)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace Fastdotnet.WebApi.Controllers
         /// <param name="filePath">文件完整路径(支持相对路径,如: plugin-icons/20260425/xxx.png)</param>
         /// <returns>删除结果</returns>
         [HttpDelete("delete")]
-        public async Task<ActionResult<bool>> DeleteAsync([FromQuery] string filePath)
+        public async Task<ActionResult<bool>> Delete([FromQuery] string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
             {
@@ -129,7 +129,7 @@ namespace Fastdotnet.WebApi.Controllers
         /// <param name="filePath">文件完整路径</param>
         /// <returns>文件URL</returns>
         [HttpGet("url/{*filePath}")]
-        public async Task<ActionResult<string>> GetFileUrlAsync(string filePath)
+        public async Task<ActionResult<string>> GetFileUrl(string filePath)
         {
             var url = await _storageService.GetFileUrlAsync(filePath);
             return Ok(new { Url = url });

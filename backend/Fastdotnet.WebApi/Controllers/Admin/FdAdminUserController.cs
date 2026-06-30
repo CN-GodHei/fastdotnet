@@ -6,7 +6,7 @@ using Fastdotnet.Service.IService.Sys;
 namespace Fastdotnet.WebApi.Controllers.Admin
 {
     [ApiController]
-    [Route("api/admin/[Controller]")]
+    [Route("api/admin/[controller]")]
     public class FdAdminUserController : GenericDtoControllerBase<FdAdminUser, string, CreateFdAdminUserDto, UpdateFdAdminUserDto, FdAdminUserDto>
     {
         private readonly IAdminUserService _adminUserService;

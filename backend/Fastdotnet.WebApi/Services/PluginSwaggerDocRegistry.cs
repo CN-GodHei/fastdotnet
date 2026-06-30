@@ -16,11 +16,13 @@ public class PluginSwaggerDocRegistry
 {
     private readonly ConcurrentDictionary<string, (string pluginName, string description, string entryPoint)> _plugins = new();
     private readonly IOptions<SwaggerGeneratorOptions> _swaggerGenOptions;
+    private readonly ILogger<PluginSwaggerDocRegistry> _logger;
     private SwaggerUIOptions? _swaggerUIOptions;
 
-    public PluginSwaggerDocRegistry(IOptions<SwaggerGeneratorOptions> swaggerGenOptions)
+    public PluginSwaggerDocRegistry(IOptions<SwaggerGeneratorOptions> swaggerGenOptions, ILogger<PluginSwaggerDocRegistry> logger)
     {
         _swaggerGenOptions = swaggerGenOptions;
+        _logger = logger;
     }
 
     /// <summary>
@@ -99,11 +101,11 @@ public class PluginSwaggerDocRegistry
         {
             var assemblyName = Path.GetFileNameWithoutExtension(entryPoint ?? pluginId);
             var pluginXmlPath = Path.Combine(AppContext.BaseDirectory, "plugins", pluginId, $"{assemblyName}.xml");
-            PluginXmlCommentFilter.AddPluginXml(pluginId, assemblyName, pluginXmlPath);
+            PluginXmlCommentFilter.AddPluginXml(pluginId, assemblyName, pluginXmlPath, _logger);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"加载插件XML注释到运行时过滤器失败 [{pluginId}]: {ex.Message}");
+            _logger.LogWarning(ex, "加载插件XML注释到运行时过滤器失败 [{PluginId}]", pluginId);
         }
 
         return true;

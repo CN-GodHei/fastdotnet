@@ -19,7 +19,7 @@ public class PluginXmlCommentFilter : IOperationFilter
     /// <summary>
     /// 注册插件的 XML 注释文件
     /// </summary>
-    public static void AddPluginXml(string pluginId, string assemblyName, string xmlFilePath)
+    public static void AddPluginXml(string pluginId, string assemblyName, string xmlFilePath, ILogger? logger = null)
     {
         try
         {
@@ -32,7 +32,10 @@ public class PluginXmlCommentFilter : IOperationFilter
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"加载插件 XML 注释失败 [{pluginId}]: {ex.Message}");
+            if (logger != null)
+                logger.LogWarning(ex, "加载插件 XML 注释失败 [{PluginId}]", pluginId);
+            else
+                Console.WriteLine($"加载插件 XML 注释失败 [{pluginId}]: {ex.Message}");
         }
     }
 

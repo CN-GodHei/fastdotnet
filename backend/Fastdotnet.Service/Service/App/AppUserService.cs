@@ -8,7 +8,7 @@ namespace Fastdotnet.Service.Service.App
     public class AppUserService : IAppUserService
     {
         private readonly IRepository<FdAppUser> _appUserRepository;
-        private readonly IRepository<FdAppUserRole> _AppUserRoleRepository;
+        private readonly IRepository<FdAppUserRole> _appUserRoleRepository;
         private readonly IBaseService<FdRole> _roleService;
         private readonly IBaseService<FdMenuButton> _menuButtonService;
         private readonly IBaseService<FdRoleMenuButton> _roleMenuButtonService;
@@ -16,7 +16,7 @@ namespace Fastdotnet.Service.Service.App
 
         public AppUserService(
             IRepository<FdAppUser> appUserRepository,
-            IRepository<FdAppUserRole> AppUserRoleRepository,
+            IRepository<FdAppUserRole> appUserRoleRepository,
             IBaseService<FdRole> roleService,
             IBaseService<FdMenuButton> menuButtonService,
             IBaseService<FdRoleMenuButton> roleMenuButtonService,
@@ -24,7 +24,7 @@ namespace Fastdotnet.Service.Service.App
             )
         {
             _appUserRepository = appUserRepository;
-            _AppUserRoleRepository = AppUserRoleRepository;
+            _appUserRoleRepository = appUserRoleRepository;
             _roleService = roleService;
             _menuButtonService = menuButtonService;
             _roleMenuButtonService = roleMenuButtonService;
@@ -53,7 +53,7 @@ namespace Fastdotnet.Service.Service.App
 
         public async Task<List<FdAppUserRole>> GetUserRoleRelationsAsync(string userId)
         {
-            var userExistRole = await _AppUserRoleRepository.GetListAsync(ur => ur.AppUserId == userId);
+            var userExistRole = await _appUserRoleRepository.GetListAsync(ur => ur.AppUserId == userId);
             var DefaultRole = await _roleService.GetListAsync(r => r.IsDefault && r.Belong== SystemCategory.App);
             return new List<FdAppUserRole> {
                 new FdAppUserRole { AppUserId = userId, RoleId = DefaultRole.FirstOrDefault()?.Id }

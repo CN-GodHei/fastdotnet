@@ -20,12 +20,14 @@ namespace Fastdotnet.WebApi.Middleware
         private readonly RequestDelegate _next;
         private readonly IEncryptionKeyService _encryptionKeyService;
         private readonly IHttpContextAccessor _contextAccessor;
-
-        public EncryptionMiddleware(RequestDelegate next, IEncryptionKeyService encryptionKeyService, IHttpContextAccessor contextAccessor)
+        private readonly ILogger<EncryptionMiddleware> _logger;
+        
+        public EncryptionMiddleware(RequestDelegate next, IEncryptionKeyService encryptionKeyService, IHttpContextAccessor contextAccessor, ILogger<EncryptionMiddleware> logger)
         {
             _next = next;
             _encryptionKeyService = encryptionKeyService;
             _contextAccessor = contextAccessor;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -354,7 +356,7 @@ namespace Fastdotnet.WebApi.Middleware
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[EncryptionMiddleware] 获取密钥失败: {ex.Message}");
+                _logger.LogWarning(ex, "[EncryptionMiddleware] 获取密钥失败");
                 return (false, "");
             }
         }

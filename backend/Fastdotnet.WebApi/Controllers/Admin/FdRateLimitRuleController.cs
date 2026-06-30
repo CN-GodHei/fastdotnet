@@ -9,12 +9,12 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     /// </summary>
     [Route("api/admin/[controller]")]
     [ApiController]
-    public class FdRatelimitRuleController : GenericDtoControllerBase<FdRateLimitRule, CreateFdRateLimitRuleDto, UpdateFdRateLimitRuleDto, FdRateLimitRuleDto>
+    public class FdRateLimitRuleController : GenericDtoControllerBase<FdRateLimitRule, CreateFdRateLimitRuleDto, UpdateFdRateLimitRuleDto, FdRateLimitRuleDto>
     {
         private readonly IBaseService<FdRateLimitRule, string> _rateLimitRuleService;
         private readonly IRateLimitCacheService _rateLimitCacheService;
 
-        public FdRatelimitRuleController(
+        public FdRateLimitRuleController(
             IBaseService<FdRateLimitRule, string> rateLimitRuleService,
             IRateLimitCacheService rateLimitCacheService) 
             : base(rateLimitRuleService)
@@ -39,20 +39,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// <summary>
         /// 检查是否触发限流
         /// </summary>
-        /// <remarks>
-        /// 注意：这个方法仅作演示用途。实际的限流检查应该在中间件中完成，
-        /// 而不是通过API调用。这里只是为了展示如何在控制器中使用仓储。
-        /// </remarks>
         [HttpGet("check")]
         public async Task<ActionResult<bool>> IsRateLimited([FromQuery] string type, [FromQuery] string key)
         {
-            // 由于这是个简单的检查，我们直接在控制器中实现
-            // 在实际项目中，如果逻辑复杂，还是建议使用服务层
             var rule = await _rateLimitRuleService.GetFirstAsync(x => x.Type == type && x.Key == key);
             if (rule == null)
                 return Ok(false);
 
-            // 这里只是一个简化的示例，实际的限流逻辑会在中间件中实现
             return Ok(true);
         }
 
@@ -61,7 +54,6 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// </summary>
         protected override async Task AfterCreate(FdRateLimitRule entity, CreateFdRateLimitRuleDto dto)
         {
-            // 添加到缓存
             var ruleDto = entity.Adapt<FdRateLimitRuleDto>();
             await _rateLimitCacheService.SetRateLimitRuleAsync(entity.Type, entity.Key, ruleDto);
             await base.AfterCreate(entity, dto);
@@ -72,7 +64,6 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// </summary>
         protected override async Task AfterUpdate(FdRateLimitRule entity, UpdateFdRateLimitRuleDto dto)
         {
-            // 更新缓存
             var ruleDto = entity.Adapt<FdRateLimitRuleDto>();
             await _rateLimitCacheService.SetRateLimitRuleAsync(entity.Type, entity.Key, ruleDto);
             await base.AfterUpdate(entity, dto);
@@ -83,9 +74,6 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// </summary>
         protected override async Task AfterDelete(string id, bool result)
         {
-            // 从缓存中移除
-            // 注意：这里我们无法直接获取到entity的信息，所以只能通过其他方式处理
-            // 在实际项目中，可能需要通过ID查询entity来获取Type和Key
             await base.AfterDelete(id, result);
         }
     }
