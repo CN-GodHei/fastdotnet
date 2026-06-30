@@ -53,7 +53,7 @@ public class ApplicationModule : Module
         //// builder.RegisterType<HybridCacheService>()
         ////        .As<IHybridCacheService>()
         ////        .InstancePerLifetimeScope();
-        ///
+
         containerBuilder.RegisterType<PluginManager>().AsSelf().SingleInstance();
         containerBuilder.RegisterType<PluginStaticFileProviderRegistry>().AsSelf().SingleInstance();
 

@@ -13,13 +13,13 @@ namespace PluginA.Entities
         /// 关联的用户ID（主键）
         /// </summary>
         [SugarColumn(IsPrimaryKey = true, ColumnDescription = "用户ID")]
-        public string FdAppUserId { get; set; }
+        public string FdAppUserId { get; set; } = string.Empty;
 
         /// <summary>
         /// 用户偏好设置
         /// </summary>
         [SugarColumn(ColumnDescription = "用户偏好设置", IsNullable = true)]
-        public string Preferences { get; set; }
+        public string Preferences { get; set; } = string.Empty;
 
         /// <summary>
         /// 用户积分

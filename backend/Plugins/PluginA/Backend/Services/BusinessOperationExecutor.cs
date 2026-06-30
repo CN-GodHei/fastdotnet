@@ -36,7 +36,7 @@ namespace PluginA.Services
             string dataType,
             string dataId,
             string userId,
-            IDictionary<string, object> extraData = null)
+            IDictionary<string, object>? extraData = null)
         {
             // 创建业务操作上下文
             var context = new BusinessOperationContext
@@ -97,7 +97,7 @@ namespace PluginA.Services
             string dataType,
             string dataId,
             string userId,
-            IDictionary<string, object> extraData = null)
+            IDictionary<string, object>? extraData = null)
         {
             return ExecuteAsync("Create", dataType, dataId, userId, extraData);
         }
@@ -109,7 +109,7 @@ namespace PluginA.Services
             string dataType,
             string dataId,
             string userId,
-            IDictionary<string, object> extraData = null)
+            IDictionary<string, object>? extraData = null)
         {
             return ExecuteAsync("Update", dataType, dataId, userId, extraData);
         }

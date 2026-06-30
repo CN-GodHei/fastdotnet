@@ -21,7 +21,7 @@ namespace Fastdotnet.WebApi.Middleware.Authorization
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, ApiScopeRequirement requirement)
         {
             // 如果用户未通过身份验证，检查是否允许匿名访问
-            if (!context.User.Identity.IsAuthenticated)
+            if (context.User.Identity?.IsAuthenticated != true)
             {
                 // 对于匿名用户，检查是否标记了AllowAnonymous特性
                 if (context.Resource is Microsoft.AspNetCore.Routing.RouteEndpoint routeEndpoint)
@@ -159,7 +159,7 @@ namespace Fastdotnet.WebApi.Middleware.Authorization
         /// <typeparam name="T">特性类型</typeparam>
         /// <param name="methodInfo">方法信息</param>
         /// <returns>找到的特性或null</returns>
-        private T GetInheritedAttribute<T>(System.Reflection.MethodInfo methodInfo) where T : System.Attribute
+        private T? GetInheritedAttribute<T>(System.Reflection.MethodInfo methodInfo) where T : System.Attribute
         {
             // 首先检查当前方法是否有特性
             var attribute = methodInfo.GetCustomAttribute<T>(false);
@@ -188,7 +188,7 @@ namespace Fastdotnet.WebApi.Middleware.Authorization
         /// <typeparam name="T">特性类型</typeparam>
         /// <param name="type">类型信息</param>
         /// <returns>找到的特性或null</returns>
-        private T GetInheritedAttribute<T>(System.Type type) where T : System.Attribute
+        private T? GetInheritedAttribute<T>(System.Type type) where T : System.Attribute
         {
             // 首先检查当前类型是否有特性
             var attribute = type.GetCustomAttribute<T>(false);

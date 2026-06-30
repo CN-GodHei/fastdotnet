@@ -80,8 +80,8 @@ namespace Fastdotnet.Service.Service
             string userId;
             string userName;
             List<string> roleCodes = new List<string>();
-            FdAdminUser adminUser = null;
-            FdAppUser appUser = null;
+            FdAdminUser? adminUser = null;
+            FdAppUser? appUser = null;
 
             if (userCategory == "Admin")
             {
@@ -124,14 +124,14 @@ namespace Fastdotnet.Service.Service
                 }
 
                 // 验证密码
-                bool isPasswordValid = await _passwordService.VerifyPasswordAsync(dto.Password, appUser.Password);
+                bool isPasswordValid = await _passwordService.VerifyPasswordAsync(dto.Password, appUser.Password!);
                 if (!isPasswordValid)
                 {
                     throw new BusinessException("用户名或密码错误");
                 }
 
                 userId = appUser.Id;
-                userName = appUser.Username;
+                userName = appUser.Username!;
 
                 var userRoles = await _appUserRoleRepository.GetListAsync(ur => ur.AppUserId == userId);
                 if (!userRoles.Any())

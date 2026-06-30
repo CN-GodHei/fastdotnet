@@ -29,8 +29,10 @@ namespace Fastdotnet.WebApi.Middleware
             await _next(context);
             return;
 #endif
+#pragma warning disable CS0162
             // 跳过特定路径（如登录、获取公钥等不需要防重放的接口）
             if (ShouldSkipAntiReplay(context))
+#pragma warning restore CS0162
             {
                 await _next(context);
                 return;

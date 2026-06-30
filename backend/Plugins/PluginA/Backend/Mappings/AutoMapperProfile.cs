@@ -6,9 +6,6 @@ using PluginA.Entities;
 
 namespace PluginA.Mappings
 {
-    /// <summary>
-    /// PluginATest实体和DTO之间的映射配置
-    /// </summary>
     //public class AutoMapperProfile : Profile
     //{
     //    public AutoMapperProfile()

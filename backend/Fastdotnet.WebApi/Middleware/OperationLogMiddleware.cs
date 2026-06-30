@@ -43,8 +43,8 @@ public class OperationLogMiddleware
         var method = request.Method;
         var ip = GetClientIp(context);
 
-        string headers = null;
-        string body = null;
+        string? headers = null;
+        string? body = null;
 
         // 仅对可能包含 Body 的方法尝试读取（并限制长度）
         if ((method.Equals("POST", StringComparison.OrdinalIgnoreCase) ||
@@ -60,7 +60,7 @@ public class OperationLogMiddleware
                 headers = GetHeaders(request);
                 body = await GetBody(request);
             }
-            catch (Exception ex)
+            catch
             {
                 //_logger.LogWarning(ex, "读取请求体或头信息时发生异常，跳过记录。Path: {Path}", path);
                 // 即使读取失败，仍记录基础日志（不含 headers/body）
@@ -81,8 +81,8 @@ public class OperationLogMiddleware
                 Path = path,
                 Method = method,
                 Ip = ip,
-                Headers = headers,
-                Body = body,
+                Headers = headers ?? "",
+                Body = body ?? "",
                 StatusCode = context.Response.StatusCode,
                 ElapsedMilliseconds = stopwatch.ElapsedMilliseconds.ToString(),
                 CreatedAt = DateTime.Now,
@@ -99,7 +99,7 @@ public class OperationLogMiddleware
                 {
                     await _logService.AddOperationLogAsync(operationLog);
                 }
-                catch (Exception ex)
+                catch
                 {
                     //_logger.LogError(ex, "异步记录操作日志失败。RequestId: {RequestId}, Path: {Path}",
                     //    operationLog.RequestId, operationLog.Path);

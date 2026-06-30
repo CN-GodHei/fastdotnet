@@ -334,7 +334,7 @@ public class OpenIddictSqlSugarTokenStore : IOpenIddictTokenStore<OpenIddictSqlS
                 Console.WriteLine($"[OIDC TokenStore]   ❌ Token NOT FOUND! Searching with ReferenceId: {identifier}");
                 // 调试：尝试查找所有包含此 ReferenceId 前缀的 token
                 var allTokens = await Tokens
-                    .Where(t => t.ReferenceId != null && t.ReferenceId.Contains(identifier.Substring(0, Math.Min(10, identifier.Length))))
+                    .Where(t => t.ReferenceId != null && t.ReferenceId.Contains(identifier!.Substring(0, Math.Min(10, identifier.Length))))
                     .ToListAsync(cancellationToken);
                 Console.WriteLine($"[OIDC TokenStore]   Debug: Found {allTokens.Count} tokens with similar ReferenceId prefix");
                 foreach (var t in allTokens.Take(5))

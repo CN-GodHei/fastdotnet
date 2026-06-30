@@ -13,7 +13,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// <returns>脱敏后的对象</returns>
         public T MaskSensitiveData<T>(T obj) where T : class
         {
-            if (obj == null) return null;
+            if (obj == null) return null!;
 
             var properties = typeof(T).GetProperties()
                 .Where(p => p.GetCustomAttribute<SensitiveDataAttribute>() != null && 
@@ -26,7 +26,7 @@ namespace Fastdotnet.Core.Service.Sys
 
                 if (value is string stringValue)
                 {
-                    var maskedValue = MaskString(stringValue, attr);
+                    var maskedValue = MaskString(stringValue, attr!);
                     property.SetValue(obj, maskedValue);
                 }
             }

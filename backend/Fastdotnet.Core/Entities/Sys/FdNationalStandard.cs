@@ -18,13 +18,13 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 国标编号（唯一标识），如 "GB/T 2260", "GB/T 14396"
         /// </summary>
         [SugarColumn(ColumnName = "standard_code", IsNullable = true, ColumnDescription = "国标编号（唯一标识），如 GB / T 2260, GB / T 14396")]
-        public string StandardCode { get; set; }
+        public string StandardCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 国标中文名称，如 "中华人民共和国行政区划代码"
         /// </summary>
         [SugarColumn(ColumnName = "standard_name", IsNullable = true, ColumnDescription = "国标中文名称，如 中华人民共和国行政区划代码")]
-        public string StandardName { get; set; }
+        public string StandardName { get; set; } = string.Empty;
 
         /// <summary>
         /// 英文名称（可选）
@@ -36,7 +36,7 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 标准类型：GB(强制性国标)、GB/T(推荐性国标)、DB(地方标准) 等
         /// </summary>
         [SugarColumn(ColumnName = "standard_type", IsNullable = true, ColumnDescription = "标准类型：GB(强制性国标)、GB/T(推荐性国标)、DB(地方标准) 等")]
-        public string StandardType { get; set; }
+        public string StandardType { get; set; } = string.Empty;
 
         /// <summary>
         /// 发布部门，如 "国家标准化管理委员会"
@@ -60,7 +60,7 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 当前有效版本号，如 "2023"
         /// </summary>
         [SugarColumn(ColumnName = "current_version", IsNullable = true, ColumnDescription = "当前有效版本号，如 2023")]
-        public string CurrentVersion { get; set; }
+        public string CurrentVersion { get; set; } = string.Empty;
 
         /// <summary>
         /// 状态：1=现行有效，0=已废止

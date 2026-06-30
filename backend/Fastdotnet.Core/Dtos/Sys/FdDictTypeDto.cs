@@ -10,13 +10,13 @@
         /// name
         /// </summary>
         [StringLength(64, ErrorMessage = "名称最多64个字符")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// code
         /// </summary>
         [StringLength(50, ErrorMessage = "编码最多50个字符")]
-        public string Code { get; set; }
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// order_no
@@ -27,7 +27,7 @@
         /// remark
         /// </summary>
         [StringLength(256, ErrorMessage = "备注最多256个字符")]
-        public string Remark { get; set; }
+        public string Remark { get; set; } = string.Empty;
 
         /// <summary>
         /// status
@@ -60,19 +60,19 @@
         /// <summary>
         /// Id
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// name
         /// </summary>
         [StringLength(64, ErrorMessage = "名称最多64个字符")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// code
         /// </summary>
         [StringLength(50, ErrorMessage = "编码最多50个字符")]
-        public string Code { get; set; }
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// order_no
@@ -83,7 +83,7 @@
         /// remark
         /// </summary>
         [StringLength(256, ErrorMessage = "备注最多256个字符")]
-        public string Remark { get; set; }
+        public string Remark { get; set; } = string.Empty;
 
         /// <summary>
         /// status
@@ -115,19 +115,19 @@
         /// <summary>
         /// Id
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// name
         /// </summary>
 
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// code
         /// </summary>
 
-        public string Code { get; set; }
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// order_no
@@ -138,7 +138,7 @@
         /// remark
         /// </summary>
 
-        public string Remark { get; set; }
+        public string Remark { get; set; } = string.Empty;
 
         /// <summary>
         /// status

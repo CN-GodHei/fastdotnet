@@ -9,20 +9,20 @@ namespace PluginA.Dto
 {
     public class MyPluginConfiguration
     {
-        public AliPay AliPayInfo { get; set; }
-        public AliOss AliOssInfo { get; set; }
-        public string testinfo { get; set; }
+        public AliPay AliPayInfo { get; set; } = null!;
+        public AliOss AliOssInfo { get; set; } = null!;
+        public string testinfo { get; set; } = string.Empty;
     }
 
     public class AliPay
     {
-        public string AppId { get; set; }
-        public string Secret { get; set; }
+        public string AppId { get; set; } = string.Empty;
+        public string Secret { get; set; } = string.Empty;
     }
 
     public class AliOss
     {
-        public string AK { get; set; }
-        public string SK { get; set; }
+        public string AK { get; set; } = string.Empty;
+        public string SK { get; set; } = string.Empty;
     }
 }

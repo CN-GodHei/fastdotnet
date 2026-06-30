@@ -332,11 +332,9 @@ app.UseResponseCompression();
 
 // 👇 启用优雅停机
 app.UseGracefulShutdown();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-    endpoints.MapHub<UniversalHub>("/universalhub");
-});
+
+app.MapControllers();
+app.MapHub<UniversalHub>("/universalhub");
 
 // 注册主程序的 SignalR 方法
 var systemProvider = new Fastdotnet.WebApi.Providers.SystemSignalRProvider();

@@ -29,7 +29,7 @@ namespace Fastdotnet.Core.Utils
             // 先深拷贝 defaults
             var result = JsonConvert.DeserializeObject<T>(
                 JsonConvert.SerializeObject(defaults)
-            );
+            )!;
 
             // 用 overrides 中的非 null 值去更新 result
             JsonConvert.PopulateObject(

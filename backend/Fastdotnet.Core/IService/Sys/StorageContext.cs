@@ -33,7 +33,9 @@ namespace Fastdotnet.Core.IService.Sys
         {
             // 优化：使用 SqlSugar 的 Saveable 方法，自动根据主键判断插入或更新
             // 这种方式比反射获取 ID 更高效，且代码更简洁
+#pragma warning disable CS0618
             await _db.Saveable(entity).ExecuteCommandAsync();
+#pragma warning restore CS0618
         }
     }
 }

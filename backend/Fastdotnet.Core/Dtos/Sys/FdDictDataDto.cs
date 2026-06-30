@@ -9,7 +9,7 @@
         /// dict_type_id
         /// </summary>
         [StringLength(50, ErrorMessage = "字典类型 Id 最多 50 个字符")]
-        public string DictTypeId { get; set; }
+        public string DictTypeId { get; set; } = string.Empty;
 
         /// <summary>
         /// dict_type_code（冗余字段，便于查询）
@@ -21,16 +21,16 @@
         /// label
         /// </summary>
         [StringLength(128, ErrorMessage = "显示文本最多 128 个字符")]
-        public string Label { get; set; }
+        public string Label { get; set; } = string.Empty;
 
         /// <summary>
         /// value
         /// </summary>
         [StringLength(500, ErrorMessage = "值最多 500 个字符")]
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
 
         /// <summary>
-        /// 值的数据类型（支持自动转换：枚举<->字符串）
+        /// 值的数据类型（支持自动转换：枚举&lt;-&gt;字符串）
         /// </summary>
         public int ValueType { get; set; }  // 默认 0=String
 
@@ -105,13 +105,13 @@
         /// id
         /// </summary>
         [Required(ErrorMessage = "ID 不能为空")]
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// dict_type_id
         /// </summary>
         [StringLength(50, ErrorMessage = "字典类型 Id 最多 50 个字符")]
-        public string DictTypeId { get; set; }
+        public string DictTypeId { get; set; } = string.Empty;
 
         /// <summary>
         /// dict_type_code
@@ -123,13 +123,13 @@
         /// label
         /// </summary>
         [StringLength(128, ErrorMessage = "显示文本最多 128 个字符")]
-        public string Label { get; set; }
+        public string Label { get; set; } = string.Empty;
 
         /// <summary>
         /// value
         /// </summary>
         [StringLength(500, ErrorMessage = "值最多 500 个字符")]
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
 
         /// <summary>
         /// 值的数据类型
@@ -206,12 +206,12 @@
         /// <summary>
         /// id
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// dict_type_id
         /// </summary>
-        public string DictTypeId { get; set; }
+        public string DictTypeId { get; set; } = string.Empty;
 
         /// <summary>
         /// dict_type_code
@@ -221,12 +221,12 @@
         /// <summary>
         /// label
         /// </summary>
-        public string Label { get; set; }
+        public string Label { get; set; } = string.Empty;
 
         /// <summary>
         /// value
         /// </summary>
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
 
         /// <summary>
         /// 值的数据类型（0-String,1-Int,2-Long,3-Double,4-Decimal,5-Boolean,6-DateTime,7-Json,8-JsonArray）
@@ -307,12 +307,12 @@
         /// <summary>
         /// 值（实际提交的值）
         /// </summary>
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
 
         /// <summary>
         /// 显示文本（下拉框显示的标签）
         /// </summary>
-        public string Label { get; set; }
+        public string Label { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -323,11 +323,11 @@
         /// <summary>
         /// 值（实际提交的值）
         /// </summary>
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
 
         /// <summary>
         /// 显示文本（下拉框显示的标签）
         /// </summary>
-        public string Label { get; set; }
+        public string Label { get; set; } = string.Empty;
     }
 }

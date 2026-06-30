@@ -11,12 +11,12 @@ namespace Fastdotnet.Core.Entities.Admin
         /// 管理员用户ID
         /// </summary>
         [SugarColumn(ColumnName = "admin_user_id", IsNullable = false, ColumnDescription = "管理员用户ID")]
-        public string AdminUserId { get; set; }
+        public string AdminUserId { get; set; } = string.Empty;
 
         /// <summary>
         /// 角色ID
         /// </summary>
         [SugarColumn(ColumnName = "role_id", IsNullable = false, ColumnDescription = "角色ID")]
-        public string RoleId { get; set; }
+        public string RoleId { get; set; } = string.Empty;
     }
 }

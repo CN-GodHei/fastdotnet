@@ -50,7 +50,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                 await _unitOfWork.CommitAsync();
 
             }
-            catch (Exception ex)
+            catch
             {
                 await _unitOfWork.RollbackAsync();
                 return false;

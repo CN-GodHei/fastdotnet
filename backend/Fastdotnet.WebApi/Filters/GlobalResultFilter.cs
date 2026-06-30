@@ -24,7 +24,7 @@ namespace Fastdotnet.WebApi.Filters
             if (context.Result is ObjectResult objResult)
             {
                 // 如果已经是 ApiResult<T>，直接包装
-                if (IsApiResult(objResult.Value))
+                if (objResult.Value != null && IsApiResult(objResult.Value))
                 {
                     // 保持原样，后续统一处理加密
                 }
@@ -51,7 +51,7 @@ namespace Fastdotnet.WebApi.Filters
                 else
                 {
                     var finalResult = objResult.Value == null
-                        ? ApiResult<object>.Success(null)
+                        ? ApiResult<object>.Success(null!)
                         : ApiResult<object>.Success(objResult.Value);
 
                     context.Result = new ObjectResult(finalResult)
@@ -65,7 +65,7 @@ namespace Fastdotnet.WebApi.Filters
             }
             else if (context.Result is EmptyResult)
             {
-                var result = new ObjectResult(ApiResult<object>.Success(null))
+                var result = new ObjectResult(ApiResult<object>.Success(null!))
                 {
                     StatusCode = 200
                 };
@@ -85,7 +85,7 @@ namespace Fastdotnet.WebApi.Filters
             }
             else if (context.Result is ContentResult contentResult)
             {
-                var result = new ObjectResult(ApiResult<string>.Success(contentResult.Content))
+                var result = new ObjectResult(ApiResult<string>.Success(contentResult.Content ?? string.Empty))
                 {
                     StatusCode = contentResult.StatusCode
                 };
@@ -122,7 +122,7 @@ namespace Fastdotnet.WebApi.Filters
         }
 
         // 尝试识别 PageResult<T> 并提取属性
-        private static bool IsPageResult(object value, out (object Data, long TotalCount, int PageIndex, int PageSize, int TotalPages) info)
+        private static bool IsPageResult(object value, out (object? Data, long TotalCount, int PageIndex, int PageSize, int TotalPages) info)
         {
             info = default;
             if (value == null) return false;
@@ -144,7 +144,7 @@ namespace Fastdotnet.WebApi.Filters
                 return false;
 
             info = (
-                Data: dataProp.GetValue(value),
+                Data: (object?)dataProp.GetValue(value),
                 TotalCount: (long)totalCountProp.GetValue(value)!,
                 PageIndex: (int)pageIndexProp.GetValue(value)!,
                 PageSize: (int)pageSizeProp.GetValue(value)!,
@@ -178,6 +178,7 @@ namespace Fastdotnet.WebApi.Filters
                            "AES-256-CBC";
             
             // 只对 ApiResult<T> 进行加密
+            if (objResult.Value == null) return;
             var apiResultType = objResult.Value.GetType();
             if (apiResultType.IsGenericType && apiResultType.GetGenericTypeDefinition() == typeof(ApiResult<>))
             {
@@ -223,7 +224,7 @@ namespace Fastdotnet.WebApi.Filters
                     context.HttpContext.Response.Headers.Append("X-Encryption-IV", Convert.ToBase64String(aes.IV));
                     context.HttpContext.Response.Headers.Append("X-Encryption-Algorithm", "AES-256-CBC");
                 }
-                catch (Exception ex)
+                catch
                 {
                     // 加密失败时保持原样
                 }

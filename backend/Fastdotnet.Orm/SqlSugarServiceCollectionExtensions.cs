@@ -31,7 +31,7 @@ public static class SqlSugarServiceCollectionExtensions
                     try
                     {
                         // ✅ 在还能拿到 RequestId 的时候立即捕获！
-                        string currentRequestId = RequestIdManager.CurrentRequestId; // 可能为 null，但这是当前上下文的真实值
+                        string? currentRequestId = RequestIdManager.CurrentRequestId; // 可能为 null，但这是当前上下文的真实值
                         // 使用日志框架记录SQL
                         //var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
                         //logger?.LogInformation("SqlSugar Executing SQL: {Sql}", sql);
@@ -46,13 +46,13 @@ public static class SqlSugarServiceCollectionExtensions
                             db.Aop.OnLogExecuted = (sqlExecuted, parsExecuted) =>
                             {
                                 stopwatch.Stop();
-                                RecordSqlExecutionToLogTable(serviceProvider, sqlCopy, 
+                        RecordSqlExecutionToLogTable(serviceProvider, sqlCopy, 
                                     parsCopy, stopwatch.ElapsedMilliseconds.ToString(), null, currentRequestId);
                                 db.Aop.OnLogExecuted = null; // 重置事件处理程序
                             };
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         // 记录AOP处理过程中的任何错误，避免影响主流程
                         //var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
@@ -64,7 +64,7 @@ public static class SqlSugarServiceCollectionExtensions
                 {
                     try
                     {
-                        string currentRequestId = RequestIdManager.CurrentRequestId; // 捕获当前 RequestId
+                        string? currentRequestId = RequestIdManager.CurrentRequestId; // 捕获当前 RequestId
 
                         // 使用日志框架记录错误
                         var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
@@ -74,7 +74,7 @@ public static class SqlSugarServiceCollectionExtensions
                         if (options.EnableSqlExecutionLogging)
                         {
                             // 安全地处理异常中的参数
-                            SugarParameter[] parameters = null;
+                            SugarParameter[]? parameters = null;
                             if (ex.Parametres is IEnumerable<SugarParameter> sugarParams)
                             {
                                 parameters = sugarParams.ToArray();
@@ -166,7 +166,7 @@ public static class SqlSugarServiceCollectionExtensions
                                 bool oldIsDeleted = (bool)(oldValue ?? false);
                                 var property = entity.GetType().GetProperty(entityInfo.PropertyName);
                                 if (property == null) return;
-                                object currentValueObj = property.GetValue(entity);
+                                object? currentValueObj = property.GetValue(entity);
                                 bool newIsDeleted = currentValueObj is bool b ? b : false;
 
                                 if (!oldIsDeleted && newIsDeleted)
@@ -251,7 +251,7 @@ public static class SqlSugarServiceCollectionExtensions
     /// <param name="exception">异常信息（如果有）</param>
     private static void RecordSqlExecutionToLogTable(IServiceProvider rootServiceProvider, 
         string sql, SugarParameter[] parameters, string elapsedMilliseconds,
-        Exception exception,string currentRequestId)
+        Exception? exception, string? currentRequestId)
     {
         try
         {
@@ -285,7 +285,7 @@ public static class SqlSugarServiceCollectionExtensions
             try
             {
                 // 获取SqlSugar客户端
-                var sqlClient = serviceProvider.GetService<ISqlSugarClient>();
+                var sqlClient = serviceProvider.GetRequiredService<ISqlSugarClient>();
                 //if (sqlClient == null) 
                 //{
                 //    var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
@@ -303,14 +303,14 @@ public static class SqlSugarServiceCollectionExtensions
                 var result = logDb.Insertable(sqlExecutionLog).SplitTable().ExecuteCommand();
                 //logger?.LogInformation("SQL执行日志记录结果: {Result}", result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // 记录日志记录过程中的任何错误，避免影响主流程
                 var logger = serviceProvider.GetService<ILogger<SqlSugarClient>>();
                 //logger?.LogError(ex, "Error recording SQL execution log to database. SQL: {Sql}", formattedSql);
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // 记录日志记录过程中的任何错误，避免影响主流程
             var logger = rootServiceProvider.GetService<ILogger<SqlSugarClient>>();
@@ -376,7 +376,7 @@ public static class SqlSugarServiceCollectionExtensions
             case decimal _:
             case float _:
             case double _:
-                return parameter.Value.ToString();
+                return parameter.Value!.ToString()!;
             default:
                 return $"'{parameter.Value}'";
         }
@@ -413,7 +413,7 @@ public static class SqlSugarServiceCollectionExtensions
                     sqlClient.CodeFirst.SplitTables().InitTables(item);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
                 throw;

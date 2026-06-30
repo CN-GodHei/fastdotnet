@@ -9,7 +9,7 @@ namespace Fastdotnet.Core.Service.Sys
     public class StorageServiceProxy : IStorageService
     {
         private readonly IServiceProvider _serviceProvider;
-        private IStorageService _currentStorageService;
+        private IStorageService _currentStorageService = null!;
         private readonly object _lock = new object();
 
         public StorageServiceProxy(IServiceProvider serviceProvider)
@@ -28,7 +28,7 @@ namespace Fastdotnet.Core.Service.Sys
                     // 双重检查锁定
                     if (_currentStorageService == null || _currentStorageService is StorageServiceProxy)
                     {
-                        var scopeFactory = _serviceProvider.GetService<IServiceScopeFactory>();
+                        var scopeFactory = _serviceProvider.GetRequiredService<IServiceScopeFactory>();
                         using var scope = scopeFactory.CreateScope();
 
                         // 尝试获取默认的本地存储服务实现（LocalStorageService）
@@ -153,7 +153,7 @@ namespace Fastdotnet.Core.Service.Sys
         {
             lock (_lock)
             {
-                var scopeFactory = _serviceProvider.GetService<IServiceScopeFactory>();
+                var scopeFactory = _serviceProvider.GetRequiredService<IServiceScopeFactory>();
                 using var scope = scopeFactory.CreateScope();
 
                 // 尝试获取默认的本地存储服务实现

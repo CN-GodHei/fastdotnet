@@ -39,7 +39,7 @@ namespace Fastdotnet.Core.Entities.App
         /// 用户昵称
         /// </summary>
         [SugarColumn(ColumnName = "nickname", IsNullable = false, ColumnDescription = "用户昵称")]
-        public string Nickname { get; set; }
+        public string Nickname { get; set; } = string.Empty;
 
         /// <summary>
         /// 用户头像URL

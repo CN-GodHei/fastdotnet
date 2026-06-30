@@ -55,7 +55,7 @@ namespace Fastdotnet.Core.Utils
                 var attr = field.GetCustomAttribute<DescriptionAttribute>();
                 if (attr?.Description == description)
                 {
-                    result = (T)field.GetValue(null);
+                    result = (T)field.GetValue(null)!;
                     _enumFromDescCache.TryAdd(key, result);
                     return true;
                 }
@@ -75,9 +75,9 @@ namespace Fastdotnet.Core.Utils
 
             foreach (var value in System.Enum.GetValues(type))
             {
-                var field = type.GetField(value.ToString());
+                var field = type.GetField(value.ToString()!);
                 var attribute = field?.GetCustomAttribute<DescriptionAttribute>();
-                dictionary.Add(Convert.ToInt32(value), attribute?.Description ?? value.ToString());
+                dictionary.Add(Convert.ToInt32(value), attribute?.Description ?? value.ToString()!);
             }
 
             return dictionary;

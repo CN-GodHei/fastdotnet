@@ -20,7 +20,7 @@ namespace Fastdotnet.WebApi.Controllers.Sys
         /// <summary>
         /// 使用插件Id获取插件配置信息
         /// </summary>
-        /// <param name="Id"></param>
+        /// <param name="PluginId"></param>
         /// <returns></returns>
         [HttpGet("Get-Plugin-ConfigurationBy/{PluginId}")]
         public async Task<PluginConfigurationGetRawJsonDto> GetPluginConfigurationById(string PluginId)

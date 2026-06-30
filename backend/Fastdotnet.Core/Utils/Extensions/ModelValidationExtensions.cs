@@ -82,7 +82,7 @@ namespace Fastdotnet.Core.Utils.Extensions
                         {
                             Path = path,
                             DisplayName = objectType.Name,
-                            ErrorMessages = { validationResult.ErrorMessage }
+                            ErrorMessages = { validationResult.ErrorMessage ?? "" }
                         };
                         validationErrors.Add(fieldInfo);
                     }
@@ -99,7 +99,7 @@ namespace Fastdotnet.Core.Utils.Extensions
                 object value;
                 try
                 {
-                    value = prop.GetValue(obj);
+                    value = prop.GetValue(obj)!;
                 }
                 catch (Exception ex)
                 {
@@ -140,7 +140,7 @@ namespace Fastdotnet.Core.Utils.Extensions
                     var propertyType = prop.PropertyType;
                     if (IsCollectionType(propertyType))
                     {
-                        ProcessCollection(value as IEnumerable, currentPath, validationErrors);
+                        ProcessCollection((IEnumerable)value, currentPath, validationErrors);
                     }
                     // 确保不会对简单类型或已校验过的类型进行不必要的递归
                     else if (!IsSimpleType(propertyType))
@@ -220,8 +220,8 @@ namespace Fastdotnet.Core.Utils.Extensions
         /// </summary>
         private class FieldValidationInfo
         {
-            public string Path { get; set; }
-            public string DisplayName { get; set; }
+            public string Path { get; set; } = string.Empty;
+            public string DisplayName { get; set; } = string.Empty;
             public List<string> ErrorMessages { get; set; } = new List<string>();
         }
 
@@ -231,7 +231,7 @@ namespace Fastdotnet.Core.Utils.Extensions
         public class ValidationResult
         {
             public bool IsValid { get; set; }
-            public string Message { get; set; }
+            public string Message { get; set; } = string.Empty;
         }
     }
 }

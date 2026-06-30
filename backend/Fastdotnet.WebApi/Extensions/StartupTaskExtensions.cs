@@ -36,7 +36,7 @@ public static class StartupTaskExtensions
                                 var exceptionLog = new ExceptionLog
                                 {
                                     RequestId = taskId,
-                                    ExceptionType = ex.GetType().FullName,
+                                    ExceptionType = ex.GetType().FullName!,
                                     Message = ex.Message,
                                     StackTrace = ex.StackTrace ?? string.Empty,
                                     Path = "/startup-task",

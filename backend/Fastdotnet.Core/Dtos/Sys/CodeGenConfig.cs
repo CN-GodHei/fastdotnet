@@ -11,7 +11,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// <summary>
         /// 代码生成主表Id
         /// </summary>
-        public string CodeGenId { get; set; }
+        public string CodeGenId { get; set; } = string.Empty;
 
         /// <summary>
         /// 数据库字段名
@@ -158,7 +158,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// </summary>
         public int OrderNo { get; set; } = 100;
 
-        public virtual string ShowColumnName { get; set; }
+        public virtual string ShowColumnName { get; set; } = string.Empty;
         
         /// <summary>
         /// 脱敏配置
@@ -185,7 +185,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 代码生成主表Id
         /// </summary>
         [Required(ErrorMessage = "代码生成主表Id不能为空")]
-        public string CodeGenId { get; set; }
+        public string CodeGenId { get; set; } = string.Empty;
 
         /// <summary>
         /// 数据库字段名
@@ -349,7 +349,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// </summary>
         public int OrderNo { get; set; } = 100;
 
-        public virtual string ShowColumnName { get; set; }
+        public virtual string ShowColumnName { get; set; } = string.Empty;
 
 
         /// <summary>
@@ -373,13 +373,13 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 主键Id不能为空
         /// </summary>
         [Required(ErrorMessage = "主键Id不能为空")]
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// 代码生成主表Id
         /// </summary>
         [Required(ErrorMessage = "代码生成主表Id不能为空")]
-        public string CodeGenId { get; set; }
+        public string CodeGenId { get; set; } = string.Empty;
 
         /// <summary>
         /// 数据库字段名
@@ -543,7 +543,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// </summary>
         public int OrderNo { get; set; } = 100;
 
-        public virtual string ShowColumnName { get; set; }
+        public virtual string ShowColumnName { get; set; } = string.Empty;
 
         /// <summary>
         /// 脱敏配置

@@ -1,3 +1,7 @@
 <Project>
+  <PropertyGroup>
+    <!-- Pomelo.EntityFrameworkCore.MySql 9.0.0 暂未支持 EF Core 10，压制 NU1608 等待更新 -->
+    <NoWarn>$(NoWarn);NU1608</NoWarn>
+  </PropertyGroup>
   <!-- Directory.Packages.props 会被 SDK 自动导入，无需手动导入 -->
 </Project>

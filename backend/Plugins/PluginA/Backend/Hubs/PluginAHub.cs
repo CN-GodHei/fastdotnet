@@ -120,8 +120,8 @@ namespace PluginA.Hubs
     /// </summary>
     public class PluginANotification
     {
-        public string PluginId { get; set; }
-        public string Message { get; set; }
+        public string PluginId { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
         public DateTime Timestamp { get; set; }
         public DateTime ProcessedAt { get; set; }
     }
@@ -131,8 +131,8 @@ namespace PluginA.Hubs
     /// </summary>
     public class PluginAData
     {
-        public string PluginId { get; set; }
-        public string Content { get; set; }
+        public string PluginId { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
         public DateTime ProcessedAt { get; set; }
     }
 }

@@ -10,7 +10,7 @@
         /// 国标编号
         /// </summary>
         [StringLength(30, ErrorMessage = "国标编号最多30个字符")]
-        public string StandardCode { get; set; }
+        public string StandardCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 国标名称
@@ -23,13 +23,13 @@
         /// 标准编码
         /// </summary>
         [StringLength(50, ErrorMessage = "标准编码最多50个字符")]
-        public string ItemCode { get; set; }
+        public string ItemCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 标准名称
         /// </summary>
         [StringLength(200, ErrorMessage = "标准名称最多200个字符")]
-        public string ItemName { get; set; }
+        public string ItemName { get; set; } = string.Empty;
 
         /// <summary>
         /// 父级编码
@@ -48,7 +48,7 @@
         /// 版本
         /// </summary>
         [StringLength(20, ErrorMessage = "版本最多20个字符")]
-        public string Version { get; set; }
+        public string Version { get; set; } = string.Empty;
 
         /// <summary>
         /// 生效日期
@@ -87,7 +87,7 @@
         /// 国标编号
         /// </summary>
         [StringLength(30, ErrorMessage = "国标编号最多30个字符")]
-        public string StandardCode { get; set; }
+        public string StandardCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 国标名称
@@ -99,13 +99,13 @@
         /// 标准编码
         /// </summary>
         [StringLength(50, ErrorMessage = "标准编码最多50个字符")]
-        public string ItemCode { get; set; }
+        public string ItemCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 标准名称
         /// </summary>
         [StringLength(200, ErrorMessage = "标准名称最多200个字符")]
-        public string ItemName { get; set; }
+        public string ItemName { get; set; } = string.Empty;
 
         /// <summary>
         /// 父级编码
@@ -122,7 +122,7 @@
         /// 版本
         /// </summary>
         [StringLength(20, ErrorMessage = "版本最多20个字符")]
-        public string Version { get; set; }
+        public string Version { get; set; } = string.Empty;
 
         /// <summary>
         /// 生效日期
@@ -160,7 +160,7 @@
         /// 国标编号
         /// </summary>
 
-        public string StandardCode { get; set; }
+        public string StandardCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 国标名称
@@ -172,13 +172,13 @@
         /// 标准编码
         /// </summary>
 
-        public string ItemCode { get; set; }
+        public string ItemCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 标准名称
         /// </summary>
 
-        public string ItemName { get; set; }
+        public string ItemName { get; set; } = string.Empty;
 
         /// <summary>
         /// 父级编码
@@ -195,7 +195,7 @@
         /// 版本
         /// </summary>
 
-        public string Version { get; set; }
+        public string Version { get; set; } = string.Empty;
 
         /// <summary>
         /// 生效日期

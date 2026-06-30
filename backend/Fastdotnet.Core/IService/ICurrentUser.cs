@@ -4,7 +4,7 @@ namespace Fastdotnet.Core.IService
     {
         bool IsAuthenticated { get; }
         string? Id { get; }
-        string UserName { get; }
+        string? UserName { get; }
         string UserType { get; } // 用于区分 Admin/App
         bool IsSuperAdmin { get; } // 是否为超级管理员
     }

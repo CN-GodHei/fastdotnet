@@ -2,9 +2,9 @@ namespace Fastdotnet.Core.Dtos.Sys
 {
     public class FdRoleDto
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Code { get; set; }
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
         public string? Description { get; set; }
         public SystemCategory Belong { get; set; }
         public bool IsSystem { get; set; }
@@ -15,7 +15,7 @@ namespace Fastdotnet.Core.Dtos.Sys
     public class CreateFdRoleDto
     {
         [Required(ErrorMessage = "角色名称不能为空")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public string? Description { get; set; }
 
@@ -27,7 +27,7 @@ namespace Fastdotnet.Core.Dtos.Sys
     public class UpdateFdRoleDto
     {
         [Required(ErrorMessage = "角色名称不能为空")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public string? Description { get; set; }
     }

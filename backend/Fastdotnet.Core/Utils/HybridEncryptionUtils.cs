@@ -89,7 +89,7 @@ namespace Fastdotnet.Core.Utils
         public static string Decrypt(string encryptedJson, string rsaPrivateKey)
         {
             // 1. 解析 JSON
-            dynamic result = JsonConvert.DeserializeObject(encryptedJson);
+            dynamic result = JsonConvert.DeserializeObject(encryptedJson)!;
             string encryptedDataBase64 = result.encryptedData;
             string encryptedKeyBase64 = result.encryptedKey;
 

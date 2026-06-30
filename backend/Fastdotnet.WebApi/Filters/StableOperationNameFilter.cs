@@ -33,7 +33,7 @@ namespace Fastdotnet.WebApi.Filters
         private string GenerateStableOperationId(OperationFilterContext context)
         {
             // 获取HTTP方法
-            var httpMethod = context.ApiDescription.HttpMethod.ToLower();
+            var httpMethod = context.ApiDescription.HttpMethod?.ToLower() ?? "get";
             
             // 获取控制器名称（去掉Controller后缀）
             var controllerType = context.MethodInfo.DeclaringType;

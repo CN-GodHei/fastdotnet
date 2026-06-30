@@ -12,19 +12,19 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 角色名称
         /// </summary>
         [SugarColumn(ColumnName = "name", IsNullable = false, ColumnDescription = "角色名称")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 角色编码
         /// </summary>
         [SugarColumn(ColumnName = "code", IsNullable = false, ColumnDescription = "角色编码")]
-        public string Code { get; set; }
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// 角色描述
         /// </summary>
         [SugarColumn(ColumnName = "description", IsNullable = true, ColumnDescription = "角色描述")]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// 角色类别: "Admin" 或 "App"

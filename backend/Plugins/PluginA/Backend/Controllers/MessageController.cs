@@ -19,7 +19,7 @@ namespace PluginA.Controllers
         /// <summary>
         /// 发送通知到插件前端
         /// </summary>
-        /// <param name="message">要发送的消息</param>
+        /// <param name="request">要发送的消息请求</param>
         /// <returns></returns>
         [HttpPost("send-notification")]
         public async Task<string> SendNotification([FromBody] SendMessageRequest request)
@@ -31,7 +31,7 @@ namespace PluginA.Controllers
         /// <summary>
         /// 发送数据到插件前端
         /// </summary>
-        /// <param name="data">要发送的数据</param>
+        /// <param name="request">要发送的数据请求</param>
         /// <returns></returns>
         [HttpPost("send-data")]
         public async Task<string> SendData([FromBody] SendMessageRequest request)
@@ -43,6 +43,6 @@ namespace PluginA.Controllers
 
     public class SendMessageRequest
     {
-        public string Message { get; set; }
+        public string Message { get; set; } = string.Empty;
     }
 }

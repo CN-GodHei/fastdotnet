@@ -29,7 +29,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
             return _loadedPlugins.ContainsKey(pluginId);
         }
 
-        public PluginInfo GetPluginInfo(string pluginId)
+        public PluginInfo? GetPluginInfo(string pluginId)
         {
             return _loadedPlugins.TryGetValue(pluginId, out var pluginInfo) ? pluginInfo.Config : null;
         }
@@ -128,18 +128,18 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
 
                 ActionDescriptorChangeProvider.Instance.NotifyChanges();
 
-                return (loadedAssembly, customLoadContext, pluginId);
+                return (loadedAssembly, customLoadContext, pluginId!);
             }
 
             return null;
         }
 
-        public Assembly GetPluginAssembly(string pluginName)
+        public Assembly? GetPluginAssembly(string pluginName)
         {
             return _loadedPlugins.TryGetValue(pluginName, out var pluginInfo) ? pluginInfo.Assembly : null;
         }
 
-        public AssemblyLoadContext GetPluginContext(string pluginId)
+        public AssemblyLoadContext? GetPluginContext(string pluginId)
         {
             return _loadedPlugins.TryGetValue(pluginId, out var pluginInfo) ? pluginInfo.Context : null;
         }
@@ -193,7 +193,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
 
         protected override Assembly Load(AssemblyName assemblyName)
         {
-            string assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
+            string? assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
             if (assemblyPath != null)
             {
                 return LoadFromAssemblyPath(assemblyPath);
@@ -205,7 +205,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
                 return defaultAssembly;
             }
 
-            return null;
+            return null!;
         }
     }
 }

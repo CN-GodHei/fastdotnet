@@ -50,7 +50,7 @@ public class OrmCodeFirstInitializer : IApplicationInitializer
                     mainDb.CodeFirst.SplitTables().InitTables(item);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
                 throw;

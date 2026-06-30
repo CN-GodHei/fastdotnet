@@ -8,7 +8,7 @@
     {
         private readonly IBaseService<FdNationalStandardItem, string> _fdnationalstandarditembaseService;
         private readonly IFdNationalStandardItemService _fdnationalstandarditemService;
-        private readonly ICurrentUser _currentUser;
+        private new readonly ICurrentUser _currentUser;
         public FdNationalStandardItemController(
             IFdNationalStandardItemService fdnationalstandarditemService,
             IBaseService<FdNationalStandardItem, string> fdnationalstandarditembaseService, ICurrentUser currentUser) : base(fdnationalstandarditembaseService, currentUser)

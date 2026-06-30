@@ -17,7 +17,7 @@ namespace Fastdotnet.Core.Service.Sys
         }
 
         /// <inheritdoc/>
-        public async Task<T> GetOrCreateAsync<T>(string key, Func<Task<T>> factory, HybridCacheEntryOptions options = null, string[] tags = null)
+        public async Task<T> GetOrCreateAsync<T>(string key, Func<Task<T>> factory, HybridCacheEntryOptions? options = null, string[]? tags = null)
         {
             var cacheOptions = options ?? CreateDefaultOptions();
 
@@ -29,7 +29,7 @@ namespace Fastdotnet.Core.Service.Sys
         }
 
         /// <inheritdoc/>
-        public async Task SetAsync<T>(string key, T value, HybridCacheEntryOptions options = null, string[] tags = null)
+        public async Task SetAsync<T>(string key, T value, HybridCacheEntryOptions? options = null, string[]? tags = null)
         {
             var cacheOptions = options ?? CreateDefaultOptions();
 
@@ -55,7 +55,7 @@ namespace Fastdotnet.Core.Service.Sys
             }
             catch (OperationCanceledException)
             {
-                return default;
+                return default!;
             }
         }
 

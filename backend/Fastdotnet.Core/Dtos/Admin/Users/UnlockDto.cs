@@ -10,6 +10,6 @@ namespace Fastdotnet.Core.Dtos.Admin.Users
         /// 密码
         /// </summary>
         [Required(ErrorMessage = "密码不能为空")]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
     }
 }

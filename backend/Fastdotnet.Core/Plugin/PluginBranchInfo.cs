@@ -8,8 +8,8 @@ namespace Fastdotnet.Core.Plugin
     /// </summary>
     public class PluginBranchInfo
     {
-        public RequestDelegate Delegate { get; set; }
-        public IServiceProvider PluginServiceProvider { get; set; }
+        public RequestDelegate Delegate { get; set; } = null!;
+        public IServiceProvider PluginServiceProvider { get; set; } = null!;
     }
 
     /// <summary>

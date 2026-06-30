@@ -10,7 +10,7 @@ namespace Fastdotnet.Core.Entities.Sys
         /// SMTP服务器地址
         /// </summary>
         [SugarColumn(ColumnName = "host", Length = 200, ColumnDescription = "SMTP服务器地址")]
-        public string Host { get; set; }
+        public string Host { get; set; } = string.Empty;
 
         /// <summary>
         /// SMTP服务器端口
@@ -22,25 +22,25 @@ namespace Fastdotnet.Core.Entities.Sys
         /// SMTP用户名
         /// </summary>
         [SugarColumn(ColumnName = "username", Length = 200, ColumnDescription = "SMTP用户名")]
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         /// <summary>
         /// SMTP密码或授权码 (注意：生产环境建议使用更安全的加密或密钥管理方案)
         /// </summary>
         [SugarColumn(ColumnName = "password", Length = 200, ColumnDescription = "SMTP密码或授权码 (注意：生产环境建议使用更安全的加密或密钥管理方案)")]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
         /// <summary>
         /// 发件人邮箱
         /// </summary>
         [SugarColumn(ColumnName = "sender_email", Length = 200, ColumnDescription = "发件人邮箱")]
-        public string SenderEmail { get; set; }
+        public string SenderEmail { get; set; } = string.Empty;
 
         /// <summary>
         /// 发件人名称
         /// </summary>
         [SugarColumn(ColumnName = "sender_name", Length = 200, ColumnDescription = "发件人名称")]
-        public string SenderName { get; set; }
+        public string SenderName { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否启用SSL

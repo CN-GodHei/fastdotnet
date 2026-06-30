@@ -40,7 +40,7 @@ namespace Fastdotnet.Core.Middleware
             var activeTypes = new List<Type>();
             foreach (var pair in _middlewareTypes)
             {
-                if (pair.Value.TryGetTarget(out Type targetType))
+                if (pair.Value.TryGetTarget(out Type? targetType))
                 {
                     activeTypes.Add(targetType);
                 }

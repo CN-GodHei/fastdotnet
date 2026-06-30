@@ -20,20 +20,20 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 关联的主表 ID
         /// </summary>
         [SugarColumn(ColumnName = "standard_id", IsNullable = true, ColumnDescription = "关联的主表 ID")]
-        public string StandardId { get; set; }
+        public string StandardId { get; set; } = string.Empty;
 
         /// <summary>
         /// 标准项编码（在标准体系内唯一）
         ///示例：GB/T 2260 中的 "110000" (北京市)
         /// </summary>
         [SugarColumn(ColumnName = "item_code", IsNullable = true, ColumnDescription = "标准项编码（在标准体系内唯一）示例：GB / T 2260 ")]
-        public string ItemCode { get; set; }
+        public string ItemCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 标准项名称
         /// </summary>
         [SugarColumn(ColumnName = "item_name", IsNullable = true, ColumnDescription = "标准项名称")]
-        public string ItemName { get; set; }
+        public string ItemName { get; set; } = string.Empty;
 
         /// <summary>
         /// 英文名称（可选）

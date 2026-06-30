@@ -141,6 +141,6 @@ namespace PluginA.Controllers
 
     public class CreateUserWithExtensionRequest : CreateFdAppUserDto
     {
-        public CreatePluginAUserExtensionDto ExtensionData { get; set; }
+        public CreatePluginAUserExtensionDto ExtensionData { get; set; } = null!;
     }
 }

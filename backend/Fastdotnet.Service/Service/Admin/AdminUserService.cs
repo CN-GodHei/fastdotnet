@@ -128,7 +128,7 @@ namespace Fastdotnet.Service.Service.Admin
             var userExistRole = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
             var DefaultRole = await _roleService.GetListAsync(r => r.IsDefault && r.Belong == SystemCategory.Admin);
             return new List<FdAdminUserRole> {
-                new FdAdminUserRole { AdminUserId = userId, RoleId = DefaultRole.FirstOrDefault()?.Id }
+                new FdAdminUserRole { AdminUserId = userId, RoleId = DefaultRole.FirstOrDefault()?.Id ?? string.Empty }
             }.Union(userExistRole).ToList();
         }
         

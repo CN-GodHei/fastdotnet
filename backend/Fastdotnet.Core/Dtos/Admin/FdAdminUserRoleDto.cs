@@ -25,13 +25,13 @@
         /// 管理员用户ID
         /// </summary>
         [StringLength(255, ErrorMessage = "管理员用户ID最多255个字符")]
-        public string AdminUserId { get; set; }
+        public string AdminUserId { get; set; } = string.Empty;
 
         /// <summary>
         /// 角色ID
         /// </summary>
         [StringLength(255, ErrorMessage = "角色ID最多255个字符")]
-        public string RoleId { get; set; }
+        public string RoleId { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -44,13 +44,13 @@
         /// 管理员用户ID
         /// </summary>
         [StringLength(255, ErrorMessage = "管理员用户ID最多255个字符")]
-        public string AdminUserId { get; set; }
+        public string AdminUserId { get; set; } = string.Empty;
 
         /// <summary>
         /// 角色ID
         /// </summary>
         [StringLength(255, ErrorMessage = "角色ID最多255个字符")]
-        public string RoleId { get; set; }
+        public string RoleId { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -61,19 +61,19 @@
         /// <summary>
         /// 主键id
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// 管理员用户ID
         /// </summary>
 
-        public string AdminUserId { get; set; }
+        public string AdminUserId { get; set; } = string.Empty;
 
         /// <summary>
         /// 角色ID
         /// </summary>
 
-        public string RoleId { get; set; }
+        public string RoleId { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -85,7 +85,7 @@
         /// 用户ID
         /// </summary>
         [Required(ErrorMessage = "用户ID不能为空")]
-        public string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         /// <summary>
         /// 要分配的角色ID列表

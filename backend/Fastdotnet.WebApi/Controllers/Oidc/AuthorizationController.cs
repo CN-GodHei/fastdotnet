@@ -75,7 +75,7 @@ namespace Fastdotnet.WebApi.Controllers.Oidc
                 throw new InvalidOperationException("IOpenIddictApplicationManager is not available. Make sure OIDC is enabled.");
 
             // 检索应用程序以确保它已注册且有效
-            var application = await applicationManager.FindByClientIdAsync(request.ClientId) ??
+            var application = await applicationManager.FindByClientIdAsync(request.ClientId!) ??
                 throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
 
             // 调试：输出当前请求的认证信息

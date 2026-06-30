@@ -13,10 +13,10 @@ namespace Fastdotnet.Core.Attributes
         public SensitiveDataType DataType { get; }
         
         // 自定义正则表达式（仅在DataType为Custom时使用）
-        public string CustomPattern { get; set; }
+        public string CustomPattern { get; set; } = string.Empty;
         
         // 自定义替换字符串（仅在DataType为Custom时使用）
-        public string CustomReplacement { get; set; }
+        public string CustomReplacement { get; set; } = string.Empty;
         
         // 保留前缀字符数
         public int PrefixKeep { get; set; } = -1;

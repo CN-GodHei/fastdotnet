@@ -267,7 +267,9 @@ namespace Fastdotnet.WebApi.Filters
                         var scopeProperty = attr.GetType().GetProperty("Scope");
                         if (scopeProperty != null)
                         {
-                            return (ApiUsageScopeEnum)scopeProperty.GetValue(attr);
+                            var scopeValue = scopeProperty.GetValue(attr);
+                            if (scopeValue != null)
+                                return (ApiUsageScopeEnum)scopeValue;
                         }
                     }
                 }
@@ -286,7 +288,9 @@ namespace Fastdotnet.WebApi.Filters
                             var scopeProperty = attr.GetType().GetProperty("Scope");
                             if (scopeProperty != null)
                             {
-                                return (ApiUsageScopeEnum)scopeProperty.GetValue(attr);
+                                var scopeValue = scopeProperty.GetValue(attr);
+                                if (scopeValue != null)
+                                    return (ApiUsageScopeEnum)scopeValue;
                             }
                         }
                     }

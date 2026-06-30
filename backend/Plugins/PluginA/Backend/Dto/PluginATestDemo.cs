@@ -15,12 +15,12 @@ namespace PluginA.Dto
         /// <summary>
         /// 名称 - 必填字段
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 描述信息
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// 测试数值
@@ -35,7 +35,7 @@ namespace PluginA.Dto
         /// <summary>
         /// 创建人手机号
         /// </summary>
-        public string Creator { get; set; }
+        public string Creator { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -46,17 +46,17 @@ namespace PluginA.Dto
         /// <summary>
         /// 主键ID
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// 名称
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 描述信息
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// 测试数值
@@ -71,7 +71,7 @@ namespace PluginA.Dto
         /// <summary>
         /// 创建人手机号
         /// </summary>
-        public string Creator { get; set; }
+        public string Creator { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -82,17 +82,17 @@ namespace PluginA.Dto
         /// <summary>
         /// 主键ID
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// 名称
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 描述信息
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// 测试数值
@@ -108,31 +108,31 @@ namespace PluginA.Dto
         /// 创建人手机号 - 手机号脱敏：138****8888
         /// </summary>
         [SensitiveData(SensitiveDataType.Phone)]
-        public string Creator { get; set; }
+        public string Creator { get; set; } = string.Empty;
 
         /// <summary>
         /// 身份证号码 - 身份证脱敏：123456**********12X
         /// </summary>
         [SensitiveData(SensitiveDataType.IdCard, PrefixKeep = 6, SuffixKeep = 3, MaskChar = '*', MaskLength = 10)]
-        public string IdCard { get; set; }
+        public string IdCard { get; set; } = string.Empty;
 
         /// <summary>
         /// 电子邮箱 - 邮箱脱敏：z***@example.com
         /// </summary>
         [SensitiveData(SensitiveDataType.Email, PrefixKeep = 1, SuffixKeep = 10)]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         /// <summary>
         /// 银行卡号 - 自定义脱敏：保留前6位和后4位
         /// </summary>
         [SensitiveData(SensitiveDataType.BankCard, PrefixKeep = 6, SuffixKeep = 4)]
-        public string BankCardNo { get; set; }
+        public string BankCardNo { get; set; } = string.Empty;
 
         /// <summary>
         /// IP地址 - 网络安全信息脱敏
         /// </summary>
         [SensitiveData(SensitiveDataType.Custom, CustomPattern = @"(\d{1,3}\.\d{1,3}\.)\d{1,3}\.\d{1,3}", CustomReplacement = "$1***.***")]
-        public string IpAddress { get; set; }
+        public string IpAddress { get; set; } = string.Empty;
 
         /// <summary>
         /// 创建时间

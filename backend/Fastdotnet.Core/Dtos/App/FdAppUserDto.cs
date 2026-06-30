@@ -37,7 +37,7 @@ namespace Fastdotnet.Core.Dtos.App
         /// 昵称
         /// </summary>
         [StringLength(255, ErrorMessage = "昵称最多255个字符")]
-        public string Nickname { get; set; }
+        public string Nickname { get; set; } = string.Empty;
 
         /// <summary>
         /// 头像
@@ -62,7 +62,7 @@ namespace Fastdotnet.Core.Dtos.App
     /// </summary>
     public class UpdateFdAppUserDto
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// 用户名
@@ -86,7 +86,7 @@ namespace Fastdotnet.Core.Dtos.App
         /// 昵称
         /// </summary>
         [StringLength(255, ErrorMessage = "昵称最多255个字符")]
-        public string Nickname { get; set; }
+        public string Nickname { get; set; } = string.Empty;
 
         /// <summary>
         /// 头像
@@ -110,7 +110,7 @@ namespace Fastdotnet.Core.Dtos.App
     /// </summary>
     public class FdAppUserDto
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// 用户名
@@ -134,7 +134,7 @@ namespace Fastdotnet.Core.Dtos.App
         /// 昵称
         /// </summary>
 
-        public string Nickname { get; set; }
+        public string Nickname { get; set; } = string.Empty;
 
         /// <summary>
         /// 头像

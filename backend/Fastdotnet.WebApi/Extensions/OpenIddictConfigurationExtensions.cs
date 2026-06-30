@@ -76,7 +76,8 @@ public static class OpenIddictConfigurationExtensions
                 var certPath = Path.Combine(AppContext.BaseDirectory, "oidc-dev-cert.pfx");
                 if (File.Exists(certPath))
                 {
-                    var certificate = new X509Certificate2(certPath, "dev-cert-password",
+                    var certificate = X509CertificateLoader.LoadPkcs12(
+                        File.ReadAllBytes(certPath), "dev-cert-password",
                         X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
                     options.AddEncryptionCertificate(certificate)
                            .AddSigningCertificate(certificate);

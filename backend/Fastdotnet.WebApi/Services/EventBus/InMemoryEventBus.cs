@@ -279,7 +279,7 @@ internal class EventHandlerAdapter<TEvent> : IEventHandlerInternal, IEventHandle
         return _inner.HandleAsync(@event, cancellationToken);
     }
 
-    Task IEventHandlerInternal.HandleAsync(object @event, CancellationToken cancellationToken = default)
+    Task IEventHandlerInternal.HandleAsync(object @event, CancellationToken cancellationToken)
     {
         return HandleAsync((TEvent)@event, cancellationToken);
     }

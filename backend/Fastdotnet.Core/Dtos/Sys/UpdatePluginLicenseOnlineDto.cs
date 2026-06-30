@@ -10,13 +10,13 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// Token
         /// </summary>
         [Required]
-        public string Token { get; set; }
+        public string Token { get; set; } = string.Empty;
 
         /// <summary>
         /// 插件Id
         /// </summary>
         [Required]
-        public string PluginId { get; set; }
+        public string PluginId { get; set; } = string.Empty;
 
     }
 }

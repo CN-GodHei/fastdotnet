@@ -67,7 +67,7 @@ namespace Fastdotnet.WebApi.Middleware
                                 var decryptedBody = await DecryptRequestBody(requestBody);
                                 await RewriteRequestBody(context.Request, decryptedBody);
                             }
-                            catch (CryptographicException ex)
+                            catch (CryptographicException)
                             {
                                 // 密钥不匹配（可能是公钥过期）
                                 context.Response.StatusCode = 498; // 自定义状态码：Token/Key Expired
@@ -320,12 +320,12 @@ namespace Fastdotnet.WebApi.Middleware
                     if (isForDecryption)
                     {
                         // 解密时使用私钥
-                        return section["PrivateKey"];
+                        return section["PrivateKey"]!;
                     }
                     else
                     {
                         // 加密时使用公钥
-                        return section["PublicKey"];
+                        return section["PublicKey"]!;
                     }
                 }
             }

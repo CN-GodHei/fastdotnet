@@ -15,7 +15,7 @@ namespace Fastdotnet.Core.Entities.Sys
         /// Route: 针对路由的全局限流
         /// </summary>
         [SugarColumn(ColumnName = "type", IsNullable = false, Length = 50, ColumnDescription = "限流类型 (IP, User, ApiKey, Route)")]
-        public string Type { get; set; }
+        public string Type { get; set; } = string.Empty;
 
         /// <summary>
         /// 限流键 
@@ -25,7 +25,7 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 当 Type=Route 时，Key=具体的路由路径，如 "/api/auth/login"
         /// </summary>
         [SugarColumn(ColumnName = "key", IsNullable = false, Length = 255, ColumnDescription = "限流键")]
-        public string Key { get; set; }
+        public string Key { get; set; } = string.Empty;
 
         /// <summary>
         /// 允许的最大请求数
@@ -43,7 +43,7 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 规则描述
         /// </summary>
         [SugarColumn(ColumnName = "description", IsNullable = true, Length = 500, ColumnDescription = "规则描述")]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否为系统内置

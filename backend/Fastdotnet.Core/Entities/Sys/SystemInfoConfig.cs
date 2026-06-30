@@ -11,25 +11,25 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 配置名称
         /// </summary>
         [SugarColumn(ColumnName = "name", IsNullable = false, Length = 100, ColumnDescription = "配置名称")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 配置编码 (Key)
         /// </summary>
         [SugarColumn(ColumnName = "code", IsNullable = false, Length = 100, ColumnDescription = "配置编码 (Key)")]
-        public string Code { get; set; }
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// 配置值 (Value)
         /// </summary>
         [SugarColumn(ColumnName = "value", IsNullable = true, IsJson = true, ColumnDataType = "text", ColumnDescription = "配置值 (Value)")]
-        public object Value { get; set; }
+        public object Value { get; set; } = default!;
 
         /// <summary>
         /// 配置描述
         /// </summary>
         [SugarColumn(ColumnName = "description", IsNullable = true, Length = 500, ColumnDescription = "配置描述")]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否为系统内置

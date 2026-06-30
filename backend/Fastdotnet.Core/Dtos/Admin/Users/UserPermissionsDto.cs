@@ -6,9 +6,9 @@ namespace Fastdotnet.Core.Dtos.Admin.Users
     /// </summary>
     public class UserPermissionsDto
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         public string? Name { get; set; }
 
@@ -24,7 +24,7 @@ namespace Fastdotnet.Core.Dtos.Admin.Users
 
         public DateTime CreatedAt { get; set; }
 
-        public string Avatar { get; set; }
+        public string Avatar { get; set; } = string.Empty;
         
         /// <summary>
         /// 用户的角色ID列表

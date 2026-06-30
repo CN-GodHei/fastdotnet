@@ -74,7 +74,7 @@ namespace PluginA.Metrics
                 Dimensions = new Dictionary<string, object>
                 {
                     ["date"] = context.StartDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd"),
-                    ["region"] = context.Filters.ContainsKey("region") ? context.Filters["region"].ToString() : "ALL"
+                    ["region"] = context.Filters.ContainsKey("region") ? context.Filters["region"].ToString()! : "ALL"
                 }
             };
         }
@@ -92,7 +92,7 @@ namespace PluginA.Metrics
                 Value = value,
                 Dimensions = new Dictionary<string, object>
                 {
-                    ["endpoint"] = context.Filters.ContainsKey("endpoint") ? context.Filters["endpoint"].ToString() : "ALL",
+                    ["endpoint"] = context.Filters.ContainsKey("endpoint") ? context.Filters["endpoint"].ToString()! : "ALL",
                     ["date"] = context.StartDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd")
                 }
             };
@@ -111,7 +111,7 @@ namespace PluginA.Metrics
                 Value = value,
                 Dimensions = new Dictionary<string, object>
                 {
-                    ["endpoint"] = context.Filters.ContainsKey("endpoint") ? context.Filters["endpoint"].ToString() : "ALL",
+                    ["endpoint"] = context.Filters.ContainsKey("endpoint") ? context.Filters["endpoint"].ToString()! : "ALL",
                     ["date"] = context.StartDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd")
                 }
             };

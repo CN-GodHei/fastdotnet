@@ -5,6 +5,7 @@ namespace PluginA.EventHandlers;
 /// <summary>
 /// 支付完成事件处理器（PluginA 订阅支付插件事件）
 /// </summary>
+#pragma warning disable CS0618
 public class OrderPaidEventHandler : IEventHandler<PaymentCompletedEvent>
 {
     private readonly ILogger<OrderPaidEventHandler> _logger;
@@ -33,3 +34,4 @@ public class OrderPaidEventHandler : IEventHandler<PaymentCompletedEvent>
         _logger.LogInformation("【PluginA】支付完成事件处理完成");
     }
 }
+#pragma warning restore CS0618

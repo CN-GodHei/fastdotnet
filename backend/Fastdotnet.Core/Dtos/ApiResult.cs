@@ -6,11 +6,11 @@ namespace Fastdotnet.Core.Dtos
     public class ApiResult
     {
         public int Code { get; set; }
-        public string Msg { get; set; }
-
+        public string Msg { get; set; } = string.Empty;
+        
         /// <summary>
         /// 默认构造函数
-        /// 修改为 protected：允许子类 ApiResult<T> 访问，但禁止外部直接 new ApiResult()
+        /// 修改为 protected：允许子类 ApiResult&lt;T&gt; 访问，但禁止外部直接 new ApiResult()
         /// </summary>
         protected ApiResult()
         {
@@ -58,8 +58,8 @@ namespace Fastdotnet.Core.Dtos
     /// </summary>
     public class ApiResult<T> : ApiResult
     {
-        public T Data { get; set; }
-
+        public T Data { get; set; } = default!;
+        
         /// <summary>
         /// 默认构造函数
         /// 现在可以正常调用 base() 了
@@ -82,7 +82,7 @@ namespace Fastdotnet.Core.Dtos
         /// 成功返回（带数据）
         /// </summary>
         /// <param name="data">数据对象</param>
-        /// <returns>ApiResult<T></returns>
+        /// <returns>ApiResult&lt;T&gt;</returns>
         public static ApiResult<T> Success(T data) => new ApiResult<T> { Code = 200, Msg = "success", Data = data };
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Fastdotnet.Core.Dtos
         /// </summary>
         /// <param name="data">数据对象</param>
         /// <param name="msg">成功消息</param>
-        /// <returns>ApiResult<T></returns>
+        /// <returns>ApiResult&lt;T&gt;</returns>
         public static ApiResult<T> Success(T data, string msg) => new ApiResult<T> { Code = 200, Msg = msg, Data = data };
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Fastdotnet.Core.Dtos
         /// </summary>
         /// <param name="code">错误码</param>
         /// <param name="msg">错误信息</param>
-        /// <returns>ApiResult<T></returns>
-        public static ApiResult<T> Fail(int code, string msg) => new ApiResult<T> { Code = code, Msg = msg, Data = default };
+        /// <returns>ApiResult&lt;T&gt;</returns>
+        public static new ApiResult<T> Fail(int code, string msg) => new ApiResult<T> { Code = code, Msg = msg, Data = default! };
     }
 }

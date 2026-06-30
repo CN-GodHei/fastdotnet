@@ -15,7 +15,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="options">缓存选项</param>
         /// <param name="tags">标签数组</param>
         /// <returns>缓存项</returns>
-        Task<T> GetOrCreateAsync<T>(string key, Func<Task<T>> factory, HybridCacheEntryOptions options = null, string[] tags = null);
+        Task<T> GetOrCreateAsync<T>(string key, Func<Task<T>> factory, HybridCacheEntryOptions? options = null, string[]? tags = null);
 
         /// <summary>
         /// 设置缓存项
@@ -25,7 +25,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="value">缓存值</param>
         /// <param name="options">缓存选项</param>
         /// <param name="tags">标签数组</param>
-        Task SetAsync<T>(string key, T value, HybridCacheEntryOptions options = null, string[] tags = null);
+        Task SetAsync<T>(string key, T value, HybridCacheEntryOptions? options = null, string[]? tags = null);
 
         /// <summary>
         /// 获取缓存项

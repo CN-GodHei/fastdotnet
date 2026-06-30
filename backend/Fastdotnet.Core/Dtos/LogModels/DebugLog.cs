@@ -14,19 +14,19 @@ public class DebugLog
     /// <summary>
     /// 请求ID，用于追踪整个请求链路
     /// </summary>
-    public string RequestId { get; set; }
+    public string RequestId { get; set; } = string.Empty;
 
 
     /// <summary>
     /// 日志消息
     /// </summary>
     [SugarColumn(Length = 4000)]
-    public string Message { get; set; }
+    public string Message { get; set; } = string.Empty;
 
     /// <summary>
     /// 业务标识
     /// </summary>
-    public string Key { get; set; }
+    public string Key { get; set; } = string.Empty;
 
     /// <summary>
     /// 创建时间

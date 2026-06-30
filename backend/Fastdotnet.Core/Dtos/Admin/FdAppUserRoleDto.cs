@@ -25,13 +25,13 @@
         /// 应用用户ID
         /// </summary>
         [StringLength(255, ErrorMessage = "应用用户ID最多255个字符")]
-        public string AppUserId { get; set; }
+        public string AppUserId { get; set; } = string.Empty;
 
         /// <summary>
         /// 角色ID
         /// </summary>
         [StringLength(255, ErrorMessage = "角色ID最多255个字符")]
-        public string RoleId { get; set; }
+        public string RoleId { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -44,13 +44,13 @@
         /// 应用用户ID
         /// </summary>
         [StringLength(255, ErrorMessage = "应用用户ID最多255个字符")]
-        public string AppUserId { get; set; }
+        public string AppUserId { get; set; } = string.Empty;
 
         /// <summary>
         /// 角色ID
         /// </summary>
         [StringLength(255, ErrorMessage = "角色ID最多255个字符")]
-        public string RoleId { get; set; }
+        public string RoleId { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -63,18 +63,18 @@
         /// 主键id
         /// </summary>
 
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// 应用用户ID
         /// </summary>
 
-        public string AppUserId { get; set; }
+        public string AppUserId { get; set; } = string.Empty;
 
         /// <summary>
         /// 角色ID
         /// </summary>
 
-        public string RoleId { get; set; }
+        public string RoleId { get; set; } = string.Empty;
     }
 }

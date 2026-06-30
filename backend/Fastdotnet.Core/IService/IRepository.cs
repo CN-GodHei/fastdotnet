@@ -28,11 +28,11 @@ namespace Fastdotnet.Core.IService
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体列表</returns>
-        Task<List<T>> GetListAsync(Expression<Func<T, bool>> whereExpression, CancellationToken cancellationToken = default);
+        Task<List<T>> GetListAsync(Expression<Func<T, bool>>? whereExpression, CancellationToken cancellationToken = default);
 
         // 👇 新增：支持 Select 投影
         Task<List<TResult>> GetListAsync<TResult>(
-            Expression<Func<T, bool>> whereExpression,
+            Expression<Func<T, bool>>? whereExpression,
             Expression<Func<T, TResult>> selectExpression,
             CancellationToken ct = default);
 
@@ -49,7 +49,7 @@ namespace Fastdotnet.Core.IService
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体对象</returns>
-        Task<T> GetFirstAsync(Expression<Func<T, bool>> whereExpression, CancellationToken cancellationToken = default);
+        Task<T> GetFirstAsync(Expression<Func<T, bool>>? whereExpression, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// 分页查询
@@ -62,7 +62,7 @@ namespace Fastdotnet.Core.IService
         Task<PageResult<T>> GetPageAsync(
             int pageIndex,
             int pageSize,
-            Expression<Func<T, object>> orderByExpression = null,
+            Expression<Func<T, object>>? orderByExpression = null,
             OrderByType orderByType = OrderByType.Asc, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -75,10 +75,10 @@ namespace Fastdotnet.Core.IService
         /// <param name="orderByType">排序类型</param>
         /// <returns>分页结果</returns>
         Task<PageResult<T>> GetPageAsync(
-            Expression<Func<T, bool>> whereExpression,
+            Expression<Func<T, bool>>? whereExpression,
             int pageIndex,
             int pageSize,
-            Expression<Func<T, object>> orderByExpression = null,
+            Expression<Func<T, object>>? orderByExpression = null,
             OrderByType orderByType = OrderByType.Asc, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Fastdotnet.Core.IService
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>是否存在</returns>
-        Task<bool> ExistsAsync(Expression<Func<T, bool>> whereExpression);
+        Task<bool> ExistsAsync(Expression<Func<T, bool>>? whereExpression);
 
         #endregion
 
@@ -138,7 +138,7 @@ namespace Fastdotnet.Core.IService
         /// <param name="whereExpression">条件表达式</param>
         /// <param name="columns">要更新的字段</param>
         /// <returns>更新成功的数量</returns>
-        Task<int> UpdateRangeAsync(Expression<Func<T, bool>> whereExpression, Dictionary<string, object> columns);
+        Task<int> UpdateRangeAsync(Expression<Func<T, bool>>? whereExpression, Dictionary<string, object> columns);
 
         #endregion
 
@@ -157,8 +157,8 @@ namespace Fastdotnet.Core.IService
         /// </summary>
         /// <param name="whereExpression">条件表达式</param>
         /// <returns>删除成功的数量</returns>
-        Task<int> DeleteAsync(Expression<Func<T, bool>> whereExpression);
-        Task<int> HardDeleteAsync(Expression<Func<T, bool>> whereExpression);
+        Task<int> DeleteAsync(Expression<Func<T, bool>>? whereExpression);
+        Task<int> HardDeleteAsync(Expression<Func<T, bool>>? whereExpression);
 
         #endregion
 
@@ -175,7 +175,7 @@ namespace Fastdotnet.Core.IService
         Task<PageResult<T>> GetRecycleBinAsync(
             int pageIndex,
             int pageSize,
-            Expression<Func<T, object>> orderByExpression = null,
+            Expression<Func<T, object>>? orderByExpression = null,
             OrderByType orderByType = OrderByType.Desc, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -188,10 +188,10 @@ namespace Fastdotnet.Core.IService
         /// <param name="orderByType">排序类型</param>
         /// <returns>分页结果</returns>
         Task<PageResult<T>> GetRecycleBinAsync(
-            Expression<Func<T, bool>> whereExpression,
+            Expression<Func<T, bool>>? whereExpression,
             int pageIndex,
             int pageSize,
-            Expression<Func<T, object>> orderByExpression = null,
+            Expression<Func<T, object>>? orderByExpression = null,
             OrderByType orderByType = OrderByType.Desc, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace Fastdotnet.Core.IService
         /// </summary>
         /// <param name="whereExpression">条件表达式</param>
         /// <returns>恢复成功的数量</returns>
-        Task<int> RestoreAsync(Expression<Func<T, bool>> whereExpression);
+        Task<int> RestoreAsync(Expression<Func<T, bool>>? whereExpression);
 
         /// <summary>
         /// 永久删除回收站中的实体
@@ -220,7 +220,7 @@ namespace Fastdotnet.Core.IService
         /// </summary>
         /// <param name="whereExpression">条件表达式</param>
         /// <returns>删除成功的数量</returns>
-        Task<int> PermanentDeleteAsync(Expression<Func<T, bool>> whereExpression);
+        Task<int> PermanentDeleteAsync(Expression<Func<T, bool>>? whereExpression);
 
         #endregion
         Task<T> InsertOrUpdateAsync(T entity);

@@ -60,8 +60,8 @@ namespace Plugina.Initializers
             {
                 if (item.fdDictType.Code == null)
                 {
-                    item.fdDictType = null;
-                    item.fdDictData = null;
+                    item.fdDictType = null!;
+                    item.fdDictData = null!;
                     continue;
                 }
                 // 为字典类型生成唯一ID

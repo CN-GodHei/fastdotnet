@@ -8,6 +8,6 @@ namespace Fastdotnet.Core.Dtos.Sys
     {
         public bool Result { get; set; }
         public bool Offline { get; set; }
-        public string UninstallCode { get; set; }
+        public string UninstallCode { get; set; } = string.Empty;
     }
 }

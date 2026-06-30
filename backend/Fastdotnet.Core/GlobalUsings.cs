@@ -18,7 +18,6 @@ global using Fastdotnet.Core.IService.Sys;
 global using Fastdotnet.Core.Middleware;
 global using Fastdotnet.Core.Service;
 global using Fastdotnet.Core.Service.Sys;
-global using Fastdotnet.Core.Service.Sys;
 global using Fastdotnet.Core.Utils;
 global using Fastdotnet.Core.Utils.Extensions;
 global using Microsoft.AspNetCore.Builder;

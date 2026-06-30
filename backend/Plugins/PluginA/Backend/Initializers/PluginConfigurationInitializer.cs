@@ -38,15 +38,15 @@ namespace PluginA.Initializers
                 AliPayInfo = new AliPay() { AppId = "商户Id", Secret = "密钥111" },
                 testinfo ="测试增加",
             };
-            var existingConfig = await _pluginConfigurationService.GetSettingsAsync<MyPluginConfiguration>(pluginInfo.id);
+            var existingConfig = await _pluginConfigurationService.GetSettingsAsync<MyPluginConfiguration>(pluginInfo!.id);
 
             //Console.WriteLine("defaultConfig: " + JsonConvert.SerializeObject(defaultConfig));
             //Console.WriteLine("Existing: " + JsonConvert.SerializeObject(existingConfig));
 
-            var mergedConfig = ObjectMerger.ApplyOverrides(defaultConfig,existingConfig);
+            var mergedConfig = ObjectMerger.ApplyOverrides(defaultConfig, existingConfig!);
             //Console.WriteLine("mergedConfig: " + JsonConvert.SerializeObject(mergedConfig));
 
-            await _pluginConfigurationService.SaveSettingsAsync(pluginInfo.id, mergedConfig);
+            await _pluginConfigurationService.SaveSettingsAsync(pluginInfo.id, mergedConfig!);
         }
     }
 }

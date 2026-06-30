@@ -156,8 +156,8 @@ namespace Fastdotnet.WebApi.Controllers.Sys
     /// </summary>
     public class ExampleRequest
     {
-        public string Data { get; set; }
-        public string Token { get; set; }
+        public string Data { get; set; } = default!;
+        public string Token { get; set; } = default!;
     }
 
     /// <summary>
@@ -165,7 +165,7 @@ namespace Fastdotnet.WebApi.Controllers.Sys
     /// </summary>
     public class ExampleResponse
     {
-        public string Data { get; set; }
+        public string Data { get; set; } = default!;
         public DateTime Timestamp { get; set; }
         public bool Success { get; set; } = true;
     }

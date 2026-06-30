@@ -6,7 +6,7 @@ namespace Fastdotnet.Core.Dtos.Sys
 {
     public class DictTypeAndData
     {
-        public FdDictType fdDictType { get; set; }
-        public List<FdDictData> fdDictData { get; set; }
+        public FdDictType fdDictType { get; set; } = default!;
+        public List<FdDictData> fdDictData { get; set; } = new();
     }
 }

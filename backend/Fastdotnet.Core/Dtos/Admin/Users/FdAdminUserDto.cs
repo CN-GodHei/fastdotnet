@@ -7,9 +7,9 @@ namespace Fastdotnet.Core.Dtos.Admin.Users
     /// </summary>
     public class FdAdminUserDto
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         public string? Name { get; set; }
 
@@ -32,7 +32,7 @@ namespace Fastdotnet.Core.Dtos.Admin.Users
         public string? LastLoginIp { get; set; }
 
         public DateTime CreatedAt { get; set; }
-        public string Avatar { get; set; }
+        public string Avatar { get; set; } = string.Empty;
         
         /// <summary>
         /// 用户的角色ID列表
@@ -52,11 +52,11 @@ namespace Fastdotnet.Core.Dtos.Admin.Users
     {
         [Required(ErrorMessage = "用户名不能为空")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "用户名长度必须在3到50个字符之间")]
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "密码不能为空")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "密码长度至少为6个字符")]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
         public string? Name { get; set; }
 
@@ -66,7 +66,7 @@ namespace Fastdotnet.Core.Dtos.Admin.Users
         public string? Phone { get; set; }
 
         public bool IsActive { get; set; } = true;
-        public string Avatar { get; set; }
+        public string Avatar { get; set; } = string.Empty;
 
     }
 
@@ -83,7 +83,7 @@ namespace Fastdotnet.Core.Dtos.Admin.Users
         public string? Phone { get; set; }
 
         public bool? IsActive { get; set; }
-        public string Avatar { get; set; }
+        public string Avatar { get; set; } = string.Empty;
 
     }
 }

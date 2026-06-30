@@ -40,7 +40,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体列表</returns>
-        public virtual async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default)
+        public virtual async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>>? whereExpression, CancellationToken cancellationToken = default)
         {
             return await _repository.GetListAsync(whereExpression, cancellationToken);
         }
@@ -50,7 +50,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体对象</returns>
-        public virtual async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>>? whereExpression, CancellationToken cancellationToken = default)
         {
             return await _repository.GetFirstAsync(whereExpression, cancellationToken);
         }
@@ -66,7 +66,7 @@ namespace Fastdotnet.Core.Service.Sys
         public virtual async Task<PageResult<TEntity>> GetPageAsync(
             int pageIndex,
             int pageSize,
-            Expression<Func<TEntity, object>> orderByExpression = null,
+            Expression<Func<TEntity, object>>? orderByExpression = null,
             OrderByType orderByType = OrderByType.Asc, CancellationToken cancellationToken = default)
         {
             return await _repository.GetPageAsync(pageIndex, pageSize, orderByExpression, orderByType, cancellationToken);
@@ -82,10 +82,10 @@ namespace Fastdotnet.Core.Service.Sys
         /// <param name="orderByType">排序类型</param>
         /// <returns>分页结果</returns>
         public virtual async Task<PageResult<TEntity>> GetPageAsync(
-            Expression<Func<TEntity, bool>> whereExpression,
+            Expression<Func<TEntity, bool>>? whereExpression,
             int pageIndex,
             int pageSize,
-            Expression<Func<TEntity, object>> orderByExpression = null,
+            Expression<Func<TEntity, object>>? orderByExpression = null,
             OrderByType orderByType = OrderByType.Asc, CancellationToken cancellationToken = default)
         {
             return await _repository.GetPageAsync(whereExpression, pageIndex, pageSize, orderByExpression, orderByType, cancellationToken);
@@ -96,7 +96,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>是否存在</returns>
-        public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> whereExpression, CancellationToken cancellationToken = default)
+        public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>>? whereExpression, CancellationToken cancellationToken = default)
         {
             return await _repository.ExistsAsync(whereExpression);
         }
@@ -166,7 +166,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// <param name="whereExpression">条件表达式</param>
         /// <param name="columns">要更新的字段</param>
         /// <returns>更新成功的数量</returns>
-        public virtual async Task<int> UpdateRangeAsync(Expression<Func<TEntity, bool>> whereExpression, Dictionary<string, object> columns)
+        public virtual async Task<int> UpdateRangeAsync(Expression<Func<TEntity, bool>>? whereExpression, Dictionary<string, object> columns)
         {
             return await _repository.UpdateRangeAsync(whereExpression, columns);
         }
@@ -190,7 +190,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// </summary>
         /// <param name="whereExpression">条件表达式</param>
         /// <returns>删除成功的数量</returns>
-        public virtual async Task<int> DeleteAsync(Expression<Func<TEntity, bool>> whereExpression)
+        public virtual async Task<int> DeleteAsync(Expression<Func<TEntity, bool>>? whereExpression)
         {
             return await _repository.DeleteAsync(whereExpression);
         }
@@ -236,7 +236,7 @@ namespace Fastdotnet.Core.Service.Sys
         public virtual async Task<PageResult<TEntity>> GetRecycleBinAsync(
             int pageIndex,
             int pageSize,
-            Expression<Func<TEntity, object>> orderByExpression = null,
+            Expression<Func<TEntity, object>>? orderByExpression = null,
             OrderByType orderByType = OrderByType.Desc, CancellationToken cancellationToken = default)
         {
             return await _repository.GetRecycleBinAsync(pageIndex, pageSize, orderByExpression, orderByType, cancellationToken);
@@ -252,10 +252,10 @@ namespace Fastdotnet.Core.Service.Sys
         /// <param name="orderByType">排序类型</param>
         /// <returns>分页结果</returns>
         public virtual async Task<PageResult<TEntity>> GetRecycleBinAsync(
-            Expression<Func<TEntity, bool>> whereExpression,
+            Expression<Func<TEntity, bool>>? whereExpression,
             int pageIndex,
             int pageSize,
-            Expression<Func<TEntity, object>> orderByExpression = null,
+            Expression<Func<TEntity, object>>? orderByExpression = null,
             OrderByType orderByType = OrderByType.Desc, CancellationToken cancellationToken = default)
         {
             return await _repository.GetRecycleBinAsync(whereExpression, pageIndex, pageSize, orderByExpression, orderByType, cancellationToken);
@@ -276,7 +276,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// </summary>
         /// <param name="whereExpression">条件表达式</param>
         /// <returns>恢复成功的数量</returns>
-        public virtual async Task<int> RestoreAsync(Expression<Func<TEntity, bool>> whereExpression)
+        public virtual async Task<int> RestoreAsync(Expression<Func<TEntity, bool>>? whereExpression)
         {
             return await _repository.RestoreAsync(whereExpression);
         }
@@ -296,14 +296,14 @@ namespace Fastdotnet.Core.Service.Sys
         /// </summary>
         /// <param name="whereExpression">条件表达式</param>
         /// <returns>删除成功的数量</returns>
-        public virtual async Task<int> PermanentDeleteAsync(Expression<Func<TEntity, bool>> whereExpression)
+        public virtual async Task<int> PermanentDeleteAsync(Expression<Func<TEntity, bool>>? whereExpression)
         {
             return await _repository.PermanentDeleteAsync(whereExpression);
         }
 
-        public async Task<List<TProjection>> GetListAsync<TProjection>(Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, TProjection>> selector, CancellationToken ct = default)
+        public async Task<List<TProjection>> GetListAsync<TProjection>(Expression<Func<TEntity, bool>>? whereExpression, Expression<Func<TEntity, TProjection>>? selector, CancellationToken ct = default)
         {
-            return await _repository.GetListAsync(whereExpression, selector, ct);
+            return await _repository.GetListAsync(whereExpression, selector!, ct);
         }
 
         #endregion

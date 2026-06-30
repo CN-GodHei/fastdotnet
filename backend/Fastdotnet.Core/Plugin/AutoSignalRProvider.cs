@@ -16,7 +16,7 @@ namespace Fastdotnet.Core.Plugin
         /// <summary>
         /// 自动从上下文获取插件 ID，如果有特殊需求可被子类重写
         /// </summary>
-        public virtual string PluginId => PluginContext.GetCurrentPluginInfo()?.id;
+        public virtual string PluginId => PluginContext.GetCurrentPluginInfo()?.id ?? string.Empty;
 
         public virtual void RegisterMethods(ISignalRMethodRegistry registry)
         {
@@ -26,7 +26,7 @@ namespace Fastdotnet.Core.Plugin
 
             foreach (var method in methods)
             {
-                var attr = method.GetCustomAttribute<SignalRMethodAttribute>();
+                var attr = method.GetCustomAttribute<SignalRMethodAttribute>()!;
                 // 如果没有指定名称，默认使用函数名
                 var methodName = string.IsNullOrEmpty(attr.MethodName) ? method.Name : attr.MethodName;
 
@@ -57,7 +57,7 @@ namespace Fastdotnet.Core.Plugin
                 }
                 else if (p.ParameterType == typeof(object[]))
                 {
-                    invokeArgs[i] = args;
+                    invokeArgs[i] = args!;
                 }
                 // 处理从前端传过来的业务参数
                 else
@@ -73,7 +73,7 @@ namespace Fastdotnet.Core.Plugin
                                 element.GetRawText(), 
                                 p.ParameterType, 
                                 new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-                            );
+                            )!;
                         }
                         else if (rawValue != null)
                         {
@@ -93,7 +93,7 @@ namespace Fastdotnet.Core.Plugin
                     else
                     {
                         // 前端少传参数时的默认值补齐
-                        invokeArgs[i] = p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null;
+                        invokeArgs[i] = (p.ParameterType.IsValueType ? Activator.CreateInstance(p.ParameterType) : null)!;
                     }
                 }
             }

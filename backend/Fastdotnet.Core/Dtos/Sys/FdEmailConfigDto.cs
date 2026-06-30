@@ -5,13 +5,13 @@ namespace Fastdotnet.Core.Dtos.Sys
     /// </summary>
     public class FdEmailConfigDto
     {
-        public string Id { get; set; }
-        public string Host { get; set; }
+        public string Id { get; set; } = string.Empty;
+        public string Host { get; set; } = string.Empty;
         public int Port { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string SenderEmail { get; set; }
-        public string SenderName { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string SenderEmail { get; set; } = string.Empty;
+        public string SenderName { get; set; } = string.Empty;
         public bool EnableSsl { get; set; }
     }
 
@@ -22,26 +22,26 @@ namespace Fastdotnet.Core.Dtos.Sys
     {
         [Required]
         [StringLength(200)]
-        public string Host { get; set; }
+        public string Host { get; set; } = string.Empty;
 
         [Required]
         public int Port { get; set; }
 
         [Required]
         [StringLength(200)]
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         [Required]
         [StringLength(200)]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
         [Required]
         [StringLength(200)]
-        public string SenderEmail { get; set; }
+        public string SenderEmail { get; set; } = string.Empty;
 
         [Required]
         [StringLength(200)]
-        public string SenderName { get; set; }
+        public string SenderName { get; set; } = string.Empty;
 
         public bool EnableSsl { get; set; }
     }
@@ -53,26 +53,26 @@ namespace Fastdotnet.Core.Dtos.Sys
     {
         [Required]
         [StringLength(200)]
-        public string Host { get; set; }
+        public string Host { get; set; } = string.Empty;
 
         [Required]
         public int Port { get; set; }
 
         [Required]
         [StringLength(200)]
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         [Required]
         [StringLength(200)]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
         [Required]
         [StringLength(200)]
-        public string SenderEmail { get; set; }
+        public string SenderEmail { get; set; } = string.Empty;
 
         [Required]
         [StringLength(200)]
-        public string SenderName { get; set; }
+        public string SenderName { get; set; } = string.Empty;
 
         public bool EnableSsl { get; set; }
     }
@@ -87,7 +87,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// </summary>
         [Required]
         [EmailAddress]
-        public string ToEmail { get; set; }
+        public string ToEmail { get; set; } = string.Empty;
 
         /// <summary>
         /// 邮件主题

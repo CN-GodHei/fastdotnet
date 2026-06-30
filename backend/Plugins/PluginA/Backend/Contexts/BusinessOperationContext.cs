@@ -17,22 +17,22 @@ namespace PluginA.Contexts
         /// <summary>
         /// 操作类型（Create、Update、Delete、Query）
         /// </summary>
-        public string OperationType { get; set; }
+        public string OperationType { get; set; } = string.Empty;
 
         /// <summary>
         /// 操作的数据类型
         /// </summary>
-        public string DataType { get; set; }
+        public string DataType { get; set; } = string.Empty;
 
         /// <summary>
         /// 操作的数据 ID
         /// </summary>
-        public string DataId { get; set; }
+        public string DataId { get; set; } = string.Empty;
 
         /// <summary>
         /// 操作用户 ID
         /// </summary>
-        public string UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         /// <summary>
         /// 操作时间

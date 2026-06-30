@@ -11,9 +11,9 @@ namespace Fastdotnet.Core.Plugin
         /// <summary>
         /// 注册到前端调用的方法名。如果为空，则默认使用原函数名。
         /// </summary>
-        public string MethodName { get; }
+        public string? MethodName { get; }
 
-        public SignalRMethodAttribute(string methodName = null)
+        public SignalRMethodAttribute(string? methodName = null)
         {
             MethodName = methodName;
         }

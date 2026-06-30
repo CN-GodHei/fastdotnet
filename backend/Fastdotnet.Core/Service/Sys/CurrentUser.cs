@@ -7,14 +7,14 @@ namespace Fastdotnet.Core.Service.Sys
     public class CurrentUser : ICurrentUser
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
-        private readonly IRepository<FdRole> _roleRepository;
+        private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository = null!;
+        private readonly IRepository<FdRole> _roleRepository = null!;
         public CurrentUser(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
 
-        private ClaimsPrincipal User => _httpContextAccessor.HttpContext?.User;
+        private ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User;
 
         public bool IsAuthenticated => User?.Identity?.IsAuthenticated ?? false;
 
@@ -26,7 +26,7 @@ namespace Fastdotnet.Core.Service.Sys
             }
         }
 
-        public string UserName
+        public string? UserName
         {
             get
             {

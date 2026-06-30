@@ -8,27 +8,27 @@ namespace Fastdotnet.Core.IService.Sys
         /// <summary>
         /// 权限所属模块 (主框架应为"System", 插件应为插件ID)
         /// </summary>
-        public string Module { get; set; }
+        public string Module { get; set; } = string.Empty;
 
         /// <summary>
         /// 权限代码 (e.g., "admin.users.view")
         /// </summary>
-        public string Code { get; set; }
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// 权限显示名称 (e.g., "查看用户")
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 权限分类: "Admin" 或 "User"
         /// </summary>
-        public string Category { get; set; }
+        public string Category { get; set; } = string.Empty;
 
         /// <summary>
         /// 权限类型: "Api", "Menu", "Data" 等
         /// </summary>
-        public string Type { get; set; }
+        public string Type { get; set; } = string.Empty;
     }
 
     /// <summary>

@@ -91,11 +91,6 @@ namespace Fastdotnet.WebApi.Controllers.Sys
             }
         }
 
-        /// <summary>
-        /// 获取指定算法的私钥
-        /// </summary>
-        /// <param name="algorithm">加密算法类型</param>
-        /// <returns>私钥信息</returns>
         //[HttpGet("private/{algorithm}")]
         //[AllowAnonymous] // 允许匿名访问
         //public async Task<IActionResult> GetPrivateKey(string algorithm)

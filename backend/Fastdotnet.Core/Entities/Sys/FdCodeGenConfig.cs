@@ -10,21 +10,21 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 代码生成主表Id
         /// </summary>
         [SugarColumn(ColumnDescription = "主表Id")]
-        public string CodeGenId { get; set; }
+        public string CodeGenId { get; set; } = string.Empty;
 
         /// <summary>
         /// 数据库字段名
         /// </summary>
         [SugarColumn(ColumnDescription = "字段名称", Length = 128)]
         [Required, MaxLength(128)]
-        public virtual string ColumnName { get; set; }
+        public virtual string ColumnName { get; set; } = string.Empty;
 
         /// <summary>
         /// 显示字段名称
         /// </summary>
         [SugarColumn(ColumnDescription = "显示字段名称", Length = 128)]
         [MaxLength(128)]
-        public virtual string ShowColumnName { get; set; }
+        public virtual string ShowColumnName { get; set; } = string.Empty;
 
         /// <summary>
         /// 主键
@@ -38,7 +38,7 @@ namespace Fastdotnet.Core.Entities.Sys
         /// </summary>
         [SugarColumn(ColumnDescription = "属性名称", Length = 128)]
         [Required, MaxLength(128)]
-        public virtual string PropertyName { get; set; }
+        public virtual string PropertyName { get; set; } = string.Empty;
 
         /// <summary>
         /// 字段数据长度

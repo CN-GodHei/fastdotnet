@@ -43,10 +43,6 @@ public class OrderCancelledEvent : DomainEvent
     public DateTime CancelledAt { get; set; } = DateTime.Now;
 }
 
-/// <summary>
-/// 库存扣减事件（订单支付后触发）
-/// eventKey: {pluginId}.inventory.deducted
-/// </summary>
 //[EventContract("inventory.deducted", Description = "库存扣减", Group = "Inventory")]
 //public class InventoryDeductedEvent : EventBase
 //{

@@ -29,13 +29,13 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 国标编号（唯一标识），如 "GB/T 2260", "GB/T 14396"
         /// </summary>
         [StringLength(255, ErrorMessage = "国标编号（唯一标识")]
-        public string StandardCode { get; set; }
+        public string StandardCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 国标中文名称，如 "中华人民共和国行政区划代码"
         /// </summary>
         [StringLength(255, ErrorMessage = "国标中文名称")]
-        public string StandardName { get; set; }
+        public string StandardName { get; set; } = string.Empty;
 
         /// <summary>
         /// 英文名称（可选）
@@ -48,7 +48,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 标准类型：GB(强制性国标)、GB/T(推荐性国标)、DB(地方标准) 等
         /// </summary>
         [StringLength(255, ErrorMessage = "标准类型：GB(强制性国标)、GB/T(推荐性国标)、DB(地方标准) 等最多255个字符")]
-        public string StandardType { get; set; }
+        public string StandardType { get; set; } = string.Empty;
 
         /// <summary>
         /// 发布部门，如 "国家标准化管理委员会"
@@ -73,7 +73,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 当前有效版本号，如 "2023"
         /// </summary>
         [StringLength(255, ErrorMessage = "当前有效版本号")]
-        public string CurrentVersion { get; set; }
+        public string CurrentVersion { get; set; } = string.Empty;
 
         /// <summary>
         /// 状态：1=现行有效，0=已废止
@@ -96,13 +96,13 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 国标编号（唯一标识），如 "GB/T 2260", "GB/T 14396"
         /// </summary>
         [StringLength(255, ErrorMessage = "国标编号（唯一标识）")]
-        public string StandardCode { get; set; }
+        public string StandardCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 国标中文名称，如 "中华人民共和国行政区划代码"
         /// </summary>
         [StringLength(255, ErrorMessage = "国标中文名称")]
-        public string StandardName { get; set; }
+        public string StandardName { get; set; } = string.Empty;
 
         /// <summary>
         /// 英文名称（可选）
@@ -114,7 +114,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 标准类型：GB(强制性国标)、GB/T(推荐性国标)、DB(地方标准) 等
         /// </summary>
         [StringLength(255, ErrorMessage = "标准类型：GB(强制性国标)、GB/T(推荐性国标)、DB(地方标准) 等最多255个字符")]
-        public string StandardType { get; set; }
+        public string StandardType { get; set; } = string.Empty;
 
         /// <summary>
         /// 发布部门，如 "国家标准化管理委员会"
@@ -136,7 +136,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 当前有效版本号，如 "2023"
         /// </summary>
         [StringLength(255, ErrorMessage = "当前有效版本号")]
-        public string CurrentVersion { get; set; }
+        public string CurrentVersion { get; set; } = string.Empty;
 
         /// <summary>
         /// 状态：1=现行有效，0=已废止
@@ -162,13 +162,13 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 国标编号（唯一标识），如 "GB/T 2260", "GB/T 14396"
         /// </summary>
 
-        public string StandardCode { get; set; }
+        public string StandardCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 国标中文名称，如 "中华人民共和国行政区划代码"
         /// </summary>
 
-        public string StandardName { get; set; }
+        public string StandardName { get; set; } = string.Empty;
 
         /// <summary>
         /// 英文名称（可选）
@@ -180,7 +180,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 标准类型：GB(强制性国标)、GB/T(推荐性国标)、DB(地方标准) 等
         /// </summary>
 
-        public string StandardType { get; set; }
+        public string StandardType { get; set; } = string.Empty;
 
         /// <summary>
         /// 发布部门，如 "国家标准化管理委员会"
@@ -202,7 +202,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 当前有效版本号，如 "2023"
         /// </summary>
 
-        public string CurrentVersion { get; set; }
+        public string CurrentVersion { get; set; } = string.Empty;
 
         /// <summary>
         /// 状态：1=现行有效，0=已废止

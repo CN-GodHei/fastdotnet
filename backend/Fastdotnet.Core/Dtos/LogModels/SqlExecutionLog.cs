@@ -15,18 +15,18 @@ public class SqlExecutionLog
     /// 请求ID，用于追踪整个请求链路
     /// </summary>
     [SugarColumn(IsNullable = true)]
-    public string RequestId { get; set; }
+    public string RequestId { get; set; } = string.Empty;
 
     /// <summary>
     /// 执行的完整SQL语句（包含参数值）
     /// </summary>
     [SugarColumn(ColumnDataType = "text")]
-    public string FullSql { get; set; }
+    public string FullSql { get; set; } = string.Empty;
 
     /// <summary>
     /// 执行耗时（毫秒）
     /// </summary>
-    public string ElapsedMilliseconds { get; set; }
+    public string ElapsedMilliseconds { get; set; } = string.Empty;
 
     /// <summary>
     /// 是否有错误
@@ -37,13 +37,13 @@ public class SqlExecutionLog
     /// 错误信息
     /// </summary>
     [SugarColumn(Length = 4000, IsNullable = true)]
-    public string ErrorMessage { get; set; }
+    public string? ErrorMessage { get; set; }
 
     /// <summary>
     /// 堆栈跟踪
     /// </summary>
     [SugarColumn(ColumnDataType = "text", IsNullable = true)]
-    public string StackTrace { get; set; }
+    public string? StackTrace { get; set; }
 
     /// <summary>
     /// 创建时间

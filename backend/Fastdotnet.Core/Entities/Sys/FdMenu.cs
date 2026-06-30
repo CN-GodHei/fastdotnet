@@ -10,31 +10,31 @@ namespace Fastdotnet.Core.Entities.Sys
         //: BaseEntity, ISoftDelete
     {
         [SugarColumn(ColumnName = "title", IsNullable = false, ColumnDescription = "菜单标题")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         /// <summary>
         /// 菜单名称
         /// </summary>
         [SugarColumn(ColumnName = "name", IsNullable = false, ColumnDescription = "菜单名称(和前端组件名称对应)")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 菜单代码
         /// </summary>
         [SugarColumn(ColumnName = "code", IsNullable = true, ColumnDescription = "菜单代码")]
-        public string Code { get; set; }
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// 菜单路径（用于前端路由）
         /// </summary>
         [SugarColumn(ColumnName = "path", IsNullable = true, ColumnDescription = "菜单路径（用于前端路由）")]
-        public string Path { get; set; }
+        public string Path { get; set; } = string.Empty;
 
         /// <summary>
         /// 菜单图标
         /// </summary>
         [SugarColumn(ColumnName = "icon", IsNullable = true, ColumnDescription = "菜单图标")]
-        public string Icon { get; set; }
+        public string Icon { get; set; } = string.Empty;
 
         /// <summary>
         /// 父级菜单Code
@@ -58,7 +58,7 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 所属模块 (System/PluginId)
         /// </summary>
         [SugarColumn(ColumnName = "module", IsNullable = true, ColumnDescription = "所属模块 (System/PluginId)")]
-        public string Module { get; set; }
+        public string Module { get; set; } = string.Empty;
 
         /// <summary>
         /// 菜单分类: Admin/App
@@ -76,7 +76,7 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 外链地址
         /// </summary>
         [SugarColumn(ColumnName = "external_url", IsNullable = true, ColumnDescription = "外链地址")]
-        public string ExternalUrl { get; set; }
+        public string ExternalUrl { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否启用
@@ -88,7 +88,7 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 关联的权限代码 (关联FdPermission)
         /// </summary>
         [SugarColumn(ColumnName = "permission_code", IsNullable = true, ColumnDescription = "关联的权限代码 (关联FdPermission)")]
-        public string PermissionCode { get; set; }
+        public string PermissionCode { get; set; } = string.Empty;
 
         /// <summary>
         /// Vue组件路径 (例如: "home/index.vue")
@@ -135,7 +135,7 @@ namespace Fastdotnet.Core.Entities.Sys
         public bool IsFdMicroApp { get; set; }
 
         [SugarColumn(ColumnName = "plugin_id", IsNullable = true, ColumnDescription = "插件Id")]
-        public string PluginId { get; set; }
+        public string PluginId { get; set; } = string.Empty;
 
         /// <summary>
         /// 属于

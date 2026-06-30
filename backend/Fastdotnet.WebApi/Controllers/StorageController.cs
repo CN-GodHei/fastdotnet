@@ -53,8 +53,7 @@ namespace Fastdotnet.WebApi.Controllers
         /// <summary>
         /// 下载文件
         /// </summary>
-        /// <param name="fileName">文件名</param>
-        /// <param name="bucketName">存储桶名称（可选）</param>
+        /// <param name="filePath">文件路径</param>
         /// <returns>文件内容</returns>
         // [HttpGet("download/{fileName}")]
         //public async Task<ActionResult> DownloadAsync(string fileName, string? bucketName = null)
@@ -101,7 +100,7 @@ namespace Fastdotnet.WebApi.Controllers
             {
                 return NotFound("文件不存在");
             }
-            catch (Exception ex)
+            catch
             {
                 return StatusCode(500, "下载失败");
             }
@@ -169,8 +168,8 @@ namespace Fastdotnet.WebApi.Controllers
                 // 对于图片文件，设置适当的头部以支持渐进式渲染
                 if (IsImageFile(fileExtension))
                 {
-                    Response.Headers.Add("Accept-Ranges", "bytes");
-                    Response.Headers.Add("Cache-Control", "public, max-age=31536000"); // 缓存一年
+                    Response.Headers["Accept-Ranges"] = "bytes";
+                    Response.Headers["Cache-Control"] = "public, max-age=31536000"; // 缓存一年
                 }
 
                 // 使用PhysicalFile，它会自动处理范围请求

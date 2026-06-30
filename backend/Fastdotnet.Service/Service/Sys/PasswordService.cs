@@ -34,7 +34,7 @@ namespace Fastdotnet.Service.Service.Sys
                 : CryptographyUtils.PasswordHashType.Irreversible;
 
             // 2. 如果是可逆加密，获取密钥
-            string encryptionKey = null;
+            string? encryptionKey = null;
             if (hashType == CryptographyUtils.PasswordHashType.Reversible)
             {
                 var keyConfig = await _dictDataService.GetFirstAsync(c => c.Code == "PasswordEncryptionKey");
@@ -59,7 +59,7 @@ namespace Fastdotnet.Service.Service.Sys
         {
             // 1. 从字典读取默认密码
             var defaultPasswordConfig = await _dictDataService.GetFirstAsync(c => c.Code == "DefaultUserPassword");
-            string defaultPassword = defaultPasswordConfig?.Value;
+            string? defaultPassword = defaultPasswordConfig?.Value;
 
             if (string.IsNullOrEmpty(defaultPassword))
             {
@@ -85,7 +85,7 @@ namespace Fastdotnet.Service.Service.Sys
                 : CryptographyUtils.PasswordHashType.Irreversible;
 
             // 2. 如果是可逆加密，获取密钥
-            string encryptionKey = null;
+            string? encryptionKey = null;
             if (hashType == CryptographyUtils.PasswordHashType.Reversible)
             {
                 var keyConfig = await _dictDataService.GetFirstAsync(c => c.Code == "PasswordEncryptionKey");

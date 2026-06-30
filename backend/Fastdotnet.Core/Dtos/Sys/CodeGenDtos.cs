@@ -328,7 +328,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// </summary>
         public bool IsIgnore { get; set; }
 
-        public virtual string ShowColumnName { get; set; }
+        public virtual string ShowColumnName { get; set; } = string.Empty;
 
     }
 

@@ -45,7 +45,7 @@ namespace Fastdotnet.Core.Plugin
         /// </summary>
         /// <param name="pluginId">插件ID</param>
         /// <returns>插件信息</returns>
-        public static PluginInfo GetPluginInfo(string pluginId)
+        public static PluginInfo? GetPluginInfo(string pluginId)
         {
             _pluginInfoMap.TryGetValue(pluginId, out var pluginInfo);
             return pluginInfo;
@@ -56,7 +56,7 @@ namespace Fastdotnet.Core.Plugin
         /// </summary>
         /// <param name="assemblyName">程序集名称</param>
         /// <returns>插件信息</returns>
-        public static PluginInfo GetPluginInfoByAssembly(string assemblyName)
+        public static PluginInfo? GetPluginInfoByAssembly(string assemblyName)
         {
             if (_assemblyToPluginIdMap.TryGetValue(assemblyName, out var pluginId))
             {
@@ -70,7 +70,7 @@ namespace Fastdotnet.Core.Plugin
         /// </summary>
         /// <param name="assemblyName">程序集名称</param>
         /// <returns>插件ID</returns>
-        public static string GetPluginIdByAssembly(string assemblyName)
+        public static string? GetPluginIdByAssembly(string assemblyName)
         {
             _assemblyToPluginIdMap.TryGetValue(assemblyName, out var pluginId);
             return pluginId;

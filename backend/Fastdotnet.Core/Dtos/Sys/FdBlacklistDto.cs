@@ -11,18 +11,18 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 黑名单类型 (IP, User, ApiKey)
         /// </summary>
         [Required]
-        public string Type { get; set; }
+        public string Type { get; set; } = string.Empty;
 
         /// <summary>
         /// 黑名单值 (具体的IP地址、用户ID或API密钥)
         /// </summary>
         [Required]
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
 
         /// <summary>
         /// 加入黑名单的原因
         /// </summary>
-        public string Reason { get; set; }
+        public string Reason { get; set; } = string.Empty;
 
         /// <summary>
         /// 过期时间 (可选)
@@ -48,18 +48,18 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 黑名单类型 (IP, User, ApiKey)
         /// </summary>
         [Required]
-        public string Type { get; set; }
+        public string Type { get; set; } = string.Empty;
 
         /// <summary>
         /// 黑名单值 (具体的IP地址、用户ID或API密钥)
         /// </summary>
         [Required]
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
 
         /// <summary>
         /// 加入黑名单的原因
         /// </summary>
-        public string Reason { get; set; }
+        public string Reason { get; set; } = string.Empty;
 
         /// <summary>
         /// 过期时间 (可选)
@@ -76,18 +76,18 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 黑名单类型 (IP, User, ApiKey)
         /// </summary>
         [Required]
-        public string Type { get; set; }
+        public string Type { get; set; } = string.Empty;
 
         /// <summary>
         /// 黑名单值 (具体的IP地址、用户ID或API密钥)
         /// </summary>
         [Required]
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
 
         /// <summary>
         /// 加入黑名单的原因
         /// </summary>
-        public string Reason { get; set; }
+        public string Reason { get; set; } = string.Empty;
 
         /// <summary>
         /// 过期时间 (可选)

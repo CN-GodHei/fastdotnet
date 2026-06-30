@@ -5,7 +5,7 @@ namespace Fastdotnet.WebApi.Filters
     /// </summary>
     public class InheritedGenericControllerOperationFilter : IOperationFilter
     {
-        private readonly XDocument _xmlDoc;
+        private readonly XDocument? _xmlDoc;
         private readonly ConcurrentDictionary<string, string> _memberSummaryCache = new();
 
         public InheritedGenericControllerOperationFilter()
@@ -23,7 +23,7 @@ namespace Fastdotnet.WebApi.Filters
             {
                 // 记录日志或处理异常，但不要让过滤器失败
                 Console.WriteLine($"Failed to load XML comments for InheritedGenericControllerOperationFilter: {ex.Message}");
-                _xmlDoc = null;
+                _xmlDoc = null!;
             }
         }
 
@@ -53,7 +53,7 @@ namespace Fastdotnet.WebApi.Filters
         private void ApplyDocumentation(OpenApiOperation operation, MethodInfo methodInfo, Type controllerType, int genericTypeParamCount)
         {
             // 检查子类方法是否有自定义的 <summary>
-            string customSummary = GetCustomSummary(methodInfo);
+            string? customSummary = GetCustomSummary(methodInfo);
             if (!string.IsNullOrWhiteSpace(customSummary))
             {
                 // 如果子类有自定义摘要，则使用它
@@ -256,7 +256,7 @@ namespace Fastdotnet.WebApi.Filters
         /// <summary>
         /// 从XML注释中获取方法的自定义摘要
         /// </summary>
-        private string GetCustomSummary(MethodInfo methodInfo)
+        private string? GetCustomSummary(MethodInfo methodInfo)
         {
             if (_xmlDoc == null) return null;
 
@@ -264,7 +264,7 @@ namespace Fastdotnet.WebApi.Filters
             string memberName = XmlCommentsMemberNameHelper.GetMemberNameForMethod(methodInfo);
             
             // 使用缓存提高性能
-            if (_memberSummaryCache.TryGetValue(memberName, out string cachedSummary))
+            if (_memberSummaryCache.TryGetValue(memberName, out string? cachedSummary))
             {
                 return cachedSummary;
             }
@@ -277,11 +277,11 @@ namespace Fastdotnet.WebApi.Filters
 
             // 提取 <summary> 节点的文本
             var summaryElement = memberElement.Element("summary");
-            string summary = summaryElement?.Value.Trim();
+            string? summary = summaryElement?.Value.Trim();
 
             // 缓存结果
-            _memberSummaryCache[memberName] = summary;
-            return summary;
+            _memberSummaryCache[memberName] = summary ?? string.Empty;
+            return summary ?? string.Empty;
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace Fastdotnet.WebApi.Filters
                 {
                     return true;
                 }
-                toCheck = toCheck.BaseType;
+                toCheck = toCheck.BaseType!;
             }
             return false;
         }
@@ -310,7 +310,8 @@ namespace Fastdotnet.WebApi.Filters
             var builder = new System.Text.StringBuilder("M:");
 
             var declaringType = method.DeclaringType;
-            AppendFullTypeName(builder, declaringType);
+            if (declaringType != null)
+                AppendFullTypeName(builder, declaringType);
 
             builder.Append('.');
             builder.Append(method.Name);
@@ -335,7 +336,7 @@ namespace Fastdotnet.WebApi.Filters
             // 处理泛型类型
             if (type.IsGenericType)
             {
-                var fullName = type.GetGenericTypeDefinition().FullName;
+                var fullName = type.GetGenericTypeDefinition().FullName!;
                 // 将 `N 替换为 'N (例如, System.Collections.Generic.List`1 -> System.Collections.Generic.List'1)
                 builder.Append(fullName.Replace('+', '.').Replace('`', '\''));
                 builder.Append('{');

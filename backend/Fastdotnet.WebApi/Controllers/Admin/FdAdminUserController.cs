@@ -10,8 +10,8 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     public class FdAdminUserController : GenericDtoControllerBase<FdAdminUser, string, CreateFdAdminUserDto, UpdateFdAdminUserDto, FdAdminUserDto>
     {
         private readonly IAdminUserService _adminUserService;
-        private readonly ICurrentUser _currentUser;
-        private readonly IBaseService<FdAdminUser, string> _service;
+        private new readonly ICurrentUser _currentUser;
+        private new readonly IBaseService<FdAdminUser, string> _service;
         private readonly IPasswordService _passwordService;
 
         public FdAdminUserController(
@@ -107,18 +107,18 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         public async Task<FdAdminUserDto> getUserInfo()
         {
             // 获取当前用户信息
-            var user = await _service.GetByIdAsync(_currentUser.Id);
+            var user = await _service.GetByIdAsync(_currentUser.Id ?? string.Empty);
             if (user == null)
             {
                 throw new UnauthorizedAccessException("用户不存在");
             }
 
             // 获取用户角色
-            var userRoleRelations = await _adminUserService.GetUserRoleRelationsAsync(_currentUser.Id);
+            var userRoleRelations = await _adminUserService.GetUserRoleRelationsAsync(_currentUser.Id!);
             var roleIds = userRoleRelations.Select(ur => ur.RoleId).ToList();
 
             // 获取用户按钮权限
-            var buttons = await _adminUserService.GetUserButtonPermissionsAsync(_currentUser.Id);
+            var buttons = await _adminUserService.GetUserButtonPermissionsAsync(_currentUser.Id!);
 
             // 构造返回对象
             var userDto = user.Adapt<FdAdminUserDto>();

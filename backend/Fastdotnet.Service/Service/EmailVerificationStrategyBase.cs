@@ -108,9 +108,9 @@ namespace Fastdotnet.Service.Service
                 return Task.FromResult(false);
             }
 
-            if (_memoryCache.TryGetValue(cacheKey, out string storedCode))
+            if (_memoryCache.TryGetValue(cacheKey, out string? storedCode))
             {
-                if (storedCode.Equals(code, StringComparison.OrdinalIgnoreCase))
+                if (storedCode != null && storedCode.Equals(code, StringComparison.OrdinalIgnoreCase))
                 {
                     // 验证成功后立即移除，防止重复使用
                     _memoryCache.Remove(cacheKey);

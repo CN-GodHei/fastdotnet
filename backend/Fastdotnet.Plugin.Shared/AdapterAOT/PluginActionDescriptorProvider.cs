@@ -35,7 +35,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
         
                 if (_pluginManager.IsTypeFromPluginAssembly(controllerType))
                 {
-                    PluginInfo pluginConfig = null;
+                    PluginInfo? pluginConfig = null;
                     foreach (var config in _pluginManager.GetLoadedPluginInfos())
                     {
                         var assembly = _pluginManager.GetPluginAssembly(config.id);
@@ -122,7 +122,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
                     var scopeProperty = attr.GetType().GetProperty("Scope");
                     if (scopeProperty != null)
                     {
-                        return (Core.Enum.ApiUsageScopeEnum)scopeProperty.GetValue(attr);
+                        return (Core.Enum.ApiUsageScopeEnum)scopeProperty.GetValue(attr)!;
                     }
                 }
             }
@@ -141,7 +141,7 @@ namespace Fastdotnet.Plugin.Shared.AdapterAOT
                         var scopeProperty = attr.GetType().GetProperty("Scope");
                         if (scopeProperty != null)
                         {
-                            return (Core.Enum.ApiUsageScopeEnum)scopeProperty.GetValue(attr);
+                            return (Core.Enum.ApiUsageScopeEnum)scopeProperty.GetValue(attr)!;
                         }
                     }
                 }

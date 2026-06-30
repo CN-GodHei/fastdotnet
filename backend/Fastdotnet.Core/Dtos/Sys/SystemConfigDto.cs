@@ -1,7 +1,7 @@
 namespace Fastdotnet.Core.Dtos.Sys
 {
     /// <summary>
-    ///ÐÂÔö´«ÊäÄ£ÐÍ
+    ///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
     /// </summary>
     public class CreateFdSystemInfoConfigDto
     {
@@ -9,16 +9,16 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// <summary>
         /// name
         /// </summary>
-        [Required(ErrorMessage = "name²»ÄÜÎª¿Õ")]
-        [StringLength(100, ErrorMessage = "name×î¶à100¸ö×Ö·û")]
-        public string Name { get; set; }
+        [Required(ErrorMessage = "nameï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½")]
+        [StringLength(100, ErrorMessage = "nameï¿½ï¿½ï¿½100ï¿½ï¿½ï¿½Ö·ï¿½")]
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// code
         /// </summary>
-        [Required(ErrorMessage = "code²»ÄÜÎª¿Õ")]
-        [StringLength(100, ErrorMessage = "code×î¶à100¸ö×Ö·û")]
-        public string Code { get; set; }
+        [Required(ErrorMessage = "codeï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½")]
+        [StringLength(100, ErrorMessage = "codeï¿½ï¿½ï¿½100ï¿½ï¿½ï¿½Ö·ï¿½")]
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// value
@@ -28,18 +28,18 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// <summary>
         /// description
         /// </summary>
-        [StringLength(500, ErrorMessage = "description×î¶à500¸ö×Ö·û")]
+        [StringLength(500, ErrorMessage = "descriptionï¿½ï¿½ï¿½500ï¿½ï¿½ï¿½Ö·ï¿½")]
         public string? Description { get; set; }
 
         /// <summary>
         /// is_system
         /// </summary>
-        [Required(ErrorMessage = "is_system²»ÄÜÎª¿Õ")]
+        [Required(ErrorMessage = "is_systemï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½")]
         public bool IsSystem { get; set; }
     }
 
     /// <summary>
-    ///ÐÞ¸Ä´«ÊäÄ£ÐÍ
+    ///ï¿½Þ¸Ä´ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
     /// </summary>
     public class UpdateFdSystemInfoConfigDto
     {
@@ -47,20 +47,20 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// <summary>
         /// id
         /// </summary>
-        [StringLength(255, ErrorMessage = "id×î¶à255¸ö×Ö·û")]
-        public string Id { get; set; }
+        [StringLength(255, ErrorMessage = "idï¿½ï¿½ï¿½255ï¿½ï¿½ï¿½Ö·ï¿½")]
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// name
         /// </summary>
-        [StringLength(100, ErrorMessage = "name×î¶à100¸ö×Ö·û")]
-        public string Name { get; set; }
+        [StringLength(100, ErrorMessage = "nameï¿½ï¿½ï¿½100ï¿½ï¿½ï¿½Ö·ï¿½")]
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// code
         /// </summary>
-        [StringLength(100, ErrorMessage = "code×î¶à100¸ö×Ö·û")]
-        public string Code { get; set; }
+        [StringLength(100, ErrorMessage = "codeï¿½ï¿½ï¿½100ï¿½ï¿½ï¿½Ö·ï¿½")]
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// value
@@ -70,7 +70,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// <summary>
         /// description
         /// </summary>
-        [StringLength(500, ErrorMessage = "description×î¶à500¸ö×Ö·û")]
+        [StringLength(500, ErrorMessage = "descriptionï¿½ï¿½ï¿½500ï¿½ï¿½ï¿½Ö·ï¿½")]
         public string? Description { get; set; }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Fastdotnet.Core.Dtos.Sys
     }
 
     /// <summary>
-    ///Êä³ö´«ÊäÄ£ÐÍ
+    ///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
     /// </summary>
     public class FdSystemInfoConfigDto
     {
@@ -89,19 +89,19 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// id
         /// </summary>
 
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// name
         /// </summary>
 
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// code
         /// </summary>
 
-        public string Code { get; set; }
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// value

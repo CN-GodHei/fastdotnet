@@ -17,14 +17,14 @@ namespace Fastdotnet.Core.Middleware
             var path = context.Request.Path;
 
             // 检查是否有任何已注册的提供者可以处理此路径
-            var bestMatchPrefix = _registry.GetBestMatchRequestPath(path.Value);
+            var bestMatchPrefix = _registry.GetBestMatchRequestPath(path.Value!);
             if (bestMatchPrefix != null)
             {
                 var provider = _registry.GetProvider(bestMatchPrefix);
                 if (provider != null)
                 {
                     // 计算子路径
-                    var subpath = path.Value.Substring(bestMatchPrefix.Length);
+                    var subpath = path.Value!.Substring(bestMatchPrefix.Length);
                     
                     // 如果子路径为空或是目录，尝试返回 index.html
                     if (string.IsNullOrEmpty(subpath) || subpath == "/")

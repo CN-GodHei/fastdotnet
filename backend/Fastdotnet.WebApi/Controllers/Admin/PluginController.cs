@@ -25,13 +25,13 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// <summary>
         /// 从 URL 下载并加载插件
         /// </summary>
-        /// <param name="pluginUrl">插件下载地址</param>
+        /// <param name="dto">插件下载信息</param>
         /// <returns>加载结果</returns>
         [HttpPost("load")]
         public async Task<ApiResult> LoadPlugin([FromBody] DownloadPluginDto dto)
         {
             dto.IsValid();
-            return await _pluginLoadService.InstallPlugin(dto.PluginId, dto.Version, dto.Token, _currentUser.Id);
+            return await _pluginLoadService.InstallPlugin(dto.PluginId, dto.Version, dto.Token, _currentUser.Id ?? string.Empty);
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// 用户授权码
         /// </summary>
         [Required]
-        public string AuthCode { get; set; }
+        public string AuthCode { get; set; } = default!;
     }
     /// <summary>
     /// 插件下载传输模型
@@ -253,33 +253,21 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     public class DownloadPluginDto
     {
         /// <summary>
-        /// 下载链接
-        /// </summary>
-        //[Required]
-        //public string Url { get; set; }
-
-        /// <summary>
         /// Token
         /// </summary>
         [Required]
-        public string Token { get; set; }
+        public string Token { get; set; } = default!;
 
         /// <summary>
         /// 插件Id
         /// </summary>
         [Required]
-        public string PluginId { get; set; }
-
-        /// <summary>
-        /// 插件名称
-        /// </summary>
-        //[Required]
-        //public string PluginName { get; set; }
+        public string PluginId { get; set; } = default!;
 
         /// <summary>
         /// 版本
         /// </summary>
         [Required]
-        public string Version { get; set; }
+        public string Version { get; set; } = default!;
     }
 }

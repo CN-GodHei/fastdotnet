@@ -11,19 +11,19 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 黑名单类型 (IP, User, ApiKey)
         /// </summary>
         [SugarColumn(ColumnName = "type", IsNullable = false, Length = 50, ColumnDescription = "黑名单类型 (IP, User, ApiKey)")]
-        public string Type { get; set; }
+        public string Type { get; set; } = string.Empty;
 
         /// <summary>
         /// 黑名单值 (具体的IP地址、用户ID或API密钥)
         /// </summary>
         [SugarColumn(ColumnName = "value", IsNullable = false, Length = 255, ColumnDescription = "黑名单值 (具体的IP地址、用户ID或API密钥)")]
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
 
         /// <summary>
         /// 加入黑名单的原因
         /// </summary>
         [SugarColumn(ColumnName = "reason", IsNullable = true, Length = 255, ColumnDescription = "加入黑名单的原因")]
-        public string Reason { get; set; }
+        public string Reason { get; set; } = string.Empty;
 
         /// <summary>
         /// 过期时间 (可选)

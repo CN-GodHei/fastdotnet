@@ -15,7 +15,7 @@ public class OperationLog
     /// <summary>
     /// 请求ID，用于追踪整个请求链路
     /// </summary>
-    public string RequestId { get; set; }
+    public string RequestId { get; set; } = string.Empty;
 
     /// <summary>
     /// 操作人用户ID（如：UserId），匿名或系统任务可为 null
@@ -38,29 +38,29 @@ public class OperationLog
     /// <summary>
     /// 请求路径
     /// </summary>
-    public string Path { get; set; }
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>
     /// 请求方法
     /// </summary>
-    public string Method { get; set; }
+    public string Method { get; set; } = string.Empty;
 
     /// <summary>
     /// 请求IP
     /// </summary>
-    public string Ip { get; set; }
+    public string Ip { get; set; } = string.Empty;
 
     /// <summary>
     /// 请求头
     /// </summary>
     [SugarColumn(Length = 2000, IsNullable = true)]
-    public string Headers { get; set; }
+    public string Headers { get; set; } = string.Empty;
     
     /// <summary>
     /// 请求体
     /// </summary>
     [SugarColumn(Length = 2000, IsNullable = true)]
-    public string Body { get; set; }
+    public string Body { get; set; } = string.Empty;
 
     /// <summary>
     /// 响应状态码
@@ -70,10 +70,10 @@ public class OperationLog
     /// <summary>
     /// 耗时（毫秒）
     /// </summary>
-    public string ElapsedMilliseconds { get; set; }
+    public string ElapsedMilliseconds { get; set; } = string.Empty;
 
     [SugarColumn(Length = 15, IsNullable = true,ColumnDescription = "操作用户类型：Admin/App")]
-    public string UserType { get; set; }
+    public string UserType { get; set; } = string.Empty;
 
     /// <summary>
     /// 创建时间

@@ -1,7 +1,7 @@
 namespace Fastdotnet.Core.Dtos.Sys
 {
     /// <summary>
-    ///ÐÂÔö´«ÊäÄ£ÐÍ
+    ///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
     /// </summary>
     public class CreateFdPermissionDto
     {
@@ -9,45 +9,45 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// <summary>
         /// name
         /// </summary>
-        [Required(ErrorMessage = "name²»ÄÜÎª¿Õ")]
-        [StringLength(255, ErrorMessage = "name×î¶à255¸ö×Ö·û")]
-        public string Name { get; set; }
+        [Required(ErrorMessage = "nameï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½")]
+        [StringLength(255, ErrorMessage = "nameï¿½ï¿½ï¿½255ï¿½ï¿½ï¿½Ö·ï¿½")]
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// code
         /// </summary>
-        [Required(ErrorMessage = "code²»ÄÜÎª¿Õ")]
-        [StringLength(255, ErrorMessage = "code×î¶à255¸ö×Ö·û")]
-        public string Code { get; set; }
+        [Required(ErrorMessage = "codeï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½")]
+        [StringLength(255, ErrorMessage = "codeï¿½ï¿½ï¿½255ï¿½ï¿½ï¿½Ö·ï¿½")]
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// description
         /// </summary>
-        [StringLength(255, ErrorMessage = "description×î¶à255¸ö×Ö·û")]
+        [StringLength(255, ErrorMessage = "descriptionï¿½ï¿½ï¿½255ï¿½ï¿½ï¿½Ö·ï¿½")]
         public string? Description { get; set; }
 
         /// <summary>
         /// module
         /// </summary>
-        [StringLength(255, ErrorMessage = "module×î¶à255¸ö×Ö·û")]
+        [StringLength(255, ErrorMessage = "moduleï¿½ï¿½ï¿½255ï¿½ï¿½ï¿½Ö·ï¿½")]
         public string? Module { get; set; }
 
         /// <summary>
         /// type
         /// </summary>
-        [Required(ErrorMessage = "type²»ÄÜÎª¿Õ")]
+        [Required(ErrorMessage = "typeï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½")]
         public long Type { get; set; }
 
         /// <summary>
         /// category
         /// </summary>
-        [Required(ErrorMessage = "category²»ÄÜÎª¿Õ")]
-        [StringLength(50, ErrorMessage = "category×î¶à50¸ö×Ö·û")]
-        public string Category { get; set; }
+        [Required(ErrorMessage = "categoryï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½")]
+        [StringLength(50, ErrorMessage = "categoryï¿½ï¿½ï¿½50ï¿½ï¿½ï¿½Ö·ï¿½")]
+        public string Category { get; set; } = string.Empty;
     }
 
     /// <summary>
-    ///ÐÞ¸Ä´«ÊäÄ£ÐÍ
+    ///ï¿½Þ¸Ä´ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
     /// </summary>
     public class UpdateFdPermissionDto
     {
@@ -55,31 +55,31 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// <summary>
         /// id
         /// </summary>
-        [StringLength(255, ErrorMessage = "id×î¶à255¸ö×Ö·û")]
-        public string Id { get; set; }
+        [StringLength(255, ErrorMessage = "idï¿½ï¿½ï¿½255ï¿½ï¿½ï¿½Ö·ï¿½")]
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// name
         /// </summary>
-        [StringLength(255, ErrorMessage = "name×î¶à255¸ö×Ö·û")]
-        public string Name { get; set; }
+        [StringLength(255, ErrorMessage = "nameï¿½ï¿½ï¿½255ï¿½ï¿½ï¿½Ö·ï¿½")]
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// code
         /// </summary>
-        [StringLength(255, ErrorMessage = "code×î¶à255¸ö×Ö·û")]
-        public string Code { get; set; }
+        [StringLength(255, ErrorMessage = "codeï¿½ï¿½ï¿½255ï¿½ï¿½ï¿½Ö·ï¿½")]
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// description
         /// </summary>
-        [StringLength(255, ErrorMessage = "description×î¶à255¸ö×Ö·û")]
+        [StringLength(255, ErrorMessage = "descriptionï¿½ï¿½ï¿½255ï¿½ï¿½ï¿½Ö·ï¿½")]
         public string? Description { get; set; }
 
         /// <summary>
         /// module
         /// </summary>
-        [StringLength(255, ErrorMessage = "module×î¶à255¸ö×Ö·û")]
+        [StringLength(255, ErrorMessage = "moduleï¿½ï¿½ï¿½255ï¿½ï¿½ï¿½Ö·ï¿½")]
         public string? Module { get; set; }
 
         /// <summary>
@@ -90,12 +90,12 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// <summary>
         /// category
         /// </summary>
-        [StringLength(50, ErrorMessage = "category×î¶à50¸ö×Ö·û")]
-        public string Category { get; set; }
+        [StringLength(50, ErrorMessage = "categoryï¿½ï¿½ï¿½50ï¿½ï¿½ï¿½Ö·ï¿½")]
+        public string Category { get; set; } = string.Empty;
     }
 
     /// <summary>
-    ///Êä³ö´«ÊäÄ£ÐÍ
+    ///ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
     /// </summary>
     public class FdPermissionDto
     {
@@ -104,19 +104,19 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// id
         /// </summary>
 
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// name
         /// </summary>
 
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// code
         /// </summary>
 
-        public string Code { get; set; }
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// description
@@ -139,7 +139,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// category
         /// </summary>
 
-        public string Category { get; set; }
+        public string Category { get; set; } = string.Empty;
 
         /// <summary>
         /// created_at

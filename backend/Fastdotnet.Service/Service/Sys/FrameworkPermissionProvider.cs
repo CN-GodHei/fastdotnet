@@ -30,7 +30,7 @@ namespace Fastdotnet.Service.Service.Sys
                 .Where(fi => fi.IsLiteral && !fi.IsInitOnly && fi.FieldType == typeof(string))
                 .Select(fi =>
                 {
-                    var code = (string)fi.GetValue(null);
+                    var code = (string)fi.GetValue(null)!;
                     var name = fi.Name; // e.g., "View", "Create"
                     return new PermissionDefinition
                     {

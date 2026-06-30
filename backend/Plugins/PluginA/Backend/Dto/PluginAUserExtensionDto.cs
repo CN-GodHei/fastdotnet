@@ -13,13 +13,13 @@ namespace PluginA.Dto
         /// 关联的用户ID
         /// </summary>
         [SugarColumn]
-        public string FdAppUserId { get; set; }
+        public string FdAppUserId { get; set; } = string.Empty;
 
         /// <summary>
         /// 用户偏好设置
         /// </summary>
         [SugarColumn]
-        public string Preferences { get; set; }
+        public string Preferences { get; set; } = string.Empty;
 
         /// <summary>
         /// 用户积分
@@ -30,9 +30,6 @@ namespace PluginA.Dto
 
     public class CreatePluginAUserExtensionDto
     {
-        /// <summary>
-        /// 关联的用户ID
-        /// </summary>
         //[SugarColumn]
         //public string FdAppUserId { get; set; }
 
@@ -40,7 +37,7 @@ namespace PluginA.Dto
         /// 用户偏好设置
         /// </summary>
         [SugarColumn]
-        public string Preferences { get; set; }
+        public string Preferences { get; set; } = string.Empty;
 
         /// <summary>
         /// 用户积分
@@ -52,11 +49,8 @@ namespace PluginA.Dto
     public class UpdatePluginAUserExtensionDto
     {
         [SugarColumn]
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
-        /// <summary>
-        /// 关联的用户ID
-        /// </summary>
         //[SugarColumn]
         //public string FdAppUserId { get; set; }
 
@@ -64,7 +58,7 @@ namespace PluginA.Dto
         /// 用户偏好设置
         /// </summary>
         [SugarColumn]
-        public string Preferences { get; set; }
+        public string Preferences { get; set; } = string.Empty;
 
         /// <summary>
         /// 用户积分

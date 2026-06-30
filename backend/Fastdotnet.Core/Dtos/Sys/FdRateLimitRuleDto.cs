@@ -11,13 +11,13 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 限流类型 (IP, User, ApiKey)
         /// </summary>
         [Required]
-        public string Type { get; set; }
+        public string Type { get; set; } = string.Empty;
 
         /// <summary>
         /// 限流键 (具体的IP地址、用户ID或API密钥)
         /// </summary>
         [Required]
-        public string Key { get; set; }
+        public string Key { get; set; } = string.Empty;
 
         /// <summary>
         /// 允许的最大请求数
@@ -34,7 +34,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// <summary>
         /// 规则描述
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否为系统内置
@@ -55,13 +55,13 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 限流类型 (IP, User, ApiKey)
         /// </summary>
         [Required]
-        public string Type { get; set; }
+        public string Type { get; set; } = string.Empty;
 
         /// <summary>
         /// 限流键 (具体的IP地址、用户ID或API密钥)
         /// </summary>
         [Required]
-        public string Key { get; set; }
+        public string Key { get; set; } = string.Empty;
 
         /// <summary>
         /// 允许的最大请求数
@@ -80,7 +80,7 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// <summary>
         /// 规则描述
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -92,13 +92,13 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 限流类型 (IP, User, ApiKey)
         /// </summary>
         [Required]
-        public string Type { get; set; }
+        public string Type { get; set; } = string.Empty;
 
         /// <summary>
         /// 限流键 (具体的IP地址、用户ID或API密钥)
         /// </summary>
         [Required]
-        public string Key { get; set; }
+        public string Key { get; set; } = string.Empty;
 
         /// <summary>
         /// 允许的最大请求数
@@ -117,6 +117,6 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// <summary>
         /// 规则描述
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
     }
 }

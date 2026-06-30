@@ -10,7 +10,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     public class FdMenuController : GenericDtoControllerBase<FdMenu, string, CreateFdMenuDto, UpdateFdMenuDto, FdMenuDto>
     {
         private readonly IMenuService _menuService;
-        private readonly ICurrentUser _currentUser;
+        private new readonly ICurrentUser _currentUser;
         private readonly IAdminUserService _adminUserService;
         private readonly IUserRefFiller _userRefFiller;
         public FdMenuController(
@@ -78,7 +78,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         /// </summary>
         /// <param name="query">查询条件</param>
         /// <param name="result">查询结果</param>
-        protected override async Task<object> AfterGetListByCondition(QueryByConditionDto query, object result)
+        protected override async Task<object?> AfterGetListByCondition(QueryByConditionDto query, object result)
         {
             // 调用基类方法确保基础逻辑执行
             await base.AfterGetListByCondition(query, result);

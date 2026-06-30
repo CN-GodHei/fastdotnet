@@ -50,7 +50,7 @@ public class PluginSwaggerDocRegistry
     /// <summary>
     /// 运行时注册单条插件文档（添加 SwaggerDoc + SwaggerUI 端点 + XML 注释）
     /// </summary>
-    public bool RegisterPlugin(string pluginId, string pluginName, string description, string entryPoint = null)
+    public bool RegisterPlugin(string pluginId, string pluginName, string description, string? entryPoint = null)
     {
         var key = pluginId.ToLower();
         if (!_plugins.TryAdd(key, (pluginName, description ?? "", entryPoint ?? pluginId)))

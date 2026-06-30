@@ -102,20 +102,20 @@ namespace Fastdotnet.Service.Service
             var attrStr = "";
             if (column.ColumnKey)
             {
-                attrStr = $"[SugarColumn(IsPrimaryKey = true,ColumnName = \"{column.ColumnName.ToLower()}\",  IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = \"{column.ColumnComment}\" {GetDefaultValue(column.DefaultValue)})]";
-                //attrStr = $"[SugarColumn(IsPrimaryKey = true,ColumnName = \"{column.ColumnName.ToLower()}\", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = \"{column.ColumnComment}\" {GetDefaultValue(column.DefaultValue)})]";
+                 attrStr = $"[SugarColumn(IsPrimaryKey = true,ColumnName = \"{column.ColumnName.ToLower()}\",  IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = \"{column.ColumnComment}\" {GetDefaultValue(column.DefaultValue!)})]";
+                //attrStr = $"[SugarColumn(IsPrimaryKey = true,ColumnName = \"{column.ColumnName.ToLower()}\", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = \"{column.ColumnComment}\" {GetDefaultValue(column.DefaultValue!)})]";
             }
             else if (column.ColumnKey)
             {
-                attrStr = $@"[SugarColumn(IsIdentity = true,ColumnName = ""{column.ColumnName.ToLower()}"",  IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}""{GetDefaultValue(column.DefaultValue)})]";
-                //attrStr = $@"[SugarColumn(IsIdentity = true,ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}""{GetDefaultValue(column.DefaultValue)})]";
+                attrStr = $@"[SugarColumn(IsIdentity = true,ColumnName = ""{column.ColumnName.ToLower()}"",  IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}""{GetDefaultValue(column.DefaultValue!)})]";
+                //attrStr = $@"[SugarColumn(IsIdentity = true,ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}""{GetDefaultValue(column.DefaultValue!)})]";
             }
             if (string.IsNullOrEmpty(attrStr))
             {
-                attrStr += $@"[SugarColumn(ColumnName = ""{column.ColumnName.ToLower()}"",  IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}"" {GetDefaultValue(column.DefaultValue)})]";
-                //attrStr += $@"[SugarColumn(ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}"" {GetDefaultValue(column.DefaultValue)})]";
+                attrStr += $@"[SugarColumn(ColumnName = ""{column.ColumnName.ToLower()}"",  IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}"" {GetDefaultValue(column.DefaultValue!)})]";
+                //attrStr += $@"[SugarColumn(ColumnName = ""{column.ColumnName.ToLower()}"", {GetLength(column.ColumnLength)} IsNullable = {column.WhetherRequired.ToString().ToLower()}, ColumnDescription = ""{column.ColumnComment}"" {GetDefaultValue(column.DefaultValue!)})]";
             }
-            return $"        {GenGenerateColumnComment(column.ColumnComment)}\n        {attrStr}\n        public {column.NetType} {column.PropertyName} {{ get; set; }}";
+            return $"        {GenGenerateColumnComment(column.ColumnComment!)}\n        {attrStr}\n        public {column.NetType} {column.PropertyName} {{ get; set; }}";
         }
 
 
@@ -702,7 +702,7 @@ const submitForm = () => {{
 	formRef.value.validate(async (valid: boolean) => {{
 		if (!valid) return;
 		try {{
-			if (state.dialog.type === 'update'&&state.formData.{configcolumns.Where(w => w.ColumnKey == true).FirstOrDefault().PropertyName ?? configcolumns.FirstOrDefault().PropertyName}) {{
+			if (state.dialog.type === 'update'&&state.formData.{configcolumns.Where(w => w.ColumnKey == true).FirstOrDefault()!.PropertyName ?? configcolumns.FirstOrDefault()!.PropertyName}) {{
 				// 更新接口调用
 				const updateData = {{ ...state.formData }} as APIModel.Update{entityName}Dto;
 				await {entityName}Api.putApi{apiscop}{entityName}Id({{ id: state.formData.Id }}, updateData);

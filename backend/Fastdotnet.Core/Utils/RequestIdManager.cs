@@ -6,7 +6,7 @@ namespace Fastdotnet.Core.Utils;
 /// </summary>
 public static class RequestIdManager
 {
-    private static readonly AsyncLocal<string> _asyncLocalRequestId = new();
+    private static readonly AsyncLocal<string?> _asyncLocalRequestId = new();
 
     /// <summary>
     /// 获取当前请求的ID（可能为 null）

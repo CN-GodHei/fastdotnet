@@ -47,7 +47,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体列表</returns>
-        public virtual async Task<List<T>> GetListAsync(Expression<Func<T, bool>> whereExpression, CancellationToken cancellationToken = default)
+        public virtual async Task<List<T>> GetListAsync(Expression<Func<T, bool>>? whereExpression, CancellationToken cancellationToken = default)
         {
             return await _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression).ToListAsync(cancellationToken);
         }
@@ -57,7 +57,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>实体对象</returns>
-        public virtual async Task<T> GetFirstAsync(Expression<Func<T, bool>> whereExpression, CancellationToken cancellationToken = default)
+        public virtual async Task<T> GetFirstAsync(Expression<Func<T, bool>>? whereExpression, CancellationToken cancellationToken = default)
         {
             return await _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression).FirstAsync(cancellationToken);
         }
@@ -73,7 +73,7 @@ namespace Fastdotnet.Core.Service.Sys
         public virtual async Task<PageResult<T>> GetPageAsync(
             int pageIndex,
             int pageSize,
-            Expression<Func<T, object>> orderByExpression = null,
+            Expression<Func<T, object>>? orderByExpression = null,
             OrderByType orderByType = OrderByType.Asc, CancellationToken cancellationToken = default)
         {
             return await GetPageAsync(null, pageIndex, pageSize, orderByExpression, orderByType, cancellationToken);
@@ -89,10 +89,10 @@ namespace Fastdotnet.Core.Service.Sys
         /// <param name="orderByType">排序类型</param>
         /// <returns>分页结果</returns>
         public virtual async Task<PageResult<T>> GetPageAsync(
-            Expression<Func<T, bool>> whereExpression,
+            Expression<Func<T, bool>>? whereExpression,
             int pageIndex,
             int pageSize,
-            Expression<Func<T, object>> orderByExpression = null,
+            Expression<Func<T, object>>? orderByExpression = null,
             OrderByType orderByType = OrderByType.Asc, CancellationToken cancellationToken = default)
         {
             RefAsync<int> totalCount = 0;
@@ -121,7 +121,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// </summary>
         /// <param name="whereExpression">查询条件表达式</param>
         /// <returns>是否存在</returns>
-        public virtual async Task<bool> ExistsAsync(Expression<Func<T, bool>> whereExpression)
+        public virtual async Task<bool> ExistsAsync(Expression<Func<T, bool>>? whereExpression)
         {
             return await _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression).AnyAsync();
         }
@@ -224,7 +224,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// <param name="whereExpression">条件表达式</param>
         /// <param name="columns">要更新的字段</param>
         /// <returns>更新成功的数量</returns>
-        public virtual async Task<int> UpdateRangeAsync(Expression<Func<T, bool>> whereExpression, Dictionary<string, object> columns)
+        public virtual async Task<int> UpdateRangeAsync(Expression<Func<T, bool>>? whereExpression, Dictionary<string, object> columns)
         {
             var updateable = _db.Updateable<T>().WhereIF(whereExpression != null, whereExpression);
 
@@ -294,7 +294,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// </summary>
         /// <param name="whereExpression">条件表达式</param>
         /// <returns>删除成功的数量</returns>
-        public virtual async Task<int> DeleteAsync(Expression<Func<T, bool>> whereExpression)
+        public virtual async Task<int> DeleteAsync(Expression<Func<T, bool>>? whereExpression)
         {
             int result;
             // 如果实体实现了软删除接口，则执行软删除
@@ -340,7 +340,7 @@ namespace Fastdotnet.Core.Service.Sys
         public virtual async Task<PageResult<T>> GetRecycleBinAsync(
             int pageIndex,
             int pageSize,
-            Expression<Func<T, object>> orderByExpression = null,
+            Expression<Func<T, object>>? orderByExpression = null,
             OrderByType orderByType = OrderByType.Desc, CancellationToken cancellationToken = default)
         {
             // 查询已删除的数据
@@ -382,10 +382,10 @@ namespace Fastdotnet.Core.Service.Sys
         /// <param name="orderByType">排序类型</param>
         /// <returns>分页结果</returns>
         public virtual async Task<PageResult<T>> GetRecycleBinAsync(
-            Expression<Func<T, bool>> whereExpression,
+            Expression<Func<T, bool>>? whereExpression,
             int pageIndex,
             int pageSize,
-            Expression<Func<T, object>> orderByExpression = null,
+            Expression<Func<T, object>>? orderByExpression = null,
             OrderByType orderByType = OrderByType.Desc, CancellationToken cancellationToken = default)
         {
             // 合并条件：必须是已删除的数据，并且满足传入的条件
@@ -446,7 +446,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// </summary>
         /// <param name="whereExpression">条件表达式</param>
         /// <returns>恢复成功的数量</returns>
-        public virtual async Task<int> RestoreAsync(Expression<Func<T, bool>> whereExpression)
+        public virtual async Task<int> RestoreAsync(Expression<Func<T, bool>>? whereExpression)
         {
             // 只有实现了软删除接口的实体才能恢复
             if (typeof(ISoftDelete).IsAssignableFrom(typeof(T)))
@@ -485,7 +485,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// </summary>
         /// <param name="whereExpression">条件表达式</param>
         /// <returns>删除成功的数量</returns>
-        public virtual async Task<int> PermanentDeleteAsync(Expression<Func<T, bool>> whereExpression)
+        public virtual async Task<int> PermanentDeleteAsync(Expression<Func<T, bool>>? whereExpression)
         {
             // 合并条件：必须是已删除的数据，并且满足传入的条件
             Expression<Func<T, bool>> deletedExpression = entity => entity.IsDeleted;
@@ -507,9 +507,9 @@ namespace Fastdotnet.Core.Service.Sys
         /// <param name="expr1">第一个表达式</param>
         /// <param name="expr2">第二个表达式</param>
         /// <returns>合并后的表达式</returns>
-        private Expression<Func<T, bool>> CombineExpressions(Expression<Func<T, bool>> expr1, Expression<Func<T, bool>> expr2)
+        private Expression<Func<T, bool>> CombineExpressions(Expression<Func<T, bool>> expr1, Expression<Func<T, bool>>? expr2)
         {
-            if (expr1 == null) return expr2;
+            if (expr1 == null) return expr2!;
             if (expr2 == null) return expr1;
 
             var parameter = Expression.Parameter(typeof(T), "entity");
@@ -521,7 +521,7 @@ namespace Fastdotnet.Core.Service.Sys
         }
 
         public async Task<List<TResult>> GetListAsync<TResult>(
-            Expression<Func<T, bool>> whereExpression,
+            Expression<Func<T, bool>>? whereExpression,
             Expression<Func<T, TResult>> selectExpression,
             CancellationToken ct = default)
         {
@@ -599,7 +599,7 @@ namespace Fastdotnet.Core.Service.Sys
         //         .ExecuteCommandAsync();
         //    return result;
         //}
-        public async Task<int> HardDeleteAsync(Expression<Func<T, bool>> whereExpression)
+        public async Task<int> HardDeleteAsync(Expression<Func<T, bool>>? whereExpression)
         {
             if (whereExpression == null)
             {

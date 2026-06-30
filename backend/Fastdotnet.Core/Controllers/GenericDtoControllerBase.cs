@@ -10,12 +10,12 @@ namespace Fastdotnet.Core.Controllers
         /// <summary>
         /// ID 列表
         /// </summary>
-        public List<object> Ids { get; set; }
+        public List<object> Ids { get; set; } = new();
 
         /// <summary>
         /// 更新 DTO
         /// </summary>
-        public TUpdateDto Dto { get; set; }
+        public TUpdateDto Dto { get; set; } = default!;
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ namespace Fastdotnet.Core.Controllers
         /// <summary>
         /// 更新 DTO
         /// </summary>
-        public TUpdateDto Dto { get; set; }
+        public TUpdateDto Dto { get; set; } = default!;
     }
 
     /// <summary>
@@ -126,7 +126,7 @@ namespace Fastdotnet.Core.Controllers
         where TUpdateDto : class
     {
         protected readonly IBaseService<TEntity, TKey> _service;
-        protected readonly ICurrentUser _currentUser;
+        protected readonly ICurrentUser _currentUser = default!;
 
         protected GenericDtoControllerBase(IBaseService<TEntity, TKey> service, ICurrentUser currentUser)
         {
@@ -160,7 +160,7 @@ namespace Fastdotnet.Core.Controllers
         {
             // 可以在子类中重写BeforeGetListByCondition方法来添加自定义逻辑
             await BeforeGetListByCondition(query);
-            if (query.SelectFields.Count() > 0)
+            if (query.SelectFields?.Count() > 0)
             {
                 var result = await _service.GetProjectedListByConditionAsync(
                 query.DynamicQuery,
@@ -196,7 +196,7 @@ namespace Fastdotnet.Core.Controllers
                 }
 
                 var result = await _service.GetListAsync(
-                    whereExpression);
+                    whereExpression!);
                 // 可以在子类中重写AfterGetListByCondition方法来添加自定义逻辑
                 // 调用 After 钩子并获取可能修改后的结果
                 var processedResult = await AfterGetListByCondition(query, result);
@@ -279,7 +279,7 @@ namespace Fastdotnet.Core.Controllers
             }
 
             var pageResult = await _service.GetPageAsync(
-                whereExpression,
+                whereExpression!,
                 query.PageIndex,
                 query.PageSize);
 

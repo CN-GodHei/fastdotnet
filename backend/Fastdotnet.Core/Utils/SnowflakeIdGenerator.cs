@@ -7,7 +7,9 @@ namespace Fastdotnet.Core.Utils;
 public static class SnowflakeIdGenerator
 {
     // 机器ID - 在分布式环境中应确保每个节点的ID唯一
-    private static readonly long _machineId = 1;
+    // 已委托给 YitIdHelper
+    // 以下字段保留以兼容旧版调用，实际未使用
+
     
     // 机器ID位数
     private static readonly long _machineIdBits = 5L;
@@ -24,14 +26,15 @@ public static class SnowflakeIdGenerator
     // 时间戳左移位数
     private static readonly long _timestampLeftShift = _sequenceBits + _machineIdBits;
     
+    #pragma warning disable CS0414
     // 序列号
     private static long _sequence = 0L;
-    
     // 上次时间戳
     private static long _lastTimestamp = -1L;
     
     // 起始时间戳 (2020-01-01)
     private static readonly long _twepoch = 1577836800000L;
+    #pragma warning restore CS0414
     public static long NextId()
     {
         return YitIdHelper.NextId();

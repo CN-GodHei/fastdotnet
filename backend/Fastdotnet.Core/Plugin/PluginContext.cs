@@ -16,21 +16,21 @@ namespace Fastdotnet.Core.Plugin
             var assemblyName = callingAssembly.GetName().Name;
             
             // 首先尝试从缓存获取插件信息
-            var cachedInfo = PluginInfoCache.GetPluginInfoByAssembly(assemblyName);
+            var cachedInfo = PluginInfoCache.GetPluginInfoByAssembly(assemblyName!);
             if (cachedInfo != null)
             {
                 return cachedInfo;
             }
             
             // 尝试通过插件程序集路径获取插件ID
-            var pluginIdFromPath = GetPluginIdFromAssemblyPath(assemblyName, callingAssembly);
+            var pluginIdFromPath = GetPluginIdFromAssemblyPath(assemblyName!, callingAssembly);
             if (!string.IsNullOrEmpty(pluginIdFromPath))
             {
                 var pluginInfoFromCache = PluginInfoCache.GetPluginInfo(pluginIdFromPath);
                 if (pluginInfoFromCache != null)
                 {
                     // 如果通过路径获取到了插件ID，但程序集映射不存在，则添加映射
-                    PluginInfoCache.StoreAssemblyMapping(assemblyName, pluginIdFromPath);
+                    PluginInfoCache.StoreAssemblyMapping(assemblyName!, pluginIdFromPath);
                     return pluginInfoFromCache;
                 }
             }
@@ -47,11 +47,11 @@ namespace Fastdotnet.Core.Plugin
             // 如果成功获取到插件信息，则缓存它
             if (pluginInfo != null)
             {
-                PluginInfoCache.StoreAssemblyMapping(assemblyName, pluginInfo.id);
+                PluginInfoCache.StoreAssemblyMapping(assemblyName!, pluginInfo.id);
                 PluginInfoCache.StorePluginInfo(pluginInfo.id, pluginInfo);
             }
             
-            return pluginInfo;
+            return pluginInfo!;
         }
 
         /// <summary>
@@ -71,14 +71,14 @@ namespace Fastdotnet.Core.Plugin
                 var pluginsDir = Path.GetDirectoryName(Path.GetDirectoryName(directory));
                 
                 // 检查是否在Plugins目录下
-                if (Path.GetFileName(pluginsDir).Equals("plugins", StringComparison.OrdinalIgnoreCase))
+                if (Path.GetFileName(pluginsDir!).Equals("plugins", StringComparison.OrdinalIgnoreCase))
                 {
                     // 返回插件目录名作为插件ID
-                    return Path.GetFileName(directory);
+                    return Path.GetFileName(directory!)!;
                 }
                 
                 // 如果不是标准插件目录结构，尝试从更深层级获取
-                var dirInfo = new DirectoryInfo(directory);
+                var dirInfo = new DirectoryInfo(directory!);
                 while (dirInfo?.Parent != null)
                 {
                     if (dirInfo.Parent.Name.Equals("plugins", StringComparison.OrdinalIgnoreCase) ||
@@ -94,7 +94,7 @@ namespace Fastdotnet.Core.Plugin
                 // 如果出现异常，静默处理并返回null
             }
             
-            return null;
+            return null!;
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Fastdotnet.Core.Plugin
             // 如果没有从程序集属性获取到足够的信息，则返回null
             if (string.IsNullOrEmpty(idAttr) || string.IsNullOrEmpty(nameAttr))
             {
-                return null;
+                return null!;
             }
 
             return new PluginInfo
@@ -166,7 +166,7 @@ namespace Fastdotnet.Core.Plugin
                 // 如果仍未找到，返回null
                 if (!File.Exists(pluginJsonPath))
                 {
-                    return null;
+                    return null!;
                 }
             }
             
@@ -174,11 +174,11 @@ namespace Fastdotnet.Core.Plugin
             {
                 var jsonContent = File.ReadAllText(pluginJsonPath);
                 var pluginInfo = JsonConvert.DeserializeObject<PluginInfo>(jsonContent);
-                return pluginInfo;
+                return pluginInfo!;
             }
             catch
             {
-                return null;
+                return null!;
             }
         }
     }

@@ -10,7 +10,7 @@ namespace PluginA.Middleware
 {
     /// <summary>
     /// HTTP 请求中间件 - 将 HTTP 请求映射到业务操作管道
-    /// 演示如何结合 IDynamicMiddleware 和 IPluginPipeline<TContext>
+    /// 演示如何结合 IDynamicMiddleware 和 IPluginPipeline{TContext}
     /// </summary>
     public class HttpToBusinessOperationMiddleware : IDynamicMiddleware
     {

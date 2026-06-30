@@ -70,7 +70,7 @@ namespace Fastdotnet.Core.IService.Sys
             
             if (idProperty != null)
             {
-                return idProperty.GetValue(entity);
+                return idProperty.GetValue(entity)!;
             }
             
             throw new InvalidOperationException($"Entity {typeof(T).Name} does not have a primary key property marked with [SugarColumn(IsPrimaryKey = true)] or named 'Id'");

@@ -37,7 +37,7 @@ namespace Fastdotnet.Core.Dtos.Base
         /// 主键ID
         /// </summary>
         [SugarColumn(ColumnName = "id", IsPrimaryKey = true, ColumnDescription = "主键id")]
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         /// <summary>
         /// 创建时间

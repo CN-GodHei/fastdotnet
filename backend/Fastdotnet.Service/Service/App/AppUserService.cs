@@ -56,7 +56,7 @@ namespace Fastdotnet.Service.Service.App
             var userExistRole = await _appUserRoleRepository.GetListAsync(ur => ur.AppUserId == userId);
             var DefaultRole = await _roleService.GetListAsync(r => r.IsDefault && r.Belong== SystemCategory.App);
             return new List<FdAppUserRole> {
-                new FdAppUserRole { AppUserId = userId, RoleId = DefaultRole.FirstOrDefault()?.Id }
+                new FdAppUserRole { AppUserId = userId, RoleId = DefaultRole.FirstOrDefault()?.Id ?? string.Empty }
             }.Union(userExistRole).ToList();
         }
 

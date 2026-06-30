@@ -21,8 +21,8 @@ namespace Fastdotnet.WebApi.Controllers.App
             _passwordService = passwordService;
             _verificationCodeManager = verificationCodeManager;
         }
-        private readonly IBaseService<FdAppUser, string> _service;
-        private readonly ICurrentUser _currentUser;
+        private new readonly IBaseService<FdAppUser, string> _service;
+        private new readonly ICurrentUser _currentUser;
         private readonly IAppUserService _appUserService;
         private readonly IPasswordService _passwordService;
         private readonly IVerificationCodeManager _verificationCodeManager;
@@ -36,18 +36,18 @@ namespace Fastdotnet.WebApi.Controllers.App
         public async Task<FdAppUserDto> getUserInfo()
         {
             // 获取当前用户信息
-            var user = await _service.GetByIdAsync(_currentUser.Id);
+            var user = await _service.GetByIdAsync(_currentUser.Id ?? string.Empty);
             if (user == null)
             {
                 throw new UnauthorizedAccessException("用户不存在");
             }
 
             // 获取用户角色
-            var userRoleRelations = await _appUserService.GetUserRoleRelationsAsync(_currentUser.Id);
+            var userRoleRelations = await _appUserService.GetUserRoleRelationsAsync(_currentUser.Id!);
             var roleIds = userRoleRelations.Select(ur => ur.RoleId).ToList();
 
             // 获取用户按钮权限
-            var buttons = await _appUserService.GetUserButtonPermissionsAsync(_currentUser.Id);
+            var buttons = await _appUserService.GetUserButtonPermissionsAsync(_currentUser.Id!);
 
             // 构造返回对象
             var userDto = user.Adapt<FdAppUserDto>();
@@ -83,7 +83,7 @@ namespace Fastdotnet.WebApi.Controllers.App
             }
 
             // 使用密码服务验证密码
-            bool isValid = await _passwordService.VerifyPasswordAsync(dto.Password, user.Password);
+            bool isValid = await _passwordService.VerifyPasswordAsync(dto.Password, user.Password ?? string.Empty);
 
             return isValid;
         }
@@ -172,7 +172,7 @@ namespace Fastdotnet.WebApi.Controllers.App
             }
 
             // 验证当前密码
-            bool isCurrentPasswordValid = await _passwordService.VerifyPasswordAsync(dto.CurrentPassword, user.Password);
+            bool isCurrentPasswordValid = await _passwordService.VerifyPasswordAsync(dto.CurrentPassword, user.Password!);
             if (!isCurrentPasswordValid)
             {
                 throw new BusinessException("当前密码错误");

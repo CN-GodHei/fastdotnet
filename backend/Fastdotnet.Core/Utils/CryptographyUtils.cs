@@ -61,7 +61,7 @@ namespace Fastdotnet.Core.Utils
         /// <param name="publicKey">公钥（Base64或PEM格式）</param>
         /// <param name="padding">填充模式</param>
         /// <returns>加密后的数据（Base64格式）</returns>
-        public static string RSAEncrypt(string plainText, string publicKey, RSAEncryptionPadding padding = null)
+        public static string RSAEncrypt(string plainText, string publicKey, RSAEncryptionPadding? padding = null)
         {
             if (string.IsNullOrEmpty(plainText))
                 throw new ArgumentException("明文不能为空", nameof(plainText));
@@ -149,7 +149,7 @@ namespace Fastdotnet.Core.Utils
         /// <param name="privateKey">私钥（Base64或PEM格式）</param>
         /// <param name="padding">填充模式</param>
         /// <returns>解密后的明文</returns>
-        public static string RSADecrypt(string cipherText, string privateKey, RSAEncryptionPadding padding = null)
+        public static string RSADecrypt(string cipherText, string privateKey, RSAEncryptionPadding? padding = null)
         {
             if (string.IsNullOrEmpty(cipherText))
                 throw new ArgumentException("密文不能为空", nameof(cipherText));
@@ -216,7 +216,7 @@ namespace Fastdotnet.Core.Utils
             bool isSegmentedEncrypted = cipherText.Contains("|SPLIT|");
             
             // 如果不是分段加密，直接转换为字节数组
-            byte[] cipherBytes = !isSegmentedEncrypted ? Convert.FromBase64String(cipherText) : null;
+            byte[] cipherBytes = !isSegmentedEncrypted ? Convert.FromBase64String(cipherText) : null!;
             
             if (isSegmentedEncrypted)
             {
@@ -423,7 +423,7 @@ namespace Fastdotnet.Core.Utils
         /// <param name="cipherMode">加密模式，默认 CBC</param>
         /// <param name="paddingMode">填充模式，默认 PKCS7</param>
         /// <returns>加密后的数据（Base64 格式）</returns>
-        public static string AESEncrypt(string plainText, string key, string iv = null, 
+        public static string AESEncrypt(string plainText, string key, string? iv = null, 
             CipherMode cipherMode = CipherMode.CBC, PaddingMode paddingMode = PaddingMode.PKCS7)
         {
             if (string.IsNullOrEmpty(plainText))
@@ -589,7 +589,9 @@ namespace Fastdotnet.Core.Utils
             }
 
             // 使用PBKDF2生成哈希
+#pragma warning disable SYSLIB0060
             using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256))
+#pragma warning restore SYSLIB0060
             {
                 byte[] hash = pbkdf2.GetBytes(32); // 32字节哈希值
 
@@ -624,7 +626,9 @@ namespace Fastdotnet.Core.Utils
                 byte[] storedHash = Convert.FromBase64String(parts[3]);
 
                 // 使用相同的参数重新计算哈希
+#pragma warning disable SYSLIB0060
                 using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256))
+#pragma warning restore SYSLIB0060
                 {
                     byte[] computedHash = pbkdf2.GetBytes(32);
 
@@ -645,7 +649,7 @@ namespace Fastdotnet.Core.Utils
         /// <param name="password">明文密码</param>
         /// <param name="encryptionKey">加密密钥（Base64格式），如果为空则使用默认密钥</param>
         /// <returns>加密后的密码（Base64格式）</returns>
-        public static string EncryptPassword(string password, string encryptionKey = null)
+        public static string EncryptPassword(string password, string? encryptionKey = null)
         {
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentException("密码不能为空", nameof(password));
@@ -686,7 +690,7 @@ namespace Fastdotnet.Core.Utils
         /// <param name="hashType">加密类型</param>
         /// <param name="encryptionKey">可逆加密时的密钥（可选）</param>
         /// <returns>处理后的密码</returns>
-        public static string ProcessPassword(string password, PasswordHashType hashType, string encryptionKey = null)
+        public static string ProcessPassword(string password, PasswordHashType hashType, string? encryptionKey = null)
         {
             return hashType switch
             {
@@ -704,7 +708,7 @@ namespace Fastdotnet.Core.Utils
         /// <param name="hashType">加密类型</param>
         /// <param name="encryptionKey">可逆加密时的密钥（可选）</param>
         /// <returns>是否匹配</returns>
-        public static bool VerifyProcessedPassword(string password, string storedPassword, PasswordHashType hashType, string encryptionKey = null)
+        public static bool VerifyProcessedPassword(string password, string storedPassword, PasswordHashType hashType, string? encryptionKey = null)
         {
             if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(storedPassword))
                 return false;
@@ -717,7 +721,7 @@ namespace Fastdotnet.Core.Utils
                 case PasswordHashType.Reversible:
                     try
                     {
-                        var decryptedPassword = DecryptPassword(storedPassword, encryptionKey);
+                        var decryptedPassword = DecryptPassword(storedPassword, encryptionKey!);
                         return password == decryptedPassword;
                     }
                     catch

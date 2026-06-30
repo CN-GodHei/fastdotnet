@@ -21,7 +21,7 @@ namespace Fastdotnet.Service.Service
             // 自动填充RequestId
             if (string.IsNullOrEmpty(log.RequestId))
             {
-                log.RequestId = RequestIdManager.CurrentRequestId;
+                log.RequestId = RequestIdManager.CurrentRequestId!;
             }
             
             // 确保有创建时间
@@ -38,7 +38,7 @@ namespace Fastdotnet.Service.Service
             // 自动填充RequestId
             if (string.IsNullOrEmpty(log.RequestId))
             {
-                log.RequestId = RequestIdManager.CurrentRequestId;
+                log.RequestId = RequestIdManager.CurrentRequestId!;
             }
             
             // 确保有创建时间
@@ -55,7 +55,7 @@ namespace Fastdotnet.Service.Service
             // 自动填充RequestId
             if (string.IsNullOrEmpty(log.RequestId))
             {
-                log.RequestId = RequestIdManager.CurrentRequestId;
+                log.RequestId = RequestIdManager.CurrentRequestId!;
             }
             
             // 确保有创建时间
@@ -73,7 +73,7 @@ namespace Fastdotnet.Service.Service
             // 自动填充RequestId
             if (string.IsNullOrEmpty(log.RequestId))
             {
-                log.RequestId = RequestIdManager.CurrentRequestId;
+                log.RequestId = RequestIdManager.CurrentRequestId!;
             }
             
             // 确保有创建时间
@@ -90,7 +90,7 @@ namespace Fastdotnet.Service.Service
             // 自动填充RequestId
             if (string.IsNullOrEmpty(log.RequestId))
             {
-                log.RequestId = RequestIdManager.CurrentRequestId;
+                log.RequestId = RequestIdManager.CurrentRequestId!;
             }
             
             // 确保有创建时间
@@ -107,7 +107,7 @@ namespace Fastdotnet.Service.Service
             // 自动填充RequestId
             if (string.IsNullOrEmpty(log.RequestId))
             {
-                log.RequestId = RequestIdManager.CurrentRequestId;
+                log.RequestId = RequestIdManager.CurrentRequestId!;
             }
             
             // 确保有创建时间

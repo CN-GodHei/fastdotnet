@@ -70,7 +70,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
         {
             if (string.IsNullOrEmpty(_currentUser.UserType))
             {
-                return null;
+                return new Dictionary<string, object>();
             }
             var configs = await _service.GetListAsync(x=>x.Belong==EnumHelper.ParseEnum<SystemCategory>(_currentUser.UserType));
             return configs.ToDictionary(c => c.Code, c => c.Value);

@@ -10,31 +10,31 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 按钮名称
         /// </summary>
         [SugarColumn(ColumnName = "name", IsNullable = false, ColumnDescription = "按钮名称")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 按钮代码（用于前端标识）
         /// </summary>
         [SugarColumn(ColumnName = "code", IsNullable = false, ColumnDescription = "按钮代码（用于前端标识）")]
-        public string Code { get; set; }
+        public string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// 按钮描述
         /// </summary>
         [SugarColumn(ColumnName = "description", IsNullable = true, ColumnDescription = "按钮描述")]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// 关联的菜单编码
         /// </summary>
         [SugarColumn(ColumnName = "menu_code", ColumnDescription = "关联的菜单编码")]
-        public string MenuCode { get; set; }
+        public string MenuCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 所属模块 (System/PluginId)
         /// </summary>
         [SugarColumn(ColumnName = "module", IsNullable = true, ColumnDescription = "所属模块 (System/PluginId)")]
-        public string Module { get; set; }
+        public string Module { get; set; } = string.Empty;
 
         /// <summary>
         /// 按钮分类: Admin/App
@@ -52,7 +52,7 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 关联的权限代码 (关联FdPermission)
         /// </summary>
         [SugarColumn(ColumnName = "permission_code", IsNullable = true, ColumnDescription = "关联的权限代码 (关联FdPermission)")]
-        public string PermissionCode { get; set; }
+        public string PermissionCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否启用

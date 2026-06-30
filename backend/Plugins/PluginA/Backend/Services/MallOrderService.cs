@@ -36,6 +36,7 @@ public class MallOrderService
         _logger.LogInformation("【PluginA】创建订单：订单 ID={OrderId}, 用户={UserId}, 金额={Amount:C}", 
             orderId, userId, totalAmount);
         
+#pragma warning disable CS0618
         var orderCreatedEvent = new OrderCreatedEvent
         {
             OrderId = orderId,
@@ -52,6 +53,7 @@ public class MallOrderService
         };
         
         await _eventBus.PublishAsync(orderCreatedEvent);
+#pragma warning restore CS0618
         
         _logger.LogInformation("【PluginA】订单创建成功，已发布 OrderCreatedEvent 事件");
         
@@ -66,6 +68,7 @@ public class MallOrderService
         _logger.LogInformation("【PluginA】发起支付请求：订单 ID={OrderId}, 金额={Amount:C}, 支付方式={Method}", 
             orderId, amount, paymentMethod);
         
+#pragma warning disable CS0618
         var paymentRequestedEvent = new PaymentRequestedEvent
         {
             OrderId = orderId,
@@ -80,6 +83,7 @@ public class MallOrderService
         };
         
         await _eventBus.PublishAsync(paymentRequestedEvent);
+#pragma warning restore CS0618
         
         _logger.LogInformation("【PluginA】支付请求事件已发布");
         

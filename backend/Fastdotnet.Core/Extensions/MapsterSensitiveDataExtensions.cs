@@ -34,19 +34,19 @@ namespace Fastdotnet.Core.Extensions
 
                 foreach (var property in sensitiveProperties)
                 {
-                    var attr = property.GetCustomAttribute<SensitiveDataAttribute>();
+                    var attr = property.GetCustomAttribute<SensitiveDataAttribute>()!;
                     var value = property.GetValue(dest);
                     
-                    if (value == null) continue;
+                    if (value == null || attr == null) continue;
 
                     var maskedValue = attr.DataType switch
                     {
-                        SensitiveDataType.Phone => MaskPhone(value.ToString(), attr),
-                        SensitiveDataType.Email => MaskEmail(value.ToString(), attr),
-                        SensitiveDataType.IdCard => MaskIdCard(value.ToString(), attr),
-                        SensitiveDataType.BankCard => MaskBankCard(value.ToString(), attr),
-                        SensitiveDataType.Name => MaskName(value.ToString(), attr),
-                        SensitiveDataType.Custom => MaskCustom(value.ToString(), attr),
+                        SensitiveDataType.Phone => MaskPhone(value.ToString()!, attr),
+                        SensitiveDataType.Email => MaskEmail(value.ToString()!, attr),
+                        SensitiveDataType.IdCard => MaskIdCard(value.ToString()!, attr),
+                        SensitiveDataType.BankCard => MaskBankCard(value.ToString()!, attr),
+                        SensitiveDataType.Name => MaskName(value.ToString()!, attr),
+                        SensitiveDataType.Custom => MaskCustom(value.ToString()!, attr),
                         _ => value
                     };
 

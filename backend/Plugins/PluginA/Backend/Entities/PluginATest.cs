@@ -15,13 +15,13 @@ namespace PluginA.Entities
         /// 名称
         /// </summary>
         [SugarColumn( IsNullable = false)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 描述
         /// </summary>
         [SugarColumn(IsNullable = true)]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// 测试值
@@ -39,6 +39,6 @@ namespace PluginA.Entities
         /// 创建者
         /// </summary>
         [SugarColumn( IsNullable = true)]
-        public string Creator { get; set; }
+        public string Creator { get; set; } = string.Empty;
     }
 }

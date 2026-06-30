@@ -109,9 +109,11 @@ namespace PluginA
             //builder.RegisterType<PluginEntityService>().As<IPluginEntityService>().InstancePerLifetimeScope();
         
             // ========== 事件总线演示：注册事件处理器 ==========
+#pragma warning disable CS0618
             builder.RegisterType<OrderPaidEventHandler>()
                 .As<Fastdotnet.Plugin.Contracts.Events.IEventHandler<Fastdotnet.Plugin.Contracts.Events.PaymentCompletedEvent>>()
                 .InstancePerLifetimeScope();
+#pragma warning restore CS0618
             builder.RegisterType<PluginInstalledEventHandler>()
                 .As<Fastdotnet.Plugin.Contracts.Events.IEventHandler<Fastdotnet.Plugin.Contracts.Events.PluginInstalledEvent>>()
                 .InstancePerLifetimeScope();

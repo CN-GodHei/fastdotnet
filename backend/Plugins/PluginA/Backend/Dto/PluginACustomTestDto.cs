@@ -12,9 +12,9 @@ namespace PluginA.Dto
     /// </summary>
     public class PluginACustomTestDto
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         
         /// <summary>
         /// 使用自定义脱敏规则的地址字段
@@ -23,7 +23,7 @@ namespace PluginA.Dto
         [SensitiveData(SensitiveDataType.Custom, 
                       CustomPattern = @"(\d{6})\d+(\d{4})", 
                       CustomReplacement = "$1****$2")]
-        public string Address { get; set; }
+        public string Address { get; set; } = string.Empty;
         
         /// <summary>
         /// 使用自定义脱敏规则的社会安全号码
@@ -32,7 +32,7 @@ namespace PluginA.Dto
         [SensitiveData(SensitiveDataType.Custom,
                       CustomPattern = @"(\d{3})\d+(\d{2})",
                       CustomReplacement = "$1*****$2")]
-        public string SSN { get; set; }
+        public string SSN { get; set; } = string.Empty;
         
         public DateTime CreatedAt { get; set; }
     }

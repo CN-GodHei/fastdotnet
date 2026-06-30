@@ -79,7 +79,8 @@ public class PluginXmlCommentFilter : IOperationFilter
         var builder = new StringBuilder("M:");
 
         var declaringType = method.DeclaringType;
-        AppendFullTypeName(builder, declaringType);
+        if (declaringType != null)
+            AppendFullTypeName(builder, declaringType);
 
         builder.Append('.');
         builder.Append(method.Name);

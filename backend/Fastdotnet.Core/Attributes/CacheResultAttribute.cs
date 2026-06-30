@@ -25,7 +25,7 @@ namespace Fastdotnet.Core.Attributes
         /// <summary>
         /// 缓存键前缀
         /// </summary>
-        public string KeyPrefix { get; set; }
+        public string KeyPrefix { get; set; } = string.Empty;
 
         /// <summary>
         /// 缓存过期时间（秒）
@@ -63,8 +63,8 @@ namespace Fastdotnet.Core.Attributes
             // 尝试从缓存获取结果数据（缓存字符串形式的JSON）
             var cachedJson = await cacheService.GetOrCreateAsync<string>(key, async () =>
             {
-                return null; // 如果缓存中没有找到，返回null
-            });
+                return null!; // 如果缓存中没有找到，返回null
+            }, tags: tags);
 
             // 如果缓存中有数据，直接构建响应返回
             if (!string.IsNullOrEmpty(cachedJson))
@@ -108,7 +108,7 @@ namespace Fastdotnet.Core.Attributes
                 // 创建缓存数据对象
                 var cacheData = new CacheResultData
                 {
-                    Data = objectResult.Value,
+                    Data = objectResult.Value!,
                     StatusCode = objectResult.StatusCode ?? 200
                 };
 
@@ -123,7 +123,7 @@ namespace Fastdotnet.Core.Attributes
         /// </summary>
         private class CacheResultData
         {
-            public object Data { get; set; }
+            public object Data { get; set; } = null!;
             public int StatusCode { get; set; }
         }
 
@@ -139,7 +139,7 @@ namespace Fastdotnet.Core.Attributes
             var controllerFullName = controllerType.FullName;
             
             // 获取动作方法名
-            var actionName = context.ActionDescriptor.DisplayName.Split('(')[0].Split('.').Last();
+            var actionName = context.ActionDescriptor.DisplayName?.Split('(')[0].Split('.').Last() ?? "";
             
             // 构建基础键
             var baseKey = string.IsNullOrEmpty(KeyPrefix) ? $"{controllerFullName}:{actionName}" : KeyPrefix;
@@ -156,7 +156,7 @@ namespace Fastdotnet.Core.Attributes
         /// </summary>
         /// <param name="parameters">参数字典</param>
         /// <returns>参数签名</returns>
-        private string GenerateParameterSignature(IDictionary<string, object> parameters)
+        private string GenerateParameterSignature(IDictionary<string, object?> parameters)
         {
             if (parameters == null || parameters.Count == 0)
                 return "no-params";

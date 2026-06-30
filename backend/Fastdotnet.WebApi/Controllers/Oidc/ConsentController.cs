@@ -36,12 +36,12 @@ public class ConsentController : Controller
         var request = HttpContext.GetOpenIddictServerRequest();
         if (request == null) return BadRequest("Invalid OIDC request.");
 
-        var app = await _applicationManager.FindByClientIdAsync(request.ClientId);
+        var app = await _applicationManager.FindByClientIdAsync(request.ClientId!);
         if (app == null) return NotFound("Application not found.");
 
         var model = new ConsentViewModel
         {
-            ApplicationName = await _applicationManager.GetDisplayNameAsync(app) ?? request.ClientId,
+            ApplicationName = await _applicationManager.GetDisplayNameAsync(app) ?? request.ClientId!,
             Scopes = request.GetScopes(),
             ReturnUrl = HttpContext.Request.Path + HttpContext.Request.QueryString
         };

@@ -13,12 +13,12 @@ namespace Fastdotnet.Core.Dtos.Sys
         /// 类型：0-单个;1-多个
         /// </summary>
         [Required]
-        public string Type { get; set; }
+        public string Type { get; set; } = string.Empty;
 
         /// <summary>
         /// 授权内容
         /// </summary>
         [Required]
-        public string LicenseStr { get; set; }
+        public string LicenseStr { get; set; } = string.Empty;
     }
 }

@@ -138,13 +138,13 @@ namespace Fastdotnet.Core.Hubs
                     var list = new List<object>();
                     foreach (var item in args.EnumerateArray())
                     {
-                        list.Add(ConvertJsonElementToObject(item));
+                        list.Add(ConvertJsonElementToObject(item)!);
                     }
                     argsArray = list.ToArray();
                 }
                 else if (args.ValueKind != JsonValueKind.Null && args.ValueKind != JsonValueKind.Undefined)
                 {
-                    argsArray = new object[] { ConvertJsonElementToObject(args) };
+                    argsArray = new object[] { ConvertJsonElementToObject(args)! };
                 }
                 
                 Console.WriteLine($"[SignalR] 转换后的参数数量: {argsArray?.Length ?? 0}");
@@ -204,7 +204,7 @@ namespace Fastdotnet.Core.Hubs
         /// </summary>
         /// <param name="exception">异常信息</param>
         /// <returns></returns>
-        public override async Task OnDisconnectedAsync(Exception exception)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
             // 清理已鉴权的连接
             var connectionId = Context.ConnectionId;
@@ -274,6 +274,6 @@ namespace Fastdotnet.Core.Hubs
     public class SensitiveData
     {
         public int Id { get; set; }
-        public string Data { get; set; }
+        public string Data { get; set; } = string.Empty;
     }
 }

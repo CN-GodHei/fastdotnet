@@ -13,37 +13,37 @@ namespace Fastdotnet.Core.Entities.Admin
         /// 登录用户名 (必须唯一)
         /// </summary>
         [SugarColumn(ColumnName = "username", IsNullable = false, ColumnDescription = "用户名")]
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         /// <summary>
         /// 哈希后的密码
         /// </summary>
         [SugarColumn(ColumnName = "password", IsNullable = false, ColumnDescription = "哈希后的密码")]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
         /// <summary>
         /// 真实姓名
         /// </summary>
         [SugarColumn(ColumnName = "name", IsNullable = true, ColumnDescription = "姓名")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 管理员邮箱
         /// </summary>
         [SugarColumn(ColumnName = "email", IsNullable = true, ColumnDescription = "邮箱")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         /// <summary>
         /// 联系电话
         /// </summary>
         [SugarColumn(ColumnName = "phone", IsNullable = true, ColumnDescription = "联系电话")]
-        public string Phone { get; set; }
+        public string Phone { get; set; } = string.Empty;
 
         /// <summary>
         /// 头像
         /// </summary>
         [SugarColumn(ColumnName = "avatar", IsNullable = true, ColumnDescription = "头像")]
-        public string Avatar { get; set; }
+        public string Avatar { get; set; } = string.Empty;
 
         /// <summary>
         /// 账户是否激活

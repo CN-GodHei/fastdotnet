@@ -55,7 +55,7 @@ public class GlobalExceptionMiddleware
             var exceptionLog = new ExceptionLog
             {
                 RequestId = requestId,
-                ExceptionType = exception.GetType().FullName,
+                ExceptionType = exception.GetType().FullName ?? "Unknown",
                 Message = exception.Message,
                 StackTrace = exception.StackTrace ?? string.Empty,
                 Path = path,
@@ -71,7 +71,7 @@ public class GlobalExceptionMiddleware
                     await logService.AddExceptionLogAsync(exceptionLog);
                 }
             }
-            catch (Exception logEx)
+            catch
             {
                 //_logger.LogError(logEx, "记录异常日志失败。RequestId: {RequestId}", requestId);
             }

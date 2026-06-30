@@ -63,14 +63,14 @@
         /// 字典类型 ID（关联 fd_dict_type 表主键，用于高性能查询和外键约束）
         /// </summary>
         [SugarColumn(ColumnName = "dict_type_id", ColumnDescription = "字典类型 ID")]
-        public string DictTypeId { get; set; }
+        public string DictTypeId { get; set; } = string.Empty;
 
         /// <summary>
         /// 字典类型导航属性（不映射到数据库）
         /// </summary>
         [Newtonsoft.Json.JsonIgnore]
         [Navigate(NavigateType.OneToOne, nameof(DictTypeId))]
-        public FdDictType DictType { get; set; }
+        public FdDictType DictType { get; set; } = null!;
 
         /// <summary>
         /// 字典类型编码（冗余字段，便于直观查询和调试，与 DictTypeId 保持一致）
@@ -82,13 +82,13 @@
         /// 字典标签（前端显示的文本）
         /// </summary>
         [SugarColumn(ColumnName = "label", ColumnDescription = "字典标签")]
-        public virtual string Label { get; set; }
+        public virtual string Label { get; set; } = string.Empty;
 
         /// <summary>
         /// 字典键值（实际存储到业务数据表中的值，建议格式：0、1 或 SYS_XXX）
         /// </summary>
         [SugarColumn(ColumnName = "value", ColumnDescription = "字典键值")]
-        public virtual string Value { get; set; }
+        public virtual string Value { get; set; } = string.Empty;
 
         /// <summary>
         /// 值的数据类型（用于前端自动渲染和后端自动序列化）
@@ -166,6 +166,6 @@
         /// 子字典项集合（导航属性，支持树形结构）
         /// </summary>
         [Navigate(NavigateType.OneToMany, nameof(ParentId))]
-        public List<FdDictData> Children { get; set; }
+        public List<FdDictData> Children { get; set; } = [];
     }
 }

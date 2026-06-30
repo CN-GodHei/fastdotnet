@@ -10,12 +10,12 @@ namespace Fastdotnet.Core.Entities.Sys
         /// 角色ID
         /// </summary>
         [SugarColumn(ColumnName = "role_id", IsNullable = false, ColumnDescription = "角色ID")]
-        public string RoleId { get; set; }
+        public string RoleId { get; set; } = string.Empty;
 
         /// <summary>
         /// 菜单ID
         /// </summary>
         [SugarColumn(ColumnName = "menu_id", IsNullable = false, ColumnDescription = "菜单ID")]
-        public string MenuId { get; set; }
+        public string MenuId { get; set; } = string.Empty;
     }
 }

@@ -7,7 +7,6 @@ namespace PluginA.Providers
 {
     /// <summary>
     /// PluginA 的 SignalR 方法提供者演示
-    /// <summary>
     /// PluginA 的 SignalR 方法提供者演示（特性路由进阶版）
     /// 继承 AutoSignalRProvider 后，参数自动反序列化绑定，告别冗余的装箱拆箱
     /// </summary>

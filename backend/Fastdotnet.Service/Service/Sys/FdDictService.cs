@@ -58,7 +58,7 @@ namespace Fastdotnet.Service.Service.Sys
             // 预处理：按类型分组现有数据，便于快速查找
             var existingDataByType = existingData
                 .GroupBy(d => d.DictTypeCode)
-                .ToDictionary(g => g.Key, g => g.ToList());
+                .ToDictionary(g => g.Key!, g => g.ToList());
 
             // 预处理：计算每个类型下已有的最大 Code 序号
             var maxSuffixByType = new Dictionary<string, int>();
@@ -71,7 +71,7 @@ namespace Fastdotnet.Service.Service.Sys
                         .Where(c => !string.IsNullOrEmpty(c) && c.StartsWith($"{typeCode}_"))
                         .Select(c =>
                         {
-                            var suffix = c.Substring((typeCode + "_").Length);
+                var suffix = c!.Substring((typeCode + "_").Length);
                             return int.TryParse(suffix, out int num) ? num : 0;
                         })
                         .DefaultIfEmpty(0)

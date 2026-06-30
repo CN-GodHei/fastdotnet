@@ -29,7 +29,7 @@ namespace Fastdotnet.Core.Middleware
         /// <summary>
         /// 注册一个管道中间件类型。
         /// </summary>
-        /// <param name="pipelineType">要注册的中间件类型，必须实现 IPluginPipeline<TContext></param>
+        /// <param name="pipelineType">要注册的中间件类型，必须实现 IPluginPipeline&lt;TContext&gt;</param>
         public void Register(Type pipelineType)
         {
             if (pipelineType == null) return;
@@ -64,7 +64,7 @@ namespace Fastdotnet.Core.Middleware
             var activeTypes = new List<Type>();
             foreach (var pair in _pipelineTypes)
             {
-                if (pair.Value.TryGetTarget(out Type targetType))
+                if (pair.Value.TryGetTarget(out Type? targetType))
                 {
                     activeTypes.Add(targetType);
                 }

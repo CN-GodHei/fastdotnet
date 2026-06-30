@@ -13,14 +13,14 @@
         /// </summary>
         [SugarColumn(ColumnName = "name", ColumnDescription = "类型名称")]
         [Required, MaxLength(100)]
-        public virtual string Name { get; set; }
+        public virtual string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 类型编码（业务使用的主要字段，建议格式：SYS_XXX、BIZ_XXX）
         /// </summary>
         [SugarColumn(ColumnName = "code", ColumnDescription = "类型编码")]
         [Required, MaxLength(100)]
-        public virtual string Code { get; set; }
+        public virtual string Code { get; set; } = string.Empty;
 
         /// <summary>
         /// 排序（数值越小越靠前）
@@ -64,6 +64,6 @@
         /// 字典值集合（导航属性，不映射到数据库）
         /// </summary>
         [Navigate(NavigateType.OneToMany, nameof(FdDictData.DictTypeId))]
-        public List<FdDictData> Children { get; set; }
+        public List<FdDictData> Children { get; set; } = [];
     }
 }

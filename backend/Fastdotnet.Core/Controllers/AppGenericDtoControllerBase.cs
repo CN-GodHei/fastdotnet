@@ -19,7 +19,7 @@ namespace Fastdotnet.Core.Controllers
         where TUpdateDto : class
     {
         protected readonly IBaseService<TEntity, TKey> _service;
-        protected readonly ICurrentUser _currentUser;
+        protected readonly ICurrentUser _currentUser = default!;
 
         protected AppGenericDtoControllerBase(IBaseService<TEntity, TKey> service, ICurrentUser currentUser)
         {
@@ -54,7 +54,7 @@ namespace Fastdotnet.Core.Controllers
             // 可以在子类中重写BeforeGetListByCondition方法来添加自定义逻辑
             await BeforeGetListByCondition(query);
 
-            if (query.SelectFields.Count() > 0)
+            if (query.SelectFields?.Count() > 0)
             {
                 var result = await _service.GetProjectedListByConditionAsync(
                 query.DynamicQuery,

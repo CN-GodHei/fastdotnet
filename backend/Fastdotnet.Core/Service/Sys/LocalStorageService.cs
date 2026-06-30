@@ -136,7 +136,7 @@ namespace Fastdotnet.Core.Service.Sys
                     return false;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

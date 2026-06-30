@@ -8,7 +8,7 @@
     {
         private readonly IBaseService<FdNationalStandard, string> _fdnationalstandardbaseService;
         private readonly IFdNationalStandardService _fdnationalstandardService;
-        private readonly ICurrentUser _currentUser;
+        private new readonly ICurrentUser _currentUser;
         
         public FdNationalStandardController(
             IFdNationalStandardService fdnationalstandardService,
