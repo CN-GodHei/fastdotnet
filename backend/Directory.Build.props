@@ -1,7 +1,8 @@
 <Project>
   <PropertyGroup>
     <!-- Pomelo.EntityFrameworkCore.MySql 9.0.0 暂未支持 EF Core 10，压制 NU1608 等待更新 -->
-    <NoWarn>$(NoWarn);NU1608</NoWarn>
+    <!-- SQLitePCLRaw.lib.e_sqlite3 2.1.11 已是最新版，但 GHSA-2m69-gcr7-jv3q 尚无修复版本，压制等待更新 -->
+    <NoWarn>$(NoWarn);NU1608;NU1903</NoWarn>
   </PropertyGroup>
   <!-- Directory.Packages.props 会被 SDK 自动导入，无需手动导入 -->
 </Project>
