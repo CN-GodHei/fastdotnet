@@ -220,7 +220,7 @@ Fastdotnet is a modular development framework based on **.NET 10**, featuring a 
 - ✅ **Dynamic Hot-Swapping**: Runtime loading/unloading without restart
 - ✅ **Plugin Lifecycle Management**: Initialize, start, stop, unload
 - ✅ **Independent Dependency Context**: Independent DLL version management per plugin
-- ✅ **Inter-Plugin EventBus**: Low-coupling cross-plugin communication
+- ✅ **Inter-Plugin EventBus**: Low-coupling cross-plugin communication → [Details](docs/05-插件开发/事件总线.md)
 - ✅ **Plugin Branch Gateway**: Private request processing pipeline for plugins
 - ✅ **Reverse Proxy Escape Hatch**: Support for plugins with their own web servers
 - ✅ **Static Resource Mapping**: Automatic handling of plugin wwwroot files
@@ -240,6 +240,7 @@ Fastdotnet is a modular development framework based on **.NET 10**, featuring a 
 - ✅ **Universal Hub**: UniversalHub supporting multiple message types
 - ✅ **Plugin SignalR**: Plugin-level real-time communication endpoints
 - ✅ **Connection State Management**: Auto-reconnect and state monitoring
+- ✅ **Framework Push Notifications**: Reliable event push based on Outbox pattern, supporting SignalR real-time push and Webhook callbacks → [Details](docs/05-插件开发/对外推送.md)
 
 ##### 🔧 Development Tools
 - ✅ **Swagger/OpenAPI**: Auto-generated API documentation
