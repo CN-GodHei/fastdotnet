@@ -1,3 +1,4 @@
+using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Service.IService.Sys;
 
@@ -7,24 +8,24 @@ namespace Fastdotnet.Service.Service.Admin
     {
         private readonly IRepository<FdAdminUser> _repository;
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
-        private readonly IRepository<FdRole> _roleRepository;
-        private readonly IRepository<FdMenuButton> _menuButtonRepository;
-        private readonly IRepository<FdRoleMenuButton> _roleMenuButtonRepository;
+        private readonly IBaseService<FdRole> _roleService;
+        private readonly IBaseService<FdMenuButton> _menuButtonService;
+        private readonly IBaseService<FdRoleMenuButton> _roleMenuButtonService;
         private readonly IPasswordService _passwordService;
 
         public AdminUserService(
             IRepository<FdAdminUser> repository, 
             IRepository<FdAdminUserRole> adminUserRoleRepository,
-            IRepository<FdRole> roleRepository,
-            IRepository<FdMenuButton> menuButtonRepository,
-            IRepository<FdRoleMenuButton> roleMenuButtonRepository,
+            IBaseService<FdRole> roleService,
+            IBaseService<FdMenuButton> menuButtonService,
+            IBaseService<FdRoleMenuButton> roleMenuButtonService,
             IPasswordService passwordService)
         {
             _repository = repository;
             _adminUserRoleRepository = adminUserRoleRepository;
-            _roleRepository = roleRepository;
-            _menuButtonRepository = menuButtonRepository;
-            _roleMenuButtonRepository = roleMenuButtonRepository;
+            _roleService = roleService;
+            _menuButtonService = menuButtonService;
+            _roleMenuButtonService = roleMenuButtonService;
             _passwordService = passwordService;
         }
 
@@ -115,7 +116,7 @@ namespace Fastdotnet.Service.Service.Admin
             }
 
             // 获取角色信息
-            var roles = await _roleRepository.GetListAsync(r => roleIds.Contains(r.Id));
+            var roles = await _roleService.GetListAsync(r => roleIds.Contains(r.Id));
 
             // 检查是否包含超管角色
             return roles.Any(r => r.Code == SystemConstants.SuperAdminRoleCode);
@@ -125,7 +126,7 @@ namespace Fastdotnet.Service.Service.Admin
         {
             //return await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
             var userExistRole = await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId);
-            var DefaultRole = await _roleRepository.GetListAsync(r => r.IsDefault && r.Belong == SystemCategory.Admin);
+            var DefaultRole = await _roleService.GetListAsync(r => r.IsDefault && r.Belong == SystemCategory.Admin);
             return new List<FdAdminUserRole> {
                 new FdAdminUserRole { AdminUserId = userId, RoleId = DefaultRole.FirstOrDefault()?.Id }
             }.Union(userExistRole).ToList();
@@ -135,7 +136,7 @@ namespace Fastdotnet.Service.Service.Admin
         {
             if (await IsSuperAdminAsync(userId))
             {
-                var menuButtons = await _menuButtonRepository.GetListAsync(x=>true);
+                var menuButtons = await _menuButtonService.GetListAsync(x=>true);
 
                 // 4. 返回按钮权限码列表
                 return menuButtons.Select(mb => mb.Code).ToList();
@@ -150,13 +151,13 @@ namespace Fastdotnet.Service.Service.Admin
             if (!roleIds.Any()) return new List<string>();
 
             // 2. 获取角色分配的菜单按钮权限
-            var roleMenuButtons = await _roleMenuButtonRepository.GetListAsync(rmb => roleIds.Contains(rmb.RoleId));
+            var roleMenuButtons = await _roleMenuButtonService.GetListAsync(rmb => roleIds.Contains(rmb.RoleId));
             
             if (!roleMenuButtons.Any()) return new List<string>();
 
             // 3. 获取具体的菜单按钮信息
             var menuButtonIds = roleMenuButtons.Select(rmb => rmb.MenuButtonId).ToList();
-            var menuButtons = await _menuButtonRepository.GetListAsync(mb => menuButtonIds.Contains(mb.Id));
+            var menuButtons = await _menuButtonService.GetListAsync(mb => menuButtonIds.Contains(mb.Id));
             
             // 4. 返回按钮权限码列表
             return menuButtons.Select(mb => mb.Code).ToList();

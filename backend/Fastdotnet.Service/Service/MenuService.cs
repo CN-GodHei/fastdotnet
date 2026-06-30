@@ -3,6 +3,7 @@ using Fastdotnet.Core.Dtos.Common;
 using Fastdotnet.Core.Dtos.Sys;
 using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Service.IService.App;
+using Fastdotnet.Service.IService.Admin;
 
 namespace Fastdotnet.Service.Service
 {
@@ -10,6 +11,8 @@ namespace Fastdotnet.Service.Service
     {
         private readonly IRepository<FdMenu> _menuRepository;
         private readonly IRepository<FdRoleMenu> _roleMenuRepository;
+        private readonly IRepository<FdMenuButton> _menuButtonRepository;
+        private readonly IRepository<FdRoleMenuButton> _roleMenuButtonRepository;
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository;
         private readonly IRepository<FdAppUserRole> _appUserRoleRepository;
         private readonly IPermissionService _permissionService;
@@ -19,6 +22,8 @@ namespace Fastdotnet.Service.Service
         public MenuService(
             IRepository<FdMenu> menuRepository,
             IRepository<FdRoleMenu> roleMenuRepository,
+            IRepository<FdMenuButton> menuButtonRepository,
+            IRepository<FdRoleMenuButton> roleMenuButtonRepository,
             IRepository<FdAdminUserRole> adminUserRoleRepository,
             IRepository<FdAppUserRole> appUserRoleRepository,
             IPermissionService permissionService,
@@ -27,6 +32,8 @@ namespace Fastdotnet.Service.Service
         {
             _menuRepository = menuRepository;
             _roleMenuRepository = roleMenuRepository;
+            _menuButtonRepository = menuButtonRepository;
+            _roleMenuButtonRepository = roleMenuButtonRepository;
             _adminUserRoleRepository = adminUserRoleRepository;
             _appUserRoleRepository = appUserRoleRepository;
             _permissionService = permissionService;
@@ -114,5 +121,21 @@ namespace Fastdotnet.Service.Service
             return await BuildTreeRecursive(parentCode);
         }
 
+        public async Task<List<FdMenuButton>> GetMenuButtonsByCodesAsync(List<string> menuCodes, CancellationToken cancellationToken = default)
+        {
+            return await _menuButtonRepository.GetListAsync(m => menuCodes.Contains(m.MenuCode), cancellationToken);
+        }
+
+        public async Task<List<string>> GetRoleMenuIdsAsync(string roleId)
+        {
+            var roleMenus = await _roleMenuRepository.GetListAsync(x => x.RoleId == roleId);
+            return roleMenus.Select(m => m.MenuId).ToList();
+        }
+
+        public async Task<List<string>> GetRoleMenuButtonIdsAsync(string roleId)
+        {
+            var roleMenuBtns = await _roleMenuButtonRepository.GetListAsync(x => x.RoleId == roleId);
+            return roleMenuBtns.Select(mb => mb.MenuButtonId).ToList();
+        }
     }
 }

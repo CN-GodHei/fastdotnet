@@ -1,35 +1,33 @@
-﻿using Fastdotnet.Core.Entities.Sys;
+﻿using Fastdotnet.Core.IService;
+using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Service.IService.App;
 using Fastdotnet.Service.IService.Sys;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Fastdotnet.Service.Service.App
 {
     public class AppUserService : IAppUserService
     {
         private readonly IRepository<FdAppUser> _appUserRepository;
-        private readonly IRepository<FdRole> _roleRepository;
         private readonly IRepository<FdAppUserRole> _AppUserRoleRepository;
-        private readonly IRepository<FdMenuButton> _menuButtonRepository;
-        private readonly IRepository<FdRoleMenuButton> _roleMenuButtonRepository;
+        private readonly IBaseService<FdRole> _roleService;
+        private readonly IBaseService<FdMenuButton> _menuButtonService;
+        private readonly IBaseService<FdRoleMenuButton> _roleMenuButtonService;
         private readonly IPasswordService _passwordService;
 
         public AppUserService(
             IRepository<FdAppUser> appUserRepository,
             IRepository<FdAppUserRole> AppUserRoleRepository,
-            IRepository<FdRole> roleRepository,
-            IRepository<FdMenuButton> menuButtonRepository,
-            IRepository<FdRoleMenuButton> roleMenuButtonRepository,
+            IBaseService<FdRole> roleService,
+            IBaseService<FdMenuButton> menuButtonService,
+            IBaseService<FdRoleMenuButton> roleMenuButtonService,
             IPasswordService passwordService
             )
         {
             _appUserRepository = appUserRepository;
             _AppUserRoleRepository = AppUserRoleRepository;
-            _roleRepository = roleRepository;
-            _menuButtonRepository = menuButtonRepository;
-            _roleMenuButtonRepository = roleMenuButtonRepository;
+            _roleService = roleService;
+            _menuButtonService = menuButtonService;
+            _roleMenuButtonService = roleMenuButtonService;
             _passwordService = passwordService;
         }
         public async Task<List<string>> GetUserButtonPermissionsAsync(string userId)
@@ -41,13 +39,13 @@ namespace Fastdotnet.Service.Service.App
             if (!roleIds.Any()) return new List<string>();
 
             // 2. 获取角色分配的菜单按钮权限
-            var roleMenuButtons = await _roleMenuButtonRepository.GetListAsync(rmb => roleIds.Contains(rmb.RoleId));
+            var roleMenuButtons = await _roleMenuButtonService.GetListAsync(rmb => roleIds.Contains(rmb.RoleId));
 
             if (!roleMenuButtons.Any()) return new List<string>();
 
             // 3. 获取具体的菜单按钮信息
             var menuButtonIds = roleMenuButtons.Select(rmb => rmb.MenuButtonId).ToList();
-            var menuButtons = await _menuButtonRepository.GetListAsync(mb => menuButtonIds.Contains(mb.Id));
+            var menuButtons = await _menuButtonService.GetListAsync(mb => menuButtonIds.Contains(mb.Id));
 
             // 4. 返回按钮权限码列表
             return menuButtons.Select(mb => mb.Code).ToList();
@@ -56,7 +54,7 @@ namespace Fastdotnet.Service.Service.App
         public async Task<List<FdAppUserRole>> GetUserRoleRelationsAsync(string userId)
         {
             var userExistRole = await _AppUserRoleRepository.GetListAsync(ur => ur.AppUserId == userId);
-            var DefaultRole = await _roleRepository.GetListAsync(r => r.IsDefault && r.Belong== SystemCategory.App);
+            var DefaultRole = await _roleService.GetListAsync(r => r.IsDefault && r.Belong== SystemCategory.App);
             return new List<FdAppUserRole> {
                 new FdAppUserRole { AppUserId = userId, RoleId = DefaultRole.FirstOrDefault()?.Id }
             }.Union(userExistRole).ToList();

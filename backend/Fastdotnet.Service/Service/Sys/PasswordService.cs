@@ -1,4 +1,5 @@
 
+using Fastdotnet.Core.IService;
 using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Core.Utils;
 using Fastdotnet.Service.IService.Sys;
@@ -10,11 +11,11 @@ namespace Fastdotnet.Service.Service.Sys
     /// </summary>
     public class PasswordService : IPasswordService
     {
-        private readonly IRepository<FdDictData> _dictDataRepository;
+        private readonly IBaseService<FdDictData> _dictDataService;
 
-        public PasswordService(IRepository<FdDictData> dictDataRepository)
+        public PasswordService(IBaseService<FdDictData> dictDataService)
         {
-            _dictDataRepository = dictDataRepository;
+            _dictDataService = dictDataService;
         }
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace Fastdotnet.Service.Service.Sys
                 throw new ArgumentException("密码不能为空", nameof(password));
 
             // 1. 获取密码加密类型
-            var hashTypeConfig = await _dictDataRepository.GetFirstAsync(c => c.Code == "PasswordHashType");
+            var hashTypeConfig = await _dictDataService.GetFirstAsync(c => c.Code == "PasswordHashType");
             var hashTypeStr = hashTypeConfig?.Value ?? "Irreversible";
             var hashType = Enum.TryParse<CryptographyUtils.PasswordHashType>(hashTypeStr, out var parsedType)
                 ? parsedType
@@ -36,7 +37,7 @@ namespace Fastdotnet.Service.Service.Sys
             string encryptionKey = null;
             if (hashType == CryptographyUtils.PasswordHashType.Reversible)
             {
-                var keyConfig = await _dictDataRepository.GetFirstAsync(c => c.Code == "PasswordEncryptionKey");
+                var keyConfig = await _dictDataService.GetFirstAsync(c => c.Code == "PasswordEncryptionKey");
                 encryptionKey = keyConfig?.Value;
 
                 if (string.IsNullOrEmpty(encryptionKey))
@@ -57,7 +58,7 @@ namespace Fastdotnet.Service.Service.Sys
         public async Task<string> GetDefaultEncryptedPasswordAsync()
         {
             // 1. 从字典读取默认密码
-            var defaultPasswordConfig = await _dictDataRepository.GetFirstAsync(c => c.Code == "DefaultUserPassword");
+            var defaultPasswordConfig = await _dictDataService.GetFirstAsync(c => c.Code == "DefaultUserPassword");
             string defaultPassword = defaultPasswordConfig?.Value;
 
             if (string.IsNullOrEmpty(defaultPassword))
@@ -77,7 +78,7 @@ namespace Fastdotnet.Service.Service.Sys
                 return false;
 
             // 1. 获取密码加密类型
-            var hashTypeConfig = await _dictDataRepository.GetFirstAsync(c => c.Code == "PasswordHashType");
+            var hashTypeConfig = await _dictDataService.GetFirstAsync(c => c.Code == "PasswordHashType");
             var hashTypeStr = hashTypeConfig?.Value ?? "Irreversible";
             var hashType = Enum.TryParse<CryptographyUtils.PasswordHashType>(hashTypeStr, out var parsedType)
                 ? parsedType
@@ -87,7 +88,7 @@ namespace Fastdotnet.Service.Service.Sys
             string encryptionKey = null;
             if (hashType == CryptographyUtils.PasswordHashType.Reversible)
             {
-                var keyConfig = await _dictDataRepository.GetFirstAsync(c => c.Code == "PasswordEncryptionKey");
+                var keyConfig = await _dictDataService.GetFirstAsync(c => c.Code == "PasswordEncryptionKey");
                 encryptionKey = keyConfig?.Value;
             }
 

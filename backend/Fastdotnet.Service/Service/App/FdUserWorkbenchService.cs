@@ -4,6 +4,7 @@ using Fastdotnet.Core.Entities.App;
 using Fastdotnet.Core.Entities.Sys;
 using Fastdotnet.Core.Entities.Admin; // 引入 Admin 实体
 using Fastdotnet.Service.IService.App;
+using Fastdotnet.Service.IService.Admin;
 using Fastdotnet.Core.IService;
 
 namespace Fastdotnet.Service.Service.App
@@ -13,23 +14,23 @@ namespace Fastdotnet.Service.Service.App
         private readonly IRepository<FdWorkbenchCard, string> _cardRepository;
         private readonly IRepository<FdRoleCard, string> _roleCardRepository;
         private readonly IRepository<FdUserLayout, string> _layoutRepository;
-        private readonly IRepository<FdAppUserRole, string> _appUserRoleRepository;
-        private readonly IRepository<FdAdminUserRole, string> _adminUserRoleRepository;
+        private readonly IAppUserService _appUserService;
+        private readonly IAdminUserService _adminUserService;
         private readonly ICurrentUser _currentUser;
 
         public FdUserWorkbenchService(
             IRepository<FdWorkbenchCard, string> cardRepository,
             IRepository<FdRoleCard, string> roleCardRepository,
             IRepository<FdUserLayout, string> layoutRepository,
-            IRepository<FdAppUserRole, string> appUserRoleRepository,
-            IRepository<FdAdminUserRole, string> adminUserRoleRepository,
+            IAppUserService appUserService,
+            IAdminUserService adminUserService,
             ICurrentUser currentUser)
         {
             _cardRepository = cardRepository;
             _roleCardRepository = roleCardRepository;
             _layoutRepository = layoutRepository;
-            _appUserRoleRepository = appUserRoleRepository;
-            _adminUserRoleRepository = adminUserRoleRepository;
+            _appUserService = appUserService;
+            _adminUserService = adminUserService;
             _currentUser = currentUser;
         }
 
@@ -42,12 +43,12 @@ namespace Fastdotnet.Service.Service.App
             List<string> roleIds;
             if (_currentUser.UserType == "Admin")
             {
-                roleIds = (await _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId))
+                roleIds = (await _adminUserService.GetUserRoleRelationsAsync(userId))
                           .Select(ur => ur.RoleId).ToList();
             }
             else
             {
-                roleIds = (await _appUserRoleRepository.GetListAsync(ur => ur.AppUserId == userId))
+                roleIds = (await _appUserService.GetUserRoleRelationsAsync(userId))
                           .Select(ur => ur.RoleId).ToList();
             }
 

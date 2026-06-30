@@ -21,19 +21,19 @@ namespace Fastdotnet.WebApi.Controllers.Sys
         private readonly IVerificationCodeManager _verificationCodeManager;
         private readonly ICaptcha _captcha;
         private readonly ICurrentUser _currentUser;
-        private readonly IRepository<SystemInfoConfig> _systemConfigRepository;
-        private readonly IRepository<FdAppUser> _appuserRepository;
+        private readonly IBaseService<SystemInfoConfig> _systemConfigService;
+        private readonly IBaseService<FdAppUser> _appuserService;
         private readonly IFdDictDataService _dictDataService;
 
         public AuthController(IAuthService authService, IVerificationCodeManager verificationCodeManager, ICaptcha captcha,
-            IRepository<SystemInfoConfig> systemConfigRepository, ICurrentUser currentUser, IRepository<FdAppUser> appuserRepository, IFdDictDataService dictDataService)
+            IBaseService<SystemInfoConfig> systemConfigService, ICurrentUser currentUser, IBaseService<FdAppUser> appuserService, IFdDictDataService dictDataService)
         {
             _authService = authService;
             _verificationCodeManager = verificationCodeManager;
             _captcha = captcha;
-            _systemConfigRepository = systemConfigRepository;
+            _systemConfigService = systemConfigService;
             _currentUser = currentUser;
-            _appuserRepository = appuserRepository;
+            _appuserService = appuserService;
             _dictDataService = dictDataService;
         }
 
@@ -49,15 +49,15 @@ namespace Fastdotnet.WebApi.Controllers.Sys
         public async Task<LoginResultDto> AdminLogin([FromBody] LoginDto dto)
         {
             // 1. 检查系统配置是否启用验证码
-            //var enableCaptchaConfig = await _systemConfigRepository.GetFirstAsync(c => c.Code == "EnableCaptcha");
-            var enableCaptchaConfig = await _systemConfigRepository.GetFirstAsync(c => c.Code == "EnableCaptcha" && c.Belong == EnumHelper.ParseEnum<SystemCategory>(_currentUser.UserName));
+            //var enableCaptchaConfig = await _systemConfigService.GetFirstAsync(c => c.Code == "EnableCaptcha");
+            var enableCaptchaConfig = await _systemConfigService.GetFirstAsync(c => c.Code == "EnableCaptcha" && c.Belong == EnumHelper.ParseEnum<SystemCategory>(_currentUser.UserName));
             var enableCaptcha = enableCaptchaConfig?.Value?.ToString()?.ToLower() == "true";
 
             // 2. 如果启用了验证码，则进行验证
             if (enableCaptcha)
             {
                 // 3. 检查验证码类型
-                var captchaTypeConfig = await _systemConfigRepository.GetFirstAsync(c => c.Code == "CaptchaType");
+                var captchaTypeConfig = await _systemConfigService.GetFirstAsync(c => c.Code == "CaptchaType");
                 var captchaType = captchaTypeConfig?.Value?.ToString() ?? "normal";
 
                 // 4. 如果是图形验证码，则验证
@@ -97,14 +97,14 @@ namespace Fastdotnet.WebApi.Controllers.Sys
         public async Task<LoginResultDto> AppLogin([FromBody] LoginDto dto)
         {
             // 1. 检查系统配置是否启用验证码
-            var enableCaptchaConfig = await _systemConfigRepository.GetFirstAsync(c => c.Code == "EnableCaptcha" && c.Belong == EnumHelper.ParseEnum<SystemCategory>(_currentUser.UserName));
+            var enableCaptchaConfig = await _systemConfigService.GetFirstAsync(c => c.Code == "EnableCaptcha" && c.Belong == EnumHelper.ParseEnum<SystemCategory>(_currentUser.UserName));
             var enableCaptcha = enableCaptchaConfig?.Value?.ToString()?.ToLower() == "true";
 
             // 2. 如果启用了验证码，则进行验证
             if (enableCaptcha)
             {
                 // 3. 检查验证码类型
-                var captchaTypeConfig = await _systemConfigRepository.GetFirstAsync(c => c.Code == "CaptchaType");
+                var captchaTypeConfig = await _systemConfigService.GetFirstAsync(c => c.Code == "CaptchaType");
                 var captchaType = captchaTypeConfig?.Value?.ToString() ?? "normal";
 
                 // 4. 如果是图形验证码，则验证
@@ -142,7 +142,7 @@ namespace Fastdotnet.WebApi.Controllers.Sys
             dto.IsValid();
             ApiResult<bool> result = new ApiResult<bool>();
 
-            var userex = await _appuserRepository.GetFirstAsync(w => w.Email == dto.Email);
+            var userex = await _appuserService.GetFirstAsync(w => w.Email == dto.Email);
             if (userex != null)
             {
                 throw new BusinessException("该邮箱已注册");
@@ -163,7 +163,7 @@ namespace Fastdotnet.WebApi.Controllers.Sys
         {
             dto.IsValid();
             ApiResult<bool> result = new ApiResult<bool>();
-            var userex = await _appuserRepository.GetFirstAsync(w => w.Username == dto.Username);
+            var userex = await _appuserService.GetFirstAsync(w => w.Username == dto.Username);
             if (userex == null)
             {
                 result.Msg = "未存在";

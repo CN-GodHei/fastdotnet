@@ -9,16 +9,13 @@ namespace Fastdotnet.Service.Service.Sys
 {
     public class FdDictDataService : IFdDictDataService
     {
-        private readonly IRepository<FdDictData, string> _dataRepository;
         private readonly IBaseService<FdDictData> _baseService;
 
         public FdDictDataService(
-            IBaseService<FdDictData> baseServic,
-            IRepository<FdDictData, string> dataRepository
+            IBaseService<FdDictData> baseServic
             )
         {
             _baseService = baseServic;
-            _dataRepository = dataRepository;
         }
 
         public async Task<List<FdDictData>> GetUserConfig()

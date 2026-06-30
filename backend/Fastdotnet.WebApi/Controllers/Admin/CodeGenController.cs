@@ -12,16 +12,16 @@ namespace Fastdotnet.WebApi.Controllers.Admin
     {
         private readonly ICodeGenConfigService _codeGenConfigService;
         private readonly IBaseService<FdCodeGen, string> _service;
-        private readonly IRepository<FdCodeGenConfig> _configRepository;
+        private readonly IBaseService<FdCodeGenConfig> _configService;
 
         public CodeGenController(
             ICodeGenConfigService codeGenConfigService,
             IBaseService<FdCodeGen, string> service,
-            IRepository<FdCodeGenConfig> configRepository) : base(service)
+            IBaseService<FdCodeGenConfig> configService) : base(service)
         {
             _codeGenConfigService = codeGenConfigService;
             _service = service;
-            _configRepository = configRepository;
+            _configService = configService;
         }
         protected override async Task BeforeCreate(FdCodeGen entity, CreateCodeGenDto dto)
         {
@@ -165,7 +165,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
             var entityName = _codeGenConfigService.GetEntityNameByTableName(config.TableName);
             //List<ColumnInfoDto>? tableColumns = await _codeGenConfigService.GetTableColumnListAsync(config.TableName);
-            List<FdCodeGenConfig>? tableColumnsconfig = await _configRepository.GetListAsync(w=>w.CodeGenId== configId);
+            List<FdCodeGenConfig>? tableColumnsconfig = await _configService.GetListAsync(w=>w.CodeGenId== configId);
             //tableColumns.ForEach(x =>
             //{
             //    x.ShowColumnName = tableColumnsconfig.FirstOrDefault(s => s.ColumnName == x.ColumnName)?.ShowColumnName ?? x.PropertyName;
@@ -250,7 +250,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
                     EnableMask = false,
                 }).ToList();
 
-                await _configRepository.InsertRangeAsync(configList);
+                await _configService.InsertRangeAsync(configList);
             }
 
             await base.AfterCreate(entity, dto);
@@ -262,7 +262,7 @@ namespace Fastdotnet.WebApi.Controllers.Admin
 
         protected override async Task AfterDelete(string id, bool result)
         {
-            await _configRepository.DeleteAsync(w => w.CodeGenId == id);
+            await _configService.DeleteAsync(w => w.CodeGenId == id);
             await base.AfterDelete(id, result);
         }
         private HashSet<string> GetBaseEntityPropertyNames()
