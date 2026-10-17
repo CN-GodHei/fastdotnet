@@ -83,15 +83,16 @@ cd backend/Fastdotnet.WebApi
 dotnet run
 # open http://localhost:18889/swagger
 
-# 2) Admin frontend (new terminal)
-cd Web/fastdotnet-admin
+# 2) Frontend deps: install once at the workspace root (admin / app / shared)
+cd Web
 pnpm install
-pnpm dev
+
+# 3) Admin frontend (new terminal)
+pnpm dev:admin
 # open http://localhost:18888
 
-# 3) App frontend (optional)
-cd Web/fastdotnet-app
-pnpm install && pnpm dev
+# 4) App frontend (optional)
+pnpm dev:app
 # open http://localhost:18887
 ```
 
@@ -209,9 +210,10 @@ backend/
 ├── Fastdotnet.WebApi/             # Host (contains plugins/ deployment dir)
 ├── Fastdotnet.Core.Tests/         # Unit tests (74 cases)
 └── Plugins/PluginA/               # Sample plugin: Backend/ + Frontend/
-Web/
+Web/                               # pnpm workspace (unified frontend deps)
 ├── fastdotnet-admin/              # Admin frontend (18888)
-└── fastdotnet-app/                # App frontend (18887)
+├── fastdotnet-app/                # App frontend (18887)
+└── packages/shared/               # Shared layer @fastdotnet/shared (utils/types, single copy)
 docs/                              # VitePress documentation source
 docker/                            # Containerized deployment
 ```
@@ -323,7 +325,7 @@ All contributions are welcome: bug reports, feature requests, docs, code, plugin
 ```bash
 # Quick self-check
 cd backend && dotnet build && dotnet test     # 74 unit tests
-cd Web/fastdotnet-admin && pnpm install && pnpm dev
+cd Web && pnpm install && pnpm dev:admin
 ```
 
 ## Ecosystem & Community

@@ -83,15 +83,16 @@ cd backend/Fastdotnet.WebApi
 dotnet run
 # 打开 http://localhost:18889/swagger
 
-# 2) 管理端（新开一个终端）
-cd Web/fastdotnet-admin
+# 2) 前端依赖：在 workspace 根安装一次即可（管理端 / 应用端 / 公共层统一管理）
+cd Web
 pnpm install
-pnpm dev
+
+# 3) 管理端（新开一个终端）
+pnpm dev:admin
 # 打开 http://localhost:18888
 
-# 3) 应用端（可选）
-cd Web/fastdotnet-app
-pnpm install && pnpm dev
+# 4) 应用端（可选）
+pnpm dev:app
 # 打开 http://localhost:18887
 ```
 
@@ -210,9 +211,10 @@ backend/
 ├── Fastdotnet.WebApi/             # 宿主（含 plugins/ 插件部署目录）
 ├── Fastdotnet.Core.Tests/         # 单元测试（74 个用例）
 └── Plugins/PluginA/               # 示例插件：Backend/ + Frontend/
-Web/
+Web/                               # pnpm workspace（前端统一依赖管理）
 ├── fastdotnet-admin/              # 管理端前端（18888）
-└── fastdotnet-app/                # 应用端前端（18887）
+├── fastdotnet-app/                # 应用端前端（18887）
+└── packages/shared/               # 公共层 @fastdotnet/shared（两个前端共享的工具与类型，只有一份）
 docs/                              # VitePress 文档站源码
 docker/                            # 容器化部署
 ```
@@ -324,7 +326,7 @@ Fastdotnet 正在向 AI Agent 时代演进，已产出基于 Microsoft Semantic 
 ```bash
 # 快速自测
 cd backend && dotnet build && dotnet test     # 74 个单元测试
-cd Web/fastdotnet-admin && pnpm install && pnpm dev
+cd Web && pnpm install && pnpm dev:admin
 ```
 
 ## 生态与交流
