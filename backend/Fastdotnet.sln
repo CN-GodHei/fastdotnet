@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fastdotnet.Mcp", "Fastdotne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AiToolDemo", "Plugins\AiToolDemo\AiToolDemo.csproj", "{A54F757F-65AB-4503-A970-7DCC44557A16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fastdotnet.WebApi.Tests", "Fastdotnet.WebApi.Tests\Fastdotnet.WebApi.Tests.csproj", "{A2E1367B-ABA9-4D91-8FCC-57D2697DF7DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,6 +173,18 @@ Global
 		{A54F757F-65AB-4503-A970-7DCC44557A16}.Release|x64.Build.0 = Release|Any CPU
 		{A54F757F-65AB-4503-A970-7DCC44557A16}.Release|x86.ActiveCfg = Release|Any CPU
 		{A54F757F-65AB-4503-A970-7DCC44557A16}.Release|x86.Build.0 = Release|Any CPU
+		{A2E1367B-ABA9-4D91-8FCC-57D2697DF7DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2E1367B-ABA9-4D91-8FCC-57D2697DF7DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2E1367B-ABA9-4D91-8FCC-57D2697DF7DC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A2E1367B-ABA9-4D91-8FCC-57D2697DF7DC}.Debug|x64.Build.0 = Debug|Any CPU
+		{A2E1367B-ABA9-4D91-8FCC-57D2697DF7DC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A2E1367B-ABA9-4D91-8FCC-57D2697DF7DC}.Debug|x86.Build.0 = Debug|Any CPU
+		{A2E1367B-ABA9-4D91-8FCC-57D2697DF7DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2E1367B-ABA9-4D91-8FCC-57D2697DF7DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2E1367B-ABA9-4D91-8FCC-57D2697DF7DC}.Release|x64.ActiveCfg = Release|Any CPU
+		{A2E1367B-ABA9-4D91-8FCC-57D2697DF7DC}.Release|x64.Build.0 = Release|Any CPU
+		{A2E1367B-ABA9-4D91-8FCC-57D2697DF7DC}.Release|x86.ActiveCfg = Release|Any CPU
+		{A2E1367B-ABA9-4D91-8FCC-57D2697DF7DC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
