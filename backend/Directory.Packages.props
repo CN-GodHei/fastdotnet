@@ -40,6 +40,8 @@
     <PackageVersion Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
     <PackageVersion Include="System.Diagnostics.Debug" Version="4.3.0" />
     <PackageVersion Include="Yarp.ReverseProxy" Version="2.3.0" />
+    <!-- MCP（Model Context Protocol）服务端：把插件能力暴露给 AI Agent -->
+    <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="2.2.0" />
     <!-- OpenIddict for OIDC/OAuth2 -->
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.9" />
