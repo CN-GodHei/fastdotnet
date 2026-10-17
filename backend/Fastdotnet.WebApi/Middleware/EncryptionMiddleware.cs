@@ -154,6 +154,13 @@ namespace Fastdotnet.WebApi.Middleware
                         await newResponseBody.CopyToAsync(originalResponseBody);
                     }
                 }
+                else
+                {
+                    // 端点存在但不是 MVC 控制器动作（例如 MCP 最小 API 端点 /mcp、健康检查等映射端点）：
+                    // 这类端点不参与请求/响应加解密，必须放行。
+                    // ⚠️ 若缺少此分支，请求会在此处静默中断，表现为「HTTP 200 且响应体为空」，极难排查。
+                    await _next(context);
+                }
             }
             else
             {
