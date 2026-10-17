@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts" name="noPower">
-import { Session } from '@/utils/storage';
+import { Session } from '@fastdotnet/shared/utils/storage';
 
 const onSetAuth = () => {
 	// /issues/I5C3JS

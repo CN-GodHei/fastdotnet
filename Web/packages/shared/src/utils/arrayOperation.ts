@@ -30,8 +30,9 @@ export function isObjectValueEqual<T>(a: T, b: T): boolean {
 	if (aProps.length != bProps.length) return false;
 	for (let i = 0; i < aProps.length; i++) {
 		let propName = aProps[i];
-		let propA = a[propName];
-		let propB = b[propName];
+		// 泛型 T 无法直接用字符串索引，显式收窄为可索引类型（原代码隐式 any，迁入公共层时补齐类型）
+		let propA = (a as Record<string, unknown>)[propName];
+		let propB = (b as Record<string, unknown>)[propName];
 		if (!b.hasOwnProperty(propName)) return false;
 		if (propA instanceof Object) {
 			if (!isObjectValueEqual(propA, propB)) return false;
@@ -55,7 +56,10 @@ export function removeDuplicate(arr: EmptyArrayType, attr?: string) {
 		if (attr) {
 			const obj: EmptyObjectType = {};
 			return arr.reduce((cur: EmptyArrayType[], item: EmptyArrayType) => {
-				obj[item[attr]] ? '' : (obj[item[attr]] = true && item[attr] && cur.push(item));
+				// item 声明为数组类型，但此处按对象属性取值，显式收窄避免隐式 any
+				const row = item as unknown as Record<string, unknown>;
+				const key = String(row[attr]);
+				obj[key] ? '' : (obj[key] = true && row[attr] && cur.push(item));
 				return cur;
 			}, []);
 		} else {

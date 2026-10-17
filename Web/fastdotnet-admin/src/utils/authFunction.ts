@@ -1,5 +1,5 @@
 import { useUserInfo } from '@/stores/userInfo';
-import { judementSameArr } from '@/utils/arrayOperation';
+import { judementSameArr } from '@fastdotnet/shared/utils/arrayOperation';
 
 /**
  * 单个权限验证

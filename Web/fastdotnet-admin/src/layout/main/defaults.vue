@@ -15,7 +15,7 @@ import { defineAsyncComponent, watch, onMounted, nextTick, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '@/stores/themeConfig';
-import { NextLoading } from '@/utils/loading';
+import { NextLoading } from '@fastdotnet/shared/utils/loading';
 
 // 引入组件
 const LayoutAside = defineAsyncComponent(() => import('@/layout/component/aside.vue'));

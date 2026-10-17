@@ -194,7 +194,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { ArrowDown, Edit, Key, Setting, User, Delete } from '@element-plus/icons-vue';
-import { buildMixedQuery } from '@/utils/queryBuilder';
+import { buildMixedQuery } from '@fastdotnet/shared/utils/queryBuilder';
 import UserExtensionPanels from '@/components/UserExtensionPanels.vue';
 
 import dayjs from 'dayjs'; // 引入日期处理库

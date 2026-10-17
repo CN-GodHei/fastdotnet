@@ -12,6 +12,8 @@ const pathResolve = (dir: string) => {
 
 const alias: Record<string, string> = {
 	'@': pathResolve('src'),
+	// 公共层：源码直连（无构建产物），改完即生效
+	'@fastdotnet/shared': pathResolve('../packages/shared/src'),
 	'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
 };
 
@@ -23,7 +25,7 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 		resolve: { alias },
 		base: mode.command === 'serve' ? '/' : env.VITE_PUBLIC_PATH,
 		appType: 'spa', // 关键: 添加SPA模式，处理history模式刷新404问题
-		optimizeDeps: { exclude: ['vue-demi'] },
+		optimizeDeps: { exclude: ['vue-demi', '@fastdotnet/shared'] },
 		server: {
 			host: '0.0.0.0',
 			port: env.VITE_PORT as unknown as number,

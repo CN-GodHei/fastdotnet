@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { Session } from '@/utils/storage';
+import { Session } from '@fastdotnet/shared/utils/storage';
 
 /**
  * 用户认证状态管理

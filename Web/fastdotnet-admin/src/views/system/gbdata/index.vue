@@ -321,7 +321,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { Document, List, Plus, Edit, Delete, Search, Refresh, Download } from '@element-plus/icons-vue';
-import { buildMixedQuery } from '@/utils/queryBuilder';
+import { buildMixedQuery } from '@fastdotnet/shared/utils/queryBuilder';
 import * as StandardApi from '@/api/fd-system-api-admin/fdNationalStandard';
 import * as ItemApi from '@/api/fd-system-api-admin/fdNationalStandardItem';
 

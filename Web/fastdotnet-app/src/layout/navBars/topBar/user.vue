@@ -102,8 +102,8 @@ import { storeToRefs } from 'pinia';
 import { useUserInfo } from '@/stores/userInfo';
 import { useThemeConfig } from '@/stores/themeConfig';
 import other from '@/utils/other';
-import mittBus from '@/utils/mitt';
-import { Session, Local } from '@/utils/storage';
+import mittBus from '@fastdotnet/shared/utils/mitt';
+import { Session, Local } from '@fastdotnet/shared/utils/storage';
 
 // 引入组件
 const UserNews = defineAsyncComponent(() => import('@/layout/navBars/topBar/userNews.vue'));

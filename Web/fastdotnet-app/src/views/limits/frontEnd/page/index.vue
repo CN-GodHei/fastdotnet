@@ -27,7 +27,7 @@ import { onMounted, ref } from 'vue';
 import Cookies from 'js-cookie';
 import { storeToRefs } from 'pinia';
 import { useUserInfo } from '@/stores/userInfo';
-import { Session } from '@/utils/storage';
+import { Session } from '@fastdotnet/shared/utils/storage';
 import { frontEndsResetRoute, setAddRoute, setFilterMenuAndCacheTagsViewRoutes } from '@/router/frontEnd';
 
 // 定义变量内容

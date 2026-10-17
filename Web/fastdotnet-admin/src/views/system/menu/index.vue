@@ -95,7 +95,7 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import * as MenuApi from '@/api/fd-system-api-admin/fdMenu';
 // 引入组件
 const MenuDialog = defineAsyncComponent(() => import('@/views/system/menu/dialog.vue'));
-import { buildMixedQuery } from '@/utils/queryBuilder';
+import { buildMixedQuery } from '@fastdotnet/shared/utils/queryBuilder';
 
 const queryForm = ref();
 const menuDialogRef = ref();

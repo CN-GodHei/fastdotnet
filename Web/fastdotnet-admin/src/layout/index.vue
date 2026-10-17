@@ -6,8 +6,8 @@
 import { onBeforeMount, onUnmounted, defineAsyncComponent } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '@/stores/themeConfig';
-import { Local } from '@/utils/storage';
-import mittBus from '@/utils/mitt';
+import { Local } from '@fastdotnet/shared/utils/storage';
+import mittBus from '@fastdotnet/shared/utils/mitt';
 
 // 引入组件
 const layouts: any = {

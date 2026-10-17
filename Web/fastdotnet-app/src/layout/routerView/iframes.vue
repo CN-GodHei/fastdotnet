@@ -24,7 +24,7 @@
 <script setup lang="ts" name="layoutIframeView">
 import { computed, watch, ref, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
-import { Session } from '@/utils/storage';
+import { Session } from '@fastdotnet/shared/utils/storage';
 
 // 定义父组件传过来的值
 const props = defineProps({

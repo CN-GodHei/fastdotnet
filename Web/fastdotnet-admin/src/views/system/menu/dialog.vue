@@ -224,7 +224,7 @@ import * as MenuApi from '@/api/fd-system-api-admin/fdMenu';
 
 import { ElMessage } from 'element-plus';
 // import { setBackEndControlRefreshRoutes } from "@/router/backEnd";
-import { buildMixedQuery } from '@/utils/queryBuilder';
+import { buildMixedQuery } from '@fastdotnet/shared/utils/queryBuilder';
 
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);

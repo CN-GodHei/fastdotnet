@@ -26,7 +26,7 @@
 <script setup lang="ts" name="layoutBreadcrumb">
 import { reactive, computed, onMounted, watch } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, RouteRecordRaw } from 'vue-router';
-import { Local } from '@/utils/storage';
+import { Local } from '@fastdotnet/shared/utils/storage';
 import other from '@/utils/other';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '@/stores/themeConfig';

@@ -56,10 +56,10 @@ import { useTagsViewRoutes } from '@/stores/tagsViewRoutes';
 import { useThemeConfig } from '@/stores/themeConfig';
 import { useKeepALiveNames } from '@/stores/keepAliveNames';
 import { useRoutesList } from '@/stores/routesList';
-import { Session } from '@/utils/storage';
-import { isObjectValueEqual } from '@/utils/arrayOperation';
+import { Session } from '@fastdotnet/shared/utils/storage';
+import { isObjectValueEqual } from '@fastdotnet/shared/utils/arrayOperation';
 import other from '@/utils/other';
-import mittBus from '@/utils/mitt';
+import mittBus from '@fastdotnet/shared/utils/mitt';
 
 // 引入组件
 const Contextmenu = defineAsyncComponent(() => import('@/layout/navBars/tagsView/contextmenu.vue'));

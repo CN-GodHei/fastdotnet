@@ -109,7 +109,7 @@ import { getPluginScanPlugins, postPluginLoadPlugin, postPluginSetAuthCode } fro
 import { usePluginStore } from '@/stores/plugin'
 import { baseSignalRManager } from '@/utils/signalr'
 import * as signalR from '@microsoft/signalr'
-import { Session } from '@/utils/storage'
+import { Session } from '@fastdotnet/shared/utils/storage'
 
 // 定义事件发射器
 const emit = defineEmits<{

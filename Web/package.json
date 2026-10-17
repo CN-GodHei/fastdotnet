@@ -1,0 +1,14 @@
+{
+	"name": "fastdotnet-web",
+	"version": "1.0.0",
+	"private": true,
+	"description": "Fastdotnet 前端工作区：管理端 + 应用端 + 公共层",
+	"packageManager": "pnpm@11.24.0",
+	"scripts": {
+		"dev:admin": "pnpm --filter fastdotnetadmin dev",
+		"dev:app": "pnpm --filter fastdotnetapp dev",
+		"build:admin": "pnpm --filter fastdotnetadmin build",
+		"build:app": "pnpm --filter fastdotnetapp build",
+		"build:all": "pnpm --filter fastdotnetadmin build && pnpm --filter fastdotnetapp build"
+	}
+}

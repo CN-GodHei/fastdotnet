@@ -36,7 +36,7 @@ import { reactive, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '@/stores/themeConfig';
-import { Local } from '@/utils/storage';
+import { Local } from '@fastdotnet/shared/utils/storage';
 
 // 定义变量内容
 const { t } = useI18n();

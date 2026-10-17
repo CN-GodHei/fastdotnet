@@ -75,7 +75,7 @@ import Sortable from 'sortablejs';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '@/stores/themeConfig';
 import { useTagsViewRoutes } from '@/stores/tagsViewRoutes';
-import commonFunction from '@/utils/commonFunction';
+import commonFunction from '@fastdotnet/shared/utils/commonFunction';
 import { leftNavList } from './js/mock';
 import { jsplumbDefaults, jsplumbMakeSource, jsplumbMakeTarget, jsplumbConnect } from './js/config';
 

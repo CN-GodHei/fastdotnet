@@ -161,7 +161,7 @@
 <script lang="ts" setup name="FdRole">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage, ElTree } from 'element-plus';
-import { buildMixedQuery } from '@/utils/queryBuilder';
+import { buildMixedQuery } from '@fastdotnet/shared/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
 import * as FdRoleApi from '@/api/fd-system-api-admin/fdRole';

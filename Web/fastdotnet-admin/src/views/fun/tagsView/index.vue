@@ -65,7 +65,7 @@
 <script setup lang="ts" name="funTagsView">
 import { defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
-import mittBus from '@/utils/mitt';
+import mittBus from '@fastdotnet/shared/utils/mitt';
 
 // 引入组件
 const NoticeBar = defineAsyncComponent(() => import('@/components/noticeBar/index.vue'));

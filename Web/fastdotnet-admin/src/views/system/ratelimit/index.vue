@@ -118,7 +118,7 @@
 <script lang="ts" setup name="FdRatelimitRule">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { buildMixedQuery } from '@/utils/queryBuilder';
+import { buildMixedQuery } from '@fastdotnet/shared/utils/queryBuilder';
 import type { FdRatelimitRule } from '@/api/fd-system-api-admin/typings';
 import dayjs from 'dayjs'; // 引入日期处理库
 import * as FdRatelimitRuleApi from '@/api/fd-system-api-admin/fdRatelimitRule';

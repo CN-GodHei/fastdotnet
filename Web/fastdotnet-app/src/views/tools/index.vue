@@ -218,7 +218,7 @@ import {
 	verifyPostalCode,
 	verifyUrl,
 	verifyCarNum,
-} from '@/utils/toolsValidate';
+} from '@fastdotnet/shared/utils/toolsValidate';
 
 // 定义变量内容
 const state = reactive({

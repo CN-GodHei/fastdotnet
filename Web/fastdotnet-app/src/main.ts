@@ -6,14 +6,20 @@ import App from '@/App.vue';
 import router from '@/router';
 import * as VueRouter from 'vue-router';
 import { getAppMenusGetUserMenuTree } from '@/api/fd-system-api-app/appMenus';
-import { Session } from '@/utils/storage';
+import { Session } from '@fastdotnet/shared/utils/storage';
 import request from '@/utils/request';
-import { buildMixedQuery } from '@/utils/queryBuilder';
+import { buildMixedQuery } from '@fastdotnet/shared/utils/queryBuilder';
 import { baseSignalRManager } from '@/utils/signalr';
 import { useMicroAppsStore } from '@/stores/microApps';
 import * as ElementPlus from 'element-plus';
 // 导入上传服务
 import uploadService from '@/services/uploadService';
+import { registerPublicKeyFetcher } from '@fastdotnet/shared/runtime/publicKey';
+import { getEncryptionPublicKey } from '@/utils/encryption';
+
+// 把本应用的公钥获取实现注入公共层：
+// 公共层（@fastdotnet/shared）不直接依赖任何应用的 API 客户端，依赖方向保持「应用 → 公共层」。
+registerPublicKeyFetcher(getEncryptionPublicKey);
 
 // --- 共享依赖 ---
 // 将Vue实例作为全局对象暴露，确保子应用可以访问所有必要的API

@@ -16,9 +16,9 @@ import { storeToRefs } from 'pinia';
 import { useTagsViewRoutes } from '@/stores/tagsViewRoutes';
 import { useThemeConfig } from '@/stores/themeConfig';
 import other from '@/utils/other';
-import { Local, Session } from '@/utils/storage';
-import mittBus from '@/utils/mitt';
-import setIntroduction from '@/utils/setIconfont';
+import { Local, Session } from '@fastdotnet/shared/utils/storage';
+import mittBus from '@fastdotnet/shared/utils/mitt';
+import setIntroduction from '@fastdotnet/shared/utils/setIconfont';
 import { startQiankun } from '@/main';
 
 // 引入组件

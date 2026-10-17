@@ -1,5 +1,5 @@
 import { getEncryptionKeyGetPublicKey } from '@/api/fd-system-api-admin/encryptionKey';
-import { Session } from '@/utils/storage';
+import { Session } from '@fastdotnet/shared/utils/storage';
 
 /**
  * 获取并缓存 RSA 公钥（用于混合加密）

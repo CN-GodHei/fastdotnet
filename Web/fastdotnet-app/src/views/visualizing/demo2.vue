@@ -232,8 +232,8 @@
 import { reactive, onMounted, onUnmounted, ref } from 'vue';
 import * as echarts from 'echarts';
 import 'echarts-gl';
-import { formatDate } from '@/utils/formatTime';
-import { NextLoading } from '@/utils/loading';
+import { formatDate } from '@fastdotnet/shared/utils/formatTime';
+import { NextLoading } from '@fastdotnet/shared/utils/loading';
 import { dropdownList, skyList, dBtnList, earth3DBtnList, chartData4List } from './mock/demo2';
 
 // 定义变量内容

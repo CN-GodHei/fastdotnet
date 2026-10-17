@@ -15,7 +15,7 @@ import { storeToRefs } from 'pinia';
 import { useRoutesList } from '@/stores/routesList';
 import { useThemeConfig } from '@/stores/themeConfig';
 import { useTagsViewRoutes } from '@/stores/tagsViewRoutes';
-import mittBus from '@/utils/mitt';
+import mittBus from '@fastdotnet/shared/utils/mitt';
 
 // 引入组件
 const Logo = defineAsyncComponent(() => import('@/layout/logo/index.vue'));

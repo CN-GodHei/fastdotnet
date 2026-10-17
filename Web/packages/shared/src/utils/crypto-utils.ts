@@ -1,7 +1,7 @@
 // 导入 JSEncrypt
 import { JSEncrypt } from 'jsencrypt';
 import CryptoJS from 'crypto-js';
-import { Session } from '@/utils/storage';
+import { Session } from './storage';
 
 /**
  * AES 加密函数（CBC 模式 + PKCS7 填充）
@@ -196,9 +196,10 @@ export async function encryptRequest(
         // 如果是首次尝试且没有强制指定公钥，尝试刷新公钥后重试
         if (!publicKey) {
           try {
-            // 动态导入避免循环依赖
-            const { getEncryptionPublicKey } = await import('@/utils/encryption');
-            const freshPublicKey = await getEncryptionPublicKey(true);
+            // 通过注入缝获取公钥：实现由各应用在入口注册（见 runtime/publicKey.ts），
+            // 公共层不直接依赖任何应用专属的 API 客户端。
+            const { getPublicKeyFetcher } = await import('../runtime/publicKey');
+            const freshPublicKey = await getPublicKeyFetcher()(true);
             
             if (freshPublicKey) {
               console.log('[Encryption] 公钥已刷新，重试加密...');

@@ -435,13 +435,13 @@ import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '@/stores/themeConfig';
-import { useChangeColor } from '@/utils/theme';
-import { verifyAndSpace } from '@/utils/toolsValidate';
-import { Local } from '@/utils/storage';
-import Watermark from '@/utils/watermark';
-import commonFunction from '@/utils/commonFunction';
+import { useChangeColor } from '@fastdotnet/shared/utils/theme';
+import { verifyAndSpace } from '@fastdotnet/shared/utils/toolsValidate';
+import { Local } from '@fastdotnet/shared/utils/storage';
+import Watermark from '@fastdotnet/shared/utils/watermark';
+import commonFunction from '@fastdotnet/shared/utils/commonFunction';
 import other from '@/utils/other';
-import mittBus from '@/utils/mitt';
+import mittBus from '@fastdotnet/shared/utils/mitt';
 
 // 定义变量内容
 const { locale } = useI18n();

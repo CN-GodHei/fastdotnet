@@ -1,8 +1,8 @@
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig, AxiosError } from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { Session } from '@/utils/storage';
+import { Session } from '@fastdotnet/shared/utils/storage';
 import qs from 'qs';
-import { encryptRequest, decryptResponse } from '@/utils/crypto-utils';
+import { encryptRequest, decryptResponse } from '@fastdotnet/shared/utils/crypto-utils';
 import CryptoJS from 'crypto-js';
 
 // ========== 配置常量 ==========

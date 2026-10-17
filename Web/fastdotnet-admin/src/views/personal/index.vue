@@ -185,7 +185,7 @@
 
 <script setup lang="ts" name="personal">
 import { reactive, computed } from 'vue';
-import { formatAxis } from '@/utils/formatTime';
+import { formatAxis } from '@fastdotnet/shared/utils/formatTime';
 
 // 消息通知列表数据
 const newsInfoList = [

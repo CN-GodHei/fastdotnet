@@ -1,5 +1,6 @@
 import { nextTick } from 'vue';
-import '@/theme/loading.scss';
+// 样式随工具一起迁入公共层，保持「一份代码」；不要改回 @/theme（那是应用自己的别名）
+import '../theme/loading.scss';
 
 /**
  * 页面全局 Loading

@@ -1,0 +1,27 @@
+{
+	"name": "@fastdotnet/shared",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Fastdotnet 前端公共层：管理端（admin）与应用端（app）共享的工具与类型，只保留一份",
+	"type": "module",
+	"main": "src/index.ts",
+	"types": "src/index.ts",
+	"sideEffects": false,
+	"dependencies": {
+		"@element-plus/icons-vue": "^2.3.1",
+		"crypto-js": "^4.2.0",
+		"element-plus": "^2.6.1",
+		"js-cookie": "^3.0.5",
+		"jsencrypt": "^3.5.4",
+		"mitt": "^3.0.1",
+		"vue-clipboard3": "^2.0.0",
+		"vue-i18n": "^9.10.2"
+	},
+	"peerDependencies": {
+		"vue": "^3.4.21"
+	},
+	"devDependencies": {
+		"@types/crypto-js": "^4.2.2",
+		"typescript": "^5.4.0"
+	}
+}

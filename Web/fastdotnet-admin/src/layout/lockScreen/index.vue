@@ -75,8 +75,8 @@
 
 <script setup lang="ts" name="layoutLockScreen">
 import { nextTick, onMounted, reactive, ref, onUnmounted, watch } from 'vue';
-import { formatDate } from '@/utils/formatTime';
-import { Local } from '@/utils/storage';
+import { formatDate } from '@fastdotnet/shared/utils/formatTime';
+import { Local } from '@fastdotnet/shared/utils/storage';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '@/stores/themeConfig';
 import { useUserInfo } from '@/stores/userInfo';

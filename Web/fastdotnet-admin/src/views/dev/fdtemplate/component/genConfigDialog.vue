@@ -234,7 +234,7 @@ import {
 	getCodeGenGetTableColumnList,
 	getGenericDtoControllerBase5GetAll
 } from '@/api/fd-system-api-admin/codeGen';
-import { buildMixedQuery } from '@/utils/queryBuilder';
+import { buildMixedQuery } from '@fastdotnet/shared/utils/queryBuilder';
 import APIModel from '@/api/fd-system-api-admin';
 import { ElMessage, ElMessageBox } from 'element-plus';
 

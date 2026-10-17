@@ -40,6 +40,11 @@ Generated\ Files/
 *.snupkg
 # 包文件夹
 [Pp]ackages/
+# ⚠️ 例外：前端 pnpm workspace 的公共层目录。
+# 上面的 [Pp]ackages/ 是 Visual Studio 针对 NuGet 目录的默认规则，
+# 会把 Web/packages/ 一并忽略，导致公共层代码不进版本库、他人 clone 后前端无法构建。
+!Web/packages/
+!Web/packages/**
 # NuGet v3的项目.json文件
 project.lock.json
 project.assets.json

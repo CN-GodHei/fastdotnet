@@ -185,7 +185,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { ArrowDown, Edit, Key, User, Delete } from '@element-plus/icons-vue';
-import { buildMixedQuery } from '@/utils/queryBuilder';
+import { buildMixedQuery } from '@fastdotnet/shared/utils/queryBuilder';
 
 import dayjs from 'dayjs'; // 引入日期处理库
 import * as FdAdminUserApi from '@/api/fd-system-api-admin/fdAdminUser';

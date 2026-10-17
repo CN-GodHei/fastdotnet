@@ -50,7 +50,7 @@ import { useRoute, useRouter, onBeforeRouteUpdate, RouteRecordRaw } from 'vue-ro
 import { storeToRefs } from 'pinia';
 import { useRoutesList } from '@/stores/routesList';
 import { useThemeConfig } from '@/stores/themeConfig';
-import mittBus from '@/utils/mitt';
+import mittBus from '@fastdotnet/shared/utils/mitt';
 
 // 定义变量内容
 const columnsAsideOffsetTopRefs = ref<RefType>([]);

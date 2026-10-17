@@ -19,8 +19,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useKeepALiveNames } from '@/stores/keepAliveNames';
 import { useThemeConfig } from '@/stores/themeConfig';
-import { Session } from '@/utils/storage';
-import mittBus from '@/utils/mitt';
+import { Session } from '@fastdotnet/shared/utils/storage';
+import mittBus from '@fastdotnet/shared/utils/mitt';
 
 // 引入组件
 const Iframes = defineAsyncComponent(() => import('@/layout/routerView/iframes.vue'));

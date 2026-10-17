@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { getFdAppUserGetUserInfo } from '@/api/fd-system-api-app/fdAppUser';
-import { Session } from '@/utils/storage';
+import { Session } from '@fastdotnet/shared/utils/storage';
 
 /**
  * 用户信息

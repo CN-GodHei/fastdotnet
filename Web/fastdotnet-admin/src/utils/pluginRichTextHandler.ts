@@ -3,7 +3,7 @@
  * 用于处理来自插件的富文本编辑器调用请求
  */
 
-import { sendRichTextEvent, RichTextEventType, listenRichTextEvent } from '@/utils/richTextCommunication';
+import { sendRichTextEvent, RichTextEventType, listenRichTextEvent } from '@fastdotnet/shared/utils/richTextCommunication';
 import RichTextEditorModal from '@/components/RichTextEditorModal.vue';
 import { createApp, ref, h } from 'vue';
 
