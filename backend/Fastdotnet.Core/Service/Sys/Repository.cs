@@ -137,6 +137,7 @@ namespace Fastdotnet.Core.Service.Sys
         /// <returns>插入后的实体</returns>
         public virtual async Task<T> InsertAsync(T entity)
         {
+            EnsureEntityId(entity);
             //var id = await _db.Insertable(entity).ExecuteReturnIdentityAsync();
             await _db.Insertable(entity).ExecuteCommandAsync();
             //entity.Id = Convert.ToInt64(id);
@@ -150,26 +151,37 @@ namespace Fastdotnet.Core.Service.Sys
         /// <returns>插入成功的数量</returns>
         public virtual async Task<int> InsertRangeAsync(List<T> entities)
         {
-            // 在批量插入前，为所有实体生成ID和设置创建时间
-            // 这样可以确保每个实体都有唯一ID，避免AOP事件在批量操作中可能的问题
-            //foreach (var entity in entities)
-            //{
-            //    if (string.IsNullOrEmpty(entity.Id))
-            //    {
-            //        entity.Id = SnowflakeIdGenerator.NextStrId();
-            //    }
+            // 批量插入前为缺少主键的实体生成唯一 ID。
+            // ⚠️ 必须做：BaseEntity.Id 是 string 主键且默认值为 string.Empty，
+            // 若不生成，批量插入会把同一个空字符串写进多行，直接触发
+            // "UNIQUE constraint failed" —— 该缺陷曾导致「全新数据库首次启动即失败」，
+            // 使得任何新用户都无法把项目跑起来。
+            if (entities is not null)
+            {
+                foreach (var entity in entities)
+                {
+                    EnsureEntityId(entity);
+                }
+            }
 
-            //    if (entity.CreatedAt == default(DateTime))
-            //    {
-            //        entity.CreatedAt = DateTime.Now;
-            //    }
-            //}
-
-            var insertable = _db.Insertable(entities);
+            var insertable = _db.Insertable(entities!);
 
             // 使用SqlSugar的批量插入方法
             var result = await insertable.ExecuteCommandAsync();
             return result;
+        }
+
+        /// <summary>
+        /// 确保实体拥有非空主键（主键为空时生成雪花 ID）
+        /// </summary>
+        private static void EnsureEntityId(T entity)
+        {
+            if (entity is null) return;
+
+            if (string.IsNullOrEmpty(entity.Id))
+            {
+                entity.Id = SnowflakeIdGenerator.NextStrId();
+            }
         }
 
         #endregion
