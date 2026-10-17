@@ -129,6 +129,34 @@ Fastdotnet 依赖于多个第三方库。我们：
 - **.NET 安全指南**: [https://docs.microsoft.com/en-us/dotnet/fundamentals/security/](https://docs.microsoft.com/en-us/dotnet/fundamentals/security/)
 - **CWE/SANS Top 25**: [https://cwe.mitre.org/top25/](https://cwe.mitre.org/top25/)
 
+## 安全测试合作招募
+
+**我们正在寻找专业的网络安全公司合作。**
+
+Fastdotnet 作为企业级开发框架，高度重视系统安全性，诚邀专业安全团队对框架进行安全审计与渗透测试。
+
+### 合作内容
+
+- ✅ 框架核心代码安全审计
+- ✅ 插件系统隔离机制安全性验证
+- ✅ 认证授权体系（OIDC / JWT / RBAC）安全测试
+- ✅ API 接口安全防护评估
+- ✅ 数据加密与传输安全检测
+- ✅ 常见漏洞扫描（SQL 注入、XSS、CSRF 等）
+
+### 合作方式
+
+- **免费测试**：为安全公司提供测试环境与技术支持
+- **品牌曝光**：在 README、官网、文档中展示贵公司 Logo 与链接
+- **报告发布**：公开发布测试报告，提升双方行业影响力
+- **长期合作**：建立持续的安全合作机制
+
+### 联系方式
+
+📧 邮箱：yunnanzuyuankeji@163.com ｜ 💬 QQ 群：779454817
+
+> 如果你是安全领域的专业公司或团队，欢迎联系我们，共同提升 Fastdotnet 的安全性。
+
 ## 联系我们
 
 如有任何安全问题或疑问，请联系：
