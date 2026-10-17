@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>AiToolDemo</AssemblyName>
+    <RootNamespace>AiToolDemo</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile></DocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- 插件唯一 ID：同时作为 plugins/ 下的目录名 -->
+    <PluginId>ai-tool-demo</PluginId>
+  </PropertyGroup>
+
+  <Target Name="ValidatePluginConfiguration" BeforeTargets="BeforeBuild">
+    <Error Condition="'$(PluginId)' == ''" Text="编译失败: 必须在 .csproj 中配置 &lt;PluginId&gt; 属性。" />
+  </Target>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute" Condition="'$(PluginId)' != ''">
+      <_Parameter1>PluginId</_Parameter1>
+      <_Parameter2>$(PluginId)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- 插件开发的唯一必需依赖：契约层 -->
+    <ProjectReference Include="..\..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" />
+  </ItemGroup>
+
+  <!-- 编译后自动输出到 publish/<PluginId>，与 PluginA 的打包约定一致 -->
+  <Target Name="CopyToPublishDir" AfterTargets="Build">
+    <PropertyGroup>
+      <PublishBaseDir>$(MSBuildThisFileDirectory)publish\$(PluginId)</PublishBaseDir>
+      <SourceBinDir>$(OutputPath)</SourceBinDir>
+      <TargetFileName>$(TargetName)$(TargetExt)</TargetFileName>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(PublishBaseDir)" />
+
+    <Copy SourceFiles="$(SourceBinDir)$(TargetFileName)" DestinationFolder="$(PublishBaseDir)" SkipUnchangedFiles="true" Condition="Exists('$(SourceBinDir)$(TargetFileName)')" />
+    <Copy SourceFiles="$(SourceBinDir)$(TargetName).pdb" DestinationFolder="$(PublishBaseDir)" SkipUnchangedFiles="true" Condition="Exists('$(SourceBinDir)$(TargetName).pdb')" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)plugin.json" DestinationFolder="$(PublishBaseDir)" SkipUnchangedFiles="true" Condition="Exists('$(MSBuildThisFileDirectory)plugin.json')" />
+
+    <Message Text="已输出插件包: $(PublishBaseDir)" Importance="high" />
+  </Target>
+
+</Project>

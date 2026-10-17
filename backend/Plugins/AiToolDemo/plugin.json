@@ -1,0 +1,11 @@
+{
+    "id": "ai-tool-demo",
+    "name": "AI 能力演示插件",
+    "description": "演示插件能力如何被 AI Agent 通过 MCP 调用（P0 验证载体）",
+    "version": "1.0.0",
+    "enabled": true,
+    "author": "Fastdotnet Team",
+    "dependencies": [],
+    "tags": [ "demo", "ai", "mcp" ],
+    "entryPoint": "AiToolDemo.dll"
+}
