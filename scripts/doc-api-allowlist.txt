@@ -1,0 +1,20 @@
+# 文档中允许出现、但不由本仓库代码提供的 API 名
+# 说明：verify-docs.ps1 会校验文档代码块里的 Add*/Use*/Map*/With* 调用是否在 backend 源码中存在，
+#       外部框架/第三方库提供的 API 请登记在此，每行一个（不含括号）。
+# 格式：每行一个标识符；# 开头为注释
+
+# ASP.NET Core / 官方 MCP SDK
+AddMcpServer
+WithHttpTransport
+WithTools
+MapMcp
+
+# Autofac
+RegisterType
+
+# SqlSugar
+AddSqlSugar
+
+# 宿主框架（WebApi 内定义，但文档中按扩展方法书写）
+AddFastdotnetMcp
+MapFastdotnetMcp

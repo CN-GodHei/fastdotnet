@@ -5,15 +5,18 @@ on:
     branches: [main, master, develop]
     paths:
       - 'backend/**'
+      - 'scripts/**'
+      - 'README.md'
+      - 'README.en.md'
+      - 'CONTRIBUTING.md'
+      - 'SECURITY.md'
       - '.github/workflows/backend-ci.yml'
   pull_request:
     branches: [main, master, develop]
-    paths:
-      - 'backend/**'
-      - '.github/workflows/backend-ci.yml'
   workflow_dispatch:
 
 jobs:
+  # 关卡 1：构建（Release）+ 单元测试 + 集成测试
   build-and-test:
     name: Build & Test (net10.0)
     runs-on: ubuntu-latest
@@ -35,3 +38,29 @@ jobs:
 
       - name: Test
         run: dotnet test backend/Fastdotnet.sln --no-build -c Release --verbosity normal
+
+  # 关卡 2：文档守门（断链 / 不存在的 API / 代码围栏）
+  docs-check:
+    name: Docs Guard
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify docs
+        shell: pwsh
+        run: ./scripts/verify-docs.ps1
+
+  # 关卡 3：技术债守门（不允许新增隐形债）
+  debt-guard:
+    name: Debt Guard
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check technical debt
+        shell: pwsh
+        run: ./scripts/check-debt.ps1

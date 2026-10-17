@@ -1,0 +1,20 @@
+# 文档守门基线（历史遗留问题）
+# 说明：这些是 Phase 0.5 引入检查时已存在的问题，允许存在但不允许新增。
+# 每修掉一条，请从本文件删除对应行——基线只应单调递减。
+# 由 scripts/verify-docs.ps1 读取；格式必须与脚本输出的问题字符串完全一致。
+
+[docs\01-快速开始\安装部署.md] 断链：../06-高级主题/部署运维
+[docs\01-快速开始\安装部署.md] 断链：../06-高级主题/性能优化
+[docs\01-快速开始\环境准备.md] 断链：../06-高级主题/常见问题
+[docs\01-快速开始\框架介绍.md] 断链：../../graphify-out/GRAPH_REPORT.md
+[docs\01-快速开始\框架介绍.md] 断链：../../graphify-out/GRAPH_TREE.html
+[docs\01-快速开始\框架介绍.md] 断链：../../graphify-out/graph.html
+[docs\01-快速开始\Framework-Introduction.en.md] 断链：../../graphify-out/GRAPH_REPORT.md
+[docs\01-快速开始\Framework-Introduction.en.md] 断链：../../graphify-out/GRAPH_TREE.html
+[docs\01-快速开始\Framework-Introduction.en.md] 断链：../../graphify-out/graph.html
+[docs\01-快速开始\index.md] 断链：../03-后端开发/项目结构
+[docs\03-后端开发\核心概念.md] 文档中使用的 API 在代码中不存在：UseOperationLogMiddleware()
+[docs\04-前端开发\插件开发指南.md] 断链：/src/main.ts
+[docs\04-前端开发\快速参考.md] 断链：779454817
+[docs\05-插件开发\事件总线.md] 断链：public/eventcatalog-ui.png
+[docs\05-插件开发\微前端集成.md] 断链：/src/main.ts
