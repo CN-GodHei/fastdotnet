@@ -4,5 +4,16 @@
     <!-- SQLitePCLRaw.lib.e_sqlite3 2.1.11 已是最新版，但 GHSA-2m69-gcr7-jv3q 尚无修复版本，压制等待更新 -->
     <NoWarn>$(NoWarn);NU1608;NU1903</NoWarn>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <!--
+      可空性警告升级为错误（架构治理 Phase 0.1）：
+      CS8604 可能将 null 作为非 null 实参传递
+      CS8625 不能将 null 字面量转换为非 null 引用类型
+      这两类问题在运行时表现为随机 NullReferenceException，且往往只在生产路径上暴露，
+      因此在编译期拦截。后续可继续加入 CS8618（未初始化的非 null 字段）。
+    -->
+    <WarningsAsErrors>$(WarningsAsErrors);CS8604;CS8625</WarningsAsErrors>
+  </PropertyGroup>
   <!-- Directory.Packages.props 会被 SDK 自动导入，无需手动导入 -->
 </Project>

@@ -16,6 +16,7 @@ using Fastdotnet.Service.Service.Admin;
 using Fastdotnet.Service.Service.App;
 using Fastdotnet.Service.Service.Sys;
 using Fastdotnet.WebApi.Providers;
+using Fastdotnet.WebApi.Startup;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IdentityModel.Tokens.Jwt;
@@ -259,6 +260,9 @@ builder.Host.UseAutofacWithCustomModules();
 // 3. 构建并运行应用
 var app = builder.Build();
 
+// 启动期依赖自检：容器注册错误立即失败，不带病启动（Development 默认启用）
+DependencySelfCheck.Run(app);
+
 // 执行应用初始化器
 await app.UseApplicationInitializers();
 // 👇 启用 Swagger（仅开发环境）
@@ -355,3 +359,9 @@ app.RunStartupTasks();
 var appSettings = app.Services.GetRequiredService<IOptions<AppSettings>>().Value;
 var urls = appSettings.Kestrel?.Endpoints?.Http?.Url ?? "http://*:18889";
 app.Run(urls);
+
+/// <summary>
+/// 供集成测试（WebApplicationFactory&lt;Program&gt;）引用的宿主入口标记。
+/// 顶层语句生成的 Program 类默认是 internal，测试项目需要它可见。
+/// </summary>
+public partial class Program;
