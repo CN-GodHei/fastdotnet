@@ -5,9 +5,9 @@ import * as Pinia from 'pinia';
 import App from '@/App.vue';
 import router from '@/router';
 import * as VueRouter from 'vue-router';
-import { getAppMenusGetUserMenuTree } from '@/api/fd-system-api-app/appMenus';
+import { getAppMenusGetUserMenuTree } from '@fastdotnet/shared/api/fd-system-api-app/appMenus';
 import { Session } from '@fastdotnet/shared/utils/storage';
-import request from '@/utils/request';
+import request from '@fastdotnet/shared/utils/request';
 import { buildMixedQuery } from '@fastdotnet/shared/utils/queryBuilder';
 import { baseSignalRManager } from '@/utils/signalr';
 import { useMicroAppsStore } from '@fastdotnet/shared/stores/microApps';
@@ -84,7 +84,7 @@ import { pluginAPI } from '@fastdotnet/shared/plugins/PluginAPI';
 import { initializePlugins } from '@fastdotnet/shared/plugins/PluginLoader';
 // 插件运行时的宿主环境注入（公共层不直接依赖本应用的 API 客户端与 request 实例）
 import { configurePluginHost, registerPluginRequest, registerPluginScanApi } from '@fastdotnet/shared/runtime/pluginHost';
-import { getPluginScanPlugins } from '@/api/fd-system-api-app/plugin';
+import { getPluginScanPlugins } from '@fastdotnet/shared/api/fd-system-api-app/plugin';
 
 // 本应用是应用端：插件前端资源路径段为 app
 // strictStyleIsolation 保持迁移前的取值（true），避免本次重构改变运行时行为。

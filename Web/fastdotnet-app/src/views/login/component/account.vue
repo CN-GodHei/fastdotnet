@@ -94,8 +94,8 @@ import { Session } from '@fastdotnet/shared/utils/storage';
 import { formatAxis } from '@fastdotnet/shared/utils/formatTime';
 import { NextLoading } from '@fastdotnet/shared/utils/loading';
 // 引入适配的登录 API
-import { postAuthAppLogin } from '@/api/fd-system-api-app/auth';
-import { getPluginGetEnabledPlugins } from '@/api/fd-system-api-app/plugin';
+import { postAuthAppLogin } from '@fastdotnet/shared/api/fd-system-api-app/auth';
+import { getPluginGetEnabledPlugins } from '@fastdotnet/shared/api/fd-system-api-app/plugin';
 import { startQiankun } from '@/main';
 
 // 定义变量内容

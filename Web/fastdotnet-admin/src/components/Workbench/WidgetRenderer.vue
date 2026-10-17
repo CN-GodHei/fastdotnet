@@ -12,7 +12,7 @@
 
 <script setup lang="ts" name="WidgetRenderer">
 import { ref, onMounted, computed, defineAsyncComponent } from 'vue';
-import request from '@/utils/request';
+import request from '@fastdotnet/shared/utils/request';
 
 const props = defineProps({
   type: { type: String, required: true },

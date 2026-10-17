@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request, { encryptRequest } from '@/utils/request';
+import request, { encryptRequest } from '@fastdotnet/shared/utils/request';
 
 /** 获取所有记录 检索并返回系统中该类型的所有记录。 GET /api/admin/FdMenuButtons */
 export async function getFdMenuButtonsGetAll(options?: { [key: string]: any }) {

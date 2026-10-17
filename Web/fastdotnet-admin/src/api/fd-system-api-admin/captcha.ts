@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request, { encryptRequest } from '@/utils/request';
+import request, { encryptRequest } from '@fastdotnet/shared/utils/request';
 
 /** 生成验证码图片 GET /api/Captcha/generate */
 export async function getCaptchaGenerate(

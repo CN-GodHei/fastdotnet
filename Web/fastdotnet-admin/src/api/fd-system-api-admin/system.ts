@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request, { encryptRequest } from '@/utils/request';
+import request, { encryptRequest } from '@fastdotnet/shared/utils/request';
 
 /** 获取当前服务器的唯一机器指纹 GET /api/System/machine-fingerprint */
 export async function getSystemGetMachineFingerprint(options?: { [key: string]: any }) {

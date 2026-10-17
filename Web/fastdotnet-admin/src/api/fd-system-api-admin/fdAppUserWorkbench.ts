@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request, { encryptRequest } from '@/utils/request';
+import request, { encryptRequest } from '@fastdotnet/shared/utils/request';
 
 /** 此处后端没有提供注释 GET /api/app/FdAppUserWorkbench */
 export async function getAppGenericDtoControllerBase5GetAll(options?: { [key: string]: any }) {

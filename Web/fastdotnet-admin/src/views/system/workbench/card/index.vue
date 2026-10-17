@@ -238,7 +238,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, watch } from 'vue';
 import { ElMessage } from 'element-plus';
-import request from '@/utils/request';
+import request from '@fastdotnet/shared/utils/request';
 import { 
   getFdWorkbenchGetAll, 
   postGenericDtoControllerBase5Create, 

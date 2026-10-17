@@ -1,4 +1,4 @@
-import { getEncryptionKeyGetPublicKey } from '@/api/fd-system-api-app/encryptionKey';
+import { getEncryptionKeyGetPublicKey } from '@fastdotnet/shared/api/fd-system-api-app/encryptionKey';
 import { Session } from '@fastdotnet/shared/utils/storage';
 
 /**

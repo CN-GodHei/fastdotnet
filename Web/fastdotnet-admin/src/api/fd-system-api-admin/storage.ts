@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request, { encryptRequest } from '@/utils/request';
+import request, { encryptRequest } from '@fastdotnet/shared/utils/request';
 
 /** 获取当前存储配置 GET /api/Storage/config */
 export async function getStorageGetCurrentConfig(options?: { [key: string]: any }) {

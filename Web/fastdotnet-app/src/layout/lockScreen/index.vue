@@ -80,7 +80,7 @@ import { Local } from '@fastdotnet/shared/utils/storage';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '@/stores/themeConfig';
 import { useUserInfo } from '@/stores/userInfo';
-import { postFdAppUserUnlock } from '@/api/fd-system-api-app/fdAppUser';
+import { postFdAppUserUnlock } from '@fastdotnet/shared/api/fd-system-api-app/fdAppUser';
 import { ElMessage } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
 

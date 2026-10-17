@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request, { encryptRequest } from '@/utils/request';
+import request, { encryptRequest } from '@fastdotnet/shared/utils/request';
 
 /** 访问被拒绝页面 GET /oidc/access-denied */
 export async function getOidcLoginAccessDenied(options?: { [key: string]: any }) {

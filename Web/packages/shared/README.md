@@ -105,18 +105,22 @@ registerPluginRequest(request);
 | Stage 1 | 工具模块 + 全局类型 + `theme/loading.scss` | 21 |
 | Stage 2a | 插件运行时（4 个文件）+ `stores/microApps` | 5 |
 | Stage 2b | `theme/`（25）+ 通用组件（6） | 31 |
+| Stage 3a | 框架页（401/404/personal/tools/login 的 mobile+scan） | 6 |
+| Stage 3b | `utils/request.ts` + `api/fd-system-api-app/`（17） | 18 |
 
 ## 尚未迁入
 
-- **`i18n/`（9 个语言包）** —— ⚠️ **不是简单搬文件**。`i18n/index.ts` 用
+- **`layout/`（27 个文件）** —— 会牵出整层基础设施，需先解决：
+  - `stores/`（`themeConfig` 两端差 2 行、`routesList`、`tagsViewRoutes`、`keepAliveNames`、`index`）
+  - `assets/`（3 个 svg，两端相同）
+  - `utils/other.ts` —— 耦合 `@/router/index` 与 `@/i18n/index`，**需要新增 router / i18n 两个注入缝**
+  - `views/home`、`views/login/index` —— 同样依赖上述 stores
+- **`i18n/`（10 个文件）** —— ⚠️ **不是简单搬文件**。`i18n/index.ts` 用
   `import.meta.glob('./**/*.ts', { eager: true })` 按目录自动装载语言包，
   文件搬走后 glob 扫不到，**翻译会静默丢失且构建不报错**。
-  搬它必须同时改 glob（`import.meta.glob('@fastdotnet/shared/i18n/**/*.ts')`）并做运行时验证。
 - `components/auth/*`、`components/table`、`components/upload/*` —— 耦合 `stores/userInfo` / `stores/themeConfig`。
-- `utils/other.ts`、`utils/authFunction.ts`、`utils/plugin-signalr.ts`、`utils/pluginRichTextHandler.ts`
-  —— 耦合 `router` / `stores` / `i18n` / 组件。
-- `utils/build.ts` —— 仅被 `vite.config.ts` 在构建期使用。
-- `utils/request.ts` —— 76 处引用，且需合并两端的 498 密钥过期重试逻辑。
-- 其余约 152 个完全相同文件（`views` / `layout` / `api` / `i18n` / 剩余 `components`）。
+- `utils/authFunction.ts`、`utils/plugin-signalr.ts`、`utils/pluginRichTextHandler.ts`、`utils/build.ts`。
+- `directive/`（3）、`App.vue`、`router/` 中的部分文件。
+
 
 

@@ -1,4 +1,4 @@
-﻿import request from '@/utils/request';
+import request from '@fastdotnet/shared/utils/request';
 import { getStorageGetCurrentConfig, postStorageGetUploadCredential, postStorageUpload, deleteStorageDelete } from '@/api/fd-system-api-admin/storage';
 
 /**

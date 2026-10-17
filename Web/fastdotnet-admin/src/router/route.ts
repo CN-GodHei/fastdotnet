@@ -159,7 +159,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 			{
 				path: '/personal',
 				name: 'personal',
-				component: () => import('@/views/personal/index.vue'),
+				component: () => import('@fastdotnet/shared/views/personal/index.vue'),
 				meta: {
 					title: 'message.router.personal',
 					isLink: '',
@@ -174,7 +174,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 			{
 				path: '/tools',
 				name: 'tools',
-				component: () => import('@/views/tools/index.vue'),
+				component: () => import('@fastdotnet/shared/views/tools/index.vue'),
 				meta: {
 					title: 'message.router.tools',
 					isLink: '',
@@ -243,7 +243,7 @@ export const notFoundAndNoPower = [
 	{
 		path: '/:path(.*)*',
 		name: 'notFound',
-		component: () => import('@/views/error/404.vue'),
+		component: () => import('@fastdotnet/shared/views/error/404.vue'),
 		meta: {
 			title: 'message.staticRoutes.notFound',
 			isHide: true,
@@ -252,7 +252,7 @@ export const notFoundAndNoPower = [
 	{
 		path: '/401',
 		name: 'noPower',
-		component: () => import('@/views/error/401.vue'),
+		component: () => import('@fastdotnet/shared/views/error/401.vue'),
 		meta: {
 			title: 'message.staticRoutes.noPower',
 			isHide: true,

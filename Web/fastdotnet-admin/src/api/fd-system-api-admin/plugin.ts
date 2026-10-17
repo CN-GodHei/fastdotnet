@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request, { encryptRequest } from '@/utils/request';
+import request, { encryptRequest } from '@fastdotnet/shared/utils/request';
 
 /** 获取所有当前活动的插件 GET /api/Plugin/active */
 export async function getPluginGetActivePlugins(options?: { [key: string]: any }) {

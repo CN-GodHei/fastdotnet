@@ -84,7 +84,7 @@ import {
   getFdAppUserWorkbenchGetAvailableCards, 
   getFdAppUserWorkbenchGetMyLayout, 
   postFdAppUserWorkbenchSaveLayout 
-} from '@/api/fd-system-api-app/fdAppUserWorkbench';
+} from '@fastdotnet/shared/api/fd-system-api-app/fdAppUserWorkbench';
 import WidgetWrapper from '@/components/Workbench/WidgetWrapper.vue';
 
 const editable = ref(false);

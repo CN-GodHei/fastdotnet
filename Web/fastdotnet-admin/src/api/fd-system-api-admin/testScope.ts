@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request, { encryptRequest } from '@/utils/request';
+import request, { encryptRequest } from '@fastdotnet/shared/utils/request';
 
 /** 管理端专用接口 GET /api/test-scope/admin-only */
 export async function getTestScopeAdminOnly(options?: { [key: string]: any }) {

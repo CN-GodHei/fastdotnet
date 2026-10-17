@@ -183,7 +183,7 @@ const onSignIn = async () => {
 		
 		// 注意：这里不能直接使用 postAuthAdminLogin，因为它内部会再次从 Session 读取公钥
 		// 需要手动调用 request 并传入刚获取的公钥
-		const { default: request, encryptRequest } = await import('@/utils/request');
+		const { default: request, encryptRequest } = await import('@fastdotnet/shared/utils/request');
 		
 		// 打印公钥指纹用于调试
 		const publicKeyFingerprint = publicKey.substring(0, 50) + '...';

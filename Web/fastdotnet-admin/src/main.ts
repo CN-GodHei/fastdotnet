@@ -7,7 +7,7 @@ import router from '@/router';
 import * as VueRouter from 'vue-router';
 import { getFdMenuGetUserMenuTree } from '@/api/fd-system-api-admin/fdMenu';
 import { Session } from '@fastdotnet/shared/utils/storage';
-import request from '@/utils/request';
+import request from '@fastdotnet/shared/utils/request';
 import { buildMixedQuery } from '@fastdotnet/shared/utils/queryBuilder';
 import { baseSignalRManager } from '@/utils/signalr';
 import { useMicroAppsStore } from '@fastdotnet/shared/stores/microApps';

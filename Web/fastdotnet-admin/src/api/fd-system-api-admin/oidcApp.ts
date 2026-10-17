@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request, { encryptRequest } from '@/utils/request';
+import request, { encryptRequest } from '@fastdotnet/shared/utils/request';
 
 /** 获取所有 OIDC 应用列表 GET /api/OidcApp */
 export async function getOidcAppGetApplications(options?: { [key: string]: any }) {

@@ -214,7 +214,7 @@ export function backEndComponent(routes: any) {
 			if (!route.component) {
 				console.warn(`Failed to dynamically import component for path: ${item.Path}, component path: ${item.Component}`);
 				// 可以设置一个默认的错误组件或者空组件
-				// route.component = () => import('@/views/error/404.vue');
+				// route.component = () => import('@fastdotnet/shared/views/error/404.vue');
 			}
 		} else if (item.component) {
 			// 保留原有逻辑（可能来自递归调用）

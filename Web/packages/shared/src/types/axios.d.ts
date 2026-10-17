@@ -11,6 +11,15 @@ declare module 'axios' {
 		[key: string]: any;
 	}
 
+	/**
+	 * openapi2ts 生成的客户端会在请求配置里带上 requestType（用于区分普通/加密/上传等请求），
+	 * 但 axios 本身没有这个字段。此前每个生成的 api 文件都会因此报 TS2353；
+	 * 声明放在公共层后，一处修复覆盖所有生成代码。
+	 */
+	export interface AxiosRequestConfig {
+		requestType?: string;
+	}
+
 	// 分页数据类型
 	export interface PageInfo {
 		Total: number;

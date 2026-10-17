@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request, { encryptRequest } from '@/utils/request';
+import request, { encryptRequest } from '@fastdotnet/shared/utils/request';
 
 /** 获取所有管理员用户 (自定义注释) GET /api/admin/FdAdminUser */
 export async function getFdAdminUserGetAll(options?: { [key: string]: any }) {
