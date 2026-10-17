@@ -23,16 +23,20 @@ namespace Fastdotnet.WebApi.Middleware
             _logger = logger;
         }
 
-        public async Task InvokeAsync(HttpContext context, IHybridCacheService cacheService, PluginReverseProxyRegistry proxyRegistry)
+        public async Task InvokeAsync(HttpContext context, IHybridCacheService cacheService, PluginReverseProxyRegistry proxyRegistry, IConfiguration configuration)
         {
-#if DEBUG
-            await _next(context);
-            return;
-#endif
-#pragma warning disable CS0162
+            // 防重放开关：由配置显式控制，不再使用 #if DEBUG。
+            // 原实现让 Debug 构建整体放行，导致「本地永远测不出 Release 下才暴露的问题」
+            // （例如 MCP 客户端不带签名头，只在 Release 被 409 拦截）。
+            // 本地如需关闭，请在 appsettings.Development.json 中显式设置 Security:AntiReplay:Enabled=false。
+            if (!configuration.GetValue("Security:AntiReplay:Enabled", true))
+            {
+                await _next(context);
+                return;
+            }
+
             // 跳过特定路径（如登录、获取公钥等不需要防重放的接口）
             if (ShouldSkipAntiReplay(context))
-#pragma warning restore CS0162
             {
                 await _next(context);
                 return;
@@ -51,7 +55,6 @@ namespace Fastdotnet.WebApi.Middleware
             
             // 跳过 MCP 端点：MCP 客户端（Claude / IDE / 自研 Agent）按协议只发送 Bearer 鉴权，
             // 不会带 X-Timestamp / X-Nonce / X-Signature，无法参与本中间件的防重放签名校验。
-            // ⚠️ 注意：Debug 构建在上面的 #if DEBUG 已直接放行，因此这个坑只在 Release 下暴露。
             if (!string.IsNullOrEmpty(requestPath) &&
                 requestPath.StartsWith("/mcp", StringComparison.OrdinalIgnoreCase))
             {
