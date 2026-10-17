@@ -1,0 +1,37 @@
+name: backend-ci
+
+on:
+  push:
+    branches: [main, master, develop]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    branches: [main, master, develop]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build & Test (net10.0)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore backend/Fastdotnet.sln
+
+      - name: Build
+        run: dotnet build backend/Fastdotnet.sln --no-restore -c Release
+
+      - name: Test
+        run: dotnet test backend/Fastdotnet.sln --no-build -c Release --verbosity normal
