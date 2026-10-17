@@ -68,7 +68,7 @@ import { useRoute } from 'vue-router';
 import mittBus from '@fastdotnet/shared/utils/mitt';
 
 // 引入组件
-const NoticeBar = defineAsyncComponent(() => import('@/components/noticeBar/index.vue'));
+const NoticeBar = defineAsyncComponent(() => import('@fastdotnet/shared/components/noticeBar/index.vue'));
 
 // 定义变量内容
 const route = useRoute();

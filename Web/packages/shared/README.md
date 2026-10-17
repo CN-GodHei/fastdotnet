@@ -26,13 +26,43 @@ import { formatTime } from '@fastdotnet/shared/utils/formatTime';
 
 ```
 src/
-├── utils/     # 与具体应用无关的工具函数
-├── types/     # 全局类型声明（EmptyObjectType 等）
-├── stores/    # 与端无关的 Pinia store（microApps）
-├── plugins/   # 插件运行时（微前端）：PluginAPI / PluginLoader / PluginManager / PluginRegistry
-├── runtime/   # 应用级依赖注入缝（见下）
-└── index.ts   # 桶文件（仅做汇总，不承载逻辑）
+├── utils/       # 与具体应用无关的工具函数
+├── types/       # 全局类型声明（EmptyObjectType 等）
+├── theme/       # 全局样式（含 element-plus 覆盖、媒体查询、mixins）
+├── components/  # 与端无关的通用组件（cropper / editor / iconSelector / noticeBar / svgIcon）
+├── stores/      # 与端无关的 Pinia store（microApps）
+├── plugins/     # 插件运行时（微前端）：PluginAPI / PluginLoader / PluginManager / PluginRegistry
+├── runtime/     # 应用级依赖注入缝（见下）
+└── index.ts     # 桶文件（仅做汇总，不承载逻辑）
 ```
+
+## ⚠️ 两条硬约束
+
+### 1. 第三方依赖必须在本包 `package.json` 中声明
+
+pnpm 使用隔离式 `node_modules`，**本包未声明的包一律解析不到**，构建会直接失败：
+
+```
+[vite]: Rollup failed to resolve import "pinia" from ".../packages/shared/src/stores/microApps.ts"
+```
+
+本包当前声明了 `pinia`、`qiankun`、`axios`、`element-plus`、`@wangeditor/*`、`cropperjs` 等。
+**搬入新文件后，务必检查其 import 的第三方包是否已声明。**
+
+> 反面教材：`axios` 漏声明时，`types/axios.d.ts` 的模块增强会**静默失效**——
+> 不报错，但会让 `AxiosResponse` 上的属性访问全部变成类型错误（实测引发 15 个错误）。
+
+### 2. 本包内不得出现 `@/` 别名，也不得自引用 `@fastdotnet/shared`
+
+`@` 是各应用自己的 `src` 别名，指向它会破坏"一份代码"的前提；自引用别名则让本包依赖消费者的配置。
+
+```powershell
+# 自检：应当只剩注释与报错文案中的出现
+Get-ChildItem packages/shared/src -Recurse -File | Select-String -Pattern "@/" 
+```
+
+> 注意：只检查 `from '@/...'` 是不够的——`<style>` 块里的 `@import '@/theme/x.scss'`
+> 和动态 `import('@/components/x')` 同样会漏网（实测踩过）。
 
 ## 依赖注入缝（runtime/）
 
@@ -63,26 +93,30 @@ registerPluginRequest(request);
 
 | 情况 | 处置 |
 | --- | --- |
-| 与端无关（格式化、校验、加密、存储封装、水印…） | ✅ 放这里 |
+| 与端无关（格式化、校验、加密、存储封装、水印、全局样式、通用组件…） | ✅ 放这里 |
 | 只差一个配置项（如 API 前缀、系统类别、插件前端路径段） | ✅ 放这里，用参数注入 |
 | 需要各自的 API 客户端（`api/fd-system-api-admin` vs `-app`） | ✅ 通过 `runtime/` 注入，不要让本包直接依赖 `@/api/*` |
 | 真分叉（路由表、上传逻辑） | ❌ 留在各自项目 |
-
-> **本包不得出现 `@/` 前缀的导入**——`@` 是各应用自己的 `src` 别名，指向它会破坏"一份代码"的前提。
-> 包内部一律使用相对路径。可用 `Get-ChildItem packages/shared/src -Recurse -Filter *.ts | Select-String "from '@/"` 自检。
 
 ## 已迁入
 
 | 批次 | 内容 | 文件数 |
 | --- | --- | --- |
 | Stage 1 | 工具模块 + 全局类型 + `theme/loading.scss` | 21 |
-| Stage 2 | 插件运行时（4 个文件）+ `stores/microApps` | 5 |
+| Stage 2a | 插件运行时（4 个文件）+ `stores/microApps` | 5 |
+| Stage 2b | `theme/`（25）+ 通用组件（6） | 31 |
 
 ## 尚未迁入
 
+- **`i18n/`（9 个语言包）** —— ⚠️ **不是简单搬文件**。`i18n/index.ts` 用
+  `import.meta.glob('./**/*.ts', { eager: true })` 按目录自动装载语言包，
+  文件搬走后 glob 扫不到，**翻译会静默丢失且构建不报错**。
+  搬它必须同时改 glob（`import.meta.glob('@fastdotnet/shared/i18n/**/*.ts')`）并做运行时验证。
+- `components/auth/*`、`components/table`、`components/upload/*` —— 耦合 `stores/userInfo` / `stores/themeConfig`。
 - `utils/other.ts`、`utils/authFunction.ts`、`utils/plugin-signalr.ts`、`utils/pluginRichTextHandler.ts`
-  —— 耦合 `router` / `stores` / `i18n` / 组件，需等这些层也迁入。
-- `utils/build.ts` —— 仅被 `vite.config.ts` 在构建期使用，不属于运行期公共工具。
-- `utils/request.ts` —— 有 76 处引用，且需合并两端的 498 密钥过期重试逻辑；迁移成本高，暂缓。
-- 其余约 185 个完全相同文件（`views` / `layout` / `theme` / `i18n` / `components` / `api`）。
+  —— 耦合 `router` / `stores` / `i18n` / 组件。
+- `utils/build.ts` —— 仅被 `vite.config.ts` 在构建期使用。
+- `utils/request.ts` —— 76 处引用，且需合并两端的 498 密钥过期重试逻辑。
+- 其余约 152 个完全相同文件（`views` / `layout` / `api` / `i18n` / 剩余 `components`）。
+
 

@@ -230,7 +230,7 @@ import { buildMixedQuery } from '@fastdotnet/shared/utils/queryBuilder';
 const emit = defineEmits(['refresh']);
 
 // 引入组件
-const IconSelector = defineAsyncComponent(() => import('@/components/iconSelector/index.vue'));
+const IconSelector = defineAsyncComponent(() => import('@fastdotnet/shared/components/iconSelector/index.vue'));
 
 // 定义变量内容
 const menuDialogFormRef = ref();

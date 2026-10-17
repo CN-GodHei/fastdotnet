@@ -269,7 +269,7 @@ const currentTime = computed(() => {
 </script>
 
 <style scoped lang="scss">
-@import '../../theme/mixins/index.scss';
+@import '@fastdotnet/shared/theme/mixins/index.scss';
 .personal {
 	.personal-user {
 		height: 130px;
