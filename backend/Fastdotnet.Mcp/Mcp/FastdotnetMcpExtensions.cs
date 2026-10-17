@@ -68,8 +68,13 @@ public static class FastdotnetMcpExtensions
         RequestContext<ListToolsRequestParams> request,
         CancellationToken cancellationToken)
     {
-        var registry = request.Services.GetRequiredService<IPluginToolRegistry>();
-        var callerFactory = request.Services.GetRequiredService<ToolCallerContextFactory>();
+        // RequestContext.Services 在类型上可空（继承自 MessageContext），
+        // 回落到 McpServer.Services，避免把可空性一路传播下去。
+        var services = request.Services ?? request.Server.Services
+            ?? throw new InvalidOperationException("MCP 请求上下文中没有可用的 IServiceProvider");
+
+        var registry = services.GetRequiredService<IPluginToolRegistry>();
+        var callerFactory = services.GetRequiredService<ToolCallerContextFactory>();
         var caller = await callerFactory.CreateAsync(request.User, cancellationToken);
 
         var tools = new List<Tool>(McpToolSchemaBuilder.BuildMetaTools());
@@ -97,9 +102,12 @@ public static class FastdotnetMcpExtensions
         var toolName = request.Params?.Name ?? string.Empty;
         var arguments = ConvertArguments(request.Params?.Arguments);
 
-        var registry = request.Services.GetRequiredService<IPluginToolRegistry>();
-        var callerFactory = request.Services.GetRequiredService<ToolCallerContextFactory>();
-        var logger = request.Services.GetRequiredService<ILoggerFactory>()
+        var services = request.Services ?? request.Server.Services
+            ?? throw new InvalidOperationException("MCP 请求上下文中没有可用的 IServiceProvider");
+
+        var registry = services.GetRequiredService<IPluginToolRegistry>();
+        var callerFactory = services.GetRequiredService<ToolCallerContextFactory>();
+        var logger = services.GetRequiredService<ILoggerFactory>()
             .CreateLogger("Fastdotnet.Mcp.ToolCall");
 
         var caller = await callerFactory.CreateAsync(request.User, cancellationToken);
