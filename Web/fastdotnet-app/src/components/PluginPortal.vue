@@ -36,8 +36,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue';
-import { pluginManager } from '@/plugins/PluginManager';
-import { pluginRegistry } from '@/plugins/PluginRegistry';
+import { pluginManager } from '@fastdotnet/shared/plugins/PluginManager';
+import { pluginRegistry } from '@fastdotnet/shared/plugins/PluginRegistry';
 
 interface Props {
   pluginId: string;

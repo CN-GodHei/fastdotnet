@@ -10,7 +10,7 @@
 <script setup lang="ts" name="pluginMarketplace">
 import { onMounted, onUnmounted, ref } from 'vue'
 import { loadMicroApp } from 'qiankun'
-import { useMicroAppsStore } from '@/stores/microApps'
+import { useMicroAppsStore } from '@fastdotnet/shared/stores/microApps'
 import { getPluginScanPlugins } from '@/api/fd-system-api-admin/plugin'
 
 // 定义微应用实例

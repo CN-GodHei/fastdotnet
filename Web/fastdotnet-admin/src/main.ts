@@ -10,7 +10,7 @@ import { Session } from '@fastdotnet/shared/utils/storage';
 import request from '@/utils/request';
 import { buildMixedQuery } from '@fastdotnet/shared/utils/queryBuilder';
 import { baseSignalRManager } from '@/utils/signalr';
-import { useMicroAppsStore } from '@/stores/microApps';
+import { useMicroAppsStore } from '@fastdotnet/shared/stores/microApps';
 import * as ElementPlus from 'element-plus';
 // 导入上传服务
 import uploadService from '@/services/uploadService';
@@ -76,12 +76,22 @@ initializeThemeConfig().then(() => {
 });
 
 // 导入插件系统
-import { pluginRegistry } from '@/plugins/PluginRegistry';
-import { pluginManager } from '@/plugins/PluginManager';
-import { pluginAPI } from '@/plugins/PluginAPI';
+import { pluginRegistry } from '@fastdotnet/shared/plugins/PluginRegistry';
+import { pluginManager } from '@fastdotnet/shared/plugins/PluginManager';
+import { pluginAPI } from '@fastdotnet/shared/plugins/PluginAPI';
 
 // 初始化插件系统
-import { initializePlugins } from '@/plugins/PluginLoader';
+import { initializePlugins } from '@fastdotnet/shared/plugins/PluginLoader';
+// 插件运行时的宿主环境注入（公共层不直接依赖本应用的 API 客户端与 request 实例）
+import { configurePluginHost, registerPluginRequest, registerPluginScanApi } from '@fastdotnet/shared/runtime/pluginHost';
+import { getPluginScanPlugins } from '@/api/fd-system-api-admin/plugin';
+
+// 本应用是管理端：插件前端资源路径段为 admin
+// strictStyleIsolation 保持迁移前的取值（false），避免本次重构改变运行时行为；
+// 该差异属于「有意保留」而非复制漂移，是否统一需实测 qiankun 样式隔离后再定。
+configurePluginHost({ frontendSegment: 'admin', strictStyleIsolation: false });
+registerPluginScanApi(getPluginScanPlugins);
+registerPluginRequest(request);
 
 async function initializePluginSystem() {
   try {

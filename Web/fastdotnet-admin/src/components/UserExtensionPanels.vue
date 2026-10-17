@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
-import { pluginAPI } from '@/plugins/PluginAPI';
+import { pluginAPI } from '@fastdotnet/shared/plugins/PluginAPI';
 
 interface Props {
   userId: string;

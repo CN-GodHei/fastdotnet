@@ -369,6 +369,12 @@ importers:
       mitt:
         specifier: ^3.0.1
         version: 3.0.1
+      pinia:
+        specifier: ^2.1.7
+        version: 2.3.1(typescript@5.9.3)(vue@3.5.44(typescript@5.9.3))
+      qiankun:
+        specifier: ^2.10.16
+        version: 2.10.16
       vue:
         specifier: ^3.4.21
         version: 3.5.44(typescript@5.9.3)

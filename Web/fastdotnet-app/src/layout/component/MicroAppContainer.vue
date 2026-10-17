@@ -14,7 +14,7 @@
 import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { loadMicroApp, MicroApp } from 'qiankun';
-import { useMicroAppsStore } from '@/stores/microApps';
+import { useMicroAppsStore } from '@fastdotnet/shared/stores/microApps';
 
 const route = useRoute();
 const microAppsStore = useMicroAppsStore();

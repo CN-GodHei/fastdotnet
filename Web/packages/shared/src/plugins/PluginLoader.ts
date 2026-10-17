@@ -5,7 +5,9 @@
 
 import { PluginMetadata } from './PluginManager';
 import { pluginRegistry } from './PluginRegistry';
-import { getPluginScanPlugins } from '@/api/fd-system-api-app/plugin';
+// 插件扫描接口由各应用注入（管理端/应用端使用各自生成的 openapi2ts 客户端），
+// 公共层不直接依赖 @/api/*；插件前端资源路径段也来自宿主配置（admin / app）。
+import { getPluginHostConfig, getPluginScanApi } from '../runtime/pluginHost';
 
 export interface PluginLoadResult {
   success: boolean;
@@ -31,7 +33,7 @@ export class PluginLoader {
   public async loadPluginsFromAPI(): Promise<PluginLoadResult[]> {
     try {
       // 从后端获取插件列表
-      const response: any = await getPluginScanPlugins();
+      const response: any = await getPluginScanApi()();
       const plugins = response || [];
 
       const results: PluginLoadResult[] = [];
@@ -69,7 +71,7 @@ export class PluginLoader {
         permissions: apiPlugin.permissions || apiPlugin.Permissions || [],
         microAppConfig: apiPlugin.microAppConfig || {
           name: apiPlugin.id || apiPlugin.Id || apiPlugin.pluginId,
-          entry: `${import.meta.env.VITE_API_URL}/plugins/${apiPlugin.id || apiPlugin.Id || apiPlugin.pluginId}/app/index.html`,
+          entry: `${import.meta.env.VITE_API_URL}/plugins/${apiPlugin.id || apiPlugin.Id || apiPlugin.pluginId}/${getPluginHostConfig().frontendSegment}/index.html`,
           container: '#subapp-viewport',
           activeRule: `/micro/${apiPlugin.id || apiPlugin.Id || apiPlugin.pluginId}`,
         }

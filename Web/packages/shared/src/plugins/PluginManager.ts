@@ -4,10 +4,11 @@
  */
 
 import { loadMicroApp, MicroApp } from 'qiankun';
-import { useMicroAppsStore } from '@/stores/microApps';
+import { useMicroAppsStore } from '../stores/microApps';
 import { pluginRegistry } from './PluginRegistry';
 import { getPluginAPI } from './PluginAPI';
-import request from '@/utils/request';
+// 主应用的 axios 实例与样式隔离策略由各应用注入，公共层不直接依赖 @/utils/request。
+import { getPluginHostConfig, getPluginRequest } from '../runtime/pluginHost';
 
 export interface PluginMetadata {
   id: string;
@@ -156,7 +157,10 @@ class PluginManager {
             pluginId: pluginId,
             pluginMetadata: config,
             // 【关键修复】传递主应用的 request 实例给子应用
-            Fdrequest: request,
+            // ⚠️ 属性名必须是 FdRequest：插件子应用在 main.ts 中按 `const { FdRequest } = props` 解构。
+            // 此处曾误写为 Fdrequest（小写 r），导致应用端加载插件时子应用拿不到 axios 实例、
+            // 插件内部所有 API 请求全部失败。该 bug 源于两个前端的复制分叉。
+            FdRequest: getPluginRequest(),
             // 传递 PluginAPI 给子应用，用于组件注册（延迟获取）
             get pluginAPI() {
               return getPluginAPI();
@@ -165,7 +169,7 @@ class PluginManager {
         },
         {
           sandbox: {
-            strictStyleIsolation: true,
+            strictStyleIsolation: getPluginHostConfig().strictStyleIsolation,
             experimentalStyleIsolation: true,
           },
           // 设置超时时间
