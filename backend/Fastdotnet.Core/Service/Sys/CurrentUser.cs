@@ -9,9 +9,14 @@ namespace Fastdotnet.Core.Service.Sys
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<FdAdminUserRole> _adminUserRoleRepository = null!;
         private readonly IRepository<FdRole> _roleRepository = null!;
-        public CurrentUser(IHttpContextAccessor httpContextAccessor)
+        public CurrentUser(
+            IHttpContextAccessor httpContextAccessor,
+            IRepository<FdAdminUserRole> adminUserRoleRepository,
+            IRepository<FdRole> roleRepository)
         {
             _httpContextAccessor = httpContextAccessor;
+            _adminUserRoleRepository = adminUserRoleRepository;
+            _roleRepository = roleRepository;
         }
 
         private ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User;
@@ -64,20 +69,29 @@ namespace Fastdotnet.Core.Service.Sys
                 {
                     return false;
                 }
-                // 获取用户的角色
-                var userRoles = _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId).Result;
-                var roleIds = userRoles.Select(ur => ur.RoleId).ToList();
-
-                if (!roleIds.Any())
+                try
                 {
-                    return false;
+                    // 获取用户的角色
+                    var userRoles = _adminUserRoleRepository.GetListAsync(ur => ur.AdminUserId == userId).Result;
+                    var roleIds = userRoles.Select(ur => ur.RoleId).ToList();
+
+                    if (!roleIds.Any())
+                    {
+                        return false;
+                    }
+
+                    // 获取角色信息
+                    var roles = _roleRepository.GetListAsync(r => roleIds.Contains(r.Id)).Result;
+
+                    // 检查是否包含超管角色
+                    return roles.Any(r => r.Code == SystemConstants.SuperAdminRoleCode);
                 }
-
-                // 获取角色信息
-                var roles =  _roleRepository.GetListAsync(r => roleIds.Contains(r.Id)).Result;
-
-                // 检查是否包含超管角色
-                return roles.Any(r => r.Code == SystemConstants.SuperAdminRoleCode);
+                catch
+                {
+                    // 查库失败时退化为「按令牌中的角色声明判断」，
+                    // 避免因基础设施抖动把整个请求打挂。
+                    return User?.IsInRole(SystemConstants.SuperAdminRoleCode) ?? false;
+                }
             }
         }
     }
