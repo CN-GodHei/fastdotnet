@@ -7,6 +7,7 @@ using Fastdotnet.Core.Options;
 using Fastdotnet.Core.Service.Oidc;
 using Fastdotnet.Core.Service.Oidc.Stores;
 using Fastdotnet.Core.Service.Sys;
+using Fastdotnet.Mcp.Mcp;
 using Fastdotnet.Service.IService;
 using Fastdotnet.Service.IService.App;
 using Fastdotnet.Service.IService.Sys;
@@ -224,6 +225,9 @@ builder.Services.AddSingleton<IControllerActivator, PluginControllerActivator>()
 // 注册限流和黑名单缓存服务
 builder.Services.AddScoped<IRateLimitCacheService, RateLimitCacheService>();
 
+// MCP 暴露层：把插件能力以 MCP 协议暴露给 AI Agent（见 backend/AI智能体集成方案/07-*.md）
+builder.Services.AddFastdotnetMcp(builder.Configuration);
+
 // 添加 SignalR 服务
 builder.Services.AddSignalR()
     .AddJsonProtocol(options =>
@@ -335,6 +339,9 @@ app.UseGracefulShutdown();
 
 app.MapControllers();
 app.MapHub<UniversalHub>("/universalhub");
+
+// MCP 端点（Streamable HTTP，无状态；要求 JWT 认证）
+app.MapFastdotnetMcp();
 
 // 注册主程序的 SignalR 方法
 var systemProvider = new Fastdotnet.WebApi.Providers.SystemSignalRProvider();

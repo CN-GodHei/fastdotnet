@@ -49,6 +49,17 @@ namespace Fastdotnet.WebApi.Middleware
                 return;
             }
             
+            // 跳过 MCP 端点：MCP 客户端（Claude / IDE / 自研 Agent）按协议只发送 Bearer 鉴权，
+            // 不会带 X-Timestamp / X-Nonce / X-Signature，无法参与本中间件的防重放签名校验。
+            // ⚠️ 注意：Debug 构建在上面的 #if DEBUG 已直接放行，因此这个坑只在 Release 下暴露。
+            if (!string.IsNullOrEmpty(requestPath) &&
+                requestPath.StartsWith("/mcp", StringComparison.OrdinalIgnoreCase))
+            {
+                // _logger.LogDebug("跳过防重放验证(MCP 端点): {Path}", context.Request.Path);
+                await _next(context);
+                return;
+            }
+
             // 跳过插件静态资源文件(如 /plugins/{pluginId}/app/*)
             // 注意:插件API接口路径为 /api/plugins/...,需要防重放保护
             if (!string.IsNullOrEmpty(requestPath) && 

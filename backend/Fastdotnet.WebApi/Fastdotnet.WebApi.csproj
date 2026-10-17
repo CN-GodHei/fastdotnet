@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -47,6 +47,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Fastdotnet.Core\Fastdotnet.Core.csproj" />
     <ProjectReference Include="..\Fastdotnet.Core.Notification\Fastdotnet.Core.Notification.csproj" />
+    <ProjectReference Include="..\Fastdotnet.Mcp\Fastdotnet.Mcp.csproj" />
     <ProjectReference Include="..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" />
     <ProjectReference Include="..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" />
     <ProjectReference Include="..\Fastdotnet.Plugin.Shared\Fastdotnet.Plugin.Shared.csproj" />
