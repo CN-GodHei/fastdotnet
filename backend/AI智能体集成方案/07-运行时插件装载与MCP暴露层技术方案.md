@@ -900,3 +900,78 @@ curl -X POST http://localhost:18889/api/Plugin/uninstall/ai-logistics-query-7f3a
 - C# SDK 传输文档：https://csharp.sdk.modelcontextprotocol.io/v2/concepts/transports/transports.html
 - 官方 2.0 GA 公告：https://devblogs.microsoft.com/dotnet/announcing-v20-of-the-official-mcp-csharp-sdk/
 - 本仓库相关实现：`fastdotnet.-plugin.-core/Fastdotnet.Plugin.Core/Infrastructure/PluginAssemblyLoader.cs`、`PluginInstallationService.cs`、`backend/Fastdotnet.Plugin.Shared/AdapterAOT/IPluginLoadService.cs`、`backend/Fastdotnet.WebApi/Controllers/Admin/PluginController.cs`
+
+---
+
+## 十二、P0 实施记录（2026-10-17）
+
+> 本章记录 P0 的实际落地情况与实测结果，供 P1 接手。
+
+### 12.1 已交付代码
+
+| 文件 / 目录 | 说明 |
+| --- | --- |
+| `Fastdotnet.Plugin.Contracts/IPluginToolProvider.cs` | 插件工具契约（`IPluginToolProvider`、`PluginToolDescriptor`、`PluginToolParameter`、`ToolInvocationContext`、`ToolInvocationResult`） |
+| `Fastdotnet.Mcp/`（新项目） | MCP 暴露层：`PluginToolRegistry`、`ToolCallerContextFactory`、`PluginToolNaming`、`McpToolSchemaBuilder`、`FastdotnetMcpExtensions` |
+| `Fastdotnet.Mcp/Tools/IHostToolProvider.cs` + `FastdotnetSystemToolProvider.cs` | 宿主内置能力通道（见 12.4） |
+| `Fastdotnet.WebApi/Program.cs` | `AddFastdotnetMcp(...)` + `MapFastdotnetMcp()` |
+| `Fastdotnet.WebApi/Middleware/AntiReplayMiddleware.cs` | 放行 `/mcp` |
+| `Fastdotnet.WebApi/appsettings.json` | `Mcp` 配置节 |
+| `backend/Plugins/AiToolDemo/` | 示例插件（`IPluginToolProvider` + 2 个工具，含一个需要权限的工具） |
+| `Directory.Packages.props` | `ModelContextProtocol.AspNetCore` 2.2.0（CPM） |
+
+### 12.2 实测验收结果
+
+| 验收项 | 结果 | 证据 |
+| --- | --- | --- |
+| A2 工具出现在 `tools/list` | ✅ | 返回 4 个工具：`fd_capabilities_list`、`fd_capability_invoke`、`fd_system_get_system_info`、`fd_system_list_plugins` |
+| A6 权限过滤 + 二次鉴权 | ✅ | `admintest`（App 端用户）的 `tools/list` **不含** `fd_system_list_plugins`；强行调用返回 `TOOL_NOT_FOUND` 且 `isError=true` |
+| A7 调用审计 | ✅ | 每次调用输出结构化日志：`tool / plugin / user / userType / success / code / durationMs / requestId` |
+| A9 宿主未重启 | ✅ | 全部调用期间进程启动时间不变 |
+| 稳定通道可用 | ✅ | `fd_capabilities_list` 返回能力清单（含参数说明）；`fd_capability_invoke` 可按 `pluginId + tool` 调用 |
+| 结构化输出 | ✅ | `CallToolResult.StructuredContent` 正常返回 |
+| A1 / A3 / A4 / A5 / A8 | ⏳ 阻塞 | 依赖插件装载链路，受 12.3 授权问题阻塞 |
+
+### 12.3 ⚠️ 关键阻塞：插件授权（必须优先解决）
+
+**现象**：`POST /api/Plugin/enable/{pluginId}` 返回 `422 插件授权验证失败!`
+
+**影响**：**新插件（包括将来 AI 生成的插件）在当前环境无法启用**，因此"插件能力被 Agent 调用"这条路径尚未端到端验证。
+
+**证据**：
+
+- `PluginLoadService.cs:251-257`：`_licenseValidator.Validate(pluginDir, pluginId)` 返回 false 即 `throw new BusinessException("插件授权验证失败!")`
+- `LicenseValidator.cs:191-197`：开发者模式豁免被 **`#if DEBUG` 包裹**，而 `Fastdotnet.Plugin.Core` 是以 Release 编译的 NuGet 包发布 → **用户无论如何配置 `EnableDeveloperMode` 都无法开启豁免**
+- 仓库内自带 `plugin.lic` 的 PluginA、Scheduler 同样启用失败（license 与机器指纹绑定，换机即失效）
+
+**建议（按优先级）**：
+
+1. 为 `Fastdotnet.Plugin.Core` 增加**不依赖 `#if DEBUG`** 的开发豁免，例如 `PluginSettings:AllowUnsignedPluginsInDevelopment`，且**仅当 `ASPNETCORE_ENVIRONMENT=Development` 时生效**
+2. 提供**本地开发签名工具**：让开发者能为自己开发的插件生成 license（绑定开发者身份而非机器指纹）
+3. 商城侧增加"开发授权"类型
+
+> 这是产品级阻塞：**如果第三方开发者无法在本地启用自己开发的插件，插件生态无从起步**；同理，AI 生成的插件在授权体系里也没有归属。
+
+### 12.4 与方案的偏差：新增「宿主内置能力」通道
+
+原方案只聚合插件能力。实施中因授权阻塞，增加了宿主内置能力通道：
+
+- 新增标记接口 `IHostToolProvider : IPluginToolProvider`。**必须用独立接口**：插件作用域是宿主容器的子作用域，若宿主直接注册 `IPluginToolProvider`，每个插件作用域都会把它解析出来，导致内置能力在每个插件名下重复出现。
+- 内置能力与插件能力在 Agent 侧是**同一份工具列表**，`pluginId = system`，权限同样走 RBAC。
+- 收益：① MCP 层可在无 license 环境下验证与回归；② 框架自身能力也能被 Agent 调用（产品上本就需要）。
+
+### 12.5 顺带修复的两处框架缺陷
+
+| # | 缺陷 | 后果 |
+| --- | --- | --- |
+| 1 | `EncryptionMiddleware`：`endpoint != null` 但**不是 MVC 控制器**时既不处理也不调用 `_next` | 请求静默中断，返回 **HTTP 200 + 空响应体**。任何非 MVC 端点（最小 API、健康检查）都会被它打断——作者此前只给 SignalR 单独开了豁免 |
+| 2 | `CurrentUser`：`_adminUserRoleRepository` / `_roleRepository` 声明为 `null!` 且构造函数从未注入 | `IsSuperAdmin` 一调用必然 `NullReferenceException`。该属性在框架内无调用方，因此长期潜伏 |
+
+> 第 2 项附带优化：MCP 侧改为**优先用令牌中的角色声明**判定超管（零数据库开销），仅在令牌不含角色时才回落到 `ICurrentUser.IsSuperAdmin`（需查库），且异常一律按"非超管"处理——不放大权限、不拖垮请求。
+
+### 12.6 下一步
+
+1. **解决 12.3 授权阻塞**（或先用宿主内置能力跑通完整演示剧本）
+2. 审计落库（当前为结构化日志，P2 接入现有日志表）
+3. 动态工具列表在真实 MCP 客户端（Claude Desktop / IDE）中的兼容性实测
+4. 验证 A1/A3/A4/A5（端到端生成→装载→卸载→ALC 回收）
