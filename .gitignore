@@ -141,3 +141,11 @@ wwwroot
 *.rar
 elsa_compatibility.db-shm
 elsa_compatibility.db-wal
+# 基于文件修改时间的清单，git clone 后会失效
+graphify-out/manifest.json
+
+# 本地的 token 成本报告，不应共享
+graphify-out/cost.json
+
+# 语义提取的缓存，体积可能很大，提交会显著增大仓库
+graphify-out/cache/

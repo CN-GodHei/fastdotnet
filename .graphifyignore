@@ -1,0 +1,31 @@
+# graphify 扫描排除规则（gitignore 语法，仅影响知识图谱，不影响构建）
+# 说明：node_modules / dist / build / target / out 已由 graphify 内置跳过，这里补它不认的。
+
+# C# 构建产物里的生成代码（AssemblyInfo.g.cs 等），会污染图谱
+**/bin/
+**/obj/
+
+# 编辑器与 CI 配置，不是架构信息
+.vs/
+.gitee/
+.github/
+build/
+
+# 前端构建/缓存产物
+**/dist/
+**/.cache/
+**/.vite/
+
+# 图片：会让 graphify 走视觉抽取，本图的模型没有视觉能力，直接排除
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.ico
+*.svg
+
+# 压缩产物，节点全是噪音
+**/*.min.js
+**/*.min.css
+**/*.map
