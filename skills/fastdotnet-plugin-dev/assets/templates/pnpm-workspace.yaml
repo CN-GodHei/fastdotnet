@@ -1,4 +1,5 @@
-allowBuilds:
-  es5-ext: true
-  esbuild: true
-  vue-demi: true
+# pnpm 11：依赖的安装脚本需要显式批准，否则 `pnpm install` / `pnpm run build`
+# 会因 ERR_PNPM_IGNORED_BUILDS 直接退 1，跑不到 vite。
+# 不同插件涉及的需要编译的依赖各不相同（esbuild / core-js-pure / vue-demi / es5-ext …），
+# 逐个列举既容易漏、又会随依赖升级失效，故统一放行本工程自己的依赖脚本。
+dangerouslyAllowAllBuilds: true

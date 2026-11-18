@@ -135,7 +135,6 @@ if ($IncludeFrontend) {
         }
 
         New-FromTemplate -TemplateFile 'index.html'           -Destination (Join-Path $proj 'index.html') -ExtraTokens $extra
-        New-FromTemplate -TemplateFile 'micro-index.html'     -Destination (Join-Path $proj 'micro-index.html') -ExtraTokens $extra
         New-FromTemplate -TemplateFile 'vite.config.ts'       -Destination (Join-Path $proj 'vite.config.ts') -ExtraTokens $extra
         New-FromTemplate -TemplateFile 'package.json'         -Destination (Join-Path $proj 'package.json') -ExtraTokens $extra
         New-FromTemplate -TemplateFile 'pnpm-workspace.yaml'  -Destination (Join-Path $proj 'pnpm-workspace.yaml') -ExtraTokens $extra
@@ -143,7 +142,6 @@ if ($IncludeFrontend) {
         New-FromTemplate -TemplateFile 'openapi2ts.config.ts' -Destination (Join-Path $proj 'openapi2ts.config.ts') -ExtraTokens $extra
         New-FromTemplate -TemplateFile 'frontend-plugin.json' -Destination (Join-Path $proj 'plugin.json') -ExtraTokens $extra
         New-FromTemplate -TemplateFile 'main.ts'              -Destination (Join-Path $proj 'src\main.ts') -ExtraTokens $extra
-        New-FromTemplate -TemplateFile 'micro-main.ts'        -Destination (Join-Path $proj 'src\micro-main.ts') -ExtraTokens $extra
         New-FromTemplate -TemplateFile 'App.vue'              -Destination (Join-Path $proj 'src\App.vue') -ExtraTokens $extra
         New-FromTemplate -TemplateFile 'Home.vue'             -Destination (Join-Path $proj 'src\views\Home.vue') -ExtraTokens $extra
         New-FromTemplate -TemplateFile 'router.ts'            -Destination (Join-Path $proj 'src\router\index.ts') -ExtraTokens $extra
@@ -226,3 +224,4 @@ if ($IncludeFrontend) {
     Write-Host "  5) 前端：cd Frontend/$Name.admin && pnpm install && pnpm build"
 }
 Write-Host ""
+
