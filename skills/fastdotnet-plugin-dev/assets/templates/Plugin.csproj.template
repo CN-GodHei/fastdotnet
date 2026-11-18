@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>__PLUGIN_NAME__</AssemblyName>
+    <RootNamespace>__PLUGIN_NAME__</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <Version>1.0.0</Version>
+
+    <!-- 必填：与 plugin.json / plugin.lic / 部署目录名一致 -->
+    <PluginId>__PLUGIN_ID__</PluginId>
+  </PropertyGroup>
+
+  <!-- 没配 PluginId 直接编译失败 -->
+  <Target Name="ValidatePluginConfiguration" BeforeTargets="BeforeBuild">
+    <Error Condition="'$(PluginId)' == ''"
+           Text="编译失败：必须在 .csproj 中配置 &lt;PluginId&gt;。" />
+  </Target>
+
+  <!-- 把 PluginId 写进程序集元数据 -->
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute" Condition="'$(PluginId)' != ''">
+      <_Parameter1>PluginId</_Parameter1>
+      <_Parameter2>$(PluginId)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Private=false：宿主程序集不进入插件包，避免类型身份冲突 -->
+    <ProjectReference Include="..\..\..\Fastdotnet.Plugin.Contracts\Fastdotnet.Plugin.Contracts.csproj" Private="false" />
+    <ProjectReference Include="..\..\..\Fastdotnet.Core\Fastdotnet.Core.csproj" Private="false" />
+    <ProjectReference Include="..\..\..\Fastdotnet.Orm\Fastdotnet.Orm.csproj" Private="false" />
+  </ItemGroup>
+
+  <!-- 构建后复制到 publish/{PluginId} -->
+  <Target Name="CopyToPublishDir" AfterTargets="Build">
+    <PropertyGroup>
+      <PublishBaseDir>$(MSBuildThisFileDirectory)..\publish\$(PluginId)</PublishBaseDir>
+      <SourceBinDir>$(OutputPath)</SourceBinDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(PublishBaseDir)" />
+    <Copy SourceFiles="$(SourceBinDir)$(TargetName)$(TargetExt)" DestinationFolder="$(PublishBaseDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(SourceBinDir)$(TargetName).pdb" DestinationFolder="$(PublishBaseDir)" SkipUnchangedFiles="true" Condition="Exists('$(SourceBinDir)$(TargetName).pdb')" />
+    <Copy SourceFiles="$(SourceBinDir)$(TargetName).xml" DestinationFolder="$(PublishBaseDir)" SkipUnchangedFiles="true" Condition="Exists('$(SourceBinDir)$(TargetName).xml')" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)plugin.json" DestinationFolder="$(PublishBaseDir)" SkipUnchangedFiles="true" />
+    <Message Text="插件产物已复制到 $(PublishBaseDir)" Importance="high" />
+  </Target>
+
+</Project>

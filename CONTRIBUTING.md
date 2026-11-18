@@ -129,6 +129,7 @@ test: 补充 CacheKeyGenerator 单元测试
 2. 在 `.csproj` 中配置唯一的 `<PluginId>`
 3. 参照 [PluginA 示例](backend/Plugins/PluginA) 组织 Backend / Frontend 目录
 4. 详细规范见 [插件开发文档](docs/05-插件开发/index.md)
+5. 用 AI Agent 参与开发时，先加载仓库内技能包：[框架开发](skills/fastdotnet/SKILL.md)、[插件开发](skills/fastdotnet-plugin-dev/SKILL.md)（根目录 `AGENTS.md` 是通用入口）
 
 如果你希望把插件上架到商城，请先通过 [商城入驻](https://fastdotnet.top/marketplace/seller) 了解审核与授权要求。
 

@@ -1,0 +1,11 @@
+{
+  "id": "__PLUGIN_ID__",
+  "name": "__DISPLAY_NAME__",
+  "description": "__DESCRIPTION__",
+  "version": "1.0.0",
+  "enabled": false,
+  "author": "__AUTHOR__",
+  "dependencies": [],
+  "tags": ["__PLUGIN_SLUG__"],
+  "entryPoint": "__PLUGIN_NAME__.dll"
+}

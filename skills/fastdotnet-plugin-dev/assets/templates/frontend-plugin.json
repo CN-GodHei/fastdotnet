@@ -1,0 +1,9 @@
+{
+  "id": "__PLUGIN_ID__",
+  "name": "__DISPLAY_NAME__",
+  "description": "__DESCRIPTION__",
+  "version": "1.0.0",
+  "author": "__AUTHOR__",
+  "enabled": true,
+  "entryPoint": "index.html"
+}
