@@ -63,7 +63,9 @@ const init = (props: any = {}) => {
     app.component(`ele-${key}`, component)
   }
 
-  const historyBase = (window as any).__POWERED_BY_QIANKUN__ ? props.base : '/'
+  // qiankun 3.0：base 仍由宿主通过 props 传入（宿主只走 loadMicroApp，不用 activeRule），
+  // 独立运行（vite dev / 直接刷新）时没有 props.base，退回 '/'。
+  const historyBase = props.base || '/'
   const router = createRouter({
     history: createWebHistory(historyBase),
     routes,
@@ -78,7 +80,15 @@ const init = (props: any = {}) => {
   // app.config.globalProperties.$FdQueryBuilder = FdQueryBuilder;
   // --- 可选结束 ---
 
-  const mountPoint = container ? container : '#app'
+  // qiankun 3.0：官方推荐渲染到 props.container 的子树（本应用 HTML 里的 #app），
+  // 而不是全局 document。宿主容器里已注入 index.html 的 body 内容，故优先取 #app。
+  const mountPoint =
+    (container && typeof container.querySelector === 'function'
+      ? container.querySelector('#app')
+      : null) ||
+    container ||
+    '#app'
+
   app.mount(mountPoint)
 
   return {
@@ -108,8 +118,39 @@ const init = (props: any = {}) => {
   }
 }
 
+// ---------------------------------------------------------------------------
+// qiankun 生命周期
+//
+// qiankun 3.0 的原生 ESM 路线：入口模块（index.html 里那个 <script type="module">）
+// 的具名导出 == 微应用生命周期，不再需要 2.x 时代的 micro-main.ts 转发薄壳 +
+// vite-plugin-qiankun 把生命周期挂到 window 上。
+//
+// 注意 bootstrap 的参数在 3.0 已收紧为只读的 { name, entry }，不含业务 props；
+// 业务 props 只在 mount 里拿（本应用从来如此，不受影响）。
+// ---------------------------------------------------------------------------
+let appInstance: ReturnType<typeof init> | null = null;
+
+export async function bootstrap() {
+  // 无需预热；保留空实现以满足生命周期约定（可省略，但显式声明更清晰）
+}
+
+export async function mount(props: any) {
+  appInstance = init(props);
+}
+
+export async function unmount() {
+  if (appInstance && typeof appInstance.unmount === 'function') {
+    appInstance.unmount();
+  }
+  appInstance = null;
+}
+
+export async function update(_props: any) {
+  // 宿主目前不使用 update 通道；留空以免 qiankun 判定生命周期契约不完整
+}
+
+// 独立运行（不经 qiankun，例如直接访问 vite dev server）时自行挂载
 if (!(window as any).__POWERED_BY_QIANKUN__) {
-  //console.log('[PluginA] not 我进来了');
   init()
 }
 

@@ -1,0 +1,6 @@
+# pnpm 11 的依赖安装脚本白名单放在这里（package.json 的 pnpm.* 字段在 pnpm 11 下不生效）。
+# 缺了 allowBuilds，pnpm run build 会先因 ERR_PNPM_IGNORED_BUILDS 直接退 1，跑不到 vite。
+allowBuilds:
+  es5-ext: true
+  esbuild: true
+  vue-demi: true
