@@ -87,9 +87,10 @@ import { configurePluginHost, registerPluginRequest, registerPluginScanApi } fro
 import { getPluginScanPlugins } from '@/api/fd-system-api-admin/plugin';
 
 // 本应用是管理端：插件前端资源路径段为 admin
-// strictStyleIsolation 保持迁移前的取值（false），避免本次重构改变运行时行为；
-// 该差异属于「有意保留」而非复制漂移，是否统一需实测 qiankun 样式隔离后再定。
-configurePluginHost({ frontendSegment: 'admin', strictStyleIsolation: false });
+// qiankun 3.0 只有 `sandbox.styleIsolation`（CSS @scope）一个开关，2.x 的
+// strictStyleIsolation / experimentalStyleIsolation 已合并；此前 admin 实际生效的是
+// `experimentalStyleIsolation: true`，故此处取 true 保持行为对等。
+configurePluginHost({ frontendSegment: 'admin', styleIsolation: true });
 registerPluginScanApi(getPluginScanPlugins);
 registerPluginRequest(request);
 
@@ -147,11 +148,8 @@ export async function startQiankun() {
             if (isDevelopment) {
                 // 在开发环境中，可以为特定插件ID指定本地开发服务器入口
                 if (pluginId === '这是你开发时的插件Id，为了避免重复编译才能测试，你可以在这里指定本地开发服务器入口') {
-                    return '//localhost:8082';
-                }
-                // 添加富文本编辑器插件的本地开发服务器入口
-                if (pluginId === 'RichTextEditor') {
-                    return '//localhost:8090';
+                // if (pluginId === '11375910391972869') {
+                    return '//localhost:8099';
                 }
                 // 可以为更多插件添加调试入口
             }
@@ -165,15 +163,20 @@ export async function startQiankun() {
                         let entry = getDebugEntry(menu.PluginId);
                         // 如果还是没有entry，则使用默认的插件地址                                                       
                         if (!entry) {
-                            entry = import.meta.env.VITE_API_URL + "/plugins/" + menu.PluginId + "/admin/index.html";
+                            // 与 packages/shared/src/utils/request.ts 的约定保持一致：
+                            //   dev  → 相对路径，走 vite.config.ts 里的 '/plugins/' 代理（同源，不需要 CORS）
+                            //   prod → 绝对 VITE_API_URL（前端与后端可能不同源）
+                            // 之前这里无条件拼 VITE_API_URL，会绕过 dev 代理直连后端，
+                            // 导致 qiankun 取 index.html 时被判为跨源而要求 CORS。
+                            entry = `${import.meta.env.PROD ? import.meta.env.VITE_API_URL : ''}/plugins/${menu.PluginId}/admin/index.html`;
                         }
                         const appName = `${menu.PluginId}`;
+                        // 仅用作子应用 router 的 history base；3.0 下不再需要 activeRule/container 字段，
+                        // 容器由 MicroAppContainer 查询成 HTMLElement 后传给 loadMicroApp。
                         const activeRule = `/micro/${menu.PluginId}`;
                         microAppConfigs.set(menu.PluginId, {
                             name: appName,
                             entry: entry,
-                            container: '#subapp-viewport',
-                            activeRule: activeRule,
                             props: {
                                 base: activeRule,
                                 // --- 添加这行 ---

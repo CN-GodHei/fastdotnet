@@ -22,16 +22,17 @@ export interface PluginHostConfig {
 	/** 插件前端资源路径段：管理端为 `admin`，应用端为 `app` */
 	frontendSegment: string;
 	/**
-	 * qiankun 严格样式隔离（Shadow DOM）。
-	 * 注意：与 `experimentalStyleIsolation`（scoped CSS）语义不同，两者同时开启可能互相干扰，
-	 * 因此保留为各应用可配置项，默认取更保守的 false。
+	 * qiankun 3.0 的样式隔离开关（`sandbox.styleIsolation`，基于原生 CSS `@scope`）。
+	 * 2.x 的 `strictStyleIsolation`（Shadow DOM）与 `experimentalStyleIsolation`（选择器改写）
+	 * 在 3.0 已合并为这一个布尔项，且不再提供 Shadow DOM 模式。
+	 * 默认 true，保持与 2.x 下 `experimentalStyleIsolation: true` 的行为对等。
 	 */
-	strictStyleIsolation: boolean;
+	styleIsolation: boolean;
 }
 
 let _config: PluginHostConfig = {
 	frontendSegment: 'admin',
-	strictStyleIsolation: false,
+	styleIsolation: true,
 };
 
 let _scanApi: PluginScanApi | undefined;

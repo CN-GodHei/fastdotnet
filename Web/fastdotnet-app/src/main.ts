@@ -87,8 +87,9 @@ import { configurePluginHost, registerPluginRequest, registerPluginScanApi } fro
 import { getPluginScanPlugins } from '@fastdotnet/shared/api/fd-system-api-app/plugin';
 
 // 本应用是应用端：插件前端资源路径段为 app
-// strictStyleIsolation 保持迁移前的取值（true），避免本次重构改变运行时行为。
-configurePluginHost({ frontendSegment: 'app', strictStyleIsolation: true });
+// qiankun 3.0 只有 `sandbox.styleIsolation`（CSS @scope）一个开关，2.x 的
+// strictStyleIsolation / experimentalStyleIsolation 已合并，此处取 true。
+configurePluginHost({ frontendSegment: 'app', styleIsolation: true });
 registerPluginScanApi(getPluginScanPlugins);
 registerPluginRequest(request);
 
@@ -160,15 +161,18 @@ export async function startQiankun() {
                         let entry = getDebugEntry(menu.PluginId);
                         // 如果还是没有entry，则使用默认的插件地址                                                       
                         if (!entry) {
-                            entry = import.meta.env.VITE_API_URL + "/plugins/" + menu.PluginId + "/app/index.html";
+                            // 与 packages/shared/src/utils/request.ts 的约定保持一致：
+                            //   dev  → 相对路径，走 vite.config.ts 里的 '/plugins/' 代理（同源，不需要 CORS）
+                            //   prod → 绝对 VITE_API_URL（前端与后端可能不同源）
+                            entry = `${import.meta.env.PROD ? import.meta.env.VITE_API_URL : ''}/plugins/${menu.PluginId}/app/index.html`;
                         }
                         const appName = `${menu.PluginId}`;
+                        // 仅用作子应用 router 的 history base；3.0 下不再需要 activeRule/container 字段，
+                        // 容器由 MicroAppContainer 查询成 HTMLElement 后传给 loadMicroApp。
                         const activeRule = `/micro/${menu.PluginId}`;
                         microAppConfigs.set(menu.PluginId, {
                             name: appName,
                             entry: entry,
-                            container: '#subapp-viewport',
-                            activeRule: activeRule,
                             props: {
                                 base: activeRule,
                                 // --- 添加这行 ---

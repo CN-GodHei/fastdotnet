@@ -9,6 +9,7 @@ import { pluginRegistry } from './PluginRegistry';
 import { getPluginAPI } from './PluginAPI';
 // 主应用的 axios 实例与样式隔离策略由各应用注入，公共层不直接依赖 @/utils/request。
 import { getPluginHostConfig, getPluginRequest } from '../runtime/pluginHost';
+import { disposeMicroApp } from '../runtime/microApp';
 
 export interface PluginMetadata {
   id: string;
@@ -23,8 +24,12 @@ export interface PluginMetadata {
   microAppConfig?: {
     name: string;
     entry: string;
-    container: string;
-    activeRule: string;
+    /**
+     * qiankun 3.0 起 `container` 只能是 HTMLElement 实例，选择器字符串已不再接受。
+     * 这里仅作为「默认容器选择器」的兼容声明保留，实际加载时会解析成元素再传给 qiankun。
+     */
+    container?: string;
+    activeRule?: string;
   };
 }
 
@@ -125,11 +130,26 @@ class PluginManager {
   }
 
   /**
+   * 把容器解析成 HTMLElement。
+   * qiankun 3.0 的 `container` 只接受 HTMLElement，传选择器字符串会抛类型错误、运行时也拿不到目标节点。
+   */
+  private resolveContainer(target: string | HTMLElement): HTMLElement {
+    if (typeof target !== 'string') {
+      return target;
+    }
+    const el = document.querySelector<HTMLElement>(target);
+    if (!el) {
+      throw new Error(`[PluginManager] 容器不存在: ${target}`);
+    }
+    return el;
+  }
+
+  /**
    * 动态加载插件
    */
   public async loadPlugin(
     pluginId: string,
-    container?: string,
+    container?: string | HTMLElement,
     props?: any
   ): Promise<MicroApp | null> {
     const config = this.getPluginConfig(pluginId);
@@ -145,7 +165,9 @@ class PluginManager {
 
     try {
       const microAppConfig = config.microAppConfig;
-      const appContainer = container || microAppConfig.container || '#subapp-viewport';
+      const appContainer = this.resolveContainer(
+        container ?? microAppConfig.container ?? '#subapp-viewport'
+      );
 
       const microApp = loadMicroApp(
         {
@@ -168,12 +190,11 @@ class PluginManager {
           },
         },
         {
+          // qiankun 3.0：应用级配置取代 2.x 的 start() 全局选项；
+          // 样式隔离统一为 sandbox.styleIsolation（CSS @scope），不再有 strict/experimental 之分。
           sandbox: {
-            strictStyleIsolation: getPluginHostConfig().strictStyleIsolation,
-            experimentalStyleIsolation: true,
+            styleIsolation: getPluginHostConfig().styleIsolation,
           },
-          // 设置超时时间
-          prefetch: false,
         }
       );
 
@@ -212,9 +233,8 @@ class PluginManager {
     }
 
     try {
-      if (pluginInstance.instance) {
-        await pluginInstance.instance.unmount();
-      }
+      // qiankun 3.0：优先 unload()（真正释放沙箱），rc.22 尚无该 API 则退回 unmount()。
+      await disposeMicroApp(pluginInstance.instance);
       
       this.plugins.delete(pluginId);
       return true;
@@ -253,7 +273,7 @@ class PluginManager {
    */
   public async loadMultiplePlugins(
     pluginIds: string[],
-    container?: string,
+    container?: string | HTMLElement,
     props?: any
   ): Promise<Map<string, MicroApp | null>> {
     const results = new Map<string, MicroApp | null>();

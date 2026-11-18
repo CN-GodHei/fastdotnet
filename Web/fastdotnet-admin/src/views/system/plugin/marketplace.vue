@@ -11,6 +11,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { loadMicroApp } from 'qiankun'
 import { useMicroAppsStore } from '@fastdotnet/shared/stores/microApps'
+import { disposeMicroApp } from '@fastdotnet/shared/runtime/microApp'
 import { getPluginScanPlugins } from '@/api/fd-system-api-admin/plugin'
 
 // 定义微应用实例
@@ -44,9 +45,18 @@ const loadMarketplaceApp = async () => {
       }
     }
 
+    // qiankun 3.0：container 必须是 HTMLElement；activeRule 已无意义（未用 registerMicroApps）
+    const container = document.getElementById('subapp-viewport')
+    if (!container) {
+      console.error('未找到微应用容器 #subapp-viewport')
+      return
+    }
+
     // 加载微应用
     microAppInstance = loadMicroApp({
-      ...marketplaceConfig,
+      name: marketplaceConfig.name,
+      entry: marketplaceConfig.entry,
+      container,
       props: {
         ...marketplaceConfig.props,
         // 传递当前已安装的插件列表给插件商城
@@ -59,6 +69,9 @@ const loadMarketplaceApp = async () => {
           window.dispatchEvent(new CustomEvent('refresh-plugin-list'))
         }
       }
+    }, {
+      // qiankun 3.0：样式隔离统一为 sandbox.styleIsolation（原生 CSS @scope）
+      sandbox: { styleIsolation: true }
     })
 
     // 等待微应用加载完成
@@ -73,7 +86,8 @@ const loadMarketplaceApp = async () => {
 const unloadMarketplaceApp = async () => {
   if (microAppInstance) {
     try {
-      await microAppInstance.unmount()
+      // 释放走 disposeMicroApp —— rc.22 没有文档所称的 unload()，会退回到 unmount()
+      await disposeMicroApp(microAppInstance)
       console.log('插件商城微应用卸载成功')
     } catch (error) {
       console.error('插件商城微应用卸载失败:', error)

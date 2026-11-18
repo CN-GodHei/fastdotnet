@@ -71,9 +71,11 @@ export class PluginLoader {
         permissions: apiPlugin.permissions || apiPlugin.Permissions || [],
         microAppConfig: apiPlugin.microAppConfig || {
           name: apiPlugin.id || apiPlugin.Id || apiPlugin.pluginId,
-          entry: `${import.meta.env.VITE_API_URL}/plugins/${apiPlugin.id || apiPlugin.Id || apiPlugin.pluginId}/${getPluginHostConfig().frontendSegment}/index.html`,
-          container: '#subapp-viewport',
-          activeRule: `/micro/${apiPlugin.id || apiPlugin.Id || apiPlugin.pluginId}`,
+          // 与 ../utils/request.ts 的约定一致：dev 用相对路径走 '/plugins/' 代理（同源，无需 CORS），
+          // prod 才用绝对的 VITE_API_URL。
+          entry: `${import.meta.env.PROD ? import.meta.env.VITE_API_URL : ''}/plugins/${apiPlugin.id || apiPlugin.Id || apiPlugin.pluginId}/${getPluginHostConfig().frontendSegment}/index.html`,
+          // qiankun 3.0 不再需要 container 选择器与 activeRule：
+          // 容器由 PluginManager 解析成 HTMLElement 后传入，本项目也不使用 registerMicroApps。
         }
       };
 
